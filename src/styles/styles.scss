@@ -1,0 +1,39 @@
+@import "_fonts.scss";
+//@import "_normalize";
+@import "_reset";
+@import "_variables.scss";
+
+html {
+  color: $mainFontColor;
+  height: 100%;
+}
+
+body {
+  font-size: $mainFontSize;
+  font-family: $RailwayFont;
+  background: $bgColor;
+  height: auto;
+
+}
+
+.container {
+  width: 100%;
+  flex: 0 0 auto;
+  position: relative;
+  box-sizing: border-box;
+  margin: 0 auto; //временный параметр
+  max-width: $maxDesktopWidth;
+  //меняет размеры основного экрана контента
+  @media screen and (max-width: $desktopWidth) {
+    max-width: $smDesktopWidth;
+  }
+  @media screen and (max-width: $smDesktopWidth) {
+    max-width: $tableWidth;
+  }
+  @media screen and (max-width: $tableWidth) {
+    max-width: $phoneWidth;
+  }
+  @media screen and (max-width: $phoneWidth) {
+    max-width: $smPhoneWidth;
+  }
+}
