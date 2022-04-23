@@ -1,16 +1,17 @@
-import { ThunkAction } from 'redux-thunk'
-import { AppStateType, GetActionsTypes } from './redux-store'
+import {ThunkAction} from 'redux-thunk'
+import {AppStateType, GetActionsTypes} from './redux-store'
 
 const initialState = {
-companyName : 'Транспортно-Логистическая Компания',
-baseHref : 'http://t-ton.com'
+    companyName: 'Транспортно-Логистическая Компания',
+    baseHref: 'http://t-ton.com',
+    directPhoneNumber: '+7950-051-0520'
 }
 
 export type BaseStoreReducerStateType = typeof initialState
 
 type ActionsType = GetActionsTypes<typeof requestFormActions>
 
-export const baseStoreReducer = ( state = initialState, action: ActionsType ): BaseStoreReducerStateType => {
+export const baseStoreReducer = (state = initialState, action: ActionsType): BaseStoreReducerStateType => {
 
     switch (action.type) {
 
@@ -30,7 +31,7 @@ export const baseStoreReducer = ( state = initialState, action: ActionsType ): B
 /* ЭКШОНЫ */
 export const requestFormActions = {
     // установка значения в карточки пользователей одной страницы
-    setBooks: ( href: string ) => ({
+    setBooks: (href: string) => ({
         type: 'base-store-reducer/CHANGE-URL',
         href,
     } as const),

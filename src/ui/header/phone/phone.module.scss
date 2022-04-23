@@ -1,0 +1,11 @@
+@import 'src/styles/mixins';
+
+.phone {
+  @include flex-center();
+  background: inherit;
+  opacity: .7;
+
+  &__img {
+    width: 45px;
+  }
+}
