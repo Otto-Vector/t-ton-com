@@ -22,18 +22,21 @@ body {
   position: relative;
   box-sizing: border-box;
   margin: 0 auto; //временный параметр
-  max-width: $maxDesktopWidth;
+  padding: 15px;
+  min-height: 100vh;
+  max-width: $midDesktopWidth;
+  background: $accentColor;
   //меняет размеры основного экрана контента
-  @media screen and (max-width: $desktopWidth) {
-    max-width: $smDesktopWidth;
-  }
-  @media screen and (max-width: $smDesktopWidth) {
-    max-width: $tableWidth;
-  }
-  @media screen and (max-width: $tableWidth) {
-    max-width: $phoneWidth;
-  }
-  @media screen and (max-width: $phoneWidth) {
-    max-width: $smPhoneWidth;
-  }
+  //@media screen and (max-width: $desktopWidth) {
+  //  max-width: $smDesktopWidth;
+  //}
+  //@media screen and (max-width: $smDesktopWidth) {
+  //  max-width: $tableWidth;
+  //}
+  //@media screen and (max-width: $tableWidth) {
+  //  max-width: $phoneWidth;
+  //}
+  //@media screen and (max-width: $phoneWidth) {
+  //  max-width: $smPhoneWidth;
+  //}
 }

@@ -1,0 +1,21 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.logo {
+  @include flex-center();
+  justify-content: left;
+
+  &__img {
+    width: 45px;
+    margin-right: 25px;
+  }
+
+  &__title {
+    color: #fff;
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 27px;
+  }
+}
