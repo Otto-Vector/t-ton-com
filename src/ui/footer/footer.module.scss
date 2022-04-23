@@ -1,0 +1,33 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.footer {
+  display: flex;
+  padding: 0 15px 15px 15px;
+  justify-content: space-between;
+  //background: inherit;
+  min-height: 60px;
+
+  &__info {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    max-width: 529px;
+  }
+  &__text {
+    color: white;
+    text-align: right;
+    font-family: $RalewayFont;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+
+    b {
+
+    }
+  }
+  &__alertImg {
+    width: 34px;
+    margin-left: 15px;
+  }
+}

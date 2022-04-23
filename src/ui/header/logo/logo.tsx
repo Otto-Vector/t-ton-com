@@ -1,15 +1,13 @@
 import React from 'react';
 import styles from './logo.module.scss';
 import logo from './../../../media/logo.png'
-import {getBaseHref, getCompanyName} from '../../../selectors/base-reselect';
-import {useSelector} from 'react-redux';
 
-type OwnProps = {}
+type OwnProps = {
+    companyName: string,
+    baseHref: string
+}
 
-export const Logo: React.FC<OwnProps> = () => {
-
-    const companyName = useSelector(getCompanyName)
-    const baseHref = useSelector(getBaseHref)
+export const Logo: React.FC<OwnProps> = ({companyName, baseHref}) => {
 
     return (
         <div className={styles.logo}>

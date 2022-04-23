@@ -1,13 +1,11 @@
 import React from 'react';
 import styles from './phone.module.scss';
 import phone from './../../../media/phone.png';
-import {useSelector} from 'react-redux';
-import {getDirectPhoneNumber} from '../../../selectors/base-reselect';
 
-type OwnProps = {}
+type OwnProps = { directPhoneNumber: string}
 
-export const Phone: React.FC<OwnProps> = () => {
-    const directPhoneNumber = useSelector(getDirectPhoneNumber)
+export const Phone: React.FC<OwnProps> = ({directPhoneNumber}) => {
+
     return (
         <div className={styles.phone}>
             <a href={`tel:${directPhoneNumber}`} role={'img'}>

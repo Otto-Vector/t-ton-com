@@ -2,9 +2,14 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
 
 const initialState = {
-    companyName: 'Транспортно-Логистическая Компания',
-    baseHref: 'http://t-ton.com',
-    directPhoneNumber: '+7950-051-0520'
+    header: {
+        companyName: 'Транспортно-Логистическая Компания',
+        baseHref: 'http://t-ton.com',
+        directPhoneNumber: '+7950-051-0520'
+    },
+    footer: {
+        linkToOfer: '#oferIsHere'
+    }
 }
 
 export type BaseStoreReducerStateType = typeof initialState
@@ -18,7 +23,7 @@ export const baseStoreReducer = (state = initialState, action: ActionsType): Bas
         case 'base-store-reducer/CHANGE-URL': {
             return {
                 ...state,
-                baseHref: action.href,
+                header: {...state.header, baseHref: action.href},
             }
         }
         default: {
