@@ -4,6 +4,8 @@ const instance = axios.create( {
     baseURL: 'https://www.google.com/s2/',
 } )
 
+// https://github.com/antongunov/favicongrabber.com
+
 export type GetIconsType = {
     domain: string
     sz?: number
