@@ -3,6 +3,7 @@ import styles from './ui-component.module.scss';
 import {Header} from './header/header';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Footer} from './footer/footer';
+import {LinksPanel} from './links-panel/links-panel'
 
 type OwnProps = {}
 
@@ -21,7 +22,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                 {/*</Routes>*/}
             </section>
                 <div className={styles.ui__sideBarRight}>
-
+                    <LinksPanel/>
                 </div>
                 </div>
             <div className={styles.ui__footer}>

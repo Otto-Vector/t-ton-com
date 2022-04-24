@@ -1,0 +1,24 @@
+@import "src/styles/mixins";
+
+.links {
+  margin: 0 auto;
+  padding-top: 15px;
+  @include flex-center('column');
+  flex-wrap: wrap;
+  width: 40px;
+
+  &__item {
+    //@include flex-center('column');
+    margin: 5px;
+    background-color: white;
+    border-radius: 5px;
+    height: 39px;
+    width: 39px;
+    overflow: hidden;
+    text-align: center;
+  }
+  &__img {
+
+    width: 39px;
+  }
+}

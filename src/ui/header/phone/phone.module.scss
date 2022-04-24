@@ -1,9 +1,29 @@
 @import 'src/styles/mixins';
+@import 'src/styles/variables';
 
 .phone {
   @include flex-center();
   background: inherit;
   //opacity: .7;
+
+  &__text {
+    display: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-family: $RalewayFont;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 21px;
+    box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.25);
+    background-color: white;
+    color: $accentColor;
+    margin-right: 10px;
+
+    &_active {
+      display: block;
+    }
+  }
 
   &__img {
     width: 45px;

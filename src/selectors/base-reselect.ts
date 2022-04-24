@@ -6,6 +6,7 @@ type BaseStoreSelectors<T extends keyof Y, Y = BaseStoreReducerStateType> = (sta
 
 export const getHeaderStore: BaseStoreSelectors<'header'> = (state) => state.baseStoreReducer.header
 export const getFooterStore: BaseStoreSelectors<'footer'> = (state) => state.baseStoreReducer.footer
+export const getLinksStore: BaseStoreSelectors<'links'> = (state) => state.baseStoreReducer.links
 
 
 

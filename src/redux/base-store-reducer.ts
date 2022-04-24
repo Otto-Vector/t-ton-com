@@ -1,31 +1,45 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
+// import {getIconsFromApi, GetIconsType} from '../api/get-icons'
 
 const initialState = {
     header: {
         companyName: 'Транспортно-Логистическая Компания',
         baseHref: 'http://t-ton.com',
-        directPhoneNumber: '+7950-051-0520'
+        directPhoneNumber: '+79-500-510-520'
     },
     footer: {
         linkToOfer: '#oferIsHere'
-    }
+    },
+    links: [
+        { domain: 'https://yandex.ru', title: 'Поисковик' },
+        { domain: 'https://github.com', title: 'Хранение' },
+        { domain: 'https://google.ru', title: 'Другой поисковик' }
+    ]
 }
 
 export type BaseStoreReducerStateType = typeof initialState
 
-type ActionsType = GetActionsTypes<typeof requestFormActions>
+type ActionsType = GetActionsTypes<typeof baseStoreActions>
 
-export const baseStoreReducer = (state = initialState, action: ActionsType): BaseStoreReducerStateType => {
+export const baseStoreReducer = ( state = initialState, action: ActionsType ): BaseStoreReducerStateType => {
 
     switch (action.type) {
 
         case 'base-store-reducer/CHANGE-URL': {
             return {
                 ...state,
-                header: {...state.header, baseHref: action.href},
+                header: { ...state.header, baseHref: action.href },
             }
         }
+        // case 'base-store-reducer/CHANGE-ICONS': {
+        //     return {
+        //         ...state,
+        //         links: state.links.map( ( item ) => {
+        //             return item.domain === action.domain ? { domain: item.domain, icon: action.icon } : item
+        //         } )
+        //     }
+        // }
         default: {
             return state
         }
@@ -34,13 +48,16 @@ export const baseStoreReducer = (state = initialState, action: ActionsType): Bas
 }
 
 /* ЭКШОНЫ */
-export const requestFormActions = {
+export const baseStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setBooks: (href: string) => ({
+    setBooks: ( href: string ) => ( {
         type: 'base-store-reducer/CHANGE-URL',
         href,
-    } as const),
-
+    } as const ),
+    setIcons: ( domain: string, icon: string ) => ( {
+        type: 'base-store-reducer/CHANGE-ICONS',
+        domain, icon
+    } as const ),
 }
 
 /* САНКИ */
@@ -48,14 +65,15 @@ export const requestFormActions = {
 export type BaseStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-// export const getOneBookFromApi = ( bookId: string ): UsersReducerThunkActionType =>
+// export const getIcons = ( { domain }: GetIconsType ): BaseStoreReducerThunkActionType =>
 //     async ( dispatch ) => {
-//         dispatch( requestFormActions.setApiError( null ) )
+//         // dispatch( requestFormActions.setIcons( null ) )
 //         try {
-//             const response = await getOneBookOverIdFromApi( bookId )
-//             dispatch( requestFormActions.setFoundedBook( response as BookInfoType ) )
+//             const response = await getIconsFromApi( { domain } )
+//             dispatch( baseStoreActions.setIcons( domain, response ) )
 //         } catch (e) {
-//             dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
+//             alert( e )
+//             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
 //         }
 //
 //     }
