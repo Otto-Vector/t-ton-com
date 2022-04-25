@@ -6931,6 +6931,13 @@
   "resolved" "https://registry.npmjs.org/nanoid/-/nanoid-3.3.3.tgz"
   "version" "3.3.3"
 
+"native-querystring@^1.1.1":
+  "integrity" "sha512-8am8T/kGFhM3ULH/g1hfHhgySCXH9mn8oWwvH3Nb89Pp5QjnYU/8Jvmfw0gkqkJ3RyR7uVziD7XdCkjYocD5zg=="
+  "resolved" "https://registry.npmjs.org/native-querystring/-/native-querystring-1.1.1.tgz"
+  "version" "1.1.1"
+  dependencies:
+    "number-is-nan" "^1.0.1"
+
 "natural-compare@^1.4.0":
   "integrity" "sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc="
   "resolved" "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
@@ -7100,6 +7107,11 @@
   "version" "2.0.1"
   dependencies:
     "boolbase" "^1.0.0"
+
+"number-is-nan@^1.0.1":
+  "integrity" "sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0="
+  "resolved" "https://registry.npmjs.org/number-is-nan/-/number-is-nan-1.0.1.tgz"
+  "version" "1.0.1"
 
 "nwsapi@^2.2.0":
   "integrity" "sha512-h2AatdwYH+JHiZpv7pt/gSX1XoRGb7L/qSIeuqA6GwYoF9w1vP1cw42TO0aI2pNyshRK5893hNSl+1//vHK7hQ=="
