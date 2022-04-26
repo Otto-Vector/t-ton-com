@@ -17,10 +17,6 @@
     line-height: 12px;
     text-align: center;
 
-    div {
-      margin-top: 3px;
-    }
-
     &_active {
       color: gold;
     }
@@ -28,5 +24,15 @@
     &_unactive {
       color: inherit;
     }
+
+  }
+
+  &__text {
+    margin: 3px auto;
+    max-width: 70px;
+  }
+
+  &__image {
+    width: 24px;
   }
 }

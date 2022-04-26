@@ -10,60 +10,41 @@ import statusSVG from './buttons/status.svg'
 import historySVG from './buttons/history.svg'
 import mapSVG from './buttons/map.svg'
 import optionsSVG from './buttons/options.svg'
+import {getIsAuth} from '../../selectors/auth-reselect';
 
 
 type OwnProps = {}
 
 export const MenuPanel: React.FC<OwnProps> = () => {
+
     const routes = useSelector(getRoutesStore)
-    const activeClass = ({isActive}: { isActive: boolean }) => isActive
+    const isAuth = useSelector(getIsAuth)
+
+    // вынес за пределы NavLink назначение классов
+    const activeClass = ({isActive}: { isActive: boolean }): string => isActive
         ? styles.menuPanel__item_active : styles.menuPanel__item_unactive
+
+    // легче редактировать и меньше кода на перебор
+    const menuItems = [
+        {route: routes.login, src: loginSVG, title: 'Авторизация', buttonText: `${isAuth ? 'Вход' : 'Выход'}`},
+        {route: routes.create, src: createSVG, title: 'Создать заявку', buttonText: 'Создать'},
+        {route: routes.search, src: searchSVG, title: 'Поиск неактивных заявок', buttonText: 'Поиск'},
+        {route: routes.status, src: statusSVG, title: 'Активные заявки', buttonText: 'Заявки'},
+        {route: routes.history, src: historySVG, title: 'Выполненные заявки', buttonText: 'История заявок'},
+        {route: routes.map, src: mapSVG, title: 'Карта маршрутов', buttonText: 'Карта'},
+        {route: routes.options, src: optionsSVG, title: 'Панель настроек (админ)', buttonText: 'Настройки'},
+    ]
 
     return (
         <nav className={styles.menuPanel}>
-            <div className={styles.menuPanel__item}>
-                <NavLink to={routes.login} className={activeClass}>
-                    <img src={loginSVG} alt="Панель авторизации"/>
-                    <div>{'Вход'}</div>
-                </NavLink>
-            </div>
-            <div className={styles.menuPanel__item}>
-                <NavLink to={routes.create} className={activeClass}>
-                    <img src={createSVG} alt="Создать заявку"/>
-                    <div>{'Создать'}</div>
-                </NavLink>
-            </div>
-            <div className={styles.menuPanel__item}>
-                <NavLink to={routes.search} className={activeClass}>
-                    <img src={searchSVG} alt="Поиск неактивных заявок"/>
-                    <div>{'Поиск'}</div>
-                </NavLink>
-            </div>
-            <div className={styles.menuPanel__item}>
-                <NavLink to={routes.status} className={activeClass}>
-                    <img src={statusSVG} alt="Активные заявки"/>
-                    <div>{'Заявки'}</div>
-                </NavLink>
-            </div>
-            <div className={styles.menuPanel__item}>
-                <NavLink to={routes.history} className={activeClass}>
-                    <img src={historySVG} alt="История выполненных заявок"/>
-                    <div>{'История'}</div>
-                    <div>{'заявок'}</div>
-                </NavLink>
-            </div>
-            <div className={styles.menuPanel__item}>
-                <NavLink to={routes.map} className={activeClass}>
-                    <img src={mapSVG} alt="Карта маршрутов"/>
-                    <div>{'Карта'}</div>
-                </NavLink>
-            </div>
-            <div className={styles.menuPanel__item}>
-                <NavLink to={routes.options} className={activeClass}>
-                    <img src={optionsSVG} alt="Панель настроек (админ)"/>
-                    <div>{'Настройки'}</div>
-                </NavLink>
-            </div>
+            {menuItems.map(({route, src, title, buttonText}) =>
+                <div className={styles.menuPanel__item}>
+                    <NavLink to={route} className={activeClass} role={'button'} title={title}>
+                        <img className={styles.menuPanel__image} src={src} alt={buttonText}/>
+                        <div className={styles.menuPanel__text}>{buttonText}</div>
+                    </NavLink>
+                </div>
+            )}
         </nav>
     )
 }
