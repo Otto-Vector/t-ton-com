@@ -13,8 +13,8 @@ export type GetIconsType = {
 }
 
 // запрос на сервер
-export const getIconsFromApi = ( { domain, sz = 64 }: GetIconsType ) => {
-
-    return instance.get<string>( `favicons?${qsNormalize({domain,sz})}` )
-        .then( response => response.data )
-}
+// export const getIconsFromApi = ( { domain, sz = 64 }: GetIconsType ) => {
+//
+//     return instance.get<string>( `favicons?${qsNormalize({domain,sz})}` )
+//         .then( response => response.data )
+// }

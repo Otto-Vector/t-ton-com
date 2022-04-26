@@ -1,0 +1,32 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.menuPanel {
+  padding-top: 60px;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+
+  &__item {
+    margin-bottom: 25px;
+    color: #fff;
+    font-family: $RalewayFont;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 10px;
+    line-height: 12px;
+    text-align: center;
+
+    div {
+      margin-top: 3px;
+    }
+
+    &_active {
+      color: gold;
+    }
+
+    &_unactive {
+      color: inherit;
+    }
+  }
+}

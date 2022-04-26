@@ -15,7 +15,16 @@ const initialState = {
         { domain: 'https://yandex.ru', title: 'Поисковик' },
         { domain: 'https://github.com', title: 'Хранение' },
         { domain: 'https://google.ru', title: 'Другой поисковик' }
-    ]
+    ],
+    routes: {
+        login : '/login',
+        create: '/create',
+        search: '/search',
+        status: '/status',
+        history: '/history',
+        map: '/maps',
+        options: '/options'
+    }
 }
 
 export type BaseStoreReducerStateType = typeof initialState
