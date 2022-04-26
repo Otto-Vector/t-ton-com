@@ -17,6 +17,7 @@ const initialState = {
         { domain: 'https://google.ru', title: 'Другой поисковик' }
     ],
     routes: {
+        hello: '/hello',
         login : '/login',
         create: '/create',
         search: '/search',

@@ -1,15 +1,16 @@
 import React from 'react'
 import styles from './menu-panel.module.scss'
+
 import {useSelector} from 'react-redux'
 import {getRoutesStore} from '../../selectors/base-reselect'
 import {NavLink} from 'react-router-dom';
-import loginSVG from './buttons/login.svg'
-import createSVG from './buttons/create.svg'
-import searchSVG from './buttons/search.svg'
-import statusSVG from './buttons/status.svg'
-import historySVG from './buttons/history.svg'
-import mapSVG from './buttons/map.svg'
-import optionsSVG from './buttons/options.svg'
+import loginSVG from './buttonsSVG/login.svg'
+import createSVG from './buttonsSVG/create.svg'
+import searchSVG from './buttonsSVG/search.svg'
+import statusSVG from './buttonsSVG/status.svg'
+import historySVG from './buttonsSVG/history.svg'
+import mapSVG from './buttonsSVG/map.svg'
+import optionsSVG from './buttonsSVG/options.svg'
 import {getIsAuth} from '../../selectors/auth-reselect';
 
 
@@ -21,8 +22,9 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     const isAuth = useSelector(getIsAuth)
 
     // вынес за пределы NavLink назначение классов
-    const activeClass = ({isActive}: { isActive: boolean }): string => isActive
-        ? styles.menuPanel__item_active : styles.menuPanel__item_unactive
+    const activeClass = ({isActive}: { isActive: boolean }): string =>
+        `${styles.menuPanel__item} ${isActive
+            ? styles.menuPanel__item_active : styles.menuPanel__item_unactive}`
 
     // легче редактировать и меньше кода на перебор
     const menuItems = [
@@ -59,12 +61,11 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     return (
         <nav className={styles.menuPanel}>
             {menuItems.map(({route, src, title, buttonText, active}) =>
-                    active && <div className={styles.menuPanel__item}>
-                        <NavLink to={route} className={activeClass} role={'button'} title={title}>
-                            <img className={styles.menuPanel__image} src={src} alt={buttonText}/>
-                            <div className={styles.menuPanel__text}>{buttonText}</div>
-                        </NavLink>
-                    </div>
+                active &&
+                <NavLink to={route} className={activeClass} role={'button'} title={title}>
+                    <img className={styles.menuPanel__image} src={src} alt={buttonText}/>
+                    <div className={styles.menuPanel__text}>{buttonText}</div>
+                </NavLink>
             )}
         </nav>
     )

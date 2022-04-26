@@ -9,7 +9,6 @@
 
   &__item {
     margin-bottom: 25px;
-    color: #fff;
     font-family: $RalewayFont;
     font-style: normal;
     font-weight: 800;
@@ -22,7 +21,7 @@
     }
 
     &_unactive {
-      color: inherit;
+      color: #fff;
     }
 
   }
