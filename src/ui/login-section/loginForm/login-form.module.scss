@@ -1,0 +1,14 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.loginForm {
+  @include flex-center();
+
+  &__header {
+    font-family: $RalewayFont;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+  }
+}

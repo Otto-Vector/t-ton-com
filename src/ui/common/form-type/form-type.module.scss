@@ -1,0 +1,127 @@
+@import "src/styles/variables";
+@import "src/styles/mixins";
+
+$input--font: inherit;
+
+$black-75: #00000075;
+$black-50: #00000050;
+
+// оболочка вокруг инпута
+.inputWrapper {
+    font-family: $input--font;
+    font-size: inherit;
+    text-align: center;
+    position: relative;
+    background-color: inherit;
+    border-radius: rem(4);
+
+    .error {
+        border-color: red;
+    }
+}
+
+// добавление иконок на оболочку
+.search:after, .clearSearch:before {
+    @include addMaterialAfter('');
+}
+
+// манипуляции с иконкой очистки поля
+.clearSearch {
+    position: absolute;
+    background-color: transparent;
+    @include size(rem(20));
+    left: rem(10);
+    top: rem(15);
+    transition-property: transform;
+    transform: rotate(0);
+    transition-duration: .25s;
+    cursor: pointer;
+
+    &:before {
+        top: 0;
+        right: 0;
+        content: 'close';
+    }
+
+    &:hover {
+        transform: scale(1.2);
+    }
+
+    &Unfocused {
+        opacity: .6;
+        cursor: default;
+    }
+}
+
+//// добавление иконки со значком поиска справа
+//.search:after {
+//    cursor: unset;
+//    opacity: .5;
+//    content: 'search';
+//}
+
+// обработка самого инпута
+.input {
+    font-family: $input--font; //переназначаем шрифт, потому что input находится в label и наследует
+    outline: none; //чтобы input не подсвечивался
+    box-sizing: border-box;
+    background: inherit;
+    font-size: rem(15);
+    line-height: rem(20);
+    border: solid {
+        color: $black-50;
+        radius: rem(4);
+        width: 2px;
+    }
+    padding: rem(13) rem(35) rem(15);
+    width: 100%;
+
+    transition-property: border;
+    transition-duration: .3s;
+
+    &:focus, &:hover {
+        border: solid $black-75 2px;
+    }
+
+    &:valid { //поставил, потому что менялся цвет в настройках браузера при разфокусировке
+        color: black;
+    }
+
+    &:invalid {
+        color: red;
+    }
+
+    &:active {
+    }
+
+    //обработка манипуляций с :placeholder
+    @include placeholder() {
+        font-family: $input--font;
+        position: absolute;
+        top: rem(14);
+        transition-property: all;
+        transition-duration: .3s;
+    }
+    //при фокусе, сообщение placeholder уходит вверх
+    &:focus {
+        @include placeholder() {
+            top: 0;
+            font-size: rem(12);
+        }
+    }
+
+}
+
+// кастомизация сообщения об ошибке под инпутом
+.errorSpan {
+    position: absolute;
+    bottom: -15px;
+    left: 5px;
+    font-size: 70%;
+    color: red;
+    font-weight: bold;
+    background-image: radial-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1));
+    border-radius: 5px;
+}
+
+

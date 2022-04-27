@@ -1,0 +1,72 @@
+@import "src/styles/variables";
+@import "src/styles/mixins";
+
+$dropdown--font    : $PTSansFont;
+$dropdown--bgColor : whitesmoke;
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  font-family: $dropdown--font;
+  font-size: rem(15);
+  text-align: left;
+  position: relative;
+  background-color: transparent;
+  width: 40%;
+  border-radius: rem(4);
+
+  &:after {
+    @include addMaterialAfter('expand_more');
+    font-size: rem(25);
+    top: unset;
+    bottom: rem(13);
+    opacity: .5;
+  }
+}
+
+  .label {
+    font-size: rem(18);
+    font-weight: bold;
+
+    padding-bottom: rem(4);
+    padding-left: rem(4);
+  }
+
+  .select {
+    /*убирает стрелочку из выпадающего списка*/
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none; //чтобы select не подсвечивался по умолчанию
+
+    font-family: $dropdown--font;
+    box-sizing: border-box;
+    background: $dropdown--bgColor;
+    font-size: rem(15);
+    line-height: rem(20);
+    border: solid {
+      color: $black-50;
+      radius: rem(4);
+      width: 2px;
+    }
+    padding: rem(13) rem(35) rem(15);
+    width: 100%;
+
+    transition-property: border;
+    transition-duration: .3s;
+
+    &:focus, &:hover {
+      border: solid $black-75 2px;
+    }
+
+    &:active {
+    }
+
+    &:after {
+      @include addMaterialAfter('expand_more');
+      font-size: rem(25);
+      top: unset;
+      bottom: rem(13);
+    }
+  }
+
