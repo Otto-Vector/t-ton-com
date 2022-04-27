@@ -18,11 +18,11 @@ body {
 
 .container {
   width: 100%;
-  flex: 0 0 auto;
-  position: relative;
+  //flex: 0 0 auto;
+  //position: relative;
   box-sizing: border-box;
   margin: 0 auto; //временный параметр
-  min-height: 100vh;
+  //min-height: 100vh;
   max-width: $midDesktopWidth;
   background: $accentColor;
   //меняет размеры основного экрана контента

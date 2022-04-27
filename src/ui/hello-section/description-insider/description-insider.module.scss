@@ -19,7 +19,10 @@
 
   transform-origin: bottom;
   transition-property: opacity, transform;
+  will-change: transform, opacity;
   transition-duration: .4s;
+  z-index: 999;
+
 
   &_left {
     left: 0;

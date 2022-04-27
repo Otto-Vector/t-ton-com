@@ -9,16 +9,16 @@ type OwnProps = {
 
 export const DescriptionInsider: React.FC<OwnProps> = ({srcIcon, textArray, position}) => {
 
-    const positionIs = (s: OwnProps['position']): string =>
-      s === 'left' ? styles.descriptionInsider_left
-          : s === 'right' ? styles.descriptionInsider_right
+    const positionIs = (pos: OwnProps['position']): string =>
+      pos === 'left' ? styles.descriptionInsider_left
+          : pos === 'right' ? styles.descriptionInsider_right
               : ''
 
     return (
         <div className={styles.descriptionInsider + ' ' + positionIs(position)}>
             <img className={styles.descriptionInsider__icon} src={srcIcon} alt="hidden"/>
             {textArray.map((text) =>
-                <span className={styles.descriptionInsider__text}>{text}</span>)}
+                <p className={styles.descriptionInsider__text} key={text}>{text}</p>)}
         </div>
     )
 }

@@ -48,10 +48,16 @@
   padding: 15px 35px;
   margin: 5px;
 
+
   background: #FFFFFF;
   border: 1px solid #CDE3FF;
   box-shadow: 2px 2px 1px rgba(44, 39, 56, 0.08), 3px 4px 8px rgba(44, 39, 56, 0.08);
   border-radius: 17px;
+
+  // избавляем от мерцания (предподготавливаем браузер)
+  transform: scale(1);
+  will-change: transform;
+
   transition-duration: .4s;
   cursor: pointer;
 
