@@ -5,6 +5,7 @@
   background: inherit;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 
   &__centerWrapper {
     background-color: inherit;
@@ -25,7 +26,7 @@
     background-size: cover;
     background-position: center center;
     border-radius: 25px;
-    overflow: hidden;
+    //overflow: hidden;
   }
 
   &__sideBarRight {
