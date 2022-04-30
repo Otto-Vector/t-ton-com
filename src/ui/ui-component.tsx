@@ -28,8 +28,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                     <Routes>
                         <Route path='/' element={ <Navigate to={ routes.login }/> }/>
                         <Route path={routes.hello} element={ <HelloSection/> }/>
-                        <Route path={routes.login} element={ <LoginSection mode={'login'}/> }/>
-                        <Route path={routes.register} element={ <LoginSection mode={'register'}/> }/>
+                        <Route path={routes.login} element={ <LoginSection /> }/>
                         <Route path={routes.create} element={ <h2>СОЗДАТЬ ЗАЯВКУ</h2> }/>
                         <Route path={routes.search} element={ <h2>ПОИСК ЗАЯВКИ</h2> }/>
                         <Route path={routes.status} element={ <h2>СТАТУС ПО АКТИВНЫМ ЗАЯВКАМ</h2> }/>

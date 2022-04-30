@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styles from './login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {composeValidators, minLength11, mustBeNumber, required} from '../../../utils/validators';
@@ -10,10 +10,10 @@ import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/au
 import {Preloader} from '../../common/Preloader/Preloader';
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer';
 import {useNavigate} from 'react-router-dom';
-import {getRoutesStore} from '../../../selectors/base-reselect';
 
 type phoneSubmitType = {
-    phoneNumber: string | null,
+    innNumber: string | null
+    phoneNumber: string | null
     sms: number | null
 }
 
@@ -23,14 +23,14 @@ type OwnProps = {
 
 export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
 
+    const [isRegisterMode, setIsRegisterMode] = useState(false)
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
-    const {register} = useSelector(getRoutesStore)
     const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const registerHandleClick = () => {
-        navigate(register)
+        setIsRegisterMode(!isRegisterMode)
     }
 
     const fakeFetch = () => { // @ts-ignore
@@ -38,7 +38,8 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
     }
 
     const initialValues = {
-        phoneNumber: '',
+        innNumber: null,
+        phoneNumber: null,
         sms: null
     } as phoneSubmitType
 
@@ -47,7 +48,7 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
         <div className={styles.loginForm}>
             { // установил прелоадер
                 isFetching ? <Preloader/> : <>
-                    <h4 className={styles.loginForm__header}>{'Вход'}</h4>
+                    <h4 className={styles.loginForm__header}>{isRegisterMode ? 'Регистрация' : 'Вход'}</h4>
                     <Form
                         onSubmit={onSubmit}
                         initialValues={initialValues}
@@ -55,6 +56,16 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                             ({submitError, handleSubmit, pristine, form, submitting}) => (
                                 <form onSubmit={handleSubmit}>
                                     <div className={styles.loginForm__inputsPanel}>
+                                        {isRegisterMode &&
+                                            < Field name={'innNumber'}
+                                                    placeholder={'ИНН Компании'}
+                                                    component={InputNumber}
+                                                    type={'input'}
+                                                    resetFieldBy={form}
+                                                    maskFormat={'#### #### ####'}
+                                                    validate={composeValidators(required)}
+                                            />
+                                        }
                                         <Field name={'phoneNumber'}
                                                placeholder={'Контактный номер +7'}
                                                component={InputNumber}
@@ -62,23 +73,23 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                maskFormat={'+7 (###) ###-##-##'}
                                                validate={composeValidators(required)}
                                         />
-                                        <Field name={'sms'}
-                                               placeholder={'Пароль из sms'}
-                                               component={InputNumber}
-                                               maskFormat={'#####'}
-                                               disabled={!isAvailableSMS}
-                                               validate={isAvailableSMS ? composeValidators(required, mustBeNumber) : undefined}
-                                               children={<div className={
-                                                   styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position}>
-                                                   <Button type={'button'}
-                                                           disabled={!isAvailableSMS}
-                                                           title={'Новый запрос на пароль из SMS'}
-                                                           colorMode={'gray'}
-                                                           onClick={fakeFetch}
-                                                           rounded
-                                                   >Новый пароль</Button>
-                                               </div>}
-                                        />
+                                        {!isAvailableSMS && <Field name={'sms'}
+                                                                   placeholder={'Пароль из sms'}
+                                                                   component={InputNumber}
+                                                                   maskFormat={'#####'}
+                                                                   disabled={!isAvailableSMS}
+                                                                   validate={isAvailableSMS ? composeValidators(required, mustBeNumber) : undefined}
+                                                                   children={<div className={
+                                                                       styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position}>
+                                                                       <Button type={'button'}
+                                                                               disabled={!isAvailableSMS}
+                                                                               title={'Новый запрос на пароль из SMS'}
+                                                                               colorMode={'gray'}
+                                                                               onClick={fakeFetch}
+                                                                               rounded
+                                                                       >Новый пароль</Button>
+                                                                   </div>}
+                                        />}
                                     </div>
                                     <div className={styles.loginForm__buttonsPanel}>
                                         <Button type={'submit'}
@@ -92,13 +103,14 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                 </form>
                             )
                         }/>
+
                     <div className={styles.loginForm__smallButton}>
                         <Button type={'button'}
                                 title={'Регистрация в приложении'}
                                 colorMode={'blue'}
                                 onClick={registerHandleClick}
                                 rounded
-                        >Регистрация</Button>
+                        >{!isRegisterMode ? 'Регистрация' : 'Назад'}</Button>
                     </div>
                 </>}
         </div>
