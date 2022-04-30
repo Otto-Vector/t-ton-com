@@ -55,7 +55,12 @@ $btnGreenBorderColor: #74C25980;
   }
 
   &:disabled {
-    opacity: .3;
+    opacity: .4;
+  }
+
+  &:active:disabled {
+    box-shadow: 0 0 6px rgba(red, .8);
+    color: red;
   }
 
   &:focus {

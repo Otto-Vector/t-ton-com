@@ -9,9 +9,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect';
 import {Preloader} from '../../common/Preloader/Preloader';
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer';
-import {NavLink} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../selectors/base-reselect';
-
 
 type phoneSubmitType = {
     phone: string | null,
@@ -24,10 +23,16 @@ type OwnProps = {
 
 export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
 
+
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
     const {register} = useSelector(getRoutesStore)
     const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const registerHandleClick = () => {
+        navigate(register)
+    }
 
     const fakeFetch = () => { // @ts-ignore
         dispatch(fakeAuthFetching())
@@ -43,61 +48,63 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
         <div className={styles.loginForm}>
             { // установил прелоадер
                 isFetching ? <Preloader/> : <>
-                <h4 className={styles.loginForm__header}>{'Вход'}</h4>
-                <Form
-                    onSubmit={onSubmit}
-                    initialValues={initialValues}
-                    render={
-                        ({submitError, handleSubmit, pristine, form, submitting}) => (
-                            <form onSubmit={handleSubmit}>
-                                <div className={styles.loginForm__inputsPanel}>
-                                    <Field name={'phone'}
-                                           placeholder={'Контактный номер +7'}
-                                           component={Input}
-                                           resetFieldBy={form}
-                                           type={'input'}
-                                        // parse={normalizePhoneNumber}
-                                           validate={composeValidators(required)}
-                                    />
-                                    <Field name={'sms'}
-                                           placeholder={'Пароль из sms'}
-                                           component={Input}
-                                           type={'input'}
-                                           disabled={!isAvailableSMS}
-                                        // parse={formatString('9999')}
-                                           validate={isAvailableSMS ? composeValidators(required, mustBeNumber) : undefined}
-                                           children={<div
-                                               className={styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position}>
-                                               <Button type={'button'}
-                                                       disabled={!isAvailableSMS}
-                                                       title={'Новый запрос на пароль из SMS'}
-                                                       colorMode={'gray'}
-                                                       onClick={fakeFetch}
-                                                       rounded
-                                               >Новый пароль</Button>
-                                           </div>}
-                                    />
-                                </div>
-                                <div className={styles.loginForm__buttonsPanel}>
-                                    <Button type={'submit'}
-                                            disabled={submitting}
-                                            colorMode={'green'}
-                                            title={'Далее'}
-                                            rounded
-                                    >Далее</Button>
-                                </div>
-                                {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
-                            </form>
-                        )
-                    }/>
-                <NavLink className={styles.loginForm__smallButton} to={register}>
-                    <Button type={'button'}
-                            title={'Регистрация в приложении'}
-                            colorMode={'blue'}
-                            rounded
-                    >Регистрация</Button>
-                </NavLink>
-            </>}
+                    <h4 className={styles.loginForm__header}>{'Вход'}</h4>
+                    <Form
+                        onSubmit={onSubmit}
+                        initialValues={initialValues}
+                        render={
+                            ({submitError, handleSubmit, pristine, form, submitting}) => (
+                                <form onSubmit={handleSubmit}>
+                                    <div className={styles.loginForm__inputsPanel}>
+                                        <Field name={'phone'}
+                                               placeholder={'Контактный номер +7'}
+                                               component={Input}
+                                               resetFieldBy={form}
+                                               type={'input'}
+                                            // parse={normalizePhoneNumber}
+                                               validate={composeValidators(required)}
+                                        />
+                                        <Field name={'sms'}
+                                               placeholder={'Пароль из sms'}
+                                               component={Input}
+                                               type={'input'}
+                                               disabled={!isAvailableSMS}
+                                            // parse={formatString('9999')}
+                                               validate={isAvailableSMS ? composeValidators(required, mustBeNumber) : undefined}
+                                               children={<div className={
+                                                   styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position}>
+                                                   <Button type={'button'}
+                                                           disabled={!isAvailableSMS}
+                                                           title={'Новый запрос на пароль из SMS'}
+                                                           colorMode={'gray'}
+                                                           onClick={fakeFetch}
+                                                           rounded
+                                                   >Новый пароль</Button>
+                                               </div>}
+                                        />
+                                    </div>
+                                    <div className={styles.loginForm__buttonsPanel}>
+                                        <Button type={'submit'}
+                                                disabled={submitting}
+                                                colorMode={'green'}
+                                                title={'Далее'}
+                                                rounded
+                                        >Далее</Button>
+                                    </div>
+                                    {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
+                                </form>
+                            )
+                        }/>
+                    <div className={styles.loginForm__smallButton}>
+                        <Button type={'button'}
+                                title={'Регистрация в приложении'}
+                                colorMode={'blue'}
+                                disabled={true}
+                                onClick={registerHandleClick}
+                                rounded
+                        >Регистрация</Button>
+                    </div>
+                </>}
         </div>
     )
 }
