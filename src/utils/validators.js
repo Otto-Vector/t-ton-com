@@ -5,10 +5,13 @@ export const required = (value) => (value ? undefined : "Обязательно�
 
 const maxLength = (max) => (value) => ((value.length > max) ? `Больше ${max} символов!` : undefined);
 const minLength = (min) => (value) => ((value.length <= min) ? `Меньше ${min} символов!` : undefined);
+export const mustBe = (to) => (value) => ((value.length !== to) ? `Должно быть ${to} символов!` : undefined);
 
 export const maxLength50 = maxLength(50)
-export const maxLength11 = minLength(11)
+export const minLength11 = minLength(11)
+export const mustBe12 = mustBe(12)
 
 export const mustBeNumber = (value) => (isNaN(value) ? "Только цифры" : undefined);
+
 
 

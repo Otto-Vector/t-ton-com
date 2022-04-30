@@ -62,7 +62,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
         <nav className={styles.menuPanel}>
             {menuItems.map(({route, src, title, buttonText, active}) =>
                 active &&
-                <NavLink to={route} className={activeClass} role={'button'} title={title}>
+                <NavLink to={route} className={activeClass} role={'button'} title={title} key={route+src}>
                     <img className={styles.menuPanel__image} src={src} alt={buttonText}/>
                     <div className={styles.menuPanel__text}>{buttonText}</div>
                 </NavLink>

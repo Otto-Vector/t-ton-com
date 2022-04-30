@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './login-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {composeValidators, maxLength11, mustBeNumber, required} from '../../../utils/validators';
+import {composeValidators, minLength11, mustBeNumber, required} from '../../../utils/validators';
 import {Button} from '../../common/button/button';
 import {Input} from '../../common/form-type/form-type';
 
@@ -9,6 +9,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect';
 import {Preloader} from '../../common/Preloader/Preloader';
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer';
+import {NavLink} from 'react-router-dom';
+import {getRoutesStore} from '../../../selectors/base-reselect';
 
 
 type phoneSubmitType = {
@@ -23,6 +25,7 @@ type OwnProps = {
 export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
 
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
+    const {register} = useSelector(getRoutesStore)
     const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
 
@@ -55,7 +58,6 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                            type={'input'}
                                         // parse={normalizePhoneNumber}
                                            validate={composeValidators(required)}
-
                                     />
                                     <Field name={'sms'}
                                            placeholder={'Пароль из sms'}
@@ -75,7 +77,6 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                >Новый пароль</Button>
                                            </div>}
                                     />
-
                                 </div>
                                 <div className={styles.loginForm__buttonsPanel}>
                                     <Button type={'submit'}
@@ -85,17 +86,17 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                             rounded
                                     >Далее</Button>
                                 </div>
-                                {submitError && <span className={styles.onError}>{submitError}</span>}
+                                {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
                             </form>
                         )
                     }/>
-                <div className={styles.loginForm__smallButton}>
+                <NavLink className={styles.loginForm__smallButton} to={register}>
                     <Button type={'button'}
                             title={'Регистрация в приложении'}
                             colorMode={'blue'}
                             rounded
                     >Регистрация</Button>
-                </div>
+                </NavLink>
             </>}
         </div>
     )

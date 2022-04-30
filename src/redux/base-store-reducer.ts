@@ -18,7 +18,8 @@ const initialState = {
     ],
     routes: {
         hello: '/hello',
-        login : '/login',
+        login : '/login/login',
+        register: '/login/register',
         create: '/create',
         search: '/search',
         status: '/status',
