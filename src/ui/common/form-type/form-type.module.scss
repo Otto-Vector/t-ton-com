@@ -14,8 +14,7 @@ $input--border-color: #92ABC8;
 $input--border-color--focused: $accentColor;
 //$input--border-color--focused: #263c9a;
 
-$black-75: #00000075;
-$black-50: #00000050;
+$input--disabled-color: #00000050;
 
 // оболочка вокруг инпута
 .inputWrapper {
@@ -106,6 +105,10 @@ $black-50: #00000050;
     }
 
     &:active {
+    }
+    &:disabled{
+        border-color: $input--disabled-color;
+        background-color: $input--disabled-color;
     }
 
     //обработка манипуляций с :placeholder

@@ -4,7 +4,7 @@ import {AppStateType, GetActionsTypes} from './redux-store'
 const initialState = {
     isAuth: true,
     authID: 'sfadsfsadfa',
-    isAvaliableSMSrequest: false,
+    isAvailableSMSrequest: false,
     isFetching: false,
 }
 
@@ -25,7 +25,7 @@ export const authStoreReducer = (state = initialState, action: ActionsType): Aut
         case 'auth-store-reducer/SET-IS-AVALIABLE-SMS-REQUEST': {
             return {
                 ...state,
-                isAvaliableSMSrequest: action.isAvaliableSMSrequest
+                isAvailableSMSrequest: action.isAvailableSMSrequest
             }
         }
         case 'auth-store-reducer/SET-IS-FETCHING': {
@@ -48,9 +48,9 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-IS-AUTH',
         isAuth,
     } as const),
-    setIsAvaliableSMSRequest: (isAvaliableSMSrequest: boolean) => ({
+    setIsAvailableSMSRequest: (isAvailableSMSrequest: boolean) => ({
         type: 'auth-store-reducer/SET-IS-AVALIABLE-SMS-REQUEST',
-        isAvaliableSMSrequest,
+        isAvailableSMSrequest: isAvailableSMSrequest,
     } as const),
     setIsFetching: (isFetching: boolean) => ({
         type: 'auth-store-reducer/SET-IS-FETCHING',
@@ -63,7 +63,12 @@ export const authStoreActions = {
 
 export type AuthStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-
+export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
+    async (dispatch, getState) => {
+        dispatch(authStoreActions.setIsFetching(true))
+        const second = await setTimeout( ()=> {
+            dispatch(authStoreActions.setIsFetching(false))}, 1000)
+    }
 // export const getIcons = ( { domain }: GetIconsType ): BaseStoreReducerThunkActionType =>
 //     async ( dispatch ) => {
 //         // dispatch( requestFormActions.setIcons( null ) )

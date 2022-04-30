@@ -5,4 +5,4 @@ type AuthStoreSelectors<T extends keyof Y, Y = AuthStoreReducerStateType> = (sta
 
 export const getIsAuth: AuthStoreSelectors<'isAuth'> = (state) => state.authStoreReducer.isAuth
 export const getIsFetchingAuth: AuthStoreSelectors<'isFetching'> = (state) => state.authStoreReducer.isFetching
-export const getIsAvaliableSMSrequest: AuthStoreSelectors<'isAvaliableSMSrequest'> = (state) => state.authStoreReducer.isAvaliableSMSrequest
+export const getIsAvailableSMSrequest: AuthStoreSelectors<'isAvailableSMSrequest'> = (state) => state.authStoreReducer.isAvailableSMSrequest

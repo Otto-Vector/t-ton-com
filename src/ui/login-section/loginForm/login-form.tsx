@@ -5,9 +5,10 @@ import {composeValidators, maxLength11, mustBeNumber, required} from '../../../u
 import {Button} from '../../common/button/button';
 import {Input} from '../../common/form-type/form-type';
 
-import {useSelector} from 'react-redux';
-import {getIsAvaliableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect';
+import {useDispatch, useSelector} from 'react-redux';
+import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect';
 import {Preloader} from '../../common/Preloader/Preloader';
+import {fakeAuthFetching} from '../../../redux/auth-store-reducer';
 
 
 type phoneSubmitType = {
@@ -21,8 +22,13 @@ type OwnProps = {
 
 export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
 
-    const isAvaliableSMS = useSelector(getIsAvaliableSMSrequest)
+    const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
     const isFetching = useSelector(getIsFetchingAuth)
+    const dispatch = useDispatch()
+
+    const fakeFetch = () => { // @ts-ignore
+        dispatch(fakeAuthFetching())
+    }
 
     const initialValues = {
         phone: '',
@@ -32,60 +38,64 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
 
     return (
         <div className={styles.loginForm}>
-            {isFetching ? <Preloader/> : <>
-            <h4 className={styles.loginForm__header}>{'Вход'}</h4>
-            <Form
-                onSubmit={onSubmit}
-                initialValues={initialValues}
-                render={
-                    ({submitError, handleSubmit, pristine, form, submitting}) => (
-                        <form onSubmit={handleSubmit}>
-                            <div className={styles.loginForm__inputsPanel}>
-                                <Field name={'phone'}
-                                       placeholder={'Контактный номер +7'}
-                                       component={Input}
-                                       resetFieldBy={form}
-                                       type={'input'}
-                                       // parse={normalizePhoneNumber}
-                                       validate={composeValidators(required)}
+            { // установил прелоадер
+                isFetching ? <Preloader/> : <>
+                <h4 className={styles.loginForm__header}>{'Вход'}</h4>
+                <Form
+                    onSubmit={onSubmit}
+                    initialValues={initialValues}
+                    render={
+                        ({submitError, handleSubmit, pristine, form, submitting}) => (
+                            <form onSubmit={handleSubmit}>
+                                <div className={styles.loginForm__inputsPanel}>
+                                    <Field name={'phone'}
+                                           placeholder={'Контактный номер +7'}
+                                           component={Input}
+                                           resetFieldBy={form}
+                                           type={'input'}
+                                        // parse={normalizePhoneNumber}
+                                           validate={composeValidators(required)}
 
-                                />
-                                <Field name={'sms'}
-                                       placeholder={'Пароль из sms'}
-                                       component={Input}
-                                       type={'input'}
-                                    // parse={formatString('9999')}
+                                    />
+                                    <Field name={'sms'}
+                                           placeholder={'Пароль из sms'}
+                                           component={Input}
+                                           type={'input'}
+                                           disabled={!isAvailableSMS}
+                                        // parse={formatString('9999')}
+                                           validate={isAvailableSMS ? composeValidators(required, mustBeNumber) : undefined}
+                                           children={<div
+                                               className={styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position}>
+                                               <Button type={'button'}
+                                                       disabled={!isAvailableSMS}
+                                                       title={'Новый запрос на пароль из SMS'}
+                                                       colorMode={'gray'}
+                                                       onClick={fakeFetch}
+                                                       rounded
+                                               >Новый пароль</Button>
+                                           </div>}
+                                    />
 
-                                       validate={composeValidators(required, mustBeNumber)}
-                                       children={<div className={styles.loginForm__smallButton+' '+styles.loginForm__smallButton_position}>
-                                           <Button type={'button'}
-                                                   disabled={isAvaliableSMS}
-                                                   title={'Новый запрос на пароль из SMS'}
-                                                   colorMode={'gray'}
-                                                   rounded
-                                           >Новый пароль</Button>
-                                       </div>}
-                                />
-                            </div>
-                            <div className={styles.loginForm__buttonsPanel}>
-                                <Button type={'submit'}
-                                        disabled={submitting}
-                                        colorMode={'green'}
-                                        title={'Далее'}
-                                        rounded
-                                >Далее</Button>
-                            </div>
-                            {submitError && <span className={styles.onError}>{submitError}</span>}
-                        </form>
-                    )
-                }/>
-            <div className={styles.loginForm__smallButton}>
-                <Button type={'button'}
-                        title={'Регистрация в приложении'}
-                        colorMode={'blue'}
-                        rounded
-                >Регистрация</Button>
-            </div>
+                                </div>
+                                <div className={styles.loginForm__buttonsPanel}>
+                                    <Button type={'submit'}
+                                            disabled={submitting}
+                                            colorMode={'green'}
+                                            title={'Далее'}
+                                            rounded
+                                    >Далее</Button>
+                                </div>
+                                {submitError && <span className={styles.onError}>{submitError}</span>}
+                            </form>
+                        )
+                    }/>
+                <div className={styles.loginForm__smallButton}>
+                    <Button type={'button'}
+                            title={'Регистрация в приложении'}
+                            colorMode={'blue'}
+                            rounded
+                    >Регистрация</Button>
+                </div>
             </>}
         </div>
     )

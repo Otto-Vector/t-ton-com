@@ -1,11 +1,13 @@
 //@use "sass:math";
 
+@import 'variables';
+
 @mixin addMaterialAfter($iconName: 'search', $right: rem(10), $top: rem(15)) {
   content: $iconName;
   font-family: $MaterialFont;
   position: absolute;
   font-size: rem(20);
-  color: $black-75;
+  color: inherit;
   right: $right;
   top: $top;
   cursor: unset;

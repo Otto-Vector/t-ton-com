@@ -8,13 +8,14 @@ type OwnProps = {
     meta: FieldState<any>
     input: any
     children?: React.ReactNode
+    disabled?: boolean
 }
 
 
 const FormType = (FormType: 'textarea' | 'input'): React.FC<OwnProps> => (
     {
         input, meta, resetFieldBy, placeholder,
-        children
+        children, disabled
     }) => {
 
     const isError = (meta.error || meta.submitError) && meta.touched
@@ -34,6 +35,7 @@ const FormType = (FormType: 'textarea' | 'input'): React.FC<OwnProps> => (
                 {...input}
                 className={styles.input + ' ' + (isError ? styles.error : '')}
                 placeholder={placeholder}
+                disabled={disabled}
             >
             </FormType>
             {children}
