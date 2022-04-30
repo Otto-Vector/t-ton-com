@@ -1,37 +1,48 @@
 @import 'src/styles/variables';
 @import 'src/styles/mixins';
 
-$btnBlueFontColor: #3A79FF;
-$btnBlueBgColor: #d2e1ff;
+$btnBlueFontColor: #fff;
+$btnBlueBgColor: #023E8A;
+$btnBlueBorderColor: $btnBlueBgColor;
+
 $btnLightBlueFontColor: #7382A3;
 $btnLightBlueBgColor: #E8ECF4;
+
 $btnWhiteFontColor: #676e87;
 $btnWhiteBgColor: #FFFFFF;
+
 $btnPinkFontColor: #D43F3F;
 $btnPingBgColor: #FFD7D7;
-$btnGrayFontColor: #51525a;
-$btnGrayBgColor: #dcdcdc;
+
+$btnGrayFontColor: #fff;
+$btnGrayBgColor: #ACACAC;
+
 $btnNoFillFontColor: #C7D3FF;
 $btnNoFillBgColor: transparent;
 $btnNoFillBorderColor: #A0B4FF;
+
 $btnGreenBgColor: #74C259;
 $btnGreenFontColor: #fff;
 $btnGreenBorderColor: #74C25980;
 
 .button {
   @include flex-center();
-  padding: rem(10);
   border-radius: 2px;
   border: 1px solid transparent;
 
   font-family: $RalewayFont;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: inherit;
+  line-height: inherit;
 
   white-space: nowrap;
   user-select: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+
+  width: 100%;
+  height: 100%;
 
   &:hover {
     transform: translateY(-1px);
@@ -59,6 +70,7 @@ $btnGreenBorderColor: #74C25980;
   &_blue {
     background-color: $btnBlueBgColor;
     color: $btnBlueFontColor;
+    border-color:$btnBlueBorderColor;
   }
 
   &_pink {
@@ -82,7 +94,6 @@ $btnGreenBorderColor: #74C25980;
   }
 
   &_noFill {
-    padding: rem(12) rem(15);
     background-color: $btnNoFillBgColor;
     color: $btnNoFillFontColor;
     border: 1px solid $btnNoFillBorderColor;
@@ -95,6 +106,6 @@ $btnGreenBorderColor: #74C25980;
   }
 
   &_rounded {
-    border-radius: 50%;
+    border-radius: 9999px; // идеальное закругление при любой высоте
   }
 }

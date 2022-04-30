@@ -6,7 +6,7 @@ import {Button} from '../../common/button/button';
 import {Input} from '../../common/form-type/form-type';
 
 type phoneSubmitType = {
-    phone: string,
+    phone: string | null,
     sms: number | null
 }
 
@@ -17,7 +17,7 @@ type OwnProps = {
 export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
 
     const initialValues = {
-        phone: '+7',
+        phone: '',
         sms: null
     } as phoneSubmitType
 
@@ -30,21 +30,31 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                 render={
                     ({submitError, handleSubmit, pristine, form, submitting}) => (
                         <form onSubmit={handleSubmit}>
-                            <Field name={'phone'}
-                                   placeholder={'Контактный номер +7'}
-                                   component={Input}
-                                   resetFieldBy={form}
-                                   type={'input'}
-                                   validate={composeValidators(required, minLength10)}
-                            />
-                            <Field name={'sms'}
-                                   placeholder={'Пароль из sms'}
-                                   component={Input}
-                                   type={'input'}
-                                   // parse={formatString('9999')}
-                                   validate={composeValidators(required, mustBeNumber)}
-                            />
-                            <div className={styles.buttonsPanel}>
+                            <div className={styles.loginForm__inputsPanel}>
+                                <Field name={'phone'}
+                                       placeholder={'Контактный номер +7'}
+                                       component={Input}
+                                       resetFieldBy={form}
+                                       type={'input'}
+                                       validate={composeValidators(required, minLength10)}
+
+                                />
+                                <Field name={'sms'}
+                                       placeholder={'Пароль из sms'}
+                                       component={Input}
+                                       type={'input'}
+                                    // parse={formatString('9999')}
+                                       validate={composeValidators(required, mustBeNumber)}
+                                       children={<div className={styles.loginForm__smallButton+' '+styles.loginForm__smallButton_position}>
+                                           <Button type={'button'}
+                                                   title={'Новый запрос на пароль из SMS'}
+                                                   colorMode={'gray'}
+                                                   rounded
+                                           >Новый пароль</Button>
+                                       </div>}
+                                />
+                            </div>
+                            <div className={styles.loginForm__buttonsPanel}>
                                 <Button type={'submit'}
                                         disabled={submitting}
                                         colorMode={'green'}
@@ -56,6 +66,13 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                         </form>
                     )
                 }/>
+            <div className={styles.loginForm__smallButton}>
+                <Button type={'button'}
+                        title={'Регистрация в приложении'}
+                        colorMode={'blue'}
+                        rounded
+                >Регистрация</Button>
+            </div>
         </div>
     )
 }

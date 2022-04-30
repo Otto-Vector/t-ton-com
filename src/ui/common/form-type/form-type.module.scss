@@ -1,8 +1,16 @@
 @import "src/styles/variables";
 @import "src/styles/mixins";
 
-$input--font: inherit;
+$input--font: $PTSansFont;
+$input--font-size: 17px;
+$input--line-height: 22px;
+$input--border-radius: 12px;
+$input--border-width: 2px;
+$input--padding-top: 5px;
 
+$input--error-color: #C70707;
+
+$input--border-color: #92ABC8;
 $black-75: #00000075;
 $black-50: #00000050;
 
@@ -12,11 +20,14 @@ $black-50: #00000050;
     font-size: inherit;
     text-align: center;
     position: relative;
-    background-color: inherit;
-    border-radius: rem(4);
+    background-color: white;
+    border-radius: $input--border-radius;
+    margin-bottom: 12px; // для спана с ошибкой
+    width: 100%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.02);
 
     .error {
-        border-color: red;
+        border-color: $input--error-color;
     }
 }
 
@@ -29,9 +40,9 @@ $black-50: #00000050;
 .clearSearch {
     position: absolute;
     background-color: transparent;
-    @include size(rem(20));
+    @include size($input--font-size);
     left: rem(10);
-    top: rem(15);
+    top: $input--padding-top+4px; // padding-top +1
     transition-property: transform;
     transform: rotate(0);
     transition-duration: .25s;
@@ -47,7 +58,7 @@ $black-50: #00000050;
         transform: scale(1.2);
     }
 
-    &Unfocused {
+    &_unfocused {
         opacity: .6;
         cursor: default;
     }
@@ -66,21 +77,21 @@ $black-50: #00000050;
     outline: none; //чтобы input не подсвечивался
     box-sizing: border-box;
     background: inherit;
-    font-size: rem(15);
-    line-height: rem(20);
+    font-size: $input--font-size;
+    line-height: $input--line-height;
     border: solid {
-        color: $black-50;
-        radius: rem(4);
-        width: 2px;
+        color: $input--border-color;
+        radius: $input--border-radius;
+        width: $input--border-width;
     }
-    padding: rem(13) rem(35) rem(15);
+    padding: $input--padding-top rem(35);
     width: 100%;
 
     transition-property: border;
     transition-duration: .3s;
 
     &:focus, &:hover {
-        border: solid $black-75 2px;
+        border: solid $black-75 $input--border-width;
     }
 
     &:valid { //поставил, потому что менялся цвет в настройках браузера при разфокусировке
@@ -98,7 +109,7 @@ $black-50: #00000050;
     @include placeholder() {
         font-family: $input--font;
         position: absolute;
-        top: rem(14);
+        top: $input--padding-top+1px;
         transition-property: all;
         transition-duration: .3s;
     }
@@ -115,10 +126,10 @@ $black-50: #00000050;
 // кастомизация сообщения об ошибке под инпутом
 .errorSpan {
     position: absolute;
-    bottom: -15px;
+    bottom: -13px;
     left: 5px;
-    font-size: 70%;
-    color: red;
+    font-size: 12px;
+    color: rgba($input--error-color, .75);
     font-weight: bold;
     background-image: radial-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1));
     border-radius: 5px;
