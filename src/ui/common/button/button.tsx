@@ -24,7 +24,7 @@ export const Button: React.FC<OwnProps> = (
                    disabled={ disabled }
                    onClick={ onClick }
                    type={ type }
-                   title={ title }
+                   title={ title + (disabled ? " (кнопка неактивна)" : "")}
     >{ // отображаем то что внутри тега button
         children
     }

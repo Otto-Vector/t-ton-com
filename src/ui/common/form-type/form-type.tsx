@@ -1,21 +1,25 @@
 import React from 'react'
 import styles from './form-type.module.scss'
 import {FieldState, FormApi} from 'final-form'
+import NumberFormat from 'react-number-format';
+
 
 type OwnProps = {
     resetFieldBy: FormApi
     placeholder?: string
     meta: FieldState<any>
     input: any
+    mask?: string
+    maskFormat?: string
     children?: React.ReactNode
     disabled?: boolean
 }
 
 
-const FormType = (FormType: 'textarea' | 'input'): React.FC<OwnProps> => (
+export const InputNumber: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
-        children, disabled
+        children, disabled, mask='_', maskFormat
     }) => {
 
     const isError = (meta.error || meta.submitError) && meta.touched
@@ -31,13 +35,27 @@ const FormType = (FormType: 'textarea' | 'input'): React.FC<OwnProps> => (
                 }}
             ></div>
             }
-            <FormType
+
+            <NumberFormat
+                mask={mask}
+                format={maskFormat}
+                // fixedDecimalScale={true}
+                displayType="input"
+                allowNegative={false}
+                autoComplete="off"
+                onBlur={input.onBlur}
+                onFocus={input.onFocus}
+                onChange={(value: React.ChangeEvent<HTMLInputElement>) => input.onChange(value)}
+                onValueChange={({formattedValue}) =>
+                    input.onChange(formattedValue)
+                }
+                type={'input'}
                 {...input}
                 className={styles.input + ' ' + (isError ? styles.error : '')}
                 placeholder={placeholder}
                 disabled={disabled}
             >
-            </FormType>
+            </NumberFormat>
             {children}
             {/*сообщение об ошибке появляется в этом спане*/}
             {isError && (<span className={styles.errorSpan}>{meta.error}</span>)}
@@ -45,5 +63,3 @@ const FormType = (FormType: 'textarea' | 'input'): React.FC<OwnProps> => (
     )
 }
 
-export const TextArea = FormType('textarea')
-export const Input = FormType('input')

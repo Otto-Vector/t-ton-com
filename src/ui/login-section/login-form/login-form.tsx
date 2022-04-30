@@ -3,7 +3,7 @@ import styles from './login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {composeValidators, minLength11, mustBeNumber, required} from '../../../utils/validators';
 import {Button} from '../../common/button/button';
-import {Input} from '../../common/form-type/form-type';
+import {InputNumber} from '../../common/form-type/form-type';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect';
@@ -13,7 +13,7 @@ import {useNavigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../selectors/base-reselect';
 
 type phoneSubmitType = {
-    phone: string | null,
+    phoneNumber: string | null,
     sms: number | null
 }
 
@@ -22,7 +22,6 @@ type OwnProps = {
 }
 
 export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
-
 
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
     const {register} = useSelector(getRoutesStore)
@@ -39,7 +38,7 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
     }
 
     const initialValues = {
-        phone: '',
+        phoneNumber: '',
         sms: null
     } as phoneSubmitType
 
@@ -56,20 +55,18 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                             ({submitError, handleSubmit, pristine, form, submitting}) => (
                                 <form onSubmit={handleSubmit}>
                                     <div className={styles.loginForm__inputsPanel}>
-                                        <Field name={'phone'}
+                                        <Field name={'phoneNumber'}
                                                placeholder={'Контактный номер +7'}
-                                               component={Input}
+                                               component={InputNumber}
                                                resetFieldBy={form}
-                                               type={'input'}
-                                            // parse={normalizePhoneNumber}
+                                               maskFormat={'+7 (###) ###-##-##'}
                                                validate={composeValidators(required)}
                                         />
                                         <Field name={'sms'}
                                                placeholder={'Пароль из sms'}
-                                               component={Input}
-                                               type={'input'}
+                                               component={InputNumber}
+                                               maskFormat={'#####'}
                                                disabled={!isAvailableSMS}
-                                            // parse={formatString('9999')}
                                                validate={isAvailableSMS ? composeValidators(required, mustBeNumber) : undefined}
                                                children={<div className={
                                                    styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position}>
@@ -99,7 +96,6 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                         <Button type={'button'}
                                 title={'Регистрация в приложении'}
                                 colorMode={'blue'}
-                                disabled={true}
                                 onClick={registerHandleClick}
                                 rounded
                         >Регистрация</Button>

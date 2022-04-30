@@ -59,7 +59,7 @@ $btnGreenBorderColor: #74C25980;
   }
 
   &:active:disabled {
-    box-shadow: 0 0 6px rgba(red, .8);
+    box-shadow: 0 0 6px rgba(red, .75);
     color: red;
   }
 
@@ -111,6 +111,6 @@ $btnGreenBorderColor: #74C25980;
   }
 
   &_rounded {
-    border-radius: 9999px; // идеальное закругление при любой высоте
+    border-radius: 9999px; // идеальное боковое закругление при любой высоте
   }
 }

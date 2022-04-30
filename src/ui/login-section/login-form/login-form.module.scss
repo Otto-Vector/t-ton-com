@@ -13,10 +13,12 @@
     font-family: $RalewayFont;
     font-weight: 700;
     font-size: 24px;
-    line-height: 28px;
+    line-height: 30px;
+    margin-bottom: 15px;
     text-align: center;
     color: $accentColor;
   }
+
   &__inputsPanel {
     width: 100%;
   }
@@ -24,7 +26,7 @@
   &__buttonsPanel {
     width: 100px;
     height: 30px;
-    margin: 0 auto;
+    margin: 10px auto;
     line-height: 19px;
 
   }

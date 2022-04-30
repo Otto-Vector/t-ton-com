@@ -13,7 +13,8 @@
     font-family: $RalewayFont;
     font-weight: 700;
     font-size: 24px;
-    line-height: 28px;
+    line-height: 30px;
+    margin-bottom: 15px;
     text-align: center;
     color: $accentColor;
   }
@@ -25,9 +26,22 @@
   &__buttonsPanel {
     width: 100px;
     height: 30px;
-    margin: 0 auto;
+    margin: 10px auto;
     line-height: 19px;
 
+  }
+  &__smallButton {
+    margin-left: auto;
+    height: 13px;
+    width: 70px;
+    font-size: 9px;
+    line-height: 11px;
+
+    &_position {
+      position: absolute;
+      top: 12px;
+      right: 6px;
+    }
   }
 
 }
