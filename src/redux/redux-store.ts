@@ -2,11 +2,13 @@ import {applyMiddleware, combineReducers, compose, createStore} from 'redux'
 import thunkMiddleWare from 'redux-thunk'
 import {baseStoreReducer} from './base-store-reducer';
 import {authStoreReducer} from './auth-store-reducer';
+import {routesStoreReducer} from './routes-store-reducer';
 
 
 const reducersObject = {
     baseStoreReducer,
-    authStoreReducer
+    authStoreReducer,
+    routesStoreReducer,
 }
 
 const rootReducer = combineReducers(reducersObject)

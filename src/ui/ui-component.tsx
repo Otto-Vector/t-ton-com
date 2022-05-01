@@ -7,9 +7,10 @@ import {Footer} from './footer/footer';
 import {LinksPanel} from './links-panel/links-panel'
 import {MenuPanel} from './menu-panel/menu-panel';
 import {useSelector} from 'react-redux';
-import {getRoutesStore} from '../selectors/base-reselect';
+import {getRoutesStore} from '../selectors/routes-reselect';
 import {HelloSection} from './hello-section/hello-section';
 import {LoginSection} from './login-section/login-section';
+import {OptionsSection} from './options-section/options-section';
 
 type OwnProps = {}
 
@@ -34,7 +35,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={routes.status} element={ <h2>СТАТУС ПО АКТИВНЫМ ЗАЯВКАМ</h2> }/>
                         <Route path={routes.history} element={ <h2>АРХИВ ЗАКРЫТЫХ ЗАЯВОК</h2> }/>
                         <Route path={routes.map} element={ <h2>КАРТА АКТИВНЫХ И ПАССИВНЫХ :)</h2> }/>
-                        <Route path={routes.options} element={ <h2>ДОСТУП ЗАКРЫТ! ТОЛЬКО АДМИНАМ</h2> }/>
+                        <Route path={routes.options} element={ <OptionsSection/> }/>
 
                         <Route path='*' element={ <h2>This site NOT FOUND. Try another address</h2> }/>
                     </Routes>

@@ -1,13 +1,10 @@
 import {AppStateType} from '../redux/redux-store'
-import {BaseStoreReducerStateType} from '../redux/base-store-reducer';
+import {RoutesStoreReducerStateType} from '../redux/routes-store-reducer';
 
 
-type BaseStoreSelectors<T extends keyof Y, Y = BaseStoreReducerStateType> = (state: AppStateType) => Y[T]
+type RoutesStoreSelectors<T extends keyof Y, Y = RoutesStoreReducerStateType> = (state: AppStateType) => Y[T]
 
-export const getHeaderStore: BaseStoreSelectors<'header'> = (state) => state.baseStoreReducer.header
-export const getFooterStore: BaseStoreSelectors<'footer'> = (state) => state.baseStoreReducer.footer
-export const getLinksStore: BaseStoreSelectors<'links'> = (state) => state.baseStoreReducer.links
-
+export const getRoutesStore: RoutesStoreSelectors<'routes'> = (state) => state.routesStoreReducer.routes
 
 
 // // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API

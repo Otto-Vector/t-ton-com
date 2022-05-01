@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './menu-panel.module.scss'
 
 import {useSelector} from 'react-redux'
-import {getRoutesStore} from '../../selectors/base-reselect'
+import {getRoutesStore} from '../../selectors/routes-reselect'
 import {NavLink} from 'react-router-dom';
 import loginSVG from './buttonsSVG/login.svg'
 import createSVG from './buttonsSVG/create.svg'
