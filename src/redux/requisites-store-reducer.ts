@@ -1,35 +1,23 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
-// import {getIconsFromApi, GetIconsType} from '../api/get-icons'
 
 const initialState = {
-    header: {
-        companyName: 'Транспортно-Логистическая Компания',
-        baseHref: 'http://t-ton.com',
-        directPhoneNumber: '+79-500-510-520'
-    },
-    footer: {
-        linkToOfer: '#oferIsHere'
-    },
-    links: [
-        { domain: 'https://yandex.ru', title: 'Поисковик' },
-        { domain: 'https://github.com', title: 'Хранение' },
-        { domain: 'https://google.ru', title: 'Другой поисковик' }
-    ],
+    some: "dfsf",
+    isFetching: false,
 }
 
-export type BaseStoreReducerStateType = typeof initialState
+export type RequisitesStoreReducerStateType = typeof initialState
 
-type ActionsType = GetActionsTypes<typeof baseStoreActions>
+type ActionsType = GetActionsTypes<typeof requisitesStoreActions>
 
-export const baseStoreReducer = ( state = initialState, action: ActionsType ): BaseStoreReducerStateType => {
+export const requisitesStoreReducer = ( state = initialState, action: ActionsType ): RequisitesStoreReducerStateType => {
 
     switch (action.type) {
 
-        case 'base-store-reducer/CHANGE-URL': {
+        case 'requisites-store-reducer/CHANGE-IS-FETCHING': {
             return {
                 ...state,
-                header: { ...state.header, baseHref: action.href },
+                isFetching:  action.isFetching,
             }
         }
         default: {
@@ -40,11 +28,11 @@ export const baseStoreReducer = ( state = initialState, action: ActionsType ): B
 }
 
 /* ЭКШОНЫ */
-export const baseStoreActions = {
+export const requisitesStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setHref: ( href: string ) => ( {
-        type: 'base-store-reducer/CHANGE-URL',
-        href,
+    setIsFetching: ( isFetching: boolean ) => ( {
+        type: 'requisites-store-reducer/CHANGE-IS-FETCHING',
+        isFetching,
     } as const ),
 
 }

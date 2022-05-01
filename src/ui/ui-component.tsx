@@ -11,6 +11,7 @@ import {getRoutesStore} from '../selectors/routes-reselect';
 import {HelloSection} from './hello-section/hello-section';
 import {LoginSection} from './login-section/login-section';
 import {OptionsSection} from './options-section/options-section';
+import {RequisitesForm} from './options-section/requisites-form/requisites-form';
 
 type OwnProps = {}
 
@@ -27,7 +28,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                 </div>
                 <section className={styles.ui__content + ' ' + styles.grow}>
                     <Routes>
-                        <Route path='/' element={ <Navigate to={ routes.login }/> }/>
+                        <Route path='/' element={ <Navigate to={ routes.options }/> }/>
                         <Route path={routes.hello} element={ <HelloSection/> }/>
                         <Route path={routes.login} element={ <LoginSection /> }/>
                         <Route path={routes.create} element={ <h2>СОЗДАТЬ ЗАЯВКУ</h2> }/>
@@ -36,6 +37,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={routes.history} element={ <h2>АРХИВ ЗАКРЫТЫХ ЗАЯВОК</h2> }/>
                         <Route path={routes.map} element={ <h2>КАРТА АКТИВНЫХ И ПАССИВНЫХ :)</h2> }/>
                         <Route path={routes.options} element={ <OptionsSection/> }/>
+                        <Route path={routes.requisites} element={ <RequisitesForm onSubmit={()=>{}}/> }/>
 
                         <Route path='*' element={ <h2>This site NOT FOUND. Try another address</h2> }/>
                     </Routes>

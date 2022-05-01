@@ -24,6 +24,9 @@ $btnNoFillBorderColor: #A0B4FF;
 $btnGreenBgColor: #74C259;
 $btnGreenFontColor: #fff;
 $btnGreenBorderColor: #74C25980;
+$btnGreenDisabledBgColor: #929090;
+$btnGreenDisabledBorderColor: #6C6C6C;
+
 
 .button {
   @include flex-center();
@@ -75,7 +78,7 @@ $btnGreenBorderColor: #74C25980;
   &_blue {
     background-color: $btnBlueBgColor;
     color: $btnBlueFontColor;
-    border-color:$btnBlueBorderColor;
+    border-color: $btnBlueBorderColor;
   }
 
   &_pink {
@@ -108,6 +111,12 @@ $btnGreenBorderColor: #74C25980;
     background-color: $btnGreenBgColor;
     color: $btnGreenFontColor;
     border: 1px solid $btnGreenBorderColor;
+
+    &:disabled {
+      opacity: 1;
+      background: $btnGreenDisabledBgColor;
+      border: 1px solid $btnGreenDisabledBorderColor;
+    }
   }
 
   &_rounded {

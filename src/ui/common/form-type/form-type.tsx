@@ -13,14 +13,18 @@ type OwnProps = {
     maskFormat?: string
     children?: React.ReactNode
     disabled?: boolean
+    textArea?: boolean
 }
 
 
-export const InputNumber: React.FC<OwnProps> = (
+export const Input: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
-        children, disabled, mask='_', maskFormat
+        children, disabled, mask = '_', maskFormat,
+        textArea
     }) => {
+
+    const InInput = textArea ? 'textarea' : 'input' // если нужен просто текстовое поле
 
     const isError = (meta.error || meta.submitError) && meta.touched
 
@@ -35,28 +39,35 @@ export const InputNumber: React.FC<OwnProps> = (
                 }}
             ></div>
             }
-
-            <NumberFormat
-                mask={mask}
-                format={maskFormat}
-                // fixedDecimalScale={true}
-                displayType="input"
-                allowNegative={false}
-                autoComplete="off"
-                onBlur={input.onBlur}
-                onFocus={input.onFocus}
-                onChange={(value: React.ChangeEvent<HTMLInputElement>) => input.onChange(value)}
-                onValueChange={({formattedValue}) =>
-                    input.onChange(formattedValue)
-                }
-                type={'text'}
-                {...input}
-                className={styles.input + ' ' + (isError ? styles.error : '')}
-                placeholder={placeholder}
-                disabled={disabled}
-            >
-            </NumberFormat>
-        {input.value && <label className={styles.label}>{placeholder}</label>}
+            {maskFormat ? // если формат отсутствует, то на обычный инпут
+                <NumberFormat
+                    mask={mask}
+                    format={maskFormat}
+                    // fixedDecimalScale={true}
+                    displayType="input"
+                    allowNegative={false}
+                    autoComplete="off"
+                    onBlur={input.onBlur}
+                    onFocus={input.onFocus}
+                    onChange={(value: React.ChangeEvent<HTMLInputElement>) => input.onChange(value)}
+                    onValueChange={({formattedValue}) =>
+                        input.onChange(formattedValue)
+                    }
+                    type={'text'}
+                    {...input}
+                    className={styles.input + ' ' + (isError ? styles.error : '')}
+                    placeholder={placeholder}
+                    disabled={disabled}
+                >
+                </NumberFormat>
+                :
+                <InInput type={'text'}
+                       {...input}
+                       className={styles.input + ' ' + (isError ? styles.error : '')}
+                       placeholder={placeholder}
+                       disabled={disabled}/>
+            }
+            {input.value && <label className={styles.label}>{placeholder}</label>}
             {children}
             {/*сообщение об ошибке появляется в этом спане*/}
             {isError && (<span className={styles.errorSpan}>{meta.error}</span>)}

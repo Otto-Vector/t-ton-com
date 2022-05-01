@@ -3,12 +3,14 @@ import thunkMiddleWare from 'redux-thunk'
 import {baseStoreReducer} from './base-store-reducer';
 import {authStoreReducer} from './auth-store-reducer';
 import {routesStoreReducer} from './routes-store-reducer';
+import {requisitesStoreReducer} from './requisites-store-reducer';
 
 
 const reducersObject = {
     baseStoreReducer,
     authStoreReducer,
     routesStoreReducer,
+    requisitesStoreReducer,
 }
 
 const rootReducer = combineReducers(reducersObject)

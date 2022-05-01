@@ -3,7 +3,7 @@ import styles from './login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {composeValidators, required} from '../../../utils/validators';
 import {Button} from '../../common/button/button';
-import {InputNumber} from '../../common/form-type/form-type';
+import {Input} from '../../common/form-type/form-type';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect';
@@ -38,13 +38,13 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
     const maskOnInputs = {
         innNumber: '#### #### ####',
         phoneNumber: '+7 (###) ###-##-##',
-        sms: '#####'
+        sms: '#####',
     } as phoneSubmitType
 
     const initialValues = {
         innNumber: null,
         phoneNumber: null,
-        sms: null
+        sms: null,
     } as phoneSubmitType
 
 
@@ -63,7 +63,7 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                         {isRegisterMode &&
                                             < Field name={'innNumber'}
                                                     placeholder={'ИНН Компании'}
-                                                    component={InputNumber}
+                                                    component={Input}
                                                     type={'input'}
                                                     resetFieldBy={form}
                                                     maskFormat={maskOnInputs.innNumber}
@@ -72,14 +72,14 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                         }
                                         <Field name={'phoneNumber'}
                                                placeholder={'Контактный номер +7'}
-                                               component={InputNumber}
+                                               component={Input}
                                                resetFieldBy={form}
                                                maskFormat={maskOnInputs.phoneNumber}
                                                validate={composeValidators(required)}
                                         />
                                         {!isAvailableSMS && <Field name={'sms'}
                                                                    placeholder={'Пароль из sms'}
-                                                                   component={InputNumber}
+                                                                   component={Input}
                                                                    maskFormat={maskOnInputs.sms}
                                                                    disabled={!isAvailableSMS}
                                                                    validate={isAvailableSMS ? composeValidators(required) : undefined}
@@ -101,7 +101,7 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                 colorMode={'green'}
                                                 title={'Далее'}
                                                 rounded
-                                        >Далее</Button>
+                                        />
                                     </div>
                                     {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
                                 </form>
@@ -109,11 +109,11 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                         }/>
                     <div className={styles.loginForm__smallButton}>
                         <Button type={'button'}
-                                title={'Регистрация в приложении'}
+                                title={!isRegisterMode ? 'Регистрация' : 'Назад'}
                                 colorMode={'blue'}
                                 onClick={registerHandleClick}
                                 rounded
-                        >{!isRegisterMode ? 'Регистрация' : 'Назад'}</Button>
+                        />
                     </div>
                 </>}
         </div>

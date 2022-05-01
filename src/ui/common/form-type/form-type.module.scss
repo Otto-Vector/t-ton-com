@@ -27,6 +27,7 @@ $input--disabled-font-color: $mainFontColor;
   background-color: white;
   border-radius: $input--border-radius;
   margin-bottom: 12px; // для спана с ошибкой
+  height: inherit;
   width: 100%;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.02);
 
@@ -102,6 +103,7 @@ $input--disabled-font-color: $mainFontColor;
   }
   padding: $input--padding-top + 3px rem(35) $input--padding-top - 3px rem(35);
   width: 100%;
+  height: inherit;
 
   transition-property: border;
   transition-duration: .3s;
@@ -119,10 +121,6 @@ $input--disabled-font-color: $mainFontColor;
   }
 
   &:active {
-    //& ~ .label {
-    //  display: inline;
-    //    color: green;
-    //}
   }
 
   &:empty {
@@ -134,7 +132,7 @@ $input--disabled-font-color: $mainFontColor;
     background-color: $input--disabled-background-color;
     color: $input--disabled-font-color;
 
-     & ~ .label {
+     & ~ .label { // цвет для лейбла на заблокированном элементе
       color: rgba($mainFontColor, .5);
     }
   }

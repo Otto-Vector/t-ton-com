@@ -26,7 +26,7 @@ export const Button: React.FC<OwnProps> = (
                    type={ type }
                    title={ title + (disabled ? " (кнопка неактивна)" : "")}
     >{ // отображаем то что внутри тега button
-        children
+        children || title
     }
     </button>
 }
