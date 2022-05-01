@@ -1,13 +1,19 @@
 import React from 'react'
 import styles from './requisites-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {composeValidators, required} from '../../../utils/validators';
+import {
+    composeValidators,
+    mustBe12Numbers,
+    mustBe13Numbers,
+    mustBe20Numbers,
+    mustBe9Numbers,
+    required,
+} from '../../../utils/validators';
 import {Button} from '../../common/button/button';
 import {Input} from '../../common/form-type/form-type';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {Preloader} from '../../common/Preloader/Preloader';
-import {fakeAuthFetching} from '../../../redux/auth-store-reducer';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
 
 type companyRequisitesType = {
@@ -44,7 +50,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
     }
 
     const fakeFetch = () => { // @ts-ignore
-        dispatch(fakeAuthFetching())
+        // dispatch(fakeAuthFetching())
     }
 
     const maskOnInputs = {
@@ -125,7 +131,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    maskFormat={maskOnInputs.innNumber}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={composeValidators(required,mustBe12Numbers)}
                                             />
                                             <Field name={'organizationName'}
                                                    placeholder={label.organizationName}
@@ -146,14 +152,14 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    maskFormat={maskOnInputs.kpp}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={composeValidators(required,mustBe9Numbers)}
                                             />
                                             <Field name={'ogrn'}
                                                    placeholder={label.ogrn}
                                                    maskFormat={maskOnInputs.ogrn}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={composeValidators(required,mustBe13Numbers)}
                                             />
                                             <Field name={'money'}
                                                    placeholder={label.money}
@@ -213,7 +219,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    maskFormat={maskOnInputs.bikBank}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={composeValidators(required,mustBe9Numbers)}
                                             />
                                             <Field name={'nameBank'}
                                                    placeholder={label.nameBank}
@@ -227,14 +233,14 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    maskFormat={maskOnInputs.checkingAccount}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={composeValidators(required,mustBe20Numbers)}
                                             />
                                             <Field name={'korrAccount'}
                                                    placeholder={label.korrAccount}
                                                    maskFormat={maskOnInputs.korrAccount}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={composeValidators(required,mustBe20Numbers)}
                                             />
                                             <div className={styles.requisitesForm__buttonsPanel}>
                                                 <Button type={'submit'}

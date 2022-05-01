@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import styles from './options-section.module.scss'
 import {Button} from '../common/button/button';
 import {getRoutesStore} from '../../selectors/routes-reselect';
