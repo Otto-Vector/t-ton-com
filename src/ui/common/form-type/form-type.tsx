@@ -49,13 +49,14 @@ export const InputNumber: React.FC<OwnProps> = (
                 onValueChange={({formattedValue}) =>
                     input.onChange(formattedValue)
                 }
-                type={'input'}
+                type={'text'}
                 {...input}
                 className={styles.input + ' ' + (isError ? styles.error : '')}
                 placeholder={placeholder}
                 disabled={disabled}
             >
             </NumberFormat>
+        {input.value && <label className={styles.label}>{placeholder}</label>}
             {children}
             {/*сообщение об ошибке появляется в этом спане*/}
             {isError && (<span className={styles.errorSpan}>{meta.error}</span>)}

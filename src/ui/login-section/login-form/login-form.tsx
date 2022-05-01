@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import styles from './login-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {composeValidators, minLength11, mustBeNumber, required} from '../../../utils/validators';
+import {composeValidators, required} from '../../../utils/validators';
 import {Button} from '../../common/button/button';
 import {InputNumber} from '../../common/form-type/form-type';
 
@@ -9,12 +9,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect';
 import {Preloader} from '../../common/Preloader/Preloader';
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer';
-import {useNavigate} from 'react-router-dom';
 
 type phoneSubmitType = {
     innNumber: string | null
     phoneNumber: string | null
-    sms: number | null
+    sms: string | null
 }
 
 type OwnProps = {
@@ -27,7 +26,6 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
     const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
-    const navigate = useNavigate()
 
     const registerHandleClick = () => {
         setIsRegisterMode(!isRegisterMode)
@@ -36,6 +34,12 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
     const fakeFetch = () => { // @ts-ignore
         dispatch(fakeAuthFetching())
     }
+
+    const maskOnInputs = {
+        innNumber: '#### #### ####',
+        phoneNumber: '+7 (###) ###-##-##',
+        sms: '#####'
+    } as phoneSubmitType
 
     const initialValues = {
         innNumber: null,
@@ -62,7 +66,7 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                     component={InputNumber}
                                                     type={'input'}
                                                     resetFieldBy={form}
-                                                    maskFormat={'#### #### ####'}
+                                                    maskFormat={maskOnInputs.innNumber}
                                                     validate={composeValidators(required)}
                                             />
                                         }
@@ -70,15 +74,15 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                placeholder={'Контактный номер +7'}
                                                component={InputNumber}
                                                resetFieldBy={form}
-                                               maskFormat={'+7 (###) ###-##-##'}
+                                               maskFormat={maskOnInputs.phoneNumber}
                                                validate={composeValidators(required)}
                                         />
                                         {!isAvailableSMS && <Field name={'sms'}
                                                                    placeholder={'Пароль из sms'}
                                                                    component={InputNumber}
-                                                                   maskFormat={'#####'}
+                                                                   maskFormat={maskOnInputs.sms}
                                                                    disabled={!isAvailableSMS}
-                                                                   validate={isAvailableSMS ? composeValidators(required, mustBeNumber) : undefined}
+                                                                   validate={isAvailableSMS ? composeValidators(required) : undefined}
                                                                    children={<div className={
                                                                        styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position}>
                                                                        <Button type={'button'}
@@ -103,7 +107,6 @@ export const LoginForm: React.FC<OwnProps> = ({onSubmit}) => {
                                 </form>
                             )
                         }/>
-
                     <div className={styles.loginForm__smallButton}>
                         <Button type={'button'}
                                 title={'Регистрация в приложении'}

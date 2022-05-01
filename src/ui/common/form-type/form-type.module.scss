@@ -1,12 +1,12 @@
-@import "src/styles/variables";
-@import "src/styles/mixins";
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
 
 $input--font: $PTSansFont;
 $input--font-size: 17px;
 $input--line-height: 22px;
 $input--border-radius: 12px;
 $input--border-width: 2px;
-$input--padding-top: 5px;
+$input--padding-top: 6px;
 
 $input--error-color: #C70707;
 
@@ -14,59 +14,73 @@ $input--border-color: #92ABC8;
 $input--border-color--focused: $accentColor;
 //$input--border-color--focused: #263c9a;
 
-$input--disabled-color: #00000050;
+$input--disabled-border-color: #00000050;
+$input--disabled-background-color: #00000025;
+$input--disabled-font-color: $mainFontColor;
 
 // оболочка вокруг инпута
 .inputWrapper {
-    font-family: $input--font;
-    font-size: inherit;
-    text-align: center;
-    position: relative;
-    background-color: white;
-    border-radius: $input--border-radius;
-    margin-bottom: 12px; // для спана с ошибкой
-    width: 100%;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.02);
+  font-family: $input--font;
+  font-size: inherit;
+  text-align: center;
+  position: relative;
+  background-color: white;
+  border-radius: $input--border-radius;
+  margin-bottom: 12px; // для спана с ошибкой
+  width: 100%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.02);
 
-    .error {
-        border-color: $input--error-color;
-    }
+  .error {
+    border-color: $input--error-color;
+  }
+
+  .label {
+    font-family: $input--font;
+    position: absolute;
+    color: rgba($mainFontColor, .6);
+    font-weight: 700;
+    top: 0;
+    left: 32px;
+    transition-property: all;
+    transition-duration: .3s;
+    font-size: 12px;
+  }
 }
 
 // добавление иконок на оболочку
 .search:after, .clearSearch:before {
-    @include addMaterialAfter('');
+  @include addMaterialAfter('');
 }
 
 // манипуляции с иконкой очистки поля
 .clearSearch {
-    position: absolute;
-    background-color: transparent;
-    @include size($input--font-size);
-    left: rem(10);
-    top: $input--padding-top+4px; // padding-top +1
-    transition-property: transform;
-    transform: rotate(0);
-    transition-duration: .25s;
-    cursor: pointer;
+  position: absolute;
+  background-color: transparent;
+  @include size($input--font-size);
+  left: rem(10);
+  top: $input--padding-top+4px; // padding-top +1
+  transition-property: transform;
+  transform: rotate(0);
+  transition-duration: .25s;
+  cursor: pointer;
 
-    &:before {
-        top: 0;
-        right: 0;
-        content: 'close';
-    }
+  &:before {
+    top: 0;
+    right: 0;
+    content: 'close';
+  }
 
-    &:hover {
-        transform: scale(1.2);
-    }
+  &:hover {
+    transform: scale(1.2);
+  }
 
-    &_unfocused {
-        opacity: .6;
-        cursor: default;
-    }
+  &_unfocused {
+    opacity: .6;
+    cursor: default;
+  }
 }
 
-//// добавление иконки со значком поиска справа
+//// добавление иконки со значком справа
 //.search:after {
 //    cursor: unset;
 //    opacity: .5;
@@ -75,69 +89,85 @@ $input--disabled-color: #00000050;
 
 // обработка самого инпута
 .input {
-    font-family: $input--font; //переназначаем шрифт, потому что input находится в label и наследует
-    outline: none; //чтобы input не подсвечивался
-    box-sizing: border-box;
-    background: inherit;
-    font-size: $input--font-size;
-    line-height: $input--line-height;
-    border: solid {
-        color: $input--border-color;
-        radius: $input--border-radius;
-        width: $input--border-width;
-    }
-    padding: $input--padding-top rem(35);
-    width: 100%;
+  font-family: $input--font; //переназначаем шрифт, потому что input находится в label и наследует
+  outline: none; //чтобы input не подсвечивался
+  box-sizing: border-box;
+  background: inherit;
+  font-size: $input--font-size;
+  line-height: $input--line-height;
+  border: solid {
+    color: $input--border-color;
+    radius: $input--border-radius;
+    width: $input--border-width;
+  }
+  padding: $input--padding-top + 3px rem(35) $input--padding-top - 3px rem(35);
+  width: 100%;
 
-    transition-property: border;
+  transition-property: border;
+  transition-duration: .3s;
+
+  &:focus, &:hover {
+    border: solid $input--border-color--focused $input--border-width;
+  }
+
+  &:valid { //поставил, потому что менялся цвет в настройках браузера при разфокусировке
+    color: black;
+  }
+
+  &:invalid {
+    color: red;
+  }
+
+  &:active {
+    //& ~ .label {
+    //  display: inline;
+    //    color: green;
+    //}
+  }
+
+  &:empty {
+
+  }
+
+  &:disabled {
+    border-color: $input--disabled-border-color;
+    background-color: $input--disabled-background-color;
+    color: $input--disabled-font-color;
+
+     & ~ .label {
+      color: rgba($mainFontColor, .5);
+    }
+  }
+
+  //обработка манипуляций с :placeholder
+  @include placeholder() {
+    font-family: $input--font;
+    position: absolute;
+    top: $input--padding-top+1px;
+    transition-property: all;
     transition-duration: .3s;
+  }
 
-    &:focus, &:hover {
-        border: solid $input--border-color--focused $input--border-width;
-    }
-
-    &:valid { //поставил, потому что менялся цвет в настройках браузера при разфокусировке
-        color: black;
-    }
-
-    &:invalid {
-        color: red;
-    }
-
-    &:active {
-    }
-    &:disabled{
-        border-color: $input--disabled-color;
-        background-color: $input--disabled-color;
-    }
-
-    //обработка манипуляций с :placeholder
-    @include placeholder() {
-        font-family: $input--font;
-        position: absolute;
-        top: $input--padding-top+1px;
-        transition-property: all;
-        transition-duration: .3s;
-    }
+  &:focus {
     //при фокусе, сообщение placeholder уходит вверх
-    &:focus {
-        @include placeholder() {
-            top: 0;
-            font-size: rem(12);
-        }
+    @include placeholder() {
+      top: 0;
+      font-size: rem(12);
     }
+  }
+
 }
 
 // кастомизация сообщения об ошибке под инпутом
 .errorSpan {
-    position: absolute;
-    bottom: -13px;
-    left: 5px;
-    font-size: 12px;
-    color: rgba($input--error-color, .75);
-    font-weight: bold;
-    background-image: radial-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1));
-    border-radius: 5px;
+  position: absolute;
+  bottom: -13px;
+  left: 5px;
+  font-size: 12px;
+  color: rgba($input--error-color, .75);
+  font-weight: bold;
+  background-image: radial-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1));
+  border-radius: 5px;
 }
 
 

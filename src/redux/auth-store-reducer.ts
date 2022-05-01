@@ -66,7 +66,7 @@ export type AuthStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, 
 export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
     async (dispatch, getState) => {
         dispatch(authStoreActions.setIsFetching(true))
-        const second = await setTimeout( ()=> {
+         await setTimeout( ()=> {
             dispatch(authStoreActions.setIsFetching(false))}, 1000)
     }
 // export const getIcons = ( { domain }: GetIconsType ): BaseStoreReducerThunkActionType =>
