@@ -23,7 +23,7 @@ body {
   box-sizing: border-box;
   margin: 0 auto; //временный параметр
   //min-height: 100vh;
-  max-width: $midDesktopWidth;
+  max-width: $maxDesktopWidth;
   background: $accentColor;
   //меняет размеры основного экрана контента
   //@media screen and (max-width: $desktopWidth) {

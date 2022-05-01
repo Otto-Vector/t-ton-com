@@ -6,7 +6,6 @@
   padding: 10px 15px;
   justify-content: space-between;
   background: $accentColor;
-  //min-height: 60px;
 
   &__info {
     display: flex;
@@ -14,6 +13,7 @@
     align-items: center;
     max-width: 529px;
   }
+
   &__text {
     color: white;
     text-align: right;

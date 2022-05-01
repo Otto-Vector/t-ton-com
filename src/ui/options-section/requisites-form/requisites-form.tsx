@@ -72,6 +72,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         checkingAccount: '#### #### #### #### ####', // 20 цифр
         korrAccount: '#### #### #### #### ####', // 20 цифр
     } as companyRequisitesType
+
     const label = {
         innNumber: 'ИНН Организации',
         organizationName: 'Наименование организации',

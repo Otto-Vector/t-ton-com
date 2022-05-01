@@ -64,6 +64,7 @@ $btnGreenDisabledBorderColor: #6C6C6C;
   &:active:disabled {
     box-shadow: 0 0 6px rgba(red, .75);
     color: red;
+    border-color: red;
   }
 
   &:focus {

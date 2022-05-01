@@ -1,7 +1,7 @@
 @import 'src/styles/variables';
 
 .ui {
-  height: 100vh;
+  min-height: 100vh;
   background: inherit;
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@
   }
 
   &__sideBarLeft {
-    min-width: 80px;
+    min-width: 70px;
   }
 
   &__content {
@@ -30,7 +30,7 @@
   }
 
   &__sideBarRight {
-    min-width: 70px;
+    min-width: 57px;
   }
 
   &__footer {

@@ -63,11 +63,11 @@
 
   &:hover {
     transform-origin: bottom;
-    transform: scale(1.2);
+    transform: scale(1.1);
     box-shadow: 3px 4px 8px rgba(44, 39, 56, 0.28);
 
     div { // активируем скрытый элемент
-      transform: scaleY(1);
+      transform: none;
       opacity: 1;
     }
   }
