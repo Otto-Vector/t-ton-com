@@ -58,12 +58,14 @@ $input--disabled-font-color: $mainFontColor;
   position: absolute;
   background-color: transparent;
   @include size($input--font-size);
-  left: rem(10);
+  right: rem(10);
   top: $input--padding-top+4px; // padding-top +1
   transition-property: transform;
   transform: rotate(0);
   transition-duration: .25s;
   cursor: pointer;
+  opacity: .6;
+  will-change: transform;
 
   &:before {
     top: 0;
@@ -76,7 +78,7 @@ $input--disabled-font-color: $mainFontColor;
   }
 
   &_unfocused {
-    opacity: .6;
+    opacity: .15;
     cursor: default;
   }
 }

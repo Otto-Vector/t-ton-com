@@ -30,8 +30,9 @@ export const Input: React.FC<OwnProps> = (
 
     return (<div className={styles.inputWrapper + ' ' + styles.search}>
             {/*кнопка для сброса параметров поля
-            (проявляется, если переданы методы resetFieldBy={form} в объявленном объекте Field*/}
-            {resetFieldBy && <div
+            (проявляется, если переданы методы resetFieldBy={form} в объявленном объекте Field
+            а также при введенных данных*/}
+            {resetFieldBy && input.value && <div
                 className={styles.clearSearch + ' ' + (!meta.dirty && styles.clearSearch_unfocused)}
                 onClick={() => {
                     resetFieldBy.change(input.name, '')
