@@ -27,6 +27,7 @@
 
   &__bottomWrapper {
     @include flex-center();
+    position: relative;
     flex-wrap: wrap;
     justify-content: space-evenly;
     margin-top: auto;
