@@ -11,6 +11,7 @@ type OwnProps = {
     input: any
     mask?: string
     maskFormat?: string
+    allowEmptyFormatting?: boolean
     children?: React.ReactNode
     disabled?: boolean
     textArea?: boolean
@@ -21,7 +22,7 @@ export const Input: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
         children, disabled, mask = '_', maskFormat,
-        textArea
+        textArea, allowEmptyFormatting
     }) => {
 
     const InInput = textArea ? 'textarea' : 'input' // если нужен просто текстовое поле
@@ -45,6 +46,7 @@ export const Input: React.FC<OwnProps> = (
                     mask={mask}
                     format={maskFormat}
                     // fixedDecimalScale={true}
+                    allowEmptyFormatting={allowEmptyFormatting}
                     displayType="input"
                     allowNegative={false}
                     autoComplete="off"
@@ -68,7 +70,7 @@ export const Input: React.FC<OwnProps> = (
                        placeholder={placeholder}
                        disabled={disabled}/>
             }
-            {input.value && <label className={styles.label}>{placeholder}</label>}
+            {(input.value || allowEmptyFormatting) && <label className={styles.label}>{placeholder}</label>}
             {children}
             {/*сообщение об ошибке появляется в этом спане*/}
             {isError && (<span className={styles.errorSpan}>{meta.error}</span>)}

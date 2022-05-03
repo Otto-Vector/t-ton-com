@@ -8,10 +8,11 @@ type OwnProps = {
 
 export const LoginSection: React.FC<OwnProps> = () => {
 
+
     return (
         <section className={ styles.authSection }>
             <div className={styles.authForm}>
-                    <LoginForm onSubmit={()=>{}}/>
+                    <LoginForm />
             </div>
                 </section>
                 )

@@ -2,13 +2,12 @@ import React from 'react'
 import styles from './requisites-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {
-    composeValidators,
-    mustBe12Numbers,
+    composeValidators, mustBe00Numbers, mustBe0_0Numbers,
     mustBe13Numbers,
     mustBe20Numbers,
     mustBe9Numbers,
     required,
-} from '../../../utils/validators';
+} from '../../../utils/validators'
 import {Button} from '../../common/button/button';
 import {Input} from '../../common/form-type/form-type';
 
@@ -16,25 +15,27 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Preloader} from '../../common/Preloader/Preloader';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
 
-type companyRequisitesType = {
-    innNumber: string | null // ИНН
-    organizationName: string | null // Наименование организации
-    taxMode: string | null // Вид налогов
-    kpp: string | null // КПП
-    ogrn: string | null // ОГРН
-    money: string | null // бюджет??
-    addres: string | null // Юридический адрес
-    description: string | null // доп. информация
+type companyRequisitesType<T = string|null> = {
+    innNumber: T // ИНН
+    organizationName: T // Наименование организации
+    taxMode: T // Вид налогов
+    kpp: T // КПП
+    ogrn: T // ОГРН
+    okpo: T // бюджет??
+    address: T // Юридический адрес
+    description: T // доп. информация
 
-    postAdress: string | null // почтовый адрес
-    phoneDirector: string | null // телефон директора
-    phoneAccountant: string | null // телефон бухгалтера
-    email: string | null // электронная почта
-    bikBank: string | null // БИК Банка
-    nameBank: string | null // Наименование Банка
-    checkingAccount: string | null // Расчётный счёт
-    korrAccount: string | null // Корреспондентский счёт
+    postAddress: T // почтовый адрес
+    phoneDirector: T // телефон директора
+    phoneAccountant: T // телефон бухгалтера
+    email: T // электронная почта
+    bikBank: T // БИК Банка
+    nameBank: T // Наименование Банка
+    checkingAccount: T // Расчётный счёт
+    korrAccount: T // Корреспондентский счёт
 }
+
+type validateType = undefined | ((val:string)=>string|undefined)
 
 type OwnProps = {
     onSubmit: (requisites: companyRequisitesType) => void
@@ -43,35 +44,14 @@ type OwnProps = {
 export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
-    const dispatch = useDispatch()
 
-    const requisiteSaveHandleClick = () => { // onSubmit
-
-    }
-
-    const fakeFetch = () => { // @ts-ignore
-        // dispatch(fakeAuthFetching())
-    }
-
-    const maskOnInputs = {
-        innNumber: '############', // 12 цифр
-        organizationName: null,
-        taxMode: null,
-        kpp: '#########', // 9 цифр
-        ogrn: '############', // 13 цифр
-        money: null, // какие-то цифры
-        addres: null, // понятно. просто адрес
-        description: null, // много букав
-
-        postAdress: null, // просто адрес
-        phoneDirector: '+7 (###) ###-##-##', //
-        phoneAccountant: '+7 (###) ###-##-##',
-        email: null, // по другой схеме
-        bikBank: '#########', // 9 цифр
-        nameBank: null, // просто текст
-        checkingAccount: '#### #### #### #### ####', // 20 цифр
-        korrAccount: '#### #### #### #### ####', // 20 цифр
-    } as companyRequisitesType
+    // const dispatch = useDispatch()
+    // const requisiteSaveHandleClick = () => { // onSubmit
+    // }
+    //
+    // const fakeFetch = () => { // @ts-ignore
+    //     // dispatch(fakeAuthFetching())
+    // }
 
     const label = {
         innNumber: 'ИНН Организации',
@@ -79,11 +59,11 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         taxMode: 'Вид налогов',
         kpp: 'КПП',
         ogrn: 'ОГРН',
-        money: 'бюджет??',
-        addres: 'Юридический адрес',
+        okpo: 'ОКПО',
+        address: 'Юридический адрес',
         description: 'Доп. информация',
 
-        postAdress: 'Почтовый адрес',
+        postAddress: 'Почтовый адрес',
         phoneDirector: 'Телефон директора',
         phoneAccountant: 'Телефон бухгалтера',
         email: 'Электронная почта',
@@ -93,17 +73,37 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         korrAccount: 'Корреспондентский счёт',
     } as companyRequisitesType
 
+    const maskOn = {
+        innNumber: '############', // 10,12 цифр
+        organizationName: null,
+        taxMode: null,
+        kpp: '#########', // 9 цифр
+        ogrn: '############', // 13 цифр
+        okpo: null, // 8,10 цифр
+        address: null, // понятно. просто адрес
+        description: null, // много букав
+
+        postAddress: null, // просто адрес
+        phoneDirector: '+7 (###) ###-##-##', //
+        phoneAccountant: '+7 (###) ###-##-##',
+        email: null, // по другой схеме
+        bikBank: '#########', // 9 цифр
+        nameBank: null, // просто текст
+        checkingAccount: '#### #### #### #### ####', // 20 цифр
+        korrAccount: '#### #### #### #### ####', // 20 цифр
+    } as companyRequisitesType
+
     const initialValues = {
         innNumber: null,
         organizationName: null,
         taxMode: null,
         kpp: null,
         ogrn: null,
-        money: null,
-        addres: null,
+        okpo: null,
+        address: null,
         description: null,
 
-        postAdress: null,
+        postAddress: null,
         phoneDirector: null,
         phoneAccountant: null,
         email: null,
@@ -112,6 +112,26 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         checkingAccount: null,
         korrAccount: null,
     } as companyRequisitesType
+
+    const validators = {
+        innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
+        organizationName: composeValidators(required),
+        taxMode: composeValidators(required),
+        kpp: composeValidators(required, mustBe00Numbers(9)),
+        ogrn: composeValidators(required, mustBe00Numbers(13)),
+        okpo: composeValidators(required, mustBe0_0Numbers(8)(10)),
+        address: composeValidators(required),
+        description: undefined,
+
+        postAddress: composeValidators(required),
+        phoneDirector: composeValidators(required, mustBe00Numbers(11)),
+        phoneAccountant: composeValidators(required, mustBe00Numbers(11)),
+        email: composeValidators(required), // toDo: завалидировать email
+        bikBank: composeValidators(required, mustBe00Numbers(9)),
+        nameBank: composeValidators(required),
+        checkingAccount: composeValidators(required, mustBe00Numbers(20)),
+        korrAccount: composeValidators(required, mustBe00Numbers(20)),
+    } as companyRequisitesType<validateType>
 
 
     return (
@@ -129,57 +149,57 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                         <div className={styles.requisitesForm__inputsPanel}>
                                             <Field name={'innNumber'}
                                                    placeholder={label.innNumber}
-                                                   maskFormat={maskOnInputs.innNumber}
+                                                   maskFormat={maskOn.innNumber}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required,mustBe12Numbers)}
+                                                   validate={validators.innNumber}
                                             />
                                             <Field name={'organizationName'}
                                                    placeholder={label.organizationName}
-                                                   maskFormat={maskOnInputs.organizationName}
+                                                   maskFormat={maskOn.organizationName}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={validators.organizationName}
                                             />
                                             <Field name={'taxMode'}
                                                    placeholder={label.taxMode}
-                                                   maskFormat={maskOnInputs.taxMode}
+                                                   maskFormat={maskOn.taxMode}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={validators.taxMode}
                                             />
                                             <Field name={'kpp'}
                                                    placeholder={label.kpp}
-                                                   maskFormat={maskOnInputs.kpp}
+                                                   maskFormat={maskOn.kpp}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required,mustBe9Numbers)}
+                                                   validate={validators.kpp}
                                             />
                                             <Field name={'ogrn'}
                                                    placeholder={label.ogrn}
-                                                   maskFormat={maskOnInputs.ogrn}
+                                                   maskFormat={maskOn.ogrn}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required,mustBe13Numbers)}
+                                                   validate={validators.ogrn}
                                             />
-                                            <Field name={'money'}
-                                                   placeholder={label.money}
-                                                   maskFormat={maskOnInputs.money}
+                                            <Field name={'okpo'}
+                                                   placeholder={label.okpo}
+                                                   maskFormat={maskOn.okpo}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={validators.okpo}
                                             />
-                                            <Field name={'addres'}
-                                                   placeholder={label.addres}
-                                                   maskFormat={maskOnInputs.addres}
+                                            <Field name={'address'}
+                                                   placeholder={label.address}
+                                                   maskFormat={maskOn.address}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={validators.address}
                                             />
                                             <div className={styles.requisitesForm__textArea}>
                                                 <Field name={'description'}
                                                        placeholder={label.description}
-                                                       maskFormat={maskOnInputs.description}
+                                                       maskFormat={maskOn.description}
                                                        component={Input}
                                                        resetFieldBy={form}
                                                        textArea
@@ -187,61 +207,63 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                             </div>
                                         </div>
                                         <div className={styles.requisitesForm__inputsPanel}>
-                                            <Field name={'postAdress'}
-                                                   placeholder={label.postAdress}
-                                                   maskFormat={maskOnInputs.postAdress}
+                                            <Field name={'postAddress'}
+                                                   placeholder={label.postAddress}
+                                                   maskFormat={maskOn.postAddress}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={validators.postAddress}
                                             />
                                             <Field name={'phoneDirector'}
                                                    placeholder={label.phoneDirector}
-                                                   maskFormat={maskOnInputs.phoneDirector}
+                                                   maskFormat={maskOn.phoneDirector}
+                                                   allowEmptyFormatting
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={validators.phoneDirector}
                                             />
                                             <Field name={'phoneAccountant'}
                                                    placeholder={label.phoneAccountant}
-                                                   maskFormat={maskOnInputs.phoneAccountant}
+                                                   maskFormat={maskOn.phoneAccountant}
+                                                   allowEmptyFormatting
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={validators.phoneAccountant}
                                             />
                                             <Field name={'email'}
                                                    placeholder={label.email}
-                                                   maskFormat={maskOnInputs.email}
+                                                   maskFormat={maskOn.email}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={validators.email}
                                             />
                                             <Field name={'bikBank'}
                                                    placeholder={label.bikBank}
-                                                   maskFormat={maskOnInputs.bikBank}
+                                                   maskFormat={maskOn.bikBank}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required,mustBe9Numbers)}
+                                                   validate={validators.bikBank}
                                             />
                                             <Field name={'nameBank'}
                                                    placeholder={label.nameBank}
-                                                   maskFormat={maskOnInputs.nameBank}
+                                                   maskFormat={maskOn.nameBank}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required)}
+                                                   validate={validators.nameBank}
                                             />
                                             <Field name={'checkingAccount'}
                                                    placeholder={label.checkingAccount}
-                                                   maskFormat={maskOnInputs.checkingAccount}
+                                                   maskFormat={maskOn.checkingAccount}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required,mustBe20Numbers)}
+                                                   validate={validators.checkingAccount}
                                             />
                                             <Field name={'korrAccount'}
                                                    placeholder={label.korrAccount}
-                                                   maskFormat={maskOnInputs.korrAccount}
+                                                   maskFormat={maskOn.korrAccount}
                                                    component={Input}
                                                    resetFieldBy={form}
-                                                   validate={composeValidators(required,mustBe20Numbers)}
+                                                   validate={validators.korrAccount}
                                             />
                                             <div className={styles.requisitesForm__buttonsPanel}>
                                                 <Button type={'submit'}
