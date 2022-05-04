@@ -1,0 +1,57 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.shipperssForm {
+  @include flex-center(column);
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100%;
+  padding: 15px 25px;
+
+  &__wrapper {
+    max-width: 695px;
+    background: #FFFFFF;
+    border: 1px solid rgba(2, 62, 138, 0.54);
+    box-shadow: 0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198), inset 128px 124px 64px rgba(158, 158, 158, 0.14), inset -107px -107px 76px rgba(158, 158, 158, 0.14);
+    border-radius: 25px;
+    padding: 13px;
+  }
+
+  &__form {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+  }
+
+  &__header {
+    font-family: $RalewayFont;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: $accentColor;
+    width: 100%;
+  }
+
+  &__inputsPanel {
+    padding: 5px 15px;
+    min-width: 300px;
+    //margin: 0 auto;
+  }
+
+  &__textArea {
+    height: 100px;
+  }
+
+  &__buttonsPanel {
+    width: 250px;
+    height: 50px;
+    margin: 0 auto;
+    font-family: $RalewayFont;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+}

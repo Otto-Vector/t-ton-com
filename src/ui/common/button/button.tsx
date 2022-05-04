@@ -13,7 +13,7 @@ type OwnProps = {
 
 export const Button: React.FC<OwnProps> = (
     {
-        disabled, onClick, title,
+        disabled, onClick, title='',
         colorMode = 'noFill', rounded,
         type = 'button', children,
     } ) => {

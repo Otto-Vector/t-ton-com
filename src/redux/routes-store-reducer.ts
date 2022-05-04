@@ -10,6 +10,13 @@ const initialState = {
         history: '/history',
         map: '/maps',
         options: '/options',
+        optionsEdit: {
+            shippers: '/options/shippers/',
+            employees: '/options/employees/',
+            transport: '/options/transport/',
+            trailer: '/options/trailer/',
+            consignees: '/options/consignees/',
+        },
         requisites: '/requisites'
     }
 }

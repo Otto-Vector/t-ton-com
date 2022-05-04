@@ -4,6 +4,7 @@ import {baseStoreReducer} from './base-store-reducer';
 import {authStoreReducer} from './auth-store-reducer';
 import {routesStoreReducer} from './routes-store-reducer';
 import {requisitesStoreReducer} from './requisites-store-reducer';
+import {optionsStoreReducer} from './options-store-reducer';
 
 
 const reducersObject = {
@@ -11,6 +12,7 @@ const reducersObject = {
     authStoreReducer,
     routesStoreReducer,
     requisitesStoreReducer,
+    optionsStoreReducer,
 }
 
 const rootReducer = combineReducers(reducersObject)
