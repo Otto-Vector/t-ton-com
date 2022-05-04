@@ -3,7 +3,7 @@ import styles from './login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../../../utils/validators'
 import {Button} from '../../common/button/button'
-import {Input} from '../../common/form-type/form-type'
+import {InputType} from '../../common/input-type/input-type'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect'
@@ -75,7 +75,7 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
                                         { isRegisterMode &&
                                           < Field name={ 'innNumber' }
                                                   placeholder={ 'ИНН Компании' }
-                                                  component={ Input }
+                                                  component={ InputType }
                                                   resetFieldBy={ form }
                                                   maskFormat={ maskOn.innNumber }
                                                   validate={ validators.innNumber }
@@ -83,7 +83,7 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
                                         }
                                         <Field name={ 'phoneNumber' }
                                                placeholder={ 'Контактный номер +7' }
-                                               component={ Input }
+                                               component={ InputType }
                                                resetFieldBy={ form }
                                                allowEmptyFormatting
                                                maskFormat={ maskOn.phoneNumber }
@@ -91,7 +91,7 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
                                         />
                                         { !isAvailableSMS && <Field name={ 'sms' }
                                                                     placeholder={ 'Пароль из sms' }
-                                                                    component={ Input }
+                                                                    component={ InputType }
                                                                     maskFormat={ maskOn.sms }
                                                                     disabled={ !isAvailableSMS }
                                                                     validate={ isAvailableSMS ? validators.sms : undefined }

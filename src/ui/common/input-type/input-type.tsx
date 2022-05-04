@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './form-type.module.scss'
+import styles from './input-type.module.scss'
 import {FieldState, FormApi} from 'final-form'
 import NumberFormat from 'react-number-format';
 
@@ -18,7 +18,7 @@ type OwnProps = {
 }
 
 
-export const Input: React.FC<OwnProps> = (
+export const InputType: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
         children, disabled, mask = '_', maskFormat,

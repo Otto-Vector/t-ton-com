@@ -163,8 +163,8 @@ $input--disabled-font-color: $mainFontColor;
 // кастомизация сообщения об ошибке под инпутом
 .errorSpan {
   position: absolute;
-  bottom: -13px;
-  left: 5px;
+  top: -14px;
+  left: 7px;
   font-size: 12px;
   color: rgba($input--error-color, .75);
   font-weight: bold;

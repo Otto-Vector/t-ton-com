@@ -28,6 +28,9 @@ export const OptionsSection: React.FC<OwnProps> = () => {
             <div className={styles.optionsSection__table}>
                 <ColumnDataList/>
                 <ColumnDataList/>
+                <ColumnDataList/>
+                <ColumnDataList/>
+                <ColumnDataList/>
             </div>
                 </section>
                 )

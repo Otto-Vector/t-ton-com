@@ -32,11 +32,12 @@
 
   &__table {
     display: flex;
+    flex-wrap: wrap;
     padding-top: 15px;
     justify-content: space-around;
 
     & > div { // применяем отступ ко вложенным на один уровень дивам
-      margin: 0 5px;
+      margin: 5px 5px 30px 5px;
     }
   }
 }
