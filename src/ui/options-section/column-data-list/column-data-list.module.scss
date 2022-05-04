@@ -33,13 +33,9 @@
     @include size(20px);
     @include flex-center(column);
     position: absolute;
-    overflow: hidden;
     font-size: 13px;
-    margin: 0 auto;
     bottom: -25px;
-    border-radius: 50%;
-    background-color: inherit;
-    border: 1px solid #B6D0ED;
+    background-color: transparent;
     cursor: pointer;
   }
 }

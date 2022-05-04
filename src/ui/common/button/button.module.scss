@@ -80,6 +80,10 @@ $btnGreenDisabledBorderColor: #6C6C6C;
     background-color: $btnBlueBgColor;
     color: $btnBlueFontColor;
     border-color: $btnBlueBorderColor;
+
+    &:focus {
+      box-shadow: inset 0 0 6px rgba(white, .7);
+    }
   }
 
   &_pink {
