@@ -7,6 +7,7 @@ $input--line-height: 22px;
 $input--border-radius: 12px;
 $input--border-width: 2px;
 $input--padding-top: 6px;
+$input--padding-left: 15px;
 
 $input--error-color: #C70707;
 
@@ -39,12 +40,13 @@ $input--disabled-font-color: $mainFontColor;
     font-family: $input--font;
     position: absolute;
     color: rgba($mainFontColor, .6);
-    font-weight: 700;
+    //font-weight: 700;
     top: 0;
-    left: 32px;
+    left: $input--padding-left + 2px;
     transition-property: all;
     transition-duration: .3s;
-    font-size: 12px;
+    font-size: 70%; // было 12px при основном размере в 17
+    white-space: nowrap;
   }
 }
 
@@ -103,7 +105,7 @@ $input--disabled-font-color: $mainFontColor;
     radius: $input--border-radius;
     width: $input--border-width;
   }
-  padding: $input--padding-top + 3px rem(35) $input--padding-top - 3px rem(35);
+  padding: $input--padding-top + 3px rem(35) $input--padding-top - 3px $input--padding-left;
   width: 100%;
   height: inherit;
 
@@ -134,7 +136,7 @@ $input--disabled-font-color: $mainFontColor;
     background-color: $input--disabled-background-color;
     color: $input--disabled-font-color;
 
-     & ~ .label { // цвет для лейбла на заблокированном элементе
+     & ~ .label { // цвет для заголовка на заблокированном элементе
       color: rgba($mainFontColor, .5);
     }
   }
@@ -151,8 +153,8 @@ $input--disabled-font-color: $mainFontColor;
   &:focus {
     //при фокусе, сообщение placeholder уходит вверх
     @include placeholder() {
-      top: 0;
-      font-size: rem(12);
+      top: -1px;
+      font-size: 70%;
     }
   }
 

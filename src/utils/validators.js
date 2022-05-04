@@ -5,17 +5,11 @@ export const composeValidators = (...validators) => (value) =>
 /////////////////////////////////////////////////////////////////////////////////
 export const required = (value) => (value ? undefined : "Обязательное поле")
 
-const maxLength = (max) => (value) => ((value.length > max) ? `Больше ${max} символов!` : undefined);
-const minLength = (min) => (value) => ((value.length <= min) ? `Меньше ${min} символов!` : undefined);
+export const mustBeNumber = (value) => (isNaN(value) ? "Только цифры" : undefined);
+export const maxLength = (max) => (value) => ((value.length > max) ? `Больше ${max} символов!` : undefined);
+export const minLength = (min) => (value) => ((value.length <= min) ? `Меньше ${min} символов!` : undefined);
 export const mustBe00Numbers = (to) => (value) => ((parseAllNumbers(value).length !== to) ? `Должно быть ${to} цифр!` : undefined);
 export const mustBe0_0Numbers = (from) => (to) => (value) => (
   (parseAllNumbers(value).length !== from && parseAllNumbers(value).length !== to) ? `Должно быть ${from} или ${to} цифр!` : undefined);
+export const mustBeMail = (value) => value ? value.match(/^\S+@\S+\.\S+$/) ? undefined : 'Введите email корректно' : undefined
 
-export const maxLength50 = maxLength(50)
-export const minLength11 = minLength(11)
-export const mustBeNumbers = mustBe00Numbers(12)
-export const mustBe9Numbers = mustBe00Numbers(12)
-export const mustBe13Numbers = mustBe00Numbers(12)
-export const mustBe20Numbers = mustBe00Numbers(12)
-
-export const mustBeNumber = (value) => (isNaN(value) ? "Только цифры" : undefined);

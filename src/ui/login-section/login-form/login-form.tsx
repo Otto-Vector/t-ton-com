@@ -21,7 +21,7 @@ type OwnProps = {
     // onSubmit: (login: phoneSubmitType) => void
 }
 
-export const LoginForm: React.FC<OwnProps> = ( {} ) => {
+export const LoginForm: React.FC<OwnProps> = ( ) => {
 
     const [ isRegisterMode, setIsRegisterMode ] = useState( false )
     const isAvailableSMS = useSelector( getIsAvailableSMSrequest )
@@ -49,7 +49,7 @@ export const LoginForm: React.FC<OwnProps> = ( {} ) => {
     } as phoneSubmitType
 
     const maskOn = {
-        innNumber: '#### #### ####',
+        innNumber: '########## ##',
         phoneNumber: '+7 (###) ###-##-##',
         sms: '#####',
     } as phoneSubmitType
@@ -76,10 +76,8 @@ export const LoginForm: React.FC<OwnProps> = ( {} ) => {
                                           < Field name={ 'innNumber' }
                                                   placeholder={ 'ИНН Компании' }
                                                   component={ Input }
-                                                  type={ 'input' }
                                                   resetFieldBy={ form }
                                                   maskFormat={ maskOn.innNumber }
-                                                  // validate={ composeValidators( required, mustBe0_0Numbers( 10 )( 12 ) ) }
                                                   validate={ validators.innNumber }
                                           />
                                         }

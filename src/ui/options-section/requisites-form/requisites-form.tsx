@@ -2,16 +2,13 @@ import React from 'react'
 import styles from './requisites-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {
-    composeValidators, mustBe00Numbers, mustBe0_0Numbers,
-    mustBe13Numbers,
-    mustBe20Numbers,
-    mustBe9Numbers,
-    required,
+    composeValidators, mustBe00Numbers, mustBe0_0Numbers, mustBeMail,
+    required, maxLength
 } from '../../../utils/validators'
 import {Button} from '../../common/button/button';
 import {Input} from '../../common/form-type/form-type';
 
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Preloader} from '../../common/Preloader/Preloader';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
 
@@ -79,7 +76,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         taxMode: null,
         kpp: '#########', // 9 цифр
         ogrn: '############', // 13 цифр
-        okpo: null, // 8,10 цифр
+        okpo: '##########', // 8,10 цифр
         address: null, // понятно. просто адрес
         description: null, // много букав
 
@@ -115,7 +112,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
 
     const validators = {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
-        organizationName: composeValidators(required),
+        organizationName: composeValidators(required, maxLength(50)),
         taxMode: composeValidators(required),
         kpp: composeValidators(required, mustBe00Numbers(9)),
         ogrn: composeValidators(required, mustBe00Numbers(13)),
@@ -126,7 +123,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         postAddress: composeValidators(required),
         phoneDirector: composeValidators(required, mustBe00Numbers(11)),
         phoneAccountant: composeValidators(required, mustBe00Numbers(11)),
-        email: composeValidators(required), // toDo: завалидировать email
+        email: composeValidators(required, mustBeMail),
         bikBank: composeValidators(required, mustBe00Numbers(9)),
         nameBank: composeValidators(required),
         checkingAccount: composeValidators(required, mustBe00Numbers(20)),
