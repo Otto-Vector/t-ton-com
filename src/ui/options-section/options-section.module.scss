@@ -29,5 +29,15 @@
     font-size: 18px;
     line-height: 21px;
   }
+
+  &__table {
+    display: flex;
+    padding-top: 15px;
+    justify-content: space-around;
+
+    & > div { // применяем отступ ко вложенным на один уровень дивам
+      margin: 0 5px;
+    }
+  }
 }
 

@@ -4,6 +4,7 @@ import {Button} from '../common/button/button';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import {ColumnDataList} from './column-data-list/column-data-list';
 
 type OwnProps = {
 }
@@ -24,6 +25,10 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                         rounded onClick={()=>{navigate(requisites)}}> Реквизиты </Button>
                 </div>
             </header>
+            <div className={styles.optionsSection__table}>
+                <ColumnDataList/>
+                <ColumnDataList/>
+            </div>
                 </section>
                 )
             }
