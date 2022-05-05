@@ -136,10 +136,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         drivingCategory: undefined,
         personnelNumber: composeValidators(maxNumbers(10)),
         garageNumber: composeValidators(maxNumbers(10)),
-        // mechanicFIO: composeValidators(maxLength(50)),
-        mechanicFIO: undefined,
-        // dispatcherFIO: composeValidators(maxLength(50)),
-        dispatcherFIO: undefined,
+        mechanicFIO: composeValidators(maxLength(50)),
+        dispatcherFIO: composeValidators(maxLength(50)),
         photoFace: undefined,
         rating: composeValidators(maxNumbers(2)),
     }

@@ -6,7 +6,7 @@ export const composeValidators = (...validators) => (value) =>
 export const required = (value) => (value ? undefined : "Обязательное поле")
 
 export const mustBeNumber = (value) => (isNaN(value) ? "Только цифры" : undefined);
-export const maxLength = (max) => (value='3') => ((value.length > max) ? `Больше ${max} символов!` : undefined);
+export const maxLength = (max) => (value) => ((value && (value.length > max)) ? `Больше ${max} символов!` : undefined);
 export const minLength = (min) => (value) => ((value.length <= min) ? `Меньше ${min} символов!` : undefined);
 export const maxNumbers = (max) => (value= undefined) => ((parseAllNumbers(value).length > max) ? `Больше ${max} цифр!` : undefined);
 export const mustBe00Numbers = (to) => (value) => ((parseAllNumbers(value).length !== to) ? `Должно быть ${to} цифр!` : undefined);
