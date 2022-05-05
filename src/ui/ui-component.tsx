@@ -13,6 +13,7 @@ import {LoginSection} from './login-section/login-section';
 import {OptionsSection} from './options-section/options-section';
 import {RequisitesForm} from './options-section/requisites-form/requisites-form';
 import {ShippersForm} from './options-section/shippers-form/shippers-form';
+import {ConsigneesForm} from './options-section/consignees-form/consignees-form';
 
 type OwnProps = {}
 
@@ -41,7 +42,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={routes.optionsEdit.employees+':id'} element={ <h2>ЗДЕСЬ БУДУТ РЕДАКТИРОВАТЬСЯ/ДОБАВЛЯТЬСЯ Сотрудники</h2> }/>
                         <Route path={routes.optionsEdit.transport+':id'} element={ <h2>ЗДЕСЬ БУДУТ РЕДАКТИРОВАТЬСЯ/ДОБАВЛЯТЬСЯ Транспорт</h2> }/>
                         <Route path={routes.optionsEdit.trailer+':id'} element={ <h2>ЗДЕСЬ БУДУТ РЕДАКТИРОВАТЬСЯ/ДОБАВЛЯТЬСЯ Прицепы</h2> }/>
-                        <Route path={routes.optionsEdit.consignees+':id'} element={ <h2>ЗДЕСЬ БУДУТ РЕДАКТИРОВАТЬСЯ/ДОБАВЛЯТЬСЯ Грузополучатели</h2> }/>
+                        <Route path={routes.optionsEdit.consignees+':id'} element={ <ConsigneesForm onSubmit={()=>{}}/>}/>
 
                         <Route path={routes.options} element={ <OptionsSection/> }/>
                         <Route path={routes.requisites} element={ <RequisitesForm onSubmit={()=>{}}/> }/>

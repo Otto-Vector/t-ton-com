@@ -85,7 +85,7 @@ export const optionsStoreReducer = (state = initialState, action: ActionsType): 
                 shippers: {
                     ...state.shippers,
                     content: [
-                        ...state.shippers.content.filter(({id}) => !!id), // убираем нулевую запись
+                        state.shippers.content[0], // оставляем нулевую запись
                         ...action.shippers,
                     ],
                 },

@@ -25,7 +25,7 @@ export const ColumnDataList: React.FC<OwnProps> = ({label, content, route}) => {
                         {title || 'null'}
                     </div>
 
-                <div className={styles.rowItem__expand}></div>
+                <div className={styles.rowItem__expand+' '+(id===0 ? styles.rowItem__expand_plus: '')}></div>
                 </div>)
             }
 

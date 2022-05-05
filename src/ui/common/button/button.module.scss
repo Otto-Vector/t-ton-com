@@ -27,6 +27,11 @@ $btnGreenBorderColor: #74C25980;
 $btnGreenDisabledBgColor: #929090;
 $btnGreenDisabledBorderColor: #6C6C6C;
 
+$btnRedBgColor: #C70707;
+$btnRedBorderColor: #C70707;
+$btnRedFontColor: #fff;
+$btnRedDisabledBgColor: #929090;
+$btnRedDisabledBorderColor: #6C6C6C;
 
 .button {
   @include flex-center();
@@ -118,9 +123,19 @@ $btnGreenDisabledBorderColor: #6C6C6C;
     border: 1px solid $btnGreenBorderColor;
 
     &:disabled {
-      opacity: 1;
       background: $btnGreenDisabledBgColor;
       border: 1px solid $btnGreenDisabledBorderColor;
+    }
+  }
+
+  &_red {
+    background-color: $btnRedBgColor;
+    color: $btnRedFontColor;
+    border: 1px solid $btnRedBorderColor;
+
+    &:disabled {
+      background: $btnRedDisabledBgColor;
+      border: 1px solid $btnRedDisabledBorderColor;
     }
   }
 

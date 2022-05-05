@@ -69,12 +69,16 @@
   }
 
   &__expand {
-    margin-left: 5px;
+    margin-left: 6px;
     height: 5px;
     width: 5px;
     border-radius: 50%;
     background-color: #98B1CD;
     box-shadow: 0 7px 0 #98B1CD, 0 -7px 0 #98B1CD;
+
+    &_plus {
+      box-shadow: 0 3.7px 0 #98B1CD, 0 -3.7px 0 #98B1CD, 3.7px 0 0 #98B1CD, -3.7px 0 0 #98B1CD;
+    }
   }
 
   &_gray {
