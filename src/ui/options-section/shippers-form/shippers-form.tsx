@@ -2,17 +2,21 @@ import React from 'react'
 import styles from './shippers-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {
-    composeValidators, mustBe00Numbers, mustBe0_0Numbers, mustBeMail,
+    composeValidators, mustBe00Numbers, mustBe0_0Numbers,
     required, maxLength,
 } from '../../../utils/validators'
 import {Button} from '../../common/button/button';
 import {InputType} from '../../common/input-type/input-type';
-
-import {useSelector} from 'react-redux';
 import {Preloader} from '../../common/Preloader/Preloader';
+
+import mapImage from '../../../media/mapsicle-map.png'
+import {useSelector} from 'react-redux';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
+import {useNavigate} from 'react-router-dom';
+import {MaterialIcon} from '../../common/material-icon/material-icon';
 
 type shippersCardType<T = string | null> = {
+    title: T // заголовок
     innNumber: T // ИНН
     organizationName: T // Наименование организации
     kpp: T // КПП
@@ -31,9 +35,18 @@ type OwnProps = {
     onSubmit: (requisites: shippersCardType) => void
 }
 
+
+const mapStyle: React.CSSProperties = {
+    // вставил так, пока не знаю как правильно воткнуть ссылку на картинку в bg
+    'background': `url(${mapImage}) cover no-repeat`,
+}
+
+
 export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
 
+    const header = 'Грузоотправители'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const navigate = useNavigate();
 
     // const dispatch = useDispatch()
     // const requisiteSaveHandleClick = () => { // onSubmit
@@ -43,7 +56,8 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
     //     // dispatch(fakeAuthFetching())
     // }
 
-    const label = {
+    const label: shippersCardType = {
+        title: 'Название грузоотправителя',
         innNumber: 'ИНН',
         organizationName: 'Наименование организации',
         kpp: 'КПП',
@@ -53,9 +67,10 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
         shipperTel: 'Телефон отправителя',
         description: 'Доп. данные для ТТН',
         coordinates: 'Местоположение в координатах',
-    } as shippersCardType
+    }
 
-    const maskOn = {
+    const maskOn: shippersCardType = {
+        title: null,
         innNumber: '############', // 10,12 цифр
         organizationName: null,
         kpp: '#########', // 9 цифр
@@ -65,9 +80,10 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
         shipperTel: '+7 (###) ###-##-##', //
         description: null, // много букав
         coordinates: null,
-    } as shippersCardType
+    }
 
-    const initialValues = {
+    const initialValues: shippersCardType = {
+        title: null,
         innNumber: null,
         organizationName: null,
         kpp: null,
@@ -77,9 +93,10 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
         shipperTel: null,
         description: null,
         coordinates: null,
-    } as shippersCardType
+    }
 
-    const validators = {
+    const validators: shippersCardType<validateType> = {
+        title: composeValidators(required, maxLength(50)),
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),
         kpp: composeValidators(required, mustBe00Numbers(9)),
@@ -89,22 +106,32 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
         shipperTel: composeValidators(required, mustBe00Numbers(11)),
         description: undefined,
         coordinates: composeValidators(required),
-    } as shippersCardType<validateType>
+    }
 
 
     return (
-        <div className={styles.shipperssForm}>
-            <div className={styles.shipperssForm__wrapper}>
+        <div className={styles.shippersForm}>
+            <div className={styles.shippersForm__wrapper}>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <h4 className={styles.shipperssForm__header}>{'Грузоотправители'}</h4>
+                        <h4 className={styles.shippersForm__header}>{header}</h4>
                         <Form
                             onSubmit={onSubmit}
                             initialValues={initialValues}
                             render={
                                 ({submitError, handleSubmit, pristine, form, submitting}) => (
-                                    <form onSubmit={handleSubmit} className={styles.shipperssForm__form}>
-                                        <div className={styles.shipperssForm__inputsPanel}>
+                                    <form onSubmit={handleSubmit} className={styles.shippersForm__form}>
+                                        <div
+                                            className={styles.shippersForm__inputsPanel + ' ' + styles.shippersForm__inputsPanel_titled}>
+                                            <Field name={'title'}
+                                                   placeholder={label.title}
+                                                   maskFormat={maskOn.title}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.title}
+                                            />
+                                        </div>
+                                        <div className={styles.shippersForm__inputsPanel}>
                                             <Field name={'innNumber'}
                                                    placeholder={label.innNumber}
                                                    maskFormat={maskOn.innNumber}
@@ -150,11 +177,12 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
                                             <Field name={'shipperTel'}
                                                    placeholder={label.shipperTel}
                                                    maskFormat={maskOn.shipperTel}
+                                                   allowEmptyFormatting
                                                    component={InputType}
                                                    resetFieldBy={form}
                                                    validate={validators.shipperTel}
                                             />
-                                            <div className={styles.shipperssForm__textArea}>
+                                            <div className={styles.shippersForm__textArea}>
                                                 <Field name={'description'}
                                                        placeholder={label.description}
                                                        maskFormat={maskOn.description}
@@ -164,7 +192,7 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.shipperssForm__inputsPanel}>
+                                        <div className={styles.shippersForm__inputsPanel}>
                                             <Field name={'coordinates'}
                                                    placeholder={label.coordinates}
                                                    maskFormat={maskOn.coordinates}
@@ -173,22 +201,29 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    validate={validators.coordinates}
                                             />
 
-                                            <div className={styles.shipperssForm__buttonsPanel}>
-                                                <Button type={'submit'}
-                                                        disabled={submitting}
-                                                        colorMode={'orange'}
-                                                        title={'Удалить'}
-                                                        rounded
-                                                />
+                                            <div className={styles.shippersForm__map}>
+                                                <img src={mapImage} alt="map"/>
                                             </div>
-                                            <div className={styles.shipperssForm__buttonsPanel}>
-                                                <Button type={'submit'}
-                                                        disabled={submitting}
-                                                        colorMode={'green'}
-                                                        title={'Cохранить'}
-                                                        rounded
-                                                />
+                                            <div className={styles.shippersForm__buttonsPanel}>
+                                                <div className={styles.shippersForm__button}>
+                                                    <Button type={'submit'}
+                                                            disabled={submitting}
+                                                            colorMode={'green'}
+                                                            title={'Cохранить'}
+                                                            rounded
+                                                    />
+                                                </div>
+                                                <div className={styles.shippersForm__button}>
+                                                    <Button type={'button'}
+                                                            disabled={true}
+                                                            colorMode={'orange'}
+                                                            title={'Удалить'}
+                                                            rounded
+                                                    />
+                                                </div>
+
                                             </div>
+
                                         </div>
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
                                     </form>
@@ -196,6 +231,13 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
                             }/>
 
                     </>}
+                <div className={styles.shippersForm__cancelButton} onClick={()=>{navigate(-1)}}>
+                    <Button type={'submit'}
+                            colorMode={'white'}
+                            title={'Отменить/вернуться'}
+                            rounded
+                    ><MaterialIcon icon_name={'close'}/></Button>
+                </div>
             </div>
         </div>
     )

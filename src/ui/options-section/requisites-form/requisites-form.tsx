@@ -50,7 +50,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
     //     // dispatch(fakeAuthFetching())
     // }
 
-    const label = {
+    const label: companyRequisitesType = {
         innNumber: 'ИНН Организации',
         organizationName: 'Наименование организации',
         taxMode: 'Вид налогов',
@@ -68,9 +68,9 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         nameBank: 'Наименование Банка',
         checkingAccount: 'Расчётный счёт',
         korrAccount: 'Корреспондентский счёт',
-    } as companyRequisitesType
+    }
 
-    const maskOn = {
+    const maskOn: companyRequisitesType = {
         innNumber: '############', // 10,12 цифр
         organizationName: null,
         taxMode: null,
@@ -88,9 +88,9 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         nameBank: null, // просто текст
         checkingAccount: '#### #### #### #### ####', // 20 цифр
         korrAccount: '#### #### #### #### ####', // 20 цифр
-    } as companyRequisitesType
+    }
 
-    const initialValues = {
+    const initialValues: companyRequisitesType = {
         innNumber: null,
         organizationName: null,
         taxMode: null,
@@ -108,9 +108,9 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         nameBank: null,
         checkingAccount: null,
         korrAccount: null,
-    } as companyRequisitesType
+    }
 
-    const validators = {
+    const validators: companyRequisitesType<validateType> = {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),
         taxMode: composeValidators(required),
@@ -128,7 +128,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
         nameBank: composeValidators(required),
         checkingAccount: composeValidators(required, mustBe00Numbers(20)),
         korrAccount: composeValidators(required, mustBe00Numbers(20)),
-    } as companyRequisitesType<validateType>
+    }
 
 
     return (
