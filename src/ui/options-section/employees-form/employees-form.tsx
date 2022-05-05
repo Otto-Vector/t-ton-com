@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ChangeEvent} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {
@@ -9,12 +9,13 @@ import {Button} from '../../common/button/button';
 import {InputType} from '../../common/input-type/input-type';
 import {Preloader} from '../../common/Preloader/Preloader';
 
-import mapImage from '../../../media/mapsicle-map.png'
+import mapImage from '../../../media/noImagePhoto.png'
 import {useSelector} from 'react-redux';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
 import {useNavigate} from 'react-router-dom';
 import {MaterialIcon} from '../../common/material-icon/material-icon';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
+import {parseFIO} from '../../../utils/parsers';
 
 type employeesCardType<T = string | null> = {
     employeeFIO: T // ФИО сотрудника
@@ -38,22 +39,28 @@ type employeesCardType<T = string | null> = {
 type validateType = undefined | ((val: string) => string | undefined)
 
 type OwnProps = {
-    onSubmit: (requisites: employeesCardType) => void
+    // onSubmit: (requisites: employeesCardType) => void
 }
 
 
-export const EmployeesForm: React.FC<OwnProps> = ({onSubmit}) => {
+export const EmployeesForm: React.FC<OwnProps> = () => {
 
-    const header = 'Грузоотправители'
+    const header = 'Сотрудник'
     const infoText = 'Проверьте правильность внесенных данных, перед сохранением.'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate();
 
+    const onSubmit = ()=> {}
 
     const onCancelClick = () => {
         navigate(options)
     };
+
+    const sendPassportFile = (event: ChangeEvent<HTMLInputElement>) => {
+        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
+    }
+
 
     // const dispatch = useDispatch()
     // const requisiteSaveHandleClick = () => { // onSubmit
@@ -96,7 +103,7 @@ export const EmployeesForm: React.FC<OwnProps> = ({onSubmit}) => {
         mechanicFIO: null, // просто текст
         dispatcherFIO: null, // просто текст
         photoFace: null, // путь к файлу изображения
-        rating: '###', // чило ДО 3-х цифр
+        rating: '##', // чило ДО 2-х цифр
     }
 
     const initialValues: employeesCardType = {
@@ -129,145 +136,190 @@ export const EmployeesForm: React.FC<OwnProps> = ({onSubmit}) => {
         drivingCategory: undefined,
         personnelNumber: composeValidators(maxNumbers(10)),
         garageNumber: composeValidators(maxNumbers(10)),
-        mechanicFIO: composeValidators(maxLength(50)),
-        dispatcherFIO: composeValidators(maxLength(50)),
+        // mechanicFIO: composeValidators(maxLength(50)),
+        mechanicFIO: undefined,
+        // dispatcherFIO: composeValidators(maxLength(50)),
+        dispatcherFIO: undefined,
         photoFace: undefined,
-        rating: composeValidators(maxNumbers(3)),
+        rating: composeValidators(maxNumbers(2)),
     }
 
 
     return (
         <div className={styles.employeesForm}>
             <div className={styles.employeesForm__wrapper}>
-                {/*{ // установил прелоадер*/}
-                {/*    isFetching ? <Preloader/> : <>*/}
-                {/*        <h4 className={styles.employeesForm__header}>{header}</h4>*/}
-                {/*        <Form*/}
-                {/*            onSubmit={onSubmit}*/}
-                {/*            initialValues={initialValues}*/}
-                {/*            render={*/}
-                {/*                ({submitError, handleSubmit, pristine, form, submitting}) => (*/}
-                {/*                    <form onSubmit={handleSubmit} className={styles.employeesForm__form}>*/}
-                {/*                        <div*/}
-                {/*                            className={styles.employeesForm__inputsPanel + ' ' + styles.employeesForm__inputsPanel_titled}>*/}
-                {/*                            <Field name={'title'}*/}
-                {/*                                   placeholder={label.title}*/}
-                {/*                                   maskFormat={maskOn.title}*/}
-                {/*                                   component={InputType}*/}
-                {/*                                   resetFieldBy={form}*/}
-                {/*                                   validate={validators.title}*/}
-                {/*                            />*/}
-                {/*                        </div>*/}
-                {/*                        <div className={styles.employeesForm__inputsPanel}>*/}
-                {/*                            <Field name={'innNumber'}*/}
-                {/*                                   placeholder={label.innNumber}*/}
-                {/*                                   maskFormat={maskOn.innNumber}*/}
-                {/*                                   component={InputType}*/}
-                {/*                                   resetFieldBy={form}*/}
-                {/*                                   validate={validators.innNumber}*/}
-                {/*                            />*/}
-                {/*                            <Field name={'organizationName'}*/}
-                {/*                                   placeholder={label.organizationName}*/}
-                {/*                                   maskFormat={maskOn.organizationName}*/}
-                {/*                                   component={InputType}*/}
-                {/*                                   resetFieldBy={form}*/}
-                {/*                                   validate={validators.organizationName}*/}
-                {/*                            />*/}
-                {/*                            <Field name={'kpp'}*/}
-                {/*                                   placeholder={label.kpp}*/}
-                {/*                                   maskFormat={maskOn.kpp}*/}
-                {/*                                   component={InputType}*/}
-                {/*                                   resetFieldBy={form}*/}
-                {/*                                   validate={validators.kpp}*/}
-                {/*                            />*/}
-                {/*                            <Field name={'ogrn'}*/}
-                {/*                                   placeholder={label.ogrn}*/}
-                {/*                                   maskFormat={maskOn.ogrn}*/}
-                {/*                                   component={InputType}*/}
-                {/*                                   resetFieldBy={form}*/}
-                {/*                                   validate={validators.ogrn}*/}
-                {/*                            />*/}
-                {/*                            <Field name={'address'}*/}
-                {/*                                   placeholder={label.address}*/}
-                {/*                                   maskFormat={maskOn.address}*/}
-                {/*                                   component={InputType}*/}
-                {/*                                   resetFieldBy={form}*/}
-                {/*                                   validate={validators.address}*/}
-                {/*                            />*/}
-                {/*                            <Field name={'shipperFio'}*/}
-                {/*                                   placeholder={label.shipperFio}*/}
-                {/*                                   maskFormat={maskOn.shipperFio}*/}
-                {/*                                   component={InputType}*/}
-                {/*                                   resetFieldBy={form}*/}
-                {/*                                   validate={validators.shipperFio}*/}
-                {/*                            />*/}
-                {/*                            <Field name={'shipperTel'}*/}
-                {/*                                   placeholder={label.shipperTel}*/}
-                {/*                                   maskFormat={maskOn.shipperTel}*/}
-                {/*                                   allowEmptyFormatting*/}
-                {/*                                   component={InputType}*/}
-                {/*                                   resetFieldBy={form}*/}
-                {/*                                   validate={validators.shipperTel}*/}
-                {/*                            />*/}
-                {/*                            <div className={styles.employeesForm__textArea}>*/}
-                {/*                                <Field name={'description'}*/}
-                {/*                                       placeholder={label.description}*/}
-                {/*                                       maskFormat={maskOn.description}*/}
-                {/*                                       component={InputType}*/}
-                {/*                                       resetFieldBy={form}*/}
-                {/*                                       textArea*/}
-                {/*                                />*/}
-                {/*                            </div>*/}
-                {/*                        </div>*/}
-                {/*                        <div className={styles.employeesForm__inputsPanel}>*/}
-                {/*                            <Field name={'coordinates'}*/}
-                {/*                                   placeholder={label.coordinates}*/}
-                {/*                                   maskFormat={maskOn.coordinates}*/}
-                {/*                                   component={InputType}*/}
-                {/*                                   resetFieldBy={form}*/}
-                {/*                                   validate={validators.coordinates}*/}
-                {/*                            />*/}
+                { // установил прелоадер
+                    isFetching ? <Preloader/> : <>
+                        <h4 className={styles.employeesForm__header}>{header}</h4>
+                        <Form
+                            onSubmit={onSubmit}
+                            initialValues={initialValues}
+                            render={
+                                ({submitError, handleSubmit, pristine, form, submitting}) => (
+                                    <form onSubmit={handleSubmit} className={styles.employeesForm__form}>
+                                        <div
+                                            className={styles.employeesForm__inputsPanel + ' ' + styles.employeesForm__inputsPanel_titled}>
+                                            <Field name={'employeeFIO'}
+                                                   placeholder={label.employeeFIO}
+                                                   maskFormat={maskOn.employeeFIO}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.employeeFIO}
+                                                   parse={parseFIO}
+                                            />
+                                            <Field name={'employeePhoneNumber'}
+                                                   placeholder={label.employeePhoneNumber}
+                                                   maskFormat={maskOn.employeePhoneNumber}
+                                                   allowEmptyFormatting
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.employeePhoneNumber}
+                                            />
+                                        </div>
+                                        <div className={styles.employeesForm__inputsPanel}>
+                                            <Field name={'passportSerial'}
+                                                   placeholder={label.passportSerial}
+                                                   maskFormat={maskOn.passportSerial}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.passportSerial}
+                                            />
+                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+                                            <div className={styles.employeesForm__attachFile} >
+                                            <input type={'file'}
+                                                   onChange={sendPassportFile}/>
+                                                <MaterialIcon icon_name={'attach_file'}/>
+                                            </div>
+                                            <div className={styles.employeesForm__showFile}>
+                                                {initialValues.passportImage
+                                                    ? <MaterialIcon icon_name={'search'}/>
+                                                    : <MaterialIcon icon_name={'close'}/>
+                                                }
+                                            </div>
+                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+                                            <Field name={'passportFMS'}
+                                                   placeholder={label.passportFMS}
+                                                   maskFormat={maskOn.passportFMS}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.passportFMS}
+                                            />
+                                            <Field name={'passportDate'}
+                                                   placeholder={label.passportDate}
+                                                   maskFormat={maskOn.passportDate}
+                                                   component={InputType}
+                                                   type={'date'}
+                                                   validate={validators.passportDate}
+                                            />
+                                            <Field name={'drivingLicenseNumber'}
+                                                   placeholder={label.drivingLicenseNumber}
+                                                   maskFormat={maskOn.drivingLicenseNumber}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.drivingLicenseNumber}
+                                            />
+                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+                                            <div className={styles.employeesForm__attachFile} >
+                                            <input type={'file'}
+                                                   onChange={sendPassportFile}/>
+                                                <MaterialIcon icon_name={'attach_file'}/>
+                                            </div>
+                                            <div className={styles.employeesForm__showFile}>
+                                                {initialValues.drivingLicenseImage
+                                                    ? <MaterialIcon icon_name={'search'}/>
+                                                    : <MaterialIcon icon_name={'close'}/>
+                                                }
+                                            </div>
+                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+                                            <Field name={'drivingCategory'}
+                                                   placeholder={label.drivingCategory}
+                                                   maskFormat={maskOn.drivingCategory}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.drivingCategory}
+                                            />
+                                            <Field name={'personnelNumber'}
+                                                   placeholder={label.personnelNumber}
+                                                   maskFormat={maskOn.personnelNumber}
+                                                   allowEmptyFormatting
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.personnelNumber}
+                                            />
+                                            <div className={styles.employeesForm__textArea}>
+                                                <Field name={'garageNumber'}
+                                                       placeholder={label.garageNumber}
+                                                       maskFormat={maskOn.garageNumber}
+                                                       component={InputType}
+                                                       resetFieldBy={form}
+                                                       validate={validators.garageNumber}
+                                                />
+                                            </div>
+                                            <Field name={'mechanicFIO'}
+                                                   placeholder={label.mechanicFIO}
+                                                   maskFormat={maskOn.mechanicFIO}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.mechanicFIO}
+                                                   parse={parseFIO}
+                                            />
+                                            <Field name={'dispatcherFIO'}
+                                                   placeholder={label.dispatcherFIO}
+                                                   maskFormat={maskOn.dispatcherFIO}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.dispatcherFIO}
+                                                   parse={parseFIO}
+                                            />
+                                        </div>
+                                        <div className={styles.employeesForm__inputsPanel}>
+                                            <div className={styles.employeesForm__photo}>
+                                                <img src={initialValues.photoFace || mapImage} alt="facePhoto"/>
+                                            </div>
+                                            <Field name={'rating'}
+                                                   placeholder={label.rating}
+                                                   maskFormat={maskOn.rating}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.rating}
+                                            />
+                                            <div className={styles.employeesForm__buttonsPanel}>
+                                                <div className={styles.employeesForm__button}>
+                                                    <Button type={'submit'}
+                                                            disabled={submitting}
+                                                            colorMode={'green'}
+                                                            title={'Cохранить'}
+                                                            rounded
+                                                    />
+                                                </div>
+                                                <div className={styles.employeesForm__button}>
+                                                    <Button type={'button'}
+                                                            disabled={true}
+                                                            colorMode={'red'}
+                                                            title={'Удалить'}
+                                                            rounded
+                                                    />
+                                                </div>
 
-                {/*                            <div className={styles.employeesForm__map}>*/}
-                {/*                                <img src={mapImage} alt="map"/>*/}
-                {/*                            </div>*/}
-                {/*                            <div className={styles.employeesForm__buttonsPanel}>*/}
-                {/*                                <div className={styles.employeesForm__button}>*/}
-                {/*                                    <Button type={'submit'}*/}
-                {/*                                            disabled={submitting}*/}
-                {/*                                            colorMode={'green'}*/}
-                {/*                                            title={'Cохранить'}*/}
-                {/*                                            rounded*/}
-                {/*                                    />*/}
-                {/*                                </div>*/}
-                {/*                                <div className={styles.employeesForm__button}>*/}
-                {/*                                    <Button type={'button'}*/}
-                {/*                                            disabled={true}*/}
-                {/*                                            colorMode={'red'}*/}
-                {/*                                            title={'Удалить'}*/}
-                {/*                                            rounded*/}
-                {/*                                    />*/}
-                {/*                                </div>*/}
+                                            </div>
 
-                {/*                            </div>*/}
+                                        </div>
+                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
+                                    </form>
+                                )
+                            }/>
 
-                {/*                        </div>*/}
-                {/*                        /!*{submitError && <span className={styles.onError}>{submitError}</span>}*!/*/}
-                {/*                    </form>*/}
-                {/*                )*/}
-                {/*            }/>*/}
-
-                {/*    </>}*/}
-                {/*<div className={styles.employeesForm__cancelButton} onClick={onCancelClick}>*/}
-                {/*    <Button type={'submit'}*/}
-                {/*            colorMode={'white'}*/}
-                {/*            title={'Отменить/вернуться'}*/}
-                {/*            rounded*/}
-                {/*    ><MaterialIcon icon_name={'close'}/></Button>*/}
-                {/*</div>*/}
-                {/*<div className={styles.employeesForm__infoText}>*/}
-                {/*    <span>{infoText}</span>*/}
-                {/*</div>*/}
+                    </>}
+                <div className={styles.employeesForm__cancelButton} onClick={onCancelClick}>
+                    <Button type={'submit'}
+                            colorMode={'white'}
+                            title={'Отменить/вернуться'}
+                            rounded
+                    ><MaterialIcon icon_name={'close'}/></Button>
+                </div>
+                <div className={styles.employeesForm__infoText}>
+                    <span>{infoText}</span>
+                </div>
             </div>
         </div>
     )

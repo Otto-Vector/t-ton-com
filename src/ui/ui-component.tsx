@@ -14,6 +14,7 @@ import {OptionsSection} from './options-section/options-section';
 import {RequisitesForm} from './options-section/requisites-form/requisites-form';
 import {ShippersForm} from './options-section/shippers-form/shippers-form';
 import {ConsigneesForm} from './options-section/consignees-form/consignees-form';
+import {EmployeesForm} from './options-section/employees-form/employees-form';
 
 type OwnProps = {}
 
@@ -39,7 +40,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={routes.history} element={ <h2>АРХИВ ЗАКРЫТЫХ ЗАЯВОК</h2> }/>
                         <Route path={routes.map} element={ <h2>КАРТА АКТИВНЫХ ЗАЯВОК</h2> }/>
                         <Route path={routes.optionsEdit.shippers+':id'} element={ <ShippersForm onSubmit={()=>{}}/> }/>
-                        <Route path={routes.optionsEdit.employees+':id'} element={ <h2>ЗДЕСЬ БУДУТ РЕДАКТИРОВАТЬСЯ/ДОБАВЛЯТЬСЯ Сотрудники</h2> }/>
+                        <Route path={routes.optionsEdit.employees+':id'} element={ <EmployeesForm/> }/>
                         <Route path={routes.optionsEdit.transport+':id'} element={ <h2>ЗДЕСЬ БУДУТ РЕДАКТИРОВАТЬСЯ/ДОБАВЛЯТЬСЯ Транспорт</h2> }/>
                         <Route path={routes.optionsEdit.trailer+':id'} element={ <h2>ЗДЕСЬ БУДУТ РЕДАКТИРОВАТЬСЯ/ДОБАВЛЯТЬСЯ Прицепы</h2> }/>
                         <Route path={routes.optionsEdit.consignees+':id'} element={ <ConsigneesForm onSubmit={()=>{}}/>}/>

@@ -15,6 +15,7 @@ type OwnProps = {
     children?: React.ReactNode
     disabled?: boolean
     textArea?: boolean
+    type?: 'text' | 'date' | 'email'
 }
 
 
@@ -22,7 +23,7 @@ export const InputType: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
         children, disabled, mask = '_', maskFormat,
-        textArea, allowEmptyFormatting
+        textArea, allowEmptyFormatting, type = 'text'
     }) => {
 
     const InInput = textArea ? 'textarea' : 'input' // если нужен просто текстовое поле
@@ -56,7 +57,7 @@ export const InputType: React.FC<OwnProps> = (
                     onValueChange={({formattedValue}) =>
                         input.onChange(formattedValue)
                     }
-                    type={'text'}
+                    type={type}
                     {...input}
                     className={styles.input + ' ' + (isError ? styles.error : '')}
                     placeholder={placeholder}
@@ -64,7 +65,7 @@ export const InputType: React.FC<OwnProps> = (
                 >
                 </NumberFormat>
                 :
-                <InInput type={'text'}
+                <InInput type={type}
                        {...input}
                        className={styles.input + ' ' + (isError ? styles.error : '')}
                        placeholder={placeholder}

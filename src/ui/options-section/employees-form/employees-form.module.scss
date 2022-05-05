@@ -1,7 +1,7 @@
 @import 'src/styles/mixins';
 @import 'src/styles/variables';
 
-.shippersForm {
+.employeesForm {
   @include flex-center(column);
   justify-content: space-evenly;
   width: 100%;
@@ -65,7 +65,7 @@
     line-height: 28px;
   }
 
-  &__map {
+  &__photo {
     display: flex;
     justify-content: center;
     align-content: stretch;
@@ -75,6 +75,7 @@
 
     margin: 30px auto;
     cursor: pointer;
+    background-color: #A0B4FF;
     //border-width: 2px;
     //border-color: $accentColor;
     //border-radius: 30px;
@@ -101,5 +102,9 @@
     font-weight: 600;
     font-size: 10px;
     line-height: 1.2;
+  }
+
+  &__attachFile {
+
   }
 }
