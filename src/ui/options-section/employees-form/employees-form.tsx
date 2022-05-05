@@ -206,6 +206,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    placeholder={label.passportDate}
                                                    maskFormat={maskOn.passportDate}
                                                    component={InputType}
+                                                   resetFieldBy={form}
                                                    type={'date'}
                                                    validate={validators.passportDate}
                                             />
