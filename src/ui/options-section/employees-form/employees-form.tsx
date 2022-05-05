@@ -207,7 +207,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={maskOn.passportDate}
                                                    component={InputType}
                                                    resetFieldBy={form}
-                                                   type={'date'}
+                                                   inputType={'date'}
                                                    validate={validators.passportDate}
                                             />
                                             <Field name={'drivingLicenseNumber'}

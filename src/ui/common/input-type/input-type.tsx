@@ -15,7 +15,7 @@ type OwnProps = {
     children?: React.ReactNode
     disabled?: boolean
     textArea?: boolean
-    type?: 'text' | 'date' | 'email'
+    inputType?: 'text' | 'date' | 'email'
 }
 
 
@@ -23,7 +23,7 @@ export const InputType: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
         children, disabled, mask = '_', maskFormat,
-        textArea, allowEmptyFormatting, type = 'text'
+        textArea, allowEmptyFormatting, inputType = 'text',
     }) => {
 
     const InInput = textArea ? 'textarea' : 'input' // если нужен просто текстовое поле
@@ -57,7 +57,7 @@ export const InputType: React.FC<OwnProps> = (
                     onValueChange={({formattedValue}) =>
                         input.onChange(formattedValue)
                     }
-                    type={type}
+                    type={inputType}
                     {...input}
                     className={styles.input + ' ' + (isError ? styles.error : '')}
                     placeholder={placeholder}
@@ -65,13 +65,15 @@ export const InputType: React.FC<OwnProps> = (
                 >
                 </NumberFormat>
                 :
-                <InInput type={type}
-                       {...input}
-                       className={styles.input + ' ' + (isError ? styles.error : '')}
-                       placeholder={placeholder}
-                       disabled={disabled}/>
+                <InInput type={inputType}
+                         {...input}
+                         className={styles.input + ' ' + (isError ? styles.error : '')}
+                         placeholder={placeholder}
+                         disabled={disabled}/>
             }
-            {(input.value || allowEmptyFormatting) && <label className={styles.label}>{placeholder}</label>}
+            {(input.value || allowEmptyFormatting || (inputType !== 'text')) &&
+                <label className={styles.label}>{placeholder}</label>
+            }
             {children}
             {/*сообщение об ошибке появляется в этом спане*/}
             {isError && (<span className={styles.errorSpan}>{meta.error}</span>)}
