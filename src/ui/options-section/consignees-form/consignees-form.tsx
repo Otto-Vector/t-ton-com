@@ -14,6 +14,7 @@ import {useSelector} from 'react-redux';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
 import {useNavigate} from 'react-router-dom';
 import {MaterialIcon} from '../../common/material-icon/material-icon';
+import {getRoutesStore} from '../../../selectors/routes-reselect';
 
 type consigneesCardType<T = string | null> = {
     title: T // заголовок
@@ -41,7 +42,10 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
     const header = 'ГрузоПолучатели'
     const infoText = 'Проверьте правильность внесенных данных, перед сохранением.'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
-    const navigate = useNavigate();
+    const {options} = useSelector(getRoutesStore)
+    const navigate = useNavigate()
+
+    const onCancelClick = () => { navigate(options)};
 
     // const dispatch = useDispatch()
     // const requisiteSaveHandleClick = () => { // onSubmit
@@ -102,7 +106,6 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
         description: undefined,
         coordinates: composeValidators(required),
     }
-
 
     return (
         <div className={styles.consigneesForm}>
@@ -226,9 +229,7 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
                             }/>
 
                     </>}
-                <div className={styles.consigneesForm__cancelButton} onClick={() => {
-                    navigate(-1)
-                }}>
+                <div className={styles.consigneesForm__cancelButton} onClick={onCancelClick}>
                     <Button type={'submit'}
                             colorMode={'white'}
                             title={'Отменить/вернуться'}

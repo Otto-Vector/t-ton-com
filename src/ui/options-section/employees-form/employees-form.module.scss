@@ -1,0 +1,105 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.shippersForm {
+  @include flex-center(column);
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100%;
+  padding: 15px 25px;
+
+  &__wrapper {
+    position: relative;
+    max-width: 695px;
+    background: #FFFFFF;
+    border: 1px solid rgba(2, 62, 138, 0.54);
+    box-shadow: 0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198), inset 128px 124px 64px rgba(158, 158, 158, 0.14), inset -107px -107px 76px rgba(158, 158, 158, 0.14);
+    border-radius: 25px;
+    padding: 13px;
+  }
+
+  &__form {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+  }
+
+  &__header {
+    font-family: $RalewayFont;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: $accentColor;
+    width: 100%;
+  }
+
+  &__inputsPanel {
+    padding: 5px 10px;
+    min-width: 320px;
+
+    &_titled { // панель встраивается в центр
+      width: 100%;
+
+      & > div {
+        max-width: 320px;
+        margin: 0 auto 5px;
+      }
+    }
+  }
+
+  &__textArea {
+    height: 100px;
+  }
+
+  &__buttonsPanel {
+    @include flex-center();
+    justify-content: space-between;
+    width: 100%;
+    height: 40px;
+    margin: 0 auto;
+    font-family: $RalewayFont;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  &__map {
+    display: flex;
+    justify-content: center;
+    align-content: stretch;
+
+    justify-self: stretch;
+    align-self: stretch;
+
+    margin: 30px auto;
+    cursor: pointer;
+    //border-width: 2px;
+    //border-color: $accentColor;
+    //border-radius: 30px;
+  }
+
+  &__button {
+    align-self: stretch;
+    width: 48%;
+  }
+
+  &__cancelButton {
+    background-color: transparent;
+    position: absolute;
+    @include size(25px);
+
+    right: 15px;
+    top: 15px;
+  }
+
+  &__infoText {
+    text-align: center;
+    color: $accentColor;
+    font-family: $RalewayFont;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 1.2;
+  }
+}

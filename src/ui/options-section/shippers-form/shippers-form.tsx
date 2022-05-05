@@ -14,6 +14,7 @@ import {useSelector} from 'react-redux';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
 import {useNavigate} from 'react-router-dom';
 import {MaterialIcon} from '../../common/material-icon/material-icon';
+import {getRoutesStore} from '../../../selectors/routes-reselect';
 
 type shippersCardType<T = string | null> = {
     title: T // заголовок
@@ -36,18 +37,18 @@ type OwnProps = {
 }
 
 
-const mapStyle: React.CSSProperties = {
-    // вставил так, пока не знаю как правильно воткнуть ссылку на картинку в bg
-    'background': `url(${mapImage}) cover no-repeat`,
-}
-
-
 export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
 
     const header = 'Грузоотправители'
     const infoText = 'Проверьте правильность внесенных данных, перед сохранением.'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate();
+
+
+    const onCancelClick = () => {
+        navigate(options)
+    };
 
     // const dispatch = useDispatch()
     // const requisiteSaveHandleClick = () => { // onSubmit
@@ -78,7 +79,7 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
         ogrn: '############', // 13 цифр
         address: null, // понятно. просто адрес
         shipperFio: null, //
-        shipperTel: '+7 (###) ###-##-##', //
+        shipperTel: '+7 (###) ###-##-##', // 11 цифр
         description: null, // много букав
         coordinates: null,
     }
@@ -232,9 +233,7 @@ export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
                             }/>
 
                     </>}
-                <div className={styles.shippersForm__cancelButton} onClick={() => {
-                    navigate(-1)
-                }}>
+                <div className={styles.shippersForm__cancelButton} onClick={onCancelClick}>
                     <Button type={'submit'}
                             colorMode={'white'}
                             title={'Отменить/вернуться'}
