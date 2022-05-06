@@ -9,7 +9,6 @@ import car from './helloSectionSVG/car.svg'
 import factory from './helloSectionSVG/factory.svg'
 import {DescriptionInsider} from './description-insider/description-insider'
 
-
 type OwnProps = {}
 
 export const HelloSection: React.FC<OwnProps> = () => {
