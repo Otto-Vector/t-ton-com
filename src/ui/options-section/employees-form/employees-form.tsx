@@ -19,25 +19,6 @@ import {parseFIO} from '../../../utils/parsers'
 
 import Upload, {UploadProps} from 'rc-upload'
 
-const uploadProps: UploadProps = {
-    action: () => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve('/upload.do')
-            }, 2000)
-        })
-    },
-    multiple: true,
-    onStart(file: any) {
-        console.log('onStart', file, file.name)
-    },
-    onSuccess(ret: any) {
-        console.log('onSuccess', ret)
-    },
-    onError(err: any) {
-        console.log('onError', err)
-    },
-}
 
 type employeesCardType<T = string | undefined> = {
     employeeFIO: T // ФИО сотрудника
@@ -84,7 +65,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
 
-
+    const sendLicenseFile = (event: ChangeEvent<HTMLInputElement>) => {
+        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
+    }
     // const dispatch = useDispatch()
     // const requisiteSaveHandleClick = () => { // onSubmit
     // }
@@ -198,23 +181,27 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                         </div>
                                         <div className={styles.employeesForm__inputsPanel}>
-                                            <Field name={'passportSerial'}
-                                                   placeholder={label.passportSerial}
-                                                   maskFormat={maskOn.passportSerial}
-                                                   component={InputType}
-                                                   resetFieldBy={form}
-                                                   validate={validators.passportSerial}
-                                            />
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
-                                            <div className={styles.employeesForm__attachFile}>
-                                                <Upload {...uploadProps}>
-                                                    <Button colorMode={'lightBlue'}
+                                            <div className={styles.employeesForm__withAttach}>
+                                                <Field name={'passportSerial'}
+                                                       placeholder={label.passportSerial}
+                                                       maskFormat={maskOn.passportSerial}
+                                                       component={InputType}
+                                                       resetFieldBy={form}
+                                                       validate={validators.passportSerial}
+                                                />
+                                                {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+                                                <div className={styles.employeesForm__attachFile}>
+                                                    <Button colorMode={'white'}
                                                             title={'Добавить' + label.passportImage}
                                                             rounded>
                                                         <MaterialIcon icon_name={'attach_file'}/>
+                                                        <input type={'file'}
+                                                               className={styles.employeesForm__hiddenAttachFile}
+                                                               accept={'.png, .jpeg, .pdf, .jpg'}
+                                                               onChange={sendPassportFile}
+                                                        />
                                                     </Button>
-                                                </Upload>
-                                            </div>
+                                                </div>
                                             <div className={styles.employeesForm__attachFile}>
                                                 <Button colorMode={'white'} title={'Просмотреть' + label.passportImage}
                                                         disabled={!initialValues.passportImage}
@@ -222,6 +209,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 >
                                                     <MaterialIcon icon_name={'search'}/>
                                                 </Button>
+                                            </div>
                                             </div>
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
                                             <Field name={'passportFMS'}
@@ -248,15 +236,18 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                        validate={validators.drivingLicenseNumber}
                                                 />
                                                 {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
-                                                {/*<div className={styles.employeesForm__attachFile}>*/}
-                                                    <Upload {...uploadProps} className={styles.employeesForm__attachFile}>
-                                                        <Button colorMode={'lightBlue'}
-                                                                title={'Добавить' + label.drivingLicenseImage}
-                                                                rounded>
-                                                            <MaterialIcon icon_name={'attach_file'}/>
-                                                        </Button>
-                                                    </Upload>
-                                                {/*</div>*/}
+                                                <div className={styles.employeesForm__attachFile}>
+                                                    <Button colorMode={'white'}
+                                                            title={'Добавить' + label.drivingLicenseImage}
+                                                            rounded>
+                                                        <MaterialIcon icon_name={'attach_file'}/>
+                                                        <input type={'file'}
+                                                               className={styles.employeesForm__hiddenAttachFile}
+                                                               accept={'.png, .jpeg, .pdf, .jpg'}
+                                                               onChange={sendPassportFile}
+                                                        />
+                                                    </Button>
+                                                </div>
                                                 <div className={styles.employeesForm__attachFile}>
                                                     <Button colorMode={'white'}
                                                             title={'Просмотреть' + label.drivingLicenseImage}
