@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ChangeEvent, useState} from 'react'
 import styles from './column-data-list.module.scss'
 import {MaterialIcon} from '../../common/material-icon/material-icon';
 import {Button} from '../../common/button/button';
@@ -17,16 +17,24 @@ type OwnProps = {
 export const ColumnDataList: React.FC<OwnProps> = ({item, route}) => {
     const navigate = useNavigate();
 
+    const [content, setContent] = useState(item.content)
+
+    const onSearch = async (event: ChangeEvent<HTMLInputElement>) => {
+        event.target?.value
+            ? setContent(item.content.filter(({title})=>title.includes(event.target?.value)))
+            : setContent(item.content)
+    }
+
     return (
         <div className={styles.columnDataList}>
             <header className={styles.columnDataList__header}>
                 <span>{item.label}</span>
-                <div className={styles.rowItem__label}>
-                    <input placeholder={item.placeholder}/>
+                <div className={styles.rowItem__label +' '+ styles.rowItem_search}>
+                    <input placeholder={item.placeholder} onChange={(e)=>{onSearch(e)}}/>
                 </div>
             </header>
             <div className={styles.columnDataList__list}>
-                {item.content.map(({id, title}) =>
+                {content.map(({id, title}) =>
                     <div className={styles.columnDataList__item + ' ' + styles.rowItem}
                          onClick={() => {
                              navigate(route + id)
