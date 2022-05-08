@@ -2,10 +2,11 @@ import React from 'react'
 
 import {Field} from 'react-final-form'
 import styles from './form-selector.module.scss'
+import {cargoType, propertyRights} from '../../options-section/transport-form/transport-form';
 
 type OwnProps = {
     named: string
-    values: []
+    values: typeof cargoType | typeof propertyRights
     label?: string
 }
 
@@ -17,7 +18,7 @@ export const FormSelector: React.FC<OwnProps> = ({
     return <div className={styles.dropdown}>
         {label && <label className={styles.label}>{label}</label>}
         <Field className={styles.select} name={named} component={'select'}>
-            {values.map(value =>
+            { values.map(value =>
                 <option value={value} key={value}>{value}</option>)
             }
         </Field>

@@ -1,7 +1,7 @@
 @import 'src/styles/mixins';
 @import 'src/styles/variables';
 
-.employeesForm {
+.transportForm {
   @include flex-center(column);
   justify-content: space-evenly;
   width: 100%;
@@ -10,10 +10,10 @@
 
   &__wrapper {
     position: relative;
-    max-width: 660px;
+    max-width: 450px;
     background: #FFFFFF;
     border: 1px solid rgba(2, 62, 138, 0.54);
-    box-shadow: 0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198), inset 128px 124px 64px rgba(158, 158, 158, 0.14), inset -107px -107px 76px rgba(158, 158, 158, 0.14);
+    box-shadow: $cardsShadow;
     border-radius: 25px;
     padding: 13px;
   }

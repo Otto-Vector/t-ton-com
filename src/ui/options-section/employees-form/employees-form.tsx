@@ -62,6 +62,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const sendPassportFile = (event: ChangeEvent<HTMLInputElement>) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
+    const sendPhotoFile = (event: ChangeEvent<HTMLInputElement>) => {
+        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
+    }
 
     const sendLicenseFile = (event: ChangeEvent<HTMLInputElement>) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
@@ -243,7 +246,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                         <input type={'file'}
                                                                className={styles.employeesForm__hiddenAttachFile}
                                                                accept={'.png, .jpeg, .pdf, .jpg'}
-                                                               onChange={sendPassportFile}
+                                                               onChange={sendLicenseFile}
                                                         />
                                                     </Button>
                                                 </div>
@@ -297,11 +300,18 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                         </div>
                                         <div>
-                                            <div className={styles.employeesForm__photo}>
+                                            <div className={styles.employeesForm__photo}
+                                                 title={'Добавить/изменить фото'}>
                                                 <img src={initialValues.photoFace || noImagePhoto} alt="facePhoto"/>
+                                                <input type={'file'}
+                                                       className={styles.employeesForm__hiddenAttachFile}
+                                                       accept={'.png, .jpeg, .pdf, .jpg'}
+                                                       onChange={sendPhotoFile}
+                                                />
                                             </div>
                                             <div className={styles.employeesForm__ratingPanel}>
-                                                <label className={styles.employeesForm__ratingPanelLabel} style={{fontSize: '16px'}}>{label.rating}</label>
+                                                <label className={styles.employeesForm__ratingPanelLabel}
+                                                       style={{fontSize: '16px'}}>{label.rating}</label>
                                                 <div className={styles.employeesForm__ratingInput}>
                                                     <Field name={'rating'}
                                                            placeholder={'%'}
@@ -314,25 +324,25 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                            <div className={styles.employeesForm__buttonsPanel}>
-                                                <div className={styles.employeesForm__button}>
-                                                    <Button type={'submit'}
-                                                            disabled={submitting}
-                                                            colorMode={'green'}
-                                                            title={'Cохранить'}
-                                                            rounded
-                                                    />
-                                                </div>
-                                                <div className={styles.employeesForm__button}>
-                                                    <Button type={'button'}
-                                                            disabled={true}
-                                                            colorMode={'red'}
-                                                            title={'Удалить'}
-                                                            rounded
-                                                    />
-                                                </div>
-
+                                        <div className={styles.employeesForm__buttonsPanel}>
+                                            <div className={styles.employeesForm__button}>
+                                                <Button type={'submit'}
+                                                        disabled={submitting}
+                                                        colorMode={'green'}
+                                                        title={'Cохранить'}
+                                                        rounded
+                                                />
                                             </div>
+                                            <div className={styles.employeesForm__button}>
+                                                <Button type={'button'}
+                                                        disabled={true}
+                                                        colorMode={'red'}
+                                                        title={'Удалить'}
+                                                        rounded
+                                                />
+                                            </div>
+
+                                        </div>
 
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
                                     </form>
