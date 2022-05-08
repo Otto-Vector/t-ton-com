@@ -21,21 +21,21 @@ import Upload, {UploadProps} from 'rc-upload'
 
 const uploadProps: UploadProps = {
     action: () => {
-        return new Promise( resolve => {
-            setTimeout( () => {
-                resolve( '/upload.do' )
-            }, 2000 )
-        } )
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve('/upload.do')
+            }, 2000)
+        })
     },
     multiple: true,
-    onStart( file: any ) {
-        console.log( 'onStart', file, file.name )
+    onStart(file: any) {
+        console.log('onStart', file, file.name)
     },
-    onSuccess( ret: any ) {
-        console.log( 'onSuccess', ret )
+    onSuccess(ret: any) {
+        console.log('onSuccess', ret)
     },
-    onError( err: any ) {
-        console.log( 'onError', err )
+    onError(err: any) {
+        console.log('onError', err)
     },
 }
 
@@ -58,7 +58,7 @@ type employeesCardType<T = string | undefined> = {
 }
 
 // вынесенный тип для валидаторов формы
-type validateType = undefined | ( ( val: string ) => string | undefined )
+type validateType = undefined | ((val: string) => string | undefined)
 
 type OwnProps = {
     // onSubmit: (requisites: employeesCardType) => void
@@ -69,18 +69,18 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     const header = 'Сотрудник'
     const infoText = 'Проверьте правильность внесенных данных, перед сохранением.'
-    const isFetching = useSelector( getIsFetchingRequisitesStore )
-    const { options } = useSelector( getRoutesStore )
+    const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
     const onSubmit = () => {
     }
 
     const onCancelClick = () => {
-        navigate( options )
+        navigate(options)
     }
 
-    const sendPassportFile = ( event: ChangeEvent<HTMLInputElement> ) => {
+    const sendPassportFile = (event: ChangeEvent<HTMLInputElement>) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
 
@@ -148,187 +148,190 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     }
 
     const validators: employeesCardType<validateType> = {
-        employeeFIO: composeValidators( required, maxLength( 50 ) ),
-        employeePhoneNumber: composeValidators( required, mustBe00Numbers( 11 ) ),
-        passportSerial: composeValidators( mustBe00Numbers( 10 ) ),
+        employeeFIO: composeValidators(required, maxLength(50)),
+        employeePhoneNumber: composeValidators(required, mustBe00Numbers(11)),
+        passportSerial: composeValidators(mustBe00Numbers(10)),
         passportImage: undefined,
         passportFMS: undefined,
         passportDate: undefined,
-        drivingLicenseNumber: composeValidators( mustBe00Numbers( 10 ) ),
+        drivingLicenseNumber: composeValidators(mustBe00Numbers(10)),
         drivingLicenseImage: undefined,
         drivingCategory: undefined,
-        personnelNumber: composeValidators( maxNumbers( 10 ) ),
-        garageNumber: composeValidators( maxNumbers( 10 ) ),
-        mechanicFIO: composeValidators( maxLength( 50 ) ),
-        dispatcherFIO: composeValidators( maxLength( 50 ) ),
+        personnelNumber: composeValidators(maxNumbers(10)),
+        garageNumber: composeValidators(maxNumbers(10)),
+        mechanicFIO: composeValidators(maxLength(50)),
+        dispatcherFIO: composeValidators(maxLength(50)),
         photoFace: undefined,
-        rating: composeValidators( maxNumbers( 2 ) ),
+        rating: composeValidators(maxNumbers(2)),
     }
 
 
     return (
-        <div className={ styles.employeesForm }>
-            <div className={ styles.employeesForm__wrapper }>
+        <div className={styles.employeesForm}>
+            <div className={styles.employeesForm__wrapper}>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <h4 className={ styles.employeesForm__header }>{ header }</h4>
+                        <h4 className={styles.employeesForm__header}>{header}</h4>
                         <Form
-                            onSubmit={ onSubmit }
-                            initialValues={ initialValues }
+                            onSubmit={onSubmit}
+                            initialValues={initialValues}
                             render={
-                                ( { submitError, handleSubmit, pristine, form, submitting } ) => (
-                                    <form onSubmit={ handleSubmit } className={ styles.employeesForm__form }>
+                                ({submitError, handleSubmit, pristine, form, submitting}) => (
+                                    <form onSubmit={handleSubmit} className={styles.employeesForm__form}>
                                         <div
-                                            className={ styles.employeesForm__inputsPanel + ' ' + styles.employeesForm__inputsPanel_titled }>
-                                            <Field name={ 'employeeFIO' }
-                                                   placeholder={ label.employeeFIO }
-                                                   maskFormat={ maskOn.employeeFIO }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.employeeFIO }
-                                                   parse={ parseFIO }
+                                            className={styles.employeesForm__inputsPanel + ' ' + styles.employeesForm__inputsPanel_titled}>
+                                            <Field name={'employeeFIO'}
+                                                   placeholder={label.employeeFIO}
+                                                   maskFormat={maskOn.employeeFIO}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.employeeFIO}
+                                                   parse={parseFIO}
                                             />
-                                            <Field name={ 'employeePhoneNumber' }
-                                                   placeholder={ label.employeePhoneNumber }
-                                                   maskFormat={ maskOn.employeePhoneNumber }
+                                            <Field name={'employeePhoneNumber'}
+                                                   placeholder={label.employeePhoneNumber}
+                                                   maskFormat={maskOn.employeePhoneNumber}
                                                    allowEmptyFormatting
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.employeePhoneNumber }
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.employeePhoneNumber}
                                             />
                                         </div>
-                                        <div className={ styles.employeesForm__inputsPanel }>
-                                            <Field name={ 'passportSerial' }
-                                                   placeholder={ label.passportSerial }
-                                                   maskFormat={ maskOn.passportSerial }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.passportSerial }
+                                        <div className={styles.employeesForm__inputsPanel}>
+                                            <Field name={'passportSerial'}
+                                                   placeholder={label.passportSerial}
+                                                   maskFormat={maskOn.passportSerial}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.passportSerial}
                                             />
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
-                                            <div className={ styles.employeesForm__attachFile }>
-                                                <Upload { ...uploadProps }>
-                                                    <Button colorMode={ 'lightBlue' } title={ 'Добавить' + label.passportImage }
+                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+                                            <div className={styles.employeesForm__attachFile}>
+                                                <Upload {...uploadProps}>
+                                                    <Button colorMode={'lightBlue'}
+                                                            title={'Добавить' + label.passportImage}
                                                             rounded>
-                                                        <MaterialIcon icon_name={ 'attach_file' }/>
+                                                        <MaterialIcon icon_name={'attach_file'}/>
                                                     </Button>
                                                 </Upload>
                                             </div>
-                                            <div className={ styles.employeesForm__attachFile }>
-                                                <Button colorMode={ 'white' } title={ 'Просмотреть' + label.passportImage }
-                                                        disabled={ !initialValues.passportImage }
+                                            <div className={styles.employeesForm__attachFile}>
+                                                <Button colorMode={'white'} title={'Просмотреть' + label.passportImage}
+                                                        disabled={!initialValues.passportImage}
                                                         rounded
                                                 >
-                                                    <MaterialIcon icon_name={ 'search' }/>
+                                                    <MaterialIcon icon_name={'search'}/>
                                                 </Button>
                                             </div>
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
-                                            <Field name={ 'passportFMS' }
-                                                   placeholder={ label.passportFMS }
-                                                   maskFormat={ maskOn.passportFMS }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.passportFMS }
+                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+                                            <Field name={'passportFMS'}
+                                                   placeholder={label.passportFMS}
+                                                   maskFormat={maskOn.passportFMS}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.passportFMS}
                                             />
-                                            <Field name={ 'passportDate' }
-                                                   placeholder={ label.passportDate }
-                                                   maskFormat={ maskOn.passportDate }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   inputType={ 'date' }
-                                                   validate={ validators.passportDate }
+                                            <Field name={'passportDate'}
+                                                   placeholder={label.passportDate}
+                                                   maskFormat={maskOn.passportDate}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   inputType={'date'}
+                                                   validate={validators.passportDate}
                                             />
                                             <div className={styles.employeesForm__withAttach}>
-                                                <Field name={ 'drivingLicenseNumber' }
-                                                   placeholder={ label.drivingLicenseNumber }
-                                                   maskFormat={ maskOn.drivingLicenseNumber }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.drivingLicenseNumber }
-                                            />
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
-                                            <div className={ styles.employeesForm__attachFile }>
-                                                <Upload { ...uploadProps }>
-                                                    <Button colorMode={ 'lightBlue' } title={ 'Добавить' + label.drivingLicenseImage }
-                                                            rounded>
-                                                        <MaterialIcon icon_name={ 'attach_file' }/>
+                                                <Field name={'drivingLicenseNumber'}
+                                                       placeholder={label.drivingLicenseNumber}
+                                                       maskFormat={maskOn.drivingLicenseNumber}
+                                                       component={InputType}
+                                                       resetFieldBy={form}
+                                                       validate={validators.drivingLicenseNumber}
+                                                />
+                                                {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+                                                {/*<div className={styles.employeesForm__attachFile}>*/}
+                                                    <Upload {...uploadProps} className={styles.employeesForm__attachFile}>
+                                                        <Button colorMode={'lightBlue'}
+                                                                title={'Добавить' + label.drivingLicenseImage}
+                                                                rounded>
+                                                            <MaterialIcon icon_name={'attach_file'}/>
+                                                        </Button>
+                                                    </Upload>
+                                                {/*</div>*/}
+                                                <div className={styles.employeesForm__attachFile}>
+                                                    <Button colorMode={'white'}
+                                                            title={'Просмотреть' + label.drivingLicenseImage}
+                                                            disabled={!initialValues.drivingLicenseImage}
+                                                            rounded
+                                                    >
+                                                        <MaterialIcon icon_name={'search'}/>
                                                     </Button>
-                                                </Upload>
+                                                </div>
+                                                {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
                                             </div>
-                                            <div className={ styles.employeesForm__attachFile }>
-                                                <Button colorMode={ 'white' } title={ 'Просмотреть' + label.drivingLicenseImage }
-                                                        disabled={ !initialValues.drivingLicenseImage }
-                                                        rounded
-                                                >
-                                                    <MaterialIcon icon_name={ 'search' }/>
-                                                </Button>
-                                            </div>
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
-                                            </div>
-                                            <Field name={ 'drivingCategory' }
-                                                   placeholder={ label.drivingCategory }
-                                                   maskFormat={ maskOn.drivingCategory }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.drivingCategory }
+                                            <Field name={'drivingCategory'}
+                                                   placeholder={label.drivingCategory}
+                                                   maskFormat={maskOn.drivingCategory}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.drivingCategory}
                                             />
-                                            <Field name={ 'personnelNumber' }
-                                                   placeholder={ label.personnelNumber }
-                                                   maskFormat={ maskOn.personnelNumber }
+                                            <Field name={'personnelNumber'}
+                                                   placeholder={label.personnelNumber}
+                                                   maskFormat={maskOn.personnelNumber}
                                                    allowEmptyFormatting
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.personnelNumber }
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.personnelNumber}
                                             />
-                                            <Field name={ 'garageNumber' }
-                                                   placeholder={ label.garageNumber }
-                                                   maskFormat={ maskOn.garageNumber }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.garageNumber }
+                                            <Field name={'garageNumber'}
+                                                   placeholder={label.garageNumber}
+                                                   maskFormat={maskOn.garageNumber}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.garageNumber}
                                             />
-                                            <Field name={ 'mechanicFIO' }
-                                                   placeholder={ label.mechanicFIO }
-                                                   maskFormat={ maskOn.mechanicFIO }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.mechanicFIO }
-                                                   parse={ parseFIO }
+                                            <Field name={'mechanicFIO'}
+                                                   placeholder={label.mechanicFIO}
+                                                   maskFormat={maskOn.mechanicFIO}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.mechanicFIO}
+                                                   parse={parseFIO}
                                             />
-                                            <Field name={ 'dispatcherFIO' }
-                                                   placeholder={ label.dispatcherFIO }
-                                                   maskFormat={ maskOn.dispatcherFIO }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.dispatcherFIO }
-                                                   parse={ parseFIO }
+                                            <Field name={'dispatcherFIO'}
+                                                   placeholder={label.dispatcherFIO}
+                                                   maskFormat={maskOn.dispatcherFIO}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.dispatcherFIO}
+                                                   parse={parseFIO}
                                             />
                                         </div>
-                                        <div className={ styles.employeesForm__inputsPanel }>
-                                            <div className={ styles.employeesForm__photo }>
-                                                <img src={ initialValues.photoFace || mapImage } alt="facePhoto"/>
+                                        <div className={styles.employeesForm__inputsPanel}>
+                                            <div className={styles.employeesForm__photo}>
+                                                <img src={initialValues.photoFace || mapImage} alt="facePhoto"/>
                                             </div>
-                                            <Field name={ 'rating' }
-                                                   placeholder={ label.rating }
-                                                   maskFormat={ maskOn.rating }
-                                                   component={ InputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.rating }
+                                            <Field name={'rating'}
+                                                   placeholder={label.rating}
+                                                   maskFormat={maskOn.rating}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.rating}
                                             />
-                                            <div className={ styles.employeesForm__buttonsPanel }>
-                                                <div className={ styles.employeesForm__button }>
-                                                    <Button type={ 'submit' }
-                                                            disabled={ submitting }
-                                                            colorMode={ 'green' }
-                                                            title={ 'Cохранить' }
+                                            <div className={styles.employeesForm__buttonsPanel}>
+                                                <div className={styles.employeesForm__button}>
+                                                    <Button type={'submit'}
+                                                            disabled={submitting}
+                                                            colorMode={'green'}
+                                                            title={'Cохранить'}
                                                             rounded
                                                     />
                                                 </div>
-                                                <div className={ styles.employeesForm__button }>
-                                                    <Button type={ 'button' }
-                                                            disabled={ true }
-                                                            colorMode={ 'red' }
-                                                            title={ 'Удалить' }
+                                                <div className={styles.employeesForm__button}>
+                                                    <Button type={'button'}
+                                                            disabled={true}
+                                                            colorMode={'red'}
+                                                            title={'Удалить'}
                                                             rounded
                                                     />
                                                 </div>
@@ -336,21 +339,21 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             </div>
 
                                         </div>
-                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
+                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
                                     </form>
                                 )
                             }/>
 
-                    </> }
-                <div className={ styles.employeesForm__cancelButton } onClick={ onCancelClick }>
-                    <Button type={ 'submit' }
-                            colorMode={ 'white' }
-                            title={ 'Отменить/вернуться' }
+                    </>}
+                <div className={styles.employeesForm__cancelButton} onClick={onCancelClick}>
+                    <Button type={'submit'}
+                            colorMode={'white'}
+                            title={'Отменить/вернуться'}
                             rounded
-                    ><MaterialIcon icon_name={ 'close' }/></Button>
+                    ><MaterialIcon icon_name={'close'}/></Button>
                 </div>
-                <div className={ styles.employeesForm__infoText }>
-                    <span>{ infoText }</span>
+                <div className={styles.employeesForm__infoText}>
+                    <span>{infoText}</span>
                 </div>
             </div>
         </div>

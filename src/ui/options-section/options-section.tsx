@@ -37,11 +37,11 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                 </div>
             </header>
             <div className={styles.optionsSection__table}>
-                <ColumnDataList label={shippers.label} content={shippers.content} route={optionsEdit.shippers}/>
-                <ColumnDataList label={employees.label} content={employees.content} route={optionsEdit.employees}/>
-                <ColumnDataList label={transport.label} content={transport.content} route={optionsEdit.transport}/>
-                <ColumnDataList label={trailer.label} content={trailer.content} route={optionsEdit.trailer}/>
-                <ColumnDataList label={consignees.label} content={consignees.content} route={optionsEdit.consignees}/>
+                <ColumnDataList item={shippers} route={optionsEdit.shippers}/>
+                <ColumnDataList item={employees} route={optionsEdit.employees}/>
+                <ColumnDataList item={transport} route={optionsEdit.transport}/>
+                <ColumnDataList item={trailer} route={optionsEdit.trailer}/>
+                <ColumnDataList item={consignees} route={optionsEdit.consignees}/>
             </div>
                 </section>
                 )

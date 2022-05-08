@@ -5,7 +5,7 @@ import NumberFormat from 'react-number-format';
 
 
 type OwnProps = {
-    resetFieldBy: FormApi
+    resetFieldBy?: FormApi
     placeholder?: string
     meta: FieldState<any>
     input: any

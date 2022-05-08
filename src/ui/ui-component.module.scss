@@ -12,6 +12,7 @@
     display: flex;
     flex-flow: row nowrap;
     flex-grow: 1;
+    height: calc(1vh - 115px);
   }
 
   &__sideBarLeft {
@@ -20,13 +21,13 @@
 
   &__content {
     width: 100%;
-    //flex-grow: 1;
+    flex-grow: 1;
     background-image: url('../media/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
     border-radius: 25px;
-    //overflow: hidden;
+
   }
 
   &__sideBarRight {
