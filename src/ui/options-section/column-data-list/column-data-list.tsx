@@ -19,10 +19,13 @@ export const ColumnDataList: React.FC<OwnProps> = ({item, route}) => {
 
     const [content, setContent] = useState(item.content)
 
-    const onSearch = async (event: ChangeEvent<HTMLInputElement>) => {
-        event.target?.value
-            ? setContent(item.content.filter(({title})=>title.includes(event.target?.value)))
-            : setContent(item.content)
+    const onSearch = (event: ChangeEvent<HTMLInputElement>) => {
+        let test = event.target?.value
+        if (test) {
+            setContent(item.content.filter(({title})=>title.match(new RegExp(test,'ig'))))
+        } else {
+            setContent(item.content)
+        }
     }
 
     return (
@@ -30,15 +33,14 @@ export const ColumnDataList: React.FC<OwnProps> = ({item, route}) => {
             <header className={styles.columnDataList__header}>
                 <span>{item.label}</span>
                 <div className={styles.rowItem__label +' '+ styles.rowItem_search}>
-                    <input placeholder={item.placeholder} onChange={(e)=>{onSearch(e)}}/>
+                    <input placeholder={item.placeholder} onChange={onSearch}/>
                 </div>
             </header>
             <div className={styles.columnDataList__list}>
                 {content.map(({id, title}) =>
                     <div className={styles.columnDataList__item + ' ' + styles.rowItem}
-                         onClick={() => {
-                             navigate(route + id)
-                         }}
+                         onClick={() => {navigate(route + id)}}
+                         key={item.label+id+title}
                     >
                         <div className={styles.rowItem__label} title={title}>
                             {title || 'null'}

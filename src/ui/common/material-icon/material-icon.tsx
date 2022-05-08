@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './material-icon.module.scss'
 
 type OwnProps = {
-    icon_name: 'search' | 'expand_more' | 'close' | 'expand_less' | 'menu_book' | 'reply' | 'add' | 'attach_file'
+    icon_name: 'search' | 'expand_more' | 'close' | 'expand_less' | 'menu_book' | 'reply' | 'add' | 'attach_file' | 'upload'
 }
 
 export const MaterialIcon: React.FC<OwnProps> = ( { icon_name } ) => {
