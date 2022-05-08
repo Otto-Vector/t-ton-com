@@ -10,7 +10,7 @@
 
   &__wrapper {
     position: relative;
-    max-width: 695px;
+    max-width: 660px;
     background: #FFFFFF;
     border: 1px solid rgba(2, 62, 138, 0.54);
     box-shadow: 0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198), inset 128px 124px 64px rgba(158, 158, 158, 0.14), inset -107px -107px 76px rgba(158, 158, 158, 0.14);
@@ -37,7 +37,7 @@
 
   &__inputsPanel {
     padding: 5px 10px;
-    min-width: 320px;
+    min-width: 360px;
 
     &_titled { // панель встраивается в центр
       width: 100%;
@@ -49,36 +49,53 @@
     }
   }
 
-  &__textArea {
-    height: 100px;
+  &__photo {
+    display: flex;
+    justify-content: center;
+    align-content: stretch;
+    width: 200px;
+    height: 240px;
+    justify-self: stretch;
+    align-self: stretch;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid #2D2D2D;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 18px;
+    margin: 10px auto;
+    cursor: pointer;
+  }
+
+  &__ratingPanel {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding-right: 10px;
+  }
+
+  &__ratingPanelLabel {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.2;
+    text-align: right;
+    color: #023E8A;
+    padding-right: 10px;
+  }
+
+  &__ratingInput {
+    height: 20px;
+    width: 45px;
   }
 
   &__buttonsPanel {
     @include flex-center();
     justify-content: space-between;
-    width: 100%;
+    width: 50%;
     height: 40px;
-    margin: 0 auto;
+    margin: 0 auto 10px;
     font-family: $RalewayFont;
     font-weight: 700;
     font-size: 24px;
     line-height: 28px;
-  }
-
-  &__photo {
-    display: flex;
-    justify-content: center;
-    align-content: stretch;
-    max-width: 200px;
-    justify-self: stretch;
-    align-self: stretch;
-
-    margin: 30px auto;
-    cursor: pointer;
-    background-color: #A0B4FF;
-    //border-width: 2px;
-    //border-color: $accentColor;
-    //border-radius: 30px;
   }
 
   &__button {
@@ -105,7 +122,6 @@
   }
 
   &__attachFile {
-    //min-width: 30px;
     max-width: 30px;
     height: 30px;
   }
@@ -119,6 +135,5 @@
 
   &__withAttach {
     display: flex;
-    //flex: 0 0;
   }
 }

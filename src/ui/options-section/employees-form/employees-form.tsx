@@ -9,15 +9,13 @@ import {Button} from '../../common/button/button'
 import {InputType} from '../../common/input-type/input-type'
 import {Preloader} from '../../common/Preloader/Preloader'
 
-import mapImage from '../../../media/noImagePhoto.png'
+import noImagePhoto from '../../../media/noImagePhoto2.png'
 import {useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {parseFIO} from '../../../utils/parsers'
-
-import Upload, {UploadProps} from 'rc-upload'
 
 
 type employeesCardType<T = string | undefined> = {
@@ -69,7 +67,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
     // const dispatch = useDispatch()
-    // const requisiteSaveHandleClick = () => { // onSubmit
+    // const employeeSaveHandleClick = () => { // onSubmit
     // }
     //
     // const fakeFetch = () => { // @ts-ignore
@@ -91,7 +89,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         mechanicFIO: 'ФИО механика',
         dispatcherFIO: 'ФИО диспетчера',
         photoFace: 'Добавить фотографию сотрудника',
-        rating: 'Рейтинг',
+        rating: 'Рейтинг:',
     }
 
     const maskOn: employeesCardType = {
@@ -202,14 +200,15 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                         />
                                                     </Button>
                                                 </div>
-                                            <div className={styles.employeesForm__attachFile}>
-                                                <Button colorMode={'white'} title={'Просмотреть' + label.passportImage}
-                                                        disabled={!initialValues.passportImage}
-                                                        rounded
-                                                >
-                                                    <MaterialIcon icon_name={'search'}/>
-                                                </Button>
-                                            </div>
+                                                <div className={styles.employeesForm__attachFile}>
+                                                    <Button colorMode={'white'}
+                                                            title={'Просмотреть' + label.passportImage}
+                                                            disabled={!initialValues.passportImage}
+                                                            rounded
+                                                    >
+                                                        <MaterialIcon icon_name={'search'}/>
+                                                    </Button>
+                                                </div>
                                             </div>
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
                                             <Field name={'passportFMS'}
@@ -269,7 +268,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             <Field name={'personnelNumber'}
                                                    placeholder={label.personnelNumber}
                                                    maskFormat={maskOn.personnelNumber}
-                                                   allowEmptyFormatting
                                                    component={InputType}
                                                    resetFieldBy={form}
                                                    validate={validators.personnelNumber}
@@ -298,17 +296,24 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    parse={parseFIO}
                                             />
                                         </div>
-                                        <div className={styles.employeesForm__inputsPanel}>
+                                        <div>
                                             <div className={styles.employeesForm__photo}>
-                                                <img src={initialValues.photoFace || mapImage} alt="facePhoto"/>
+                                                <img src={initialValues.photoFace || noImagePhoto} alt="facePhoto"/>
                                             </div>
-                                            <Field name={'rating'}
-                                                   placeholder={label.rating}
-                                                   maskFormat={maskOn.rating}
-                                                   component={InputType}
-                                                   resetFieldBy={form}
-                                                   validate={validators.rating}
-                                            />
+                                            <div className={styles.employeesForm__ratingPanel}>
+                                                <label className={styles.employeesForm__ratingPanelLabel} style={{fontSize: '16px'}}>{label.rating}</label>
+                                                <div className={styles.employeesForm__ratingInput}>
+                                                    <Field name={'rating'}
+                                                           placeholder={'%'}
+                                                           maskFormat={maskOn.rating}
+                                                           component={InputType}
+                                                           resetFieldBy={form}
+                                                           validate={validators.rating}
+                                                           disabled
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
                                             <div className={styles.employeesForm__buttonsPanel}>
                                                 <div className={styles.employeesForm__button}>
                                                     <Button type={'submit'}
@@ -329,7 +334,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
                                             </div>
 
-                                        </div>
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
                                     </form>
                                 )
