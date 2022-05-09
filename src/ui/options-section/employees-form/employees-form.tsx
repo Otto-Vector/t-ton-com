@@ -16,6 +16,7 @@ import {useNavigate} from 'react-router-dom'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {parseFIO} from '../../../utils/parsers'
+import {InfoText} from '../common/info-text/into-text';
 
 
 type employeesCardType<T = string | undefined> = {
@@ -47,7 +48,6 @@ type OwnProps = {
 export const EmployeesForm: React.FC<OwnProps> = () => {
 
     const header = 'Сотрудник'
-    const infoText = 'Проверьте правильность внесенных данных, перед сохранением.'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -357,9 +357,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                             rounded
                     ><MaterialIcon icon_name={'close'}/></Button>
                 </div>
-                <div className={styles.employeesForm__infoText}>
-                    <span>{infoText}</span>
-                </div>
+                <InfoText/>
             </div>
         </div>
     )

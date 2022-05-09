@@ -15,6 +15,7 @@ import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-resele
 import {useNavigate} from 'react-router-dom';
 import {MaterialIcon} from '../../common/material-icon/material-icon';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
+import {InfoText} from '../common/info-text/into-text';
 
 type consigneesCardType<T = string | null> = {
     title: T // заголовок
@@ -40,12 +41,13 @@ type OwnProps = {
 export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
 
     const header = 'ГрузоПолучатели'
-    const infoText = 'Проверьте правильность внесенных данных, перед сохранением.'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
-    const onCancelClick = () => { navigate(options)};
+    const onCancelClick = () => {
+        navigate(options)
+    };
 
     // const dispatch = useDispatch()
     // const requisiteSaveHandleClick = () => { // onSubmit
@@ -236,9 +238,7 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
                             rounded
                     ><MaterialIcon icon_name={'close'}/></Button>
                 </div>
-                <div className={styles.consigneesForm__infoText}>
-                    <span>{infoText}</span>
-                </div>
+                <InfoText/>
             </div>
         </div>
     )

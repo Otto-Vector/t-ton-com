@@ -1,9 +1,8 @@
 import React, {ChangeEvent} from 'react'
-import styles from './trailer-form.module.scss'
+import styles from '../transport-form/transport-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {
-    composeValidators, required, maxLength,
-    mustBe0_0Numbers, maxRangeNumber,
+    composeValidators, required, maxLength, maxRangeNumber,
 } from '../../../utils/validators'
 import {Button} from '../../common/button/button'
 import {InputType} from '../../common/input-type/input-type'
@@ -17,6 +16,7 @@ import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {parseFIO} from '../../../utils/parsers';
 import {FormSelector} from '../../common/form-selector/form-selector';
+import {InfoText} from '../common/info-text/into-text';
 
 
 export const cargoType = ['Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
@@ -27,9 +27,9 @@ export const propertyRights = ['Собственность', 'Аренда', 'Л
 type PropertyRights = typeof propertyRights[number]
 
 type trailerCardType<T = string | undefined> = {
-    trailerNumber: T // Гос. номер прицепа
-    trailerTrademark: T // Марка прицепа
-    trailerModel: T // Модель прицепа
+    trailerNumber: T // Гос. номер авто
+    trailerTrademark: T // Марка авто
+    trailerModel: T // Модель авто
     pts: T // ПТС
     dopog: T // ДОПОГ
     cargoType: T | CargoType // Тип груза
@@ -48,7 +48,6 @@ type OwnProps = {
 export const TrailerForm: React.FC<OwnProps> = () => {
 
     const header = 'Транспорт'
-    const infoText = 'Проверьте правильность внесенных данных, перед сохранением.'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -60,13 +59,16 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const sendPassportFile = (event: ChangeEvent<HTMLInputElement>) => {
+    const sendPhotoFile = (event: ChangeEvent<HTMLInputElement>) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
-
+    const sendPTSFile = (event: ChangeEvent<HTMLInputElement>) => {
+        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
+    }
     const sendDopogFile = (event: ChangeEvent<HTMLInputElement>) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
+
     // const dispatch = useDispatch()
     // const employeeSaveHandleClick = () => { // onSubmit
     // }
@@ -76,9 +78,9 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     // }
 
     const label: trailerCardType = {
-        trailerNumber: 'Гос. номер прицепа',
-        trailerTrademark: 'Марка прицепа',
-        trailerModel: 'Модель прицепа',
+        trailerNumber: 'Гос. номер авто',
+        trailerTrademark: 'Марка авто',
+        trailerModel: 'Модель авто',
         pts: 'ПТС',
         dopog: 'ДОПОГ',
         cargoType: 'Тип груза',
@@ -118,26 +120,25 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         pts: undefined,
         dopog: undefined,
         cargoType: undefined,
-        cargoWeight: composeValidators(mustBe0_0Numbers(1)(2), maxRangeNumber(50)),
+        cargoWeight: composeValidators(maxRangeNumber(50)),
         propertyRights: undefined,
         trailerImage: undefined,
     }
 
 
     return (
-        <div className={styles.trailerForm}>
-            <div className={styles.trailerForm__wrapper}>
+        <div className={styles.transportForm}>
+            <div className={styles.transportForm__wrapper}>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <h4 className={styles.trailerForm__header}>{header}</h4>
+                        <h4 className={styles.transportForm__header}>{header}</h4>
                         <Form
                             onSubmit={onSubmit}
                             initialValues={initialValues}
                             render={
                                 ({submitError, handleSubmit, pristine, form, submitting}) => (
-                                    <form onSubmit={handleSubmit} className={styles.trailerForm__form}>
-                                        <div
-                                            className={styles.trailerForm__inputsPanel + ' ' + styles.trailerForm__inputsPanel_titled}>
+                                    <form onSubmit={handleSubmit} className={styles.transportForm__form}>
+                                        <div className={styles.transportForm__inputsPanel}>
                                             <Field name={'trailerNumber'}
                                                    placeholder={label.trailerNumber}
                                                    maskFormat={maskOn.trailerNumber}
@@ -153,18 +154,16 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={form}
                                                    validate={validators.trailerTrademark}
                                             />
-                                        </div>
-                                        <Field name={'trailerModel'}
-                                               placeholder={label.trailerModel}
-                                               maskFormat={maskOn.trailerModel}
-                                               component={InputType}
-                                               resetFieldBy={form}
-                                               validate={validators.trailerModel}
-                                        />
 
-                                        {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
-                                        <div className={styles.trailerForm__inputsPanel}>
-                                            <div className={styles.trailerForm__withAttach}>
+                                            <Field name={'trailerModel'}
+                                                   placeholder={label.trailerModel}
+                                                   maskFormat={maskOn.trailerModel}
+                                                   component={InputType}
+                                                   resetFieldBy={form}
+                                                   validate={validators.trailerModel}
+                                            />
+                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+                                            <div className={styles.transportForm__withAttach}>
                                                 <Field name={'pts'}
                                                        placeholder={label.pts}
                                                        maskFormat={maskOn.pts}
@@ -173,65 +172,50 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                        validate={validators.pts}
                                                        disabled
                                                 />
-                                                <div className={styles.trailerForm__attachFile}>
-                                                    <Button colorMode={'white'}
+                                                <div className={styles.transportForm__attachFile}>
+                                                    <Button colorMode={'noFill'}
                                                             title={'Добавить' + label.pts}
                                                             rounded>
                                                         <MaterialIcon icon_name={'attach_file'}/>
                                                         <input type={'file'}
-                                                               className={styles.trailerForm__hiddenAttachFile}
+                                                               className={styles.transportForm__hiddenAttachFile}
                                                                accept={'.png, .jpeg, .pdf, .jpg'}
-                                                               onChange={sendPassportFile}
+                                                               onChange={sendPTSFile}
                                                         />
-                                                    </Button>
-                                                </div>
-                                                <div className={styles.trailerForm__attachFile}>
-                                                    <Button colorMode={'white'}
-                                                            title={'Просмотреть' + label.pts}
-                                                            disabled={!initialValues.pts}
-                                                            rounded
-                                                    >
-                                                        <MaterialIcon icon_name={'search'}/>
                                                     </Button>
                                                 </div>
                                             </div>
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
-                                            <div className={styles.trailerForm__inputsPanel}>
-                                                <div className={styles.trailerForm__withAttach}>
-                                                    <Field name={'dopog'}
-                                                           placeholder={label.dopog}
-                                                           maskFormat={maskOn.dopog}
-                                                           component={InputType}
-                                                           resetFieldBy={form}
-                                                           validate={validators.dopog}
-                                                           disabled
-                                                    />
-                                                    <div className={styles.trailerForm__attachFile}>
-                                                        <Button colorMode={'white'}
-                                                                title={'Добавить' + label.dopog}
-                                                                rounded>
-                                                            <MaterialIcon icon_name={'attach_file'}/>
-                                                            <input type={'file'}
-                                                                   className={styles.trailerForm__hiddenAttachFile}
-                                                                   accept={'.png, .jpeg, .pdf, .jpg'}
-                                                                   onChange={sendDopogFile}
-                                                            />
-                                                        </Button>
-                                                    </div>
-                                                    <div className={styles.trailerForm__attachFile}>
-                                                        <Button colorMode={'white'}
-                                                                title={'Просмотреть' + label.dopog}
-                                                                disabled={!initialValues.dopog}
-                                                                rounded
-                                                        >
-                                                            <MaterialIcon icon_name={'search'}/>
-                                                        </Button>
-                                                    </div>
+                                            <div className={styles.transportForm__withAttach}>
+                                                <Field name={'dopog'}
+                                                       placeholder={label.dopog}
+                                                       maskFormat={maskOn.dopog}
+                                                       component={InputType}
+                                                       resetFieldBy={form}
+                                                       validate={validators.dopog}
+                                                       disabled
+                                                />
+                                                <div className={styles.transportForm__attachFile}>
+                                                    <Button colorMode={'noFill'}
+                                                            title={'Добавить' + label.dopog}
+                                                            rounded>
+                                                        <MaterialIcon icon_name={'attach_file'}/>
+                                                        <input type={'file'}
+                                                               className={styles.transportForm__hiddenAttachFile}
+                                                               accept={'.png, .jpeg, .pdf, .jpg'}
+                                                               onChange={sendDopogFile}
+                                                        />
+                                                    </Button>
                                                 </div>
-                                                {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
 
+                                            </div>
+                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
+
+                                            <div className={styles.transportForm__smallInput}>
                                                 <FormSelector named={'cargoType'} values={cargoType}/>
+                                            </div>
+                                            <div className={styles.transportForm__smallInput}>
                                                 <Field name={'cargoWeight'}
                                                        placeholder={label.cargoWeight}
                                                        maskFormat={maskOn.cargoWeight}
@@ -242,26 +226,37 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <FormSelector named={'propertyRights'} values={propertyRights}/>
                                         </div>
-                                        <div className={styles.trailerForm__photo}>
-                                            <img src={initialValues.trailerImage || noImageTrailer}
-                                                 alt="trailerPhoto"/>
-                                        </div>
+                                        <div>
+                                            <div className={styles.transportForm__photo}
+                                                 title={'Добавить/изменить фото транспорта'}
+                                            >
+                                                <img src={initialValues.trailerImage || noImageTrailer}
+                                                     alt="trailerPhoto"/>
+                                                <input type={'file'}
+                                                       className={styles.transportForm__hiddenAttachFile}
+                                                       accept={'.png, .jpeg, .pdf, .jpg'}
+                                                       onChange={sendPhotoFile}
+                                                />
+                                            </div>
+                                            <div className={styles.transportForm__buttonsPanel}>
 
-                                        <div className={styles.trailerForm__button}>
-                                            <Button type={'submit'}
-                                                    disabled={submitting}
-                                                    colorMode={'green'}
-                                                    title={'Cохранить'}
-                                                    rounded
-                                            />
-                                        </div>
-                                        <div className={styles.trailerForm__button}>
-                                            <Button type={'button'}
-                                                    disabled={true}
-                                                    colorMode={'red'}
-                                                    title={'Удалить'}
-                                                    rounded
-                                            />
+                                                <div className={styles.transportForm__button}>
+                                                    <Button type={'button'}
+                                                            disabled={true}
+                                                            colorMode={'red'}
+                                                            title={'Удалить'}
+                                                            rounded
+                                                    />
+                                                </div>
+                                                <div className={styles.transportForm__button}>
+                                                    <Button type={'submit'}
+                                                            disabled={submitting}
+                                                            colorMode={'green'}
+                                                            title={'Cохранить'}
+                                                            rounded
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
 
 
@@ -271,16 +266,14 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                             }/>
 
                     </>}
-                <div className={styles.trailerForm__cancelButton} onClick={onCancelClick}>
+                <div className={styles.transportForm__cancelButton} onClick={onCancelClick}>
                     <Button type={'submit'}
                             colorMode={'white'}
                             title={'Отменить/вернуться'}
                             rounded
                     ><MaterialIcon icon_name={'close'}/></Button>
                 </div>
-                <div className={styles.trailerForm__infoText}>
-                    <span>{infoText}</span>
-                </div>
+                <InfoText/>
             </div>
         </div>
     )

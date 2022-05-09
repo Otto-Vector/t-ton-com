@@ -2,26 +2,28 @@
 @import "src/styles/mixins";
 
 $dropdown--font    : $PTSansFont;
-$dropdown--bgColor : whitesmoke;
-$black-50 : #00000050;
+$dropdown--bgColor : white;
+$dropdown--borderColor: #92ABC8;
+$dropdown--fontColor: $accentColor;
 $black-75 : #00000075;
 
 .dropdown {
   display: flex;
   flex-direction: column;
   font-family: $dropdown--font;
-  font-size: rem(15);
+  font-size: inherit;
+  font-weight: 400;
   text-align: left;
   position: relative;
   background-color: transparent;
-  width: 40%;
-  border-radius: rem(4);
+  border-radius: rem(12);
+  width: 100%;
 
   &:after {
     @include addMaterialAfter('expand_more');
     font-size: rem(25);
     top: unset;
-    bottom: rem(13);
+    top: rem(8);
     opacity: .5;
   }
 }
@@ -44,14 +46,15 @@ $black-75 : #00000075;
     font-family: $dropdown--font;
     box-sizing: border-box;
     background: $dropdown--bgColor;
-    font-size: rem(15);
-    line-height: rem(20);
+    font-size: inherit;
+    line-height: 1.2;
     border: solid {
-      color: $black-50;
-      radius: rem(4);
+      color: $dropdown--borderColor;
+      radius: inherit;
       width: 2px;
     }
-    padding: rem(13) rem(35) rem(15);
+    color: $dropdown--fontColor;
+    padding: rem(6) rem(30) rem(6) rem(15);
     width: 100%;
 
     transition-property: border;
@@ -64,11 +67,5 @@ $black-75 : #00000075;
     &:active {
     }
 
-    &:after {
-      @include addMaterialAfter('expand_more');
-      font-size: rem(25);
-      top: unset;
-      bottom: rem(13);
-    }
   }
 
