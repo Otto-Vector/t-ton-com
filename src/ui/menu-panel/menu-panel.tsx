@@ -10,7 +10,8 @@ import searchSVG from './buttonsSVG/search.svg'
 import statusSVG from './buttonsSVG/status.svg'
 import historySVG from './buttonsSVG/history.svg'
 import mapSVG from './buttonsSVG/map.svg'
-import optionsSVG from './buttonsSVG/options.svg'
+// import optionsSVG from './buttonsSVG/options.svg'
+import optionsPNG from './buttonsSVG/options.png'
 import {getIsAuth} from '../../selectors/auth-reselect';
 
 
@@ -53,7 +54,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
             buttonText: 'Карта', active: isAuth
         },
         {
-            route: routes.options, src: optionsSVG, title: 'Панель настроек (админ)',
+            route: routes.options, src: optionsPNG, title: 'Панель настроек (админ)',
             buttonText: 'Настройки', active: isAuth
         },
     ]

@@ -14,7 +14,6 @@ import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-resele
 import {useNavigate} from 'react-router-dom'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {parseFIO} from '../../../utils/parsers';
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {InfoText} from '../common-forms/info-text/into-text';
 import {CargoType, cargoType, propertyRights, PropertyRights} from './transport-form';
@@ -137,7 +136,6 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.trailerNumber}
-                                                   parse={parseFIO} // как фио чтобы не писали сюда лишних символов
                                             />
                                             <Field name={'trailerTrademark'}
                                                    placeholder={label.trailerTrademark}

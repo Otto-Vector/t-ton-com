@@ -144,20 +144,20 @@ $input--disabled-font-color: $mainFontColor;
   //обработка манипуляций с :placeholder
   @include placeholder() {
     font-family: $input--font;
-    position: absolute;
-    top: $input--padding-top+1px;
-    transition-property: all;
-    transition-duration: .3s;
-  }
-
-  &:focus {
-    //при фокусе, сообщение placeholder уходит вверх
-    @include placeholder() {
-      top: -1px;
-      font-size: 70%;
-    }
+    //position: absolute;
+    //top: $input--padding-top+1px;
+    //transition-property: all;
+    //transition-duration: .3s;
   }
 }
+
+  //&:focus {
+  //  //при фокусе, сообщение placeholder уходит вверх
+  //  @include placeholder() {
+  //    top: -1px;
+  //    font-size: 70%;
+  //  }
+  //}
 
 // кастомизация сообщения об ошибке под/над инпутом
 .errorSpan {
