@@ -1,8 +1,9 @@
-import React, {ChangeEvent, useState} from 'react'
+import React, {ChangeEvent, useEffect, useState} from 'react'
 import styles from './column-data-list.module.scss'
 import {MaterialIcon} from '../../common/material-icon/material-icon';
 import {Button} from '../../common/button/button';
 import {useNavigate} from 'react-router-dom';
+import {parseCharsAndNumbers} from '../../../utils/parsers';
 
 
 type OwnProps = {
@@ -18,22 +19,39 @@ export const ColumnDataList: React.FC<OwnProps> = ({item, route}) => {
     const navigate = useNavigate();
 
     const [content, setContent] = useState(item.content)
+    const [test, setTest] = useState<string>('')
 
     const onSearch = (event: ChangeEvent<HTMLInputElement>) => {
-        let test = event.target?.value
-        if (test) {
+        setTest(parseCharsAndNumbers(event.target?.value))
+    }
+
+    useEffect(()=>{
+        if (test !== '') {
             setContent(item.content.filter(({title})=>title.match(new RegExp(test,'ig'))))
         } else {
             setContent(item.content)
         }
-    }
+    },[test, content])
 
     return (
         <div className={styles.columnDataList}>
             <header className={styles.columnDataList__header}>
                 <span>{item.label}</span>
                 <div className={styles.rowItem__label +' '+ styles.rowItem_search}>
-                    <input placeholder={item.placeholder} onChange={onSearch}/>
+                    <div className={styles.rowItem__searchIcon}><MaterialIcon icon_name={'search'}/></div>
+                    <input placeholder={item.placeholder}
+                           value={test}
+                           onChange={onSearch}
+                    />
+                    <div className={styles.rowItem__clear}>
+                        <Button colorMode={'white'}
+                                disabled={!test}
+                                title={'Очистить строку поиска'}
+                                onClick={()=>{setTest('')}
+                        }>
+                            <MaterialIcon icon_name={'close'}/>
+                        </Button>
+                    </div>
                 </div>
             </header>
             <div className={styles.columnDataList__list}>

@@ -6,7 +6,7 @@ type contentType = { id: number, title: string }[]
 const initialState = {
     shippers: {
         label: 'Грузоотправители',
-        placeholder: 'Название',
+        placeholder: 'Поиск по названию',
         content: [
             {id: 1, title: 'Черепахи'},
             {id: 2, title: 'крокодилыНазвание ЧерепахиБегемоты'},
@@ -35,7 +35,7 @@ const initialState = {
     },
     employees: {
         label: 'Сотрудники',
-        placeholder: 'Ф.И.О.',
+        placeholder: 'Поиск по Ф.И.О.',
         content: [
             {id: 2, title: 'Дзюба Иван Иванович'},
             {id: 44, title: 'Мальденштамм Изя Харизмович'},
@@ -44,7 +44,7 @@ const initialState = {
     },
     transport: {
         label: 'Транспорт',
-        placeholder: 'Гос. номер',
+        placeholder: 'Поиск по гос.номеру',
         content: [
             {id: 1, title: 'Черепахи'},
             {id: 2, title: 'крокодилыНаз ваниеЧерепахиБегемоты'},
@@ -64,7 +64,7 @@ const initialState = {
     },
     trailer: {
         label: 'Прицеп',
-        placeholder: 'Гос. номер',
+        placeholder: 'Поиск по гос.номеру',
         content: [
             {id: 0, title: 'Прицеп такой-то'},
             {id: 1, title: 'Прицеп такой-то 2'},
@@ -74,7 +74,7 @@ const initialState = {
     },
     consignees: {
         label: 'Грузополучатели',
-        placeholder: 'Название',
+        placeholder: 'Поиск по названию',
         content: [
             {id: 1, title: 'Один из'}
         ],
