@@ -1,7 +1,7 @@
 @import 'src/styles/mixins';
 @import 'src/styles/variables';
 
-.shippersForm {
+.shippersConsigneesForm {
   @include flex-center(column);
   justify-content: space-evenly;
   width: 100%;
@@ -39,6 +39,10 @@
     padding: 5px 10px;
     min-width: 320px;
 
+    & > div {
+      margin-bottom: 13px;
+    }
+
     &_titled { // панель встраивается в центр
       width: 100%;
 
@@ -67,29 +71,13 @@
 
   &__map {
     display: flex;
-    justify-content: center;
-    align-content: stretch;
-
-    justify-self: stretch;
-    align-self: stretch;
-
-    margin: 30px auto;
+    flex-direction: column;
     cursor: pointer;
-
   }
 
   &__button {
     align-self: stretch;
     width: 48%;
-  }
-
-  &__cancelButton {
-    background-color: transparent;
-    position: absolute;
-    @include size(25px);
-
-    right: 15px;
-    top: 15px;
   }
 
 }

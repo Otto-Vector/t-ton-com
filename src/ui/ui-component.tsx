@@ -12,11 +12,11 @@ import {HelloSection} from './hello-section/hello-section';
 import {LoginSection} from './login-section/login-section';
 import {OptionsSection} from './options-section/options-section';
 import {RequisitesForm} from './options-section/requisites-form/requisites-form';
-import {ShippersForm} from './options-section/shippers-form/shippers-form';
-import {ConsigneesForm} from './options-section/consignees-form/consignees-form';
+import {ShippersForm} from './options-section/shippers-consignees-form/shippers-form';
+import {ConsigneesForm} from './options-section/shippers-consignees-form/consignees-form';
 import {EmployeesForm} from './options-section/employees-form/employees-form';
-import {TransportForm} from './options-section/transport-form/transport-form';
-import {TrailerForm} from './options-section/trailer-form/trailer-form';
+import {TransportForm} from './options-section/transport-trailer-form/transport-form';
+import {TrailerForm} from './options-section/transport-trailer-form/trailer-form';
 
 type OwnProps = {}
 

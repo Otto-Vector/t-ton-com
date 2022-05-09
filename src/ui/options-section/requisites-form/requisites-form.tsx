@@ -6,7 +6,7 @@ import {
     required, maxLength
 } from '../../../utils/validators'
 import {Button} from '../../common/button/button';
-import {InputType} from '../../common/input-type/input-type';
+import {FormInputType} from '../../common/form-input-type/form-input-type';
 
 import {useSelector} from 'react-redux';
 import {Preloader} from '../../common/Preloader/Preloader';
@@ -147,49 +147,49 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                             <Field name={'innNumber'}
                                                    placeholder={label.innNumber}
                                                    maskFormat={maskOn.innNumber}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.innNumber}
                                             />
                                             <Field name={'organizationName'}
                                                    placeholder={label.organizationName}
                                                    maskFormat={maskOn.organizationName}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.organizationName}
                                             />
                                             <Field name={'taxMode'}
                                                    placeholder={label.taxMode}
                                                    maskFormat={maskOn.taxMode}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.taxMode}
                                             />
                                             <Field name={'kpp'}
                                                    placeholder={label.kpp}
                                                    maskFormat={maskOn.kpp}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.kpp}
                                             />
                                             <Field name={'ogrn'}
                                                    placeholder={label.ogrn}
                                                    maskFormat={maskOn.ogrn}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.ogrn}
                                             />
                                             <Field name={'okpo'}
                                                    placeholder={label.okpo}
                                                    maskFormat={maskOn.okpo}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.okpo}
                                             />
                                             <Field name={'address'}
                                                    placeholder={label.address}
                                                    maskFormat={maskOn.address}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.address}
                                             />
@@ -197,7 +197,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                 <Field name={'description'}
                                                        placeholder={label.description}
                                                        maskFormat={maskOn.description}
-                                                       component={InputType}
+                                                       component={FormInputType}
                                                        resetFieldBy={form}
                                                        textArea
                                                 />
@@ -207,7 +207,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                             <Field name={'postAddress'}
                                                    placeholder={label.postAddress}
                                                    maskFormat={maskOn.postAddress}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.postAddress}
                                             />
@@ -215,7 +215,7 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    placeholder={label.phoneDirector}
                                                    maskFormat={maskOn.phoneDirector}
                                                    allowEmptyFormatting
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.phoneDirector}
                                             />
@@ -223,42 +223,42 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    placeholder={label.phoneAccountant}
                                                    maskFormat={maskOn.phoneAccountant}
                                                    allowEmptyFormatting
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.phoneAccountant}
                                             />
                                             <Field name={'email'}
                                                    placeholder={label.email}
                                                    maskFormat={maskOn.email}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.email}
                                             />
                                             <Field name={'bikBank'}
                                                    placeholder={label.bikBank}
                                                    maskFormat={maskOn.bikBank}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.bikBank}
                                             />
                                             <Field name={'nameBank'}
                                                    placeholder={label.nameBank}
                                                    maskFormat={maskOn.nameBank}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.nameBank}
                                             />
                                             <Field name={'checkingAccount'}
                                                    placeholder={label.checkingAccount}
                                                    maskFormat={maskOn.checkingAccount}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.checkingAccount}
                                             />
                                             <Field name={'korrAccount'}
                                                    placeholder={label.korrAccount}
                                                    maskFormat={maskOn.korrAccount}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.korrAccount}
                                             />

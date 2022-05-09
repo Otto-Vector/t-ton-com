@@ -22,7 +22,6 @@ $black-75 : #00000075;
   &:after {
     @include addMaterialAfter('expand_more');
     font-size: rem(25);
-    top: unset;
     top: rem(8);
     opacity: .5;
   }
@@ -54,7 +53,7 @@ $black-75 : #00000075;
       width: 2px;
     }
     color: $dropdown--fontColor;
-    padding: rem(6) rem(30) rem(6) rem(15);
+    padding: rem(7) rem(30) rem(7) rem(15);
     width: 100%;
 
     transition-property: border;

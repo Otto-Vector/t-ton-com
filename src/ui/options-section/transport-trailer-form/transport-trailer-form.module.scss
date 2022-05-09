@@ -1,7 +1,7 @@
 @import 'src/styles/mixins';
 @import 'src/styles/variables';
 
-.transportForm {
+.transportTrailerForm {
   @include flex-center(column);
   justify-content: space-evenly;
   width: 100%;
@@ -36,32 +36,29 @@
   }
 
   &__inputsPanel {
-    padding: 5px 10px 5px 0;
+    padding: 0 10px 5px 0;
     min-width: 240px;
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: flex-start;
   }
 
   &__smallInput {
     width: 48%;
   }
 
-  &__photo {
+  &__photoWrapper {
     position: relative;
     display: flex;
-    justify-content: center;
-    align-content: stretch;
+    align-items: center;
     min-width: 200px;
     height: 240px;
-    justify-self: stretch;
-    align-self: stretch;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid #2D2D2D;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 18px;
-    margin: 10px auto;
+    margin: 0 auto 10px;
     overflow: hidden;
   }
 
@@ -111,6 +108,5 @@
     opacity: 0;
     cursor: pointer;
   }
-
 
 }

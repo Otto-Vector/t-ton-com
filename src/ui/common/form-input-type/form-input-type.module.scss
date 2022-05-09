@@ -27,7 +27,7 @@ $input--disabled-font-color: $mainFontColor;
   position: relative;
   background-color: white;
   border-radius: $input--border-radius;
-  margin-bottom: 12px; // для спана с ошибкой
+  //margin-bottom: 12px; // для спана с ошибкой
   height: inherit;
   width: 100%;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.02);
@@ -85,7 +85,7 @@ $input--disabled-font-color: $mainFontColor;
   }
 }
 
-//// добавление иконки со значком справа
+//// добавление 2 иконки со значком справа или слева
 //.search:after {
 //    cursor: unset;
 //    opacity: .5;
@@ -157,10 +157,9 @@ $input--disabled-font-color: $mainFontColor;
       font-size: 70%;
     }
   }
-
 }
 
-// кастомизация сообщения об ошибке под инпутом
+// кастомизация сообщения об ошибке под/над инпутом
 .errorSpan {
   position: absolute;
   top: -14px;

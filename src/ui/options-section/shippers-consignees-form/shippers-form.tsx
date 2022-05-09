@@ -1,31 +1,31 @@
 import React from 'react'
-import styles from './consignees-form.module.scss'
+import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {
     composeValidators, mustBe00Numbers, mustBe0_0Numbers,
     required, maxLength,
 } from '../../../utils/validators'
 import {Button} from '../../common/button/button';
-import {InputType} from '../../common/input-type/input-type';
+import {FormInputType} from '../../common/form-input-type/form-input-type';
 import {Preloader} from '../../common/Preloader/Preloader';
 
 import mapImage from '../../../media/mapsicle-map.png'
 import {useSelector} from 'react-redux';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
 import {useNavigate} from 'react-router-dom';
-import {MaterialIcon} from '../../common/material-icon/material-icon';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
-import {InfoText} from '../common/info-text/into-text';
+import {InfoText} from '../common-forms/info-text/into-text';
+import {CancelButton} from '../common-forms/cancel-button/cancel-button';
 
-type consigneesCardType<T = string | null> = {
+type shippersCardType<T = string | null> = {
     title: T // заголовок
     innNumber: T // ИНН
     organizationName: T // Наименование организации
     kpp: T // КПП
     ogrn: T // ОГРН
     address: T // Юридический адрес
-    consigneesFio: T // ФИО получателя
-    consigneesTel: T // Телефон получателя
+    shipperFio: T // ФИО отправителя
+    shipperTel: T // Телефон отправителя
     description: T // Доп. данные для ТТН
     coordinates: T // Местоположение в координатах
 }
@@ -34,16 +34,17 @@ type consigneesCardType<T = string | null> = {
 type validateType = undefined | ((val: string) => string | undefined)
 
 type OwnProps = {
-    onSubmit: (requisites: consigneesCardType) => void
+    onSubmit: (requisites: shippersCardType) => void
 }
 
 
-export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
+export const ShippersForm: React.FC<OwnProps> = ({onSubmit}) => {
 
-    const header = 'ГрузоПолучатели'
+    const header = 'Заказчики и Грузоотправители'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const {options} = useSelector(getRoutesStore)
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
 
     const onCancelClick = () => {
         navigate(options)
@@ -57,155 +58,156 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
     //     // dispatch(fakeAuthFetching())
     // }
 
-    const label: consigneesCardType = {
-        title: 'Название грузополучателя',
+    const label: shippersCardType = {
+        title: 'Название грузоотправителя',
         innNumber: 'ИНН',
         organizationName: 'Наименование организации',
         kpp: 'КПП',
         ogrn: 'ОГРН',
         address: 'Юридический адрес',
-        consigneesFio: 'ФИО получателя',
-        consigneesTel: 'Телефон получателя',
+        shipperFio: 'ФИО отправителя',
+        shipperTel: 'Телефон отправителя',
         description: 'Доп. данные для ТТН',
         coordinates: 'Местоположение в координатах',
     }
 
-    const maskOn: consigneesCardType = {
+    const maskOn: shippersCardType = {
         title: null,
         innNumber: '############', // 10,12 цифр
         organizationName: null,
         kpp: '#########', // 9 цифр
         ogrn: '############', // 13 цифр
         address: null, // понятно. просто адрес
-        consigneesFio: null, //
-        consigneesTel: '+7 (###) ###-##-##', //
+        shipperFio: null, //
+        shipperTel: '+7 (###) ###-##-##', // 11 цифр
         description: null, // много букав
         coordinates: null,
     }
 
-    const initialValues: consigneesCardType = {
+    const initialValues: shippersCardType = {
         title: null,
         innNumber: null,
         organizationName: null,
         kpp: null,
         ogrn: null,
         address: null,
-        consigneesFio: null,
-        consigneesTel: null,
+        shipperFio: null,
+        shipperTel: null,
         description: null,
         coordinates: null,
     }
 
-    const validators: consigneesCardType<validateType> = {
+    const validators: shippersCardType<validateType> = {
         title: composeValidators(required, maxLength(50)),
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),
         kpp: composeValidators(required, mustBe00Numbers(9)),
         ogrn: composeValidators(required, mustBe00Numbers(13)),
         address: composeValidators(required),
-        consigneesFio: composeValidators(required),
-        consigneesTel: composeValidators(required, mustBe00Numbers(11)),
+        shipperFio: composeValidators(required),
+        shipperTel: composeValidators(required, mustBe00Numbers(11)),
         description: undefined,
         coordinates: composeValidators(required),
     }
 
+
     return (
-        <div className={styles.consigneesForm}>
-            <div className={styles.consigneesForm__wrapper}>
+        <div className={styles.shippersConsigneesForm}>
+            <div className={styles.shippersConsigneesForm__wrapper}>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <h4 className={styles.consigneesForm__header}>{header}</h4>
+                        <h4 className={styles.shippersConsigneesForm__header}>{header}</h4>
                         <Form
                             onSubmit={onSubmit}
                             initialValues={initialValues}
                             render={
                                 ({submitError, handleSubmit, pristine, form, submitting}) => (
-                                    <form onSubmit={handleSubmit} className={styles.consigneesForm__form}>
+                                    <form onSubmit={handleSubmit} className={styles.shippersConsigneesForm__form}>
                                         <div
-                                            className={styles.consigneesForm__inputsPanel + ' ' + styles.consigneesForm__inputsPanel_titled}>
+                                            className={styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled}>
                                             <Field name={'title'}
                                                    placeholder={label.title}
                                                    maskFormat={maskOn.title}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.title}
                                             />
                                         </div>
-                                        <div className={styles.consigneesForm__inputsPanel}>
+                                        <div className={styles.shippersConsigneesForm__inputsPanel}>
                                             <Field name={'innNumber'}
                                                    placeholder={label.innNumber}
                                                    maskFormat={maskOn.innNumber}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.innNumber}
                                             />
                                             <Field name={'organizationName'}
                                                    placeholder={label.organizationName}
                                                    maskFormat={maskOn.organizationName}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.organizationName}
                                             />
                                             <Field name={'kpp'}
                                                    placeholder={label.kpp}
                                                    maskFormat={maskOn.kpp}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.kpp}
                                             />
                                             <Field name={'ogrn'}
                                                    placeholder={label.ogrn}
                                                    maskFormat={maskOn.ogrn}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.ogrn}
                                             />
                                             <Field name={'address'}
                                                    placeholder={label.address}
                                                    maskFormat={maskOn.address}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.address}
                                             />
-                                            <Field name={'consigneesFio'}
-                                                   placeholder={label.consigneesFio}
-                                                   maskFormat={maskOn.consigneesFio}
-                                                   component={InputType}
+                                            <Field name={'shipperFio'}
+                                                   placeholder={label.shipperFio}
+                                                   maskFormat={maskOn.shipperFio}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
-                                                   validate={validators.consigneesFio}
+                                                   validate={validators.shipperFio}
                                             />
-                                            <Field name={'consigneesTel'}
-                                                   placeholder={label.consigneesTel}
-                                                   maskFormat={maskOn.consigneesTel}
+                                            <Field name={'shipperTel'}
+                                                   placeholder={label.shipperTel}
+                                                   maskFormat={maskOn.shipperTel}
                                                    allowEmptyFormatting
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
-                                                   validate={validators.consigneesTel}
+                                                   validate={validators.shipperTel}
                                             />
-                                            <div className={styles.consigneesForm__textArea}>
+                                            <div className={styles.shippersConsigneesForm__textArea}>
                                                 <Field name={'description'}
                                                        placeholder={label.description}
                                                        maskFormat={maskOn.description}
-                                                       component={InputType}
+                                                       component={FormInputType}
                                                        resetFieldBy={form}
                                                        textArea
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.consigneesForm__inputsPanel}>
+                                        <div className={styles.shippersConsigneesForm__inputsPanel}>
                                             <Field name={'coordinates'}
                                                    placeholder={label.coordinates}
                                                    maskFormat={maskOn.coordinates}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.coordinates}
                                             />
 
-                                            <div className={styles.consigneesForm__map}>
+                                            <div className={styles.shippersConsigneesForm__map}>
                                                 <img src={mapImage} alt="map"/>
                                             </div>
-                                            <div className={styles.consigneesForm__buttonsPanel}>
-                                                <div className={styles.consigneesForm__button}>
+                                            <div className={styles.shippersConsigneesForm__buttonsPanel}>
+                                                <div className={styles.shippersConsigneesForm__button}>
                                                     <Button type={'submit'}
                                                             disabled={submitting}
                                                             colorMode={'green'}
@@ -213,7 +215,7 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                             rounded
                                                     />
                                                 </div>
-                                                <div className={styles.consigneesForm__button}>
+                                                <div className={styles.shippersConsigneesForm__button}>
                                                     <Button type={'button'}
                                                             disabled={true}
                                                             colorMode={'red'}
@@ -221,23 +223,14 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                             rounded
                                                     />
                                                 </div>
-
                                             </div>
-
                                         </div>
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
                                     </form>
                                 )
                             }/>
-
                     </>}
-                <div className={styles.consigneesForm__cancelButton} onClick={onCancelClick}>
-                    <Button type={'submit'}
-                            colorMode={'white'}
-                            title={'Отменить/вернуться'}
-                            rounded
-                    ><MaterialIcon icon_name={'close'}/></Button>
-                </div>
+                <CancelButton onCancelClick={onCancelClick}/>
                 <InfoText/>
             </div>
         </div>

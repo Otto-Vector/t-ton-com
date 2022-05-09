@@ -6,7 +6,7 @@ import {
     required, maxLength, maxNumbers,
 } from '../../../utils/validators'
 import {Button} from '../../common/button/button'
-import {InputType} from '../../common/input-type/input-type'
+import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/Preloader/Preloader'
 
 import noImagePhoto from '../../../media/noImagePhoto2.png'
@@ -16,8 +16,8 @@ import {useNavigate} from 'react-router-dom'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {parseFIO} from '../../../utils/parsers'
-import {InfoText} from '../common/info-text/into-text';
-
+import {InfoText} from '../common-forms/info-text/into-text';
+import {CancelButton} from '../common-forms/cancel-button/cancel-button';
 
 type employeesCardType<T = string | undefined> = {
     employeeFIO: T // ФИО сотрудника
@@ -167,7 +167,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             <Field name={'employeeFIO'}
                                                    placeholder={label.employeeFIO}
                                                    maskFormat={maskOn.employeeFIO}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.employeeFIO}
                                                    parse={parseFIO}
@@ -176,7 +176,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    placeholder={label.employeePhoneNumber}
                                                    maskFormat={maskOn.employeePhoneNumber}
                                                    allowEmptyFormatting
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.employeePhoneNumber}
                                             />
@@ -186,12 +186,13 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 <Field name={'passportSerial'}
                                                        placeholder={label.passportSerial}
                                                        maskFormat={maskOn.passportSerial}
-                                                       component={InputType}
+                                                       component={FormInputType}
                                                        resetFieldBy={form}
                                                        validate={validators.passportSerial}
                                                 />
                                                 {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
-                                                <div className={styles.employeesForm__attachFile}>
+                                                <div className={styles.employeesForm__attachFile
+                                                    + ' ' + styles.employeesForm__attachFile_absolute}>
                                                     <Button colorMode={'white'}
                                                             title={'Добавить' + label.passportImage}
                                                             rounded>
@@ -217,14 +218,14 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             <Field name={'passportFMS'}
                                                    placeholder={label.passportFMS}
                                                    maskFormat={maskOn.passportFMS}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.passportFMS}
                                             />
                                             <Field name={'passportDate'}
                                                    placeholder={label.passportDate}
                                                    maskFormat={maskOn.passportDate}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    inputType={'date'}
                                                    validate={validators.passportDate}
@@ -233,12 +234,13 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 <Field name={'drivingLicenseNumber'}
                                                        placeholder={label.drivingLicenseNumber}
                                                        maskFormat={maskOn.drivingLicenseNumber}
-                                                       component={InputType}
+                                                       component={FormInputType}
                                                        resetFieldBy={form}
                                                        validate={validators.drivingLicenseNumber}
                                                 />
                                                 {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
-                                                <div className={styles.employeesForm__attachFile}>
+                                                <div className={styles.employeesForm__attachFile
+                                                    + ' ' + styles.employeesForm__attachFile_absolute}>
                                                     <Button colorMode={'white'}
                                                             title={'Добавить' + label.drivingLicenseImage}
                                                             rounded>
@@ -264,28 +266,28 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             <Field name={'drivingCategory'}
                                                    placeholder={label.drivingCategory}
                                                    maskFormat={maskOn.drivingCategory}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.drivingCategory}
                                             />
                                             <Field name={'personnelNumber'}
                                                    placeholder={label.personnelNumber}
                                                    maskFormat={maskOn.personnelNumber}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.personnelNumber}
                                             />
                                             <Field name={'garageNumber'}
                                                    placeholder={label.garageNumber}
                                                    maskFormat={maskOn.garageNumber}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.garageNumber}
                                             />
                                             <Field name={'mechanicFIO'}
                                                    placeholder={label.mechanicFIO}
                                                    maskFormat={maskOn.mechanicFIO}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.mechanicFIO}
                                                    parse={parseFIO}
@@ -293,7 +295,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             <Field name={'dispatcherFIO'}
                                                    placeholder={label.dispatcherFIO}
                                                    maskFormat={maskOn.dispatcherFIO}
-                                                   component={InputType}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
                                                    validate={validators.dispatcherFIO}
                                                    parse={parseFIO}
@@ -316,7 +318,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                     <Field name={'rating'}
                                                            placeholder={'%'}
                                                            maskFormat={maskOn.rating}
-                                                           component={InputType}
+                                                           component={FormInputType}
                                                            resetFieldBy={form}
                                                            validate={validators.rating}
                                                            disabled
@@ -350,13 +352,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                             }/>
 
                     </>}
-                <div className={styles.employeesForm__cancelButton} onClick={onCancelClick}>
-                    <Button type={'submit'}
-                            colorMode={'white'}
-                            title={'Отменить/вернуться'}
-                            rounded
-                    ><MaterialIcon icon_name={'close'}/></Button>
-                </div>
+
+                <CancelButton onCancelClick={onCancelClick}/>
                 <InfoText/>
             </div>
         </div>

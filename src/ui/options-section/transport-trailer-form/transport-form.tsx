@@ -1,14 +1,14 @@
 import React, {ChangeEvent} from 'react'
-import styles from '../transport-form/transport-form.module.scss'
+import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {
     composeValidators, required, maxLength, maxRangeNumber,
 } from '../../../utils/validators'
 import {Button} from '../../common/button/button'
-import {InputType} from '../../common/input-type/input-type'
+import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/Preloader/Preloader'
 
-import noImageTrailer from '../../../media/noImageTrailer.png'
+import noImageTransport from '../../../media/noImageTransport.png'
 import {useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
@@ -16,38 +16,39 @@ import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {parseFIO} from '../../../utils/parsers';
 import {FormSelector} from '../../common/form-selector/form-selector';
-import {InfoText} from '../common/info-text/into-text';
+import {InfoText} from '../common-forms/info-text/into-text';
+import {CancelButton} from '../common-forms/cancel-button/cancel-button';
 
 
 export const cargoType = ['Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
     'Тягач', 'Фургон, Борт', 'Цементовоз'] as const
-type CargoType = typeof cargoType[number]
+export type CargoType = typeof cargoType[number]
 
 export const propertyRights = ['Собственность', 'Аренда', 'Лизинг'] as const
-type PropertyRights = typeof propertyRights[number]
+export type PropertyRights = typeof propertyRights[number]
 
-type trailerCardType<T = string | undefined> = {
-    trailerNumber: T // Гос. номер авто
-    trailerTrademark: T // Марка авто
-    trailerModel: T // Модель авто
+type transportCardType<T = string | undefined> = {
+    transportNumber: T // Гос. номер авто
+    transportTrademark: T // Марка авто
+    transportModel: T // Модель авто
     pts: T // ПТС
     dopog: T // ДОПОГ
     cargoType: T | CargoType // Тип груза
     cargoWeight: T // Вес груза
     propertyRights: T | PropertyRights // Право собственности
-    trailerImage: T // Фото транспорта
+    transportImage: T // Фото транспорта
 }
 // вынесенный тип для валидаторов формы
 type validateType = undefined | ((val: string) => string | undefined)
 
 type OwnProps = {
-    // onSubmit: (requisites: trailerCardType) => void
+    // onSubmit: (requisites: transportCardType) => void
 }
 
 
-export const TrailerForm: React.FC<OwnProps> = () => {
+export const TransportForm: React.FC<OwnProps> = () => {
 
-    const header = 'Прицеп'
+    const header = 'Транспорт'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -77,108 +78,108 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     //     // dispatch(fakeAuthFetching())
     // }
 
-    const label: trailerCardType = {
-        trailerNumber: 'Гос. номер авто',
-        trailerTrademark: 'Марка авто',
-        trailerModel: 'Модель авто',
+    const label: transportCardType = {
+        transportNumber: 'Гос. номер авто',
+        transportTrademark: 'Марка авто',
+        transportModel: 'Модель авто',
         pts: 'ПТС',
         dopog: 'ДОПОГ',
         cargoType: 'Тип груза',
         cargoWeight: 'Вес груза (тн.)',
         propertyRights: 'Право собственности',
-        trailerImage: 'Фото транспорта',
+        transportImage: 'Фото транспорта',
     }
 
-    const maskOn: trailerCardType = {
-        trailerNumber: undefined, // просто текст
-        trailerTrademark: undefined, // просто текст
-        trailerModel: undefined, // просто текст
+    const maskOn: transportCardType = {
+        transportNumber: undefined, // просто текст
+        transportTrademark: undefined, // просто текст
+        transportModel: undefined, // просто текст
         pts: undefined, // просто фото
         dopog: undefined, // просто фото
         cargoType: undefined, // просто текст
         cargoWeight: '##', // не больше 50-ти тонн
         propertyRights: undefined, // просто текст
-        trailerImage: undefined, // просто текст
+        transportImage: undefined, // просто текст
     }
 
-    const initialValues: trailerCardType = {
-        trailerNumber: undefined,
-        trailerTrademark: undefined,
-        trailerModel: undefined,
+    const initialValues: transportCardType = {
+        transportNumber: undefined,
+        transportTrademark: undefined,
+        transportModel: undefined,
         pts: undefined,
         dopog: undefined,
         cargoType: undefined,
         cargoWeight: undefined,
         propertyRights: undefined,
-        trailerImage: undefined,
+        transportImage: undefined,
     }
 
-    const validators: trailerCardType<validateType> = {
-        trailerNumber: composeValidators(required, maxLength(20)),
-        trailerTrademark: composeValidators(required, maxLength(20)),
-        trailerModel: composeValidators(required, maxLength(20)),
+    const validators: transportCardType<validateType> = {
+        transportNumber: composeValidators(required, maxLength(20)),
+        transportTrademark: composeValidators(required, maxLength(20)),
+        transportModel: composeValidators(required, maxLength(20)),
         pts: undefined,
         dopog: undefined,
         cargoType: undefined,
         cargoWeight: composeValidators(maxRangeNumber(50)),
         propertyRights: undefined,
-        trailerImage: undefined,
+        transportImage: undefined,
     }
 
 
     return (
-        <div className={styles.transportForm}>
-            <div className={styles.transportForm__wrapper}>
+        <div className={styles.transportTrailerForm}>
+            <div className={styles.transportTrailerForm__wrapper}>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <h4 className={styles.transportForm__header}>{header}</h4>
+                        <h4 className={styles.transportTrailerForm__header}>{header}</h4>
                         <Form
                             onSubmit={onSubmit}
                             initialValues={initialValues}
                             render={
                                 ({submitError, handleSubmit, pristine, form, submitting}) => (
-                                    <form onSubmit={handleSubmit} className={styles.transportForm__form}>
-                                        <div className={styles.transportForm__inputsPanel}>
-                                            <Field name={'trailerNumber'}
-                                                   placeholder={label.trailerNumber}
-                                                   maskFormat={maskOn.trailerNumber}
-                                                   component={InputType}
+                                    <form onSubmit={handleSubmit} className={styles.transportTrailerForm__form}>
+                                        <div className={styles.transportTrailerForm__inputsPanel}>
+                                            <Field name={'transportNumber'}
+                                                   placeholder={label.transportNumber}
+                                                   maskFormat={maskOn.transportNumber}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
-                                                   validate={validators.trailerNumber}
+                                                   validate={validators.transportNumber}
                                                    parse={parseFIO} // как фио чтобы не писали сюда лишних символов
                                             />
-                                            <Field name={'trailerTrademark'}
-                                                   placeholder={label.trailerTrademark}
-                                                   maskFormat={maskOn.trailerTrademark}
-                                                   component={InputType}
+                                            <Field name={'transportTrademark'}
+                                                   placeholder={label.transportTrademark}
+                                                   maskFormat={maskOn.transportTrademark}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
-                                                   validate={validators.trailerTrademark}
+                                                   validate={validators.transportTrademark}
                                             />
 
-                                            <Field name={'trailerModel'}
-                                                   placeholder={label.trailerModel}
-                                                   maskFormat={maskOn.trailerModel}
-                                                   component={InputType}
+                                            <Field name={'transportModel'}
+                                                   placeholder={label.transportModel}
+                                                   maskFormat={maskOn.transportModel}
+                                                   component={FormInputType}
                                                    resetFieldBy={form}
-                                                   validate={validators.trailerModel}
+                                                   validate={validators.transportModel}
                                             />
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
-                                            <div className={styles.transportForm__withAttach}>
+                                            <div className={styles.transportTrailerForm__withAttach}>
                                                 <Field name={'pts'}
                                                        placeholder={label.pts}
                                                        maskFormat={maskOn.pts}
-                                                       component={InputType}
+                                                       component={FormInputType}
                                                        resetFieldBy={form}
                                                        validate={validators.pts}
                                                        disabled
                                                 />
-                                                <div className={styles.transportForm__attachFile}>
+                                                <div className={styles.transportTrailerForm__attachFile}>
                                                     <Button colorMode={'noFill'}
                                                             title={'Добавить' + label.pts}
                                                             rounded>
                                                         <MaterialIcon icon_name={'attach_file'}/>
                                                         <input type={'file'}
-                                                               className={styles.transportForm__hiddenAttachFile}
+                                                               className={styles.transportTrailerForm__hiddenAttachFile}
                                                                accept={'.png, .jpeg, .pdf, .jpg'}
                                                                onChange={sendPTSFile}
                                                         />
@@ -187,22 +188,22 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             </div>
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
-                                            <div className={styles.transportForm__withAttach}>
+                                            <div className={styles.transportTrailerForm__withAttach}>
                                                 <Field name={'dopog'}
                                                        placeholder={label.dopog}
                                                        maskFormat={maskOn.dopog}
-                                                       component={InputType}
+                                                       component={FormInputType}
                                                        resetFieldBy={form}
                                                        validate={validators.dopog}
                                                        disabled
                                                 />
-                                                <div className={styles.transportForm__attachFile}>
+                                                <div className={styles.transportTrailerForm__attachFile}>
                                                     <Button colorMode={'noFill'}
                                                             title={'Добавить' + label.dopog}
                                                             rounded>
                                                         <MaterialIcon icon_name={'attach_file'}/>
                                                         <input type={'file'}
-                                                               className={styles.transportForm__hiddenAttachFile}
+                                                               className={styles.transportTrailerForm__hiddenAttachFile}
                                                                accept={'.png, .jpeg, .pdf, .jpg'}
                                                                onChange={sendDopogFile}
                                                         />
@@ -212,14 +213,14 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             </div>
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
 
-                                            <div className={styles.transportForm__smallInput}>
+                                            <div className={styles.transportTrailerForm__smallInput}>
                                                 <FormSelector named={'cargoType'} values={cargoType}/>
                                             </div>
-                                            <div className={styles.transportForm__smallInput}>
+                                            <div className={styles.transportTrailerForm__smallInput}>
                                                 <Field name={'cargoWeight'}
                                                        placeholder={label.cargoWeight}
                                                        maskFormat={maskOn.cargoWeight}
-                                                       component={InputType}
+                                                       component={FormInputType}
                                                        resetFieldBy={form}
                                                        validate={validators.cargoWeight}
                                                 />
@@ -227,20 +228,20 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             <FormSelector named={'propertyRights'} values={propertyRights}/>
                                         </div>
                                         <div>
-                                            <div className={styles.transportForm__photo}
+                                            <div className={styles.transportTrailerForm__photoWrapper}
                                                  title={'Добавить/изменить фото транспорта'}
                                             >
-                                                <img src={initialValues.trailerImage || noImageTrailer}
-                                                     alt="trailerPhoto"/>
+                                                <img src={initialValues.transportImage || noImageTransport}
+                                                     alt="transportPhoto"/>
                                                 <input type={'file'}
-                                                       className={styles.transportForm__hiddenAttachFile}
+                                                       className={styles.transportTrailerForm__hiddenAttachFile}
                                                        accept={'.png, .jpeg, .pdf, .jpg'}
                                                        onChange={sendPhotoFile}
                                                 />
                                             </div>
-                                            <div className={styles.transportForm__buttonsPanel}>
+                                            <div className={styles.transportTrailerForm__buttonsPanel}>
 
-                                                <div className={styles.transportForm__button}>
+                                                <div className={styles.transportTrailerForm__button}>
                                                     <Button type={'button'}
                                                             disabled={true}
                                                             colorMode={'red'}
@@ -248,7 +249,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                             rounded
                                                     />
                                                 </div>
-                                                <div className={styles.transportForm__button}>
+                                                <div className={styles.transportTrailerForm__button}>
                                                     <Button type={'submit'}
                                                             disabled={submitting}
                                                             colorMode={'green'}
@@ -266,13 +267,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                             }/>
 
                     </>}
-                <div className={styles.transportForm__cancelButton} onClick={onCancelClick}>
-                    <Button type={'submit'}
-                            colorMode={'white'}
-                            title={'Отменить/вернуться'}
-                            rounded
-                    ><MaterialIcon icon_name={'close'}/></Button>
-                </div>
+                <CancelButton onCancelClick={onCancelClick}/>
                 <InfoText/>
             </div>
         </div>

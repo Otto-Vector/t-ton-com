@@ -39,6 +39,10 @@
     padding: 5px 10px;
     min-width: 360px;
 
+    & > div {
+      margin-bottom: 13px;
+    }
+
     &_titled { // панель встраивается в центр
       width: 100%;
 
@@ -106,18 +110,17 @@
     width: 48%;
   }
 
-  &__cancelButton {
-    background-color: transparent;
-    position: absolute;
-    @include size(25px);
-
-    right: 15px;
-    top: 15px;
-  }
-
   &__attachFile {
     max-width: 30px;
     height: 30px;
+    margin-left: 3px;
+
+    &_absolute {
+      position: absolute;
+      top: 4px;
+      right: 27px;
+    }
+
   }
 
   &__hiddenAttachFile {
@@ -129,6 +132,8 @@
   }
 
   &__withAttach {
+    position: relative;
     display: flex;
+    align-items: center;
   }
 }
