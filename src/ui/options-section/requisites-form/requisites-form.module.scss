@@ -15,6 +15,7 @@
     box-shadow: $cardsShadow;
     border-radius: 25px;
     padding: 13px;
+    position: relative;
   }
 
   &__form {
@@ -37,7 +38,10 @@
   &__inputsPanel {
     padding: 5px 15px;
     min-width: 300px;
-    //margin: 0 auto;
+
+    & > div {
+      margin-bottom: 13px;
+    }
   }
 
   &__textArea {

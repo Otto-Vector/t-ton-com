@@ -48,7 +48,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={routes.optionsEdit.consignees+':id'} element={ <ConsigneesForm onSubmit={()=>{}}/>}/>
 
                         <Route path={routes.options} element={ <OptionsSection/> }/>
-                        <Route path={routes.requisites} element={ <RequisitesForm onSubmit={()=>{}}/> }/>
+                        <Route path={routes.requisites} element={ <RequisitesForm/> }/>
 
                         <Route path='*' element={ <h2>This site NOT FOUND. Try another address</h2> }/>
                     </Routes>

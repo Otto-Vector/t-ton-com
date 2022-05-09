@@ -3,7 +3,7 @@ import styles from './requisites-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {
     composeValidators, mustBe00Numbers, mustBe0_0Numbers, mustBeMail,
-    required, maxLength
+    required, maxLength,
 } from '../../../utils/validators'
 import {Button} from '../../common/button/button';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
@@ -11,44 +11,34 @@ import {FormInputType} from '../../common/form-input-type/form-input-type';
 import {useSelector} from 'react-redux';
 import {Preloader} from '../../common/Preloader/Preloader';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
+import {companyRequisitesType, validateType} from '../../types/form-types';
+import {CancelButton} from '../common-forms/cancel-button/cancel-button';
+import {useNavigate} from 'react-router-dom';
+import {InfoText} from '../common-forms/info-text/into-text';
 
-type companyRequisitesType<T = string|null> = {
-    innNumber: T // ИНН
-    organizationName: T // Наименование организации
-    taxMode: T // Вид налогов
-    kpp: T // КПП
-    ogrn: T // ОГРН
-    okpo: T // бюджет??
-    address: T // Юридический адрес
-    description: T // доп. информация
 
-    postAddress: T // почтовый адрес
-    phoneDirector: T // телефон директора
-    phoneAccountant: T // телефон бухгалтера
-    email: T // электронная почта
-    bikBank: T // БИК Банка
-    nameBank: T // Наименование Банка
-    checkingAccount: T // Расчётный счёт
-    korrAccount: T // Корреспондентский счёт
-}
-
-type validateType = undefined | ((val:string)=>string|undefined)
 
 type OwnProps = {
-    onSubmit: (requisites: companyRequisitesType) => void
+    // onSubmit: (requisites: companyRequisitesType) => void
 }
 
-export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
+export const RequisitesForm: React.FC<OwnProps> = () => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
-
+    const navigate = useNavigate()
     // const dispatch = useDispatch()
-    // const requisiteSaveHandleClick = () => { // onSubmit
-    // }
-    //
+
+    const onSubmit = (requisites: companyRequisitesType) => {
+        console.log(requisites)
+    }
+
+    const onCancelClick = () => {
+        navigate(-1)
+    }
     // const fakeFetch = () => { // @ts-ignore
     //     // dispatch(fakeAuthFetching())
     // }
+
 
     const label: companyRequisitesType = {
         innNumber: 'ИНН Организации',
@@ -275,8 +265,9 @@ export const RequisitesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                     </form>
                                 )
                             }/>
-
                     </>}
+            <CancelButton onCancelClick={onCancelClick}/>
+                <InfoText/>
             </div>
         </div>
     )

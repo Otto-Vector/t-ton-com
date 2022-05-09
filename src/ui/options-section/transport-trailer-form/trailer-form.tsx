@@ -166,7 +166,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                 />
                                                 <div className={styles.transportTrailerForm__attachFile}>
                                                     <Button colorMode={'noFill'}
-                                                            title={'Добавить' + label.pts}
+                                                            title={'Добавить ' + label.pts}
                                                             rounded>
                                                         <MaterialIcon icon_name={'attach_file'}/>
                                                         <input type={'file'}
@@ -190,7 +190,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                 />
                                                 <div className={styles.transportTrailerForm__attachFile}>
                                                     <Button colorMode={'noFill'}
-                                                            title={'Добавить' + label.dopog}
+                                                            title={'Добавить ' + label.dopog}
                                                             rounded>
                                                         <MaterialIcon icon_name={'attach_file'}/>
                                                         <input type={'file'}

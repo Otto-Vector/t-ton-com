@@ -110,19 +110,19 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
     }
 
     return (
-        <div className={styles.consigneesForm}>
-            <div className={styles.consigneesForm__wrapper}>
+        <div className={styles.shippersConsigneesForm}>
+            <div className={styles.shippersConsigneesForm__wrapper}>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <h4 className={styles.consigneesForm__header}>{header}</h4>
+                        <h4 className={styles.shippersConsigneesForm__header}>{header}</h4>
                         <Form
                             onSubmit={onSubmit}
                             initialValues={initialValues}
                             render={
                                 ({submitError, handleSubmit, pristine, form, submitting}) => (
-                                    <form onSubmit={handleSubmit} className={styles.consigneesForm__form}>
+                                    <form onSubmit={handleSubmit} className={styles.shippersConsigneesForm__form}>
                                         <div
-                                            className={styles.consigneesForm__inputsPanel + ' ' + styles.consigneesForm__inputsPanel_titled}>
+                                            className={styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled}>
                                             <Field name={'title'}
                                                    placeholder={label.title}
                                                    maskFormat={maskOn.title}
@@ -131,7 +131,7 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    validate={validators.title}
                                             />
                                         </div>
-                                        <div className={styles.consigneesForm__inputsPanel}>
+                                        <div className={styles.shippersConsigneesForm__inputsPanel}>
                                             <Field name={'innNumber'}
                                                    placeholder={label.innNumber}
                                                    maskFormat={maskOn.innNumber}
@@ -182,7 +182,7 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    resetFieldBy={form}
                                                    validate={validators.consigneesTel}
                                             />
-                                            <div className={styles.consigneesForm__textArea}>
+                                            <div className={styles.shippersConsigneesForm__textArea}>
                                                 <Field name={'description'}
                                                        placeholder={label.description}
                                                        maskFormat={maskOn.description}
@@ -192,7 +192,7 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.consigneesForm__inputsPanel}>
+                                        <div className={styles.shippersConsigneesForm__inputsPanel}>
                                             <Field name={'coordinates'}
                                                    placeholder={label.coordinates}
                                                    maskFormat={maskOn.coordinates}
@@ -201,11 +201,11 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                    validate={validators.coordinates}
                                             />
 
-                                            <div className={styles.consigneesForm__map}>
+                                            <div className={styles.shippersConsigneesForm__map}>
                                                 <img src={mapImage} alt="map"/>
                                             </div>
-                                            <div className={styles.consigneesForm__buttonsPanel}>
-                                                <div className={styles.consigneesForm__button}>
+                                            <div className={styles.shippersConsigneesForm__buttonsPanel}>
+                                                <div className={styles.shippersConsigneesForm__button}>
                                                     <Button type={'submit'}
                                                             disabled={submitting}
                                                             colorMode={'green'}
@@ -213,7 +213,7 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
                                                             rounded
                                                     />
                                                 </div>
-                                                <div className={styles.consigneesForm__button}>
+                                                <div className={styles.shippersConsigneesForm__button}>
                                                     <Button type={'button'}
                                                             disabled={true}
                                                             colorMode={'red'}
