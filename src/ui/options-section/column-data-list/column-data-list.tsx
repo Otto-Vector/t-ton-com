@@ -25,21 +25,22 @@ export const ColumnDataList: React.FC<OwnProps> = ({item, route}) => {
         setTest(parseCharsAndNumbers(event.target?.value))
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         if (test !== '') {
-            setContent(item.content.filter(({title})=>title.match(new RegExp(test,'ig'))))
+            setContent(item.content.filter(({title}) => title.match(new RegExp(test, 'ig'))))
         } else {
             setContent(item.content)
         }
-    },[test, content])
+    }, [test, content])
 
     return (
         <div className={styles.columnDataList}>
             <header className={styles.columnDataList__header}>
                 <span>{item.label}</span>
-                <div className={styles.rowItem__label +' '+ styles.rowItem_search}>
+                <div className={styles.rowItem__label + ' ' + styles.rowItem_search}>
                     <div className={styles.rowItem__searchIcon}><MaterialIcon icon_name={'search'}/></div>
-                    <input placeholder={item.placeholder}
+                    <input className={styles.rowItem__input}
+                           placeholder={item.placeholder}
                            value={test}
                            onChange={onSearch}
                     />
@@ -47,8 +48,10 @@ export const ColumnDataList: React.FC<OwnProps> = ({item, route}) => {
                         <Button colorMode={'white'}
                                 disabled={!test}
                                 title={'Очистить строку поиска'}
-                                onClick={()=>{setTest('')}
-                        }>
+                                onClick={() => {
+                                    setTest('')
+                                }
+                                }>
                             <MaterialIcon icon_name={'close'}/>
                         </Button>
                     </div>
@@ -57,8 +60,10 @@ export const ColumnDataList: React.FC<OwnProps> = ({item, route}) => {
             <div className={styles.columnDataList__list}>
                 {content.map(({id, title}) =>
                     <div className={styles.columnDataList__item + ' ' + styles.rowItem}
-                         onClick={() => {navigate(route + id)}}
-                         key={item.label+id+title}
+                         onClick={() => {
+                             navigate(route + id)
+                         }}
+                         key={item.label + id + title}
                     >
                         <div className={styles.rowItem__label} title={title}>
                             {title || 'null'}

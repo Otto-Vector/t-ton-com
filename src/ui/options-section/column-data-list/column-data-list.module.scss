@@ -61,13 +61,12 @@
   &__label {
     position: relative;
     flex-grow: 1;
-    //@include flex-center();
     width: 220px;
     max-height: 50px;
     padding: 1px 10px;
     overflow: hidden;
     text-overflow: ellipsis;
-    background: inherit;
+    background: transparent;
     border: 1px solid #92ABC8;
     box-sizing: border-box;
     box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.2);
@@ -78,6 +77,11 @@
     line-height: 22px;
     text-align: center;
     color: #023E8A;
+  }
+
+  &__input {
+    background-color: transparent;
+    width: 100%;
   }
 
   &__clear {
@@ -98,19 +102,5 @@
   &_search {
     padding-left: 25px;
   }
-
-  //&__expand {
-  //  margin-left: 6px;
-  //  height: 5px;
-  //  width: 5px;
-  //  border-radius: 50%;
-  //  background-color: #98B1CD;
-  //  box-shadow: 0 7px 0 #98B1CD, 0 -7px 0 #98B1CD;
-  //
-  //  &_plus {
-  //    box-shadow: 0 3.7px 0 #98B1CD, 0 -3.7px 0 #98B1CD, 3.7px 0 0 #98B1CD, -3.7px 0 0 #98B1CD;
-  //  }
-  //}
-
 
 }
