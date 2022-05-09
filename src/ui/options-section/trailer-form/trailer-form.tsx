@@ -47,7 +47,7 @@ type OwnProps = {
 
 export const TrailerForm: React.FC<OwnProps> = () => {
 
-    const header = 'Транспорт'
+    const header = 'Прицеп'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
