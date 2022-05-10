@@ -1,5 +1,5 @@
-import {AppStateType} from '../redux/redux-store'
-import {OptionsStoreReducerStateType} from '../redux/options-store-reducer';
+import {AppStateType} from '../../redux/redux-store'
+import {OptionsStoreReducerStateType} from '../../redux/options/options-store-reducer';
 
 type OptionsStoreSelectors<T extends keyof Y, Y = OptionsStoreReducerStateType> = (state: AppStateType) => Y[T]
 

@@ -11,7 +11,7 @@ import {FormInputType} from '../../common/form-input-type/form-input-type';
 import {useSelector} from 'react-redux';
 import {Preloader} from '../../common/Preloader/Preloader';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
-import {companyRequisitesType, validateType} from '../../types/form-types';
+import {CompanyRequisitesType, ValidateType} from '../../types/form-types';
 import {CancelButton} from '../common-forms/cancel-button/cancel-button';
 import {useNavigate} from 'react-router-dom';
 import {InfoText} from '../common-forms/info-text/into-text';
@@ -28,7 +28,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     // const dispatch = useDispatch()
 
-    const onSubmit = (requisites: companyRequisitesType) => {
+    const onSubmit = (requisites: CompanyRequisitesType) => {
         console.log(requisites)
     }
 
@@ -40,7 +40,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
     // }
 
 
-    const label: companyRequisitesType = {
+    const label: CompanyRequisitesType = {
         innNumber: 'ИНН Организации',
         organizationName: 'Наименование организации',
         taxMode: 'Вид налогов',
@@ -60,47 +60,47 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
         korrAccount: 'Корреспондентский счёт',
     }
 
-    const maskOn: companyRequisitesType = {
+    const maskOn: CompanyRequisitesType = {
         innNumber: '############', // 10,12 цифр
-        organizationName: null,
-        taxMode: null,
+        organizationName: undefined,
+        taxMode: undefined,
         kpp: '#########', // 9 цифр
         ogrn: '############', // 13 цифр
         okpo: '##########', // 8,10 цифр
-        address: null, // понятно. просто адрес
-        description: null, // много букав
+        address: undefined, // понятно. просто адрес
+        description: undefined, // много букав
 
-        postAddress: null, // просто адрес
+        postAddress: undefined, // просто адрес
         phoneDirector: '+7 (###) ###-##-##', //
         phoneAccountant: '+7 (###) ###-##-##',
-        email: null, // по другой схеме
+        email: undefined, // по другой схеме
         bikBank: '#########', // 9 цифр
-        nameBank: null, // просто текст
+        nameBank: undefined, // просто текст
         checkingAccount: '#### #### #### #### ####', // 20 цифр
         korrAccount: '#### #### #### #### ####', // 20 цифр
     }
 
-    const initialValues: companyRequisitesType = {
-        innNumber: null,
-        organizationName: null,
-        taxMode: null,
-        kpp: null,
-        ogrn: null,
-        okpo: null,
-        address: null,
-        description: null,
+    const initialValues: CompanyRequisitesType = {
+        innNumber: undefined,
+        organizationName: undefined,
+        taxMode: undefined,
+        kpp: undefined,
+        ogrn: undefined,
+        okpo: undefined,
+        address: undefined,
+        description: undefined,
 
-        postAddress: null,
-        phoneDirector: null,
-        phoneAccountant: null,
-        email: null,
-        bikBank: null,
-        nameBank: null,
-        checkingAccount: null,
-        korrAccount: null,
+        postAddress: undefined,
+        phoneDirector: undefined,
+        phoneAccountant: undefined,
+        email: undefined,
+        bikBank: undefined,
+        nameBank: undefined,
+        checkingAccount: undefined,
+        korrAccount: undefined,
     }
 
-    const validators: companyRequisitesType<validateType> = {
+    const validators: CompanyRequisitesType<ValidateType> = {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),
         taxMode: composeValidators(required),

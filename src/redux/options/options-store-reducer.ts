@@ -1,5 +1,5 @@
 import {ThunkAction} from 'redux-thunk'
-import {AppStateType, GetActionsTypes} from './redux-store'
+import {AppStateType, GetActionsTypes} from '../redux-store'
 
 type contentType = { id: number, title: string }[]
 

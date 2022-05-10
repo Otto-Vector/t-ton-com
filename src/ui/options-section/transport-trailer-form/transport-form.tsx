@@ -17,28 +17,8 @@ import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {InfoText} from '../common-forms/info-text/into-text';
 import {CancelButton} from '../common-forms/cancel-button/cancel-button';
+import {cargoType, propertyRights, TransportCardType, ValidateType} from '../../types/form-types'
 
-
-export const cargoType = ['Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
-    'Тягач', 'Фургон, Борт', 'Цементовоз'] as const
-export type CargoType = typeof cargoType[number]
-
-export const propertyRights = ['Собственность', 'Аренда', 'Лизинг'] as const
-export type PropertyRights = typeof propertyRights[number]
-
-type transportCardType<T = string | undefined> = {
-    transportNumber: T // Гос. номер авто
-    transportTrademark: T // Марка авто
-    transportModel: T // Модель авто
-    pts: T // ПТС
-    dopog: T // ДОПОГ
-    cargoType: T | CargoType // Тип груза
-    cargoWeight: T // Вес груза
-    propertyRights: T | PropertyRights // Право собственности
-    transportImage: T // Фото транспорта
-}
-// вынесенный тип для валидаторов формы
-type validateType = undefined | ((val: string) => string | undefined)
 
 type OwnProps = {
     // onSubmit: (requisites: transportCardType) => void
@@ -52,7 +32,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
-    const onSubmit = () => {
+    const onSubmit = (values: TransportCardType) => {
     }
 
     const onCancelClick = () => {
@@ -77,7 +57,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
     //     // dispatch(fakeAuthFetching())
     // }
 
-    const label: transportCardType = {
+    const label: TransportCardType = {
         transportNumber: 'Гос. номер авто',
         transportTrademark: 'Марка авто',
         transportModel: 'Модель авто',
@@ -89,7 +69,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
         transportImage: 'Фото транспорта',
     }
 
-    const maskOn: transportCardType = {
+    const maskOn: TransportCardType = {
         transportNumber: undefined, // просто текст
         transportTrademark: undefined, // просто текст
         transportModel: undefined, // просто текст
@@ -101,7 +81,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
         transportImage: undefined, // просто текст
     }
 
-    const initialValues: transportCardType = {
+    const initialValues: TransportCardType = {
         transportNumber: undefined,
         transportTrademark: undefined,
         transportModel: undefined,
@@ -113,7 +93,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
         transportImage: undefined,
     }
 
-    const validators: transportCardType<validateType> = {
+    const validators: TransportCardType<ValidateType> = {
         transportNumber: composeValidators(required, maxLength(20)),
         transportTrademark: composeValidators(required, maxLength(20)),
         transportModel: composeValidators(required, maxLength(20)),
@@ -207,7 +187,6 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                         />
                                                     </Button>
                                                 </div>
-
                                             </div>
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/}
 

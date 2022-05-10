@@ -10,7 +10,7 @@ import {
     getEmployeesOptionsStore,
     getShippersOptionsStore,
     getTrailerOptionsStore, getTransportOptionsStore,
-} from '../../selectors/options-reselect';
+} from '../../selectors/options/options-reselect';
 
 type OwnProps = {
 }

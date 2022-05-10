@@ -41,11 +41,11 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={routes.status} element={ <h2>СТАТУС ПО АКТИВНЫМ ЗАЯВКАМ</h2> }/>
                         <Route path={routes.history} element={ <h2>АРХИВ ЗАКРЫТЫХ ЗАЯВОК</h2> }/>
                         <Route path={routes.map} element={ <h2>КАРТА АКТИВНЫХ ЗАЯВОК</h2> }/>
-                        <Route path={routes.optionsEdit.shippers+':id'} element={ <ShippersForm onSubmit={()=>{}}/> }/>
+                        <Route path={routes.optionsEdit.shippers+':id'} element={ <ShippersForm/> }/>
                         <Route path={routes.optionsEdit.employees+':id'} element={ <EmployeesForm/> }/>
                         <Route path={routes.optionsEdit.transport+':id'} element={ <TransportForm/> }/>
                         <Route path={routes.optionsEdit.trailer+':id'} element={ <TrailerForm/> }/>
-                        <Route path={routes.optionsEdit.consignees+':id'} element={ <ConsigneesForm onSubmit={()=>{}}/>}/>
+                        <Route path={routes.optionsEdit.consignees+':id'} element={ <ConsigneesForm/>}/>
 
                         <Route path={routes.options} element={ <OptionsSection/> }/>
                         <Route path={routes.requisites} element={ <RequisitesForm/> }/>

@@ -16,34 +16,23 @@ import {useNavigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {InfoText} from '../common-forms/info-text/into-text';
 import {CancelButton} from '../common-forms/cancel-button/cancel-button';
-
-type consigneesCardType<T = string | null> = {
-    title: T // заголовок
-    innNumber: T // ИНН
-    organizationName: T // Наименование организации
-    kpp: T // КПП
-    ogrn: T // ОГРН
-    address: T // Юридический адрес
-    consigneesFio: T // ФИО получателя
-    consigneesTel: T // Телефон получателя
-    description: T // Доп. данные для ТТН
-    coordinates: T // Местоположение в координатах
-}
-
-// вынесенный тип для валидаторов формы
-type validateType = undefined | ((val: string) => string | undefined)
+import {ConsigneesCardType, ValidateType} from '../../types/form-types'
 
 type OwnProps = {
-    onSubmit: (requisites: consigneesCardType) => void
+    // onSubmit: (requisites: consigneesCardType) => void
 }
 
 
-export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
+export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const header = 'ГрузоПолучатели'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
+
+    const onSubmit = (values: ConsigneesCardType) => {
+
+    }
 
     const onCancelClick = () => {
         navigate(options)
@@ -57,7 +46,7 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
     //     // dispatch(fakeAuthFetching())
     // }
 
-    const label: consigneesCardType = {
+    const label: ConsigneesCardType = {
         title: 'Название грузополучателя',
         innNumber: 'ИНН',
         organizationName: 'Наименование организации',
@@ -70,33 +59,33 @@ export const ConsigneesForm: React.FC<OwnProps> = ({onSubmit}) => {
         coordinates: 'Местоположение в координатах',
     }
 
-    const maskOn: consigneesCardType = {
-        title: null,
+    const maskOn: ConsigneesCardType = {
+        title: undefined,
         innNumber: '############', // 10,12 цифр
-        organizationName: null,
+        organizationName: undefined,
         kpp: '#########', // 9 цифр
         ogrn: '############', // 13 цифр
-        address: null, // понятно. просто адрес
-        consigneesFio: null, //
+        address: undefined, // понятно. просто адрес
+        consigneesFio: undefined, //
         consigneesTel: '+7 (###) ###-##-##', //
-        description: null, // много букав
-        coordinates: null,
+        description: undefined, // много букав
+        coordinates: undefined,
     }
 
-    const initialValues: consigneesCardType = {
-        title: null,
-        innNumber: null,
-        organizationName: null,
-        kpp: null,
-        ogrn: null,
-        address: null,
-        consigneesFio: null,
-        consigneesTel: null,
-        description: null,
-        coordinates: null,
+    const initialValues: ConsigneesCardType = {
+        title: undefined,
+        innNumber: undefined,
+        organizationName: undefined,
+        kpp: undefined,
+        ogrn: undefined,
+        address: undefined,
+        consigneesFio: undefined,
+        consigneesTel: undefined,
+        description: undefined,
+        coordinates: undefined,
     }
 
-    const validators: consigneesCardType<validateType> = {
+    const validators: ConsigneesCardType<ValidateType> = {
         title: composeValidators(required, maxLength(50)),
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),

@@ -1,7 +1,10 @@
+// на валидаторы для форм
+export type ValidateType = undefined | ((val: string) => string | undefined)
+// на поля для форм
+type DefaultFormType = string | undefined
 
 // на форму с реквизитами
-
-export type companyRequisitesType<T = string | null> = {
+export type CompanyRequisitesType<T = DefaultFormType> = {
     innNumber: T // ИНН
     organizationName: T // Наименование организации
     taxMode: T // Вид налогов
@@ -22,5 +25,84 @@ export type companyRequisitesType<T = string | null> = {
 }
 // на форму с реквизитами *//
 
-// на валидаторы для форм
-export type validateType = undefined | ((val: string) => string | undefined)
+
+// на сотрудника
+export type EmployeesCardType<T = DefaultFormType> = {
+    employeeFIO: T // ФИО сотрудника
+    employeePhoneNumber: T // Телефон сотрудника
+    passportSerial: T // Серия, № паспорта
+    passportImage: T // Скан паспорта
+    passportFMS: T // Кем выдан паспорт
+    passportDate: T // Когда выдан
+    drivingLicenseNumber: T // Номер водительского удостоверения
+    drivingLicenseImage: T // Скан водительского удостоверения
+    drivingCategory: T // Водительские категории
+    personnelNumber: T // Табельный номер
+    garageNumber: T // Гаражный номер
+    mechanicFIO: T // ФИО механика
+    dispatcherFIO: T // ФИО диспетчера
+    photoFace: T // Добавить фотографию сотрудника
+    rating: T // Рейтинг
+}
+
+// на грузоПОЛУЧАТЕЛЯ
+export type ConsigneesCardType<T = DefaultFormType> = {
+    title: T // заголовок
+    innNumber: T // ИНН
+    organizationName: T // Наименование организации
+    kpp: T // КПП
+    ogrn: T // ОГРН
+    address: T // Юридический адрес
+    consigneesFio: T // ФИО получателя
+    consigneesTel: T // Телефон получателя
+    description: T // Доп. данные для ТТН
+    coordinates: T // Местоположение в координатах
+}
+
+// на грузоотправителя
+export type ShippersCardType<T = DefaultFormType> = {
+    title: T // заголовок
+    innNumber: T // ИНН
+    organizationName: T // Наименование организации
+    kpp: T // КПП
+    ogrn: T // ОГРН
+    address: T // Юридический адрес
+    shipperFio: T // ФИО отправителя
+    shipperTel: T // Телефон отправителя
+    description: T // Доп. данные для ТТН
+    coordinates: T // Местоположение в координатах
+}
+
+/////////////////////////////////////////////////////////////////////////////
+export const cargoType = ['Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
+    'Тягач', 'Фургон, Борт', 'Цементовоз'] as const
+export type CargoType = typeof cargoType[number]
+
+export const propertyRights = ['Собственность', 'Аренда', 'Лизинг'] as const
+export type PropertyRightsType = typeof propertyRights[number]
+
+// на транспорт
+export type TransportCardType<T = DefaultFormType> = {
+    transportNumber: T // Гос. номер авто
+    transportTrademark: T // Марка авто
+    transportModel: T // Модель авто
+    pts: T // ПТС
+    dopog: T // ДОПОГ
+    cargoType: T | CargoType // Тип груза
+    cargoWeight: T // Вес груза
+    propertyRights: T | PropertyRightsType // Право собственности
+    transportImage: T // Фото транспорта
+}
+
+// на прицеп
+export type TrailerCardType<T = DefaultFormType> = {
+    trailerNumber: T // Гос. номер авто
+    trailerTrademark: T // Марка авто
+    trailerModel: T // Модель авто
+    pts: T // ПТС
+    dopog: T // ДОПОГ
+    cargoType: T | CargoType // Тип груза
+    cargoWeight: T // Вес груза
+    propertyRights: T | PropertyRightsType // Право собственности
+    trailerImage: T // Фото транспорта
+}

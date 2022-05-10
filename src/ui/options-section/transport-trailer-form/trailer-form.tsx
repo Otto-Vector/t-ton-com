@@ -16,22 +16,9 @@ import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {InfoText} from '../common-forms/info-text/into-text';
-import {CargoType, cargoType, propertyRights, PropertyRights} from './transport-form';
 import {CancelButton} from '../common-forms/cancel-button/cancel-button';
+import {cargoType, propertyRights, TrailerCardType, ValidateType} from '../../types/form-types'
 
-type trailerCardType<T = string | undefined> = {
-    trailerNumber: T // Гос. номер авто
-    trailerTrademark: T // Марка авто
-    trailerModel: T // Модель авто
-    pts: T // ПТС
-    dopog: T // ДОПОГ
-    cargoType: T | CargoType // Тип груза
-    cargoWeight: T // Вес груза
-    propertyRights: T | PropertyRights // Право собственности
-    trailerImage: T // Фото транспорта
-}
-// вынесенный тип для валидаторов формы
-type validateType = undefined | ((val: string) => string | undefined)
 
 type OwnProps = {
     // onSubmit: (requisites: trailerCardType) => void
@@ -45,7 +32,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
-    const onSubmit = () => {
+    const onSubmit = (value: TrailerCardType) => {
     }
 
     const onCancelClick = () => { navigate(options) }
@@ -68,7 +55,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     //     // dispatch(fakeAuthFetching())
     // }
 
-    const label: trailerCardType = {
+    const label: TrailerCardType = {
         trailerNumber: 'Гос. номер авто',
         trailerTrademark: 'Марка авто',
         trailerModel: 'Модель авто',
@@ -80,7 +67,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         trailerImage: 'Фото транспорта',
     }
 
-    const maskOn: trailerCardType = {
+    const maskOn: TrailerCardType = {
         trailerNumber: undefined, // просто текст
         trailerTrademark: undefined, // просто текст
         trailerModel: undefined, // просто текст
@@ -92,7 +79,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         trailerImage: undefined, // просто текст
     }
 
-    const initialValues: trailerCardType = {
+    const initialValues: TrailerCardType = {
         trailerNumber: undefined,
         trailerTrademark: undefined,
         trailerModel: undefined,
@@ -104,7 +91,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         trailerImage: undefined,
     }
 
-    const validators: trailerCardType<validateType> = {
+    const validators: TrailerCardType<ValidateType> = {
         trailerNumber: composeValidators(required, maxLength(20)),
         trailerTrademark: composeValidators(required, maxLength(20)),
         trailerModel: composeValidators(required, maxLength(20)),
