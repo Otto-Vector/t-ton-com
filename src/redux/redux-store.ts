@@ -7,6 +7,7 @@ import {requisitesStoreReducer} from './requisites-store-reducer';
 import {optionsStoreReducer} from './options/options-store-reducer';
 import {employeesStoreReducer} from './options/employees-store-reducer'
 import {consigneesStoreReducer} from './options/consignees-store-reducer'
+import {shippersStoreReducer} from './options/shippers-store-reducer'
 
 
 const reducersObject = {
@@ -16,7 +17,9 @@ const reducersObject = {
     requisitesStoreReducer,
     optionsStoreReducer,
     employeesStoreReducer,
-    consigneesStoreReducer
+    consigneesStoreReducer,
+    shippersStoreReducer,
+
 }
 
 const rootReducer = combineReducers(reducersObject)

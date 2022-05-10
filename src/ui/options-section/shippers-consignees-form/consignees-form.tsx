@@ -29,11 +29,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const header = 'ГрузоПолучатели'
     const isFetching = useSelector( getIsFetchingRequisitesStore )
+
     const label = useSelector( getLabelConsigneesStore )
     const initialValues = useSelector( getInitialValuesConsigneesStore )
     const maskOn = useSelector( getMaskOnConsigneesStore )
     const validators = useSelector( getValidatorsConsigneesStore )
-
 
     const { options } = useSelector( getRoutesStore )
     const navigate = useNavigate()
