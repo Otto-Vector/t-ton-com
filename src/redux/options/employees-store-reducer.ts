@@ -98,7 +98,7 @@ export const employeesStoreReducer = ( state = initialState, action: ActionsType
 /* ЭКШОНЫ */
 export const employeesStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setShippers: ( initialValues: EmployeesCardType ) => ( {
+    setValues: ( initialValues: EmployeesCardType ) => ( {
         type: 'employees-store-reducer/SET-VALUES',
         initialValues,
     } as const ),

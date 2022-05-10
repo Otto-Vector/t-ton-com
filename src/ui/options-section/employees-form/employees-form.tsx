@@ -16,7 +16,7 @@ import {InfoText} from '../common-forms/info-text/into-text'
 import {CancelButton} from '../common-forms/cancel-button/cancel-button'
 import {EmployeesCardType} from '../../types/form-types'
 import {
-    getIntialValuesEmployeesStore,
+    getInitialValuesEmployeesStore,
     getLabelEmployeesStore,
     getMaskOnEmployeesStore,
     getValidatorsEmployeesStore
@@ -31,7 +31,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const header = 'Сотрудник'
     const isFetching = useSelector( getIsFetchingRequisitesStore )
     const label = useSelector( getLabelEmployeesStore )
-    const initialValues = useSelector( getIntialValuesEmployeesStore )
+    const initialValues = useSelector( getInitialValuesEmployeesStore )
     const maskOn = useSelector( getMaskOnEmployeesStore )
     const validators = useSelector( getValidatorsEmployeesStore )
 

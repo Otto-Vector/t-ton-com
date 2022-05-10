@@ -4,7 +4,7 @@ import {EmployeesStoreReducerStateType} from '../../redux/options/employees-stor
 type EmployeesStoreSelectors<T extends keyof Y, Y = EmployeesStoreReducerStateType> = (state: AppStateType) => Y[T]
 
 export const getLabelEmployeesStore: EmployeesStoreSelectors<'label'> = (state) => state.employeesStoreReducer.label
-export const getIntialValuesEmployeesStore: EmployeesStoreSelectors<'initialValues'> = (state) => state.employeesStoreReducer.initialValues
+export const getInitialValuesEmployeesStore: EmployeesStoreSelectors<'initialValues'> = (state) => state.employeesStoreReducer.initialValues
 export const getMaskOnEmployeesStore: EmployeesStoreSelectors<'maskOn'> = (state) => state.employeesStoreReducer.maskOn
 export const getValidatorsEmployeesStore: EmployeesStoreSelectors<'validators'> = (state) => state.employeesStoreReducer.validators
 
