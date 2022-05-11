@@ -9,7 +9,7 @@ import {Button} from '../../common/button/button';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
 
 import {useSelector} from 'react-redux';
-import {Preloader} from '../../common/Preloader/Preloader';
+import {Preloader} from '../../common/preloader/Preloader';
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
 import {CompanyRequisitesType, ValidateType} from '../../types/form-types';
 import {CancelButton} from '../common-forms/cancel-button/cancel-button';

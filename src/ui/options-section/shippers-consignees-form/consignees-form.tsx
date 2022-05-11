@@ -3,7 +3,7 @@ import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
-import {Preloader} from '../../common/Preloader/Preloader'
+import {Preloader} from '../../common/preloader/Preloader'
 
 import mapImage from '../../../media/mapsicle-map.png'
 import {useSelector} from 'react-redux'

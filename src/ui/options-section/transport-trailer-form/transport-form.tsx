@@ -6,7 +6,7 @@ import {
 } from '../../../utils/validators'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
-import {Preloader} from '../../common/Preloader/Preloader'
+import {Preloader} from '../../common/preloader/Preloader'
 
 import noImageTransport from '../../../media/noImageTransport.png'
 import {useSelector} from 'react-redux'

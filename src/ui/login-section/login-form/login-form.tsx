@@ -7,7 +7,7 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect'
-import {Preloader} from '../../common/Preloader/Preloader'
+import {Preloader} from '../../common/preloader/Preloader'
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
 

@@ -3,7 +3,7 @@ import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
-import {Preloader} from '../../common/Preloader/Preloader'
+import {Preloader} from '../../common/preloader/Preloader'
 
 import noImagePhoto from '../../../media/noImagePhoto2.png'
 import {useSelector} from 'react-redux'
