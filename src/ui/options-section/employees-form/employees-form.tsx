@@ -20,7 +20,6 @@ import {
     getMaskOnEmployeesStore,
     getValidatorsEmployeesStore
 } from '../../../selectors/options/employees-reselect'
-import {WithAttachForm} from '../../common/with-attach-form/with-attach-form'
 
 type OwnProps = {
     // onSubmit: (requisites: employeesCardType) => void
@@ -96,16 +95,13 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                         </div>
                                         <div className={ styles.employeesForm__inputsPanel }>
-                                            <WithAttachForm onChange={sendPassportFile} addViewButton>
-                                                <Field name={ 'passportSerial' }
-                                                       placeholder={ label.passportSerial }
-                                                       maskFormat={ maskOn.passportSerial }
-                                                       component={ FormInputType }
-                                                       resetFieldBy={ form }
-                                                       validate={ validators.passportSerial }
-                                                />
-                                            </WithAttachForm>
-
+                                            <Field name={ 'passportSerial' }
+                                                   placeholder={ label.passportSerial }
+                                                   maskFormat={ maskOn.passportSerial }
+                                                   component={ FormInputType }
+                                                   resetFieldBy={ form }
+                                                   validate={ validators.passportSerial }
+                                            />
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                             <Field name={ 'passportFMS' }
                                                    placeholder={ label.passportFMS }
@@ -122,14 +118,14 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    inputType={ 'date' }
                                                    validate={ validators.passportDate }
                                             />
-                                                <Field name={ 'drivingLicenseNumber' }
-                                                       placeholder={ label.drivingLicenseNumber }
-                                                       maskFormat={ maskOn.drivingLicenseNumber }
-                                                       component={ FormInputType }
-                                                       resetFieldBy={ form }
-                                                       validate={ validators.drivingLicenseNumber }
-                                                />
-                                                {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
+                                            <Field name={ 'drivingLicenseNumber' }
+                                                   placeholder={ label.drivingLicenseNumber }
+                                                   maskFormat={ maskOn.drivingLicenseNumber }
+                                                   component={ FormInputType }
+                                                   resetFieldBy={ form }
+                                                   validate={ validators.drivingLicenseNumber }
+                                            />
+                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                             <Field name={ 'drivingCategory' }
                                                    placeholder={ label.drivingCategory }
                                                    maskFormat={ maskOn.drivingCategory }
