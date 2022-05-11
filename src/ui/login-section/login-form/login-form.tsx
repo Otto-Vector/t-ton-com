@@ -11,7 +11,7 @@ import {
     getIsFetchingAuth, getLabelAuthStore, getMaskOnAuthStore,
     getValidatorsAuthStore
 } from '../../../selectors/auth-reselect'
-import {Preloader} from '../../common/preloader/Preloader'
+import {Preloader} from '../../common/preloader/preloader'
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
 import {phoneSubmitType} from '../../types/form-types'
@@ -25,6 +25,12 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
 
     const [ isRegisterMode, setIsRegisterMode ] = useState( false )
     const isAvailableSMS = useSelector( getIsAvailableSMSrequest )
+
+    const label = useSelector( getLabelAuthStore )
+    const initialValues = useSelector( getInitialValuesAuthStore )
+    const maskOn = useSelector( getMaskOnAuthStore )
+    const validators = useSelector( getValidatorsAuthStore )
+
     const isFetching = useSelector( getIsFetchingAuth )
     const dispatch = useDispatch()
 
@@ -42,10 +48,6 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
         dispatch( fakeAuthFetching() )
     }
 
-    const label = useSelector( getLabelAuthStore )
-    const initialValues = useSelector( getInitialValuesAuthStore )
-    const maskOn = useSelector( getMaskOnAuthStore )
-    const validators = useSelector( getValidatorsAuthStore )
 
     return (
         <div className={ styles.loginForm }>

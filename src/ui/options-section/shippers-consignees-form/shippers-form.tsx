@@ -4,7 +4,7 @@ import {Field, Form} from 'react-final-form'
 
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
-import {Preloader} from '../../common/preloader/Preloader'
+import {Preloader} from '../../common/preloader/preloader'
 
 import mapImage from '../../../media/mapsicle-map.png'
 import {useSelector} from 'react-redux'
@@ -13,7 +13,7 @@ import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../common-forms/info-text/into-text'
 import {CancelButton} from '../common-forms/cancel-button/cancel-button'
-import {ShippersCardType, ValidateType} from '../../types/form-types'
+import {ShippersCardType} from '../../types/form-types'
 import {
     getInitialValuesShippersStore,
     getLabelShippersStore,

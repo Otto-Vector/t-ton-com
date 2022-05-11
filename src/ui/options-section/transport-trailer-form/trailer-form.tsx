@@ -3,13 +3,12 @@ import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
-import {Preloader} from '../../common/preloader/Preloader'
+import {Preloader} from '../../common/preloader/preloader'
 
 import noImageTrailer from '../../../media/noImageTrailer.png'
 import {useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
-import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector} from '../../common/form-selector/form-selector'
 import {InfoText} from '../common-forms/info-text/into-text'
@@ -49,12 +48,6 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
-    const sendPTSFile = ( event: ChangeEvent<HTMLInputElement> ) => {
-        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
-    }
-    const sendDopogFile = ( event: ChangeEvent<HTMLInputElement> ) => {
-        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
-    }
 
     return (
         <div className={ styles.transportTrailerForm }>
@@ -83,7 +76,6 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.trailerTrademark }
                                             />
-
                                             <Field name={ 'trailerModel' }
                                                    placeholder={ label.trailerModel }
                                                    maskFormat={ maskOn.trailerModel }
@@ -91,55 +83,20 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.trailerModel }
                                             />
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
-                                            <div className={ styles.transportTrailerForm__withAttach }>
-                                                <Field name={ 'pts' }
-                                                       placeholder={ label.pts }
-                                                       maskFormat={ maskOn.pts }
-                                                       component={ FormInputType }
-                                                       resetFieldBy={ form }
-                                                       validate={ validators.pts }
-                                                       disabled
-                                                />
-                                                <div className={ styles.transportTrailerForm__attachFile }>
-                                                    <Button colorMode={ 'noFill' }
-                                                            title={ 'Добавить ' + label.pts }
-                                                            rounded>
-                                                        <MaterialIcon icon_name={ 'attach_file' }/>
-                                                        <input type={ 'file' }
-                                                               className={ styles.transportTrailerForm__hiddenAttachFile }
-                                                               accept={ '.png, .jpeg, .pdf, .jpg' }
-                                                               onChange={ sendPTSFile }
-                                                        />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
-                                            <div className={ styles.transportTrailerForm__withAttach }>
-                                                <Field name={ 'dopog' }
-                                                       placeholder={ label.dopog }
-                                                       maskFormat={ maskOn.dopog }
-                                                       component={ FormInputType }
-                                                       resetFieldBy={ form }
-                                                       validate={ validators.dopog }
-                                                       disabled
-                                                />
-                                                <div className={ styles.transportTrailerForm__attachFile }>
-                                                    <Button colorMode={ 'noFill' }
-                                                            title={ 'Добавить ' + label.dopog }
-                                                            rounded>
-                                                        <MaterialIcon icon_name={ 'attach_file' }/>
-                                                        <input type={ 'file' }
-                                                               className={ styles.transportTrailerForm__hiddenAttachFile }
-                                                               accept={ '.png, .jpeg, .pdf, .jpg' }
-                                                               onChange={ sendDopogFile }
-                                                        />
-                                                    </Button>
-                                                </div>
-
-                                            </div>
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
+                                            <Field name={ 'pts' }
+                                                   placeholder={ label.pts }
+                                                   maskFormat={ maskOn.pts }
+                                                   component={ FormInputType }
+                                                   resetFieldBy={ form }
+                                                   validate={ validators.pts }
+                                            />
+                                            <Field name={ 'dopog' }
+                                                   placeholder={ label.dopog }
+                                                   maskFormat={ maskOn.dopog }
+                                                   component={ FormInputType }
+                                                   resetFieldBy={ form }
+                                                   validate={ validators.dopog }
+                                            />
 
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <FormSelector named={ 'cargoType' } values={ cargoType }/>
@@ -167,8 +124,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                        onChange={ sendPhotoFile }
                                                 />
                                             </div>
-                                            <div className={ styles.transportTrailerForm__buttonsPanel }>
 
+                                            <div className={ styles.transportTrailerForm__buttonsPanel }>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'button' }
                                                             disabled={ true }
