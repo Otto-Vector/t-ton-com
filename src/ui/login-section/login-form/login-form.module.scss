@@ -21,6 +21,10 @@
 
   &__inputsPanel {
     width: 100%;
+
+    & > div {
+      margin-bottom: 13px;
+    }
   }
 
   &__buttonsPanel {

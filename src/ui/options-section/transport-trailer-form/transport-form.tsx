@@ -1,9 +1,6 @@
 import React, {ChangeEvent} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {
-    composeValidators, required, maxLength, maxRangeNumber,
-} from '../../../utils/validators'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/Preloader'
@@ -17,7 +14,11 @@ import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {InfoText} from '../common-forms/info-text/into-text';
 import {CancelButton} from '../common-forms/cancel-button/cancel-button';
-import {cargoType, propertyRights, TransportCardType, ValidateType} from '../../types/form-types'
+import {cargoType, propertyRights, TransportCardType} from '../../types/form-types'
+import {
+    getInitialValuesTranstportStore, getLabelTranstportStore, getMaskOnTranstportStore,
+    getValidatorsTranstportStore
+} from '../../../selectors/options/transport-reselect'
 
 
 type OwnProps = {
@@ -29,6 +30,12 @@ export const TransportForm: React.FC<OwnProps> = () => {
 
     const header = 'Транспорт'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
+
+    const label = useSelector( getLabelTranstportStore )
+    const initialValues = useSelector( getInitialValuesTranstportStore )
+    const maskOn = useSelector( getMaskOnTranstportStore )
+    const validators = useSelector( getValidatorsTranstportStore )
+
     const {options} = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
@@ -56,55 +63,6 @@ export const TransportForm: React.FC<OwnProps> = () => {
     // const fakeFetch = () => { // @ts-ignore
     //     // dispatch(fakeAuthFetching())
     // }
-
-    const label: TransportCardType = {
-        transportNumber: 'Гос. номер авто',
-        transportTrademark: 'Марка авто',
-        transportModel: 'Модель авто',
-        pts: 'ПТС',
-        dopog: 'ДОПОГ',
-        cargoType: 'Тип груза',
-        cargoWeight: 'Вес груза (тн.)',
-        propertyRights: 'Право собственности',
-        transportImage: 'Фото транспорта',
-    }
-
-    const maskOn: TransportCardType = {
-        transportNumber: undefined, // просто текст
-        transportTrademark: undefined, // просто текст
-        transportModel: undefined, // просто текст
-        pts: undefined, // просто фото
-        dopog: undefined, // просто фото
-        cargoType: undefined, // просто текст
-        cargoWeight: '##', // не больше 50-ти тонн
-        propertyRights: undefined, // просто текст
-        transportImage: undefined, // просто текст
-    }
-
-    const initialValues: TransportCardType = {
-        transportNumber: undefined,
-        transportTrademark: undefined,
-        transportModel: undefined,
-        pts: undefined,
-        dopog: undefined,
-        cargoType: undefined,
-        cargoWeight: undefined,
-        propertyRights: undefined,
-        transportImage: undefined,
-    }
-
-    const validators: TransportCardType<ValidateType> = {
-        transportNumber: composeValidators(required, maxLength(20)),
-        transportTrademark: composeValidators(required, maxLength(20)),
-        transportModel: composeValidators(required, maxLength(20)),
-        pts: undefined,
-        dopog: undefined,
-        cargoType: undefined,
-        cargoWeight: composeValidators(maxRangeNumber(50)),
-        propertyRights: undefined,
-        transportImage: undefined,
-    }
-
 
     return (
         <div className={styles.transportTrailerForm}>
@@ -236,13 +194,10 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                 </div>
                                             </div>
                                         </div>
-
-
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/}
                                     </form>
                                 )
                             }/>
-
                     </>}
                 <CancelButton onCancelClick={onCancelClick}/>
                 <InfoText/>
