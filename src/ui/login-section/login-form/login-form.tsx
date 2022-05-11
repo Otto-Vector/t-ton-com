@@ -1,21 +1,21 @@
 import React, {useState} from 'react'
 import styles from './login-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../../../utils/validators'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 
 import {useDispatch, useSelector} from 'react-redux'
-import {getIsAvailableSMSrequest, getIsFetchingAuth} from '../../../selectors/auth-reselect'
+import {
+    getInitialValuesAuthStore,
+    getIsAvailableSMSrequest,
+    getIsFetchingAuth, getLabelAuthStore, getMaskOnAuthStore,
+    getValidatorsAuthStore
+} from '../../../selectors/auth-reselect'
 import {Preloader} from '../../common/preloader/Preloader'
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
+import {phoneSubmitType} from '../../types/form-types'
 
-type phoneSubmitType = {
-    innNumber: string | null
-    phoneNumber: string | null
-    sms: string | null
-}
 
 type OwnProps = {
     // onSubmit: (login: phoneSubmitType) => void
@@ -42,23 +42,10 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
         dispatch( fakeAuthFetching() )
     }
 
-    const initialValues = {
-        innNumber: null,
-        phoneNumber: null,
-        sms: null,
-    } as phoneSubmitType
-
-    const maskOn = {
-        innNumber: '########## ##',
-        phoneNumber: '+7 (###) ###-##-##',
-        sms: '#####',
-    } as phoneSubmitType
-
-    const validators = {
-        innNumber: composeValidators( required, mustBe0_0Numbers( 10 )( 12 ) ),
-        phoneNumber: composeValidators( required, mustBe00Numbers( 11 ) ),
-        sms: composeValidators( required, mustBe00Numbers( 5 ) )
-    }
+    const label = useSelector( getLabelAuthStore )
+    const initialValues = useSelector( getInitialValuesAuthStore )
+    const maskOn = useSelector( getMaskOnAuthStore )
+    const validators = useSelector( getValidatorsAuthStore )
 
     return (
         <div className={ styles.loginForm }>
@@ -74,7 +61,7 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
                                     <div className={ styles.loginForm__inputsPanel }>
                                         { isRegisterMode &&
                                           < Field name={ 'innNumber' }
-                                                  placeholder={ 'ИНН Компании' }
+                                                  placeholder={ label.innNumber }
                                                   component={ FormInputType }
                                                   resetFieldBy={ form }
                                                   maskFormat={ maskOn.innNumber }
@@ -82,7 +69,7 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
                                           />
                                         }
                                         <Field name={ 'phoneNumber' }
-                                               placeholder={ 'Контактный номер +7' }
+                                               placeholder={ label.phoneNumber }
                                                component={ FormInputType }
                                                resetFieldBy={ form }
                                                allowEmptyFormatting
@@ -90,7 +77,7 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
                                                validate={ validators.phoneNumber }
                                         />
                                         { !isAvailableSMS && <Field name={ 'sms' }
-                                                                    placeholder={ 'Пароль из sms' }
+                                                                    placeholder={ label.sms }
                                                                     component={ FormInputType }
                                                                     maskFormat={ maskOn.sms }
                                                                     disabled={ !isAvailableSMS }

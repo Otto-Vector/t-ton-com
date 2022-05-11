@@ -3,6 +3,13 @@ export type ValidateType = undefined | ((val: string) => string | undefined)
 // на поля для форм
 type DefaultFormType = string | undefined
 
+// на форму авторизации
+export type phoneSubmitType<T = DefaultFormType> = {
+    innNumber: T
+    phoneNumber: T
+    sms: T
+}
+
 // на форму с реквизитами
 export type CompanyRequisitesType<T = DefaultFormType> = {
     innNumber: T // ИНН

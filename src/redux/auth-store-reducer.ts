@@ -1,18 +1,44 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
+import {phoneSubmitType, ValidateType} from '../ui/types/form-types'
+import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 
 const initialState = {
     isAuth: true,
     authID: 'sfadsfsadfa',
     isAvailableSMSrequest: false,
     isFetching: false,
+
+    label: {
+        innNumber: 'ИНН Компании',
+        phoneNumber: 'Контактный номер +7',
+        sms: 'Пароль из sms',
+    } as phoneSubmitType,
+
+    initialValues: {
+        innNumber: undefined,
+        phoneNumber: undefined,
+        sms: undefined,
+    } as phoneSubmitType,
+
+    maskOn: {
+        innNumber: '########## ##',
+        phoneNumber: '+7 (###) ###-##-##',
+        sms: '#####',
+    } as phoneSubmitType,
+
+    validators: {
+        innNumber: composeValidators( required, mustBe0_0Numbers( 10 )( 12 ) ),
+        phoneNumber: composeValidators( required, mustBe00Numbers( 11 ) ),
+        sms: composeValidators( required, mustBe00Numbers( 5 ) )
+    } as phoneSubmitType<ValidateType>,
 }
 
 export type AuthStoreReducerStateType = typeof initialState
 
 type ActionsType = GetActionsTypes<typeof authStoreActions>
 
-export const authStoreReducer = (state = initialState, action: ActionsType): AuthStoreReducerStateType => {
+export const authStoreReducer = ( state = initialState, action: ActionsType ): AuthStoreReducerStateType => {
 
     switch (action.type) {
 
@@ -22,7 +48,7 @@ export const authStoreReducer = (state = initialState, action: ActionsType): Aut
                 isAuth: action.isAuth,
             }
         }
-        case 'auth-store-reducer/SET-IS-AVALIABLE-SMS-REQUEST': {
+        case 'auth-store-reducer/SET-IS-AVAILABLE-SMS-REQUEST': {
             return {
                 ...state,
                 isAvailableSMSrequest: action.isAvailableSMSrequest
@@ -32,6 +58,12 @@ export const authStoreReducer = (state = initialState, action: ActionsType): Aut
             return {
                 ...state,
                 isFetching: action.isFetching
+            }
+        }
+        case 'auth-store-reducer/SET-VALUES': {
+            return {
+                ...state,
+                initialValues: action.initialValues
             }
         }
         default: {
@@ -44,18 +76,22 @@ export const authStoreReducer = (state = initialState, action: ActionsType): Aut
 /* ЭКШОНЫ */
 export const authStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setIsAuth: (isAuth: boolean) => ({
+    setIsAuth: ( isAuth: boolean ) => ( {
         type: 'auth-store-reducer/SET-IS-AUTH',
         isAuth,
-    } as const),
-    setIsAvailableSMSRequest: (isAvailableSMSrequest: boolean) => ({
-        type: 'auth-store-reducer/SET-IS-AVALIABLE-SMS-REQUEST',
+    } as const ),
+    setIsAvailableSMSRequest: ( isAvailableSMSrequest: boolean ) => ( {
+        type: 'auth-store-reducer/SET-IS-AVAILABLE-SMS-REQUEST',
         isAvailableSMSrequest: isAvailableSMSrequest,
-    } as const),
-    setIsFetching: (isFetching: boolean) => ({
+    } as const ),
+    setIsFetching: ( isFetching: boolean ) => ( {
         type: 'auth-store-reducer/SET-IS-FETCHING',
         isFetching,
-    } as const),
+    } as const ),
+     setInitialValues: ( initialValues: phoneSubmitType ) => ( {
+        type: 'auth-store-reducer/SET-VALUES',
+        initialValues,
+    } as const ),
 
 }
 
@@ -64,11 +100,13 @@ export const authStoreActions = {
 export type AuthStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
-    async (dispatch, getState) => {
-        dispatch(authStoreActions.setIsFetching(true))
-         await setTimeout( ()=> {
-            dispatch(authStoreActions.setIsFetching(false))}, 1000)
+    async ( dispatch, getState ) => {
+        dispatch( authStoreActions.setIsFetching( true ) )
+        await setTimeout( () => {
+            dispatch( authStoreActions.setIsFetching( false ) )
+        }, 1000 )
     }
+
 // export const getIcons = ( { domain }: GetIconsType ): BaseStoreReducerThunkActionType =>
 //     async ( dispatch ) => {
 //         // dispatch( requestFormActions.setIcons( null ) )
