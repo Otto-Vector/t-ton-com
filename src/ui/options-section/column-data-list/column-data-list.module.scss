@@ -60,7 +60,8 @@
 
   &__label {
     position: relative;
-    flex-grow: 1;
+
+    @include flex-center(row);
     width: 220px;
     max-height: 50px;
     padding: 1px 10px;
@@ -83,20 +84,20 @@
     background-color: transparent;
     width: 100%;
     font-size: 90%;
+    margin: 3px auto;
   }
 
   &__clear {
     position: absolute;
     width: 15px;
     height: 15px;
-    top: 5px;
     right: 4px;
   }
 
   &__searchIcon {
     position: absolute;
     color: $grayFonColor;
-    top: 2px;
+    top: 1px;
     left: 4px;
   }
 

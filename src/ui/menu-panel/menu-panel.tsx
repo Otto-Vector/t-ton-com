@@ -10,7 +10,6 @@ import searchSVG from './buttonsSVG/search.svg'
 import statusSVG from './buttonsSVG/status.svg'
 import historySVG from './buttonsSVG/history.svg'
 import mapSVG from './buttonsSVG/map.svg'
-// import optionsSVG from './buttonsSVG/options.svg'
 import optionsPNG from './buttonsSVG/options.png'
 import {getIsAuth} from '../../selectors/auth-reselect';
 
