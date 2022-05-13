@@ -52,10 +52,13 @@
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
-    padding-top: 15px;
+    margin-top: 15px;
     justify-content: space-around;
-    height: 97%;
+    height: 93%;
     overflow-y: auto;
+
+    border: 1px solid #023E8A;
+    border-radius: 10px;
 
     & > div { // применяем отступ ко вложенным на один уровень дивам
       margin: 5px;

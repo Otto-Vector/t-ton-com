@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import styles from './search-section.module.scss'
 import {Button} from '../common/button/button';
-import {CargoType} from '../types/form-types';
 import {addOneDay, dateFormat} from '../../utils/parsers';
+import {TableComponent} from './table-component/table-component';
 
 
 type OwnProps = {
@@ -73,7 +73,7 @@ export const SearchSection: React.FC<OwnProps> = () => {
                 </div>
             </header>
             <div className={styles.searchSection__table}>
-
+                <TableComponent/>
             </div>
         </section>
     )

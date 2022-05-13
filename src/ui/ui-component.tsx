@@ -38,7 +38,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={routes.hello} element={ <HelloSection/> }/>
                         <Route path={routes.login} element={ <LoginSection /> }/>
                         <Route path={routes.create} element={ <h2>СОЗДАТЬ ЗАЯВКУ</h2> }/>
-                        <Route path={routes.search} element={ <SearchSection/> }/>
+                        <Route path={routes.search} element={ <SearchSection/> }/> {/*ПОИСК активных заявок*/}
                         <Route path={routes.status} element={ <SearchSection/> }/> {/*статус по активным заявкам*/}
                         <Route path={routes.history} element={ <SearchSection/> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/}
                         <Route path={routes.map} element={ <h2>КАРТА АКТИВНЫХ ЗАЯВОК</h2> }/>

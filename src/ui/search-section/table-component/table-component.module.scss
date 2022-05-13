@@ -1,0 +1,54 @@
+@import 'src/styles/variables';
+
+
+.tableComponent {
+
+  width: 100%;
+
+  table {
+    width: 100%;
+    border-spacing: 0;
+    background-color: #F4F4F4;
+    font-family: $PTSansFont;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 23px;
+
+    thead {
+      color: #00224C;
+      font-family: $RalewayFont;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 21px;
+
+      tr {
+
+        &:hover {
+          background-image: none;
+        }
+        }
+
+        th {
+          border-bottom: 1px solid #023E8A;
+        }
+      }
+    }
+
+    tr {
+      background-position: 0 -5px;
+      transition-property: background-position;
+      transition-duration: .3s;
+
+        &:hover {
+          background-image: linear-gradient(transparent 35%, #D9D9D9 65%, transparent);
+          background-position: 0 center;
+        }
+
+    th,
+    td {
+      margin: 0;
+      text-align: center;
+      padding: 0.5rem;
+    }
+  }
+}
