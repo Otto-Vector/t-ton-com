@@ -17,6 +17,7 @@ import {ConsigneesForm} from './options-section/shippers-consignees-form/consign
 import {EmployeesForm} from './options-section/employees-form/employees-form';
 import {TransportForm} from './options-section/transport-trailer-form/transport-form';
 import {TrailerForm} from './options-section/transport-trailer-form/trailer-form';
+import {SearchSection} from './search-section/search-section';
 
 type OwnProps = {}
 
@@ -33,11 +34,11 @@ export const UiComponent: React.FC<OwnProps> = () => {
                 </div>
                 <section className={styles.ui__content + ' ' + styles.grow}>
                     <Routes>
-                        <Route path='/' element={ <Navigate to={ routes.options }/> }/>
+                        <Route path='/' element={ <Navigate to={ routes.search }/> }/>
                         <Route path={routes.hello} element={ <HelloSection/> }/>
                         <Route path={routes.login} element={ <LoginSection /> }/>
                         <Route path={routes.create} element={ <h2>СОЗДАТЬ ЗАЯВКУ</h2> }/>
-                        <Route path={routes.search} element={ <h2>ПОИСК ЗАЯВКИ</h2> }/>
+                        <Route path={routes.search} element={ <SearchSection/> }/>
                         <Route path={routes.status} element={ <h2>СТАТУС ПО АКТИВНЫМ ЗАЯВКАМ</h2> }/>
                         <Route path={routes.history} element={ <h2>АРХИВ ЗАКРЫТЫХ ЗАЯВОК</h2> }/>
                         <Route path={routes.map} element={ <h2>КАРТА АКТИВНЫХ ЗАЯВОК</h2> }/>

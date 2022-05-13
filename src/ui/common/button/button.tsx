@@ -4,7 +4,7 @@ import classes from './button.module.scss'
 type OwnProps = {
     disabled?: boolean,
     onClick?: () => void,
-    colorMode?: 'orange' | 'blue' | 'lightBlue' | 'pink' | 'gray' | 'white' | 'noFill' | 'green' | 'red'
+    colorMode?: 'orange' | 'blue' | 'lightBlue' | 'pink' | 'gray' | 'white' | 'noFill' | 'green' | 'red' | 'whiteBlue'
     type?: 'button' | 'submit' | 'reset'
     title?: string
     rounded?: boolean

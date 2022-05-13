@@ -8,6 +8,11 @@ $btnBlueBorderColor: $btnBlueBgColor;
 $btnLightBlueFontColor: #7382A3;
 $btnLightBlueBgColor: #E8ECF4;
 
+$btnWhiteBlueFontColor: inherit;
+$btnWhiteBlueDisableFontColor: inherit;
+$btnWhiteBlueBgColor: trasparent;
+$btnWhiteBlueBorderColor: $accentColor;
+
 $btnWhiteFontColor: #676e87;
 $btnWhiteBgColor: #FFFFFF;
 
@@ -103,6 +108,22 @@ $btnRedDisabledBorderColor: #6C6C6C;
   &_lightBlue {
     background-color: $btnLightBlueBgColor;
     color: $btnLightBlueFontColor;
+  }
+
+  &_whiteBlue {
+    color: $btnWhiteBlueFontColor;
+    background-color: $btnWhiteBlueBgColor;
+    border-color: $btnWhiteBlueBorderColor;
+
+    &:disabled {
+      opacity: 1;
+      color: $btnWhiteBlueDisableFontColor;
+    }
+
+    &:focus {
+      border-width: 2px;
+      border-color: $btnWhiteBlueBorderColor;
+    }
   }
 
   &_gray {
