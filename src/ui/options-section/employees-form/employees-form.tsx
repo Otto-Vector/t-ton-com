@@ -7,7 +7,7 @@ import {Preloader} from '../../common/preloader/preloader'
 
 import noImagePhoto from '../../../media/noImagePhoto2.png'
 import {useSelector} from 'react-redux'
-import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect'
+import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {parseFIO} from '../../../utils/parsers'
@@ -44,14 +44,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         navigate( options )
     }
 
-    const sendPassportFile = ( event: ChangeEvent<HTMLInputElement> ) => {
-        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
-    }
     const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
-        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
-    }
-
-    const sendLicenseFile = ( event: ChangeEvent<HTMLInputElement> ) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
 

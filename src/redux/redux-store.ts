@@ -3,7 +3,7 @@ import thunkMiddleWare from 'redux-thunk'
 import {baseStoreReducer} from './base-store-reducer';
 import {authStoreReducer} from './auth-store-reducer';
 import {routesStoreReducer} from './routes-store-reducer';
-import {requisitesStoreReducer} from './requisites-store-reducer';
+import {requisitesStoreReducer} from './options/requisites-store-reducer';
 import {optionsStoreReducer} from './options/options-store-reducer';
 import {employeesStoreReducer} from './options/employees-store-reducer'
 import {consigneesStoreReducer} from './options/consignees-store-reducer'

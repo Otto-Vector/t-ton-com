@@ -7,7 +7,7 @@ import {Preloader} from '../../common/preloader/preloader'
 
 import mapImage from '../../../media/mapsicle-map.png'
 import {useSelector} from 'react-redux'
-import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect'
+import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../common-forms/info-text/into-text'

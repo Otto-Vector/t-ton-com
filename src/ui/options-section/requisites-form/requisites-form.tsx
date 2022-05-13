@@ -1,17 +1,17 @@
 import React from 'react'
 import styles from './requisites-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {
-    composeValidators, mustBe00Numbers, mustBe0_0Numbers, mustBeMail,
-    required, maxLength,
-} from '../../../utils/validators'
+
 import {Button} from '../../common/button/button';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
 
 import {useSelector} from 'react-redux';
 import {Preloader} from '../../common/preloader/preloader';
-import {getIsFetchingRequisitesStore} from '../../../selectors/requisites-reselect';
-import {CompanyRequisitesType, ValidateType} from '../../types/form-types';
+import {
+    getInitialValuesRequisitesStore,
+    getIsFetchingRequisitesStore, getLabelRequisitesStore, getMaskOnRequisitesStore, getValidatorsRequisitesStore,
+} from '../../../selectors/options/requisites-reselect';
+import {CompanyRequisitesType} from '../../types/form-types';
 import {CancelButton} from '../common-forms/cancel-button/cancel-button';
 import {useNavigate} from 'react-router-dom';
 import {InfoText} from '../common-forms/info-text/into-text';
@@ -26,7 +26,14 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const navigate = useNavigate()
+
+    const label = useSelector( getLabelRequisitesStore )
+    const initialValues = useSelector( getInitialValuesRequisitesStore )
+    const maskOn = useSelector( getMaskOnRequisitesStore )
+    const validators = useSelector( getValidatorsRequisitesStore )
+
     // const dispatch = useDispatch()
+
 
     const onSubmit = (requisites: CompanyRequisitesType) => {
         console.log(requisites)
@@ -38,88 +45,6 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
     // const fakeFetch = () => { // @ts-ignore
     //     // dispatch(fakeAuthFetching())
     // }
-
-
-    const label: CompanyRequisitesType = {
-        innNumber: 'ИНН Организации',
-        organizationName: 'Наименование организации',
-        taxMode: 'Вид налогов',
-        kpp: 'КПП',
-        ogrn: 'ОГРН',
-        okpo: 'ОКПО',
-        address: 'Юридический адрес',
-        description: 'Доп. информация',
-
-        postAddress: 'Почтовый адрес',
-        phoneDirector: 'Телефон директора',
-        phoneAccountant: 'Телефон бухгалтера',
-        email: 'Электронная почта',
-        bikBank: 'БИК Банка',
-        nameBank: 'Наименование Банка',
-        checkingAccount: 'Расчётный счёт',
-        korrAccount: 'Корреспондентский счёт',
-    }
-
-    const maskOn: CompanyRequisitesType = {
-        innNumber: '############', // 10,12 цифр
-        organizationName: undefined,
-        taxMode: undefined,
-        kpp: '#########', // 9 цифр
-        ogrn: '############', // 13 цифр
-        okpo: '##########', // 8,10 цифр
-        address: undefined, // понятно. просто адрес
-        description: undefined, // много букав
-
-        postAddress: undefined, // просто адрес
-        phoneDirector: '+7 (###) ###-##-##', //
-        phoneAccountant: '+7 (###) ###-##-##',
-        email: undefined, // по другой схеме
-        bikBank: '#########', // 9 цифр
-        nameBank: undefined, // просто текст
-        checkingAccount: '#### #### #### #### ####', // 20 цифр
-        korrAccount: '#### #### #### #### ####', // 20 цифр
-    }
-
-    const initialValues: CompanyRequisitesType = {
-        innNumber: undefined,
-        organizationName: undefined,
-        taxMode: undefined,
-        kpp: undefined,
-        ogrn: undefined,
-        okpo: undefined,
-        address: undefined,
-        description: undefined,
-
-        postAddress: undefined,
-        phoneDirector: undefined,
-        phoneAccountant: undefined,
-        email: undefined,
-        bikBank: undefined,
-        nameBank: undefined,
-        checkingAccount: undefined,
-        korrAccount: undefined,
-    }
-
-    const validators: CompanyRequisitesType<ValidateType> = {
-        innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
-        organizationName: composeValidators(required, maxLength(50)),
-        taxMode: composeValidators(required),
-        kpp: composeValidators(required, mustBe00Numbers(9)),
-        ogrn: composeValidators(required, mustBe00Numbers(13)),
-        okpo: composeValidators(required, mustBe0_0Numbers(8)(10)),
-        address: composeValidators(required),
-        description: undefined,
-
-        postAddress: composeValidators(required),
-        phoneDirector: composeValidators(required, mustBe00Numbers(11)),
-        phoneAccountant: composeValidators(required, mustBe00Numbers(11)),
-        email: composeValidators(required, mustBeMail),
-        bikBank: composeValidators(required, mustBe00Numbers(9)),
-        nameBank: composeValidators(required),
-        checkingAccount: composeValidators(required, mustBe00Numbers(20)),
-        korrAccount: composeValidators(required, mustBe00Numbers(20)),
-    }
-
 
     return (
         <div className={styles.requisitesForm}>
