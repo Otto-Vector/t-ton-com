@@ -59,9 +59,6 @@
   align-items: center;
 
   &__label {
-    position: relative;
-
-    @include flex-center(row);
     width: 220px;
     max-height: 50px;
     padding: 1px 10px;
@@ -78,6 +75,12 @@
     line-height: 22px;
     text-align: center;
     color: #023E8A;
+  }
+
+  &_search {
+    position: relative;
+    @include flex-center(row);
+    padding-left: 25px;
   }
 
   &__input {
@@ -99,10 +102,6 @@
     color: $grayFonColor;
     top: 1px;
     left: 4px;
-  }
-
-  &_search {
-    padding-left: 25px;
   }
 
 }
