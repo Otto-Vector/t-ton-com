@@ -62,13 +62,13 @@ $btnRedDisabledBorderColor: #6C6C6C;
   height: 100%;
 
   &:hover {
-    transform: translateY(-1px);
+    //transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, .35);
   }
 
   &:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, .35);
+    //transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
   }
 
   &:disabled {
