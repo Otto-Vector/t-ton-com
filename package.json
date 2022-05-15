@@ -16,6 +16,8 @@
     "@types/reselect": "^2.2.0",
     "axios": "^0.26.1",
     "inputmask-core": "^2.2.0",
+    "match-sorter": "^6.3.1",
+    "namor": "^2.0.3",
     "native-querystring": "^1.1.1",
     "querystring-es3": "^0.2.1",
     "react": "^18.0.0",
@@ -58,6 +60,7 @@
   "devDependencies": {
     "@types/node-sass": "^4.11.2",
     "@types/react-table": "^7.7.12",
-    "node-sass": "^7.0.1"
+    "node-sass": "^7.0.1",
+    "styled-components": "^5.3.5"
   }
 }
