@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import styles from './search-section.module.scss'
 import {Button} from '../common/button/button';
 import {TableComponent} from './table-component/table-component';
@@ -42,6 +42,8 @@ export const SearchSection: React.FC<OwnProps> = () => {
         nearDriverFilter: () => {
             dispatch(filtersStoreActions.setLongRouteMode(false))
             dispatch(filtersStoreActions.setShortRouteMode(false))
+            dispatch(filtersStoreActions.setLongRouteFilter())
+            dispatch(filtersStoreActions.setNearDriverMode(!filterButtons.nearDriverFilter.mode))
         },
         cargoFilter: () => {
             console.log('cargo')
@@ -51,6 +53,15 @@ export const SearchSection: React.FC<OwnProps> = () => {
         },
     }
 
+    useEffect(() => { // перекрашиваем кнопку "Без фильтра"
+        // если любой из фильтров на кнопках активен
+        let clearMode = Object.entries(filterButtons)
+            // кроме самой clearFilters
+            .map(([key, {mode}]) => key === 'clearFilters' ? false : mode)
+            // складываем логически все состояния кнопок
+            .reduce((a, b) => a || b)
+            if (clearMode === filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(!clearMode))
+    }, [filterButtons])
 
     return (
         <section className={styles.searchSection}>

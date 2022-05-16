@@ -78,9 +78,9 @@ export const TableComponent: React.FC = () => {
                 Filter: () => {
                 },
                 disableFilters: true,
-                Cell: ({val}:{val: number}) => (
+                Cell: ({requestNumber}:{requestNumber: number}) => (
                     <Button title={'Открыть'}
-                            onClick={()=>navigate(search+'/'+val)}
+                            onClick={()=>navigate(search+'/'+requestNumber)}
                             colorMode={'blue'}
                             rounded/>
                 )
@@ -91,8 +91,8 @@ export const TableComponent: React.FC = () => {
                 accessor: 'close',
                 Filter: () => { },
                 disableFilters: true,
-                Cell: ({val}:{val: number}) => (
-                    <CancelButton onCancelClick={()=>deleteRow(val)} noAbsolute/>
+                Cell: ({requestNumber}:{requestNumber: number}) => (
+                    <CancelButton onCancelClick={()=>deleteRow(requestNumber)} noAbsolute/>
                 )
             },
         ],

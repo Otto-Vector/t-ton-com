@@ -44,8 +44,7 @@ export const Table = ( { columns, data }) => {
                     <tr { ...row.getRowProps() } onClick={ () => { }}>
                         { row.cells.map( cell => {
                             return <td { ...cell.getCellProps() }
-                                       // onClick={()=>console.log(cell.row.values.requestNumber)}
-                            >{ cell.render( 'Cell', {val: cell.row.values.requestNumber} ) }</td>
+                            >{ cell.render( 'Cell', {requestNumber: cell.row.values.requestNumber} ) }</td>
                         } ) }
                     </tr>
                 )

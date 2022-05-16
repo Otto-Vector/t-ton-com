@@ -125,6 +125,24 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 },
             }
         }
+        case 'filters-store-reducer/SET-NEAR-DRIVER-MODE': {
+            return {
+                ...state,
+                buttons: {
+                    ...state.buttons,
+                    nearDriverFilter: {...state.buttons.nearDriverFilter, mode: action.mode}
+                }
+            }
+        }
+        case 'filters-store-reducer/SET-CLEAR-FILTER-MODE': {
+            return {
+                ...state,
+                buttons: {
+                    ...state.buttons,
+                    clearFilters: {...state.buttons.clearFilters, mode: action.mode}
+                }
+            }
+        }
         case 'filters-store-reducer/SET-CLEAR-FILTER': {
             return {
                 ...action.initial,
@@ -167,12 +185,18 @@ export const filtersStoreActions = {
         type: 'filters-store-reducer/SET-LONG-ROUTE-MODE',
         mode,
     } as const),
-
+    setNearDriverMode: (mode: boolean) => ({
+        type: 'filters-store-reducer/SET-NEAR-DRIVER-MODE',
+        mode,
+    } as const),
     setClearFilter: (initial: FiltersStoreReducerStateType) => ({
         type: 'filters-store-reducer/SET-CLEAR-FILTER',
         initial,
     } as const),
-
+    setClearFilterMode: (mode: boolean) => ({
+        type: 'filters-store-reducer/SET-CLEAR-FILTER-MODE',
+        mode,
+    } as const),
 
 }
 
