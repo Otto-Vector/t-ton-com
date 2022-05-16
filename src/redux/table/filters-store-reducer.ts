@@ -40,6 +40,7 @@ export const initialFiltersState = {
     values: {
         dayFilter: '',
         routeFilter: [0, 99999],
+        cargoFilter: ''
     },
 }
 

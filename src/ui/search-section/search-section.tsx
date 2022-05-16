@@ -40,6 +40,8 @@ export const SearchSection: React.FC<OwnProps> = () => {
             dispatch(filtersStoreActions.setLongRouteFilter())
         },
         nearDriverFilter: () => {
+            dispatch(filtersStoreActions.setLongRouteMode(false))
+            dispatch(filtersStoreActions.setShortRouteMode(false))
         },
         cargoFilter: () => {
             console.log('cargo')

@@ -31,7 +31,7 @@ export const Table = ( { columns, data }) => {
                 <tr { ...headerGroup.getHeaderGroupProps() }>
                     { headerGroup.headers.map( column => (
                         <th { ...column.getHeaderProps() }>{ column.render( 'Header' ) }
-                          <div>{column.canFilter ? column.render('Filter') : null}</div>
+                          {column.canFilter ? column.render('Filter') : null}
                         </th>
                     ) ) }
                 </tr>
