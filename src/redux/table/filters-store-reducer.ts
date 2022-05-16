@@ -112,7 +112,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 values: {
                     ...state.values,
-                    routeFilter: state.buttons.longRouteFilter.mode ? [101, 99999] : [0, 99999],
+                    routeFilter: state.buttons.longRouteFilter.mode ? [100, 99999] : [0, 99999],
                 },
             }
         }
