@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {Button} from '../../../common/button/button';
 
-export const ColumnFilter = ({ column }) => {
+export const ColumnInputFilter = ({ column }) => {
 
   const {filterValue, setFilter} = column
 
@@ -15,8 +15,7 @@ export const ColumnFilter = ({ column }) => {
       <input
         value={filterValue || ''}
         onChange={e => {
-          // setFilter(e.target.value);
-          setFilter('16.05.2022');
+          setFilter(e.target.value);
         }}
       />
     </span>

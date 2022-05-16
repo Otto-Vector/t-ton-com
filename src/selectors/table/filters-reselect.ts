@@ -3,8 +3,9 @@ import {FiltersStoreReducerStateType} from '../../redux/table/filters-store-redu
 
 type FiltersStoreSelectors<T extends keyof Y, Y = FiltersStoreReducerStateType> = (state: AppStateType) => Y[T]
 
-export const getTodayFiltersStore: FiltersStoreSelectors<'todayFilter'> = (state) => state.filtersStoreReducer.todayFilter
-export const getTomorrowFiltersStore: FiltersStoreSelectors<'tomorrowFilter'> = (state) => state.filtersStoreReducer.tomorrowFilter
+export const getValuesFiltersStore: FiltersStoreSelectors<'values'> = (state) => state.filtersStoreReducer.values
+export const getButtonsFiltersStore: FiltersStoreSelectors<'buttons'> = (state) => state.filtersStoreReducer.buttons
+export const getFiltersStore = (state: AppStateType): FiltersStoreReducerStateType => state.filtersStoreReducer
 
 
 

@@ -4,9 +4,10 @@ import {Button} from '../../common/button/button'
 import {CancelButton} from '../../options-section/common-forms/cancel-button/cancel-button'
 import {addOneDay} from '../../../utils/parsers'
 import {Table} from './table'
-import {ColumnFilter} from './filter/column-filter'
-import {getTodayFiltersStore} from '../../../selectors/table/filters-reselect'
+import {ColumnInputFilter} from './filter/column-filters'
+import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
 import {useSelector} from 'react-redux'
+import {UseFiltersColumnProps} from 'react-table';
 
 // const TableF = ( { columns, data }: { columns: readonly Column[], data: readonly {}[] }) => {
 // // export const Table( { columns, data }: { columns: readonly Column[], data: readonly {}[] } ) => {
@@ -59,76 +60,83 @@ import {useSelector} from 'react-redux'
 
 
 export const TableComponent: React.FC = () => {
-    const today = useSelector(getTodayFiltersStore)
+
+    const {dayFilter, routeFilter} = useSelector(getValuesFiltersStore)
+
     const columns = React.useMemo(
         () => [
             {
                 Header: '№',
                 accessor: 'requestNumber',
-                Filter: ColumnFilter,
                 disableFilters: true,
             },
             {
                 Header: 'Тип груза',
                 accessor: 'cargoType',
-                Filter: ColumnFilter
+                Filter: () => {
+                },
             },
             {
                 Header: 'Дата',
                 accessor: 'requestDate',
-                // Filter: ColumnDataFilter,
-                Filter: ({ column }) => {
-                    useEffect(()=> {
-                        column.setFilter(today)
-                    },[])
+                Filter: ({column}: { column: UseFiltersColumnProps<{}> }) => {
+                    useEffect(() => {
+                        column.setFilter(dayFilter)
+                    }, [])
                 },
-                // disableFilters: true,
             },
             {
                 Header: 'Расстояние (км)',
                 accessor: 'distance',
-                Filter: ColumnFilter
+                Filter: ({column}: { column: UseFiltersColumnProps<{}> }) => {
+                    useEffect(() => {
+                        column.setFilter(routeFilter)
+                    }, [])
+                },
+                filter: 'between',
             },
             {
                 Header: 'Маршрут',
                 accessor: 'route',
-                Filter: ColumnFilter,
+                Filter: ColumnInputFilter,
                 disableFilters: true,
             },
             {
                 Header: 'Ответы',
                 accessor: 'answers',
-                Filter: ColumnFilter,
+                Filter: ColumnInputFilter,
                 disableFilters: true,
             },
             {
                 Header: '',
                 accessor: 'open',
-                Filter: ()=>{},
+                Filter: () => {
+                },
                 disableFilters: true,
             },
             {
                 Header: '',
                 accessor: 'close',
-                Filter: ()=>{},
-                disableFilters: true
+                Filter: () => {
+                },
+                disableFilters: true,
             },
         ],
-        [today],
+        [dayFilter, routeFilter],
     )
 
-    const data = React.useMemo( () => (
+    const data = React.useMemo(() => (
         [
             {
                 requestNumber: 964,
                 cargoType: 'Битумовоз',
-                requestDate: addOneDay( new Date() ).toLocaleDateString(),
+                requestDate: addOneDay(new Date()).toLocaleDateString(),
                 distance: 1120,
                 route: 'Ангарск в Чита',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
@@ -137,10 +145,10 @@ export const TableComponent: React.FC = () => {
                 requestDate: new Date().toLocaleDateString(),
                 distance: 120,
                 route: 'Пенза в Самара',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
@@ -149,10 +157,10 @@ export const TableComponent: React.FC = () => {
                 requestDate: new Date().toLocaleDateString(),
                 distance: 80,
                 route: 'Иркутск в Усолье-Сибирское',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
@@ -161,10 +169,10 @@ export const TableComponent: React.FC = () => {
                 requestDate: new Date().toLocaleDateString(),
                 distance: 3760,
                 route: 'Пенза в Ростов-на-Дону',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
@@ -173,10 +181,10 @@ export const TableComponent: React.FC = () => {
                 requestDate: new Date().toLocaleDateString(),
                 distance: 4790,
                 route: 'Красноярск в Пенза',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
@@ -185,46 +193,46 @@ export const TableComponent: React.FC = () => {
                 requestDate: new Date().toLocaleDateString(),
                 distance: 1680,
                 route: 'Пенза в Новосибирск',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
-                requestNumber: Math.floor( Math.random() * 99 ),
+                requestNumber: Math.floor(Math.random() * 99),
                 cargoType: 'Газовоз',
                 requestDate: new Date().toLocaleDateString(),
-                distance: Math.floor( Math.random() * 9999 ),
+                distance: Math.floor(Math.random() * 9999),
                 route: 'Пенза в Новосибирск',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
                 requestNumber: 964,
                 cargoType: 'Битумовоз',
-                requestDate: addOneDay( new Date() ).toLocaleDateString(),
+                requestDate: addOneDay(new Date()).toLocaleDateString(),
                 distance: 1120,
                 route: 'Ангарск в Чита',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
                 requestNumber: 984,
                 cargoType: 'Битумовоз',
-                requestDate: addOneDay( new Date() ).toLocaleDateString(),
+                requestDate: addOneDay(new Date()).toLocaleDateString(),
                 distance: 120,
                 route: 'Пенза в Самара',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
@@ -233,10 +241,10 @@ export const TableComponent: React.FC = () => {
                 requestDate: new Date().toLocaleDateString(),
                 distance: 80,
                 route: 'Иркутск в Усолье-Сибирское',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
@@ -245,10 +253,10 @@ export const TableComponent: React.FC = () => {
                 requestDate: new Date().toLocaleDateString(),
                 distance: 3760,
                 route: 'Пенза в Ростов-на-Дону',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
@@ -257,44 +265,44 @@ export const TableComponent: React.FC = () => {
                 requestDate: new Date().toLocaleDateString(),
                 distance: 4790,
                 route: 'Красноярск в Пенза',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
                 requestNumber: 999,
                 cargoType: 'Цементовоз',
-                requestDate: addOneDay( new Date() ).toLocaleDateString(),
+                requestDate: addOneDay(new Date()).toLocaleDateString(),
                 distance: 1680,
                 route: 'Пенза в Новосибирск',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
             {
-                requestNumber: Math.floor( Math.random() * 99 ),
+                requestNumber: Math.floor(Math.random() * 99),
                 cargoType: 'Газовоз',
                 requestDate: new Date().toLocaleDateString(),
-                distance: Math.floor( Math.random() * 9999 ),
+                distance: Math.floor(Math.random() * 9999),
                 route: 'Пенза в Новосибирск',
-                answers: Math.floor( Math.random() * 99 ),
-                open: <Button colorMode={ 'gray' } title={ 'Открыть' }/>,
-                close: <CancelButton onCancelClick={ () => {
-                } } noAbsolute/>,
+                answers: Math.floor(Math.random() * 99),
+                open: <Button colorMode={'gray'} title={'Открыть'}/>,
+                close: <CancelButton onCancelClick={() => {
+                }} noAbsolute/>,
                 subRows: undefined,
             },
 
-        ] ), [] )
+        ]), [])
 
 
     return (
-        <div className={ styles.tableComponent }>
-            <Table columns={ columns } data={ data }/>
-            {/*<AppTable/>*/ }
+        <div className={styles.tableComponent}>
+            <Table columns={columns} data={data}/>
+            {/*<AppTable/>*/}
         </div>
     )
 }

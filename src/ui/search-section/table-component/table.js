@@ -1,6 +1,6 @@
 import React from 'react';
 import {useGlobalFilter, useTable, useFilters} from 'react-table';
-import {GlobalFilter} from './filter/global-filter';
+// import {GlobalFilter} from './filter/global-filter';
 
 export const Table = ( { columns, data }) => {
 // export const Table( { columns, data }: { columns: readonly Column[], data: readonly {}[] } ) => {
@@ -11,8 +11,8 @@ export const Table = ( { columns, data }) => {
         headerGroups,
         rows,
         prepareRow,
-        state,
-        setGlobalFilter,
+        // state,
+        // setGlobalFilter,
     } = useTable( {
         columns,
         data,
@@ -20,11 +20,11 @@ export const Table = ( { columns, data }) => {
       useFilters,
       useGlobalFilter )
 
-    const {globalFilter} = state
+    // const {globalFilter} = state
 
     // Render the UI for your table
     return ( <>
-        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+        {/*<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />*/}
         <table { ...getTableProps() }>
             <thead>
             { headerGroups.map( headerGroup => (
