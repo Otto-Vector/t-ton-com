@@ -11,7 +11,7 @@ const initialState = {
 
     label: {
         innNumber: 'ИНН Компании',
-        phoneNumber: 'Контактный номер +7',
+        phoneNumber: 'Контактный номер',
         sms: 'Пароль из sms',
     } as phoneSubmitType,
 
@@ -70,7 +70,6 @@ export const authStoreReducer = ( state = initialState, action: ActionsType ): A
             return state
         }
     }
-
 }
 
 /* ЭКШОНЫ */

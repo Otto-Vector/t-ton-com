@@ -18,11 +18,14 @@ export const TableComponent: React.FC = () => {
     const navigate = useNavigate()
     const {search} = useSelector(getRoutesStore)
     const {dayFilter, routeFilter, cargoFilter} = useSelector(getValuesFiltersStore)
+    const TABLE_CONTENT = useSelector(getContentTableStore)
     const dispatch = useDispatch()
 
     const deleteRow = (requestNumber: number) => {
         dispatch(tableStoreActions.deleteRow(requestNumber))
     }
+
+    const data = React.useMemo(() => (TABLE_CONTENT), [TABLE_CONTENT])
 
     const columns = React.useMemo(
         () => [
@@ -50,7 +53,7 @@ export const TableComponent: React.FC = () => {
                 },
             },
             {
-                Header: 'Расстояние (км)',
+                Header: 'Расстояние',
                 accessor: 'distance',
                 Filter: ({column}: { column: UseFiltersColumnProps<{}> }) => {
                     useEffect(() => {
@@ -82,7 +85,7 @@ export const TableComponent: React.FC = () => {
                     <Button title={'Открыть'}
                             onClick={()=>navigate(search+'/'+requestNumber)}
                             colorMode={'blue'}
-                            rounded/>
+                            />
                 )
             },
             {
@@ -92,15 +95,15 @@ export const TableComponent: React.FC = () => {
                 Filter: () => { },
                 disableFilters: true,
                 Cell: ({requestNumber}:{requestNumber: number}) => (
-                    <CancelButton onCancelClick={()=>deleteRow(requestNumber)} noAbsolute/>
+                    <CancelButton onCancelClick={()=>deleteRow(requestNumber)} mode={'redAlert'} noAbsolute/>
                 )
             },
         ],
-        [dayFilter, routeFilter, cargoFilter],
+        [dayFilter, routeFilter, cargoFilter,TABLE_CONTENT],
     )
 
-    const TABLE_CONTENT = useSelector(getContentTableStore)
-    const data = React.useMemo(() => (TABLE_CONTENT), [TABLE_CONTENT])
+
+
 
     return (
         <div className={styles.tableComponent}>

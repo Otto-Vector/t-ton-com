@@ -4,6 +4,8 @@
 $btnBlueFontColor: #fff;
 $btnBlueBgColor: #023E8A;
 $btnBlueBorderColor: $btnBlueBgColor;
+$btnBlueDisabledBgColor: #ACACAC;
+$btnBlueDisabledBorderColor: $btnBlueDisabledBgColor;
 
 $btnLightBlueFontColor: #7382A3;
 $btnLightBlueBgColor: #E8ECF4;
@@ -33,7 +35,7 @@ $btnGreenDisabledBgColor: #929090;
 $btnGreenDisabledBorderColor: #6C6C6C;
 
 $btnRedBgColor: #C70707;
-$btnRedBorderColor: #C70707;
+$btnRedBorderColor: $btnRedBgColor;
 $btnRedFontColor: #fff;
 $btnRedDisabledBgColor: #929090;
 $btnRedDisabledBorderColor: #6C6C6C;
@@ -41,7 +43,7 @@ $btnRedDisabledBorderColor: #6C6C6C;
 .button {
   position: relative;
   @include flex-center();
-  border-radius: 2px;
+  border-radius: 10px;
   border: 1px solid transparent;
 
   font-family: $RalewayFont;
@@ -97,6 +99,16 @@ $btnRedDisabledBorderColor: #6C6C6C;
 
     &:focus {
       box-shadow: inset 0 0 6px rgba(white, .7);
+    }
+
+    &:disabled {
+      opacity: 1;
+      background-color: $btnBlueDisabledBgColor;
+      border-color: $btnBlueDisabledBorderColor;
+    }
+
+    &:disabled:hover {
+      background-color: $btnBlueBgColor;
     }
   }
 
@@ -161,6 +173,22 @@ $btnRedDisabledBorderColor: #6C6C6C;
     &:disabled {
       background: $btnRedDisabledBgColor;
       border: 1px solid $btnRedDisabledBorderColor;
+    }
+  }
+
+  &_redAlert {
+    background-color: transparent;
+    color: $btnRedBorderColor;
+    border: 2px solid $btnRedBorderColor;
+
+    &:disabled {
+      background: transparent;
+      border: 2px solid $btnRedDisabledBorderColor;
+    }
+    &:active {
+      background: $btnRedBorderColor;
+      border: 2px solid $btnRedBorderColor;
+      color: $btnRedFontColor;
     }
   }
 

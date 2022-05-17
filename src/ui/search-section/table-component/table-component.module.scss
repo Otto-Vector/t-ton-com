@@ -1,4 +1,5 @@
 @import 'src/styles/variables';
+@import 'src/styles/mixins';
 
 
 .tableComponent {
@@ -12,16 +13,17 @@
     font-family: $PTSansFont;
     font-weight: 400;
     font-size: 18px;
-    line-height: 23px;
+    line-height: 30px;
 
     thead {
       color: #00224C;
       font-family: $RalewayFont;
       font-weight: 600;
       font-size: 18px;
-      line-height: 21px;
+      line-height: 35px;
 
       tr {
+        border-radius: 20px;
 
         &:hover {
           background-image: none;
@@ -35,20 +37,55 @@
   }
 
   tr {
-    background-position: 0 -5px;
-    transition-property: background-position;
-    transition-duration: .3s;
+
+    td:nth-child(2) {
+      width: 200px;
+      text-align: left;
+    }
+
+    td:nth-child(3), td:nth-child(4), td:nth-child(6) {
+      width: 80px;
+    }
+
+    td:nth-child(5) {
+
+    }
+
+    td:nth-child(7) {
+      width: 110px;
+    }
+
+    td:nth-child(8) {
+      width: 40px;
+      line-height: 20px;
+      vertical-align: middle;
+    }
 
     &:hover {
-      background-image: linear-gradient(transparent 35%, #D9D9D9 65%, transparent);
-      background-position: 0 center;
+
+      td {
+        background-image: linear-gradient(transparent 5%, #D9D9D9 7.1%, #D9D9D9 93%, transparent 95.1%);
+        background-repeat: no-repeat;
+      }
+
+      td:first-child {
+        border-radius: 30px 0 0 30px;
+      }
+
+      td:nth-child(6) {
+        border-radius: 0 30px 30px 0;
+      }
+
+      td:nth-child(7), td:nth-child(8) {
+        background: none;
+      }
     }
 
     th,
     td {
       margin: 0;
       text-align: center;
-      padding: 0.5rem;
+      padding: 0.2rem 0.5rem;
     }
   }
 }

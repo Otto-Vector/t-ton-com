@@ -6,16 +6,17 @@ import {MaterialIcon} from '../../../common/material-icon/material-icon';
 type OwnProps = {
     onCancelClick: () => void
     noAbsolute?: boolean
+    mode?: 'redAlert' | 'white'
 }
 
-export const CancelButton: React.FC<OwnProps> = ({onCancelClick, noAbsolute}) => {
+export const CancelButton: React.FC<OwnProps> = ({onCancelClick, noAbsolute, mode='white'}) => {
     return (
         <div className={styles.cancelButtonn + ' '
             + (noAbsolute ? styles.cancelButtonn_noAbsolute : '')}
              onClick={onCancelClick}
         >
             <Button type={'submit'}
-                    colorMode={'white'}
+                    colorMode={mode}
                     title={'Отменить/вернуться'}
                     rounded
             ><MaterialIcon icon_name={'close'}/></Button>

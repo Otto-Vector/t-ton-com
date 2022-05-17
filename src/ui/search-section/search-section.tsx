@@ -76,37 +76,35 @@ export const SearchSection: React.FC<OwnProps> = () => {
                             (!!value.mode ? styles.searchSection__buttonItem_active : '')}>
                             {
                                 (key === 'cargoFilter')
-                                ?
-                                <div className={styles.searchSection__dropdown}>
-                                    <select className={styles.searchSection__select + ' ' +
-                                        (!!value.mode ? styles.searchSection__select_active : '')}
-                                            name="cargoFilter" id="cargoFilter"
-                                            onChange={
-                                                (e) => {
+                                    ?
+                                    <div className={styles.searchSection__dropdown}>
+                                        <select className={styles.searchSection__select + ' ' +
+                                            (!!value.mode ? styles.searchSection__select_active : '')}
+                                                name="cargoFilter" id="cargoFilter"
+                                                onChange={(e) => {
                                                     filtersAction.cargoFilter(e.target.value)
-                                                }
-                                            }
-                                            defaultValue={''}
-                                    >
-                                        <option className={styles.searchSection__option}
-                                                value={''} >{value.title}</option>
-                                        {cargoType.map((item) =>
+                                                }}
+                                                defaultValue={''}
+                                        >
                                             <option className={styles.searchSection__option}
-                                                    key={item} value={item}>{item}</option>,
-                                        )
-                                        }
-                                    </select>
-                                </div>
-                                :
-                                <Button type={(key === 'clearFilters') ? 'reset' :'button'}
-                                        title={value.title}
-                                        colorMode={'whiteBlue'}
-                                        rounded
-                                        onClick={() => {
-                                            // @ts-ignore
-                                            filtersAction[key]()
-                                        }}
-                                />}
+                                                    value={''}>{value.title}</option>
+                                            {cargoType.map((item) =>
+                                                <option className={styles.searchSection__option}
+                                                        key={item} value={item}>{item}</option>,
+                                            )
+                                            }
+                                        </select>
+                                    </div>
+                                    :
+                                    <Button type={(key === 'clearFilters') ? 'reset' : 'button'}
+                                            title={value.title}
+                                            colorMode={'whiteBlue'}
+                                            rounded
+                                            onClick={() => {
+                                                // @ts-ignore
+                                                filtersAction[key]()
+                                            }}
+                                    />}
                         </div>,
                     )
                     }
