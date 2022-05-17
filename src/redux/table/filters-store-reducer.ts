@@ -40,7 +40,7 @@ export const initialFiltersState = {
     values: {
         dayFilter: '',
         routeFilter: [0, 99999],
-        cargoFilter: ''
+        cargoFilter: '' as string | undefined
     },
 }
 
@@ -134,6 +134,25 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 }
             }
         }
+        case 'filters-store-reducer/SET-CARGO-FILTER': {
+            return {
+                ...state,
+                values: {
+                    ...state.values,
+                    cargoFilter: action.value
+                }
+            }
+        }
+        case 'filters-store-reducer/SET-CARGO-FILTER-MODE': {
+            return {
+                ...state,
+                buttons: {
+                    ...state.buttons,
+                    cargoFilter: {...state.buttons.cargoFilter, mode: !!state.values.cargoFilter}
+                }
+            }
+        }
+
         case 'filters-store-reducer/SET-CLEAR-FILTER-MODE': {
             return {
                 ...state,
@@ -184,6 +203,13 @@ export const filtersStoreActions = {
     setLongRouteMode: (mode: boolean) => ({
         type: 'filters-store-reducer/SET-LONG-ROUTE-MODE',
         mode,
+    } as const),
+    setCargoFilter: (value: string | undefined) => ({
+        type: 'filters-store-reducer/SET-CARGO-FILTER',
+        value
+    } as const),
+    setCargoFilterMode: () => ({
+        type: 'filters-store-reducer/SET-CARGO-FILTER-MODE',
     } as const),
     setNearDriverMode: (mode: boolean) => ({
         type: 'filters-store-reducer/SET-NEAR-DRIVER-MODE',

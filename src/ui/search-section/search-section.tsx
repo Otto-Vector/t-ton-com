@@ -8,6 +8,7 @@ import {
     initialFiltersState,
 } from '../../redux/table/filters-store-reducer'
 import {getButtonsFiltersStore} from '../../selectors/table/filters-reselect';
+import {cargoType} from '../types/form-types';
 
 
 type OwnProps = {}
@@ -18,7 +19,7 @@ export const SearchSection: React.FC<OwnProps> = () => {
     const filterButtons = useSelector(getButtonsFiltersStore)
     const dispatch = useDispatch()
 
-    const filtersAction: Record<keyof typeof filterButtons, () => void> = {
+    const filtersAction: Record<keyof typeof filterButtons, (value?: string) => void> = {
         todayFilter: () => {
             dispatch(filtersStoreActions.setTomorrowMode(false))
             dispatch(filtersStoreActions.setTodayMode(!filterButtons.todayFilter.mode))
@@ -45,8 +46,9 @@ export const SearchSection: React.FC<OwnProps> = () => {
             dispatch(filtersStoreActions.setLongRouteFilter())
             dispatch(filtersStoreActions.setNearDriverMode(!filterButtons.nearDriverFilter.mode))
         },
-        cargoFilter: () => {
-            console.log('cargo')
+        cargoFilter: (value) => {
+            dispatch(filtersStoreActions.setCargoFilter(value))
+            dispatch(filtersStoreActions.setCargoFilterMode())
         },
         clearFilters: () => {
             dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
@@ -55,35 +57,60 @@ export const SearchSection: React.FC<OwnProps> = () => {
 
     useEffect(() => { // перекрашиваем кнопку "Без фильтра"
         // если любой из фильтров на кнопках активен
-        let clearMode = Object.entries(filterButtons)
+        let clearMode = !Object.entries(filterButtons)
             // кроме самой clearFilters
             .map(([key, {mode}]) => key === 'clearFilters' ? false : mode)
             // складываем логически все состояния кнопок
             .reduce((a, b) => a || b)
-            if (clearMode === filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(!clearMode))
+        // если состояния отличаются, то присваиваем
+        if (clearMode !== filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(clearMode))
     }, [filterButtons])
 
     return (
         <section className={styles.searchSection}>
             <header className={styles.searchSection__header}>
                 <h3>{header}</h3>
-                <div className={styles.searchSection__buttonFilters}>
+                <form className={styles.searchSection__buttonFilters}>
                     {Object.entries(filterButtons).map(([key, value]) =>
                         <div key={key} className={styles.searchSection__buttonItem + ' ' +
                             (!!value.mode ? styles.searchSection__buttonItem_active : '')}>
-                            <Button type={'button'}
-                                    title={value.title}
-                                    colorMode={'whiteBlue'}
-                                    rounded
-                                    onClick={() => {
-                                        // @ts-ignore
-                                        filtersAction[key]()
-                                    }}
-                            />
+                            {
+                                (key === 'cargoFilter')
+                                ?
+                                <div className={styles.searchSection__dropdown}>
+                                    <select className={styles.searchSection__select + ' ' +
+                                        (!!value.mode ? styles.searchSection__select_active : '')}
+                                            name="cargoFilter" id="cargoFilter"
+                                            onChange={
+                                                (e) => {
+                                                    filtersAction.cargoFilter(e.target.value)
+                                                }
+                                            }
+                                            defaultValue={''}
+                                    >
+                                        <option className={styles.searchSection__option}
+                                                value={''} >{value.title}</option>
+                                        {cargoType.map((item) =>
+                                            <option className={styles.searchSection__option}
+                                                    key={item} value={item}>{item}</option>,
+                                        )
+                                        }
+                                    </select>
+                                </div>
+                                :
+                                <Button type={(key === 'clearFilters') ? 'reset' :'button'}
+                                        title={value.title}
+                                        colorMode={'whiteBlue'}
+                                        rounded
+                                        onClick={() => {
+                                            // @ts-ignore
+                                            filtersAction[key]()
+                                        }}
+                                />}
                         </div>,
                     )
                     }
-                </div>
+                </form>
             </header>
             <div className={styles.searchSection__table}>
                 <TableComponent/>

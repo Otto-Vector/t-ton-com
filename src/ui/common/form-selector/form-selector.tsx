@@ -20,7 +20,7 @@ export const FormSelector: React.FC<OwnProps> = ({
         {label && <label className={styles.label}>{label}</label>}
         <Field className={styles.select} name={named} component={'select'}>
             { values.map(value =>
-                <option value={value} key={value}>{value}</option>)
+                <option className={styles.dropdown__option} value={value} key={value}>{value}</option>)
             }
         </Field>
     </div>
