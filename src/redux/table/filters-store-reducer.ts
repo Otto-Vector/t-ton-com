@@ -139,7 +139,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 values: {
                     ...state.values,
-                    cargoFilter: action.value
+                    cargoFilter: state.buttons.cargoFilter.mode ? '' : action.value
                 }
             }
         }
@@ -148,7 +148,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 buttons: {
                     ...state.buttons,
-                    cargoFilter: {...state.buttons.cargoFilter, mode: !!state.values.cargoFilter}
+                    cargoFilter: {...state.buttons.cargoFilter, mode: action.mode}
                 }
             }
         }
@@ -208,8 +208,9 @@ export const filtersStoreActions = {
         type: 'filters-store-reducer/SET-CARGO-FILTER',
         value
     } as const),
-    setCargoFilterMode: () => ({
+    setCargoFilterMode: (mode: boolean) => ({
         type: 'filters-store-reducer/SET-CARGO-FILTER-MODE',
+        mode,
     } as const),
     setNearDriverMode: (mode: boolean) => ({
         type: 'filters-store-reducer/SET-NEAR-DRIVER-MODE',

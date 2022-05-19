@@ -7,7 +7,7 @@ import {
     filtersStoreActions,
     initialFiltersState,
 } from '../../redux/table/filters-store-reducer'
-import {getButtonsFiltersStore} from '../../selectors/table/filters-reselect'
+import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
 import {cargoType} from '../types/form-types'
 
 
@@ -21,8 +21,8 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const modes: TableModesType = { search: mode === 'search', history: mode === 'history', status: mode === 'status' }
     const header = modes.search ? 'Поиск ' : modes.history ? 'История' : 'Заявки'
-
     const filterButtons = useSelector( getButtonsFiltersStore )
+    const { cargoFilter } = useSelector( getValuesFiltersStore )
     const dispatch = useDispatch()
 
     const filtersAction: Record<keyof typeof filterButtons, ( value?: string ) => void> = {
@@ -54,12 +54,16 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
         },
         cargoFilter: ( value ) => {
             dispatch( filtersStoreActions.setCargoFilter( value ) )
-            dispatch( filtersStoreActions.setCargoFilterMode() )
+            dispatch( filtersStoreActions.setCargoFilterMode(value === '') )
         },
         clearFilters: () => {
             dispatch( filtersStoreActions.setClearFilter( initialFiltersState ) )
         },
     }
+
+    useEffect(()=>{
+        dispatch( filtersStoreActions.setClearFilter( initialFiltersState ) )
+    },[mode])
 
     useEffect( () => { // перекрашиваем кнопку "Без фильтра"
         // если любой из фильтров на кнопках активен
@@ -91,6 +95,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                                                     filtersAction.cargoFilter( e.target.value )
                                                 } }
                                                 defaultValue={ '' }
+                                                value={cargoFilter}
                                         >
                                             <option className={ styles.searchSection__option }
                                                     value={ '' }>{ value.title }</option>
