@@ -15,11 +15,11 @@ type OwnProps = {
     mode: 'search' | 'history' | 'status'
 }
 
-export type TableModesType = {search: boolean, history: boolean, status: boolean}
+export type TableModesType = { search: boolean, history: boolean, status: boolean }
 
 export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
 
-    const modes:TableModesType = { search: mode === 'search', history: mode === 'history', status: mode === 'status' }
+    const modes: TableModesType = { search: mode === 'search', history: mode === 'history', status: mode === 'status' }
     const header = modes.search ? 'Поиск ' : modes.history ? 'История' : 'Заявки'
 
     const filterButtons = useSelector( getButtonsFiltersStore )
@@ -121,7 +121,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                 </form>
             </header>
             <div className={ styles.searchSection__table }>
-                <TableComponent modes={modes}/>
+                <TableComponent modes={ modes }/>
             </div>
         </section>
     )
