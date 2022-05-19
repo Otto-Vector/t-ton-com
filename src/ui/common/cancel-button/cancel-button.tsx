@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './cancel-button.module.scss';
-import {Button} from '../../../common/button/button';
-import {MaterialIcon} from '../../../common/material-icon/material-icon';
+import {Button} from '../button/button';
+import {MaterialIcon} from '../material-icon/material-icon';
 
 type OwnProps = {
     onCancelClick: () => void

@@ -6,9 +6,17 @@ const initialState = {
         login: '/login',
         create: '/create',
         search: '/search',
-        status: '/status',
+        requests: '/requests',
+        requestInfo: {
+            status: '/request/status/',
+        },
         history: '/history',
         map: '/maps',
+        maps: {
+            address: '/maps/address/',
+            answers: '/maps/answers/',
+            routes: '/maps/routes/',
+        },
         balance: '/balance',
         options: '/options',
         optionsEdit: {
@@ -18,8 +26,8 @@ const initialState = {
             trailer: '/options/trailer/',
             consignees: '/options/consignees/',
         },
-        requisites: '/requisites'
-    }
+        requisites: '/requisites',
+    },
 }
 
 export type RoutesStoreReducerStateType = typeof initialState

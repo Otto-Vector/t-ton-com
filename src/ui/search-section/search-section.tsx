@@ -19,8 +19,8 @@ export type TableModesType = { search: boolean, history: boolean, status: boolea
 
 export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
 
-    const modes: TableModesType = { search: mode === 'search', history: mode === 'history', status: mode === 'status' }
-    const header = modes.search ? 'Поиск ' : modes.history ? 'История' : 'Заявки'
+    const tableModes: TableModesType = { search: mode === 'search', history: mode === 'history', status: mode === 'status' }
+    const header = tableModes.search ? 'Поиск ' : tableModes.history ? 'История' : 'Заявки'
     const filterButtons = useSelector( getButtonsFiltersStore )
     const { cargoFilter } = useSelector( getValuesFiltersStore )
     const dispatch = useDispatch()
@@ -94,7 +94,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                                                 onChange={ ( e ) => {
                                                     filtersAction.cargoFilter( e.target.value )
                                                 } }
-                                                defaultValue={ '' }
+                                                // defaultValue={ '' }
                                                 value={cargoFilter}
                                         >
                                             <option className={ styles.searchSection__option }
@@ -107,9 +107,9 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                                         </select>
                                     </div>
                                     : ( // убираем кнопки на разных типах
-                                        ( key === 'nearDriverFilter' && ( modes.history || modes.status ) )
+                                        ( key === 'nearDriverFilter' && ( tableModes.history || tableModes.status ) )
                                         ||
-                                        ( ( key === 'todayFilter' || key === 'tomorrowFilter' ) && modes.history ) )
+                                        ( ( key === 'todayFilter' || key === 'tomorrowFilter' ) && tableModes.history ) )
                                         ? null
                                         : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
                                                   title={ value.title }
@@ -126,7 +126,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                 </form>
             </header>
             <div className={ styles.searchSection__table }>
-                <TableComponent modes={ modes }/>
+                <TableComponent tableModes={ tableModes }/>
             </div>
         </section>
     )
