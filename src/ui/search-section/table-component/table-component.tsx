@@ -68,6 +68,7 @@ export const TableComponent: React.FC = () => {
                 },
                 disableFilters: false,
                 filter: 'between',
+                Cell: ({value}:{value: number})=>`${value} км`
             },
             {
                 Header: 'Маршрут',

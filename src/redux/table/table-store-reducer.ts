@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {addOneDay} from '../../utils/parsers';
+import {addOneDay, DdMmYearFormat} from '../../utils/parsers'
 import React from 'react';
 
 
@@ -18,7 +18,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: addOneDay(new Date()).toLocaleDateString(),
+            requestDate: DdMmYearFormat(addOneDay(new Date())),
             distance: 1120,
             route: 'Ангарск в Чита',
             answers: Math.floor(Math.random() * 99),
@@ -26,7 +26,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: 120,
             route: 'Пенза в Самара',
             answers: Math.floor(Math.random() * 99),
@@ -34,7 +34,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Контейнеровоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: 80,
             route: 'Иркутск в Усолье-Сибирское',
             answers: Math.floor(Math.random() * 99),
@@ -42,7 +42,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: 3760,
             route: 'Пенза в Ростов-на-Дону',
             answers: Math.floor(Math.random() * 99),
@@ -50,7 +50,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Бензовоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: 4790,
             route: 'Красноярск в Пенза',
             answers: Math.floor(Math.random() * 99),
@@ -58,7 +58,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Цементовоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: 1680,
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
@@ -66,7 +66,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Газовоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: Math.floor(Math.random() * 9999),
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
@@ -74,7 +74,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: addOneDay(new Date()).toLocaleDateString(),
+            requestDate: DdMmYearFormat(addOneDay(new Date())),
             distance: 1120,
             route: 'Ангарск в Чита',
             answers: Math.floor(Math.random() * 99),
@@ -82,7 +82,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: addOneDay(new Date()).toLocaleDateString(),
+            requestDate: DdMmYearFormat(addOneDay(new Date())),
             distance: 120,
             route: 'Пенза в Самара',
             answers: Math.floor(Math.random() * 99),
@@ -90,7 +90,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Контейнеровоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: 80,
             route: 'Иркутск в Усолье-Сибирское',
             answers: Math.floor(Math.random() * 99),
@@ -98,7 +98,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: 3760,
             route: 'Пенза в Ростов-на-Дону',
             answers: Math.floor(Math.random() * 99),
@@ -106,7 +106,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Бензовоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: 4790,
             route: 'Красноярск в Пенза',
             answers: Math.floor(Math.random() * 99),
@@ -114,7 +114,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Цементовоз',
-            requestDate: addOneDay(new Date()).toLocaleDateString(),
+            requestDate: DdMmYearFormat(addOneDay(new Date())),
             distance: 100,
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
@@ -122,7 +122,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Газовоз',
-            requestDate: new Date().toLocaleDateString(),
+            requestDate: DdMmYearFormat(new Date()),
             distance: Math.floor(Math.random() * 9999),
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
