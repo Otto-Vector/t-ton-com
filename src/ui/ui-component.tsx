@@ -34,7 +34,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                 </div>
                 <section className={styles.ui__content + ' ' + styles.grow}>
                     <Routes>
-                        <Route path='/' element={ <Navigate to={ routes.search }/> }/>
+                        <Route path='/' element={ <Navigate to={ routes.hello }/> }/>
                         <Route path={routes.hello} element={ <HelloSection/> }/>
                         <Route path={routes.login} element={ <LoginSection /> }/>
                         <Route path={routes.create} element={ <h2>СОЗДАТЬ ЗАЯВКУ</h2> }/>
