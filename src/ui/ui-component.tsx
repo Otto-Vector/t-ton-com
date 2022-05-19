@@ -18,6 +18,7 @@ import {EmployeesForm} from './options-section/employees-form/employees-form';
 import {TransportForm} from './options-section/transport-trailer-form/transport-form';
 import {TrailerForm} from './options-section/transport-trailer-form/trailer-form';
 import {SearchSection} from './search-section/search-section';
+import {CashCard} from './cash-card/cash-card'
 
 type OwnProps = {}
 
@@ -43,6 +44,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={routes.status} element={ <SearchSection/> }/> {/*статус по активным заявкам*/}
                         <Route path={routes.history} element={ <SearchSection/> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/}
                         <Route path={routes.map} element={ <h2>КАРТА АКТИВНЫХ ЗАЯВОК</h2> }/>
+                        <Route path={routes.balance} element={ <CashCard/> }/>
                         <Route path={routes.optionsEdit.shippers+':id'} element={ <ShippersForm/> }/>
                         <Route path={routes.optionsEdit.employees+':id'} element={ <EmployeesForm/> }/>
                         <Route path={routes.optionsEdit.transport+':id'} element={ <TransportForm/> }/>

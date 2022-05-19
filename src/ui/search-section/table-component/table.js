@@ -44,7 +44,7 @@ export const Table = ( { columns, data }) => {
                     <tr { ...row.getRowProps() } onClick={ () => { }}>
                         { row.cells.map( cell => {
                             return <td { ...cell.getCellProps() }
-                            >{ cell.render( 'Cell', {requestNumber: cell.row.values.requestNumber} ) }</td>
+                            >{ cell.render( 'Cell', {requestNumber: cell.row.values.requestNumber, price: cell.row.values.price } ) }</td>
                         } ) }
                     </tr>
                 )

@@ -6,6 +6,7 @@ import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '..
 const initialState = {
     isAuth: true,
     authID: 'sfadsfsadfa',
+    authCash: 100,
     isAvailableSMSrequest: false,
     isFetching: false,
 
@@ -87,7 +88,7 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-IS-FETCHING',
         isFetching,
     } as const ),
-     setInitialValues: ( initialValues: phoneSubmitType ) => ( {
+    setInitialValues: ( initialValues: phoneSubmitType ) => ( {
         type: 'auth-store-reducer/SET-VALUES',
         initialValues,
     } as const ),

@@ -36,7 +36,7 @@
     flex-wrap: wrap;
     padding-top: 15px;
     justify-content: space-around;
-    height: 97%;
+    height: calc(100% - 30px);
     overflow-y: auto;
 
     & > div { // применяем отступ ко вложенным на один уровень дивам

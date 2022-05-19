@@ -11,7 +11,7 @@ import statusSVG from './buttonsSVG/status.svg'
 import historySVG from './buttonsSVG/history.svg'
 import mapSVG from './buttonsSVG/map.svg'
 import optionsPNG from './buttonsSVG/options.png'
-import {getIsAuth} from '../../selectors/auth-reselect';
+import {getIsAuthAuthStore} from '../../selectors/auth-reselect';
 
 
 type OwnProps = {}
@@ -19,7 +19,7 @@ type OwnProps = {}
 export const MenuPanel: React.FC<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
-    const isAuth = useSelector(getIsAuth)
+    const isAuth = useSelector(getIsAuthAuthStore)
 
     // вынес за пределы NavLink назначение классов
     const activeClass = ({isActive}: { isActive: boolean }): string =>

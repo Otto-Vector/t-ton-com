@@ -54,7 +54,7 @@
     flex-wrap: wrap;
     margin-top: 15px;
     justify-content: space-around;
-    height: 93%;
+    height: calc(100% - 50px); // px вычисляется padding-top + padding-bottom
     overflow-y: auto;
 
     border: 1px solid #023E8A;

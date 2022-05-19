@@ -12,11 +12,13 @@ import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {tableStoreActions} from '../../../redux/table/table-store-reducer'
+import {getAuthCashAuthStore} from '../../../selectors/auth-reselect'
 
 
 export const TableComponent: React.FC = () => {
     const navigate = useNavigate()
-    const { search } = useSelector( getRoutesStore )
+    const { search, balance } = useSelector( getRoutesStore )
+    const authCash = useSelector( getAuthCashAuthStore )
     const { dayFilter, routeFilter, cargoFilter } = useSelector( getValuesFiltersStore )
     const TABLE_CONTENT = useSelector( getContentTableStore )
     const dispatch = useDispatch()
@@ -84,14 +86,18 @@ export const TableComponent: React.FC = () => {
             },
             {
                 Header: '',
-                id: 'open',
-                accessor: 'open',
+                // id: 'open',
+                accessor: 'price',
 
                 disableFilters: true,
-                Cell: ( { requestNumber }: { requestNumber: number } ) => (
+                Cell: ( { requestNumber, price }: { requestNumber: number, price: number } ) => (
                     <Button title={ 'Открыть' }
-                            onClick={ () => navigate( search + '/' + requestNumber ) }
-                            colorMode={ 'blue' }
+                            onClick={ () => {
+                                price > authCash
+                                ? navigate( balance  )
+                                : navigate( search + '/' + requestNumber )
+                            }}
+                            colorMode={ price > authCash ? 'gray' : 'blue' }
                     />
                 )
             },
@@ -106,7 +112,7 @@ export const TableComponent: React.FC = () => {
                 )
             },
         ],
-        [ dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
+        [ authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
     )
 
 

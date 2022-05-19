@@ -9,6 +9,7 @@ const initialState = {
         status: '/status',
         history: '/history',
         map: '/maps',
+        balance: '/balance',
         options: '/options',
         optionsEdit: {
             shippers: '/options/shippers/',

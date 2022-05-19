@@ -11,7 +11,8 @@ type OneTableRow = {
     distance: number
     route: string
     answers: number
-    open: React.ReactElement }
+    price: number
+}
 
 const initialState = {
     content: [
@@ -22,6 +23,7 @@ const initialState = {
             distance: 1120,
             route: 'Ангарск в Чита',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -30,6 +32,7 @@ const initialState = {
             distance: 120,
             route: 'Пенза в Самара',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -38,6 +41,7 @@ const initialState = {
             distance: 80,
             route: 'Иркутск в Усолье-Сибирское',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -46,6 +50,7 @@ const initialState = {
             distance: 3760,
             route: 'Пенза в Ростов-на-Дону',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -54,6 +59,7 @@ const initialState = {
             distance: 4790,
             route: 'Красноярск в Пенза',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -62,6 +68,7 @@ const initialState = {
             distance: 1680,
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -70,6 +77,7 @@ const initialState = {
             distance: Math.floor(Math.random() * 9999),
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -78,6 +86,7 @@ const initialState = {
             distance: 1120,
             route: 'Ангарск в Чита',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -86,6 +95,7 @@ const initialState = {
             distance: 120,
             route: 'Пенза в Самара',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -94,6 +104,7 @@ const initialState = {
             distance: 80,
             route: 'Иркутск в Усолье-Сибирское',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -102,6 +113,7 @@ const initialState = {
             distance: 3760,
             route: 'Пенза в Ростов-на-Дону',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -110,6 +122,7 @@ const initialState = {
             distance: 4790,
             route: 'Красноярск в Пенза',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -118,6 +131,7 @@ const initialState = {
             distance: 100,
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
         {
             requestNumber: Math.floor(Math.random() * 999),
@@ -126,6 +140,7 @@ const initialState = {
             distance: Math.floor(Math.random() * 9999),
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
+            price: Math.floor(Math.random() * 200),
         },
     ] as OneTableRow[],
 }

@@ -1,0 +1,18 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.authCash {
+  @include flex-center();
+  padding: 10px 15px;
+  background: $accentColor;
+  height: 100%;
+
+  &__title {
+    background-color: #92ABC8;
+    color: black;
+    font-size: 40px;
+    font-weight: bold;
+  }
+
+
+}
