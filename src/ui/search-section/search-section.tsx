@@ -1,117 +1,127 @@
 import React, {useEffect} from 'react'
 import styles from './search-section.module.scss'
-import {Button} from '../common/button/button';
-import {TableComponent} from './table-component/table-component';
+import {Button} from '../common/button/button'
+import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {
     filtersStoreActions,
     initialFiltersState,
 } from '../../redux/table/filters-store-reducer'
-import {getButtonsFiltersStore} from '../../selectors/table/filters-reselect';
-import {cargoType} from '../types/form-types';
+import {getButtonsFiltersStore} from '../../selectors/table/filters-reselect'
+import {cargoType} from '../types/form-types'
 
 
-type OwnProps = {}
+type OwnProps = {
+    mode: 'search' | 'history' | 'status'
+}
 
-export const SearchSection: React.FC<OwnProps> = () => {
+export type TableModesType = {search: boolean, history: boolean, status: boolean}
 
-    const header = 'Поиск'
-    const filterButtons = useSelector(getButtonsFiltersStore)
+export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
+
+    const modes:TableModesType = { search: mode === 'search', history: mode === 'history', status: mode === 'status' }
+    const header = modes.search ? 'Поиск ' : modes.history ? 'История' : 'Заявки'
+
+    const filterButtons = useSelector( getButtonsFiltersStore )
     const dispatch = useDispatch()
 
-    const filtersAction: Record<keyof typeof filterButtons, (value?: string) => void> = {
+    const filtersAction: Record<keyof typeof filterButtons, ( value?: string ) => void> = {
         todayFilter: () => {
-            dispatch(filtersStoreActions.setTomorrowMode(false))
-            dispatch(filtersStoreActions.setTodayMode(!filterButtons.todayFilter.mode))
-            dispatch(filtersStoreActions.setTodayFilter())
+            dispatch( filtersStoreActions.setTomorrowMode( false ) )
+            dispatch( filtersStoreActions.setTodayMode( !filterButtons.todayFilter.mode ) )
+            dispatch( filtersStoreActions.setTodayFilter() )
         },
         tomorrowFilter: () => {
-            dispatch(filtersStoreActions.setTodayMode(false))
-            dispatch(filtersStoreActions.setTomorrowMode(!filterButtons.tomorrowFilter.mode))
-            dispatch(filtersStoreActions.setTomorrowFilter())
+            dispatch( filtersStoreActions.setTodayMode( false ) )
+            dispatch( filtersStoreActions.setTomorrowMode( !filterButtons.tomorrowFilter.mode ) )
+            dispatch( filtersStoreActions.setTomorrowFilter() )
         },
         shortRouteFilter: () => {
-            dispatch(filtersStoreActions.setLongRouteMode(false))
-            dispatch(filtersStoreActions.setShortRouteMode(!filterButtons.shortRouteFilter.mode))
-            dispatch(filtersStoreActions.setShortRouteFilter())
+            dispatch( filtersStoreActions.setLongRouteMode( false ) )
+            dispatch( filtersStoreActions.setShortRouteMode( !filterButtons.shortRouteFilter.mode ) )
+            dispatch( filtersStoreActions.setShortRouteFilter() )
         },
         longRouteFilter: () => {
-            dispatch(filtersStoreActions.setShortRouteMode(false))
-            dispatch(filtersStoreActions.setLongRouteMode(!filterButtons.longRouteFilter.mode))
-            dispatch(filtersStoreActions.setLongRouteFilter())
+            dispatch( filtersStoreActions.setShortRouteMode( false ) )
+            dispatch( filtersStoreActions.setLongRouteMode( !filterButtons.longRouteFilter.mode ) )
+            dispatch( filtersStoreActions.setLongRouteFilter() )
         },
         nearDriverFilter: () => {
-            dispatch(filtersStoreActions.setLongRouteMode(false))
-            dispatch(filtersStoreActions.setShortRouteMode(false))
-            dispatch(filtersStoreActions.setLongRouteFilter())
-            dispatch(filtersStoreActions.setNearDriverMode(!filterButtons.nearDriverFilter.mode))
+            dispatch( filtersStoreActions.setLongRouteMode( false ) )
+            dispatch( filtersStoreActions.setShortRouteMode( false ) )
+            dispatch( filtersStoreActions.setLongRouteFilter() )
+            dispatch( filtersStoreActions.setNearDriverMode( !filterButtons.nearDriverFilter.mode ) )
         },
-        cargoFilter: (value) => {
-            dispatch(filtersStoreActions.setCargoFilter(value))
-            dispatch(filtersStoreActions.setCargoFilterMode())
+        cargoFilter: ( value ) => {
+            dispatch( filtersStoreActions.setCargoFilter( value ) )
+            dispatch( filtersStoreActions.setCargoFilterMode() )
         },
         clearFilters: () => {
-            dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
+            dispatch( filtersStoreActions.setClearFilter( initialFiltersState ) )
         },
     }
 
-    useEffect(() => { // перекрашиваем кнопку "Без фильтра"
+    useEffect( () => { // перекрашиваем кнопку "Без фильтра"
         // если любой из фильтров на кнопках активен
-        let clearMode = !Object.entries(filterButtons)
+        let clearMode = !Object.entries( filterButtons )
             // кроме самой clearFilters
-            .map(([key, {mode}]) => key === 'clearFilters' ? false : mode)
+            .map( ( [ key, { mode } ] ) => key === 'clearFilters' ? false : mode )
             // складываем логически все состояния кнопок
-            .reduce((a, b) => a || b)
+            .reduce( ( a, b ) => a || b )
         // если состояния отличаются, то присваиваем
-        if (clearMode !== filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(clearMode))
-    }, [filterButtons])
+        if (clearMode !== filterButtons.clearFilters.mode) dispatch( filtersStoreActions.setClearFilterMode( clearMode ) )
+    }, [ filterButtons ] )
 
     return (
-        <section className={styles.searchSection}>
-            <header className={styles.searchSection__header}>
-                <h3>{header}</h3>
-                <form className={styles.searchSection__buttonFilters}>
-                    {Object.entries(filterButtons).map(([key, value]) =>
-                        <div key={key} className={styles.searchSection__buttonItem + ' ' +
-                            (!!value.mode ? styles.searchSection__buttonItem_active : '')}>
+        <section className={ styles.searchSection }>
+            <header className={ styles.searchSection__header }>
+                <h3>{ header }</h3>
+                <form className={ styles.searchSection__buttonFilters }>
+                    { Object.entries( filterButtons ).map( ( [ key, value ] ) =>
+                        <div key={ key } className={ styles.searchSection__buttonItem + ' ' +
+                            ( !!value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             {
-                                (key === 'cargoFilter')
+                                ( key === 'cargoFilter' )
                                     ?
-                                    <div className={styles.searchSection__dropdown}>
-                                        <select className={styles.searchSection__select + ' ' +
-                                            (!!value.mode ? styles.searchSection__select_active : '')}
+                                    <div className={ styles.searchSection__dropdown }>
+                                        <select className={ styles.searchSection__select + ' ' +
+                                            ( !!value.mode ? styles.searchSection__select_active : '' ) }
                                                 name="cargoFilter" id="cargoFilter"
-                                                onChange={(e) => {
-                                                    filtersAction.cargoFilter(e.target.value)
-                                                }}
-                                                defaultValue={''}
+                                                onChange={ ( e ) => {
+                                                    filtersAction.cargoFilter( e.target.value )
+                                                } }
+                                                defaultValue={ '' }
                                         >
-                                            <option className={styles.searchSection__option}
-                                                    value={''}>{value.title}</option>
-                                            {cargoType.map((item) =>
-                                                <option className={styles.searchSection__option}
-                                                        key={item} value={item}>{item}</option>,
+                                            <option className={ styles.searchSection__option }
+                                                    value={ '' }>{ value.title }</option>
+                                            { cargoType.map( ( item ) =>
+                                                <option className={ styles.searchSection__option }
+                                                        key={ item } value={ item }>{ item }</option>,
                                             )
                                             }
                                         </select>
                                     </div>
-                                    :
-                                    <Button type={(key === 'clearFilters') ? 'reset' : 'button'}
-                                            title={value.title}
-                                            colorMode={'whiteBlue'}
-                                            rounded
-                                            onClick={() => {
-                                                // @ts-ignore
-                                                filtersAction[key]()
-                                            }}
-                                    />}
+                                    : ( // убираем кнопки на разных типах
+                                        ( key === 'nearDriverFilter' && ( modes.history || modes.status ) )
+                                        ||
+                                        ( ( key === 'todayFilter' || key === 'tomorrowFilter' ) && modes.history ) )
+                                        ? null
+                                        : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
+                                                  title={ value.title }
+                                                  colorMode={ 'whiteBlue' }
+                                                  rounded
+                                                  onClick={ () => {
+                                                      // @ts-ignore
+                                                      filtersAction[key]()
+                                                  } }
+                                        /> }
                         </div>,
                     )
                     }
                 </form>
             </header>
-            <div className={styles.searchSection__table}>
-                <TableComponent/>
+            <div className={ styles.searchSection__table }>
+                <TableComponent modes={modes}/>
             </div>
         </section>
     )

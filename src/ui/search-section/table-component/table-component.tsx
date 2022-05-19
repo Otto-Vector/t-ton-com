@@ -13,9 +13,14 @@ import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {tableStoreActions} from '../../../redux/table/table-store-reducer'
 import {getAuthCashAuthStore} from '../../../selectors/auth-reselect'
+import {TableModesType} from '../search-section'
+
+type OwnProps = {
+    modes: TableModesType
+}
 
 
-export const TableComponent: React.FC = () => {
+export const TableComponent: React.FC<OwnProps> = ({modes}) => {
     const navigate = useNavigate()
     const { search, balance } = useSelector( getRoutesStore )
     const authCash = useSelector( getAuthCashAuthStore )
@@ -108,18 +113,18 @@ export const TableComponent: React.FC = () => {
 
                 disableFilters: true,
                 Cell: ( { requestNumber }: { requestNumber: number } ) => (
+                    modes.history ? null :
                     <CancelButton onCancelClick={ () => deleteRow( requestNumber ) } mode={ 'redAlert' } noAbsolute/>
                 )
             },
         ],
-        [ authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
+        [ modes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
     )
 
 
     return (
         <div className={ styles.tableComponent }>
             <Table columns={ columns } data={ data }/>
-            {/*<AppTable/>*/ }
         </div>
     )
 }
