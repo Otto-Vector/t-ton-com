@@ -26,12 +26,6 @@ $black-75 : #00000075;
     opacity: .5;
   }
 
-  //&__option {
-  //  background-color: #023E8A;
-  //  color: white;
-  //  border: .5px solid #92ABC8;
-  //}
-
 }
 
   .label {
@@ -67,7 +61,7 @@ $black-75 : #00000075;
     transition-duration: .3s;
 
     &:focus, &:hover {
-      border: solid $black-75 2px;
+      border: solid $accentColor 2px;
     }
 
     &:active {

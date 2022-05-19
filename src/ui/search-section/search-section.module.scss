@@ -71,17 +71,19 @@
     position: relative;
     background-color: transparent;
     border-radius: 9999px;
+    height: 100%;
+
 
     &:after {
       @include addMaterialAfter('expand_more');
       font-size: rem(25);
       right: rem(5);
-      top: rem(8);
+      top: rem(9);
       opacity: .5;
     }
   }
 
-  &__select {
+  &__select { //ToDo: выделить в отдельный элемент
     /*убирает стрелочку из выпадающего списка*/
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -94,21 +96,41 @@
     background: transparent;
     font-size: inherit;
     line-height: 1.2;
-    //text-align: center;
+    cursor: pointer;
+
     border: solid {
       color: inherit;
       radius: inherit;
       width: 1px;
     }
     color: inherit;
+
     padding: rem(7) rem(20) rem(7) rem(20);
     width: 100%;
+    height: 100%;
+    transition: box-shadow 0.2s ease-in-out;
 
-    &:focus, &:hover {
-      border: solid $accentColor 1px;
+    &:focus {
+      border: solid $accentColor 2px;
+      padding: rem(6) rem(19) rem(6) rem(19);
+    }
+
+    &:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .35);
     }
 
     &:active {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+    }
+
+    &:disabled {
+      opacity: .4;
+    }
+
+    &:active:disabled {
+      box-shadow: 0 0 6px rgba(red, .75);
+      color: red;
+      border-color: red;
     }
 
     &_active {
@@ -124,4 +146,3 @@
     //text-align: center;
   }
 }
-
