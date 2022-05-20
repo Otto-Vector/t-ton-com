@@ -20,6 +20,7 @@ import {TrailerForm} from './options-section/transport-trailer-form/trailer-form
 import {SearchSection} from './search-section/search-section';
 import {CashCard} from './cash-card/cash-card'
 import {RequestSection} from './request-section/request-section';
+import {AddDriversForm} from './request-section/add-drivers-form/add-drivers-form';
 
 type OwnProps = {}
 
@@ -36,7 +37,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                 </div>
                 <section className={ styles.ui__content + ' ' + styles.grow }>
                     <Routes>
-                        <Route path="/" element={ <Navigate to={ routes.optionsEdit.employees+'5' }/> }/>
+                        <Route path="/" element={ <Navigate to={ routes.addDriver }/> }/>
 
                         <Route path={ routes.hello } element={ <HelloSection/> }/> {/*ОКНО ПРИВЕТСТВИЯ*/ }
                         <Route path={ routes.login } element={ <LoginSection/> }/> {/*ОКНО АВТОРИЗАЦИИ*/ }
@@ -64,8 +65,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                                </div> }/>
                         <Route path={ routes.balance } element={ <CashCard/> }/>
                         <Route path={ routes.addDriver }
-                               element={ <div className={ styles.ui__fake }><h2>ЗДЕСЬ ФОРМА ДОБАВЛЕНИЯ ВОДИТЕЛЯ НА
-                                   ЗАЯВКУ</h2></div> }/>
+                               element={ <AddDriversForm /> }/>
 
 
                         <Route path={ routes.optionsEdit.shippers + ':id' } element={ <ShippersForm/> }/>
