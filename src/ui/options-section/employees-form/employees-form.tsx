@@ -18,7 +18,7 @@ import {
     getInitialValuesEmployeesStore,
     getLabelEmployeesStore,
     getMaskOnEmployeesStore,
-    getValidatorsEmployeesStore
+    getValidatorsEmployeesStore,
 } from '../../../selectors/options/employees-reselect'
 
 type OwnProps = {
@@ -28,20 +28,20 @@ type OwnProps = {
 export const EmployeesForm: React.FC<OwnProps> = () => {
 
     const header = 'Сотрудник'
-    const isFetching = useSelector( getIsFetchingRequisitesStore )
-    const label = useSelector( getLabelEmployeesStore )
-    const initialValues = useSelector( getInitialValuesEmployeesStore )
-    const maskOn = useSelector( getMaskOnEmployeesStore )
-    const validators = useSelector( getValidatorsEmployeesStore )
+    const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const label = useSelector(getLabelEmployeesStore)
+    const initialValues = useSelector(getInitialValuesEmployeesStore)
+    const maskOn = useSelector(getMaskOnEmployeesStore)
+    const validators = useSelector(getValidatorsEmployeesStore)
 
-    const { options } = useSelector( getRoutesStore )
+    const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
     const onSubmit = ( values: EmployeesCardType ) => {
     }
 
     const onCancelClick = () => {
-        navigate( options )
+        navigate(options)
     }
 
     const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
@@ -78,15 +78,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.employeeFIO }
                                                    parse={ parseFIO }
                                             />
-                                            <Field name={ 'employeePhoneNumber' }
-                                                   placeholder={ label.employeePhoneNumber }
-                                                   maskFormat={ maskOn.employeePhoneNumber }
-                                                   allowEmptyFormatting
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.employeePhoneNumber }
-                                            />
                                         </div>
+
                                         <div className={ styles.employeesForm__inputsPanel }>
                                             <Field name={ 'passportSerial' }
                                                    placeholder={ label.passportSerial }
@@ -103,14 +96,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.passportFMS }
                                             />
-                                            <Field name={ 'passportDate' }
-                                                   placeholder={ label.passportDate }
-                                                   maskFormat={ maskOn.passportDate }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   inputType={ 'date' }
-                                                   validate={ validators.passportDate }
-                                            />
                                             <Field name={ 'drivingLicenseNumber' }
                                                    placeholder={ label.drivingLicenseNumber }
                                                    maskFormat={ maskOn.drivingLicenseNumber }
@@ -118,7 +103,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.drivingLicenseNumber }
                                             />
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                             <Field name={ 'drivingCategory' }
                                                    placeholder={ label.drivingCategory }
                                                    maskFormat={ maskOn.drivingCategory }
@@ -157,7 +141,24 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    parse={ parseFIO }
                                             />
                                         </div>
-                                        <div>
+                                        {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
+                                        <div className={ styles.employeesForm__inputsWithPhoto }>
+                                            <Field name={ 'employeePhoneNumber' }
+                                                   placeholder={ label.employeePhoneNumber }
+                                                   maskFormat={ maskOn.employeePhoneNumber }
+                                                   allowEmptyFormatting
+                                                   component={ FormInputType }
+                                                   resetFieldBy={ form }
+                                                   validate={ validators.employeePhoneNumber }
+                                            />
+                                            <Field name={ 'passportDate' }
+                                                   placeholder={ label.passportDate }
+                                                   maskFormat={ maskOn.passportDate }
+                                                   component={ FormInputType }
+                                                   resetFieldBy={ form }
+                                                   inputType={ 'date' }
+                                                   validate={ validators.passportDate }
+                                            />
                                             <div className={ styles.employeesForm__photo }
                                                  title={ 'Добавить/изменить фото' }>
                                                 <img src={ initialValues.photoFace || noImagePhoto } alt="facePhoto"/>
@@ -167,30 +168,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                        onChange={ sendPhotoFile }
                                                 />
                                             </div>
-                                            <div className={ styles.employeesForm__ratingPanel }>
-                                                <label className={ styles.employeesForm__ratingPanelLabel }
-                                                       style={ { fontSize: '16px' } }>{ label.rating }</label>
-                                                <div className={ styles.employeesForm__ratingInput }>
-                                                    <Field name={ 'rating' }
-                                                           placeholder={ '%' }
-                                                           maskFormat={ maskOn.rating }
-                                                           component={ FormInputType }
-                                                           resetFieldBy={ form }
-                                                           validate={ validators.rating }
-                                                           disabled
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
+
                                         <div className={ styles.employeesForm__buttonsPanel }>
-                                            <div className={ styles.employeesForm__button }>
-                                                <Button type={ 'submit' }
-                                                        disabled={ submitting }
-                                                        colorMode={ 'green' }
-                                                        title={ 'Cохранить' }
-                                                        rounded
-                                                />
-                                            </div>
                                             <div className={ styles.employeesForm__button }>
                                                 <Button type={ 'button' }
                                                         disabled={ true }
@@ -199,6 +178,15 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                         rounded
                                                 />
                                             </div>
+                                            <div className={ styles.employeesForm__button }>
+                                                <Button type={ 'submit' }
+                                                        disabled={ submitting }
+                                                        colorMode={ 'green' }
+                                                        title={ 'Cохранить' }
+                                                        rounded
+                                                />
+                                            </div>
+                                        </div>
                                         </div>
 
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }

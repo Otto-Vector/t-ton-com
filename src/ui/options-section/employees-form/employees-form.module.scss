@@ -38,7 +38,7 @@
 
   &__inputsPanel {
     padding: 5px 10px;
-    min-width: 360px;
+    min-width: 350px;
 
     & > div {
       margin-bottom: 13px;
@@ -54,17 +54,25 @@
     }
   }
 
+  &__inputsWithPhoto {
+    padding-top: 5px;
+
+    & > div {
+      margin-bottom: 13px;
+    }
+  }
+
   &__photo {
     position: relative;
     display: flex;
     justify-content: center;
     width: 220px;
-    height: 220px;
+    height: 170px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid #2D2D2D;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 18px;
-    margin: 10px auto;
+    margin: 15px auto;
     cursor: pointer;
     overflow: hidden;
 
@@ -73,33 +81,11 @@
     }
   }
 
-  &__ratingPanel {
-    display: flex;
-    align-items: center;
-    justify-content: right;
-    padding-right: 10px;
-  }
-
-  &__ratingPanelLabel {
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 1.2;
-    text-align: right;
-    color: #023E8A;
-    padding-right: 10px;
-  }
-
-  &__ratingInput {
-    height: 20px;
-    width: 45px;
-  }
-
   &__buttonsPanel {
-    @include flex-center();
+    @include flex-center(column);
     justify-content: space-between;
-    width: 50%;
-    height: 40px;
-    margin: 0 auto 10px;
+    height: 90px;
+    margin: 20px auto 10px;
     font-family: $RalewayFont;
     font-weight: 700;
     font-size: 24px;
@@ -108,7 +94,7 @@
 
   &__button {
     align-self: stretch;
-    width: 48%;
+    height: 40px;
   }
 
   &__attachFile {

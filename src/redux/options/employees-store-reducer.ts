@@ -1,6 +1,13 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {composeValidators, maxLength, maxNumbers, mustBe00Numbers, required} from '../../utils/validators'
+import {
+    composeValidators,
+    maxLength,
+    maxNumbers,
+    mustBe00Numbers,
+    mustNotBeOnlyNull,
+    required,
+} from '../../utils/validators'
 import {EmployeesCardType, ValidateType} from '../../ui/types/form-types'
 
 const initialState = {
@@ -58,15 +65,15 @@ const initialState = {
     validators: {
         employeeFIO: composeValidators( required, maxLength( 50 ) ),
         employeePhoneNumber: composeValidators( required, mustBe00Numbers( 11 ) ),
-        passportSerial: composeValidators( mustBe00Numbers( 10 ) ),
+        passportSerial: composeValidators( mustBe00Numbers( 10 ), mustNotBeOnlyNull ),
         passportImage: undefined,
         passportFMS: undefined,
         passportDate: undefined,
-        drivingLicenseNumber: composeValidators( mustBe00Numbers( 10 ) ),
+        drivingLicenseNumber: composeValidators( mustBe00Numbers( 10 ), mustNotBeOnlyNull ),
         drivingLicenseImage: undefined,
         drivingCategory: undefined,
         personnelNumber: composeValidators( maxNumbers( 10 ) ),
-        garageNumber: composeValidators( maxNumbers( 10 ) ),
+        garageNumber: composeValidators( maxNumbers( 10 ), mustNotBeOnlyNull ),
         mechanicFIO: composeValidators( maxLength( 50 ) ),
         dispatcherFIO: composeValidators( maxLength( 50 ) ),
         photoFace: undefined,

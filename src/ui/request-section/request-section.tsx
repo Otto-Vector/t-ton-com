@@ -46,7 +46,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const buttonsAction = {
         acceptRequest: () => {
-            navigate(routes.requestInfo.driver)
+            navigate(routes.addDriver)
         },
         cancelRequest: () => {
             navigate(-1)
@@ -73,27 +73,29 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                 <h4 className={ styles.requestSection__title }>{ title }</h4>
                 <div className={ styles.requestSection__buttonsPanel }>
                     { !requestModes.historyMode ? <>
-                            <div className={ styles.requestSection__panelButton }>
-                                <Button colorMode={ 'green' }
-                                        onClick={ () => {
-                                            requestModes.driverMode
-                                                ? buttonsAction.acceptRequest()
-                                                : buttonsAction.submitRequestAndSearch()
-                                        } }
-                                        disabled={requestModes.createMode}
-                                        rounded>{ requestModes.driverMode ? 'Принять заявку' : 'Поиск исполнителя' }</Button>
-                            </div>
-                            <div className={ styles.requestSection__panelButton }>
-                                <Button colorMode={ requestModes.driverMode ? 'red' : 'blue' }
-                                        onClick={ () => {
-                                           requestModes.driverMode
-                                                ? buttonsAction.cancelRequest()
-                                                : buttonsAction.submitRequestAndDrive()
-                                        } }
-                                        disabled={requestModes.createMode}
-                                        rounded>{ requestModes.driverMode ? 'Отказаться' : 'Самовывоз' }</Button>
-                            </div>
-                        </> : null
+                        <div className={ styles.requestSection__panelButton }>
+                            <Button colorMode={ 'green' }
+                                    title={ requestModes.driverMode ? 'Принять заявку' : 'Поиск исполнителя' }
+                                    onClick={ () => {
+                                        requestModes.driverMode
+                                            ? buttonsAction.acceptRequest()
+                                            : buttonsAction.submitRequestAndSearch()
+                                    } }
+                                    disabled={ requestModes.createMode }
+                                    rounded/>
+                        </div>
+                        <div className={ styles.requestSection__panelButton }>
+                            <Button colorMode={ requestModes.driverMode ? 'red' : 'blue' }
+                                    title={ requestModes.driverMode ? 'Отказаться' : 'Самовывоз' }
+                                    onClick={ () => {
+                                        requestModes.driverMode
+                                            ? buttonsAction.cancelRequest()
+                                            : buttonsAction.submitRequestAndDrive()
+                                    } }
+                                    disabled={ requestModes.createMode }
+                                    rounded/>
+                        </div>
+                    </> : null
                     }
                 </div>
             </header>
