@@ -13,7 +13,7 @@ import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector} from '../../common/form-selector/form-selector'
 import {InfoText} from '../common-forms/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
-import {cargoType, propertyRights, TransportCardType} from '../../types/form-types'
+import {cargoType, propertyRights, TransportCardType} from '../../../types/form-types'
 import {
     getInitialValuesTranstportStore, getLabelTranstportStore, getMaskOnTranstportStore,
     getValidatorsTranstportStore

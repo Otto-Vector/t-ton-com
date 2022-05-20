@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
-import {phoneSubmitType, ValidateType} from '../ui/types/form-types'
+import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 
 const initialState = {

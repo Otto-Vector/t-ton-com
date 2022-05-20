@@ -12,6 +12,7 @@ import {trailerStoreReducer} from './options/trailer-store-reducer'
 import {transportStoreReducer} from './options/transport-store-reducer'
 import {filtersStoreReducer} from './table/filters-store-reducer'
 import {tableStoreReducer} from './table/table-store-reducer';
+import {addDriverStoreReducer} from './forms/add-driver-store-reducer';
 
 
 const reducersObject = {
@@ -27,6 +28,7 @@ const reducersObject = {
     transportStoreReducer,
     filtersStoreReducer,
     tableStoreReducer,
+    addDriverStoreReducer,
 }
 
 const rootReducer = combineReducers(reducersObject)

@@ -2,7 +2,7 @@ import React from 'react'
 
 import {Field} from 'react-final-form'
 import styles from './form-selector.module.scss'
-import {cargoType, propertyRights} from '../../types/form-types'
+import {cargoType, propertyRights} from '../../../types/form-types'
 
 
 type OwnProps = {

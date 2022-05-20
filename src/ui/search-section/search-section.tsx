@@ -8,7 +8,7 @@ import {
     initialFiltersState,
 } from '../../redux/table/filters-store-reducer'
 import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
-import {cargoType} from '../types/form-types'
+import {cargoType} from '../../types/form-types'
 
 
 type OwnProps = {

@@ -11,7 +11,7 @@ import {
     getInitialValuesRequisitesStore,
     getIsFetchingRequisitesStore, getLabelRequisitesStore, getMaskOnRequisitesStore, getValidatorsRequisitesStore,
 } from '../../../selectors/options/requisites-reselect';
-import {CompanyRequisitesType} from '../../types/form-types';
+import {CompanyRequisitesType} from '../../../types/form-types';
 import {CancelButton} from '../../common/cancel-button/cancel-button';
 import {useNavigate} from 'react-router-dom';
 import {InfoText} from '../common-forms/info-text/into-text';

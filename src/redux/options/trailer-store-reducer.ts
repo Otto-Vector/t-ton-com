@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {TrailerCardType, ValidateType} from '../../ui/types/form-types'
+import {TrailerCardType, ValidateType} from '../../types/form-types'
 import {
     composeValidators,
     maxLength,

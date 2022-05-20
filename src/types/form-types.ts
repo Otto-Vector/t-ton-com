@@ -113,3 +113,16 @@ export type TrailerCardType<T = DefaultFormType> = {
     propertyRights: T | PropertyRightsType // Право собственности
     trailerImage: T // Фото транспорта
 }
+
+ export type AddDriverCardType<T = DefaultFormType> = {
+     driverFIO: T,
+     driverTransport: T,
+     driverTrailer: T,
+     driverStavka: T,
+     driverSumm: T,
+     driverRating: T,
+     driverTax: T,
+     driverPhoto: T,
+     driverTransportPhoto: T,
+     driverTrailerPhoto: T,
+ }

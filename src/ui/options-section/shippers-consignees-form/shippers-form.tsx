@@ -13,7 +13,7 @@ import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../common-forms/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
-import {ShippersCardType} from '../../types/form-types'
+import {ShippersCardType} from '../../../types/form-types'
 import {
     getInitialValuesShippersStore,
     getLabelShippersStore,

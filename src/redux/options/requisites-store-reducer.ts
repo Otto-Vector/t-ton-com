@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {CompanyRequisitesType, ValidateType} from '../../ui/types/form-types';
+import {CompanyRequisitesType, ValidateType} from '../../types/form-types';
 import {
     composeValidators,
     maxLength,

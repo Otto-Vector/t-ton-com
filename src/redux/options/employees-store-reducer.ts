@@ -8,7 +8,7 @@ import {
     mustNotBeOnlyNull,
     required,
 } from '../../utils/validators'
-import {EmployeesCardType, ValidateType} from '../../ui/types/form-types'
+import {EmployeesCardType, ValidateType} from '../../types/form-types'
 
 const initialState = {
     label: {

@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {ConsigneesCardType, ValidateType} from '../../ui/types/form-types'
+import {ConsigneesCardType, ValidateType} from '../../types/form-types'
 import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
 
 

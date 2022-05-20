@@ -14,7 +14,7 @@ import {
 import {Preloader} from '../../common/preloader/preloader'
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
-import {phoneSubmitType} from '../../types/form-types'
+import {phoneSubmitType} from '../../../types/form-types'
 
 
 type OwnProps = {
