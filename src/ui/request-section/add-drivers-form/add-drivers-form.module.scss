@@ -24,9 +24,13 @@
     font-weight: 700;
     font-size: 13px;
     line-height: 1.2;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
     text-align: center;
     color: #00224C;
+    width: 100%;
+  }
+
+  &__selector {
     width: 100%;
   }
 
@@ -39,8 +43,8 @@
 
 
   &__inputsPanel {
-    padding: 5px 10px;
-    min-width: 350px;
+    padding: 5px;
+    min-width: 220px;
 
     & > div {
       margin-bottom: 13px;

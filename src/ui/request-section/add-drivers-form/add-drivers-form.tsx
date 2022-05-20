@@ -67,7 +67,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                     <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }>
                                         <div
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
-                                            <div className={ styles.transportTrailerForm__smallInput }>
+                                            <div className={ styles.addDriversForm__selector }>
                                                 <FormSelector named={ 'cargoType' } values={ cargoType }/>
                                             </div>
                                         </div>
