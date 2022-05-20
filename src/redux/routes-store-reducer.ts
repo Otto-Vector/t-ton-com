@@ -7,6 +7,8 @@ const initialState = {
         searchList: '/search',
         requestsList: '/requests',
         historyList: '/history',
+        myDrivers: '/request/myDriversForm/',
+        addDriver: '/request/addDriversForm/',
         requestInfo: {
             status: '/request/status/',
             driver: '/request/driver/',

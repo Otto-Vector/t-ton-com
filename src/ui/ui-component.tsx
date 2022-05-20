@@ -28,43 +28,62 @@ export const UiComponent: React.FC<OwnProps> = () => {
     const routes = useSelector(getRoutesStore)
 
     return (
-        <div className={styles.ui}>
+        <div className={ styles.ui }>
             <Header/>
-            <div className={styles.ui__centerWrapper}>
-                <div className={styles.ui__sideBarLeft}>
+            <div className={ styles.ui__centerWrapper }>
+                <div className={ styles.ui__sideBarLeft }>
                     <MenuPanel/>
                 </div>
-                <section className={styles.ui__content + ' ' + styles.grow}>
+                <section className={ styles.ui__content + ' ' + styles.grow }>
                     <Routes>
-                        <Route path='/' element={ <Navigate to={ routes.hello }/> }/>
-                        <Route path={routes.hello} element={ <HelloSection/> }/>
-                        <Route path={routes.login} element={ <LoginSection /> }/>
-                        <Route path={routes.requestInfo.create+'new'} element={  <RequestSection mode={'create'} /> }/>
-                        <Route path={routes.searchList} element={ <SearchSection mode={'search'}/> }/> {/*ПОИСК активных заявок*/}
-                        <Route path={routes.requestInfo.driver+':reqNumber'} element={ <RequestSection mode={'driver'} /> }/> {/*ПРОСМОТР активных заявок*/}
-                        <Route path={routes.requestsList} element={ <SearchSection mode={'status'}/> }/> {/*таблица статусов по активным заявкам*/}
-                        <Route path={routes.requestInfo.status+':reqNumber'} element={ <div className={styles.ui__fake}><h2>СТАТУС ЗАЯВКИ</h2></div> }/> {/*статус заявки*/}
-                        <Route path={routes.historyList} element={ <SearchSection mode={'history'}/> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/}
-                        <Route path={routes.map} element={ <div className={styles.ui__fake}><h2>КАРТА АКТИВНЫХ ЗАЯВОК</h2></div> }/>
-                        <Route path={routes.maps.answers+':reqNumber'} element={ <div className={styles.ui__fake}><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2></div> }/>
-                        <Route path={routes.balance} element={ <CashCard/> }/>
-                        <Route path={routes.optionsEdit.shippers+':id'} element={ <ShippersForm/> }/>
-                        <Route path={routes.optionsEdit.employees+':id'} element={ <EmployeesForm/> }/>
-                        <Route path={routes.optionsEdit.transport+':id'} element={ <TransportForm/> }/>
-                        <Route path={routes.optionsEdit.trailer+':id'} element={ <TrailerForm/> }/>
-                        <Route path={routes.optionsEdit.consignees+':id'} element={ <ConsigneesForm/>}/>
+                        <Route path="/" element={ <Navigate to={ routes.hello }/> }/>
+                        <Route path={ routes.hello } element={ <HelloSection/> }/> {/*ОКНО ПРИВЕТСТВИЯ*/ }
+                        <Route path={ routes.login } element={ <LoginSection/> }/> {/*ОКНО АВТОРИЗАЦИИ*/ }
+                        <Route path={ routes.requestInfo.create }
+                               element={ <RequestSection mode={ 'create' }/> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
+                        <Route path={ routes.requestInfo.history+':reqNumber' }
+                               element={ <RequestSection mode={ 'history' }/> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
+                        <Route path={ routes.searchList }
+                               element={ <SearchSection mode={ 'search' }/> }/> {/*ПОИСК активных заявок*/ }
+                        <Route path={ routes.requestInfo.driver + ':reqNumber' }
+                               element={ <RequestSection
+                                   mode={ 'driver' }/> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
+                        <Route path={ routes.requestsList } element={ <SearchSection
+                            mode={ 'status' }/> }/> {/*таблица статусов по активным заявкам*/ }
+                        <Route path={ routes.requestInfo.status + ':reqNumber' }
+                               element={ <div className={ styles.ui__fake }><h2>СТАТУС ЗАЯВКИ</h2>
+                               </div> }/> {/*статус заявки*/ }
+                        <Route path={ routes.historyList }
+                               element={ <SearchSection mode={ 'history' }/> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
 
-                        <Route path={routes.options} element={ <OptionsSection/> }/>
-                        <Route path={routes.requisites} element={ <RequisitesForm/> }/>
+                        <Route path={ routes.map }
+                               element={ <div className={ styles.ui__fake }><h2>КАРТА АКТИВНЫХ ЗАЯВОК</h2></div> }/>
+                        <Route path={ routes.maps.answers + ':reqNumber' }
+                               element={ <div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2>
+                               </div> }/>
+                        <Route path={ routes.balance } element={ <CashCard/> }/>
+                        <Route path={ routes.addDriver }
+                               element={ <div className={ styles.ui__fake }><h2>ЗДЕСЬ ФОРМА ДОБАВЛЕНИЯ ВОДИТЕЛЯ НА
+                                   ЗАЯВКУ</h2></div> }/>
 
-                        <Route path='*' element={ <h2>This site NOT FOUND. Try another address</h2> }/>
+
+                        <Route path={ routes.optionsEdit.shippers + ':id' } element={ <ShippersForm/> }/>
+                        <Route path={ routes.optionsEdit.employees + ':id' } element={ <EmployeesForm/> }/>
+                        <Route path={ routes.optionsEdit.transport + ':id' } element={ <TransportForm/> }/>
+                        <Route path={ routes.optionsEdit.trailer + ':id' } element={ <TrailerForm/> }/>
+                        <Route path={ routes.optionsEdit.consignees + ':id' } element={ <ConsigneesForm/> }/>
+
+                        <Route path={ routes.options } element={ <OptionsSection/> }/>
+                        <Route path={ routes.requisites } element={ <RequisitesForm/> }/>
+
+                        <Route path="*" element={ <h2>This site NOT FOUND. Try another address</h2> }/>
                     </Routes>
                 </section>
-                <div className={styles.ui__sideBarRight}>
+                <div className={ styles.ui__sideBarRight }>
                     <LinksPanel/>
                 </div>
             </div>
-            <div className={styles.ui__footer}>
+            <div className={ styles.ui__footer }>
                 <Footer/>
             </div>
         </div>

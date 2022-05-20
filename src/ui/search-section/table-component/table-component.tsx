@@ -117,7 +117,7 @@ export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
                     if (tableModes.historyTblMode)
                         return <Button title={'Открыть'}
                                        onClick={() => {
-                                           navigate(requestInfo.status + requestNumber)
+                                           navigate(requestInfo.history + requestNumber)
                                        }}
                                        colorMode={'pink'}/>
                 },

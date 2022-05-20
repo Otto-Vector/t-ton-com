@@ -6,6 +6,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {Button} from '../common/button/button';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {addOneDay, ddMmYearFormat} from '../../utils/parsers';
+import {OneRequest} from '../../redux/table/table-store-reducer';
 
 
 type OwnProps = {
@@ -40,7 +41,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
             route: 'Ангарск в Чита',
             answers: Math.floor(Math.random() * 99),
             price: Math.floor(Math.random() * 200),
-        }
+        } as OneRequest
         : TABLE_CONTENT.filter(( { requestNumber } ) => requestNumber === +( reqNumber || 0 ))[0]
 
     const buttonsAction = {
@@ -49,6 +50,12 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
         },
         cancelRequest: () => {
             navigate(-1)
+        },
+        submitRequestAndSearch: () => {
+            navigate(routes.searchList)
+        },
+        submitRequestAndDrive: () => {
+            navigate(routes.myDrivers)
         },
     }
 
@@ -65,24 +72,33 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                 <h3 className={ styles.requestSection__label }>{ label }</h3>
                 <h4 className={ styles.requestSection__title }>{ title }</h4>
                 <div className={ styles.requestSection__buttonsPanel }>
-                    <div className={ styles.requestSection__panelButton }>
-                        <Button colorMode={ 'green' }
-                                onClick={ () => {
-                                    buttonsAction.acceptRequest()
-                                } }
-                                rounded>{ 'Принять заявку' }</Button>
-                    </div>
-                    <div className={ styles.requestSection__panelButton }>
-                        <Button colorMode={ 'red' }
-                                onClick={ () => {
-                                    buttonsAction.cancelRequest()
-                                } }
-                                rounded>{ 'Отказаться' }</Button>
-                    </div>
+                    { !requestModes.historyMode ? <>
+                            <div className={ styles.requestSection__panelButton }>
+                                <Button colorMode={ 'green' }
+                                        onClick={ () => {
+                                            requestModes.driverMode
+                                                ? buttonsAction.acceptRequest()
+                                                : buttonsAction.submitRequestAndSearch()
+                                        } }
+                                        disabled={requestModes.createMode}
+                                        rounded>{ requestModes.driverMode ? 'Принять заявку' : 'Поиск исполнителя' }</Button>
+                            </div>
+                            <div className={ styles.requestSection__panelButton }>
+                                <Button colorMode={ requestModes.driverMode ? 'red' : 'blue' }
+                                        onClick={ () => {
+                                           requestModes.driverMode
+                                                ? buttonsAction.cancelRequest()
+                                                : buttonsAction.submitRequestAndDrive()
+                                        } }
+                                        disabled={requestModes.createMode}
+                                        rounded>{ requestModes.driverMode ? 'Отказаться' : 'Самовывоз' }</Button>
+                            </div>
+                        </> : null
+                    }
                 </div>
             </header>
             <div className={ styles.requestSection__requestForm }>
-                <p>{ `Дата погрузки: ${ currentRequest.requestDate }` }</p>
+                <p>{ `Дата погрузки: ${ ddMmYearFormat(currentRequest.requestDate) }` }</p>
                 <p>{ `Расстояние: ${ currentRequest.distance }` }</p>
                 <p>{ `Тип груза: ${ currentRequest.cargoType }` }</p>
             </div>
