@@ -11,7 +11,7 @@ export const minLength = (min) => (value) => ( ( value.length <= min ) ? `Мен
 export const maxRangeNumber = (max) => (value) => ( ( +value > max ) ? `Значение не должно превышать ${ max }!` : undefined );
 export const maxNumbers = (max) => (value = undefined) => ( ( parseAllNumbers(value).length > max ) ? `Больше ${ max } цифр!` : undefined );
 export const mustBe00Numbers = (to) => (value) => ( value && ( parseAllNumbers(value).length !== to ) ? `Должно быть ${ to } цифр!` : undefined )
-export const mustNotBeOnlyNull = (value) => ( ( +parseAllNumbers(value) === 0 ) ? `Здесь только нули!` : undefined )
+export const mustNotBeOnlyNull = (value) => ( value && ( +parseAllNumbers(value) === 0 ) ? `Здесь только нули!` : undefined )
 export const mustBe0_0Numbers = (from) => (to) => (value) => (
     ( parseAllNumbers(value).length !== from && parseAllNumbers(value).length !== to ) ? `Должно быть ${ from } или ${ to } цифр!` : undefined );
 export const mustBeMail = (value) => value ? value.match(/^\S+@\S+\.\S+$/) ? undefined : 'Введите email корректно' : undefined
