@@ -14,6 +14,7 @@ import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {tableStoreActions} from '../../../redux/table/table-store-reducer'
 import {getAuthCashAuthStore} from '../../../selectors/auth-reselect'
 import {TableModesType} from '../search-section'
+import {ddMmYearFormat} from '../../../utils/parsers';
 
 type OwnProps = {
     tableModes: TableModesType
@@ -22,7 +23,7 @@ type OwnProps = {
 
 export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
     const navigate = useNavigate()
-    const {search, balance, maps, requestInfo} = useSelector(getRoutesStore)
+    const {balance, maps, requestInfo} = useSelector(getRoutesStore)
     const authCash = useSelector(getAuthCashAuthStore)
     const {dayFilter, routeFilter, cargoFilter} = useSelector(getValuesFiltersStore)
     const TABLE_CONTENT = useSelector(getContentTableStore)
@@ -63,6 +64,7 @@ export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
                     return (<></>)
                 },
                 disableFilters: false,
+                Cell: ({value}: { value: Date }) => ddMmYearFormat(value),
             },
             {
                 Header: 'Расстояние',
@@ -96,23 +98,23 @@ export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
 
                 disableFilters: true,
                 Cell: ({requestNumber, price}: { requestNumber: number, price: number }) => {
-                    if (tableModes.search)
+                    if (tableModes.searchTblMode)
                         return <Button title={'Открыть'}
                                        onClick={() => {
                                            price > authCash
                                                ? navigate(balance)
-                                               : navigate(search + '/' + requestNumber)
+                                               : navigate(requestInfo.driver + requestNumber)
                                        }}
                                        colorMode={price > authCash ? 'gray' : 'blue'}
                         />
-                    if (tableModes.status)
+                    if (tableModes.statusTblMode)
                         return <Button title={'Открыть'}
                                        onClick={() => {
                                            navigate(maps.answers + requestNumber)
                                        }}
                                        colorMode={'green'}
                         />
-                    if (tableModes.history)
+                    if (tableModes.historyTblMode)
                         return <Button title={'Открыть'}
                                        onClick={() => {
                                            navigate(requestInfo.status + requestNumber)
@@ -127,7 +129,7 @@ export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
 
                 disableFilters: true,
                 Cell: ({requestNumber}: { requestNumber: number }) => (
-                    tableModes.history ? null :
+                    tableModes.historyTblMode ? null :
                         <CancelButton onCancelClick={() => deleteRow(requestNumber)} mode={'redAlert'} noAbsolute/>
                 ),
             },

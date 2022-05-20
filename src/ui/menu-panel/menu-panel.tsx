@@ -33,19 +33,19 @@ export const MenuPanel: React.FC<OwnProps> = () => {
             buttonText: `${isAuth ? 'Вход' : 'Выход'}`, active: true
         },
         {
-            route: routes.create, src: createSVG, title: 'Создать заявку',
+            route: routes.requestInfo.create, src: createSVG, title: 'Создать заявку',
             buttonText: 'Создать', active: isAuth
         },
         {
-            route: routes.search, src: searchSVG, title: 'Поиск неактивных заявок',
+            route: routes.searchList, src: searchSVG, title: 'Поиск неактивных заявок',
             buttonText: 'Поиск', active: isAuth
         },
         {
-            route: routes.requests, src: statusSVG, title: 'Активные заявки',
+            route: routes.requestsList, src: statusSVG, title: 'Активные заявки',
             buttonText: 'Заявки', active: isAuth
         },
         {
-            route: routes.history, src: historySVG, title: 'Выполненные заявки',
+            route: routes.historyList, src: historySVG, title: 'Выполненные заявки',
             buttonText: 'История заявок', active: isAuth
         },
         {

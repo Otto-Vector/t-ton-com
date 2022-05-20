@@ -16,7 +16,7 @@ const newPerson = () => {
     age: Math.floor(Math.random() * 30),
     visits: Math.floor(Math.random() * 100),
     progress: Math.floor(Math.random() * 100),
-    requests:
+    requestsList:
       statusChance > 0.66
         ? 'relationship'
         : statusChance > 0.33

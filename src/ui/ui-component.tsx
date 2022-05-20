@@ -19,6 +19,7 @@ import {TransportForm} from './options-section/transport-trailer-form/transport-
 import {TrailerForm} from './options-section/transport-trailer-form/trailer-form';
 import {SearchSection} from './search-section/search-section';
 import {CashCard} from './cash-card/cash-card'
+import {RequestSection} from './request-section/request-section';
 
 type OwnProps = {}
 
@@ -38,14 +39,14 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path='/' element={ <Navigate to={ routes.hello }/> }/>
                         <Route path={routes.hello} element={ <HelloSection/> }/>
                         <Route path={routes.login} element={ <LoginSection /> }/>
-                        <Route path={routes.create} element={ <div className={styles.ui__fake}><h2>СОЗДАТЬ ЗАЯВКУ</h2></div> }/>
-                        <Route path={routes.search} element={ <SearchSection mode={'search'}/> }/> {/*ПОИСК активных заявок*/}
-                        <Route path={routes.search+'/:id'} element={ <div className={styles.ui__fake}><h2>ПРОСМОТР ВЫБРАННОЙ ЗАЯВКИ</h2></div> }/> {/*ПРОСМОТР активных заявок*/}
-                        <Route path={routes.requests} element={ <SearchSection mode={'status'}/> }/> {/*таблица статусов по активным заявкам*/}
-                        <Route path={routes.requestInfo.status+':requestNumber'} element={ <div className={styles.ui__fake}><h2>СТАТУС ЗАЯВКИ</h2></div> }/> {/*статус заявки*/}
-                        <Route path={routes.history} element={ <SearchSection mode={'history'}/> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/}
+                        <Route path={routes.requestInfo.create+'new'} element={  <RequestSection mode={'create'} /> }/>
+                        <Route path={routes.searchList} element={ <SearchSection mode={'search'}/> }/> {/*ПОИСК активных заявок*/}
+                        <Route path={routes.requestInfo.driver+':reqNumber'} element={ <RequestSection mode={'driver'} /> }/> {/*ПРОСМОТР активных заявок*/}
+                        <Route path={routes.requestsList} element={ <SearchSection mode={'status'}/> }/> {/*таблица статусов по активным заявкам*/}
+                        <Route path={routes.requestInfo.status+':reqNumber'} element={ <div className={styles.ui__fake}><h2>СТАТУС ЗАЯВКИ</h2></div> }/> {/*статус заявки*/}
+                        <Route path={routes.historyList} element={ <SearchSection mode={'history'}/> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/}
                         <Route path={routes.map} element={ <div className={styles.ui__fake}><h2>КАРТА АКТИВНЫХ ЗАЯВОК</h2></div> }/>
-                        <Route path={routes.maps.answers+':requestNumber'} element={ <div className={styles.ui__fake}><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2></div> }/>
+                        <Route path={routes.maps.answers+':reqNumber'} element={ <div className={styles.ui__fake}><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2></div> }/>
                         <Route path={routes.balance} element={ <CashCard/> }/>
                         <Route path={routes.optionsEdit.shippers+':id'} element={ <ShippersForm/> }/>
                         <Route path={routes.optionsEdit.employees+':id'} element={ <EmployeesForm/> }/>

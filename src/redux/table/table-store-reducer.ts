@@ -1,13 +1,12 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {addOneDay, DdMmYearFormat} from '../../utils/parsers'
-import React from 'react';
+import {addOneDay, ddMmYearFormat} from '../../utils/parsers'
 
 
-type OneTableRow = {
+export type OneRequest = {
     requestNumber: number
     cargoType: string
-    requestDate: string
+    requestDate: Date
     distance: number
     route: string
     answers: number
@@ -17,9 +16,9 @@ type OneTableRow = {
 const initialState = {
     content: [
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 999,
             cargoType: 'Битумовоз',
-            requestDate: DdMmYearFormat(addOneDay(new Date())),
+            requestDate: addOneDay(new Date()),
             distance: 1120,
             route: 'Ангарск в Чита',
             answers: Math.floor(Math.random() * 99),
@@ -28,7 +27,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: 120,
             route: 'Пенза в Самара',
             answers: Math.floor(Math.random() * 99),
@@ -37,7 +36,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Контейнеровоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: 80,
             route: 'Иркутск в Усолье-Сибирское',
             answers: Math.floor(Math.random() * 99),
@@ -46,7 +45,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: 3760,
             route: 'Пенза в Ростов-на-Дону',
             answers: Math.floor(Math.random() * 99),
@@ -55,7 +54,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Бензовоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: 4790,
             route: 'Красноярск в Пенза',
             answers: Math.floor(Math.random() * 99),
@@ -64,7 +63,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Цементовоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: 1680,
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
@@ -73,7 +72,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Газовоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: Math.floor(Math.random() * 9999),
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
@@ -82,7 +81,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: DdMmYearFormat(addOneDay(new Date())),
+            requestDate: addOneDay(new Date()),
             distance: 1120,
             route: 'Ангарск в Чита',
             answers: Math.floor(Math.random() * 99),
@@ -91,7 +90,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: DdMmYearFormat(addOneDay(new Date())),
+            requestDate: addOneDay(new Date()),
             distance: 120,
             route: 'Пенза в Самара',
             answers: Math.floor(Math.random() * 99),
@@ -100,7 +99,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Контейнеровоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: 80,
             route: 'Иркутск в Усолье-Сибирское',
             answers: Math.floor(Math.random() * 99),
@@ -109,7 +108,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Битумовоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: 3760,
             route: 'Пенза в Ростов-на-Дону',
             answers: Math.floor(Math.random() * 99),
@@ -118,7 +117,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Бензовоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: 4790,
             route: 'Красноярск в Пенза',
             answers: Math.floor(Math.random() * 99),
@@ -127,7 +126,7 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Цементовоз',
-            requestDate: DdMmYearFormat(addOneDay(new Date())),
+            requestDate: addOneDay(new Date()),
             distance: 100,
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
@@ -136,13 +135,13 @@ const initialState = {
         {
             requestNumber: Math.floor(Math.random() * 999),
             cargoType: 'Газовоз',
-            requestDate: DdMmYearFormat(new Date()),
+            requestDate: new Date(),
             distance: Math.floor(Math.random() * 9999),
             route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
             price: Math.floor(Math.random() * 200),
         },
-    ] as OneTableRow[],
+    ] as OneRequest[],
 }
 
 export type TableStoreReducerStateType = typeof initialState
@@ -175,7 +174,7 @@ export const tableStoreReducer = (state = initialState, action: ActionsType): Ta
 /* ЭКШОНЫ */
 export const tableStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setValues: (content: OneTableRow[]) => ({
+    setValues: (content: OneRequest[]) => ({
         type: 'table-store-reducer/SET-VALUES',
         content,
     } as const),

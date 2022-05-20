@@ -15,12 +15,15 @@ type OwnProps = {
     mode: 'search' | 'history' | 'status'
 }
 
-export type TableModesType = { search: boolean, history: boolean, status: boolean }
+export type TableModesType = { searchTblMode: boolean, historyTblMode: boolean, statusTblMode: boolean }
 
 export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
 
-    const tableModes: TableModesType = { search: mode === 'search', history: mode === 'history', status: mode === 'status' }
-    const header = tableModes.search ? 'Поиск ' : tableModes.history ? 'История' : 'Заявки'
+    const tableModes: TableModesType = {
+        searchTblMode: mode === 'search',
+        historyTblMode: mode === 'history',
+        statusTblMode: mode === 'status' }
+    const header = tableModes.searchTblMode ? 'Поиск ' : tableModes.historyTblMode ? 'История' : 'Заявки'
     const filterButtons = useSelector( getButtonsFiltersStore )
     const { cargoFilter } = useSelector( getValuesFiltersStore )
     const dispatch = useDispatch()
@@ -107,9 +110,9 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                                         </select>
                                     </div>
                                     : ( // убираем кнопки на разных типах
-                                        ( key === 'nearDriverFilter' && ( tableModes.history || tableModes.status ) )
+                                        ( key === 'nearDriverFilter' && ( tableModes.historyTblMode || tableModes.statusTblMode ) )
                                         ||
-                                        ( ( key === 'todayFilter' || key === 'tomorrowFilter' ) && tableModes.history ) )
+                                        ( ( key === 'todayFilter' || key === 'tomorrowFilter' ) && tableModes.historyTblMode ) )
                                         ? null
                                         : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
                                                   title={ value.title }

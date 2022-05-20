@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {addOneDay, DdMmFormat, DdMmYearFormat} from '../../utils/parsers'
+import {addOneDay, ddMmFormat, ddMmYearFormat} from '../../utils/parsers'
 
 
 const date = new Date()
@@ -13,11 +13,11 @@ export const initialFiltersState = {
             // type: CargoType,
         },
         todayFilter: {
-            title: 'Сегодня ' + DdMmFormat(date),
+            title: 'Сегодня ' + ddMmFormat(date),
             mode: false,
         },
         tomorrowFilter: {
-            title: 'Завтра ' + DdMmFormat(addOneDay(date)),
+            title: 'Завтра ' + ddMmFormat(addOneDay(date)),
             mode: false,
         },
         shortRouteFilter: {
@@ -38,7 +38,7 @@ export const initialFiltersState = {
         },
     },
     values: {
-        dayFilter: '',
+        dayFilter: undefined as undefined | Date,
         routeFilter: [0, 99999],
         cargoFilter: '' as string | undefined
     },
@@ -58,7 +58,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 values:
                     {
                         ...state.values,
-                        dayFilter: state.buttons.todayFilter.mode ? DdMmYearFormat(date) : '',
+                        dayFilter: state.buttons.todayFilter.mode ? date : undefined,
                     },
             }
         }
@@ -76,7 +76,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 values: {
                     ...state.values,
-                    dayFilter: state.buttons.tomorrowFilter.mode ? DdMmYearFormat(addOneDay(date)) : '',
+                    dayFilter: state.buttons.tomorrowFilter.mode ? addOneDay(date) : undefined,
                 },
             }
         }

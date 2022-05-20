@@ -4,13 +4,16 @@ const initialState = {
     routes: {
         hello: '/hello',
         login: '/login',
-        create: '/create',
-        search: '/search',
-        requests: '/requests',
+        searchList: '/search',
+        requestsList: '/requests',
+        historyList: '/history',
         requestInfo: {
             status: '/request/status/',
+            driver: '/request/driver/',
+            history: '/request/history/',
+            create: '/request/create/',
+            accept: '/request/accept/',
         },
-        history: '/history',
         map: '/maps',
         maps: {
             address: '/maps/address/',
