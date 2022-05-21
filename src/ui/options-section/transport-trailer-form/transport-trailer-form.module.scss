@@ -43,6 +43,7 @@
     justify-content: space-between;
     align-items: flex-start;
     align-content: space-around;
+    font-size: 16px;
 
     & > div {
       margin-bottom: 13px;
@@ -51,6 +52,7 @@
 
   &__smallInput {
     width: 48%;
+
   }
 
   &__photoWrapper {

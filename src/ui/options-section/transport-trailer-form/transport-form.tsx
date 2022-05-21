@@ -10,7 +10,7 @@ import {useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {FormSelector} from '../../common/form-selector/form-selector'
+import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
 import {InfoText} from '../common-forms/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoType, propertyRights, TransportCardType} from '../../../types/form-types'
@@ -39,6 +39,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
 
     const onSubmit = ( values: TransportCardType ) => {
+        console.log(values)
     }
 
     const onCancelClick = () => {
@@ -107,7 +108,9 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             />
 
                                             <div className={ styles.transportTrailerForm__smallInput }>
-                                                <FormSelector named={ 'cargoType' } values={ cargoType }/>
+                                                <FormSelector named={ 'cargoType' }
+                                                              placeholder={label.cargoType}
+                                                              values={ stringArrayToSelectValue(cargoType.map(x=>x)) }/>
                                             </div>
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <Field name={ 'cargoWeight' }
@@ -118,7 +121,10 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                        validate={ validators.cargoWeight }
                                                 />
                                             </div>
-                                            <FormSelector named={ 'propertyRights' } values={ propertyRights }/>
+                                            <FormSelector named={ 'propertyRights' }
+                                                          placeholder={label.propertyRights}
+                                                          values={ stringArrayToSelectValue(propertyRights.map(x=>x)) }
+                                            />
                                         </div>
                                         <div>
                                             <div className={ styles.transportTrailerForm__photoWrapper }

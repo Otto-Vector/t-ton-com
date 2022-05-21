@@ -1,71 +1,30 @@
-@import "src/styles/variables";
-@import "src/styles/mixins";
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
 
-$dropdown--font    : $PTSansFont;
-$dropdown--bgColor : white;
+$dropdown--font: $PTSansFont;
+$dropdown--bgColor: white;
 $dropdown--borderColor: #92ABC8;
 $dropdown--fontColor: $accentColor;
-$black-75 : #00000075;
+$black-75: #00000075;
 
 .dropdown {
   display: flex;
   flex-direction: column;
   font-family: $dropdown--font;
   font-size: inherit;
+  white-space: nowrap;
   font-weight: 400;
   text-align: left;
   position: relative;
   background-color: transparent;
   border-radius: rem(12);
   width: 100%;
-
-  &:after {
-    @include addMaterialAfter('expand_more');
-    font-size: rem(25);
-    top: rem(8);
-    opacity: .5;
-  }
-
 }
 
-  .label {
-    font-size: rem(18);
-    font-weight: bold;
+.label {
+  font-size: rem(18);
+  font-weight: bold;
 
-    padding-bottom: rem(4);
-    padding-left: rem(4);
-  }
-
-  .select {
-    /*убирает стрелочку из выпадающего списка*/
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none; //чтобы select не подсвечивался по умолчанию
-
-    font-family: $dropdown--font;
-    box-sizing: border-box;
-    background: $dropdown--bgColor;
-    font-size: inherit;
-    line-height: 1.2;
-    border: solid {
-      color: $dropdown--borderColor;
-      radius: inherit;
-      width: 2px;
-    }
-    color: $dropdown--fontColor;
-    padding: rem(7) rem(30) rem(7) rem(15);
-    width: 100%;
-
-    transition-property: border;
-    transition-duration: .3s;
-
-    &:focus, &:hover {
-      border: solid $accentColor 2px;
-    }
-
-    &:active {
-    }
-
-  }
-
+  padding-bottom: rem(4);
+  padding-left: rem(4);
+}

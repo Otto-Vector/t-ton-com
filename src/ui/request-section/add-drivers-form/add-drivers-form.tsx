@@ -21,7 +21,7 @@ import {
 } from '../../../selectors/options/employees-reselect'
 import {InfoText} from '../../options-section/common-forms/info-text/into-text';
 import {getInitialValuesAddDriverStore, getLabelAddDriverStore} from '../../../selectors/forms/add-driver-reselect';
-import {FormSelector} from '../../common/form-selector/form-selector';
+import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector';
 
 type OwnProps = {
     // onSubmit: (requisites: employeesCardType) => void
@@ -68,7 +68,8 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                         <div
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
                                             <div className={ styles.addDriversForm__selector }>
-                                                <FormSelector named={ 'cargoType' } values={ cargoType }/>
+                                                <FormSelector named={ 'cargoType' }
+                                                              values={ stringArrayToSelectValue(cargoType.map(x=>x)) }/>
                                             </div>
                                         </div>
 

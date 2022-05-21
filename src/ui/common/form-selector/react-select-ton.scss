@@ -1,0 +1,47 @@
+@import 'src/styles/variables';
+
+.react-select-ton {
+  &__control {
+    box-sizing: border-box !important;
+    border-color: #92ABC8 !important;
+    border-width: 2px !important;
+    border-radius: 12px !important;
+
+    &--is-focused, &:hover {
+      border-color: $accentColor !important;
+      box-shadow: none !important;
+    }
+  }
+
+  &__indicator {
+    padding: 0 6px 0 0 !important;
+  }
+
+  &__indicator-separator {
+    display: none;
+  }
+
+  &__menu {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  &__menu-list {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  &__option {
+    font-size: 90% !important;
+    line-height: 1.1 !important;
+    color: #FFFFFF !important;
+    background-color: $accentColor !important;
+    border-bottom: .5px solid #92ABC8 !important;
+
+
+    &:hover, &--is-focused {
+      background-color: rgba($accentColor, .8) !important;
+    }
+  }
+
+}
