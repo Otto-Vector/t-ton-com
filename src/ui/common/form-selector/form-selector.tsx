@@ -57,5 +57,7 @@ type SelectOptionType = {
     value: string;
 };
 
-export const stringArrayToSelectValue = ( value: string[] ): { value: string, label: string, key: string }[] =>
+export type SelectOptions =  { value: string , label: string , key: string  }
+
+export const stringArrayToSelectValue = ( value: string[] ): SelectOptions[] =>
     value.map(( el ) => ( { value: el, label: el, key: el } ))
