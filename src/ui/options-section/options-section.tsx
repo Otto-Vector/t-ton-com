@@ -8,17 +8,17 @@ import {ColumnDataList} from './column-data-list/column-data-list';
 import {
     getConsigneesOptionsStore,
     getEmployeesOptionsStore,
-    getShippersOptionsStore,
+    getShippersOptionsStore, getShippersTitlesOptionsStore,
     getTrailerOptionsStore, getTransportOptionsStore,
 } from '../../selectors/options/options-reselect';
 
-type OwnProps = {
-}
+type OwnProps = {}
 
 export const OptionsSection: React.FC<OwnProps> = () => {
 
-    const {requisites, optionsEdit} = useSelector(getRoutesStore)
-    const shippers = useSelector(getShippersOptionsStore)
+    const { requisites, optionsEdit } = useSelector(getRoutesStore)
+    const { placeholder, label } = useSelector(getShippersTitlesOptionsStore)
+    const shippersList = useSelector(getShippersOptionsStore)
     const employees = useSelector(getEmployeesOptionsStore)
     const transport = useSelector(getTransportOptionsStore)
     const trailer = useSelector(getTrailerOptionsStore)
@@ -27,22 +27,24 @@ export const OptionsSection: React.FC<OwnProps> = () => {
 
     return (
         <section className={ styles.optionsSection }>
-            <header className={styles.optionsSection__header}>
+            <header className={ styles.optionsSection__header }>
                 <h3>Настройки</h3>
-                <div className={styles.optionsSection__buttonRequisites}>
-                <Button type={'button'}
-                        title={'Реквизиты'}
-                        colorMode={'blue'}
-                        rounded onClick={()=>{navigate(requisites)}}> Реквизиты </Button>
+                <div className={ styles.optionsSection__buttonRequisites }>
+                    <Button type={ 'button' }
+                            title={ 'Реквизиты' }
+                            colorMode={ 'blue' }
+                            rounded onClick={ () => {
+                        navigate(requisites)
+                    } }> Реквизиты </Button>
                 </div>
             </header>
-            <div className={styles.optionsSection__table}>
-                <ColumnDataList item={shippers} route={optionsEdit.shippers}/>
-                <ColumnDataList item={employees} route={optionsEdit.employees}/>
-                <ColumnDataList item={transport} route={optionsEdit.transport}/>
-                <ColumnDataList item={trailer} route={optionsEdit.trailer}/>
-                <ColumnDataList item={consignees} route={optionsEdit.consignees}/>
+            <div className={ styles.optionsSection__table }>
+                <ColumnDataList item={{placeholder, label, content: shippersList}} route={ optionsEdit.shippers }/>
+                <ColumnDataList item={ { ...employees, content: employees.content } } route={ optionsEdit.employees }/>
+                <ColumnDataList item={ transport } route={ optionsEdit.transport }/>
+                <ColumnDataList item={ trailer } route={ optionsEdit.trailer }/>
+                <ColumnDataList item={ consignees } route={ optionsEdit.consignees }/>
             </div>
-                </section>
-                )
-            }
+        </section>
+    )
+}

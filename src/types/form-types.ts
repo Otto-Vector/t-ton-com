@@ -1,5 +1,5 @@
 // на валидаторы для форм
-export type ValidateType = undefined | ((val: string) => string | undefined)
+export type ValidateType = undefined | ( ( val: string ) => string | undefined )
 // на поля для форм
 type DefaultFormType = string | undefined
 
@@ -35,6 +35,7 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
 
 // на сотрудника
 export type EmployeesCardType<T = DefaultFormType> = {
+    id: number // идентификатор
     employeeFIO: T // ФИО сотрудника
     employeePhoneNumber: T // Телефон сотрудника
     passportSerial: T // Серия, № паспорта
@@ -54,7 +55,8 @@ export type EmployeesCardType<T = DefaultFormType> = {
 
 // на грузоПОЛУЧАТЕЛЯ
 export type ConsigneesCardType<T = DefaultFormType> = {
-    title: T // заголовок
+    id: number // идентификатор
+    title: T // укороченное название
     innNumber: T // ИНН
     organizationName: T // Наименование организации
     kpp: T // КПП
@@ -68,7 +70,8 @@ export type ConsigneesCardType<T = DefaultFormType> = {
 
 // на грузоотправителя
 export type ShippersCardType<T = DefaultFormType> = {
-    title: T // заголовок
+    id: number // идентификатор
+    title: T // укороченное название
     innNumber: T // ИНН
     organizationName: T // Наименование организации
     kpp: T // КПП
@@ -81,15 +84,16 @@ export type ShippersCardType<T = DefaultFormType> = {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-export const cargoType = ['Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
-    'Тягач', 'Фургон, Борт', 'Цементовоз'] as const
+export const cargoType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
+    'Тягач', 'Фургон, Борт', 'Цементовоз' ] as const
 export type CargoType = typeof cargoType[number]
 
-export const propertyRights = ['Собственность', 'Аренда', 'Лизинг'] as const
+export const propertyRights = [ 'Собственность', 'Аренда', 'Лизинг' ] as const
 export type PropertyRightsType = typeof propertyRights[number]
 
 // на транспорт
 export type TransportCardType<T = DefaultFormType> = {
+    id: number // идентификатор
     transportNumber: T // Гос. номер авто
     transportTrademark: T // Марка авто
     transportModel: T // Модель авто
@@ -103,6 +107,7 @@ export type TransportCardType<T = DefaultFormType> = {
 
 // на прицеп
 export type TrailerCardType<T = DefaultFormType> = {
+    id: number // идентификатор
     trailerNumber: T // Гос. номер авто
     trailerTrademark: T // Марка авто
     trailerModel: T // Модель авто
@@ -114,15 +119,15 @@ export type TrailerCardType<T = DefaultFormType> = {
     trailerImage: T // Фото транспорта
 }
 
- export type AddDriverCardType<T = DefaultFormType> = {
-     driverFIO: T,
-     driverTransport: T,
-     driverTrailer: T,
-     driverStavka: T,
-     driverSumm: T,
-     driverRating: T,
-     driverTax: T,
-     driverPhoto: T,
-     driverTransportPhoto: T,
-     driverTrailerPhoto: T,
- }
+export type AddDriverCardType<T = DefaultFormType> = {
+    driverFIO: T,
+    driverTransport: T,
+    driverTrailer: T,
+    driverStavka: T,
+    driverSumm: T,
+    driverRating: T,
+    driverTax: T,
+    driverPhoto: T,
+    driverTransportPhoto: T,
+    driverTrailerPhoto: T,
+}

@@ -23,7 +23,7 @@ const initialState = {
         innNumber: '############', // 10,12 цифр
         organizationName: undefined,
         kpp: '#########', // 9 цифр
-        ogrn: '############', // 13 цифр
+        ogrn: '############', // 12 цифр
         address: undefined, // понятно. просто адрес
         consigneesFio: undefined, //
         consigneesTel: '+7 (###) ###-##-##', //
@@ -49,7 +49,7 @@ const initialState = {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),
         kpp: composeValidators(required, mustBe00Numbers(9)),
-        ogrn: composeValidators(required, mustBe00Numbers(13)),
+        ogrn: composeValidators(required, mustBe00Numbers(12)),
         address: composeValidators(required),
         consigneesFio: composeValidators(required),
         consigneesTel: composeValidators(required, mustBe00Numbers(11)),

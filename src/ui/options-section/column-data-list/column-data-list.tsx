@@ -4,13 +4,14 @@ import {MaterialIcon} from '../../common/material-icon/material-icon';
 import {Button} from '../../common/button/button';
 import {useNavigate} from 'react-router-dom';
 import {parseCharsAndNumbers} from '../../../utils/parsers';
+import {OptionsLabelType} from '../../../redux/options/options-store-reducer';
 
 
 type OwnProps = {
     item: {
         label: string,
         placeholder: string
-        content: { id: number, title: string }[]
+        content: OptionsLabelType[]
     }
     route: string
 }
@@ -27,7 +28,7 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
 
     useEffect(() => {
         if (test !== '') {
-            setContent(item.content.filter(( { title } ) => title.match(new RegExp(test, 'ig'))))
+            setContent(item.content.filter(( { title } ) => title?.match(new RegExp(test, 'ig'))))
         }
         if (test === '') setContent(item.content)
 
