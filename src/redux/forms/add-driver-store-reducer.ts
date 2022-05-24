@@ -30,6 +30,12 @@ const initialState = {
         driverTrailerPhoto: undefined,
     } as AddDriverCardType,
 
+    placeholder: {
+        driverFIO: 'Поиск водителя...',
+        driverTransport: 'Поиск транспорта...',
+        driverTrailer: 'Поиск прицепа...',
+    },
+
 }
 
 export type AddDriverStoreReducerStateType = typeof initialState

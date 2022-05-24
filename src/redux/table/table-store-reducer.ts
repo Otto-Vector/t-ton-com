@@ -1,9 +1,9 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {addOneDay, ddMmYearFormat} from '../../utils/parsers'
+import {addOneDay} from '../../utils/parsers'
 
 
-export type OneRequest = {
+export type OneRequestTableType = {
     requestNumber: number
     cargoType: string
     requestDate: Date
@@ -141,7 +141,7 @@ const initialState = {
             answers: Math.floor(Math.random() * 99),
             price: Math.floor(Math.random() * 200),
         },
-    ] as OneRequest[],
+    ] as OneRequestTableType[],
 }
 
 export type TableStoreReducerStateType = typeof initialState
@@ -174,7 +174,7 @@ export const tableStoreReducer = (state = initialState, action: ActionsType): Ta
 /* ЭКШОНЫ */
 export const tableStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setValues: (content: OneRequest[]) => ({
+    setValues: (content: OneRequestTableType[]) => ({
         type: 'table-store-reducer/SET-VALUES',
         content,
     } as const),

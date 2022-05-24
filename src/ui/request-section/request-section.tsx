@@ -5,8 +5,17 @@ import {getContentTableStore} from '../../selectors/table/table-reselect';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Button} from '../common/button/button';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {addOneDay, ddMmYearFormat} from '../../utils/parsers';
-import {OneRequest} from '../../redux/table/table-store-reducer';
+import {ddMmYearFormat} from '../../utils/parsers';
+import {Form, Field} from 'react-final-form'
+import {
+    getCargoСompositionRequestStore,
+    getInitialValuesRequestStore, getLabelRequestStore, getPlaceholderRequestStore,
+} from '../../selectors/forms/request-form-reselect';
+import {FormSelector, stringArrayToSelectValue} from '../common/form-selector/form-selector';
+import {OneRequestType} from '../../redux/forms/request-store-reducer';
+import {FormInputType} from '../common/form-input-type/form-input-type';
+import {cargoType} from '../../types/form-types';
+import {getAllShippersStore} from '../../selectors/options/shippers-reselect';
 
 
 type OwnProps = {
@@ -24,24 +33,26 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
         historyMode: mode === 'history',
     }
 
-    const label = requestModes.driverMode ? 'Статус (для водителя)'
+    const labelTitle = requestModes.driverMode ? 'Статус (для водителя)'
         : requestModes.createMode ? 'Создать'
             : requestModes.historyMode ? 'История' : 'Статус'
 
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const routes = useSelector(getRoutesStore)
     const navigate = useNavigate()
+
+
+    const cargoComposition = useSelector(getCargoСompositionRequestStore)
+    const initialValues = useSelector(getInitialValuesRequestStore)
+    const labels = useSelector(getLabelRequestStore)
+    const placehoders = useSelector(getPlaceholderRequestStore)
+    const customers = useSelector(getAllShippersStore)
+        .map(( { id, title } ) => ( { key: id?.toString(), value: id.toString(), label: title?.toString() || '' } ))
+    const shippers = customers // пока присвоил те что есть...
+    const consignees = customers
     const TABLE_CONTENT = useSelector(getContentTableStore)
 
-    const currentRequest = requestModes.createMode ? {
-            requestNumber: 1000,
-            cargoType: 'Битумовоз',
-            requestDate: new Date(),
-            distance: 1120,
-            route: 'Ангарск в Чита',
-            answers: Math.floor(Math.random() * 99),
-            price: Math.floor(Math.random() * 200),
-        } as OneRequest
+    const currentRequest = requestModes.createMode ? initialValues
         : TABLE_CONTENT.filter(( { requestNumber } ) => requestNumber === +( reqNumber || 0 ))[0]
 
     const buttonsAction = {
@@ -59,17 +70,19 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
         },
     }
 
+    const onSubmit = ( values: OneRequestType ) => {
+    }
+
     useEffect(() => {
-    }, [ mode ])
+    }, [ initialValues ])
 
-    if (!currentRequest) return <div> ДАННАЯ ЗАЯВКА НЕДОСТУПНА</div>
+    if (!currentRequest) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
     const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate) }`
-
 
     return (
         <section className={ styles.requestSection }>
             <header className={ styles.requestSection__header }>
-                <h3 className={ styles.requestSection__label }>{ label }</h3>
+                <h3 className={ styles.requestSection__label }>{ labelTitle }</h3>
                 <h4 className={ styles.requestSection__title }>{ title }</h4>
                 <div className={ styles.requestSection__buttonsPanel }>
                     { !requestModes.historyMode ? <>
@@ -100,9 +113,108 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                 </div>
             </header>
             <div className={ styles.requestSection__requestForm }>
-                <p>{ `Дата погрузки: ${ ddMmYearFormat(currentRequest.requestDate) }` }</p>
-                <p>{ `Расстояние: ${ currentRequest.distance }` }</p>
-                <p>{ `Тип груза: ${ currentRequest.cargoType }` }</p>
+                <div className={ styles.requestForm__top }>
+                    <div className={ styles.requestForm__topLeft }>
+                        <Form
+                            onSubmit={ onSubmit }
+                            initialValues={ initialValues }
+                            render={
+                                ( { submitError, handleSubmit, pristine, form, submitting, values } ) => (
+                                    <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>
+                                        <div className={ styles.requestFormLeft__inputsPanel }>
+                                            <div className={ styles.requestFormLeft__selector }>
+                                                <label className={ styles.requestFormLeft__label }>
+                                                    { labels.cargoComposition }</label>
+                                                <FormSelector named={ 'cargoComposition' }
+                                                              placeholder={ placehoders.cargoComposition }
+                                                              values={ stringArrayToSelectValue(cargoComposition) }/>
+                                            </div>
+                                            <div className={ styles.requestFormLeft__inputsPanel_trio }>
+                                                <div className={ styles.requestFormLeft__inputsItem }>
+                                                    <label className={ styles.requestFormLeft__label }>
+                                                        { labels.shipmentDate }</label>
+                                                    <Field name={ 'shipmentDate' }
+                                                           component={ FormInputType }
+                                                           resetFieldBy={ form }
+                                                           inputType={ 'date' }
+                                                    />
+                                                    <div className={ styles.requestFormLeft__inputsItem }>
+                                                        <label className={ styles.requestFormLeft__label }>
+                                                            { labels.distance }</label>
+                                                        <div className={ styles.requestFormLeft__info }>
+                                                            { initialValues.distance || placehoders.distance }
+                                                        </div>
+                                                    </div>
+                                                    <div className={ styles.requestFormLeft__inputsItem }>
+                                                        <label className={ styles.requestFormLeft__label }>
+                                                            { labels.cargoType }</label>
+                                                        <FormSelector named={ 'cargoType' }
+                                                                      placeholder={ labels.cargoType }
+                                                                      values={ stringArrayToSelectValue(cargoType.map(x => x)) }/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className={ styles.requestFormLeft__selector }>
+                                                <label
+                                                    className={ styles.requestFormLeft__label }>{ labels.customer }</label>
+                                                <FormSelector named={ 'customer' }
+                                                              placeholder={ placehoders.customer }
+                                                              values={ customers }/>
+                                            </div>
+                                            <div className={ styles.requestFormLeft__selector }>
+                                                <label
+                                                    className={ styles.requestFormLeft__label }>{ labels.shipper }</label>
+                                                <FormSelector named={ 'shipper' }
+                                                              placeholder={ placehoders.shipper }
+                                                              values={ shippers }/>
+                                            </div>
+                                            <div className={ styles.requestFormLeft__selector }>
+                                                <label
+                                                    className={ styles.requestFormLeft__label }>{ labels.consignee }</label>
+                                                <FormSelector named={ 'consignee' }
+                                                              placeholder={ placehoders.consignee }
+                                                              values={ consignees }/>
+                                            </div>
+                                            <div className={ styles.requestFormLeft__inputsItem }>
+                                                <label className={ styles.requestFormLeft__label }>
+                                                    { labels.carrier }</label>
+                                                <div className={ styles.requestFormLeft__info }>
+                                                    { initialValues.carrier || placehoders.carrier }
+                                                </div>
+                                            </div>
+                                            <div className={ styles.requestFormLeft__inputsItem }>
+                                                <label className={ styles.requestFormLeft__label }>
+                                                    { labels.driver }</label>
+                                                <div className={ styles.requestFormLeft__info }>
+                                                    { initialValues.driver || placehoders.driver }
+                                                </div>
+                                            </div>
+                                            <div className={ styles.requestFormLeft__inputsItem }>
+                                                <label className={ styles.requestFormLeft__label }>
+                                                    { labels.note }</label>
+                                                <Field name={ 'note' }
+                                                       component={ FormInputType }
+                                                       resetFieldBy={ form }
+
+                                                       placeholder={ placehoders.note }
+                                                       inputType={ 'text' }
+                                                />
+                                            </div>
+
+                                        </div>
+                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
+                                    </form>
+                                )
+                            }/>
+                    </div>
+
+                </div>
+                <div className={ styles.requestForm__middle }>
+
+                </div>
+                <div className={ styles.requestForm__bottom }>
+
+                </div>
             </div>
         </section>
 

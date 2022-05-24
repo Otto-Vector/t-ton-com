@@ -1,8 +1,7 @@
-import React, {ChangeEvent} from 'react'
+import React from 'react'
 import styles from './add-drivers-form.module.scss'
-import {Field, Form} from 'react-final-form'
+import {Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
-import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
 import noImagePhoto from '../../../media/noImagePhoto2.png'
@@ -11,10 +10,14 @@ import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisite
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
-import {AddDriverCardType, cargoType, EmployeesCardType} from '../../../types/form-types'
+import {AddDriverCardType} from '../../../types/form-types'
 
-import {getInitialValuesAddDriverStore, getLabelAddDriverStore} from '../../../selectors/forms/add-driver-reselect';
-import {FormSelector, SelectOptions, stringArrayToSelectValue} from '../../common/form-selector/form-selector';
+import {
+    getInitialValuesAddDriverStore,
+    getLabelAddDriverStore,
+    getPlaceholderAddDriverStore,
+} from '../../../selectors/forms/add-driver-reselect';
+import {FormSelector, SelectOptions} from '../../common/form-selector/form-selector';
 import {randomDriverImage, randomTrailerImage, randomTruckImage} from '../../../api/randomImage';
 import {
     getEmployeesOptionsStore,
@@ -32,6 +35,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const label = useSelector(getLabelAddDriverStore)
     const initialValues = useSelector(getInitialValuesAddDriverStore)
+    const placeholder = useSelector(getPlaceholderAddDriverStore)
 
     const employees: SelectOptions[] = useSelector(getEmployeesOptionsStore).content
         .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
@@ -70,7 +74,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
 
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, handleSubmit, pristine, form, submitting , values} ) => (
+                                ( { submitError, handleSubmit, pristine, form, submitting, values } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }>
                                         <div
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
@@ -78,21 +82,21 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <label
                                                     className={ styles.addDriversForm__label }>{ label.driverFIO + ':' }</label>
                                                 <FormSelector named={ 'driverFIO' }
-                                                              placeholder={ 'Поиск водителя...' }
+                                                              placeholder={ placeholder.driverFIO }
                                                               values={ employees }/>
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>{ label.driverTransport + ':' }</label>
                                                 <FormSelector named={ 'driverTransport' }
-                                                              placeholder={ 'Поиск транспорта...' }
+                                                              placeholder={ placeholder.driverTransport }
                                                               values={ transport }/>
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>{ label.driverTrailer + ':' }</label>
                                                 <FormSelector named={ 'driverTrailer' }
-                                                              placeholder={ 'Поиск прицепа...' }
+                                                              placeholder={ placeholder.driverTrailer }
                                                               values={ trailer }/>
                                             </div>
                                         </div>
@@ -159,7 +163,9 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <Button type={ 'button' }
                                                         colorMode={ 'red' }
                                                         title={ 'Отказаться' }
-                                                        onClick={()=>{onCancelClick()}}
+                                                        onClick={ () => {
+                                                            onCancelClick()
+                                                        } }
                                                         rounded
                                                 />
                                             </div>
