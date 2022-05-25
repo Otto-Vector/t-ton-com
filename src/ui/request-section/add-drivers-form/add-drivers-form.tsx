@@ -25,6 +25,7 @@ import {
     getTransportOptionsStore,
 } from '../../../selectors/options/options-reselect';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
+import {ddMmYearFormat} from '../../../utils/parsers';
 
 type OwnProps = {
     // onSubmit: (requisites: employeesCardType) => void
@@ -32,12 +33,13 @@ type OwnProps = {
 
 export const AddDriversForm: React.FC<OwnProps> = () => {
 
-    const header = 'Заявка ____ от __-__-____'
+    const header = (requestNumber: number, shipmentDate: Date ): string =>
+        `Заявка ${requestNumber} от ${ddMmYearFormat(shipmentDate)}`
     const isFetching = useSelector(getIsFetchingRequisitesStore)
-    const label = useSelector(getLabelAddDriverStore)
+
     const initialValues = useSelector(getInitialValuesAddDriverStore)
+    const label = useSelector(getLabelAddDriverStore)
     const placeholder = useSelector(getPlaceholderAddDriverStore)
-    const maskOn = useSelector(getMaskOnAddDriverStore)
     const validators = useSelector(getValidatorsAddDriverStore)
 
     const employees: SelectOptions[] = useSelector(getEmployeesOptionsStore).content
@@ -48,10 +50,12 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
 
 
-    const { options } = useSelector(getRoutesStore)
+
+    const { requestInfo: {create} } = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
     const onSubmit = ( values: AddDriverCardType ) => {
+        navigate(create)
     }
 
     const onCancelClick = () => {
@@ -71,7 +75,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
             <div className={ styles.addDriversForm__wrapper }>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <h4 className={ styles.addDriversForm__header }>{ header }</h4>
+                        <h4 className={ styles.addDriversForm__header }>{ header(999, new Date()) }</h4>
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
@@ -106,9 +110,6 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.driverStavka + ':' }</label>
-                                                {/*<div className={ styles.addDriversForm__info }>*/ }
-                                                {/*    { initialValues.driverStavka || 'в тн.км.' }*/ }
-                                                {/*</div>*/ }
 
                                                 <Field name={ 'driverStavka' }
                                                        placeholder={ placeholder.driverStavka }

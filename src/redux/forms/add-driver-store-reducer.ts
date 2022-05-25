@@ -35,7 +35,7 @@ const initialState = {
         driverFIO: 'Поиск водителя...',
         driverTransport: 'Поиск транспорта...',
         driverTrailer: 'Поиск прицепа...',
-        driverStavka: '0.00'
+        driverStavka: '0.00 руб'
     },
 
     maskOn: {

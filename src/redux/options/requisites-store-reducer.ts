@@ -12,6 +12,8 @@ import {
 
 const initialState = {
     isFetching: false,
+    storedMode: false, // подгружать данные или вводить новые м.б удалю
+
     label: {
         innNumber: 'ИНН Организации',
         organizationName: 'Наименование организации',
@@ -19,7 +21,7 @@ const initialState = {
         kpp: 'КПП',
         ogrn: 'ОГРН',
         okpo: 'ОКПО',
-        address: 'Юридический адрес',
+        legalAddress: 'Юридический адрес',
         description: 'Доп. информация',
 
         postAddress: 'Почтовый адрес',
@@ -39,7 +41,7 @@ const initialState = {
         kpp: '#########', // 9 цифр
         ogrn: '#############', // 13 цифр
         okpo: '##########', // 8,10 цифр
-        address: undefined, // понятно. просто адрес
+        legalAddress: undefined, //  юридический адрес
         description: undefined, // много букав
 
         postAddress: undefined, // просто адрес
@@ -59,7 +61,7 @@ const initialState = {
         kpp: undefined,
         ogrn: undefined,
         okpo: undefined,
-        address: undefined,
+        legalAddress: undefined,
         description: undefined,
 
         postAddress: undefined,
@@ -72,6 +74,25 @@ const initialState = {
         korrAccount: undefined,
     } as CompanyRequisitesType,
 
+    storedValues: {
+        innNumber: '4265631947',
+        organizationName: "Тестовое наименование",
+        taxMode: "УСН",
+        kpp: '839646136',
+        ogrn: '5179220547402',
+        okpo: '7512278594',
+        legalAddress: 'Россия, г. Нижний Тагил, Пушкина ул., д. 23 кв.173',
+        description: undefined,
+
+        postAddress: 'Россия, г. Магнитогорск, Колхозная ул., д. 19 кв.40',
+        phoneDirector: '+7 (965) 461-43-67',
+        phoneAccountant: '+7 (993) 383-63-63',
+        email: 'valentina19@outlook.com',
+        bikBank: '648417961',
+        nameBank: 'СБЕРБАНК СБЕР СБЕРБАНК',
+        checkingAccount: '40560033000000009122',
+        korrAccount: '50934220600000004673',
+    } as CompanyRequisitesType,
     validators: {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),
@@ -79,7 +100,7 @@ const initialState = {
         kpp: composeValidators(required, mustBe00Numbers(9)),
         ogrn: composeValidators(required, mustBe00Numbers(13)),
         okpo: composeValidators(required, mustBe0_0Numbers(8)(10)),
-        address: composeValidators(required),
+        legalAddress: composeValidators(required),
         description: undefined,
 
         postAddress: composeValidators(required),

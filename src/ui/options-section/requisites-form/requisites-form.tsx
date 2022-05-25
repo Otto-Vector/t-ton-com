@@ -5,11 +5,15 @@ import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
 
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Preloader} from '../../common/preloader/preloader';
 import {
     getInitialValuesRequisitesStore,
-    getIsFetchingRequisitesStore, getLabelRequisitesStore, getMaskOnRequisitesStore, getValidatorsRequisitesStore,
+    getIsFetchingRequisitesStore,
+    getLabelRequisitesStore,
+    getMaskOnRequisitesStore,
+    getStoredValuesRequisitesStore,
+    getValidatorsRequisitesStore,
 } from '../../../selectors/options/requisites-reselect';
 import {CompanyRequisitesType} from '../../../types/form-types';
 import {CancelButton} from '../../common/cancel-button/cancel-button';
@@ -26,13 +30,14 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const navigate = useNavigate()
+    // const dispatch = useDispatch()
 
     const label = useSelector( getLabelRequisitesStore )
-    const initialValues = useSelector( getInitialValuesRequisitesStore )
+    // const initialValues = useSelector( getInitialValuesRequisitesStore )
+    const initialValues = useSelector( getStoredValuesRequisitesStore )
+
     const maskOn = useSelector( getMaskOnRequisitesStore )
     const validators = useSelector( getValidatorsRequisitesStore )
-
-    // const dispatch = useDispatch()
 
 
     const onSubmit = (requisites: CompanyRequisitesType) => {
@@ -101,12 +106,12 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={form}
                                                    validate={validators.okpo}
                                             />
-                                            <Field name={'address'}
-                                                   placeholder={label.address}
-                                                   maskFormat={maskOn.address}
+                                            <Field name={'legalAddress'}
+                                                   placeholder={label.legalAddress}
+                                                   maskFormat={maskOn.legalAddress}
                                                    component={FormInputType}
                                                    resetFieldBy={form}
-                                                   validate={validators.address}
+                                                   validate={validators.legalAddress}
                                             />
                                             <div className={styles.requisitesForm__textArea}>
                                                 <Field name={'description'}

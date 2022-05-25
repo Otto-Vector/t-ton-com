@@ -18,7 +18,7 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
     kpp: T // КПП
     ogrn: T // ОГРН
     okpo: T // бюджет??
-    address: T // Юридический адрес
+    legalAddress: T // Юридический адрес
     description: T // доп. информация
 
     postAddress: T // почтовый адрес
