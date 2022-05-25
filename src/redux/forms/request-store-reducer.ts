@@ -12,12 +12,14 @@ export type OneRequestType = {
     shipmentDate: undefined | Date, // дата погрузки
     cargoType: undefined | CargoType, // тип груза
     customer: undefined | number, // заказчик
+    shipper: undefined | number, // грузоотправитель
+    consignee: undefined | number, // грузополучатель
+    carrier: undefined | number, // перевозчик
+    driver: undefined | number, // водитель
     distance: undefined | number, // расстояние
-    shipper: undefined | string, // грузоотправитель
-    consignee: undefined | string, // грузополучатель
-    carrier: undefined | string, // перевозчик
-    driver: undefined | string, // водитель
     note: undefined | string, // примечание
+    answers: number | undefined // количество ответов от водителей
+    driverPrice: number | undefined // стоимость перевозки
 }
 
 
@@ -93,128 +95,180 @@ const initialState = {
             carrier: 4,
             driver: 1,
             distance: 1120,
-            driverPrice: undefined,
             note: 'что-то там',
             answers: Math.floor(Math.random() * 99),
+            driverPrice: undefined,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 998,
             cargoType: 'Битумовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: 120,
-            route: 'Пенза в Самара',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 997,
             cargoType: 'Контейнеровоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: 80,
-            route: 'Иркутск в Усолье-Сибирское',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 996,
             cargoType: 'Битумовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: 3760,
-            route: 'Пенза в Ростов-на-Дону',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 995,
             cargoType: 'Бензовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: 4790,
-            route: 'Красноярск в Пенза',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 944,
             cargoType: 'Цементовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: 1680,
-            route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 931,
             cargoType: 'Газовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: Math.floor(Math.random() * 9999),
-            route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 110,
             cargoType: 'Битумовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: addOneDay(new Date()),
             distance: 1120,
-            route: 'Ангарск в Чита',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 15,
             cargoType: 'Битумовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: addOneDay(new Date()),
             distance: 120,
-            route: 'Пенза в Самара',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 50,
             cargoType: 'Контейнеровоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: 80,
-            route: 'Иркутск в Усолье-Сибирское',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 501,
             cargoType: 'Битумовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: 3760,
-            route: 'Пенза в Ростов-на-Дону',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 36,
             cargoType: 'Бензовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: 4790,
-            route: 'Красноярск в Пенза',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 16,
             cargoType: 'Цементовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: addOneDay(new Date()),
             distance: 100,
-            route: 'Пенза в Новосибирск',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
         {
-            requestNumber: Math.floor(Math.random() * 999),
+            requestNumber: 4,
             cargoType: 'Газовоз',
+            customer: 1,
+            shipper: 3,
+            consignee: 2,
+            carrier: 4,
+            driver: 1,
             requestDate: new Date(),
             distance: Math.floor(Math.random() * 9999),
-            route: 'Пенза в Яндекс',
             answers: Math.floor(Math.random() * 99),
             driverPrice: 0,
         },
-    ],
+    ] as OneRequestType[],
 }
 
 export type RequestStoreReducerStateType = typeof initialState
@@ -231,6 +285,12 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
                 initialValues: action.initialValues,
             }
         }
+        case 'request-store-reducer/SET-CONTENT': {
+            return {
+                ...state,
+                content: action.content
+            }
+        }
         default: {
             return state
         }
@@ -244,7 +304,10 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-INITIAL-VALUES',
         initialValues,
     } as const ),
-
+    setContent: ( content: OneRequestType[] ) => ( {
+        type: 'request-store-reducer/SET-CONTENT',
+        content,
+    } as const ),
 }
 
 /* САНКИ */

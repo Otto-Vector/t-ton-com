@@ -6,7 +6,10 @@ import {Preloader} from '../../common/preloader/preloader'
 
 import noImagePhoto from '../../../media/noImagePhoto2.png'
 import {useSelector} from 'react-redux'
-import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
+import {
+    getIsFetchingRequisitesStore,
+    getStoredValuesRequisitesStore,
+} from '../../../selectors/options/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
@@ -26,6 +29,7 @@ import {
 } from '../../../selectors/options/options-reselect';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
 import {ddMmYearFormat} from '../../../utils/parsers';
+import {getContentRequestStore} from '../../../selectors/forms/request-form-reselect';
 
 type OwnProps = {
     // onSubmit: (requisites: employeesCardType) => void
@@ -41,6 +45,8 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const label = useSelector(getLabelAddDriverStore)
     const placeholder = useSelector(getPlaceholderAddDriverStore)
     const validators = useSelector(getValidatorsAddDriverStore)
+    const {taxMode} = useSelector(getStoredValuesRequisitesStore)
+    const {distance} = useSelector(getContentRequestStore)[0]
 
     const employees: SelectOptions[] = useSelector(getEmployeesOptionsStore).content
         .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
@@ -48,7 +54,6 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
     const trailer: SelectOptions[] = useSelector(getTrailerOptionsStore).content
         .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
-
 
 
     const { requestInfo: {create} } = useSelector(getRoutesStore)
@@ -61,6 +66,8 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const onCancelClick = () => {
         navigate(-1)
     }
+
+    // const driverSumm = (a,b)=>a*b
 
     // const dispatch = useDispatch()
     // const employeeSaveHandleClick = () => { // onSubmit
@@ -126,7 +133,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                     { label.driverSumm + ':' }</label>
                                                 <div className={ styles.addDriversForm__info +' '+
                                                 styles.addDriversForm__info_long}>
-                                                    { initialValues.driverSumm || 'за весь рейс' }
+                                                    { (+(values.driverStavka||0)*(distance||0)) || 'за весь рейс' }
                                                 </div>
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>
@@ -140,7 +147,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.driverTax + ':' }</label>
                                                 <div className={ styles.addDriversForm__info }>
-                                                    { initialValues.driverTax || '-' }
+                                                    { initialValues.driverTax || taxMode }
                                                 </div>
                                             </div>
                                         </div>
