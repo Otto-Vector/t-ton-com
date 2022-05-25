@@ -1,6 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {AddDriverCardType} from '../../types/form-types';
+import {AddDriverCardType, ValidateType} from '../../types/form-types';
+import {composeValidators, maxRangeNumber, required} from '../../utils/validators';
 
 
 const initialState = {
@@ -34,7 +35,15 @@ const initialState = {
         driverFIO: 'Поиск водителя...',
         driverTransport: 'Поиск транспорта...',
         driverTrailer: 'Поиск прицепа...',
+        driverStavka: '0.00'
     },
+
+    maskOn: {
+        driverStavka: undefined
+    },
+    validators: {
+        driverStavka:composeValidators(required, maxRangeNumber(3000)) as ValidateType
+    }
 
 }
 

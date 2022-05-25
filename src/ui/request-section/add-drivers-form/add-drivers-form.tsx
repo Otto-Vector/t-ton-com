@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './add-drivers-form.module.scss'
-import {Form} from 'react-final-form'
+import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {Preloader} from '../../common/preloader/preloader'
 
@@ -14,8 +14,8 @@ import {AddDriverCardType} from '../../../types/form-types'
 
 import {
     getInitialValuesAddDriverStore,
-    getLabelAddDriverStore,
-    getPlaceholderAddDriverStore,
+    getLabelAddDriverStore, getMaskOnAddDriverStore,
+    getPlaceholderAddDriverStore, getValidatorsAddDriverStore,
 } from '../../../selectors/forms/add-driver-reselect';
 import {FormSelector, SelectOptions} from '../../common/form-selector/form-selector';
 import {randomDriverImage, randomTrailerImage, randomTruckImage} from '../../../api/randomImage';
@@ -24,6 +24,7 @@ import {
     getTrailerOptionsStore,
     getTransportOptionsStore,
 } from '../../../selectors/options/options-reselect';
+import {FormInputType} from '../../common/form-input-type/form-input-type';
 
 type OwnProps = {
     // onSubmit: (requisites: employeesCardType) => void
@@ -36,6 +37,8 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const label = useSelector(getLabelAddDriverStore)
     const initialValues = useSelector(getInitialValuesAddDriverStore)
     const placeholder = useSelector(getPlaceholderAddDriverStore)
+    const maskOn = useSelector(getMaskOnAddDriverStore)
+    const validators = useSelector(getValidatorsAddDriverStore)
 
     const employees: SelectOptions[] = useSelector(getEmployeesOptionsStore).content
         .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
@@ -71,7 +74,6 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                         <h4 className={ styles.addDriversForm__header }>{ header }</h4>
                         <Form
                             onSubmit={ onSubmit }
-
                             initialValues={ initialValues }
                             render={
                                 ( { submitError, handleSubmit, pristine, form, submitting, values } ) => (
@@ -104,14 +106,25 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.driverStavka + ':' }</label>
-                                                <div className={ styles.addDriversForm__info }>
-                                                    { initialValues.driverStavka || 'в тн.км.' }
-                                                </div>
+                                                {/*<div className={ styles.addDriversForm__info }>*/ }
+                                                {/*    { initialValues.driverStavka || 'в тн.км.' }*/ }
+                                                {/*</div>*/ }
+
+                                                <Field name={ 'driverStavka' }
+                                                       placeholder={ placeholder.driverStavka }
+                                                       component={ FormInputType }
+                                                       inputType={ 'money' }
+                                                       pattern={ '/d*.' }
+                                                       resetFieldBy={ form }
+                                                       validate={ validators.driverStavka }
+                                                       errorBottom
+                                                />
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.driverSumm + ':' }</label>
-                                                <div className={ styles.addDriversForm__info }>
+                                                <div className={ styles.addDriversForm__info +' '+
+                                                styles.addDriversForm__info_long}>
                                                     { initialValues.driverSumm || 'за весь рейс' }
                                                 </div>
                                             </div>

@@ -6,6 +6,8 @@ type AddDriverStoreSelectors<T extends keyof Y, Y = AddDriverStoreReducerStateTy
 export const getLabelAddDriverStore: AddDriverStoreSelectors<'label'> = (state) => state.addDriverStoreReducer.label
 export const getPlaceholderAddDriverStore: AddDriverStoreSelectors<'placeholder'> = (state) => state.addDriverStoreReducer.placeholder
 export const getInitialValuesAddDriverStore: AddDriverStoreSelectors<'initialValues'> = (state) => state.addDriverStoreReducer.initialValues
+export const getMaskOnAddDriverStore: AddDriverStoreSelectors<'maskOn'> = (state) => state.addDriverStoreReducer.maskOn
+export const getValidatorsAddDriverStore: AddDriverStoreSelectors<'validators'> = (state) => state.addDriverStoreReducer.validators
 
 
 

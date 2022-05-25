@@ -136,7 +136,7 @@ $input--disabled-font-color: $mainFontColor;
     background-color: $input--disabled-background-color;
     color: $input--disabled-font-color;
 
-     & ~ .label { // цвет для заголовка на заблокированном элементе
+    & ~ .label { // цвет для заголовка на заблокированном элементе
       color: rgba($mainFontColor, .5);
     }
   }
@@ -151,24 +151,32 @@ $input--disabled-font-color: $mainFontColor;
   }
 }
 
-  //&:focus {
-  //  //при фокусе, сообщение placeholder уходит вверх
-  //  @include placeholder() {
-  //    top: -1px;
-  //    font-size: 70%;
-  //  }
-  //}
+//&:focus {
+//  //при фокусе, сообщение placeholder уходит вверх
+//  @include placeholder() {
+//    top: -1px;
+//    font-size: 70%;
+//  }
+//}
 
 // кастомизация сообщения об ошибке под/над инпутом
 .errorSpan {
   position: absolute;
-  top: -14px;
   left: 7px;
+  white-space: nowrap;
   font-size: 12px;
   color: rgba($input--error-color, .75);
   font-weight: bold;
   background-image: radial-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1));
   border-radius: 5px;
+
+  &_top {
+    top: -14px;
+  }
+
+  &_bottom {
+    bottom: -14px;
+  }
 }
 
 

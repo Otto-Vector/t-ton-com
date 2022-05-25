@@ -79,7 +79,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
     }, [ initialValues ])
 
     if (!currentRequest) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
-    const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate) }`
+    const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate || new Date()) }`
 
     return (
         <section className={ styles.requestSection }>

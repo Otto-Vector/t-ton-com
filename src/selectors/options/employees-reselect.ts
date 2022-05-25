@@ -9,7 +9,6 @@ export const getMaskOnEmployeesStore: EmployeesStoreSelectors<'maskOn'> = (state
 export const getValidatorsEmployeesStore: EmployeesStoreSelectors<'validators'> = (state) => state.employeesStoreReducer.validators
 
 
-
 // // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API
 // export const getOneBookFromLocal = createSelector( getBooksList, getBookToView,
 //     ( booksList, bookToView ): ItemBook['volumeInfo'] | undefined => {

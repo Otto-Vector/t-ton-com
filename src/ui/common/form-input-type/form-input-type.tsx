@@ -15,7 +15,8 @@ type OwnProps = {
     children?: React.ReactNode
     disabled?: boolean
     textArea?: boolean
-    inputType?: 'text' | 'date' | 'email'
+    inputType?: 'text' | 'date' | 'email' | 'money'
+    errorBottom?: boolean
 }
 
 
@@ -23,7 +24,7 @@ export const FormInputType: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
         children, disabled, mask = '_', maskFormat,
-        textArea, allowEmptyFormatting, inputType = 'text',
+        textArea, allowEmptyFormatting, inputType = 'text', errorBottom
     }) => {
 
     const InInput = textArea ? 'textarea' : 'input' // если нужен просто текстовое поле
@@ -42,11 +43,12 @@ export const FormInputType: React.FC<OwnProps> = (
                 }}
             ></div>
             }
-            {maskFormat ? // если формат отсутствует, то на обычный инпут
+            {(maskFormat || inputType === 'money') ? // если формат отсутствует, то на обычный инпут
                 <NumberFormat
                     mask={mask}
                     format={maskFormat}
                     // fixedDecimalScale={true}
+                    decimalScale={inputType === 'money' ? 2 : 0}
                     allowEmptyFormatting={allowEmptyFormatting}
                     displayType="input"
                     allowNegative={false}
@@ -76,7 +78,9 @@ export const FormInputType: React.FC<OwnProps> = (
             }
             {children}
             {/*сообщение об ошибке появляется в этом спане*/}
-            {isError && (<span className={styles.errorSpan}>{meta.error}</span>)}
+            {isError && (<span className={
+                styles.errorSpan +' '+ (errorBottom ? styles.errorSpan_bottom : styles.errorSpan_top)
+            }>{meta.error}</span>)}
         </div>
     )
 }
