@@ -16,7 +16,8 @@ import {OneRequestType} from '../../redux/forms/request-store-reducer';
 import {FormInputType} from '../common/form-input-type/form-input-type';
 import {cargoType} from '../../types/form-types';
 import {getAllShippersStore} from '../../selectors/options/shippers-reselect';
-
+import requestMap from '../../media/request-map.jpg'
+import {getConsigneesOptionsStore} from '../../selectors/options/options-reselect';
 
 type OwnProps = {
     mode: 'driver' | 'create' | 'status' | 'history'
@@ -49,7 +50,8 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
     const customers = useSelector(getAllShippersStore)
         .map(( { id, title } ) => ( { key: id?.toString(), value: id.toString(), label: title?.toString() || '' } ))
     const shippers = customers // пока присвоил те что есть...
-    const consignees = customers
+    const consignees = useSelector(getConsigneesOptionsStore).content
+        .map(( { id, title })=> ({key: id.toString(), value: title, label: title}))
     const TABLE_CONTENT = useSelector(getContentTableStore)
 
     const currentRequest = requestModes.createMode ? initialValues
@@ -99,7 +101,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                         </div>
                         <div className={ styles.requestSection__panelButton }>
                             <Button colorMode={ requestModes.driverMode ? 'red' : 'blue' }
-                                    title={ requestModes.driverMode ? 'Отказаться' : 'Самовывоз' }
+                                    title={ requestModes.driverMode ? 'Отказаться' : 'Cамовывоз' }
                                     onClick={ () => {
                                         requestModes.driverMode
                                             ? buttonsAction.cancelRequest()
@@ -114,7 +116,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
             </header>
             <div className={ styles.requestSection__requestForm }>
                 <div className={ styles.requestForm__top }>
-                    <div className={ styles.requestForm__topLeft }>
+                    <div className={ styles.requestFormLeft }>
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
@@ -129,7 +131,8 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                                                               placeholder={ placehoders.cargoComposition }
                                                               values={ stringArrayToSelectValue(cargoComposition) }/>
                                             </div>
-                                            <div className={ styles.requestFormLeft__inputsPanel_trio }>
+                                            <div className={ styles.requestFormLeft__inputsPanel + ' ' +
+                                                styles.requestFormLeft__inputsPanel_trio }>
                                                 <div className={ styles.requestFormLeft__inputsItem }>
                                                     <label className={ styles.requestFormLeft__label }>
                                                         { labels.shipmentDate }</label>
@@ -138,6 +141,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                                                            resetFieldBy={ form }
                                                            inputType={ 'date' }
                                                     />
+                                                </div>
                                                     <div className={ styles.requestFormLeft__inputsItem }>
                                                         <label className={ styles.requestFormLeft__label }>
                                                             { labels.distance }</label>
@@ -175,21 +179,23 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                                                               placeholder={ placehoders.consignee }
                                                               values={ consignees }/>
                                             </div>
-                                            <div className={ styles.requestFormLeft__inputsItem }>
+                                            <div className={ styles.requestFormLeft__inputsPanel }>
                                                 <label className={ styles.requestFormLeft__label }>
                                                     { labels.carrier }</label>
-                                                <div className={ styles.requestFormLeft__info }>
+                                                <div className={ styles.requestFormLeft__info+ ' ' +
+                                                styles.requestFormLeft__info_leftAlign}>
                                                     { initialValues.carrier || placehoders.carrier }
                                                 </div>
                                             </div>
-                                            <div className={ styles.requestFormLeft__inputsItem }>
+                                            <div className={ styles.requestFormLeft__inputsPanel }>
                                                 <label className={ styles.requestFormLeft__label }>
                                                     { labels.driver }</label>
-                                                <div className={ styles.requestFormLeft__info }>
+                                                <div className={ styles.requestFormLeft__info+ ' ' +
+                                                styles.requestFormLeft__info_leftAlign}>
                                                     { initialValues.driver || placehoders.driver }
                                                 </div>
                                             </div>
-                                            <div className={ styles.requestFormLeft__inputsItem }>
+                                            <div className={ styles.requestFormLeft__inputsPanel }>
                                                 <label className={ styles.requestFormLeft__label }>
                                                     { labels.note }</label>
                                                 <Field name={ 'note' }
@@ -201,13 +207,15 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                                                 />
                                             </div>
 
-                                        </div>
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
                                     </form>
                                 )
                             }/>
                     </div>
-
+                    <div className={styles.requestForm__map}>
+                        <label className={styles.requestFormLeft__label}>{'Местоположение и маршрут'}</label>
+                        <img src={requestMap} alt={'Карта маршрута'} title={"Карта маршрута"}/>
+                    </div>
                 </div>
                 <div className={ styles.requestForm__middle }>
 
