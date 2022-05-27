@@ -85,8 +85,10 @@ export type ShippersCardType<T = DefaultFormType> = {
 
 /////////////////////////////////////////////////////////////////////////////
 export const cargoType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
+    'Тягач', 'Фургон, Борт', 'Цементовоз' ]
+export const cargoTypeType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
     'Тягач', 'Фургон, Борт', 'Цементовоз' ] as const
-export type CargoType = typeof cargoType[number]
+export type CargoType = typeof cargoTypeType[number]
 
 export const propertyRights = [ 'Собственность', 'Аренда', 'Лизинг' ] as const
 export type PropertyRightsType = typeof propertyRights[number]

@@ -1,35 +1,35 @@
 import React from 'react'
 import styles from './add-drivers-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {Button} from '../../common/button/button'
-import {Preloader} from '../../common/preloader/preloader'
+import {Button} from '../common/button/button'
+import {Preloader} from '../common/preloader/preloader'
 
-import noImagePhoto from '../../../media/noImagePhoto2.png'
+import noImagePhoto from '../../media/noImagePhoto2.png'
 import {useSelector} from 'react-redux'
 import {
     getIsFetchingRequisitesStore,
     getStoredValuesRequisitesStore,
-} from '../../../selectors/options/requisites-reselect'
+} from '../../selectors/options/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
-import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {CancelButton} from '../../common/cancel-button/cancel-button'
-import {AddDriverCardType} from '../../../types/form-types'
+import {getRoutesStore} from '../../selectors/routes-reselect'
+import {CancelButton} from '../common/cancel-button/cancel-button'
+import {AddDriverCardType} from '../../types/form-types'
 
 import {
     getInitialValuesAddDriverStore,
     getLabelAddDriverStore, getMaskOnAddDriverStore,
     getPlaceholderAddDriverStore, getValidatorsAddDriverStore,
-} from '../../../selectors/forms/add-driver-reselect';
-import {FormSelector, SelectOptions} from '../../common/form-selector/form-selector';
-import {randomDriverImage, randomTrailerImage, randomTruckImage} from '../../../api/randomImage';
+} from '../../selectors/forms/add-driver-reselect';
+import {FormSelector, SelectOptions} from '../common/form-selector/form-selector';
+import {randomDriverImage, randomTrailerImage, randomTruckImage} from '../../api/randomImage';
 import {
     getEmployeesOptionsStore,
     getTrailerOptionsStore,
     getTransportOptionsStore,
-} from '../../../selectors/options/options-reselect';
-import {FormInputType} from '../../common/form-input-type/form-input-type';
-import {ddMmYearFormat} from '../../../utils/parsers';
-import {getContentRequestStore} from '../../../selectors/forms/request-form-reselect';
+} from '../../selectors/options/options-reselect';
+import {FormInputType} from '../common/form-input-type/form-input-type';
+import {ddMmYearFormat} from '../../utils/parsers';
+import {getContentRequestStore} from '../../selectors/forms/request-form-reselect';
 
 type OwnProps = {
     // onSubmit: (requisites: employeesCardType) => void

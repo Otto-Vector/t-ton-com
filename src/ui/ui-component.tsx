@@ -20,7 +20,7 @@ import {TrailerForm} from './options-section/transport-trailer-form/trailer-form
 import {SearchSection} from './search-section/search-section';
 import {CashCard} from './cash-card/cash-card'
 import {RequestSection} from './request-section/request-section';
-import {AddDriversForm} from './request-section/add-drivers-form/add-drivers-form';
+import {AddDriversForm} from './add-drivers-form/add-drivers-form';
 
 type OwnProps = {}
 

@@ -8,7 +8,7 @@ import {
     initialFiltersState,
 } from '../../redux/table/filters-store-reducer'
 import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
-import {cargoType} from '../../types/form-types'
+import {cargoTypeType} from '../../types/form-types'
 
 
 type OwnProps = {
@@ -102,7 +102,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                                         >
                                             <option className={ styles.searchSection__option }
                                                     value={ '' }>{ value.title }</option>
-                                            { cargoType.map( ( item ) =>
+                                            { cargoTypeType.map( ( item ) =>
                                                 <option className={ styles.searchSection__option }
                                                         key={ item } value={ item }>{ item }</option>,
                                             )

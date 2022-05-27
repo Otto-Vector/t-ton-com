@@ -1,5 +1,5 @@
 
-
+// автоматизация параметоров query
 export const qsNormalize = (params: {}, nullIsRequired = true, decodeisRequired = true ): string => {
 
         let urlObj = new URLSearchParams(Object.fromEntries( Object
