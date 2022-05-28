@@ -18,7 +18,7 @@ import {
 import {CompanyRequisitesType} from '../../../types/form-types';
 import {CancelButton} from '../../common/cancel-button/cancel-button';
 import {useNavigate} from 'react-router-dom';
-import {InfoText} from '../common-forms/info-text/into-text';
+import {InfoText} from '../../common/info-text/into-text';
 
 
 

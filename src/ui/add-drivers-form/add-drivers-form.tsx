@@ -17,7 +17,7 @@ import {AddDriverCardType} from '../../types/form-types'
 
 import {
     getInitialValuesAddDriverStore,
-    getLabelAddDriverStore, getMaskOnAddDriverStore,
+    getLabelAddDriverStore,
     getPlaceholderAddDriverStore, getValidatorsAddDriverStore,
 } from '../../selectors/forms/add-driver-reselect';
 import {FormSelector, SelectOptions} from '../common/form-selector/form-selector';
@@ -32,7 +32,7 @@ import {ddMmYearFormat} from '../../utils/parsers';
 import {getContentRequestStore} from '../../selectors/forms/request-form-reselect';
 
 type OwnProps = {
-    // onSubmit: (requisites: employeesCardType) => void
+
 }
 
 export const AddDriversForm: React.FC<OwnProps> = () => {
@@ -62,6 +62,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const onSubmit = ( values: AddDriverCardType ) => {
         navigate(create)
     }
+    const resultDistanceCost = (...args: number[]): number => args.reduce((a,b)=> a*b) * (distance||1)
 
     const onCancelClick = () => {
         navigate(-1)
@@ -125,6 +126,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                        pattern={ '/d*.' }
                                                        resetFieldBy={ form }
                                                        validate={ validators.driverStavka }
+                                                       noLabel
                                                        errorBottom
                                                 />
                                             </div>
@@ -133,7 +135,9 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                     { label.driverSumm + ':' }</label>
                                                 <div className={ styles.addDriversForm__info +' '+
                                                 styles.addDriversForm__info_long}>
-                                                    { (+(values.driverStavka||0)*(distance||0)) || 'за весь рейс' }
+                                                    {
+                                                        values.driverSumm = resultDistanceCost(+(values.driverStavka||0)).toString()
+                                                        || 'за весь рейс' }
                                                 </div>
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>

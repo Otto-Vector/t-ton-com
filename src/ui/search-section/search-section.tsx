@@ -66,7 +66,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
 
     useEffect(()=>{
         dispatch( filtersStoreActions.setClearFilter( initialFiltersState ) )
-    },[mode])
+    },[mode, dispatch])
 
     useEffect( () => { // перекрашиваем кнопку "Без фильтра"
         // если любой из фильтров на кнопках активен
@@ -77,7 +77,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
             .reduce( ( a, b ) => a || b )
         // если состояния отличаются, то присваиваем
         if (clearMode !== filterButtons.clearFilters.mode) dispatch( filtersStoreActions.setClearFilterMode( clearMode ) )
-    }, [ filterButtons ] )
+    }, [ filterButtons, dispatch ], )
 
     return (
         <section className={ styles.searchSection }>
