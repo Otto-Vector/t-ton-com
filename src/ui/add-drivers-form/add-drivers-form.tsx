@@ -29,7 +29,7 @@ import {
 } from '../../selectors/options/options-reselect';
 import {FormInputType} from '../common/form-input-type/form-input-type';
 import {ddMmYearFormat} from '../../utils/parsers';
-import {getContentRequestStore} from '../../selectors/forms/request-form-reselect';
+import {getAllRequestStore, getOneRequestStore} from '../../selectors/forms/request-form-reselect';
 
 type OwnProps = {
 
@@ -46,7 +46,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const placeholder = useSelector(getPlaceholderAddDriverStore)
     const validators = useSelector(getValidatorsAddDriverStore)
     const {taxMode} = useSelector(getStoredValuesRequisitesStore)
-    const {distance} = useSelector(getContentRequestStore)[0]
+    const {distance} = useSelector(getOneRequestStore)
 
     const employees: SelectOptions[] = useSelector(getEmployeesOptionsStore).content
         .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))

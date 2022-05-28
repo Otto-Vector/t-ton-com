@@ -49,7 +49,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                                element={ <SearchSection mode={ 'search' }/> }/> {/*ПОИСК активных заявок*/ }
                         <Route path={ routes.requestInfo.driver + ':reqNumber' }
                                element={ <RequestSection
-                                   mode={ 'driver' }/> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
+                                   mode={ 'status' }/> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
                         <Route path={ routes.requestsList } element={ <SearchSection
                             mode={ 'status' }/> }/> {/*таблица статусов по активным заявкам*/ }
                         <Route path={ routes.requestInfo.status + ':reqNumber' }

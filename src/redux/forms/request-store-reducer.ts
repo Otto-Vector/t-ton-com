@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {cargoType, CargoType} from '../../types/form-types'
-import {randArrayValue, ranFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from '../../utils/random-utils'
+import {randArrayValue, randFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from '../../utils/random-utils'
 
 
 export type OneRequestType = {
@@ -22,7 +22,7 @@ export type OneRequestType = {
     driverPrice: number | undefined // стоимость перевозки
 }
 
-const cargoСomposition = [
+const cargoComposition = [
     'Мазут топочный М-100 ТУ2012-110712',
     'Битум нефтяной дорожный вязкий БНД 90/130',
     'Битум нефтяной дорожный вязкий БНД 100/130',
@@ -33,9 +33,31 @@ const cargoСomposition = [
     'Битум 90/130, фасованный в кловертейнеры',
 ]
 
+const makeOneTestRequest = (id: number): OneRequestType => ({
+            id: id,
+            requestNumber: id,
+            requestDate: new Date( 2022, 5 , randFloorMax( 29 ) ),
+            cargoComposition: randArrayValue( cargoComposition ),
+            shipmentDate: new Date( 2022, 6, randFloorMax( 29 ) ),
+            cargoType: randArrayValue(cargoType) as CargoType,
+            customer: randFloorMax(9),
+            shipper: randFloorMax(11),
+            consignee: randMinMax(12,23),
+            carrier: randFloorMax(9),
+            driver: randFloorMax(9),
+            distance: randFloorMax(1200),
+            note: 'Насос на 120, рукава, ДОПОГ.',
+            answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
+            driverPrice: undefined,
+        })
+
+const makeNTestRequests = (count: number): OneRequestType[] => [999,...randomDifferentIntegersArrayCreator(998)(count)]
+    .map((id)=>makeOneTestRequest(id))
+
 const initialState = {
 
-    cargoСomposition: cargoСomposition,
+    cargoComposition: cargoComposition,
+    currentRequestNumber: undefined as undefined | number,
 
     label: {
         id: undefined,
@@ -85,26 +107,7 @@ const initialState = {
         note: undefined,
     } as OneRequestType,
 
-    content: [
-        {
-            id: 999,
-            requestNumber: 999,
-            requestDate: new Date( 2022, 5 , ranFloorMax( 29 ) ),
-            cargoComposition: randArrayValue( cargoСomposition ),
-            shipmentDate: new Date( 2022, 6, ranFloorMax( 29 ) ),
-            cargoType: randArrayValue(cargoType as string[]),
-            customer: ranFloorMax(9),
-            shipper: ranFloorMax(9),
-            consignee: ranFloorMax(9),
-            carrier: ranFloorMax(9),
-            driver: ranFloorMax(9),
-            distance: ranFloorMax(1200),
-            note: 'что-то там',
-            answers: randomDifferentIntegersArrayCreator(ranFloorMax(9))(),
-            driverPrice: undefined,
-        },
-
-    ] as OneRequestType[],
+    content: makeNTestRequests(15) as OneRequestType[] | undefined, // создаём тестовые
 }
 
 export type RequestStoreReducerStateType = typeof initialState
@@ -127,6 +130,12 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
                 content: action.content
             }
         }
+        case 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW': {
+            return {
+                ...state,
+                currentRequestNumber: action.currentRequestNumber
+            }
+        }
         default: {
             return state
         }
@@ -143,6 +152,10 @@ export const requestStoreActions = {
     setContent: ( content: OneRequestType[] ) => ( {
         type: 'request-store-reducer/SET-CONTENT',
         content,
+    } as const ),
+    setRequestNumber:( currentRequestNumber: number | undefined ) => ( {
+        type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
+        currentRequestNumber,
     } as const ),
 }
 

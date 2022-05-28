@@ -1,18 +1,19 @@
 import {AppStateType} from '../../redux/redux-store'
-import {RequestStoreReducerStateType} from '../../redux/forms/request-store-reducer';
+import {OneRequestType, RequestStoreReducerStateType} from '../../redux/forms/request-store-reducer';
+import {createSelector} from 'reselect';
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = (state: AppStateType) => Y[T]
 
-export const getCargoСompositionRequestStore: RequestStoreSelectors<'cargoСomposition'> = (state) => state.requestStoreReducer.cargoСomposition
+export const getCargoСompositionRequestStore: RequestStoreSelectors<'cargoComposition'> = (state) => state.requestStoreReducer.cargoComposition
 export const getInitialValuesRequestStore: RequestStoreSelectors<'initialValues'> = (state) => state.requestStoreReducer.initialValues
 export const getLabelRequestStore: RequestStoreSelectors<'label'> = ( state) => state.requestStoreReducer.label
 export const getPlaceholderRequestStore: RequestStoreSelectors<'placeholder'> = ( state) => state.requestStoreReducer.placeholder
-export const getContentRequestStore: RequestStoreSelectors<'content'> = ( state) => state.requestStoreReducer.content
+export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state) => state.requestStoreReducer.content
+const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state) => state.requestStoreReducer.currentRequestNumber
 
 
 
-// // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API
-// export const getOneBookFromLocal = createSelector( getBooksList, getBookToView,
-//     ( booksList, bookToView ): ItemBook['volumeInfo'] | undefined => {
-//         return booksList.filter( ( book ) => book.id === bookToView.bookId )[0]?.volumeInfo
-//     } )
+export const getOneRequestStore = createSelector( getAllRequestStore, getCurrentRequestNumberStore, getInitialValuesRequestStore,
+    ( content, numberValue, initial ): OneRequestType => {
+        return content?.filter( ( {requestNumber} ) => requestNumber === numberValue )[0] || initial
+    } )

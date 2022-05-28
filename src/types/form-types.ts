@@ -66,6 +66,7 @@ export type ConsigneesCardType<T = DefaultFormType> = {
     consigneesTel: T // Телефон получателя
     description: T // Доп. данные для ТТН
     coordinates: T // Местоположение в координатах
+    city: T // присваивается автоматически
 }
 
 // на грузоотправителя
@@ -81,6 +82,7 @@ export type ShippersCardType<T = DefaultFormType> = {
     shipperTel: T // Телефон отправителя
     description: T // Доп. данные для ТТН
     coordinates: T // Местоположение в координатах
+    city: T // город (присваивается автоматически)
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -6,7 +6,7 @@ import {ColumnInputFilter} from './filter/column-filters'
 import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
 import {useDispatch, useSelector} from 'react-redux'
 import {UseFiltersColumnProps} from 'react-table'
-import {getContentTableStore} from '../../../selectors/table/table-reselect'
+import {geInitialValuesTableStore, getContentTableStore} from '../../../selectors/table/table-reselect'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
@@ -15,25 +15,32 @@ import {tableStoreActions} from '../../../redux/table/table-store-reducer'
 import {getAuthCashAuthStore} from '../../../selectors/auth-reselect'
 import {TableModesType} from '../search-section'
 import {ddMmYearFormat} from '../../../utils/parsers';
+import {getAllRequestStore} from '../../../selectors/forms/request-form-reselect';
+import {getAllConsigneesStore} from '../../../selectors/options/consignees-reselect';
+import {getAllShippersStore} from '../../../selectors/options/shippers-reselect';
 
 type OwnProps = {
     tableModes: TableModesType
 }
 
 
-export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
+export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const navigate = useNavigate()
-    const {balance, maps, requestInfo} = useSelector(getRoutesStore)
+    const { balance, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = useSelector(getAuthCashAuthStore)
-    const {dayFilter, routeFilter, cargoFilter} = useSelector(getValuesFiltersStore)
+    const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
+    const allRequests = useSelector(getAllRequestStore)
+    const initialValues = useSelector(geInitialValuesTableStore)
     const TABLE_CONTENT = useSelector(getContentTableStore)
+    const allConsignee = useSelector(getAllConsigneesStore)
+    const allShippers = useSelector(getAllShippersStore)
     const dispatch = useDispatch()
 
-    const deleteRow = (requestNumber: number) => {
+    const deleteRow = ( requestNumber: number ) => {
         dispatch(tableStoreActions.deleteRow(requestNumber))
     }
 
-    const data = React.useMemo(() => (TABLE_CONTENT), [TABLE_CONTENT])
+    const data = React.useMemo(() => ( TABLE_CONTENT || initialValues ), [ TABLE_CONTENT ])
 
     const columns = React.useMemo(
         () => [
@@ -45,11 +52,11 @@ export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
             {
                 Header: 'Тип груза',
                 accessor: 'cargoType',
-                Filter: ({column}: { column?: UseFiltersColumnProps<{}> }) => {
+                Filter: ( { column }: { column?: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column?.setFilter(cargoFilter)
                     }, [])
-                    return (<></>)
+                    return ( <></> )
                 },
 
                 // disableFilters: true,
@@ -57,27 +64,27 @@ export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
             {
                 Header: 'Дата',
                 accessor: 'requestDate',
-                Filter: ({column}: { column: UseFiltersColumnProps<{}> }) => {
+                Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column.setFilter(dayFilter)
                     }, [])
-                    return (<></>)
+                    return ( <></> )
                 },
                 disableFilters: false,
-                Cell: ({value}: { value: Date }) => ddMmYearFormat(value),
+                Cell: ( { value }: { value: Date } ) => ddMmYearFormat(value),
             },
             {
                 Header: 'Расстояние',
                 accessor: 'distance',
-                Filter: ({column}: { column: UseFiltersColumnProps<{}> }) => {
+                Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column.setFilter(routeFilter)
                     }, [])
-                    return (<></>)
+                    return ( <></> )
                 },
                 disableFilters: false,
                 filter: 'between',
-                Cell: ({value}: { value: number }) => `${value} км`,
+                Cell: ( { value }: { value: number } ) => `${ value } км`,
             },
             {
                 Header: 'Маршрут',
@@ -97,29 +104,29 @@ export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
                 accessor: 'price',
 
                 disableFilters: true,
-                Cell: ({requestNumber, price}: { requestNumber: number, price: number }) => {
+                Cell: ( { requestNumber, price }: { requestNumber: number, price: number } ) => {
                     if (tableModes.searchTblMode)
-                        return <Button title={'Открыть'}
-                                       onClick={() => {
+                        return <Button title={ 'Открыть' }
+                                       onClick={ () => {
                                            price > authCash
                                                ? navigate(balance)
                                                : navigate(requestInfo.driver + requestNumber)
-                                       }}
-                                       colorMode={price > authCash ? 'gray' : 'blue'}
+                                       } }
+                                       colorMode={ price > authCash ? 'gray' : 'blue' }
                         />
                     if (tableModes.statusTblMode)
-                        return <Button title={'Открыть'}
-                                       onClick={() => {
+                        return <Button title={ 'Открыть' }
+                                       onClick={ () => {
                                            navigate(maps.answers + requestNumber)
-                                       }}
-                                       colorMode={'green'}
+                                       } }
+                                       colorMode={ 'green' }
                         />
                     if (tableModes.historyTblMode)
-                        return <Button title={'Открыть'}
-                                       onClick={() => {
+                        return <Button title={ 'Открыть' }
+                                       onClick={ () => {
                                            navigate(requestInfo.history + requestNumber)
-                                       }}
-                                       colorMode={'pink'}/>
+                                       } }
+                                       colorMode={ 'pink' }/>
                 },
             },
             {
@@ -128,19 +135,31 @@ export const TableComponent: React.FC<OwnProps> = ({tableModes}) => {
                 accessor: 'close',
 
                 disableFilters: true,
-                Cell: ({requestNumber}: { requestNumber: number }) => (
+                Cell: ( { requestNumber }: { requestNumber: number } ) => (
                     tableModes.historyTblMode ? null :
-                        <CancelButton onCancelClick={() => deleteRow(requestNumber)} mode={'redAlert'} noAbsolute/>
+                        <CancelButton onCancelClick={ () => deleteRow(requestNumber) } mode={ 'redAlert' } noAbsolute/>
                 ),
             },
         ],
-        [tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT],
+        [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
     )
 
+    useEffect(() => {
+        let createTableValues = allRequests?.map((
+            { requestNumber, requestDate, cargoType, shipper, consignee, distance, answers } ) =>
+            ( {
+                requestNumber, cargoType, requestDate, distance,
+                answers: answers?.length, price: 100,
+                route: allShippers.filter(( { id } ) => id === shipper)[0]?.city +' в '
+                    + allConsignee.filter(( { id } ) => id === consignee)[0]?.city,
+            } )) || [initialValues]
+        // debugger;
+        dispatch(tableStoreActions.setValues(createTableValues))
+    },[])
 
     return (
-        <div className={styles.tableComponent}>
-            <Table columns={columns} data={data}/>
+        <div className={ styles.tableComponent }>
+            <Table columns={ columns } data={ data }/>
         </div>
     )
 }

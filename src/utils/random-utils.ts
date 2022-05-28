@@ -1,10 +1,10 @@
 export const randMinMax = ( min: number, max: number ): number => Math.floor( Math.random() * ( max - min + 1 ) ) + min
 
 // минимальное значение по умолчанию = 1
-export const ranFloorMax = ( max: number, min = 1 ): number => randMinMax( min, max )
+export const randFloorMax = ( max: number, min = 1 ): number => randMinMax( min, max )
 
 // возвращает рандомный элемент массива
-export const randArrayValue = <T = string>( array: T[] ): T => array[ranFloorMax( array.length - 1, 0 )]
+export const randArrayValue = <T = string>( array: T[] ): T => array[randFloorMax( array.length - 1, 0 )]
 
 // возвращает массив из необходимого числа элементов needArraySize
 // рандомных /НЕ ОДИНАКОВЫХ/ целых чисел (from 0 to realArraySize)

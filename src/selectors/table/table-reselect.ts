@@ -4,6 +4,7 @@ import {TableStoreReducerStateType} from '../../redux/table/table-store-reducer'
 type TableStoreSelectors<T extends keyof Y, Y = TableStoreReducerStateType> = (state: AppStateType) => Y[T]
 
 export const getContentTableStore: TableStoreSelectors<'content'> = (state) => state.tableStoreReducer.content
+export const geInitialValuesTableStore: TableStoreSelectors<'initialValues'> = (state) => state.tableStoreReducer.initialValues
 
 
 
