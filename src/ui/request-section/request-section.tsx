@@ -3,9 +3,12 @@ import styles from './request-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {useNavigate, useParams} from 'react-router-dom';
-import {Button} from '../common/button/button';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {requestStoreActions} from '../../redux/forms/request-store-reducer';
+import {OneRequestType, requestStoreActions} from '../../redux/forms/request-store-reducer';
+import {getInitialValuesRequestStore, getOneRequestStore} from '../../selectors/forms/request-form-reselect';
+import {ddMmYearFormat} from '../../utils/parsers';
+import {CancelButton} from '../common/cancel-button/cancel-button';
+import {RequestFormLeft} from './request-form-left/request-form-left';
 
 type OwnProps = {
     mode: 'create' | 'status' | 'history'
@@ -21,11 +24,18 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
         historyMode: mode === 'history',
     }
 
+    const initialValues = useSelector(getInitialValuesRequestStore)
+    const oneRequest = useSelector(getOneRequestStore)
+    const currentRequest = requestModes.createMode ? initialValues : oneRequest || initialValues
+
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const routes = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+    const onSubmit = ( values: OneRequestType ) => {
+        console.log('данные из заявки: ',values);
+    }
 
     const buttonsAction = {
         acceptRequest: () => {
@@ -41,42 +51,23 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
             navigate(routes.myDrivers)
         },
     }
+
     useEffect(()=>{
         dispatch(requestStoreActions.setRequestNumber(+(reqNumber||0) || undefined))
     })
+
+    if (!oneRequest) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
+    const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate || new Date()) }`
     return (
         <section className={ styles.requestSection }>
+            <div className={styles.requestSection__wrapper}>
+
             <header className={ styles.requestSection__header }>
-
-                <div className={ styles.requestSection__buttonsPanel }>
-                    { !requestModes.historyMode ? <>
-                        <div className={ styles.requestSection__panelButton }>
-                            <Button colorMode={ 'green' }
-                                    title={ requestModes.statusMode ? 'Принять заявку' : 'Поиск исполнителя' }
-                                    onClick={ () => {
-                                        requestModes.statusMode
-                                            ? buttonsAction.acceptRequest()
-                                            : buttonsAction.submitRequestAndSearch()
-                                    } }
-                                    disabled={ requestModes.createMode }
-                                    rounded/>
-                        </div>
-                        <div className={ styles.requestSection__panelButton }>
-                            <Button colorMode={ requestModes.statusMode ? 'red' : 'blue' }
-                                    title={ requestModes.statusMode ? 'Отказаться' : 'Cамовывоз' }
-                                    onClick={ () => {
-                                        requestModes.statusMode
-                                            ? buttonsAction.cancelRequest()
-                                            : buttonsAction.submitRequestAndDrive()
-                                    } }
-                                    disabled={ requestModes.createMode }
-                                    rounded/>
-                        </div>
-                    </> : null
-                    }
-                </div>
+                {title}
             </header>
-
+                <RequestFormLeft requestModes={requestModes} initialValues={initialValues} onSubmit={onSubmit}/>
+                <CancelButton onCancelClick={()=>navigate(-1)} mode={'blueAlert'}/>
+            </div>
         </section>
 
 

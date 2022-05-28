@@ -2,7 +2,7 @@
 @import 'src/styles/mixins';
 
 $btnBlueFontColor: #fff;
-$btnBlueBgColor: #023E8A;
+$btnBlueBgColor: $accentColor;
 $btnBlueBorderColor: $btnBlueBgColor;
 $btnBlueDisabledBgColor: #ACACAC;
 $btnBlueDisabledBorderColor: $btnBlueDisabledBgColor;
@@ -188,6 +188,22 @@ $btnRedDisabledBorderColor: #6C6C6C;
     &:active {
       background: $btnRedBorderColor;
       border: 2px solid $btnRedBorderColor;
+      color: $btnRedFontColor;
+    }
+  }
+
+  &_blueAlert {
+    background-color: transparent;
+    color: $btnBlueBorderColor;
+    border: 2px solid $btnBlueBorderColor;
+
+    &:disabled {
+      background: transparent;
+      border: 2px solid $btnRedDisabledBorderColor;
+    }
+    &:active {
+      background: $btnBlueBorderColor;
+      border: 2px solid $btnBlueBorderColor;
       color: $btnRedFontColor;
     }
   }

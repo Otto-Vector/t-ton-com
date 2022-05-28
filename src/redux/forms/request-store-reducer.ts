@@ -1,7 +1,8 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {cargoType, CargoType} from '../../types/form-types'
+import {cargoType, CargoType, ValidateType} from '../../types/form-types'
 import {randArrayValue, randFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from '../../utils/random-utils'
+import {composeValidators, required} from '../../utils/validators';
 
 
 export type OneRequestType = {
@@ -90,6 +91,22 @@ const initialState = {
         driver: 'ФИО, Марка авто, Марка прицепа, тн',
         note: 'дополнительные данные',
     } as Record<keyof OneRequestType, string | undefined>,
+
+    validators: {
+        id: undefined,
+        requestNumber: undefined,
+        requestDate: composeValidators(required),
+        cargoComposition: composeValidators(required),
+        shipmentDate: composeValidators(required),
+        distance: undefined,
+        cargoType: composeValidators(required),
+        customer: composeValidators(required),
+        shipper: composeValidators(required),
+        consignee: composeValidators(required),
+        carrier: undefined,
+        driver: undefined,
+        note: undefined,
+    } as Record<keyof OneRequestType, ValidateType>,
 
     initialValues: {
         id: 0,

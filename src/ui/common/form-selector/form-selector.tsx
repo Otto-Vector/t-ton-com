@@ -10,24 +10,28 @@ type OwnProps = {
     values: { value: string, label: string, key: string }[]
     label?: string
     placeholder?: string
+    validate?: any
 }
 
 
-const CustomSelect = ( { input, options, ...rest }: FieldRenderProps<string, HTMLElement> ) => {
+const CustomSelect = ( { input, options, meta, ...rest }: FieldRenderProps<string, HTMLElement> ) => {
 
     const handleChange = ( option: SelectOptionType | null ) => {
         input.onChange(option?.value);
     };
-
+    const isError = ( meta.error || meta.submitError ) && meta.touched
     return (
-        <Select
-            { ...input }
-            { ...rest }
-            classNamePrefix={ 'react-select-ton' }
-            onChange={ handleChange }
-            options={ options }
-            value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
-        />
+        <>
+            <Select
+                { ...input }
+                { ...rest }
+                classNamePrefix={ 'react-select-ton' }
+                onChange={ handleChange }
+                options={ options }
+                value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
+            />
+            { isError && <span className={ styles.errorSpan }>{ meta.error }</span> }
+        </>
     );
 };
 
@@ -36,6 +40,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                                                       named,
                                                       label,
                                                       placeholder,
+                                                      validate,
                                                   } ) => {
 
     return <div className={ styles.dropdown }>
@@ -43,6 +48,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
         <Field className={ styles.select }
                name={ named }
                placeholder={ placeholder }
+               validate={ validate }
         >
             { ( { input, meta, placeholder } ) => (
                 <CustomSelect input={ input } meta={ meta } options={ values } placeholder={ placeholder }/>
@@ -57,7 +63,7 @@ type SelectOptionType = {
     value: string;
 };
 
-export type SelectOptions =  { value: string , label: string , key: string  }
+export type SelectOptions = { value: string, label: string, key: string }
 
 export const stringArrayToSelectValue = ( value: string[] ): SelectOptions[] =>
     value.map(( el ) => ( { value: el, label: el, key: el } ))

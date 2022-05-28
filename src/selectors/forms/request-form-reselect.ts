@@ -8,6 +8,7 @@ export const getCargoСompositionRequestStore: RequestStoreSelectors<'cargoCompo
 export const getInitialValuesRequestStore: RequestStoreSelectors<'initialValues'> = (state) => state.requestStoreReducer.initialValues
 export const getLabelRequestStore: RequestStoreSelectors<'label'> = ( state) => state.requestStoreReducer.label
 export const getPlaceholderRequestStore: RequestStoreSelectors<'placeholder'> = ( state) => state.requestStoreReducer.placeholder
+export const getValidatorsRequestStore: RequestStoreSelectors<'validators'> = ( state) => state.requestStoreReducer.validators
 export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state) => state.requestStoreReducer.content
 const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state) => state.requestStoreReducer.currentRequestNumber
 

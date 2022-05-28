@@ -28,3 +28,14 @@ $black-75: #00000075;
   padding-bottom: rem(4);
   padding-left: rem(4);
 }
+
+.errorSpan {
+  position: absolute;
+  left: 5px;
+  bottom: -14px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: rgba(199, 7, 7, 0.75);
+  font-weight: bold;
+
+}
