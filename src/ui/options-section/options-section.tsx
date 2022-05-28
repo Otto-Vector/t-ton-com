@@ -8,7 +8,7 @@ import {ColumnDataList} from './column-data-list/column-data-list';
 import {
     getConsigneesOptionsStore,
     getEmployeesOptionsStore,
-    getShippersOptionsStore, getShippersTitlesOptionsStore,
+    getShippersOptionsStore,
     getTrailerOptionsStore, getTransportOptionsStore,
 } from '../../selectors/options/options-reselect';
 
@@ -17,12 +17,11 @@ type OwnProps = {}
 export const OptionsSection: React.FC<OwnProps> = () => {
 
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
-    const { placeholder, label } = useSelector(getShippersTitlesOptionsStore)
     const shippersList = useSelector(getShippersOptionsStore)
+    const consigneesList = useSelector(getConsigneesOptionsStore)
     const employees = useSelector(getEmployeesOptionsStore)
     const transport = useSelector(getTransportOptionsStore)
     const trailer = useSelector(getTrailerOptionsStore)
-    const consignees = useSelector(getConsigneesOptionsStore)
     const navigate = useNavigate()
 
     return (
@@ -39,11 +38,11 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                 </div>
             </header>
             <div className={ styles.optionsSection__table }>
-                <ColumnDataList item={{placeholder, label, content: shippersList}} route={ optionsEdit.shippers }/>
-                <ColumnDataList item={ { ...employees, content: employees.content } } route={ optionsEdit.employees }/>
+                <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/>
+                <ColumnDataList item={ employees } route={ optionsEdit.employees }/>
                 <ColumnDataList item={ transport } route={ optionsEdit.transport }/>
                 <ColumnDataList item={ trailer } route={ optionsEdit.trailer }/>
-                <ColumnDataList item={ consignees } route={ optionsEdit.consignees }/>
+                <ColumnDataList item={ consigneesList } route={ optionsEdit.consignees }/>
             </div>
         </section>
     )

@@ -1,6 +1,7 @@
 import {AppStateType} from '../../redux/redux-store'
 import {ShippersStoreReducerStateType} from '../../redux/options/shippers-store-reducer'
 import {createSelector} from 'reselect';
+import {ShippersCardType} from '../../types/form-types';
 
 type ShippersStoreSelectors<T extends keyof Y, Y = ShippersStoreReducerStateType> = (state: AppStateType) => Y[T]
 
@@ -12,7 +13,7 @@ export const getAllShippersStore: ShippersStoreSelectors<'content'> = (state) =>
 export const getCurrentIdShipperStore: ShippersStoreSelectors<'currentId'> = ( state) => state.shippersStoreReducer.currentId
 
 // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API
-export const getOneShipperFromLocal = createSelector( getCurrentIdShipperStore, getAllShippersStore,
-    (currentId, shippers )  => {
-        return shippers.filter( ( { id } ) => id === currentId )[0]
+export const getOneShipperFromLocal = createSelector( getCurrentIdShipperStore, getAllShippersStore, getInitialValuesShippersStore,
+    (currentId, shippers, initials ):  ShippersCardType  => {
+        return shippers.filter( ( { id } ) => id === currentId )[0] || initials
     } )

@@ -8,7 +8,7 @@ const initialState = {
     shippers: {
         label: 'Грузоотправители',
         placeholder: 'Поиск по названию',
-        content: [ ] as OptionsLabelType[],
+        content: [] as OptionsLabelType[],
     },
     employees: {
         label: 'Сотрудники',
@@ -66,18 +66,7 @@ const initialState = {
     consignees: {
         label: 'Грузополучатели',
         placeholder: 'Поиск по названию',
-        content: [
-            { id: 1, title: 'Один из' },
-            { id: 15, title: 'Лебеди' },
-            { id: 24, title: 'Очень сильные тигры' },
-            { id: 53, title: 'Везучие атоллы' },
-            { id: 102, title: 'Хранители попкорна' },
-            { id: 11, title: 'Б и Ко' },
-            { id: 20, title: 'Южный Мак' },
-            { id: 54, title: 'Ретир загубыч' },
-            { id: 130, title: 'Загребущие тараканы' },
-            { id: 133, title: 'Рак и щука' },
-        ],
+        content: [] as OptionsLabelType[],
     },
 }
 
@@ -95,7 +84,7 @@ export const optionsStoreReducer = ( state = initialState, action: ActionsType )
                 shippers: {
                     ...state.shippers,
                     content: [
-                        ...action.shippers.map(({id,title})=> ({id,title})),
+                        ...action.shippers.map(( { id, title } ) => ( { id, title } )),
                     ],
                 },
             }

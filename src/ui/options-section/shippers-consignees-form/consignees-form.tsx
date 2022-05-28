@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -6,19 +6,21 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
 import mapImage from '../../../media/mapsicle-map.png'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {ConsigneesCardType} from '../../../types/form-types'
 import {
+    getCurrentIdConsigneeStore,
     getInitialValuesConsigneesStore,
     getLabelConsigneesStore,
-    getMaskOnConsigneesStore,
-    getValidatorsConsigneesStore
+    getMaskOnConsigneesStore, getOneConsigneesFromLocal,
+    getValidatorsConsigneesStore,
 } from '../../../selectors/options/consignees-reselect'
+import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer';
 
 type OwnProps = {
     // onSubmit: (requisites: consigneesCardType) => void
@@ -28,31 +30,47 @@ type OwnProps = {
 export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const header = 'ГрузоПолучатели'
-    const isFetching = useSelector( getIsFetchingRequisitesStore )
+    const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const label = useSelector( getLabelConsigneesStore )
-    const initialValues = useSelector( getInitialValuesConsigneesStore )
-    const maskOn = useSelector( getMaskOnConsigneesStore )
-    const validators = useSelector( getValidatorsConsigneesStore )
+    const label = useSelector(getLabelConsigneesStore)
+    const defaultInitialValues = useSelector(getInitialValuesConsigneesStore)
+    const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
-    const { options } = useSelector( getRoutesStore )
+    const maskOn = useSelector(getMaskOnConsigneesStore)
+    const validators = useSelector(getValidatorsConsigneesStore)
+    const currentId = useSelector(getCurrentIdConsigneeStore)
+    const oneConsignee = useSelector(getOneConsigneesFromLocal)
+    // вытаскиваем значение роутера
+    const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
+
+
+    const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const onSubmit = ( values: ConsigneesCardType ) => {
+        dispatch(consigneesStoreActions.changeConsignee(currentId, values)) //сохраняем измененное значение
+        navigate(options) // и возвращаемся в предыдущее окно
     }
 
     const onCancelClick = () => {
-        navigate( options )
+        navigate(options)
     }
 
-    // const dispatch = useDispatch()
-    // const requisiteSaveHandleClick = () => { // onSubmit
-    // }
-    //
-    // const fakeFetch = () => { // @ts-ignore
-    //     // dispatch(fakeAuthFetching())
-    // }
+    const consigneeDeleteHandleClick = () => {
+        dispatch(consigneesStoreActions.deleteConsignee(currentId))
+        navigate(options)
+    }
 
+    useEffect(() => {
+            if (currentId === +( currentIdForShow || 0 )) {
+                setInitialValues(oneConsignee)
+            } else {
+                dispatch(consigneesStoreActions.setCurrentId(+( currentIdForShow || 0 )))
+            }
+            // debugger;
+        }, [ currentId, initialValues ],
+    )
 
     return (
         <div className={ styles.shippersConsigneesForm }>
@@ -160,9 +178,10 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }
-                                                            disabled={ true }
+                                                            // disabled={ true }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
+                                                            onClick={ () => consigneeDeleteHandleClick() }
                                                             rounded
                                                     />
                                                 </div>

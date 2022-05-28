@@ -5,6 +5,8 @@ import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, require
 
 
 const initialState = {
+    currentId: 0,
+
     label: {
         title: 'Название грузополучателя',
         innNumber: 'ИНН',
@@ -225,10 +227,50 @@ export const consigneesStoreReducer = ( state = initialState, action: ActionsTyp
 
     switch (action.type) {
 
-        case 'consignees-store-reducer/SET-VALUES': {
+        case 'consignees-store-reducer/SET-INITIAL-VALUES': {
             return {
                 ...state,
                 initialValues: action.initialValues,
+            }
+        }
+        case 'consignees-store-reducer/SET-CURRENT-ID': {
+            return {
+                ...state,
+                currentId: action.currentId,
+            }
+        }
+        case 'consignees-store-reducer/SET-SHIPPERS': {
+            return {
+                ...state,
+                content: [
+                    ...action.consignees,
+                ],
+            }
+        }
+        case 'consignees-store-reducer/ADD-SHIPPER': {
+            return {
+                ...state,
+                content: [
+                    ...state.content,
+                    action.consignee,
+                ],
+            }
+
+        }
+        case 'consignees-store-reducer/CHANGE-SHIPPER': {
+            return {
+                ...state,
+                content: [
+                    ...state.content.map(( val ) => ( +( val.id || 0 ) !== action.id ) ? val : action.consignee),
+                ],
+            }
+        }
+        case 'consignees-store-reducer/DELETE-SHIPPER': {
+            return {
+                ...state,
+                content: [
+                    ...state.content.filter(( { id } ) => +( id || 1 ) !== action.id),
+                ],
             }
         }
         default: {
@@ -245,7 +287,31 @@ export const consigneesStoreActions = {
         type: 'consignees-store-reducer/SET-VALUES',
         initialValues,
     } as const ),
-
+    setInitialValues: ( initialValues: ConsigneesCardType ) => ( {
+        type: 'consignees-store-reducer/SET-INITIAL-VALUES',
+        initialValues,
+    } as const ),
+    setCurrentId: ( currentId: number ) => ( {
+        type: 'consignees-store-reducer/SET-CURRENT-ID',
+        currentId,
+    } as const ),
+    setConsignees: ( consignees: ConsigneesCardType[] ) => ( {
+        type: 'consignees-store-reducer/SET-SHIPPERS',
+        consignees,
+    } as const ),
+    addConsignee: ( consignee: ConsigneesCardType ) => ( {
+        type: 'consignees-store-reducer/ADD-SHIPPER',
+        consignee,
+    } as const ),
+    changeConsignee: ( id: number, consignee: ConsigneesCardType ) => ( {
+        type: 'consignees-store-reducer/CHANGE-SHIPPER',
+        id,
+        consignee,
+    } as const ),
+    deleteConsignee: ( id: number ) => ( {
+        type: 'consignees-store-reducer/DELETE-SHIPPER',
+        id,
+    } as const ),
 }
 
 /* САНКИ */

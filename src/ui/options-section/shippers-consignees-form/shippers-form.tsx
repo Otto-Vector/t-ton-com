@@ -36,7 +36,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     const label = useSelector(getLabelShippersStore)
     const defaultInitialValues = useSelector(getInitialValuesShippersStore)
-    const [initialValues, setInitialValues] = useState(defaultInitialValues)
+    const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
     const maskOn = useSelector(getMaskOnShippersStore)
     const validators = useSelector(getValidatorsShippersStore)
@@ -63,17 +63,13 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    // const fakeFetch = () => { // @ts-ignore
-    //     // dispatch(fakeAuthFetching())
-    // }
-    //
     useEffect(() => {
-        if (currentId === +( currentIdForShow || 0 )) {
+            if (currentId === +( currentIdForShow || 0 )) {
                 setInitialValues(oneShipper)
             } else {
-                dispatch(shippersStoreActions.setCurrentId(+(currentIdForShow||0)))
+                dispatch(shippersStoreActions.setCurrentId(+( currentIdForShow || 0 )))
             }
-        // debugger;
+            // debugger;
         }, [ currentId, initialValues ],
     )
 
@@ -88,7 +84,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                             initialValues={ initialValues }
                             render={
                                 ( { submitError, handleSubmit, pristine, form, submitting } ) => (
-                                    <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
+                                    <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form } >
                                         <div
                                             className={ styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled }>
                                             <Field name={ 'title' }
@@ -179,16 +175,16 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded
-                                                            // onClick={()=>shipperSaveHandleClick()}
+                                                        // onClick={()=>shipperSaveHandleClick()}
                                                     />
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }
-                                                            // disabled={ true }
+                                                        // disabled={ true }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
                                                             rounded
-                                                            onClick={()=>shipperDeleteHandleClick()}
+                                                            onClick={ () => shipperDeleteHandleClick() }
                                                     />
                                                 </div>
                                             </div>

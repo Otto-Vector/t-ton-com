@@ -1,5 +1,7 @@
 import {AppStateType} from '../../redux/redux-store'
 import {ConsigneesStoreReducerStateType} from '../../redux/options/consignees-store-reducer'
+import {ConsigneesCardType} from '../../types/form-types';
+import {createSelector} from 'reselect';
 
 type ConsigneesStoreSelectors<T extends keyof Y, Y = ConsigneesStoreReducerStateType> = (state: AppStateType) => Y[T]
 
@@ -8,11 +10,10 @@ export const getInitialValuesConsigneesStore: ConsigneesStoreSelectors<'initialV
 export const getMaskOnConsigneesStore: ConsigneesStoreSelectors<'maskOn'> = (state) => state.consigneesStoreReducer.maskOn
 export const getValidatorsConsigneesStore: ConsigneesStoreSelectors<'validators'> = (state) => state.consigneesStoreReducer.validators
 export const getAllConsigneesStore: ConsigneesStoreSelectors<'content'> = (state) => state.consigneesStoreReducer.content
+export const getCurrentIdConsigneeStore: ConsigneesStoreSelectors<'currentId'> = (state) => state.consigneesStoreReducer.currentId
 
 
-
-// // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API
-// export const getOneBookFromLocal = createSelector( getBooksList, getBookToView,
-//     ( booksList, bookToView ): ItemBook['volumeInfo'] | undefined => {
-//         return booksList.filter( ( book ) => book.id === bookToView.bookId )[0]?.volumeInfo
-//     } )
+export const getOneConsigneesFromLocal = createSelector( getCurrentIdConsigneeStore, getAllConsigneesStore, getInitialValuesConsigneesStore,
+    (currentId, shippers, initials ):  ConsigneesCardType  => {
+        return shippers.filter( ( { id } ) => id === currentId )[0] || initials
+    } )
