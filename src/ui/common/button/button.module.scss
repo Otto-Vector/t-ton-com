@@ -149,8 +149,12 @@ $btnRedDisabledBorderColor: #6C6C6C;
 
   &_grayAlert {
     background-color: $btnGrayBgColor;
-    color: black;
+    color: rgba(0, 0, 0, 1);
     border: 1px solid #92ABC8;
+
+    &:active {
+      color: rgba(0, 0, 0, 0.5);
+    }
   }
 
   &_white {
@@ -195,6 +199,7 @@ $btnRedDisabledBorderColor: #6C6C6C;
       background: transparent;
       border: 2px solid $btnRedDisabledBorderColor;
     }
+
     &:active {
       background: $btnRedBorderColor;
       border: 2px solid $btnRedBorderColor;
@@ -211,6 +216,7 @@ $btnRedDisabledBorderColor: #6C6C6C;
       background: transparent;
       border: 2px solid $btnRedDisabledBorderColor;
     }
+
     &:active {
       background: $btnBlueBorderColor;
       border: 2px solid $btnBlueBorderColor;
