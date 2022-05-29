@@ -58,6 +58,7 @@ export type DocumentsRequestType = {
     customerToConsigneeContractECP: {
         label: string | undefined // Документы от Заказчика для Получателя с ЭЦП
         customer: boolean | string // Заказчик
+        consignee: boolean | string // Грузополучатель
         uploadDocument: string | undefined // Загрузить
     },
     paymentHasBeenTransferred: string | undefined // Оплату передал
@@ -110,6 +111,7 @@ const initialDocumentsRequestValues:  DocumentsRequestType = {
         customerToConsigneeContractECP: {
             label: undefined,
             customer: false,
+            consignee: false,
             uploadDocument: undefined,
         },
         paymentHasBeenTransferred: undefined,
@@ -244,6 +246,7 @@ const initialState = {
         customerToConsigneeContractECP: {
             label: 'Документы от Заказчика для Получателя с ЭЦП',
             customer: 'Заказчик',
+            consignee: 'Грузополучатель',
             uploadDocument: 'Загрузить',
         },
         paymentHasBeenTransferred: 'Оплату передал',

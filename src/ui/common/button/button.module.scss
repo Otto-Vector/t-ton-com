@@ -141,6 +141,11 @@ $btnRedDisabledBorderColor: #6C6C6C;
       border-color: $btnWhiteBlueBorderColor;
     }
   }
+  &_whiteBlueDoc {
+    background-color: white;
+    color: black;
+    border: 1px solid #92ABC8;
+  }
 
   &_gray {
     background-color: $btnGrayBgColor;

@@ -5,7 +5,7 @@ type OwnProps = {
     disabled?: boolean,
     onClick?: () => void,
     colorMode?: 'orange' | 'blue' | 'lightBlue' | 'pink' | 'gray' | 'white'
-        | 'noFill' | 'green' | 'red' | 'whiteBlue' | 'redAlert' | 'blueAlert' | 'grayAlert'
+        | 'noFill' | 'green' | 'red' | 'whiteBlue' | 'whiteBlueDoc' | 'redAlert' | 'blueAlert' | 'grayAlert'
     type?: 'button' | 'submit' | 'reset'
     title?: string
     rounded?: boolean
