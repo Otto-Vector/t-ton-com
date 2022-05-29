@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import styles from './request-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {useNavigate, useParams} from 'react-router-dom';
+import {To, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {OneRequestType, requestStoreActions} from '../../redux/forms/request-store-reducer';
 import {getInitialValuesRequestStore, getOneRequestStore} from '../../selectors/forms/request-form-reselect';
@@ -10,6 +10,7 @@ import {ddMmYearFormat} from '../../utils/parsers';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormLeft} from './request-form-left/request-form-left';
 import requestMap from '../../media/request-map.jpg'
+import {RequestMapCenter} from './request-map-center/request-map-center';
 
 type OwnProps = {
     mode: 'create' | 'status' | 'history'
@@ -48,24 +49,23 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
         if (tab==='center') return setTabModes({...tabModesInitial, center: true})
         if (tab==='right') return setTabModes({...tabModesInitial, right: true})
     }
-    const buttonsAction = {
-        acceptRequest: () => {
-            navigate(routes.addDriver)
-        },
-        cancelRequest: () => {
-            navigate(-1)
-        },
-        submitRequestAndSearch: () => {
-            navigate(routes.searchList)
-        },
-        submitRequestAndDrive: () => {
-            navigate(routes.myDrivers)
-        },
+
+    const cancelNavigate = (): To => {
+        if (requestModes.statusMode) return routes.searchList
+        if (requestModes.historyMode) return routes.historyList
+        return -1 as To
+    }
+    const onCancelButton = () => {
+        navigate(cancelNavigate())
     }
 
     useEffect(() => {
+        setTabModes({...tabModesInitial, left: true})
+    },[navigate])
+
+    useEffect(() => {
         dispatch(requestStoreActions.setRequestNumber(+( reqNumber || 0 ) || undefined))
-    })
+    },)
 
     if (!oneRequest) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
     const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate || new Date()) }`
@@ -78,13 +78,15 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                     <header className={ styles.requestSection__header }>
                         { title }
                     </header>
+                    <div className={!tabModes.center ? styles.requestSection__formsWrapper : styles.requestSection__mapsWrapper}>
                     { tabModes.left && <RequestFormLeft requestModes={ requestModes } initialValues={ currentRequest }
                                                         onSubmit={ onSubmit }/> }
-                    { tabModes.center && <img src={ requestMap } alt="карта маршрутов"/> }
+                    { tabModes.center && <RequestMapCenter requestModes={requestModes}/> }
                     { tabModes.right && <div>ЗАГЛУШКА ДЛЯ КНОПОК</div> }
+                    </div>
 
 
-                    <CancelButton onCancelClick={ () => navigate(-1) } mode={ 'blueAlert' }/>
+                    <CancelButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/>
 
                 </div>
                 <div className={ styles.requestSection__bottomTabsPanel }>

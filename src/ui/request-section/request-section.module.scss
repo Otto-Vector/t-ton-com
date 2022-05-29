@@ -6,7 +6,7 @@
   justify-content: space-evenly;
   width: 100%;
   height: 100%;
-  padding: 15px 25px;
+  padding: 10px;
   background-color: $accentColor;
 
   &__subWrapper {
@@ -21,22 +21,32 @@
     box-shadow: $cardsShadow;
     width: 500px;
     height: 663px;
-    padding: 13px 13px 20px 13px;
+    padding: 0;
     border-radius: 25px;
   }
 
   &__header {
-    //position: fixed;
+    position: absolute;
     width: 100%;
     text-align: center;
     white-space: nowrap;
     font-family: $RalewayFont;
     font-weight: 700;
-    font-size: 26px;
+    font-size: 22px;
     line-height: 1.2;
     color: #023C85;
-    margin: 5px auto;
+    padding-top: 15px;
     background-color: transparent;
+  }
+
+  &__formsWrapper {
+    margin-top: 45px;
+  }
+
+  &__mapsWrapper {
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
   }
 
   &__label, &__title {
@@ -78,17 +88,16 @@
     width: 150px;
     border: 2px solid white;
     border-radius: 0 0 20px 20px;
-    background-color: rgba(whitesmoke,0);
+    background-color: rgba(whitesmoke, 0);
 
     transition-duration: .4s;
     transition-property: height, background-color, color;
     cursor: pointer;
     user-select: none;
 
-
     &_active, &:hover {
       height: 58px;
-      background-color: rgba(whitesmoke,1);
+      background-color: rgba(whitesmoke, 1);
       color: $accentColor;
     }
   }
