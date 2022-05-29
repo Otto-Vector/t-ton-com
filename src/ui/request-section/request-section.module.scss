@@ -95,7 +95,11 @@
     cursor: pointer;
     user-select: none;
 
-    &_active, &:hover {
+    &:hover {
+      height: 58px;
+    }
+
+    &_active {
       height: 58px;
       background-color: rgba(whitesmoke, 1);
       color: $accentColor;

@@ -6,9 +6,13 @@ type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> 
 
 export const getCargoCompositionRequestStore: RequestStoreSelectors<'cargoComposition'> = ( state) => state.requestStoreReducer.cargoComposition
 export const getInitialValuesRequestStore: RequestStoreSelectors<'initialValues'> = (state) => state.requestStoreReducer.initialValues
+export const getInitialDocumentsRequestValuesStore: RequestStoreSelectors<'initialDocumentsRequestValues'> = (state) => state.requestStoreReducer.initialDocumentsRequestValues
+export const getLabelDocumentsRequestValuesStore: RequestStoreSelectors<'labelDocumentsRequestValues'> = (state) => state.requestStoreReducer.labelDocumentsRequestValues
+
 export const getLabelRequestStore: RequestStoreSelectors<'label'> = ( state) => state.requestStoreReducer.label
 export const getPlaceholderRequestStore: RequestStoreSelectors<'placeholder'> = ( state) => state.requestStoreReducer.placeholder
 export const getValidatorsRequestStore: RequestStoreSelectors<'validators'> = ( state) => state.requestStoreReducer.validators
+
 export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state) => state.requestStoreReducer.content
 const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state) => state.requestStoreReducer.currentRequestNumber
 

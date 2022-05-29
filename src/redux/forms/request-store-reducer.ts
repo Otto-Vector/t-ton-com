@@ -21,6 +21,48 @@ export type OneRequestType = {
     note: undefined | string, // примечание
     answers: number[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками
     driverPrice: number | undefined // стоимость перевозки
+    documents: DocumentsRequestType
+}
+
+export type DocumentsRequestType = {
+    proxyWay: {
+        label: string | undefined // Транспортные документы Сторон
+        proxyFreightLoader: boolean | string // Доверенность Грузовладельцу
+        proxyDriver: boolean | string // Доверенность на Водителя
+        waybillDriver: boolean | string // Путевой Лист Водителя
+    },
+    uploadTime: Date | undefined | string // Время погрузки
+    cargoWeight: number | string // Вес груза, в тн.
+    cargoDocuments: string | undefined // Документы груза
+    cargoPrice: number | string // Цена по Заявке
+    addedPrice: number | string // Доп. Услуги
+    finalPrice: number | string // Итоговая Цена
+    ttnECP: {
+        label: string | undefined // ТТН или ЭТрН с ЭЦП
+        customer: boolean | string // Заказчик
+        carrier: boolean | string // Перевозчик
+        consignee: boolean | string // Грузополучатель
+    },
+    contractECP: {
+        label: string | undefined // Договор оказания транспортных услуг с ЭЦП
+        customer: boolean | string // Заказчик
+        carrier: boolean | string // Перевозчик
+        uploadDocument: string | undefined // Загрузить
+    },
+    updECP: {
+        label: string | undefined // УПД от Перевозчика для Заказчика с ЭЦП
+        customer: boolean | string // Заказчик
+        carrier: boolean | string // Перевозчик
+        uploadDocument: string | undefined // Загрузить
+    },
+    customerToConsigneeContractECP: {
+        label: string | undefined // Документы от Заказчика для Получателя с ЭЦП
+        customer: boolean | string // Заказчик
+        uploadDocument: string | undefined // Загрузить
+    },
+    paymentHasBeenTransferred: string | undefined // Оплату передал
+    paymentHasBeenReceived: boolean | string // Оплату получил
+    completeRequest: boolean | string // Закрыть заявку
 }
 
 const cargoComposition = [
@@ -34,26 +76,68 @@ const cargoComposition = [
     'Битум 90/130, фасованный в кловертейнеры',
 ]
 
-const makeOneTestRequest = (id: number): OneRequestType => ({
-            id: id,
-            requestNumber: id,
-            requestDate: new Date( 2022, 5 , randFloorMax( 29 ) ),
-            cargoComposition: randArrayValue( cargoComposition ),
-            shipmentDate: new Date( 2022, 6, randFloorMax( 29 ) ),
-            cargoType: randArrayValue(cargoType) as CargoType,
-            customer: randFloorMax(9),
-            shipper: randFloorMax(11),
-            consignee: randMinMax(12,23),
-            carrier: randFloorMax(9),
-            driver: randFloorMax(9),
-            distance: randFloorMax(1200),
-            note: 'Насос на 120, рукава, ДОПОГ.',
-            answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
-            driverPrice: undefined,
-        })
+const initialDocumentsRequestValues:  DocumentsRequestType = {
+        proxyWay: {
+            label: undefined,
+            proxyFreightLoader: false,
+            proxyDriver: false,
+            waybillDriver: false,
+        },
+        uploadTime: undefined,
+        cargoWeight: 0,
+        cargoDocuments: undefined,
+        cargoPrice: 0,
+        addedPrice: 0,
+        finalPrice: 0,
+        ttnECP: {
+            label: undefined,
+            customer: false,
+            carrier: false,
+            consignee: false,
+        },
+        contractECP: {
+            label: undefined,
+            customer: false,
+            carrier: false,
+            uploadDocument: undefined,
+        },
+        updECP: {
+            label: undefined,
+            customer: false,
+            carrier: false,
+            uploadDocument: undefined,
+        },
+        customerToConsigneeContractECP: {
+            label: undefined,
+            customer: false,
+            uploadDocument: undefined,
+        },
+        paymentHasBeenTransferred: undefined,
+        paymentHasBeenReceived: false,
+        completeRequest: false,
+    }
 
-const makeNTestRequests = (count: number): OneRequestType[] => [999,...randomDifferentIntegersArrayCreator(998)(count)]
-    .map((id)=>makeOneTestRequest(id))
+const makeOneTestRequest = ( id: number ): OneRequestType => ( {
+    id: id,
+    requestNumber: id,
+    requestDate: new Date(2022, 5, randFloorMax(29)),
+    cargoComposition: randArrayValue(cargoComposition),
+    shipmentDate: new Date(2022, 6, randFloorMax(29)),
+    cargoType: randArrayValue(cargoType) as CargoType,
+    customer: randFloorMax(9),
+    shipper: randFloorMax(11),
+    consignee: randMinMax(12, 23),
+    carrier: randFloorMax(9),
+    driver: randFloorMax(9),
+    distance: randFloorMax(1200),
+    note: 'Насос на 120, рукава, ДОПОГ.',
+    answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
+    driverPrice: undefined,
+    documents: initialDocumentsRequestValues
+} )
+
+const makeNTestRequests = ( count: number ): OneRequestType[] => [ 999, ...randomDifferentIntegersArrayCreator(998)(count) ]
+    .map(( id ) => makeOneTestRequest(id))
 
 const initialState = {
 
@@ -124,7 +208,50 @@ const initialState = {
         note: undefined,
     } as OneRequestType,
 
-    content: makeNTestRequests(15) as OneRequestType[] | undefined, // создаём тестовые
+    content: makeNTestRequests(15) as OneRequestType[] | undefined, // создаём тестовые заявки
+
+    labelDocumentsRequestValues: {
+        proxyWay: {
+            label: 'Транспортные документы Сторон',
+            proxyFreightLoader: 'Доверенность Грузовладельцу',
+            proxyDriver: 'Доверенность на Водителя',
+            waybillDriver: 'Путевой Лист Водителя',
+        },
+        uploadTime: 'Время погрузки',
+        cargoWeight: 'Вес груза, в тн.',
+        cargoDocuments: 'Документы груза',
+        cargoPrice: 'Цена по Заявке',
+        addedPrice: 'Доп. Услуги',
+        finalPrice: 'Итоговая Цена',
+        ttnECP: {
+            label: 'ТТН или ЭТрН с ЭЦП',
+            customer: 'Заказчик',
+            carrier: 'Перевозчик',
+            consignee: 'Грузополучатель',
+        },
+        contractECP: {
+            label: 'Договор оказания транспортных услуг с ЭЦП',
+            customer: 'Заказчик',
+            carrier: 'Перевозчик',
+            uploadDocument: 'Загрузить',
+        },
+        updECP: {
+            label: 'УПД от Перевозчика для Заказчика с ЭЦП',
+            customer: 'Заказчик',
+            carrier: 'Перевозчик',
+            uploadDocument: 'Загрузить',
+        },
+        customerToConsigneeContractECP: {
+            label: 'Документы от Заказчика для Получателя с ЭЦП',
+            customer: 'Заказчик',
+            uploadDocument: 'Загрузить',
+        },
+        paymentHasBeenTransferred: 'Оплату передал',
+        paymentHasBeenReceived: 'Оплату получил',
+        completeRequest: 'Закрыть заявку',
+    } as DocumentsRequestType,
+
+    initialDocumentsRequestValues: initialDocumentsRequestValues,
 }
 
 export type RequestStoreReducerStateType = typeof initialState
@@ -144,13 +271,13 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
         case 'request-store-reducer/SET-CONTENT': {
             return {
                 ...state,
-                content: action.content
+                content: action.content,
             }
         }
         case 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW': {
             return {
                 ...state,
-                currentRequestNumber: action.currentRequestNumber
+                currentRequestNumber: action.currentRequestNumber,
             }
         }
         default: {
@@ -162,7 +289,7 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
 
 /* ЭКШОНЫ */
 export const requestStoreActions = {
-    setValues: ( initialValues: RequestStoreReducerStateType['initialValues'] ) => ( {
+    setInitialValues: ( initialValues: RequestStoreReducerStateType['initialValues'] ) => ( {
         type: 'request-store-reducer/SET-INITIAL-VALUES',
         initialValues,
     } as const ),
@@ -170,7 +297,7 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-CONTENT',
         content,
     } as const ),
-    setRequestNumber:( currentRequestNumber: number | undefined ) => ( {
+    setRequestNumber: ( currentRequestNumber: number | undefined ) => ( {
         type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
         currentRequestNumber,
     } as const ),

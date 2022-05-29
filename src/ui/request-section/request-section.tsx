@@ -8,9 +8,10 @@ import {OneRequestType, requestStoreActions} from '../../redux/forms/request-sto
 import {getInitialValuesRequestStore, getOneRequestStore} from '../../selectors/forms/request-form-reselect';
 import {ddMmYearFormat} from '../../utils/parsers';
 import {CancelButton} from '../common/cancel-button/cancel-button';
-import {RequestFormLeft} from './request-form-left/request-form-left';
+import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
 import requestMap from '../../media/request-map.jpg'
 import {RequestMapCenter} from './request-map-center/request-map-center';
+import {RequestFormLeft} from './request-form-left/request-form-left';
 
 type OwnProps = {
     mode: 'create' | 'status' | 'history'
@@ -28,7 +29,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const tabModesInitial = { left: false, center: false, right: false }
 
-    const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
+    const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, right: true })
 
 
     const initialValues = useSelector(getInitialValuesRequestStore)
@@ -60,7 +61,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
     }
 
     useEffect(() => {
-        setTabModes({...tabModesInitial, left: true})
+        setTabModes({...tabModesInitial, right: true})
     },[navigate])
 
     useEffect(() => {
@@ -80,9 +81,9 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                     </header>
                     <div className={!tabModes.center ? styles.requestSection__formsWrapper : styles.requestSection__mapsWrapper}>
                     { tabModes.left && <RequestFormLeft requestModes={ requestModes } initialValues={ currentRequest }
-                                                        onSubmit={ onSubmit }/> }
+                                                         onSubmit={ onSubmit }/> }
                     { tabModes.center && <RequestMapCenter requestModes={requestModes}/> }
-                    { tabModes.right && <div>ЗАГЛУШКА ДЛЯ КНОПОК</div> }
+                    { tabModes.right && <RequestFormDocumentsRight requestModes={requestModes} /> }
                     </div>
 
 
