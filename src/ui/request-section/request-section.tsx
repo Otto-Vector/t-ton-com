@@ -9,7 +9,6 @@ import {getInitialValuesRequestStore, getOneRequestStore} from '../../selectors/
 import {ddMmYearFormat} from '../../utils/parsers';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
-import requestMap from '../../media/request-map.jpg'
 import {RequestMapCenter} from './request-map-center/request-map-center';
 import {RequestFormLeft} from './request-form-left/request-form-left';
 
@@ -29,7 +28,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const tabModesInitial = { left: false, center: false, right: false }
 
-    const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, right: true })
+    const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
 
 
     const initialValues = useSelector(getInitialValuesRequestStore)
@@ -61,7 +60,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
     }
 
     useEffect(() => {
-        setTabModes({...tabModesInitial, right: true})
+        setTabModes({...tabModesInitial, left: true})
     },[navigate])
 
     useEffect(() => {

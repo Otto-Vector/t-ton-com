@@ -152,7 +152,7 @@ const initialState = {
         requestDate: 'Дата создания заявки',
         cargoComposition: 'Вид груза',
         shipmentDate: 'Дата погрузки',
-        distance: 'Расстояние',
+        distance: 'Расстояние, км.',
         cargoType: 'Тип груза',
         customer: 'Заказчик',
         shipper: 'Грузоотправитель',

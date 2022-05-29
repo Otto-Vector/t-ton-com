@@ -41,11 +41,15 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const validators = useSelector(getValidatorsRequestStore)
 
     const allCustomers = useSelector(getAllShippersStore)
-    const oneCustomer = allCustomers.filter(({id})=>id===initialValues.customer)[0]
+    const oneCustomer = allCustomers.filter(( { id } ) => id === initialValues.customer)[0]
+    const oneShipper = allCustomers.filter(( { id } ) => id === initialValues.shipper)[0]
+    const oneCarrier = allCustomers.filter(( { id } ) => id === initialValues.carrier)[0]
     const customers = allCustomers
         .map(( { id, title } ) => ( { key: id?.toString(), value: id.toString(), label: title?.toString() || '' } ))
     const shippers = customers // пока присвоил те что есть...
-    const consignees = useSelector(getAllConsigneesStore)
+    const allConsignees = useSelector(getAllConsigneesStore)
+    const oneConsignee = allConsignees.filter(( { id } ) => id === initialValues.consignee)[0]
+    const consignees = allConsignees
         .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title?.toString() || '' } ))
 
 
@@ -80,11 +84,17 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 <div className={ styles.requestFormLeft__selector }>
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.cargoComposition }</label>
-                                    <FormSelector named={ 'cargoComposition' }
-                                                  placeholder={ placehoders.cargoComposition }
-                                                  values={ stringArrayToSelectValue(cargoComposition) }
-                                                  validate={ validators.cargoComposition }
-                                    />
+                                    { requestModes.createMode
+                                        ? <FormSelector named={ 'cargoComposition' }
+                                                        placeholder={ placehoders.cargoComposition }
+                                                        values={ stringArrayToSelectValue(cargoComposition) }
+                                                        validate={ validators.cargoComposition }
+                                        />
+                                        : <div className={ styles.requestFormLeft__info + ' ' +
+                                        styles.requestFormLeft__info_leftAlign  }>
+                                            { initialValues.cargoComposition }
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel + ' ' +
@@ -109,7 +119,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.distance }</label>
                                     <div className={ styles.requestFormLeft__info }>
-                                        { initialValues.distance || placehoders.distance }
+                                        { ( initialValues.distance || placehoders.distance ) }
                                     </div>
                                 </div>
                                 <div className={ styles.requestFormLeft__inputsItem }>
@@ -117,11 +127,11 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                         { labels.cargoType }</label>
                                     { requestModes.createMode
                                         ? <FormSelector named={ 'cargoType' }
-                                        placeholder={ labels.cargoType }
-                                        values={ stringArrayToSelectValue(cargoTypeType.map(x => x)) }
-                                        validate={ validators.cargoType }
+                                                        placeholder={ labels.cargoType }
+                                                        values={ stringArrayToSelectValue(cargoTypeType.map(x => x)) }
+                                                        validate={ validators.cargoType }
                                         />
-                                         :<div className={ styles.requestFormLeft__info }>
+                                        : <div className={ styles.requestFormLeft__info }>
                                             { initialValues.cargoType }
                                         </div>
                                     }
@@ -130,36 +140,52 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.customer }</label>
-                                <FormSelector named={ 'customer' }
-                                              placeholder={ placehoders.customer }
-                                              values={ customers }
-                                              validate={ validators.customer }
-                                />
+                                { requestModes.createMode
+                                    ? <FormSelector named={ 'customer' }
+                                                    placeholder={ placehoders.customer }
+                                                    values={ customers }
+                                                    validate={ validators.customer }
+                                    />
+                                    : <div className={ styles.requestFormLeft__info + ' ' +
+                                        styles.requestFormLeft__info_leftAlign }>
+                                        { oneCustomer?.title + ', ' + oneCustomer?.city }
+                                    </div>
+                                }
                             </div>
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.shipper }</label>
-                                <FormSelector named={ 'shipper' }
-                                              placeholder={ placehoders.shipper }
-                                              values={ shippers }
-                                              validate={ validators.shipper }
-                                />
+                                { requestModes.createMode
+                                    ? <FormSelector named={ 'shipper' }
+                                                    placeholder={ placehoders.shipper }
+                                                    values={ shippers }
+                                                    validate={ validators.shipper }
+                                    /> : <div className={ styles.requestFormLeft__info + ' ' +
+                                        styles.requestFormLeft__info_leftAlign }>
+                                        { oneShipper?.title + ', ' + oneShipper?.city }
+                                    </div>
+                                }
                             </div>
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.consignee }</label>
-                                <FormSelector named={ 'consignee' }
-                                              placeholder={ placehoders.consignee }
-                                              values={ consignees }
-                                              validate={ validators.consignee }
-                                />
+                                { requestModes.createMode
+                                    ? <FormSelector named={ 'consignee' }
+                                                    placeholder={ placehoders.consignee }
+                                                    values={ consignees }
+                                                    validate={ validators.consignee }
+                                    /> : <div className={ styles.requestFormLeft__info + ' ' +
+                                        styles.requestFormLeft__info_leftAlign }>
+                                        { oneConsignee?.title + ', ' + oneConsignee?.city }
+                                    </div>
+                                }
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.carrier }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { initialValues.carrier || placehoders.carrier }
+                                    { oneCarrier ? ( oneConsignee.title + ', ' + oneCarrier.city ) : placehoders.carrier }
                                 </div>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
@@ -173,12 +199,17 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.note }</label>
-                                <Field name={ 'note' }
-                                       component={ FormInputType }
-                                       resetFieldBy={ form }
-                                       placeholder={ placehoders.note }
-                                       inputType={ 'text' }
-                                />
+                                { requestModes.createMode
+                                    ? <Field name={ 'note' }
+                                             component={ FormInputType }
+                                             resetFieldBy={ form }
+                                             placeholder={ placehoders.note }
+                                             inputType={ 'text' }
+                                    /> : <div className={ styles.requestFormLeft__info + ' ' +
+                                        styles.requestFormLeft__info_leftAlign }>
+                                        { initialValues.note }
+                                    </div>
+                                }
                             </div>
                             <div className={ styles.requestFormLeft__buttonsPanel }>
                                 { !requestModes.historyMode ? <>
