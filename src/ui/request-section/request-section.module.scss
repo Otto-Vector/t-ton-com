@@ -9,14 +9,20 @@
   padding: 15px 25px;
   background-color: $accentColor;
 
+  &__subWrapper {
+    position: relative;
+  }
+
   &__wrapper {
     position: relative;
-    width: 500px;
+    z-index: 20;
     background: #FFFFFF;
     border: 1px solid rgba(2, 62, 138, 0.54);
     box-shadow: $cardsShadow;
+    width: 500px;
+    height: 663px;
+    padding: 13px 13px 20px 13px;
     border-radius: 25px;
-    padding: 13px;
   }
 
   &__header {
@@ -45,11 +51,46 @@
   }
 
   &__bottomTabsPanel {
-
+    position: absolute;
+    left: 0;
+    z-index: 10;
+    bottom: -40px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: transparent;
   }
 
   &__bottomTabsItem {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
 
+    font-family: $RalewayFont;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    color: #ffffff;
+    padding-bottom: 3px;
+    height: 51px;
+    width: 150px;
+    border: 2px solid white;
+    border-radius: 0 0 20px 20px;
+    background-color: rgba(whitesmoke,0);
+
+    transition-duration: .4s;
+    transition-property: height, background-color, color;
+    cursor: pointer;
+    user-select: none;
+
+
+    &_active, &:hover {
+      height: 58px;
+      background-color: rgba(whitesmoke,1);
+      color: $accentColor;
+    }
   }
 }
 
