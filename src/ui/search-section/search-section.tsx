@@ -116,7 +116,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                                         ? null
                                         : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
                                                   title={ value.title }
-                                                  colorMode={ 'whiteBlue' }
+                                                  colorMode={ 'blue' }
                                                   rounded
                                                   onClick={ () => {
                                                       // @ts-ignore
