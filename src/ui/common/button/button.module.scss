@@ -12,7 +12,7 @@ $btnLightBlueBgColor: #E8ECF4;
 
 $btnWhiteBlueFontColor: inherit;
 $btnWhiteBlueDisableFontColor: inherit;
-$btnWhiteBlueBgColor: #00000000;
+$btnWhiteBlueBgColor: $accentColor;
 $btnWhiteBlueBorderColor: $accentColor;
 
 $btnWhiteFontColor: #676e87;
@@ -102,7 +102,7 @@ $btnRedDisabledBorderColor: #6C6C6C;
     border-color: $btnBlueBorderColor;
 
     &:focus {
-      box-shadow: inset 0 0 6px rgba(white, .7);
+      box-shadow: inset 0 0 10px #ffffff;
     }
 
     &:disabled {
@@ -137,8 +137,7 @@ $btnRedDisabledBorderColor: #6C6C6C;
     }
 
     &:focus {
-      border-width: 2px;
-      border-color: $btnWhiteBlueBorderColor;
+      box-shadow: inset 0 0 10px #ffffff;
     }
   }
   &_whiteBlueDoc {

@@ -5,7 +5,7 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 export type OneRequestTableType = {
     requestNumber: number | undefined
     cargoType: string | undefined
-    requestDate: Date | undefined
+    shipmentDate: Date | undefined
     distance: number | undefined
     route: string | undefined
     answers: number | undefined
@@ -17,7 +17,7 @@ const initialState = {
     initialValues: {
         requestNumber: undefined,
         cargoType: undefined,
-        requestDate: undefined,
+        shipmentDate: undefined,
         distance: undefined,
         route: undefined,
         answers: undefined,

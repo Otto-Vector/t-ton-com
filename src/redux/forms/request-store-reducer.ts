@@ -77,54 +77,54 @@ const cargoComposition = [
     'Битум 90/130, фасованный в кловертейнеры',
 ]
 
-const initialDocumentsRequestValues:  DocumentsRequestType = {
-        proxyWay: {
-            label: undefined,
-            proxyFreightLoader: false,
-            proxyDriver: false,
-            waybillDriver: false,
-        },
-        uploadTime: undefined,
-        cargoWeight: 0,
-        cargoDocuments: undefined,
-        cargoPrice: 0,
-        addedPrice: 0,
-        finalPrice: 0,
-        ttnECP: {
-            label: undefined,
-            customer: false,
-            carrier: false,
-            consignee: false,
-        },
-        contractECP: {
-            label: undefined,
-            customer: false,
-            carrier: false,
-            uploadDocument: undefined,
-        },
-        updECP: {
-            label: undefined,
-            customer: false,
-            carrier: false,
-            uploadDocument: undefined,
-        },
-        customerToConsigneeContractECP: {
-            label: undefined,
-            customer: false,
-            consignee: false,
-            uploadDocument: undefined,
-        },
-        paymentHasBeenTransferred: undefined,
-        paymentHasBeenReceived: false,
-        completeRequest: false,
-    }
+const initialDocumentsRequestValues: DocumentsRequestType = {
+    proxyWay: {
+        label: undefined,
+        proxyFreightLoader: false,
+        proxyDriver: false,
+        waybillDriver: false,
+    },
+    uploadTime: undefined,
+    cargoWeight: 0,
+    cargoDocuments: undefined,
+    cargoPrice: 0,
+    addedPrice: 0,
+    finalPrice: 0,
+    ttnECP: {
+        label: undefined,
+        customer: false,
+        carrier: false,
+        consignee: false,
+    },
+    contractECP: {
+        label: undefined,
+        customer: false,
+        carrier: false,
+        uploadDocument: undefined,
+    },
+    updECP: {
+        label: undefined,
+        customer: false,
+        carrier: false,
+        uploadDocument: undefined,
+    },
+    customerToConsigneeContractECP: {
+        label: undefined,
+        customer: false,
+        consignee: false,
+        uploadDocument: undefined,
+    },
+    paymentHasBeenTransferred: undefined,
+    paymentHasBeenReceived: false,
+    completeRequest: false,
+}
 
 const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     id: id,
     requestNumber: id,
-    requestDate: new Date(2022, 5, randFloorMax(29)),
+    requestDate: new Date(2022, 5, randFloorMax(30)),
     cargoComposition: randArrayValue(cargoComposition),
-    shipmentDate: new Date(2022, 6, randFloorMax(29)),
+    shipmentDate: id === 999 ? new Date() : new Date(2022, 6, randFloorMax(30)),
     cargoType: randArrayValue(cargoType) as CargoType,
     customer: randFloorMax(9),
     shipper: randFloorMax(11),
@@ -135,7 +135,7 @@ const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     note: 'Насос на 120, рукава, ДОПОГ.',
     answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
     driverPrice: undefined,
-    documents: initialDocumentsRequestValues
+    documents: initialDocumentsRequestValues,
 } )
 
 const makeNTestRequests = ( count: number ): OneRequestType[] => [ 999, ...randomDifferentIntegersArrayCreator(998)(count) ]
@@ -210,7 +210,7 @@ const initialState = {
         note: undefined,
     } as OneRequestType,
 
-    content: makeNTestRequests(15) as OneRequestType[] | undefined, // создаём тестовые заявки
+    content: makeNTestRequests(50) as OneRequestType[] | undefined, // создаём тестовые заявки
 
     labelDocumentsRequestValues: {
         proxyWay: {

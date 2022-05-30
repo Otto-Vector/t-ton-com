@@ -42,6 +42,19 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
 
     const data = React.useMemo(() => ( TABLE_CONTENT || initialValues ), [ TABLE_CONTENT ])
 
+    useEffect(() => { // формируем поля таблицы из данных заявок
+        let createTableValues = allRequests?.map((
+            { requestNumber, shipmentDate, cargoType, shipper, consignee, distance, answers } ) =>
+            ( {
+                requestNumber, cargoType, shipmentDate, distance,
+                answers: answers?.length, price: 100,
+                route: allShippers.filter(( { id } ) => id === shipper)[0]?.city +' в '
+                    + allConsignee.filter(( { id } ) => id === consignee)[0]?.city,
+            } )) || [initialValues]
+        // debugger;
+        dispatch(tableStoreActions.setValues(createTableValues))
+    },[])
+
     const columns = React.useMemo(
         () => [
             {
@@ -63,7 +76,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             },
             {
                 Header: 'Дата',
-                accessor: 'requestDate',
+                accessor: 'shipmentDate',
                 Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column.setFilter(dayFilter)
@@ -144,18 +157,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
         [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
     )
 
-    useEffect(() => {
-        let createTableValues = allRequests?.map((
-            { requestNumber, requestDate, cargoType, shipper, consignee, distance, answers } ) =>
-            ( {
-                requestNumber, cargoType, requestDate, distance,
-                answers: answers?.length, price: 100,
-                route: allShippers.filter(( { id } ) => id === shipper)[0]?.city +' в '
-                    + allConsignee.filter(( { id } ) => id === consignee)[0]?.city,
-            } )) || [initialValues]
-        // debugger;
-        dispatch(tableStoreActions.setValues(createTableValues))
-    },[])
+
 
     return (
         <div className={ styles.tableComponent }>

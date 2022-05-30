@@ -22,87 +22,87 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
     const tableModes: TableModesType = {
         searchTblMode: mode === 'search',
         historyTblMode: mode === 'history',
-        statusTblMode: mode === 'status' }
+        statusTblMode: mode === 'status',
+    }
     const header = tableModes.searchTblMode ? 'Поиск ' : tableModes.historyTblMode ? 'История' : 'Заявки'
-    const filterButtons = useSelector( getButtonsFiltersStore )
-    const { cargoFilter } = useSelector( getValuesFiltersStore )
+    const filterButtons = useSelector(getButtonsFiltersStore)
+    const { cargoFilter } = useSelector(getValuesFiltersStore)
     const dispatch = useDispatch()
 
     const filtersAction: Record<keyof typeof filterButtons, ( value?: string ) => void> = {
         todayFilter: () => {
-            dispatch( filtersStoreActions.setTomorrowMode( false ) )
-            dispatch( filtersStoreActions.setTodayMode( !filterButtons.todayFilter.mode ) )
-            dispatch( filtersStoreActions.setTodayFilter() )
+            dispatch(filtersStoreActions.setTomorrowMode(false))
+            dispatch(filtersStoreActions.setTodayMode(!filterButtons.todayFilter.mode))
+            dispatch(filtersStoreActions.setTodayFilter())
         },
         tomorrowFilter: () => {
-            dispatch( filtersStoreActions.setTodayMode( false ) )
-            dispatch( filtersStoreActions.setTomorrowMode( !filterButtons.tomorrowFilter.mode ) )
-            dispatch( filtersStoreActions.setTomorrowFilter() )
+            dispatch(filtersStoreActions.setTodayMode(false))
+            dispatch(filtersStoreActions.setTomorrowMode(!filterButtons.tomorrowFilter.mode))
+            dispatch(filtersStoreActions.setTomorrowFilter())
         },
         shortRouteFilter: () => {
-            dispatch( filtersStoreActions.setLongRouteMode( false ) )
-            dispatch( filtersStoreActions.setShortRouteMode( !filterButtons.shortRouteFilter.mode ) )
-            dispatch( filtersStoreActions.setShortRouteFilter() )
+            dispatch(filtersStoreActions.setLongRouteMode(false))
+            dispatch(filtersStoreActions.setShortRouteMode(!filterButtons.shortRouteFilter.mode))
+            dispatch(filtersStoreActions.setShortRouteFilter())
         },
         longRouteFilter: () => {
-            dispatch( filtersStoreActions.setShortRouteMode( false ) )
-            dispatch( filtersStoreActions.setLongRouteMode( !filterButtons.longRouteFilter.mode ) )
-            dispatch( filtersStoreActions.setLongRouteFilter() )
+            dispatch(filtersStoreActions.setShortRouteMode(false))
+            dispatch(filtersStoreActions.setLongRouteMode(!filterButtons.longRouteFilter.mode))
+            dispatch(filtersStoreActions.setLongRouteFilter())
         },
         nearDriverFilter: () => {
-            dispatch( filtersStoreActions.setLongRouteMode( false ) )
-            dispatch( filtersStoreActions.setShortRouteMode( false ) )
-            dispatch( filtersStoreActions.setLongRouteFilter() )
-            dispatch( filtersStoreActions.setNearDriverMode( !filterButtons.nearDriverFilter.mode ) )
+            dispatch(filtersStoreActions.setLongRouteMode(false))
+            dispatch(filtersStoreActions.setShortRouteMode(false))
+            dispatch(filtersStoreActions.setLongRouteFilter())
+            dispatch(filtersStoreActions.setNearDriverMode(!filterButtons.nearDriverFilter.mode))
         },
         cargoFilter: ( value ) => {
-            dispatch( filtersStoreActions.setCargoFilter( value ) )
-            dispatch( filtersStoreActions.setCargoFilterMode(value === '') )
+            dispatch(filtersStoreActions.setCargoFilter(value))
+            dispatch(filtersStoreActions.setCargoFilterMode(value !== ''))
         },
         clearFilters: () => {
-            dispatch( filtersStoreActions.setClearFilter( initialFiltersState ) )
+            dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
         },
     }
 
-    useEffect(()=>{
-        dispatch( filtersStoreActions.setClearFilter( initialFiltersState ) )
-    },[mode, dispatch])
+    useEffect(() => {
+        dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
+    }, [ mode, dispatch ])
 
-    useEffect( () => { // перекрашиваем кнопку "Без фильтра"
+    useEffect(() => { // перекрашиваем кнопку "Без фильтра"
         // если любой из фильтров на кнопках активен
-        let clearMode = !Object.entries( filterButtons )
+        let clearMode = !Object.entries(filterButtons)
             // кроме самой clearFilters
-            .map( ( [ key, { mode } ] ) => key === 'clearFilters' ? false : mode )
+            .map(( [ key, { mode } ] ) => key === 'clearFilters' ? false : mode)
             // складываем логически все состояния кнопок
-            .reduce( ( a, b ) => a || b )
+            .reduce(( a, b ) => a || b)
         // если состояния отличаются, то присваиваем
-        if (clearMode !== filterButtons.clearFilters.mode) dispatch( filtersStoreActions.setClearFilterMode( clearMode ) )
-    }, [ filterButtons, dispatch ], )
+        if (clearMode !== filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(clearMode))
+    }, [ filterButtons, dispatch ])
 
     return (
         <section className={ styles.searchSection }>
             <header className={ styles.searchSection__header }>
                 <h3>{ header }</h3>
                 <form className={ styles.searchSection__buttonFilters }>
-                    { Object.entries( filterButtons ).map( ( [ key, value ] ) =>
+                    { Object.entries(filterButtons).map(( [ key, value ] ) =>
                         <div key={ key } className={ styles.searchSection__buttonItem + ' ' +
                             ( !!value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             {
                                 ( key === 'cargoFilter' )
-                                    ?
-                                    <div className={ styles.searchSection__dropdown }>{/*ToDo: выделить в отдельный элемент*/}
+                                    ? <div className={ styles.searchSection__dropdown }>
+                                        {/*ToDo: выделить select в отдельный элемент*/}
                                         <select className={ styles.searchSection__select + ' ' +
                                             ( !!value.mode ? styles.searchSection__select_active : '' ) }
                                                 name="cargoFilter" id="cargoFilter"
                                                 onChange={ ( e ) => {
-                                                    filtersAction.cargoFilter( e.target.value )
+                                                    filtersAction.cargoFilter(e.target.value)
                                                 } }
-                                                // defaultValue={ '' }
-                                                value={cargoFilter}
+                                                value={ cargoFilter }
                                         >
                                             <option className={ styles.searchSection__option }
                                                     value={ '' }>{ value.title }</option>
-                                            { cargoTypeType.map( ( item ) =>
+                                            { cargoTypeType.map(( item ) =>
                                                 <option className={ styles.searchSection__option }
                                                         key={ item } value={ item }>{ item }</option>,
                                             )
@@ -116,7 +116,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                                         ? null
                                         : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
                                                   title={ value.title }
-                                                  colorMode={ 'blue' }
+                                                  colorMode={ 'whiteBlue' }
                                                   rounded
                                                   onClick={ () => {
                                                       // @ts-ignore
