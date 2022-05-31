@@ -11,13 +11,11 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {getValuesForTable, tableStoreActions} from '../../../redux/table/table-store-reducer'
+import {tableStoreActions} from '../../../redux/table/table-store-reducer'
 import {getAuthCashAuthStore} from '../../../selectors/auth-reselect'
 import {TableModesType} from '../search-section'
 import {ddMmYearFormat} from '../../../utils/parsers';
-import {getAllRequestStore} from '../../../selectors/forms/request-form-reselect';
-import {getAllConsigneesStore} from '../../../selectors/options/consignees-reselect';
-import {getAllShippersStore} from '../../../selectors/options/shippers-reselect';
+import {requestStoreActions} from '../../../redux/forms/request-store-reducer'
 
 type OwnProps = {
     tableModes: TableModesType
@@ -35,15 +33,12 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const dispatch = useDispatch()
 
     const deleteRow = ( requestNumber: number ) => {
-        dispatch(tableStoreActions.deleteRow(requestNumber))
+        // dispatch(tableStoreActions.deleteRow(requestNumber))
+        dispatch(requestStoreActions.setToggleRequestVisible(requestNumber))
+
     }
 
     const data = React.useMemo(() => ( TABLE_CONTENT || initialValues ), [ TABLE_CONTENT ])
-
-    useEffect(() => { // формируем поля таблицы из данных заявок
-        // @ts-ignore
-        dispatch(getValuesForTable())
-    },[])
 
     const columns = React.useMemo(
         () => [
@@ -146,8 +141,6 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
         ],
         [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
     )
-
-
 
     return (
         <div className={ styles.tableComponent }>

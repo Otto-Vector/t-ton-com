@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {cargoType, CargoType, ValidateType} from '../../types/form-types'
 import {randArrayValue, randFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from '../../utils/random-utils'
-import {composeValidators, required} from '../../utils/validators';
+import {composeValidators, required} from '../../utils/validators'
 
 
 export type OneRequestType = {
@@ -21,6 +21,7 @@ export type OneRequestType = {
     note: undefined | string, // примечание
     answers: number[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками
     driverPrice: number | undefined // стоимость перевозки
+    visible: boolean // видимость для таблицы
     documents: DocumentsRequestType
 }
 
@@ -135,6 +136,7 @@ const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     note: 'Насос на 120, рукава, ДОПОГ.',
     answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
     driverPrice: undefined,
+    visible: true,
     documents: initialDocumentsRequestValues,
 } )
 
@@ -208,9 +210,11 @@ const initialState = {
         carrier: undefined,
         driver: undefined,
         note: undefined,
+        visible: true,
+        documents: initialDocumentsRequestValues,
     } as OneRequestType,
 
-    content: makeNTestRequests(50) as OneRequestType[] | undefined, // создаём тестовые заявки
+    content: makeNTestRequests(50) as OneRequestType[] | [], // создаём тестовые заявки
 
     labelDocumentsRequestValues: {
         proxyWay: {
@@ -283,6 +287,14 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
                 currentRequestNumber: action.currentRequestNumber,
             }
         }
+        case 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE': {
+            return {
+                ...state,
+                content: [ ...state.content.map(( oneRequest ) =>
+                    oneRequest.requestNumber === action.requestNumber
+                        ? { ...oneRequest, visible: !oneRequest.visible } : oneRequest) ]
+            }
+        }
         default: {
             return state
         }
@@ -303,6 +315,10 @@ export const requestStoreActions = {
     setRequestNumber: ( currentRequestNumber: number | undefined ) => ( {
         type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
         currentRequestNumber,
+    } as const ),
+    setToggleRequestVisible: ( requestNumber: number ) => ( {
+        type: 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE',
+        requestNumber,
     } as const ),
 }
 
