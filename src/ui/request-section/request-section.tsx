@@ -65,7 +65,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
 
     useEffect(() => {
         dispatch(requestStoreActions.setRequestNumber(+( reqNumber || 0 ) || undefined))
-    },)
+    },[])
 
     if (!oneRequest) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
     const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate || new Date()) }`

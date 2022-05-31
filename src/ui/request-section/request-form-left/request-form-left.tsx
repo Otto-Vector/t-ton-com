@@ -185,7 +185,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     { labels.carrier }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { oneCarrier ? ( oneConsignee.title + ', ' + oneCarrier.city ) : placehoders.carrier }
+                                    { oneCarrier ? ( oneCarrier.title + ', ' + oneCarrier.city ) : placehoders.carrier }
                                 </div>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>

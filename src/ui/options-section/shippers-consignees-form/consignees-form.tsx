@@ -49,7 +49,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     const onSubmit = ( values: ConsigneesCardType ) => {
-        dispatch(consigneesStoreActions.changeConsignee(currentId, values)) //сохраняем измененное значение
+        dispatch(consigneesStoreActions.changeOneConsignee(currentId, values)) //сохраняем измененное значение
         navigate(options) // и возвращаемся в предыдущее окно
     }
 

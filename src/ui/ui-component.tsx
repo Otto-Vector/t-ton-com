@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react'
 import styles from './ui-component.module.scss';
 
 import {Header} from './header/header';
@@ -6,7 +6,7 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 import {Footer} from './footer/footer';
 import {LinksPanel} from './links-panel/links-panel'
 import {MenuPanel} from './menu-panel/menu-panel';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux'
 import {getRoutesStore} from '../selectors/routes-reselect';
 import {HelloSection} from './hello-section/hello-section';
 import {LoginSection} from './login-section/login-section';
@@ -21,12 +21,20 @@ import {SearchSection} from './search-section/search-section';
 import {CashCard} from './cash-card/cash-card'
 import {RequestSection} from './request-section/request-section';
 import {AddDriversForm} from './add-drivers-form/add-drivers-form';
+import {ConsigneesStoreReducerThunkActionType, getAllConsigneesAPI} from '../redux/options/consignees-store-reducer'
 
 type OwnProps = {}
 
 export const UiComponent: React.FC<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+
+        dispatch<any>(getAllConsigneesAPI())
+
+    },[])
 
     return (
         <div className={ styles.ui }>

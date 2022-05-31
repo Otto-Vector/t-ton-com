@@ -127,7 +127,7 @@ const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     cargoComposition: randArrayValue(cargoComposition),
     shipmentDate: id === 999 ? new Date() : new Date(2022, 6, randFloorMax(30)),
     cargoType: randArrayValue(cargoType) as CargoType,
-    customer: randFloorMax(9),
+    customer: randFloorMax(10),
     shipper: randFloorMax(11),
     consignee: randMinMax(12, 23),
     carrier: randFloorMax(9),
