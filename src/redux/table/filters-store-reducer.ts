@@ -134,12 +134,12 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 }
             }
         }
-        case 'filters-store-reducer/SET-CARGO-FILTER': {
+        case 'filters-store-reducer/SET-CARGO-FILTER-VALUE': {
             return {
                 ...state,
                 values: {
                     ...state.values,
-                    cargoFilter: state.buttons.cargoFilter.mode ? '' : action.value
+                    cargoFilter: action.value
                 }
             }
         }
@@ -204,8 +204,8 @@ export const filtersStoreActions = {
         type: 'filters-store-reducer/SET-LONG-ROUTE-MODE',
         mode,
     } as const),
-    setCargoFilter: (value: string | undefined) => ({
-        type: 'filters-store-reducer/SET-CARGO-FILTER',
+    setCargoFilterValue: (value: string | undefined) => ({
+        type: 'filters-store-reducer/SET-CARGO-FILTER-VALUE',
         value
     } as const),
     setCargoFilterMode: (mode: boolean) => ({

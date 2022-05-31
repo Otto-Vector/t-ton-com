@@ -72,16 +72,24 @@ export const tableStoreActions = {
 export type TableStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-// export const getIcons = ( { domain }: GetIconsType ): TableStoreReducerThunkActionType =>
-//     async ( dispatch ) => {
-//         // dispatch( requestFormActions.setIcons( null ) )
-//         try {
-//             const response = await getIconsFromApi( { domain } )
-//             dispatch( baseStoreActions.setIcons( domain, response ) )
-//         } catch (e) {
-//             alert( e )
-//             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
-//         }
-//
-//     }
+export const getValuesForTable = (): TableStoreReducerThunkActionType =>
+    async ( dispatch , getState) => {
+        try {
+            const allRequests = getState().requestStoreReducer.content
+            const allShippers = getState().shippersStoreReducer.content
+            const allConsignee = getState().consigneesStoreReducer.content
+             let createTableValues = allRequests?.map((
+            { requestNumber, shipmentDate, cargoType, shipper, consignee, distance, answers } ) =>
+            ( {
+                requestNumber, cargoType, shipmentDate, distance,
+                answers: answers?.length, price: 100,
+                route: allShippers.filter(( { id } ) => id === shipper)[0]?.city +' в '
+                    + allConsignee.filter(( { id } ) => id === consignee)[0]?.city,
+            } )) || [getState().tableStoreReducer.initialValues]
+            dispatch( tableStoreActions.setValues(createTableValues) )
+        } catch (e) {
+            alert( e )
+        }
+
+    }
 

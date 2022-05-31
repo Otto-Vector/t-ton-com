@@ -57,7 +57,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
             dispatch(filtersStoreActions.setNearDriverMode(!filterButtons.nearDriverFilter.mode))
         },
         cargoFilter: ( value ) => {
-            dispatch(filtersStoreActions.setCargoFilter(value))
+            dispatch(filtersStoreActions.setCargoFilterValue(value))
             dispatch(filtersStoreActions.setCargoFilterMode(value !== ''))
         },
         clearFilters: () => {
@@ -91,7 +91,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                             {
                                 ( key === 'cargoFilter' )
                                     ? <div className={ styles.searchSection__dropdown }>
-                                        {/*ToDo: выделить select в отдельный элемент*/}
+                                        {/*ToDo: выделить select в отдельный элемент*/ }
                                         <select className={ styles.searchSection__select + ' ' +
                                             ( !!value.mode ? styles.searchSection__select_active : '' ) }
                                                 name="cargoFilter" id="cargoFilter"

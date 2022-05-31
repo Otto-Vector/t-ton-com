@@ -11,7 +11,7 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {tableStoreActions} from '../../../redux/table/table-store-reducer'
+import {getValuesForTable, tableStoreActions} from '../../../redux/table/table-store-reducer'
 import {getAuthCashAuthStore} from '../../../selectors/auth-reselect'
 import {TableModesType} from '../search-section'
 import {ddMmYearFormat} from '../../../utils/parsers';
@@ -25,15 +25,13 @@ type OwnProps = {
 
 
 export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
+
     const navigate = useNavigate()
     const { balance, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = useSelector(getAuthCashAuthStore)
     const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
-    const allRequests = useSelector(getAllRequestStore)
     const initialValues = useSelector(geInitialValuesTableStore)
     const TABLE_CONTENT = useSelector(getContentTableStore)
-    const allConsignee = useSelector(getAllConsigneesStore)
-    const allShippers = useSelector(getAllShippersStore)
     const dispatch = useDispatch()
 
     const deleteRow = ( requestNumber: number ) => {
@@ -43,16 +41,8 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const data = React.useMemo(() => ( TABLE_CONTENT || initialValues ), [ TABLE_CONTENT ])
 
     useEffect(() => { // формируем поля таблицы из данных заявок
-        let createTableValues = allRequests?.map((
-            { requestNumber, shipmentDate, cargoType, shipper, consignee, distance, answers } ) =>
-            ( {
-                requestNumber, cargoType, shipmentDate, distance,
-                answers: answers?.length, price: 100,
-                route: allShippers.filter(( { id } ) => id === shipper)[0]?.city +' в '
-                    + allConsignee.filter(( { id } ) => id === consignee)[0]?.city,
-            } )) || [initialValues]
-        // debugger;
-        dispatch(tableStoreActions.setValues(createTableValues))
+        // @ts-ignore
+        dispatch(getValuesForTable())
     },[])
 
     const columns = React.useMemo(

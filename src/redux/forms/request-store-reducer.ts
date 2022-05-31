@@ -131,7 +131,7 @@ const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     consignee: randMinMax(12, 23),
     carrier: randFloorMax(9),
     driver: randFloorMax(9),
-    distance: randFloorMax(1200),
+    distance: randMinMax(20, 400),
     note: 'Насос на 120, рукава, ДОПОГ.',
     answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
     driverPrice: undefined,
