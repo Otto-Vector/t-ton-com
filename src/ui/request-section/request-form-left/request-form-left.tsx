@@ -53,16 +53,19 @@ export const RequestFormLeft: React.FC<OwnProps> = (
 
 
     const buttonsAction = {
-        acceptRequest: () => {
-            navigate(routes.addDriver)
+        acceptRequest: async (values: OneRequestType) => {
+
+            navigate(routes.addDriver+values.requestNumber)
         },
         cancelRequest: () => {
             navigate(-1)
         },
-        submitRequestAndSearch: () => {
-            // navigate(routes.searchList)
+        submitRequestAndSearch: async ( values: OneRequestType ) => {
+            await onSubmit(values)
+            navigate(routes.searchList)
         },
-        submitRequestAndDrive: () => {
+        submitRequestAndDrive: async ( values: OneRequestType ) => {
+            await onSubmit(values)
             navigate(routes.addDriver)
         },
     }
@@ -77,7 +80,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                 onSubmit={ onSubmit }
                 initialValues={ initialValues }
                 render={
-                    ( { submitError, handleSubmit, pristine, form, submitting, values } ) => (
+                    ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting, values } ) => (
                         <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <div className={ styles.requestFormLeft__selector }>
@@ -220,10 +223,10 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                 title={ requestModes.statusMode ? 'Принять заявку' : 'Поиск исполнителя' }
                                                 onClick={ () => {
                                                     requestModes.statusMode
-                                                        ? buttonsAction.acceptRequest()
-                                                        : buttonsAction.submitRequestAndSearch()
+                                                        ? buttonsAction.acceptRequest(values)
+                                                        : buttonsAction.submitRequestAndSearch(values)
                                                 } }
-                                                disabled={ requestModes.createMode }
+                                                disabled={ hasValidationErrors }
                                                 rounded/>
                                     </div>
                                     <div className={ styles.requestFormLeft__panelButton }>
@@ -233,9 +236,9 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                 onClick={ () => {
                                                     requestModes.statusMode
                                                         ? buttonsAction.cancelRequest()
-                                                        : buttonsAction.submitRequestAndDrive()
+                                                        : buttonsAction.submitRequestAndDrive(values)
                                                 } }
-                                            // disabled={ requestModes.createMode }
+                                                disabled={ hasValidationErrors }
                                                 rounded/>
                                     </div>
                                 </> : null
