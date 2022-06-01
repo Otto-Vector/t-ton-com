@@ -16,6 +16,7 @@ type OwnProps = {
     disabled?: boolean
     textArea?: boolean
     inputType?: 'text' | 'date' | 'email' | 'money'
+    min?: string
     errorBottom?: boolean // отображаем ошибку внизу (по умолчаниию - наверху)
     noLabel?: boolean // отключаем label совсем
 }
@@ -25,7 +26,7 @@ export const FormInputType: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
         children, disabled, mask = '_', maskFormat,
-        textArea, allowEmptyFormatting, inputType = 'text', errorBottom, noLabel,
+        textArea, allowEmptyFormatting, inputType = 'text', errorBottom, noLabel, min,
     } ) => {
 
     const InInput = textArea ? 'textarea' : 'input' // если нужен просто текстовое поле
@@ -69,8 +70,9 @@ export const FormInputType: React.FC<OwnProps> = (
                 >
                 </NumberFormat>
                 :
-                <InInput type={ inputType }
-                         { ...input }
+                <InInput { ...input }
+                         type={ inputType }
+                         min={inputType==='date' ? min : undefined}
                          className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
                          placeholder={ placeholder }
                          disabled={ disabled }/>

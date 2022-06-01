@@ -18,7 +18,7 @@ import {Field, Form} from 'react-final-form'
 import {getAllConsigneesStore} from '../../../selectors/options/consignees-reselect';
 import {Button} from '../../common/button/button';
 import {InfoText} from '../../common/info-text/into-text';
-import {ddMmYearFormat} from '../../../utils/parsers';
+import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/parsers';
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -91,7 +91,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                         validate={ validators.cargoComposition }
                                         />
                                         : <div className={ styles.requestFormLeft__info + ' ' +
-                                        styles.requestFormLeft__info_leftAlign  }>
+                                            styles.requestFormLeft__info_leftAlign }>
                                             { initialValues.cargoComposition }
                                         </div>
                                     }
@@ -107,6 +107,8 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                  component={ FormInputType }
                                                  resetFieldBy={ form }
                                                  inputType={ 'date' }
+                                                 value={ yearMmDdFormat(initialValues.shipmentDate || new Date()) }
+                                                 min={ yearMmDdFormat(new Date()) } // для ввода от сегодняшнего дня value обязателен
                                                  validate={ validators.shipmentDate }
                                                  errorBottom
                                         />
