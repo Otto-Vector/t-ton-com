@@ -86,8 +86,6 @@ export type ShippersCardType<T = DefaultFormType> = {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-export const cargoType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
-    'Тягач', 'Фургон, Борт', 'Цементовоз' ]
 export const cargoTypeType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
     'Тягач', 'Фургон, Борт', 'Цементовоз' ] as const
 export type CargoType = typeof cargoTypeType[number]
@@ -123,10 +121,11 @@ export type TrailerCardType<T = DefaultFormType> = {
     trailerImage: T // Фото транспорта
 }
 
+// на добавление водителя
 export type AddDriverCardType<T = DefaultFormType> = {
-    driverFIO: T,
-    driverTransport: T,
-    driverTrailer: T,
+    driverFIO: T, // фио водителя (из карточки водителя)
+    driverTransport: T, // транспорт (из карточки транспорт)
+    driverTrailer: T, // прицеп (из карточки прицеп)
     driverStavka: T,
     driverSumm: T,
     driverRating: T,
@@ -134,4 +133,68 @@ export type AddDriverCardType<T = DefaultFormType> = {
     driverPhoto: T,
     driverTransportPhoto: T,
     driverTrailerPhoto: T,
+}
+
+
+
+export type OneRequestType = {
+    id: number | undefined,
+    requestNumber: number | undefined, // номер заявки
+    requestDate: undefined | Date, // дата создания заявки
+    cargoComposition: undefined | string, // вид груза
+    shipmentDate: undefined | Date, // дата погрузки
+    cargoType: undefined | CargoType, // тип груза
+    customer: undefined | number, // заказчик
+    shipper: undefined | number, // грузоотправитель
+    consignee: undefined | number, // грузополучатель
+    carrier: undefined | number, // перевозчик
+    driver: undefined | number, // водитель
+    distance: undefined | number, // расстояние
+    note: undefined | string, // примечание
+    answers: number[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками
+    driverPrice: number | undefined // стоимость перевозки
+    visible: boolean // видимость для таблицы
+    documents: DocumentsRequestType
+}
+
+export type DocumentsRequestType = {
+    proxyWay: {
+        label: string | undefined // Транспортные документы Сторон
+        proxyFreightLoader: boolean | string // Доверенность Грузовладельцу
+        proxyDriver: boolean | string // Доверенность на Водителя
+        waybillDriver: boolean | string // Путевой Лист Водителя
+    },
+    uploadTime: Date | undefined | string // Время погрузки
+    cargoWeight: number | string // Вес груза, в тн.
+    cargoDocuments: string | undefined // Документы груза
+    cargoPrice: number | string // Цена по Заявке
+    addedPrice: number | string // Доп. Услуги
+    finalPrice: number | string // Итоговая Цена
+    ttnECP: {
+        label: string | undefined // ТТН или ЭТрН с ЭЦП
+        customer: boolean | string // Заказчик
+        carrier: boolean | string // Перевозчик
+        consignee: boolean | string // Грузополучатель
+    },
+    contractECP: {
+        label: string | undefined // Договор оказания транспортных услуг с ЭЦП
+        customer: boolean | string // Заказчик
+        carrier: boolean | string // Перевозчик
+        uploadDocument: string | undefined // Загрузить
+    },
+    updECP: {
+        label: string | undefined // УПД от Перевозчика для Заказчика с ЭЦП
+        customer: boolean | string // Заказчик
+        carrier: boolean | string // Перевозчик
+        uploadDocument: string | undefined // Загрузить
+    },
+    customerToConsigneeContractECP: {
+        label: string | undefined // Документы от Заказчика для Получателя с ЭЦП
+        customer: boolean | string // Заказчик
+        consignee: boolean | string // Грузополучатель
+        uploadDocument: string | undefined // Загрузить
+    },
+    paymentHasBeenTransferred: string | undefined // Оплату передал
+    paymentHasBeenReceived: boolean | string // Оплату получил
+    completeRequest: boolean | string // Закрыть заявку
 }

@@ -22,6 +22,8 @@ import {CashCard} from './cash-card/cash-card'
 import {RequestSection} from './request-section/request-section';
 import {AddDriversForm} from './add-drivers-form/add-drivers-form';
 import {ConsigneesStoreReducerThunkActionType, getAllConsigneesAPI} from '../redux/options/consignees-store-reducer'
+import {getAllRequestsAPI} from '../redux/forms/request-store-reducer';
+import {getAllShippersAPI} from '../redux/options/shippers-store-reducer';
 
 type OwnProps = {}
 
@@ -32,7 +34,9 @@ export const UiComponent: React.FC<OwnProps> = () => {
 
     useEffect(()=>{
 
-        dispatch<any>(getAllConsigneesAPI())
+        dispatch<any>(getAllConsigneesAPI({innID:0}))
+        dispatch<any>(getAllRequestsAPI({innID:0}))
+        dispatch<any>(getAllShippersAPI({innID:0}))
 
     },[])
 

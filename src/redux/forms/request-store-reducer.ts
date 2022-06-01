@@ -1,147 +1,9 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {cargoType, CargoType, ValidateType} from '../../types/form-types'
-import {randArrayValue, randFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from '../../utils/random-utils'
+import { DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
+import {cargoComposition, initialDocumentsRequestValues, makeNTestRequests} from '../initialsTestData';
 
-
-export type OneRequestType = {
-    id: number | undefined,
-    requestNumber: number | undefined, // номер заявки
-    requestDate: undefined | Date, // дата создания заявки
-    cargoComposition: undefined | string, // вид груза
-    shipmentDate: undefined | Date, // дата погрузки
-    cargoType: undefined | CargoType, // тип груза
-    customer: undefined | number, // заказчик
-    shipper: undefined | number, // грузоотправитель
-    consignee: undefined | number, // грузополучатель
-    carrier: undefined | number, // перевозчик
-    driver: undefined | number, // водитель
-    distance: undefined | number, // расстояние
-    note: undefined | string, // примечание
-    answers: number[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками
-    driverPrice: number | undefined // стоимость перевозки
-    visible: boolean // видимость для таблицы
-    documents: DocumentsRequestType
-}
-
-export type DocumentsRequestType = {
-    proxyWay: {
-        label: string | undefined // Транспортные документы Сторон
-        proxyFreightLoader: boolean | string // Доверенность Грузовладельцу
-        proxyDriver: boolean | string // Доверенность на Водителя
-        waybillDriver: boolean | string // Путевой Лист Водителя
-    },
-    uploadTime: Date | undefined | string // Время погрузки
-    cargoWeight: number | string // Вес груза, в тн.
-    cargoDocuments: string | undefined // Документы груза
-    cargoPrice: number | string // Цена по Заявке
-    addedPrice: number | string // Доп. Услуги
-    finalPrice: number | string // Итоговая Цена
-    ttnECP: {
-        label: string | undefined // ТТН или ЭТрН с ЭЦП
-        customer: boolean | string // Заказчик
-        carrier: boolean | string // Перевозчик
-        consignee: boolean | string // Грузополучатель
-    },
-    contractECP: {
-        label: string | undefined // Договор оказания транспортных услуг с ЭЦП
-        customer: boolean | string // Заказчик
-        carrier: boolean | string // Перевозчик
-        uploadDocument: string | undefined // Загрузить
-    },
-    updECP: {
-        label: string | undefined // УПД от Перевозчика для Заказчика с ЭЦП
-        customer: boolean | string // Заказчик
-        carrier: boolean | string // Перевозчик
-        uploadDocument: string | undefined // Загрузить
-    },
-    customerToConsigneeContractECP: {
-        label: string | undefined // Документы от Заказчика для Получателя с ЭЦП
-        customer: boolean | string // Заказчик
-        consignee: boolean | string // Грузополучатель
-        uploadDocument: string | undefined // Загрузить
-    },
-    paymentHasBeenTransferred: string | undefined // Оплату передал
-    paymentHasBeenReceived: boolean | string // Оплату получил
-    completeRequest: boolean | string // Закрыть заявку
-}
-
-const cargoComposition = [
-    'Мазут топочный М-100 ТУ2012-110712',
-    'Битум нефтяной дорожный вязкий БНД 90/130',
-    'Битум нефтяной дорожный вязкий БНД 100/130',
-    'Битум нефтяной дорожный БНД 100/130',
-    'Битум БНД 90/130 дорожный вязкий, в танк-контейнере',
-    'Битум 90/130, фасованный в кловертейнеры',
-    'Мазут топочный марки М-100 малозольный 0,5% серности',
-    'Битум 90/130, фасованный в кловертейнеры',
-]
-
-const initialDocumentsRequestValues: DocumentsRequestType = {
-    proxyWay: {
-        label: undefined,
-        proxyFreightLoader: false,
-        proxyDriver: false,
-        waybillDriver: false,
-    },
-    uploadTime: undefined,
-    cargoWeight: 0,
-    cargoDocuments: undefined,
-    cargoPrice: 0,
-    addedPrice: 0,
-    finalPrice: 0,
-    ttnECP: {
-        label: undefined,
-        customer: false,
-        carrier: false,
-        consignee: false,
-    },
-    contractECP: {
-        label: undefined,
-        customer: false,
-        carrier: false,
-        uploadDocument: undefined,
-    },
-    updECP: {
-        label: undefined,
-        customer: false,
-        carrier: false,
-        uploadDocument: undefined,
-    },
-    customerToConsigneeContractECP: {
-        label: undefined,
-        customer: false,
-        consignee: false,
-        uploadDocument: undefined,
-    },
-    paymentHasBeenTransferred: undefined,
-    paymentHasBeenReceived: false,
-    completeRequest: false,
-}
-
-const makeOneTestRequest = ( id: number ): OneRequestType => ( {
-    id: id,
-    requestNumber: id,
-    requestDate: new Date(2022, 5, randFloorMax(30)),
-    cargoComposition: randArrayValue(cargoComposition),
-    shipmentDate: id === 999 ? new Date() : new Date(2022, 6, randFloorMax(30)),
-    cargoType: randArrayValue(cargoType) as CargoType,
-    customer: randFloorMax(10),
-    shipper: randFloorMax(11),
-    consignee: randMinMax(12, 23),
-    carrier: randFloorMax(9),
-    driver: randFloorMax(9),
-    distance: randMinMax(20, 400),
-    note: 'Насос на 120, рукава, ДОПОГ.',
-    answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
-    driverPrice: undefined,
-    visible: true,
-    documents: initialDocumentsRequestValues,
-} )
-
-const makeNTestRequests = ( count: number ): OneRequestType[] => [ 999, ...randomDifferentIntegersArrayCreator(998)(count) ]
-    .map(( id ) => makeOneTestRequest(id))
 
 const initialState = {
 
@@ -214,7 +76,7 @@ const initialState = {
         documents: initialDocumentsRequestValues,
     } as OneRequestType,
 
-    content: makeNTestRequests(50) as OneRequestType[] | [], // создаём тестовые заявки
+    content: [] as OneRequestType[], // создаём тестовые заявки
 
     labelDocumentsRequestValues: {
         proxyWay: {
@@ -327,16 +189,16 @@ export const requestStoreActions = {
 export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-// export const getIcons = ( { domain }: GetIconsType ): BaseStoreReducerThunkActionType =>
-//     async ( dispatch ) => {
-//         // dispatch( requestFormActions.setIcons( null ) )
-//         try {
-//             const response = await getIconsFromApi( { domain } )
-//             dispatch( baseStoreActions.setIcons( domain, response ) )
-//         } catch (e) {
-//             alert( e )
-//             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
-//         }
-//
-//     }
+export const getAllRequestsAPI = ( { innID }: {innID: number} ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        // dispatch( requestFormActions.setIcons( null ) )
+        try {
+            const response = makeNTestRequests(50)
+            dispatch( requestStoreActions.setContent( response ) )
+        } catch (e) {
+            alert( e )
+            // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
+        }
+
+    }
 

@@ -2,14 +2,13 @@ import React, {useEffect} from 'react'
 import styles from './request-form-left.module.scss'
 import {getAllShippersStore} from '../../../selectors/options/shippers-reselect';
 import {useSelector} from 'react-redux';
-import {cargoTypeType} from '../../../types/form-types';
+import {cargoTypeType, OneRequestType} from '../../../types/form-types';
 import {
     getCargoCompositionRequestStore,
     getLabelRequestStore,
     getPlaceholderRequestStore, getValidatorsRequestStore,
 } from '../../../selectors/forms/request-form-reselect';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
-import {OneRequestType} from '../../../redux/forms/request-store-reducer';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {useNavigate} from 'react-router-dom';
 import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector';

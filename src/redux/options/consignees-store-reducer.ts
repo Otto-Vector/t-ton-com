@@ -156,13 +156,13 @@ export const consigneesStoreActions = {
 export type ConsigneesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-export const getAllConsigneesAPI = ( ): ConsigneesStoreReducerThunkActionType =>
+export const getAllConsigneesAPI = ( { innID }: { innID: number } ): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = initialConsigneesContent
-            await dispatch( consigneesStoreActions.setConsigneesContent(response) )
+            await dispatch(consigneesStoreActions.setConsigneesContent(response))
         } catch (e) {
-            alert( e )
+            alert(e)
         }
 
     }

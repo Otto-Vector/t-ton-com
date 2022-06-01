@@ -1,6 +1,7 @@
 import {AppStateType} from '../../redux/redux-store'
-import {OneRequestType, RequestStoreReducerStateType} from '../../redux/forms/request-store-reducer';
+import {RequestStoreReducerStateType} from '../../redux/forms/request-store-reducer';
 import {createSelector} from 'reselect';
+import {OneRequestType} from '../../types/form-types';
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = (state: AppStateType) => Y[T]
 
@@ -15,7 +16,6 @@ export const getValidatorsRequestStore: RequestStoreSelectors<'validators'> = ( 
 
 export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state) => state.requestStoreReducer.content
 const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state) => state.requestStoreReducer.currentRequestNumber
-
 
 
 export const getOneRequestStore = createSelector( getAllRequestStore, getCurrentRequestNumberStore, getInitialValuesRequestStore,

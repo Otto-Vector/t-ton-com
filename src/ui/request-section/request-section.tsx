@@ -4,13 +4,14 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {To, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {OneRequestType, requestStoreActions} from '../../redux/forms/request-store-reducer';
+import {requestStoreActions} from '../../redux/forms/request-store-reducer';
 import {getInitialValuesRequestStore, getOneRequestStore} from '../../selectors/forms/request-form-reselect';
 import {ddMmYearFormat} from '../../utils/parsers';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
 import {RequestMapCenter} from './request-map-center/request-map-center';
 import {RequestFormLeft} from './request-form-left/request-form-left';
+import {OneRequestType} from '../../types/form-types';
 
 type OwnProps = {
     mode: 'create' | 'status' | 'history'
