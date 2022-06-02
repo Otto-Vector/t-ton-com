@@ -26,7 +26,7 @@ const initialState = {
         transportNumber: undefined, // просто текст
         transportTrademark: undefined, // просто текст
         transportModel: undefined, // просто текст
-        pts: undefined, // просто фото
+        pts: '### ###', // просто фото
         dopog: undefined, // просто фото
         cargoType: undefined, // просто текст
         cargoWeight: '##', // не больше 50-ти тонн

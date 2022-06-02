@@ -18,10 +18,9 @@ import {EmployeesForm} from './options-section/employees-form/employees-form';
 import {TransportForm} from './options-section/transport-trailer-form/transport-form';
 import {TrailerForm} from './options-section/transport-trailer-form/trailer-form';
 import {SearchSection} from './search-section/search-section';
-import {CashCard} from './cash-card/cash-card'
 import {RequestSection} from './request-section/request-section';
 import {AddDriversForm} from './add-drivers-form/add-drivers-form';
-import {ConsigneesStoreReducerThunkActionType, getAllConsigneesAPI} from '../redux/options/consignees-store-reducer'
+import {getAllConsigneesAPI} from '../redux/options/consignees-store-reducer'
 import {getAllRequestsAPI} from '../redux/forms/request-store-reducer';
 import {getAllShippersAPI} from '../redux/options/shippers-store-reducer';
 import {getInfoMessages} from '../redux/info-store-reducer';
@@ -35,7 +34,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
     const routes = useSelector(getRoutesStore)
     const dispatch = useDispatch()
 
-    useEffect(()=>{
+    useEffect(()=>{ // до реализации авторизации, подгружаем все данные здесь
 
         dispatch<any>(getAllConsigneesAPI({innID:0}))
         dispatch<any>(getAllRequestsAPI({innID:0}))
