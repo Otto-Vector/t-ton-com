@@ -32,6 +32,7 @@ const initialState = {
             consignees: '/options/consignees/',
         },
         requisites: '/requisites',
+        info: '/info',
     },
 }
 

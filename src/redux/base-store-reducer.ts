@@ -16,6 +16,12 @@ const initialState = {
         { domain: 'https://github.com', title: 'Хранение' },
         { domain: 'https://google.ru', title: 'Другой поисковик' }
     ],
+    tarifs: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
+        create: 100,
+        acceptShortRoute: 100,
+        acceptLongRoute: 100,
+        paySafeTax: 3,
+    }
 }
 
 export type BaseStoreReducerStateType = typeof initialState

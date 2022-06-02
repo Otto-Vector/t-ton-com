@@ -1,0 +1,105 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.infoSection {
+  font-family: $RalewayFont;
+  font-style: normal;
+  font-weight: 700;
+  margin: 0 auto;
+  padding: 10px;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+
+  &__messagesContainer {
+    flex-grow: 0;
+    margin-bottom: 5px;
+  }
+
+  &__infoPayContainer {
+    height: 150px;
+  }
+}
+
+.messagesContainer {
+  display: flex;
+  flex-flow: column wrap;
+  overflow: hidden;
+  color: $accentColor;
+
+  &__header {
+    font-size: 24px;
+    line-height: 28px;
+    text-align: center;
+  }
+
+  &__label {
+    padding-left: 5px;
+    width: 49%;
+    font-size: 20px;
+    line-height: 1;
+    text-align: left;
+  }
+  &__item {
+    width: 49.5%;
+    margin: 2px 0;
+  }
+}
+
+.infoPayContainer {
+  height: 150px;
+  width: 100%;
+  border: {
+    radius: 25px;
+    color: $accentColor;
+    width: 2px;
+    style: solid;
+  };
+
+  &__header {
+    font-size: 24px;
+    line-height: 28px;
+    text-align: center;
+    color: #000000;
+    width: 49%;
+  }
+
+}
+
+.messageItem {
+  font-size: 16px;
+  display: flex;
+  flex-flow: row nowrap;
+  border-top: 1px solid $accentColor;
+  color: $accentColor;
+
+
+  &_gray {
+    color: #989898;
+  }
+
+  &__number {
+    text-align: center;
+    width: 80px;
+    //border-bottom: 1px solid $accentColor;
+  }
+
+  &__text {
+    flex-grow: 1;
+    border-bottom: 1px solid $accentColor;
+    padding-left: 5px;
+
+    &_green {
+      color: #74C259;
+    }
+
+    &_red {
+      color: #C70707;
+    }
+  }
+
+  &__date {
+    text-align: center;
+    width: 70px;
+  }
+}

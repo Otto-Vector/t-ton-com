@@ -10,6 +10,7 @@ import searchSVG from './buttonsSVG/search.svg'
 import statusSVG from './buttonsSVG/status.svg'
 import historySVG from './buttonsSVG/history.svg'
 import mapSVG from './buttonsSVG/map.svg'
+import infoSVG from './buttonsSVG/info.svg'
 import optionsPNG from './buttonsSVG/options.png'
 import {getIsAuthAuthStore} from '../../selectors/auth-reselect';
 
@@ -55,6 +56,10 @@ export const MenuPanel: React.FC<OwnProps> = () => {
         {
             route: routes.options, src: optionsPNG, title: 'Панель настроек (админ)',
             buttonText: 'Настройки', active: isAuth
+        },
+        {
+            route: routes.info, src: infoSVG, title: 'Информация / События',
+            buttonText: 'Инфо', active: isAuth
         },
     ]
 

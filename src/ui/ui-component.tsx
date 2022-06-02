@@ -24,6 +24,9 @@ import {AddDriversForm} from './add-drivers-form/add-drivers-form';
 import {ConsigneesStoreReducerThunkActionType, getAllConsigneesAPI} from '../redux/options/consignees-store-reducer'
 import {getAllRequestsAPI} from '../redux/forms/request-store-reducer';
 import {getAllShippersAPI} from '../redux/options/shippers-store-reducer';
+import {getInfoMessages} from '../redux/info-store-reducer';
+import {InfoText} from './common/info-text/into-text';
+import {InfoSection} from './info-section/info-section';
 
 type OwnProps = {}
 
@@ -37,6 +40,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
         dispatch<any>(getAllConsigneesAPI({innID:0}))
         dispatch<any>(getAllRequestsAPI({innID:0}))
         dispatch<any>(getAllShippersAPI({innID:0}))
+        dispatch<any>(getInfoMessages({authID:0}))
 
     },[])
 
@@ -75,7 +79,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.maps.answers + ':reqNumber' }
                                element={ <div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2>
                                </div> }/>
-                        <Route path={ routes.balance } element={ <CashCard/> }/>
+                        <Route path={ routes.info } element={ <InfoSection/> }/>
                         <Route path={ routes.addDriver }
                                element={ <AddDriversForm /> }/>
 
