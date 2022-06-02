@@ -40,6 +40,20 @@ export const infoStoreReducer = ( state = initialState, action: ActionsType ): I
                 content: action.content,
             }
         }
+        case 'info-store-reducer/SET-ALL-MESSAGES-VIEWED': {
+            return {
+                ...state,
+                content: [ ...state.content
+                    .map(( item ) => item.viewed ? item : { ...item, viewed: true }),
+                ],
+            }
+        }
+        case 'info-store-reducer/SET-UNREAD-COUNT': {
+            return {
+                ...state,
+                unreadMessages: action.unreadCount,
+            }
+        }
         default: {
             return state
         }
@@ -56,6 +70,13 @@ export const infoStoreActions = {
     setValuesContent: ( content: OneInfoItem[] ) => ( {
         type: 'info-store-reducer/SET-VALUES-CONTENT',
         content,
+    } as const ),
+    setAllMessagesViewed: () => ( {
+        type: 'info-store-reducer/SET-ALL-MESSAGES-VIEWED',
+    } as const ),
+    setUnreadCount: ( unreadCount: number ) => ( {
+        type: 'info-store-reducer/SET-UNREAD-COUNT',
+        unreadCount,
     } as const ),
 }
 

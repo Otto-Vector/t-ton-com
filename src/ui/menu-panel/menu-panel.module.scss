@@ -2,12 +2,14 @@
 @import 'src/styles/variables';
 
 .menuPanel {
+
   padding-top: 60px;
   display: flex;
   flex-flow: column wrap;
   align-items: flex-end;
 
   &__item {
+    position: relative;
     margin: 6px 0;
     padding: 7px 2px 5px 0;
     font-family: $RalewayFont;
@@ -42,5 +44,19 @@
 
   &__image {
     width: 24px;
+  }
+}
+
+.attentionIcon {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  text-align: center;
+  @include size(16px);
+  border-radius: 50%;
+  background-color: transparent;
+  img {
+    height: 100%;
+    width: 100%;
   }
 }

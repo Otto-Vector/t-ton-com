@@ -1,13 +1,14 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import styles from './info-section.module.scss'
 import barcode from '../../media/barcode.png'
 import ucassa from '../../media/ukassa.jpg'
-import {useSelector} from 'react-redux'
-import {getContentInfoStore} from '../../selectors/info-reselect';
+import {useDispatch, useSelector} from 'react-redux'
+import {getContentInfoStore, getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect';
 import {getAuthCashAuthStore, getTarifsAuthStore} from '../../selectors/auth-reselect';
 import {NavLink} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {MessageItem} from './message-item/message-item';
+import {infoStoreActions} from '../../redux/info-store-reducer';
 
 type OwnProps = {}
 
@@ -16,6 +17,8 @@ export const InfoSection: React.FC<OwnProps> = () => {
     const balance = useSelector(getAuthCashAuthStore)
     const { requestInfo } = useSelector(getRoutesStore)
     const tarifsPrice = useSelector(getTarifsAuthStore)
+    const unreadCount = useSelector(getUnreadMessagesCountInfoStore)
+    const dispatch = useDispatch()
 
     const tarifsHeader = 'Тарифы оказания услуг на сайте'
     const tarifsLabel: Record<keyof typeof tarifsPrice, string> = {
@@ -28,6 +31,12 @@ export const InfoSection: React.FC<OwnProps> = () => {
     const balanceHeader = 'Ваш баланс: ' + balance + ' рублей'
     const subTitle = [ 'Укажите номер Пользователя при пополнении Баланса.', 'Рекомендуется пополнять счёт каждого из Пользователей заранее!' ]
     const textInfo = 'Для пополнения Баланса счета Пользователя через сайт Т-Л-К.РФ, отсканируйте QR-код в мобильном приложении своей банковской карты. К оплате принимаются любые виды банковских карт личные и корпоративные. При невозможности оплаты через QR-код, воспользуйтесь оплатой через ЮКасса.'
+
+    useEffect(() => {
+        if (unreadCount !== 0) {
+            dispatch(infoStoreActions.setAllMessagesViewed())
+        }
+    }, [unreadCount])
 
     return (
         <div className={ styles.infoSection }>
@@ -82,16 +91,16 @@ export const InfoSection: React.FC<OwnProps> = () => {
                                 { balanceHeader }
                             </h3>
                             <div className={ styles.rightBalance__upperLeftSubtitle }>
-                            { subTitle[0] }</div>
+                                { subTitle[0] }</div>
                             <div className={ styles.rightBalance__upperLeftSubtitle }>
-                            { subTitle[1] }</div>
+                                { subTitle[1] }</div>
                         </div>
                         <div className={ styles.rightBalance__upperRight }>
                             <button type={ 'button' }
                                     onClick={ () => {
                                         alert('Оплата!')
                                     } }>
-                                <img className={styles.rightBalance__upperRight}
+                                <img className={ styles.rightBalance__upperRight }
                                      src={ ucassa } alt="Оплата онлайн" title={ 'Оплатить сюда' }/>
                             </button>
                         </div>

@@ -12,7 +12,11 @@ import historySVG from './buttonsSVG/history.svg'
 import mapSVG from './buttonsSVG/map.svg'
 import infoSVG from './buttonsSVG/info.svg'
 import optionsPNG from './buttonsSVG/options.png'
+import attentionSVG from '../../media/attention.svg'
+
 import {getIsAuthAuthStore} from '../../selectors/auth-reselect';
+import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect';
+
 
 
 type OwnProps = {}
@@ -21,7 +25,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
     const isAuth = useSelector(getIsAuthAuthStore)
-
+    const unreadMessagesCount = useSelector(getUnreadMessagesCountInfoStore)
     // вынес за пределы NavLink назначение классов
     const activeClass = ({isActive}: { isActive: boolean }): string =>
         `${styles.menuPanel__item} ${isActive
@@ -70,6 +74,8 @@ export const MenuPanel: React.FC<OwnProps> = () => {
                 <NavLink to={route} className={activeClass} role={'button'} title={title} key={route+src}>
                     <img className={styles.menuPanel__image} src={src} alt={buttonText}/>
                     <div className={styles.menuPanel__text}>{buttonText}</div>
+                    {(buttonText === 'Инфо' && unreadMessagesCount !== 0) &&
+                        <div className={styles.attentionIcon}><img src={attentionSVG} alt={'!'}/></div>}
                 </NavLink>
             )}
         </nav>
