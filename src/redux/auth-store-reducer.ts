@@ -10,6 +10,13 @@ const initialState = {
     isAvailableSMSrequest: false,
     isFetching: false,
 
+     tarifs: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
+        create: 100,
+        acceptShortRoute: 100,
+        acceptLongRoute: 100,
+        paySafeTax: 3,
+    },
+
     label: {
         innNumber: 'ИНН Компании',
         phoneNumber: 'Контактный номер',

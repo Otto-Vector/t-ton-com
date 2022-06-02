@@ -5,3 +5,4 @@ type InfoStoreSelectors<T extends keyof Y, Y = InfoStoreReducerStateType> = (sta
 
 export const getIsFetchingInfoStore: InfoStoreSelectors<'isFetching'> = (state) => state.infoStoreReducer.isFetching
 export const getContentInfoStore: InfoStoreSelectors<'content'> = (state) => state.infoStoreReducer.content
+

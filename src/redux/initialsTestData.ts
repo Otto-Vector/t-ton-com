@@ -742,7 +742,7 @@ export const infoMessagesTest: OneInfoItem[] = [
     {
         requestNumber: 388,
         infoText: 'Принять заявку',
-        timeDate: new Date(2022, 5, 2, 16, 33),
+        timeDate: new Date(2022, today.getMonth(), today.getDate(), 16, 33),
         viewed: false,
         mode: 'blue',
     },
