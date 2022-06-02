@@ -1,0 +1,38 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+.messageItem {
+  font-size: 16px;
+  display: flex;
+  flex-flow: row nowrap;
+  border-top: 1px solid $accentColor;
+  color: $accentColor;
+
+  &_gray {
+    color: $grayFonColor;
+  }
+
+  &__number {
+    text-align: center;
+    width: 80px;
+  }
+
+  &__text {
+    flex-grow: 1;
+    border-bottom: 1px solid $accentColor;
+    padding-left: 5px;
+
+    &_green {
+      color: $greenColor;
+    }
+
+    &_red {
+      color: $redColor;
+    }
+  }
+
+  &__date {
+    text-align: center;
+    width: 70px;
+  }
+}
