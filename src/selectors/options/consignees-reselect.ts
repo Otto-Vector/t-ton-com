@@ -14,6 +14,6 @@ export const getCurrentIdConsigneeStore: ConsigneesStoreSelectors<'currentId'> =
 
 
 export const getOneConsigneesFromLocal = createSelector( getCurrentIdConsigneeStore, getAllConsigneesStore, getInitialValuesConsigneesStore,
-    (currentId, shippers, initials ):  ConsigneesCardType  => {
-        return shippers.filter( ( { id } ) => id === currentId )[0] || initials
+    (currentId, consignees, initials ):  ConsigneesCardType  => {
+        return consignees.filter( ( { id } ) => id === currentId )[0] || initials
     } )

@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react'
+import React, {ChangeEvent, useEffect, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -6,18 +6,21 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
 import noImageTransport from '../../../media/noImageTransport.png'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoTypeType, propertyRights, TransportCardType} from '../../../types/form-types'
 import {
-    getInitialValuesTranstportStore, getLabelTranstportStore, getMaskOnTranstportStore,
-    getValidatorsTranstportStore
+    getCurrentIdTransportStore,
+    getInitialValuesTranstportStore, getLabelTranstportStore, getMaskOnTranstportStore, getOneTransportFromLocal,
+    getValidatorsTranstportStore,
 } from '../../../selectors/options/transport-reselect'
+
+import {transportStoreActions} from '../../../redux/options/transport-store-reducer';
 
 
 type OwnProps = {
@@ -28,35 +31,50 @@ type OwnProps = {
 export const TransportForm: React.FC<OwnProps> = () => {
 
     const header = 'Транспорт'
-    const isFetching = useSelector( getIsFetchingRequisitesStore )
+    const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const label = useSelector( getLabelTranstportStore )
-    const initialValues = useSelector( getInitialValuesTranstportStore )
-    const maskOn = useSelector( getMaskOnTranstportStore )
-    const validators = useSelector( getValidatorsTranstportStore )
+    const label = useSelector(getLabelTranstportStore)
+    const defaultInitialValues = useSelector(getInitialValuesTranstportStore)
+    const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
-    const { options } = useSelector( getRoutesStore )
+    const maskOn = useSelector(getMaskOnTranstportStore)
+    const validators = useSelector(getValidatorsTranstportStore)
+    const currentId = useSelector(getCurrentIdTransportStore)
+    const oneTransport = useSelector(getOneTransportFromLocal)
+    // вытаскиваем значение роутера
+    const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
+
+    const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const onSubmit = ( values: TransportCardType ) => {
-        console.log(values)
+        dispatch(transportStoreActions.changeTransport(currentId, values)) //сохраняем измененное значение
+        navigate(options) // и возвращаемся в предыдущее окно
     }
 
     const onCancelClick = () => {
-        navigate( options )
+        navigate(options)
+    }
+
+    const transportDeleteHandleClick = (currentId: number) => {
+
+        dispatch(transportStoreActions.deleteTransport(currentId))
+        navigate(options)
     }
 
     const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
 
-    // const dispatch = useDispatch()
-    // const employeeSaveHandleClick = () => { // onSubmit
-    // }
-    //
-    // const fakeFetch = () => { // @ts-ignore
-    //     // dispatch(fakeAuthFetching())
-    // }
+    useEffect(() => {
+            if (currentId === +( currentIdForShow || 0 )) {
+                setInitialValues(oneTransport)
+            } else {
+                dispatch(transportStoreActions.setCurrentId(+( currentIdForShow || 0 )))
+            }
+        }, [ currentId, initialValues ],
+    )
 
     return (
         <div className={ styles.transportTrailerForm }>
@@ -68,7 +86,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, handleSubmit, pristine, form, submitting } ) => (
+                                ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.transportTrailerForm__form }>
                                         <div className={ styles.transportTrailerForm__inputsPanel }>
                                             <Field name={ 'transportNumber' }
@@ -109,8 +127,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
 
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <FormSelector named={ 'cargoType' }
-                                                              placeholder={label.cargoType}
-                                                              values={ stringArrayToSelectValue(cargoTypeType.map(x=>x)) }/>
+                                                              placeholder={ label.cargoType }
+                                                              values={ stringArrayToSelectValue(cargoTypeType.map(x => x)) }/>
                                             </div>
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <Field name={ 'cargoWeight' }
@@ -122,8 +140,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                 />
                                             </div>
                                             <FormSelector named={ 'propertyRights' }
-                                                          placeholder={label.propertyRights}
-                                                          values={ stringArrayToSelectValue(propertyRights.map(x=>x)) }
+                                                          placeholder={ label.propertyRights }
+                                                          values={ stringArrayToSelectValue(propertyRights.map(x => x)) }
                                             />
                                         </div>
                                         <div>
@@ -142,15 +160,16 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'button' }
-                                                            disabled={ true }
+                                                            disabled={ false }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
+                                                            onClick={()=>{transportDeleteHandleClick(currentId)}}
                                                             rounded
                                                     />
                                                 </div>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting }
+                                                            disabled={ submitting || hasValidationErrors}
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

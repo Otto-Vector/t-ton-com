@@ -5,12 +5,14 @@ import {
     composeValidators,
     maxLength,
     maxRangeNumber,
-    required
+    required,
 } from '../../utils/validators'
+import {initialTransportValues} from '../initialsTestData';
 
 
 const initialState = {
-     label: {
+    currentId: 0,
+    label: {
         transportNumber: 'Гос. номер авто',
         transportTrademark: 'Марка авто',
         transportModel: 'Модель авто',
@@ -26,7 +28,7 @@ const initialState = {
         transportNumber: undefined, // просто текст
         transportTrademark: undefined, // просто текст
         transportModel: undefined, // просто текст
-        pts: '### ###', // просто фото
+        pts: undefined, // просто фото
         dopog: undefined, // просто фото
         cargoType: undefined, // просто текст
         cargoWeight: '##', // не больше 50-ти тонн
@@ -50,13 +52,15 @@ const initialState = {
         transportNumber: composeValidators(required, maxLength(20)),
         transportTrademark: composeValidators(required, maxLength(20)),
         transportModel: composeValidators(required, maxLength(20)),
-        pts: undefined,
-        dopog: undefined,
-        cargoType: undefined,
+        pts: composeValidators(required),
+        dopog: composeValidators(required),
+        cargoType: composeValidators(required),
         cargoWeight: composeValidators(maxRangeNumber(50)),
-        propertyRights: undefined,
+        propertyRights: composeValidators(required),
         transportImage: undefined,
     } as TransportCardType<ValidateType>,
+
+    content: [] as TransportCardType[],
 
 }
 
@@ -68,10 +72,45 @@ export const transportStoreReducer = ( state = initialState, action: ActionsType
 
     switch (action.type) {
 
-        case 'transport-store-reducer/SET-VALUES': {
+        case 'transport-store-reducer/SET-CURRENT-ID': {
             return {
                 ...state,
-                initialValues: action.initialValues
+                currentId: action.currentId,
+            }
+        }
+        case 'transport-store-reducer/SET-TRANSPORTS-CONTENT': {
+            return {
+                ...state,
+                content: [
+                    ...action.transport,
+                ],
+            }
+        }
+        case 'transport-store-reducer/ADD-TRANSPORT': {
+            return {
+                ...state,
+                content: [
+                    ...state.content,
+                    action.transport,
+                ],
+            }
+
+        }
+        case 'transport-store-reducer/CHANGE-TRANSPORT': {
+            return {
+                ...state,
+                content: [
+                    ...state.content
+                        .map(( val ) => ( +( val.id || 0 ) !== action.id ) ? val : action.transport),
+                ],
+            }
+        }
+        case 'transport-store-reducer/DELETE-TRANSPORT': {
+            return {
+                ...state,
+                content: [
+                    ...state.content.filter(( { id } ) => +( id || 1 ) !== action.id),
+                ],
             }
         }
         default: {
@@ -84,11 +123,28 @@ export const transportStoreReducer = ( state = initialState, action: ActionsType
 /* ЭКШОНЫ */
 export const transportStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setValues: ( initialValues: TransportCardType ) => ( {
-        type: 'transport-store-reducer/SET-VALUES',
-        initialValues,
+    setTransportContent: ( transport: TransportCardType[] ) => ( {
+        type: 'transport-store-reducer/SET-TRANSPORTS-CONTENT',
+        transport,
+    } as const ),
+    setCurrentId: ( currentId: number ) => ( {
+        type: 'transport-store-reducer/SET-CURRENT-ID',
+        currentId,
     } as const ),
 
+    addTransport: ( transport: TransportCardType ) => ( {
+        type: 'transport-store-reducer/ADD-TRANSPORT',
+        transport,
+    } as const ),
+    changeTransport: ( id: number, transport: TransportCardType ) => ( {
+        type: 'transport-store-reducer/CHANGE-TRANSPORT',
+        id,
+        transport,
+    } as const ),
+    deleteTransport: ( id: number ) => ( {
+        type: 'transport-store-reducer/DELETE-TRANSPORT',
+        id,
+    } as const ),
 }
 
 /* САНКИ */
@@ -96,16 +152,14 @@ export const transportStoreActions = {
 export type TransportStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-// export const getIcons = ( { domain }: GetIconsType ): TransportStoreReducerThunkActionType =>
-//     async ( dispatch ) => {
-//         // dispatch( requestFormActions.setIcons( null ) )
-//         try {
-//             const response = await getIconsFromApi( { domain } )
-//             dispatch( baseStoreActions.setIcons( domain, response ) )
-//         } catch (e) {
-//             alert( e )
-//             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
-//         }
-//
-//     }
+export const getAllTransportAPI = ( { innID }: { innID: number } ): TransportStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = initialTransportValues
+            dispatch(transportStoreActions.setTransportContent(response))
+        } catch (e) {
+            alert(e)
+        }
+
+    }
 

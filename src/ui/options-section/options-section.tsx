@@ -19,8 +19,8 @@ export const OptionsSection: React.FC<OwnProps> = () => {
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
     const shippersList = useSelector(getShippersOptionsStore)
     const consigneesList = useSelector(getConsigneesOptionsStore)
-    const employees = useSelector(getEmployeesOptionsStore)
     const transport = useSelector(getTransportOptionsStore)
+    const employees = useSelector(getEmployeesOptionsStore)
     const trailer = useSelector(getTrailerOptionsStore)
     const navigate = useNavigate()
 

@@ -26,8 +26,8 @@ const initialState = {
         trailerNumber: undefined, // просто текст
         trailerTrademark: undefined, // просто текст
         trailerModel: undefined, // просто текст
-        pts: undefined, // просто фото
-        dopog: undefined, // просто фото
+        pts: undefined, // просто текст
+        dopog: undefined, // просто текст
         cargoType: undefined, // просто текст
         cargoWeight: '##', // не больше 50-ти тонн
         propertyRights: undefined, // просто текст
@@ -50,11 +50,11 @@ const initialState = {
         trailerNumber: composeValidators(required, maxLength(20)),
         trailerTrademark: composeValidators(required, maxLength(20)),
         trailerModel: composeValidators(required, maxLength(20)),
-        pts: undefined,
-        dopog: undefined,
-        cargoType: undefined,
-        cargoWeight: composeValidators(maxRangeNumber(50)),
-        propertyRights: undefined,
+        pts: composeValidators(required),
+        dopog: composeValidators(required),
+        cargoType: composeValidators(required),
+        cargoWeight: composeValidators(required, maxRangeNumber(50)),
+        propertyRights: composeValidators(required),
         trailerImage: undefined,
     } as TrailerCardType<ValidateType>,
 

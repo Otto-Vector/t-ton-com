@@ -82,7 +82,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, handleSubmit, pristine, form, submitting } ) => (
+                                ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
                                         <div
                                             className={ styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled }>
@@ -170,7 +170,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting }
+                                                            disabled={ submitting || hasValidationErrors }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

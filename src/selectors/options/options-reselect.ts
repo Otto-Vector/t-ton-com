@@ -4,13 +4,14 @@ import {createSelector} from 'reselect'
 import {getAllShippersStore} from './shippers-reselect';
 import {ConsigneesCardType, ShippersCardType} from '../../types/form-types';
 import {getAllConsigneesStore} from './consignees-reselect';
+import {getAllTranstportStore} from './transport-reselect';
 
 type OptionsStoreSelectors<T extends keyof Y, Y = OptionsStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
 const getShippersTitleOptionsStore: OptionsStoreSelectors<'shippers'> = ( state ) => state.optionsStoreReducer.shippers
 const getConsigneesTitleOptionsStore: OptionsStoreSelectors<'consignees'> = ( state ) => state.optionsStoreReducer.consignees
+const getTransportTitleOptionsStore: OptionsStoreSelectors<'transport'> = ( state ) => state.optionsStoreReducer.transport
 export const getEmployeesOptionsStore: OptionsStoreSelectors<'employees'> = ( state ) => state.optionsStoreReducer.employees
-export const getTransportOptionsStore: OptionsStoreSelectors<'transport'> = ( state ) => state.optionsStoreReducer.transport
 export const getTrailerOptionsStore: OptionsStoreSelectors<'trailer'> = ( state ) => state.optionsStoreReducer.trailer
 
 
@@ -23,4 +24,11 @@ export const getShippersOptionsStore = createSelector(getAllShippersStore, getSh
 export const getConsigneesOptionsStore = createSelector(getAllConsigneesStore, getConsigneesTitleOptionsStore,
     ( consignee: ConsigneesCardType[], titles ) => {
         return { ...titles, content: consignee.map(( { id, title } ) => ( { id, title } )) }
+    })
+
+// выборка из списка загруженных грузовиков
+export const getTransportOptionsStore = createSelector(getAllTranstportStore, getTransportTitleOptionsStore,
+    ( transport, titles ) => {
+        return { ...titles, content: transport.map(( { id, transportTrademark, transportNumber  } ) =>
+                ( { id, title: transportTrademark+', '+ transportNumber} )) }
     })

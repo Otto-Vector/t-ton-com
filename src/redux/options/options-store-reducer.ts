@@ -123,19 +123,3 @@ export type OptionsStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 //
 //     }
 
-'Maruti'
-'Maserati'
-'Maybach'
-'Mazda'
-'McLaren'
-'Mega'
-'Mercedes-Benz'
-'Mercury'
-'Metrocab'
-'MG'
-'Minelli'
-'Mini'
-'Mitsubishi'
-'Mitsuoka'
-'Monte Carlo'
-'Morgan'
