@@ -57,6 +57,6 @@ export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, get
     ( employees: EmployeesCardType[], titles ) => {
         return {
             ...titles, content: employees.map(( { id, employeeFIO } ) =>
-                ( { id, title: employeeFIO } )),
+                ( { id, title: employeeFIO+'' } )),
         }
     })

@@ -33,34 +33,42 @@ type OwnProps = {
 export const TrailerForm: React.FC<OwnProps> = () => {
 
     const header = 'Прицеп'
-    const isFetching = useSelector( getIsFetchingRequisitesStore )
+    const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const label = useSelector( getLabelTrailerStore )
+    const label = useSelector(getLabelTrailerStore)
     const defaultInitialValues = useSelector(getInitialValuesTrailerStore)
     //для проброса загруженных данных в форму
     const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
-    const maskOn = useSelector( getMaskOnTrailerStore )
-    const validators = useSelector( getValidatorsTrailerStore )
-     const currentId = useSelector(getCurrentIdTrailerStore)
+    const maskOn = useSelector(getMaskOnTrailerStore)
+    const validators = useSelector(getValidatorsTrailerStore)
+    const currentId = useSelector(getCurrentIdTrailerStore)
     const oneTrailer = useSelector(getOneTrailerFromLocal)
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
 
-    const { options } = useSelector( getRoutesStore )
+    const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const onSubmit = ( value: TrailerCardType ) => {
+    const onSubmit = ( values: TrailerCardType ) => {
+        dispatch(trailerStoreActions.changeTrailer(currentId, values)) //сохраняем измененное значение
+        navigate(options) // и возвращаемся в предыдущее окно
     }
+
     const onCancelClick = () => {
-        navigate( options )
+        navigate(options)
     }
     const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
 
-     useEffect(() => {
+    const trailerDeleteHandleClick = ( currentId: number ) => {
+        dispatch(trailerStoreActions.deleteTrailer(currentId))
+        navigate(options)
+    }
+
+    useEffect(() => {
             if (currentId === +( currentIdForShow || 0 )) {
                 setInitialValues(oneTrailer)
             } else {
@@ -120,7 +128,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <FormSelector named={ 'cargoType' }
-                                                              values={ stringArrayToSelectValue(cargoTypeType.map(x=>x)) }/>
+                                                              values={ stringArrayToSelectValue(cargoTypeType.map(x => x)) }/>
                                             </div>
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <Field name={ 'cargoWeight' }
@@ -132,7 +140,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                 />
                                             </div>
                                             <FormSelector named={ 'propertyRights' }
-                                                          values={ stringArrayToSelectValue(propertyRights.map(x=>x)) }/>
+                                                          values={ stringArrayToSelectValue(propertyRights.map(x => x)) }/>
                                         </div>
                                         <div>
                                             <div className={ styles.transportTrailerForm__photoWrapper }
@@ -150,9 +158,11 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'button' }
-                                                            disabled={ true }
+                                                            disabled={ submitting }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
+                                                            onClick={ () => {trailerDeleteHandleClick(currentId)
+                                                            } }
                                                             rounded
                                                     />
                                                 </div>

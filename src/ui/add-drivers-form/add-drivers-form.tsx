@@ -24,50 +24,69 @@ import {
 import {FormSelector, SelectOptions} from '../common/form-selector/form-selector';
 import {randomDriverImage, randomTrailerImage, randomTruckImage} from '../../api/randomImage';
 import {
-    getEmployeesOptionsStore,
     getTrailerOptionsStore,
-    getTransportOptionsStore,
+
 } from '../../selectors/options/options-reselect';
 import {FormInputType} from '../common/form-input-type/form-input-type';
 import {getOneRequestStore} from '../../selectors/forms/request-form-reselect';
 import {ddMmYearFormat} from '../../utils/date-formats';
+import {getAllEmployeesStore} from '../../selectors/options/employees-reselect';
+import {getAllTransportStore} from '../../selectors/options/transport-reselect';
+import {parseFamilyToFIO} from '../../utils/parsers';
+import {getAllTrailerStore} from '../../selectors/options/trailer-reselect';
 
-type OwnProps = {
-
-}
+type OwnProps = {}
 
 export const AddDriversForm: React.FC<OwnProps> = () => {
 
-    const header = (requestNumber: number, shipmentDate: Date ): string =>
-        `Заявка ${requestNumber} от ${ddMmYearFormat(shipmentDate)}`
+    const header = ( requestNumber: number, shipmentDate: Date ): string =>
+        `Заявка ${ requestNumber } от ${ ddMmYearFormat(shipmentDate) }`
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
     const initialValues = useSelector(getInitialValuesAddDriverStore)
     const label = useSelector(getLabelAddDriverStore)
     const placeholder = useSelector(getPlaceholderAddDriverStore)
     const validators = useSelector(getValidatorsAddDriverStore)
-    const {taxMode} = useSelector(getStoredValuesRequisitesStore)
-    const {distance} = useSelector(getOneRequestStore)
-
-    const employees: SelectOptions[] = useSelector(getEmployeesOptionsStore).content
-        .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title?.toString() } ))
-    const transport: SelectOptions[] = useSelector(getTransportOptionsStore).content
-        .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
-    const trailer: SelectOptions[] = useSelector(getTrailerOptionsStore).content
-        .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
+    const { taxMode } = useSelector(getStoredValuesRequisitesStore)
+    const { distance } = useSelector(getOneRequestStore)
 
 
-    const { requestInfo: {create} } = useSelector(getRoutesStore)
+    const employees = useSelector(getAllEmployeesStore)
+    const employeesSelect: SelectOptions[] = employees.map(( { id, employeeFIO } ) =>
+        ( { key: id.toString(), value: id.toString(), label: parseFamilyToFIO(employeeFIO) } ))
+    const transport = useSelector(getAllTransportStore)
+    const transportSelect: SelectOptions[] = transport
+        .map(( { id, transportTrademark, transportNumber, cargoWeight } ) =>
+            ( {
+                key: id.toString(),
+                value: id.toString(),
+                label: [ transportTrademark, transportNumber, cargoWeight ].join(', ') + 'т.',
+            } ))
+    const trailer = useSelector(getAllTrailerStore)
+    const trailerSelect: SelectOptions[] = trailer
+        .map(( { id, trailerTrademark, trailerNumber, cargoWeight } ) =>
+            ( {
+                key: id.toString(),
+                value: id.toString(),
+                label: [ trailerTrademark, trailerNumber, cargoWeight ].join(', ') + 'т.',
+            } ))
+
+
+    const { requestInfo: { create } } = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
     const onSubmit = ( values: AddDriverCardType ) => {
         navigate(create)
     }
-    const resultDistanceCost = (...args: number[]): number => args.reduce((a,b)=> a*b) * (distance||1)
+    const resultDistanceCost = ( ...args: number[] ): number => args.reduce(( a, b ) => a * b) * ( distance || 1 )
 
     const onCancelClick = () => {
         navigate(-1)
     }
+
+    const getEmployeeOneImage = ( searchId: string ) => employees.filter(( { id } ) => id === +searchId)[0].photoFace
+    const getTransportOneImage = ( searchId: string ) => transport.filter(( { id } ) => id === +searchId)[0].transportImage
+    const getTrailerOneImage = ( searchId: string ) => trailer.filter(( { id } ) => id === +searchId)[0].trailerImage
 
     // const driverSumm = (a,b)=>a*b
 
@@ -98,21 +117,21 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                     className={ styles.addDriversForm__label }>{ label.driverFIO + ':' }</label>
                                                 <FormSelector named={ 'driverFIO' }
                                                               placeholder={ placeholder.driverFIO }
-                                                              values={ employees }/>
+                                                              values={ employeesSelect }/>
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>{ label.driverTransport + ':' }</label>
                                                 <FormSelector named={ 'driverTransport' }
                                                               placeholder={ placeholder.driverTransport }
-                                                              values={ transport }/>
+                                                              values={ transportSelect }/>
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>{ label.driverTrailer + ':' }</label>
                                                 <FormSelector named={ 'driverTrailer' }
                                                               placeholder={ placeholder.driverTrailer }
-                                                              values={ trailer }/>
+                                                              values={ trailerSelect }/>
                                             </div>
                                         </div>
                                         <div className={ styles.addDriversForm__infoPanel }>
@@ -134,11 +153,11 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.driverSumm + ':' }</label>
-                                                <div className={ styles.addDriversForm__info +' '+
-                                                styles.addDriversForm__info_long}>
+                                                <div className={ styles.addDriversForm__info + ' ' +
+                                                    styles.addDriversForm__info_long }>
                                                     {
-                                                        values.driverSumm = resultDistanceCost(+(values.driverStavka||0)).toString()
-                                                        || 'за весь рейс' }
+                                                        values.driverSumm = resultDistanceCost(+( values.driverStavka || 0 )).toString()
+                                                            || 'за весь рейс' }
                                                 </div>
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>
@@ -161,17 +180,29 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
 
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
-                                                    src={ values.driverFIO ? randomDriverImage(+values.driverFIO) : noImagePhoto }
+                                                    src={
+                                                    values.driverFIO
+                                                        ? getEmployeeOneImage(values.driverFIO)
+                                                        : noImagePhoto
+                                                }
                                                     alt="driverPhoto"/>
                                             </div>
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
-                                                    src={ values.driverTransport ? randomTruckImage(+values.driverTransport) : noImagePhoto }
+                                                    src={
+                                                    values.driverTransport
+                                                        ? getTransportOneImage(values.driverTransport)
+                                                        : noImagePhoto
+                                                }
                                                     alt="driverTransportPhoto"/>
                                             </div>
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
-                                                    src={ values.driverTrailer ? randomTrailerImage(+values.driverTrailer) : noImagePhoto }
+                                                    src={
+                                                        values.driverTrailer
+                                                            ? getTrailerOneImage(values.driverTrailer)
+                                                            : noImagePhoto
+                                                    }
                                                     alt="driverTrailerPhoto"/>
                                             </div>
                                         </div>

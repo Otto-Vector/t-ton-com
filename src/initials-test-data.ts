@@ -7,10 +7,11 @@ import {
     ShippersCardType,
     TrailerCardType,
     TransportCardType,
-} from '../types/form-types'
-import {randArrayValue, randFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from '../utils/random-utils';
-import {OneInfoItem} from './info-store-reducer';
-import {randomPassportDate} from '../utils/date-formats';
+} from './types/form-types'
+import {randArrayValue, randFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from './utils/random-utils';
+import {OneInfoItem} from './redux/info-store-reducer';
+import {randomPassportDate} from './utils/date-formats';
+import {randomDriverImage, randomTrailerImage, randomTruckImage} from './api/randomImage';
 
 const today = new Date()
 
@@ -496,7 +497,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
 export const initialTransportValues: TransportCardType[] = [
     {
         id: 1,
-        transportNumber: 'В 367 Р А',
+        transportNumber: 'В 367 РА',
         transportTrademark: 'Dacia',
         transportModel: 'Maruti',
         pts: '55РТ 114857',
@@ -504,11 +505,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: 'https://www.fraikinrus.ru/upload/iblock/eb9/eb9b0dc47eb0d3340cdad41d5c25c101.png',
     },
     {
         id: 2,
-        transportNumber: 'Р 571 А Е',
+        transportNumber: 'Р 571 АЕ',
         transportTrademark: 'Dadi',
         transportModel: 'Maserati',
         pts: '17ЕА 519329',
@@ -516,11 +517,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(2),
     },
     {
         id: 3,
-        transportNumber: 'Н 436 Х В',
+        transportNumber: 'Н 436 ХВ',
         transportTrademark: 'Daewoo',
         transportModel: 'Maybach',
         pts: '74ХН 939066',
@@ -528,11 +529,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(3),
     },
     {
         id: 4,
-        transportNumber: 'В 358 Е Т',
+        transportNumber: 'В 358 ЕТ',
         transportTrademark: 'Daihatsu',
         transportModel: 'Mazda',
         pts: '61УА 299363',
@@ -540,11 +541,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(4),
     },
     {
         id: 15,
-        transportNumber: 'Е 916 Р У',
+        transportNumber: 'Е 916 РУ',
         transportTrademark: 'Daimler',
         transportModel: 'McLaren',
         pts: '68ЕУ 674842',
@@ -552,11 +553,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(15),
     },
     {
         id: 5,
-        transportNumber: 'А 055 У Т',
+        transportNumber: 'А 055 УТ',
         transportTrademark: 'Dallas',
         transportModel: 'Mega',
         pts: '59ХР 438299',
@@ -564,11 +565,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(5),
     },
     {
         id: 6,
-        transportNumber: 'А 426 У Х',
+        transportNumber: 'А 426 УХ',
         transportTrademark: 'Derways',
         transportModel: 'Mercedes-Benz',
         pts: '49УХ 105717',
@@ -576,11 +577,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(6),
     },
     {
         id: 7,
-        transportNumber: 'О 805 С М',
+        transportNumber: 'О 805 СМ',
         transportTrademark: 'De Tomaso',
         transportModel: 'Mercury',
         pts: '85АН 886286',
@@ -588,11 +589,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(7),
     },
     {
         id: 8,
-        transportNumber: 'Х 538 К У',
+        transportNumber: 'Х 538 КУ',
         transportTrademark: 'Dodge',
         transportModel: 'Metrocab',
         pts: '58НХ 667817',
@@ -600,11 +601,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(8),
     },
     {
         id: 9,
-        transportNumber: 'Р 321 К Т',
+        transportNumber: 'Р 321 КТ',
         transportTrademark: 'Dong Feng',
         transportModel: 'MG',
         pts: '82УР 268409',
@@ -612,11 +613,11 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(9),
     },
     {
         id: 10,
-        transportNumber: 'Е 749 Т В',
+        transportNumber: 'Е 749 ТВ',
         transportTrademark: 'Doninvest',
         transportModel: 'Minelli',
         pts: '73ТР 562526',
@@ -624,7 +625,7 @@ export const initialTransportValues: TransportCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        transportImage: undefined,
+        transportImage: randomTruckImage(10),
     },
 ]
 
@@ -632,7 +633,7 @@ export const initialTransportValues: TransportCardType[] = [
 export const initialTrailerValues: TrailerCardType[] = [
     {
         id: 11,
-        trailerNumber: 'А 355 В С',
+        trailerNumber: 'А 355 ВС',
         trailerTrademark: 'Jeep',
         trailerModel: 'Mini',
         pts: '71СР 245074',
@@ -640,11 +641,11 @@ export const initialTrailerValues: TrailerCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        trailerImage: undefined,
+        trailerImage: 'http://maz-kam.ru/wp-content/uploads/2018/01/pritsep-1.jpg',
     },
     {
         id: 12,
-        trailerNumber: 'К 796 О Р',
+        trailerNumber: 'К 796 ОР',
         trailerTrademark: 'Jiangling',
         trailerModel: 'Mitsubishi',
         pts: '27КС 289906',
@@ -652,11 +653,11 @@ export const initialTrailerValues: TrailerCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        trailerImage: undefined,
+        trailerImage: randomTrailerImage(12),
     },
     {
         id: 13,
-        trailerNumber: 'Н 916 О М',
+        trailerNumber: 'Н 916 ОМ',
         trailerTrademark: 'Jiangnan',
         trailerModel: 'Mitsuoka',
         pts: '24СО 206228',
@@ -664,11 +665,11 @@ export const initialTrailerValues: TrailerCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        trailerImage: undefined,
+        trailerImage: randomTrailerImage(13),
     },
     {
         id: 14,
-        trailerNumber: 'Р 209 К Х',
+        trailerNumber: 'Р 209 КХ',
         trailerTrademark: 'КАМАЗ',
         trailerModel: 'Monte Carlo',
         pts: '11СО 837334',
@@ -676,7 +677,7 @@ export const initialTrailerValues: TrailerCardType[] = [
         cargoType: randArrayValue(cargoType),
         cargoWeight: randFloorMax(50).toString(),
         propertyRights: 'Аренда',
-        trailerImage: undefined,
+        trailerImage: randomTrailerImage(14),
     }
     ]
 
@@ -695,7 +696,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '9194',
         mechanicFIO: 'Тимофеев Андрей Федорович',
         dispatcherFIO: 'Маркова Феодосия Данииловна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(1),
         rating: randFloorMax(10).toString(),
     },
     {
@@ -711,7 +712,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '3081',
         mechanicFIO: 'Крылов Эрнест Макарович',
         dispatcherFIO: 'Пахомова Архелия Пётровна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(2),
         rating: randFloorMax(10).toString(),
     },
     {
@@ -727,7 +728,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '1854',
         mechanicFIO: 'Беляков Алан Лаврентьевич',
         dispatcherFIO: 'Меркушева Аксинья Викторовна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(3),
         rating: randFloorMax(10).toString(),
     },
     {
@@ -743,7 +744,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '6511',
         mechanicFIO: 'Архипов Лука Ярославович',
         dispatcherFIO: 'Козлова Сара Георгиевна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(4),
         rating: randFloorMax(10).toString(),
     },
     {
@@ -759,7 +760,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '1520',
         mechanicFIO: 'Сафонов Роман Васильевич',
         dispatcherFIO: 'Дорофеева Евгения Арсеньевна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(5),
         rating: randFloorMax(10).toString(),
     },
     {
@@ -775,7 +776,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '4818',
         mechanicFIO: 'Миронов Аполлон Антонович',
         dispatcherFIO: 'Самсонова Нева Альбертовна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(6),
         rating: randFloorMax(10).toString(),
     },
     {
@@ -791,7 +792,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '8103',
         mechanicFIO: 'Баранов Герасим Георгьевич',
         dispatcherFIO: 'Макарова Эдуарда Максимовна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(7),
         rating: randFloorMax(10).toString(),
     },
     {
@@ -807,7 +808,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '9502',
         mechanicFIO: 'Терентьев Тимур Лукьянович',
         dispatcherFIO: 'Гуляева Юстина Леонидовна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(8),
         rating: randFloorMax(10).toString(),
     },
     {
@@ -823,7 +824,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '3964',
         mechanicFIO: 'Кузнецов Прохор Валерьевич',
         dispatcherFIO: 'Герасимова Данута Филипповна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(9),
         rating: randFloorMax(10).toString(),
     },
     {
@@ -839,7 +840,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '1476',
         mechanicFIO: 'Цветков Осип Макарович',
         dispatcherFIO: 'Савина Гелена Куприяновна',
-        photoFace: undefined,
+        photoFace: randomDriverImage(10),
         rating: randFloorMax(10).toString(),
     },
 

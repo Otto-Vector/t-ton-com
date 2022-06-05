@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {TransportCardType, ValidateType} from '../../types/form-types'
 import {composeValidators, maxLength, maxRangeNumber, required} from '../../utils/validators'
-import {initialTransportValues} from '../initials-test-data';
+import {initialTransportValues} from '../../initials-test-data';
 
 
 const initialState = {

@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
-import {infoMessagesTest} from './initials-test-data';
+import {infoMessagesTest} from '../initials-test-data';
 
 
 export type OneInfoItem = {

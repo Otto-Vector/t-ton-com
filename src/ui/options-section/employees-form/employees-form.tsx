@@ -201,7 +201,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.employeesForm__buttonsPanel }>
                                                 <div className={ styles.employeesForm__button }>
                                                     <Button type={ 'button' }
-                                                            disabled={ true }
+                                                            disabled={ submitting }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
                                                             onClick={()=>{employeesDeleteHandleClick(currentId)}}

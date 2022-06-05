@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ConsigneesCardType, ValidateType} from '../../types/form-types'
 import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
-import {initialConsigneesContent} from '../initials-test-data'
+import {initialConsigneesContent} from '../../initials-test-data'
 
 const initialState = {
     currentId: 0,

@@ -17,7 +17,7 @@ import {
     parseOnlyOneDot,
     parseOnlyOneSpace,
 } from '../../utils/parsers';
-import {initialEmployeesValues} from '../initials-test-data';
+import {initialEmployeesValues} from '../../initials-test-data';
 
 const initialState = {
     currentId: 0,
@@ -43,7 +43,7 @@ const initialState = {
         passportSerial: '## ## ### ###', // 10 цифр
         passportFMS: undefined, // просто текст
         passportDate: undefined, // режим ввода даты
-        drivingLicenseNumber: '## ## ######', // 10 цифр
+        drivingLicenseNumber: undefined, // 10 цифр
         drivingCategory: undefined, // просто текст же?
         personnelNumber: '##### #####', // поставим ДО 10 цифр
         garageNumber: '##### #####', // поставим ДО 10 цифр

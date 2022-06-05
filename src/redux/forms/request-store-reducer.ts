@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
-import {cargoComposition, initialDocumentsRequestValues, makeNTestRequests} from '../initials-test-data';
+import {cargoComposition, initialDocumentsRequestValues, makeNTestRequests} from '../../initials-test-data';
 
 
 const initialState = {
