@@ -21,6 +21,7 @@ import {
 } from '../../../selectors/options/transport-reselect'
 
 import {transportStoreActions} from '../../../redux/options/transport-store-reducer';
+import {parsePseudoLatinCharsAndNumbers} from '../../../utils/parsers';
 
 
 type OwnProps = {
@@ -95,6 +96,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.transportNumber }
+                                                   parse={parsePseudoLatinCharsAndNumbers}
                                             />
                                             <Field name={ 'transportTrademark' }
                                                    placeholder={ label.transportTrademark }

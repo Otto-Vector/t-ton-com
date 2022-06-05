@@ -2,10 +2,13 @@ import {parseAllNumbers} from './parsers';
 
 export const composeValidators = (...validators) => (value) =>
     validators.reduce((error, validator) => error || validator(value), undefined);
+
+
 /////////////////////////////////////////////////////////////////////////////////
 export const required = (value) => ( value ? undefined : "Обязательное поле" )
 
 export const mustBeNumber = (value) => ( isNaN(value) ? "Только цифры" : undefined );
+export const mustBeOneSpace = (value) => ( isNaN(value) ? "Только один пробел!" : undefined );
 export const maxLength = (max) => (value) => ( ( value && ( value.length > max ) ) ? `Больше ${ max } символов!` : undefined );
 export const minLength = (min) => (value) => ( ( value.length <= min ) ? `Меньше ${ min } символов!` : undefined );
 export const maxRangeNumber = (max) => (value) => ( ( +value > max ) ? `Значение не должно превышать ${ max }!` : undefined );

@@ -8,7 +8,8 @@ import {
     mustNotBeOnlyNull,
     required,
 } from '../../utils/validators'
-import {EmployeesCardType, ValidateType} from '../../types/form-types'
+import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-types'
+import {composeParsers, parseFIO, parseOnlyOneDash, parseOnlyOneDot, parseOnlyOneSpace} from '../../utils/parsers';
 
 const initialState = {
     label: {
@@ -63,22 +64,40 @@ const initialState = {
         rating: undefined,
     } as EmployeesCardType,
     validators: {
-        employeeFIO: composeValidators( required, maxLength( 50 ) ),
-        employeePhoneNumber: composeValidators( required, mustBe00Numbers( 11 ) ),
-        passportSerial: composeValidators( mustBe00Numbers( 10 ), mustNotBeOnlyNull ),
+        employeeFIO: composeValidators(required, maxLength(50)),
+        employeePhoneNumber: composeValidators(required, mustBe00Numbers(11)),
+        passportSerial: composeValidators(mustBe00Numbers(10), mustNotBeOnlyNull),
         passportImage: undefined,
         passportFMS: undefined,
         passportDate: undefined,
-        drivingLicenseNumber: composeValidators( mustBe00Numbers( 10 ), mustNotBeOnlyNull ),
+        drivingLicenseNumber: composeValidators(mustBe00Numbers(10), mustNotBeOnlyNull),
         drivingLicenseImage: undefined,
         drivingCategory: undefined,
-        personnelNumber: composeValidators( maxNumbers( 10 ) ),
-        garageNumber: composeValidators( maxNumbers( 10 ), mustNotBeOnlyNull ),
-        mechanicFIO: composeValidators( maxLength( 50 ) ),
-        dispatcherFIO: composeValidators( maxLength( 50 ) ),
+        personnelNumber: composeValidators(maxNumbers(10)),
+        garageNumber: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
+        mechanicFIO: composeValidators(maxLength(50)),
+        dispatcherFIO: composeValidators(maxLength(50)),
         photoFace: undefined,
-        rating: composeValidators( maxNumbers( 2 ) ),
-    } as EmployeesCardType<ValidateType>
+        rating: composeValidators(maxNumbers(2)),
+    } as EmployeesCardType<ValidateType>,
+    parsers: {
+        employeeFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot),
+        employeePhoneNumber: undefined,
+        passportSerial: undefined,
+        passportImage: undefined,
+        passportFMS: undefined,
+        passportDate: undefined,
+        drivingLicenseNumber: undefined,
+        drivingLicenseImage: undefined,
+        drivingCategory: undefined,
+        personnelNumber: undefined,
+        garageNumber: undefined,
+        mechanicFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot),
+        dispatcherFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot),
+        photoFace: undefined,
+        rating: undefined,
+    } as EmployeesCardType<ParserType>,
+
 }
 
 export type EmployeesStoreReducerStateType = typeof initialState
@@ -92,7 +111,7 @@ export const employeesStoreReducer = ( state = initialState, action: ActionsType
         case 'employees-store-reducer/SET-VALUES': {
             return {
                 ...state,
-                initialValues: action.initialValues
+                initialValues: action.initialValues,
             }
         }
         default: {

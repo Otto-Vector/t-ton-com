@@ -1,5 +1,6 @@
 // на валидаторы для форм
 export type ValidateType = undefined | ( ( val: string ) => string | undefined )
+export type ParserType = undefined | ( ( val: string | undefined ) => string )
 // на поля для форм
 type DefaultFormType = string | undefined
 

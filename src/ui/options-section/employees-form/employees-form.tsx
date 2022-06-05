@@ -10,16 +10,17 @@ import {useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {parseFIO} from '../../../utils/parsers'
+import {parseFIO, parseOnlyOneDash, parseOnlyOneSpace} from '../../../utils/parsers'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {EmployeesCardType} from '../../../types/form-types'
 import {
     getInitialValuesEmployeesStore,
     getLabelEmployeesStore,
-    getMaskOnEmployeesStore,
+    getMaskOnEmployeesStore, getParsersEmployeesStore,
     getValidatorsEmployeesStore,
 } from '../../../selectors/options/employees-reselect'
+import {composeParsers} from '../../../utils/parsers';
 
 type OwnProps = {
     // onSubmit: (requisites: employeesCardType) => void
@@ -33,6 +34,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const initialValues = useSelector(getInitialValuesEmployeesStore)
     const maskOn = useSelector(getMaskOnEmployeesStore)
     const validators = useSelector(getValidatorsEmployeesStore)
+    const parsers = useSelector(getParsersEmployeesStore)
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -66,7 +68,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, handleSubmit, pristine, form, submitting } ) => (
+                                ( { submitError, hasValidationErrors , handleSubmit, pristine, form, submitting } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.employeesForm__form }>
                                         <div
                                             className={ styles.employeesForm__inputsPanel + ' ' + styles.employeesForm__inputsPanel_titled }>
@@ -76,7 +78,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.employeeFIO }
-                                                   parse={ parseFIO }
+                                                   parse={ parsers.employeeFIO }
                                             />
                                         </div>
 
@@ -180,7 +182,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <div className={ styles.employeesForm__button }>
                                                 <Button type={ 'submit' }
-                                                        disabled={ submitting }
+                                                        disabled={ submitting || submitError || hasValidationErrors}
                                                         colorMode={ 'green' }
                                                         title={ 'Cохранить' }
                                                         rounded

@@ -7,6 +7,7 @@ export const getLabelEmployeesStore: EmployeesStoreSelectors<'label'> = (state) 
 export const getInitialValuesEmployeesStore: EmployeesStoreSelectors<'initialValues'> = (state) => state.employeesStoreReducer.initialValues
 export const getMaskOnEmployeesStore: EmployeesStoreSelectors<'maskOn'> = (state) => state.employeesStoreReducer.maskOn
 export const getValidatorsEmployeesStore: EmployeesStoreSelectors<'validators'> = (state) => state.employeesStoreReducer.validators
+export const getParsersEmployeesStore: EmployeesStoreSelectors<'parsers'> = (state) => state.employeesStoreReducer.parsers
 
 
 // // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API
