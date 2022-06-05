@@ -22,11 +22,6 @@ import {
     getValidatorsAddDriverStore,
 } from '../../selectors/forms/add-driver-reselect';
 import {FormSelector, SelectOptions} from '../common/form-selector/form-selector';
-import {randomDriverImage, randomTrailerImage, randomTruckImage} from '../../api/randomImage';
-import {
-    getTrailerOptionsStore,
-
-} from '../../selectors/options/options-reselect';
 import {FormInputType} from '../common/form-input-type/form-input-type';
 import {getOneRequestStore} from '../../selectors/forms/request-form-reselect';
 import {ddMmYearFormat} from '../../utils/date-formats';
@@ -76,8 +71,9 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
 
     const onSubmit = ( values: AddDriverCardType ) => {
-        navigate(create)
+        // navigate(create)
     }
+
     const resultDistanceCost = ( ...args: number[] ): number => args.reduce(( a, b ) => a * b) * ( distance || 1 )
 
     const onCancelClick = () => {
@@ -88,9 +84,9 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const getTransportOneImage = ( searchId: string ) => transport.filter(( { id } ) => id === +searchId)[0].transportImage
     const getTrailerOneImage = ( searchId: string ) => trailer.filter(( { id } ) => id === +searchId)[0].trailerImage
 
-    // const driverSumm = (a,b)=>a*b
+    const getTransportOneCargoWeight = ( searchId?: string ) => transport.filter(( { id } ) => id === +(searchId||0))[0]?.cargoWeight
+    const getTrailerOneCargoWeight = ( searchId?: string ) => trailer.filter(( { id } ) => id === +(searchId||0))[0]?.cargoWeight
 
-    // const dispatch = useDispatch()
     // const employeeSaveHandleClick = () => { // onSubmit
     // }
     //
@@ -150,13 +146,21 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                        errorBottom
                                                 />
                                             </div>
-                                            <div className={ styles.addDriversForm__infoItem }>
+                                            <div className={ styles.addDriversForm__infoItem }
+                                            title={'Расстояние: '+distance+'км.'}>
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.driverSumm + ':' }</label>
                                                 <div className={ styles.addDriversForm__info + ' ' +
                                                     styles.addDriversForm__info_long }>
                                                     {
-                                                        values.driverSumm = resultDistanceCost(+( values.driverStavka || 0 )).toString()
+                                                        values.driverSumm = resultDistanceCost(
+                                                            +( values.driverStavka || 0 ),
+                                                            (
+                                                                +(getTrailerOneCargoWeight(values.driverTrailer)|| 0)
+                                                                +
+                                                                +(getTransportOneCargoWeight(values.driverTransport)||0)
+                                                            )
+                                                            ).toString()
                                                             || 'за весь рейс' }
                                                 </div>
                                             </div>
