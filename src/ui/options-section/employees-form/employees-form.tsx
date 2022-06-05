@@ -68,7 +68,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, hasValidationErrors , handleSubmit, pristine, form, submitting } ) => (
+                                ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.employeesForm__form }>
                                         <div
                                             className={ styles.employeesForm__inputsPanel + ' ' + styles.employeesForm__inputsPanel_titled }>
@@ -89,6 +89,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.passportSerial }
+                                                   parse={ parsers.passportSerial }
                                             />
                                             {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                             <Field name={ 'passportFMS' }
@@ -97,6 +98,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.passportFMS }
+                                                   parse={ parsers.passportFMS }
                                             />
                                             <Field name={ 'drivingLicenseNumber' }
                                                    placeholder={ label.drivingLicenseNumber }
@@ -104,6 +106,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.drivingLicenseNumber }
+                                                   parse={ parsers.drivingLicenseNumber }
                                             />
                                             <Field name={ 'drivingCategory' }
                                                    placeholder={ label.drivingCategory }
@@ -111,6 +114,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.drivingCategory }
+                                                   parse={ parsers.drivingCategory }
                                             />
                                             <Field name={ 'personnelNumber' }
                                                    placeholder={ label.personnelNumber }
@@ -118,6 +122,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.personnelNumber }
+                                                   parse={ parsers.personnelNumber }
                                             />
                                             <Field name={ 'garageNumber' }
                                                    placeholder={ label.garageNumber }
@@ -125,6 +130,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.garageNumber }
+                                                   parse={ parsers.garageNumber }
                                             />
                                             <Field name={ 'mechanicFIO' }
                                                    placeholder={ label.mechanicFIO }
@@ -132,7 +138,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.mechanicFIO }
-                                                   parse={ parseFIO }
+                                                   parse={ parsers.mechanicFIO }
                                             />
                                             <Field name={ 'dispatcherFIO' }
                                                    placeholder={ label.dispatcherFIO }
@@ -140,7 +146,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.dispatcherFIO }
-                                                   parse={ parseFIO }
+                                                   parse={ parsers.dispatcherFIO }
                                             />
                                         </div>
                                         {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
@@ -152,6 +158,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.employeePhoneNumber }
+                                                   parse={ parsers.employeePhoneNumber }
                                             />
                                             <Field name={ 'passportDate' }
                                                    placeholder={ label.passportDate }
@@ -160,6 +167,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    inputType={ 'date' }
                                                    validate={ validators.passportDate }
+                                                   parse={ parsers.passportDate }
                                             />
                                             <div className={ styles.employeesForm__photo }
                                                  title={ 'Добавить/изменить фото' }>
@@ -171,24 +179,24 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 />
                                             </div>
 
-                                        <div className={ styles.employeesForm__buttonsPanel }>
-                                            <div className={ styles.employeesForm__button }>
-                                                <Button type={ 'button' }
-                                                        disabled={ true }
-                                                        colorMode={ 'red' }
-                                                        title={ 'Удалить' }
-                                                        rounded
-                                                />
+                                            <div className={ styles.employeesForm__buttonsPanel }>
+                                                <div className={ styles.employeesForm__button }>
+                                                    <Button type={ 'button' }
+                                                            disabled={ true }
+                                                            colorMode={ 'red' }
+                                                            title={ 'Удалить' }
+                                                            rounded
+                                                    />
+                                                </div>
+                                                <div className={ styles.employeesForm__button }>
+                                                    <Button type={ 'submit' }
+                                                            disabled={ submitting || submitError || hasValidationErrors }
+                                                            colorMode={ 'green' }
+                                                            title={ 'Cохранить' }
+                                                            rounded
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className={ styles.employeesForm__button }>
-                                                <Button type={ 'submit' }
-                                                        disabled={ submitting || submitError || hasValidationErrors}
-                                                        colorMode={ 'green' }
-                                                        title={ 'Cохранить' }
-                                                        rounded
-                                                />
-                                            </div>
-                                        </div>
                                         </div>
 
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
