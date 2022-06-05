@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './message-item.module.scss'
-import {ddDotMmFormat, hhMmFormat, isToday} from '../../../utils/parsers';
 import {OneInfoItem} from '../../../redux/info-store-reducer';
+import {ddDotMmFormat, hhMmFormat, isToday} from '../../../utils/date-formats';
 
 
 type OwnProps = {

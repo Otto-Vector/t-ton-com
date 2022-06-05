@@ -19,3 +19,14 @@ export const mustBe0_0Numbers = (from) => (to) => (value) => (
     ( parseAllNumbers(value).length !== from && parseAllNumbers(value).length !== to ) ? `Должно быть ${ from } или ${ to } цифр!` : undefined );
 export const mustBeMail = (value) => value ? value.match(/^\S+@\S+\.\S+$/) ? undefined : 'Введите email корректно' : undefined
 
+
+'Маркова Феодосия Данииловна'
+'Пахомова Архелия Пётровна'
+'Меркушева Аксинья Викторовна'
+'Козлова Сара Георгиевна'
+'Дорофеева Евгения Арсеньевна'
+'Самсонова Нева Альбертовна'
+'Макарова Эдуарда Максимовна'
+'Гуляева Юстина Леонидовна'
+'Герасимова Данута Филипповна'
+'Савина Гелена Куприяновна'

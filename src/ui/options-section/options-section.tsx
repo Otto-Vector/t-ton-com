@@ -7,10 +7,10 @@ import {useNavigate} from 'react-router-dom';
 import {ColumnDataList} from './column-data-list/column-data-list';
 import {
     getConsigneesOptionsStore,
-    getShippersOptionsStore,
-    getTransportOptionsStore,
-    getTrailerOptionsStore,
     getEmployeesOptionsStore,
+    getShippersOptionsStore,
+    getTrailerOptionsStore,
+    getTransportOptionsStore,
 } from '../../selectors/options/options-reselect';
 
 type OwnProps = {}

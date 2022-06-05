@@ -1,13 +1,8 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {TrailerCardType, ValidateType} from '../../types/form-types'
-import {
-    composeValidators,
-    maxLength,
-    maxRangeNumber,
-    required,
-} from '../../utils/validators'
-import {initialTrailerValues} from '../initialsTestData';
+import {composeValidators, maxLength, maxRangeNumber, required} from '../../utils/validators'
+import {initialTrailerValues} from '../initials-test-data';
 
 
 const initialState = {

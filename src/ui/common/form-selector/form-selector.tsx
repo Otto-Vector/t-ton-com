@@ -1,8 +1,7 @@
 import React from 'react'
 import styles from './form-selector.module.scss'
 import './react-select-ton.scss'
-import {Field} from 'react-final-form'
-import {FieldRenderProps} from 'react-final-form';
+import {Field, FieldRenderProps} from 'react-final-form'
 import Select from 'react-select';
 
 type OwnProps = {

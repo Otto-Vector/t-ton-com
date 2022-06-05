@@ -6,7 +6,8 @@ import {cargoTypeType, OneRequestType} from '../../../types/form-types';
 import {
     getCargoCompositionRequestStore,
     getLabelRequestStore,
-    getPlaceholderRequestStore, getValidatorsRequestStore,
+    getPlaceholderRequestStore,
+    getValidatorsRequestStore,
 } from '../../../selectors/forms/request-form-reselect';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
@@ -17,7 +18,7 @@ import {Field, Form} from 'react-final-form'
 import {getAllConsigneesStore} from '../../../selectors/options/consignees-reselect';
 import {Button} from '../../common/button/button';
 import {InfoText} from '../../common/info-text/into-text';
-import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/parsers';
+import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats';
 
 type OwnProps = {
     requestModes: RequestModesType,

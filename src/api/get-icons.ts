@@ -1,5 +1,4 @@
 import axios from 'axios'
-import {qsNormalize} from '../utils/normQuery'
 
 const instance = axios.create( {
     baseURL: 'https://www.google.com/s2/',

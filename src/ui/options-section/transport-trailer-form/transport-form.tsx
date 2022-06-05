@@ -16,12 +16,14 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoTypeType, propertyRights, TransportCardType} from '../../../types/form-types'
 import {
     getCurrentIdTransportStore,
-    getInitialValuesTransportStore, getLabelTransportStore, getMaskOnTransportStore, getOneTransportFromLocal,
+    getInitialValuesTransportStore,
+    getLabelTransportStore,
+    getMaskOnTransportStore,
+    getOneTransportFromLocal,
     getValidatorsTransportStore,
 } from '../../../selectors/options/transport-reselect'
 
 import {transportStoreActions} from '../../../redux/options/transport-store-reducer';
-import {parsePseudoLatinCharsAndNumbers} from '../../../utils/parsers';
 
 
 type OwnProps = {
@@ -97,7 +99,6 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.transportNumber }
-
                                             />
                                             <Field name={ 'transportTrademark' }
                                                    placeholder={ label.transportTrademark }

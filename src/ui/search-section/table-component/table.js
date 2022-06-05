@@ -1,5 +1,5 @@
 import React from 'react';
-import {useGlobalFilter, useTable, useFilters} from 'react-table';
+import {useFilters, useGlobalFilter, useTable} from 'react-table';
 // import {GlobalFilter} from './filter/global-filter';
 
 export const Table = ( { columns, data }) => {

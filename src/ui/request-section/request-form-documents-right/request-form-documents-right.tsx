@@ -2,15 +2,15 @@ import React, {ChangeEvent, useEffect} from 'react'
 import styles from './request-form-documents-right.module.scss'
 import {useSelector} from 'react-redux';
 import {
-    getInitialDocumentsRequestValuesStore, getLabelDocumentsRequestValuesStore,
-
+    getInitialDocumentsRequestValuesStore,
+    getLabelDocumentsRequestValuesStore,
 } from '../../../selectors/forms/request-form-reselect';
 import {RequestModesType} from '../request-section';
 
 import {Button} from '../../common/button/button';
 import {InfoText} from '../../common/info-text/into-text';
 import {MaterialIcon} from '../../common/material-icon/material-icon';
-import {hhMmDdMmFormat} from '../../../utils/parsers';
+import {hhMmDdMmFormat} from '../../../utils/date-formats';
 
 type OwnProps = {
     requestModes: RequestModesType,

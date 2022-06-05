@@ -2,11 +2,17 @@ import {
     CargoType,
     ConsigneesCardType,
     DocumentsRequestType,
+    EmployeesCardType,
     OneRequestType,
-    ShippersCardType, TrailerCardType, TransportCardType,
+    ShippersCardType,
+    TrailerCardType,
+    TransportCardType,
 } from '../types/form-types'
 import {randArrayValue, randFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from '../utils/random-utils';
 import {OneInfoItem} from './info-store-reducer';
+import {randomPassportDate} from '../utils/date-formats';
+
+const today = new Date()
 
 export const cargoType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
     'Тягач', 'Фургон, Борт', 'Цементовоз' ]
@@ -674,6 +680,172 @@ export const initialTrailerValues: TrailerCardType[] = [
     }
     ]
 
+// фейковые водители
+export const initialEmployeesValues: EmployeesCardType[] = [
+    {
+        id: 1,
+        employeeFIO: 'Петров Анвар Васильевич',
+        employeePhoneNumber: '+7(938)155-22-43',
+        passportSerial: '7806563706',
+        passportFMS: 'Отделением УФМС России по г. Хабаровск',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '66 78 AB 151642',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '491694',
+        garageNumber: '9194',
+        mechanicFIO: 'Тимофеев Андрей Федорович',
+        dispatcherFIO: 'Маркова Феодосия Данииловна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+    {
+        id: 2,
+        employeeFIO: 'Беспалов Артем Юрьевич',
+        employeePhoneNumber: '+7(938)747-31-53',
+        passportSerial: '5839444355',
+        passportFMS: 'Отделом внутренних дел России по г. Ногинск',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '47 83 AB 114970',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '230481',
+        garageNumber: '3081',
+        mechanicFIO: 'Крылов Эрнест Макарович',
+        dispatcherFIO: 'Пахомова Архелия Пётровна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+    {
+        id: 3,
+        employeeFIO: 'Владимиров Аким Платонович',
+        employeePhoneNumber: '+7(938)304-98-05',
+        passportSerial: '4542766432',
+        passportFMS: 'Отделом внутренних дел России по г. Октябрьский',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '24 77 AB 872524',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '218954',
+        garageNumber: '1854',
+        mechanicFIO: 'Беляков Алан Лаврентьевич',
+        dispatcherFIO: 'Меркушева Аксинья Викторовна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+    {
+        id: 4,
+        employeeFIO: 'Кондратьев Виссарион Даниилович',
+        employeePhoneNumber: '+7(938)368-92-65',
+        passportSerial: '6157722598',
+        passportFMS: 'Отделом УФМС России по г. Нижний Тагил',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '58 50 AB 605366',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '265411',
+        garageNumber: '6511',
+        mechanicFIO: 'Архипов Лука Ярославович',
+        dispatcherFIO: 'Козлова Сара Георгиевна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+    {
+        id: 5,
+        employeeFIO: 'Белоусов Людвиг Эльдарович',
+        employeePhoneNumber: '+7(938)206-44-01',
+        passportSerial: '7331537327',
+        passportFMS: 'Отделением УФМС России по г. Серпухов',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '24 37 AB 651748',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '415320',
+        garageNumber: '1520',
+        mechanicFIO: 'Сафонов Роман Васильевич',
+        dispatcherFIO: 'Дорофеева Евгения Арсеньевна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+    {
+        id: 6,
+        employeeFIO: 'Горшков Вольдемар Миронович',
+        employeePhoneNumber: '+7(938)495-55-95',
+        passportSerial: '9888557656',
+        passportFMS: 'ОУФМС России по г. Калуга',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '81 06 AB 185291',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '748518',
+        garageNumber: '4818',
+        mechanicFIO: 'Миронов Аполлон Антонович',
+        dispatcherFIO: 'Самсонова Нева Альбертовна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+    {
+        id: 7,
+        employeeFIO: 'Зиновьев Вилен Лукьевич',
+        employeePhoneNumber: '+7(938)998-79-38',
+        passportSerial: '7805913257',
+        passportFMS: 'Отделом УФМС России по г. Сергиев Посад',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '98 40 AB 941719',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '681703',
+        garageNumber: '8103',
+        mechanicFIO: 'Баранов Герасим Георгьевич',
+        dispatcherFIO: 'Макарова Эдуарда Максимовна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+    {
+        id: 8,
+        employeeFIO: 'Симонов Тарас Станиславович',
+        employeePhoneNumber: '+7(938)062-23-76',
+        passportSerial: '8455069157',
+        passportFMS: 'ОВД России по г. Братск',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '82 88 AB 774956',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '595102',
+        garageNumber: '9502',
+        mechanicFIO: 'Терентьев Тимур Лукьянович',
+        dispatcherFIO: 'Гуляева Юстина Леонидовна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+    {
+        id: 9,
+        employeeFIO: 'Поляков Руслан Рудольфович',
+        employeePhoneNumber: '+7(938)730-23-14',
+        passportSerial: '9269743181',
+        passportFMS: 'ОУФМС России по г. Невинномысск',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '45 92 AB 677966',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '839264',
+        garageNumber: '3964',
+        mechanicFIO: 'Кузнецов Прохор Валерьевич',
+        dispatcherFIO: 'Герасимова Данута Филипповна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+    {
+        id: 10,
+        employeeFIO: 'Ершов Флор Леонидович',
+        employeePhoneNumber: '+7(938)194-68-95',
+        passportSerial: '8416910459',
+        passportFMS: 'Отделом УФМС России по г. Тула',
+        passportDate: randomPassportDate(),
+        drivingLicenseNumber: '22 35 AB 736880',
+        drivingCategory:'B, C, C1, CE, C1E',
+        personnelNumber: '514476',
+        garageNumber: '1476',
+        mechanicFIO: 'Цветков Осип Макарович',
+        dispatcherFIO: 'Савина Гелена Куприяновна',
+        photoFace: undefined,
+        rating: randFloorMax(10).toString(),
+    },
+
+]
+
+
 // для обработки документов в заявке
 export const initialDocumentsRequestValues: DocumentsRequestType = {
     proxyWay: {
@@ -723,7 +895,7 @@ const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     requestNumber: id,
     requestDate: new Date(2022, 4, randFloorMax(30)),
     cargoComposition: randArrayValue(cargoComposition),
-    shipmentDate: id === 999 ? new Date() : new Date(2022, 5, randFloorMax(15)),
+    shipmentDate: id === 999 ? today : new Date(2022, 5, randFloorMax(15)),
     cargoType: randArrayValue(cargoType) as CargoType,
     customer: randFloorMax(10),
     shipper: randFloorMax(11),
@@ -734,6 +906,7 @@ const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     note: 'Насос на 120, рукава, ДОПОГ.',
     answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
     driverPrice: undefined,
+    driverTax: undefined,
     visible: true,
     documents: initialDocumentsRequestValues,
 } )
@@ -742,7 +915,7 @@ export const makeNTestRequests = ( count: number ): OneRequestType[] =>
     [ 999, 339, 348, 361, 375, 388, ...randomDifferentIntegersArrayCreator(998)(count - 6) ]
         .map(( id ) => makeOneTestRequest(id))
 
-const today = new Date()
+
 export const infoMessagesTest: OneInfoItem[] = [
     {
         requestNumber: undefined,

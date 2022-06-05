@@ -11,11 +11,10 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {tableStoreActions} from '../../../redux/table/table-store-reducer'
 import {getAuthCashAuthStore} from '../../../selectors/auth-reselect'
 import {TableModesType} from '../search-section'
-import {ddMmYearFormat} from '../../../utils/parsers';
 import {requestStoreActions} from '../../../redux/forms/request-store-reducer'
+import {ddMmYearFormat} from '../../../utils/date-formats';
 
 type OwnProps = {
     tableModes: TableModesType

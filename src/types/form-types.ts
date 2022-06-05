@@ -40,11 +40,9 @@ export type EmployeesCardType<T = DefaultFormType> = {
     employeeFIO: T // ФИО сотрудника
     employeePhoneNumber: T // Телефон сотрудника
     passportSerial: T // Серия, № паспорта
-    passportImage: T // Скан паспорта
     passportFMS: T // Кем выдан паспорт
     passportDate: T // Когда выдан
     drivingLicenseNumber: T // Номер водительского удостоверения
-    drivingLicenseImage: T // Скан водительского удостоверения
     drivingCategory: T // Водительские категории
     personnelNumber: T // Табельный номер
     garageNumber: T // Гаражный номер
@@ -154,6 +152,7 @@ export type OneRequestType = {
     note: undefined | string, // примечание
     answers: number[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками
     driverPrice: number | undefined // стоимость перевозки
+    driverTax: number | undefined // ставка тн.км.
     visible: boolean // видимость для таблицы
     documents: DocumentsRequestType
 }

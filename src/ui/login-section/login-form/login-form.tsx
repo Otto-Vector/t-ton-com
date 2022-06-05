@@ -8,8 +8,10 @@ import {useDispatch, useSelector} from 'react-redux'
 import {
     getInitialValuesAuthStore,
     getIsAvailableSMSrequest,
-    getIsFetchingAuth, getLabelAuthStore, getMaskOnAuthStore,
-    getValidatorsAuthStore
+    getIsFetchingAuth,
+    getLabelAuthStore,
+    getMaskOnAuthStore,
+    getValidatorsAuthStore,
 } from '../../../selectors/auth-reselect'
 import {Preloader} from '../../common/preloader/preloader'
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer'

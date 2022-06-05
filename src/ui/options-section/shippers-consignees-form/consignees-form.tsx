@@ -17,7 +17,8 @@ import {
     getCurrentIdConsigneeStore,
     getInitialValuesConsigneesStore,
     getLabelConsigneesStore,
-    getMaskOnConsigneesStore, getOneConsigneesFromLocal,
+    getMaskOnConsigneesStore,
+    getOneConsigneesFromLocal,
     getValidatorsConsigneesStore,
 } from '../../../selectors/options/consignees-reselect'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer';

@@ -1,6 +1,6 @@
-import React from "react";
-import styles from "./preloader.module.css"
-import preLoader from "./svg/Spinner.svg"
+import React from 'react';
+import styles from './preloader.module.css'
+import preLoader from './svg/Spinner.svg'
 
 export const Preloader: React.FC = () => {
 

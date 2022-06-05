@@ -5,10 +5,9 @@ import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
 
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Preloader} from '../../common/preloader/preloader';
 import {
-    getInitialValuesRequisitesStore,
     getIsFetchingRequisitesStore,
     getLabelRequisitesStore,
     getMaskOnRequisitesStore,
@@ -19,7 +18,6 @@ import {CompanyRequisitesType} from '../../../types/form-types';
 import {CancelButton} from '../../common/cancel-button/cancel-button';
 import {useNavigate} from 'react-router-dom';
 import {InfoText} from '../../common/info-text/into-text';
-
 
 
 type OwnProps = {

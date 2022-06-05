@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './links.module.scss'
-import { useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {getLinksStore} from '../../selectors/base-reselect'
 
 type OwnProps = {}

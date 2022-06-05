@@ -18,7 +18,8 @@ import {AddDriverCardType} from '../../types/form-types'
 import {
     getInitialValuesAddDriverStore,
     getLabelAddDriverStore,
-    getPlaceholderAddDriverStore, getValidatorsAddDriverStore,
+    getPlaceholderAddDriverStore,
+    getValidatorsAddDriverStore,
 } from '../../selectors/forms/add-driver-reselect';
 import {FormSelector, SelectOptions} from '../common/form-selector/form-selector';
 import {randomDriverImage, randomTrailerImage, randomTruckImage} from '../../api/randomImage';
@@ -28,8 +29,8 @@ import {
     getTransportOptionsStore,
 } from '../../selectors/options/options-reselect';
 import {FormInputType} from '../common/form-input-type/form-input-type';
-import {ddMmYearFormat} from '../../utils/parsers';
-import {getAllRequestStore, getOneRequestStore} from '../../selectors/forms/request-form-reselect';
+import {getOneRequestStore} from '../../selectors/forms/request-form-reselect';
+import {ddMmYearFormat} from '../../utils/date-formats';
 
 type OwnProps = {
 
@@ -49,7 +50,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const {distance} = useSelector(getOneRequestStore)
 
     const employees: SelectOptions[] = useSelector(getEmployeesOptionsStore).content
-        .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
+        .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title?.toString() } ))
     const transport: SelectOptions[] = useSelector(getTransportOptionsStore).content
         .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title } ))
     const trailer: SelectOptions[] = useSelector(getTrailerOptionsStore).content

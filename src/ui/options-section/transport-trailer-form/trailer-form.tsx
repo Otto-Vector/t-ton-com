@@ -16,8 +16,10 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoTypeType, propertyRights, TrailerCardType} from '../../../types/form-types'
 import {
     getCurrentIdTrailerStore,
-    getInitialValuesTrailerStore, getLabelTrailerStore,
-    getMaskOnTrailerStore, getOneTrailerFromLocal,
+    getInitialValuesTrailerStore,
+    getLabelTrailerStore,
+    getMaskOnTrailerStore,
+    getOneTrailerFromLocal,
     getValidatorsTrailerStore,
 } from '../../../selectors/options/trailer-reselect'
 import {trailerStoreActions} from '../../../redux/options/trailer-store-reducer';

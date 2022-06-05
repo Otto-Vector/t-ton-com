@@ -3,14 +3,14 @@ import {TransportStoreReducerStateType} from '../../redux/options/transport-stor
 import {TransportCardType} from '../../types/form-types';
 import {createSelector} from 'reselect';
 
-type TranstportStoreSelectors<T extends keyof Y, Y = TransportStoreReducerStateType> = (state: AppStateType) => Y[T]
+type TransportStoreSelectors<T extends keyof Y, Y = TransportStoreReducerStateType> = ( state: AppStateType) => Y[T]
 
-export const getLabelTransportStore: TranstportStoreSelectors<'label'> = ( state) => state.transportStoreReducer.label
-export const getInitialValuesTransportStore: TranstportStoreSelectors<'initialValues'> = ( state) => state.transportStoreReducer.initialValues
-export const getMaskOnTransportStore: TranstportStoreSelectors<'maskOn'> = ( state) => state.transportStoreReducer.maskOn
-export const getValidatorsTransportStore: TranstportStoreSelectors<'validators'> = ( state) => state.transportStoreReducer.validators
-export const getAllTransportStore: TranstportStoreSelectors<'content'> = ( state) => state.transportStoreReducer.content
-export const getCurrentIdTransportStore: TranstportStoreSelectors<'currentId'> = (state) => state.transportStoreReducer.currentId
+export const getLabelTransportStore: TransportStoreSelectors<'label'> = ( state) => state.transportStoreReducer.label
+export const getInitialValuesTransportStore: TransportStoreSelectors<'initialValues'> = ( state) => state.transportStoreReducer.initialValues
+export const getMaskOnTransportStore: TransportStoreSelectors<'maskOn'> = ( state) => state.transportStoreReducer.maskOn
+export const getValidatorsTransportStore: TransportStoreSelectors<'validators'> = ( state) => state.transportStoreReducer.validators
+export const getAllTransportStore: TransportStoreSelectors<'content'> = ( state) => state.transportStoreReducer.content
+export const getCurrentIdTransportStore: TransportStoreSelectors<'currentId'> = ( state) => state.transportStoreReducer.currentId
 
 
 export const getOneTransportFromLocal = createSelector( getCurrentIdTransportStore, getAllTransportStore, getInitialValuesTransportStore,

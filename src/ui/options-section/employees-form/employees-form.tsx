@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react'
+import React, {ChangeEvent, useEffect, useState} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -6,19 +6,22 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
 import noImagePhoto from '../../../media/noImagePhoto2.png'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {EmployeesCardType} from '../../../types/form-types'
 import {
+    getCurrentIdEmployeesStore,
     getInitialValuesEmployeesStore,
     getLabelEmployeesStore,
-    getMaskOnEmployeesStore, getParsersEmployeesStore,
+    getMaskOnEmployeesStore, getOneEmployeesFromLocal,
+    getParsersEmployeesStore,
     getValidatorsEmployeesStore,
 } from '../../../selectors/options/employees-reselect'
+import {employeesStoreActions} from '../../../redux/options/employees-store-reducer';
 
 
 type OwnProps = {
@@ -28,20 +31,36 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     const header = 'Сотрудник'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const defaultInitialValues = useSelector(getInitialValuesEmployeesStore)
+    //для проброса загруженных данных в форму
+    const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
+
     const label = useSelector(getLabelEmployeesStore)
-    const initialValues = useSelector(getInitialValuesEmployeesStore)
     const maskOn = useSelector(getMaskOnEmployeesStore)
     const validators = useSelector(getValidatorsEmployeesStore)
     const parsers = useSelector(getParsersEmployeesStore)
 
+    const currentId = useSelector(getCurrentIdEmployeesStore)
+    const oneEmployees = useSelector(getOneEmployeesFromLocal)
+    // вытаскиваем значение роутера
+    const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
+
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
 
-    const onSubmit = ( values: EmployeesCardType ) => {
+     const onSubmit = ( values: EmployeesCardType ) => {
+        dispatch(employeesStoreActions.changeEmployees(currentId, values)) //сохраняем измененное значение
+        navigate(options) // и возвращаемся в предыдущее окно
     }
 
     const onCancelClick = () => {
+        navigate(options)
+    }
+
+    const employeesDeleteHandleClick = (currentId: number) => {
+
+        dispatch(employeesStoreActions.deleteEmployees(currentId))
         navigate(options)
     }
 
@@ -49,8 +68,14 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
 
-    const employeeSaveHandleClick = () => { // onSubmit
-    }
+    useEffect(() => {
+            if (currentId === +( currentIdForShow || 0 )) {
+                setInitialValues(oneEmployees)
+            } else {
+                dispatch(employeesStoreActions.setCurrentId(+( currentIdForShow || 0 )))
+            }
+        }, [ currentId, initialValues ],
+    )
 
     return (
         <div className={ styles.employeesForm }>
@@ -179,6 +204,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                             disabled={ true }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
+                                                            onClick={()=>{employeesDeleteHandleClick(currentId)}}
                                                             rounded
                                                     />
                                                 </div>
@@ -187,7 +213,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                             disabled={ submitting || submitError || hasValidationErrors }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
-                                                            onClick={()=>{employeeSaveHandleClick()}}
+                                                            // onClick={()=>{employeesSaveHandleClick()}}
                                                             rounded
                                                     />
                                                 </div>

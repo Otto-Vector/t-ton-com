@@ -1,8 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
-import {phoneSubmitType, ValidateType} from '../types/form-types'
-import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
-import {infoMessagesTest} from './initialsTestData';
+import {infoMessagesTest} from './initials-test-data';
 
 
 export type OneInfoItem = {

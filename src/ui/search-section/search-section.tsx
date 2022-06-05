@@ -3,10 +3,7 @@ import styles from './search-section.module.scss'
 import {Button} from '../common/button/button'
 import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
-import {
-    filtersStoreActions,
-    initialFiltersState,
-} from '../../redux/table/filters-store-reducer'
+import {filtersStoreActions, initialFiltersState} from '../../redux/table/filters-store-reducer'
 import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
 import {cargoTypeType} from '../../types/form-types'
 
