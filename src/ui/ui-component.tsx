@@ -27,6 +27,7 @@ import {getInfoMessages} from '../redux/info-store-reducer';
 import {InfoText} from './common/info-text/into-text';
 import {InfoSection} from './info-section/info-section';
 import {getAllTransportAPI} from '../redux/options/transport-store-reducer';
+import {getAllTrailerAPI} from '../redux/options/trailer-store-reducer';
 
 type OwnProps = {}
 
@@ -41,6 +42,8 @@ export const UiComponent: React.FC<OwnProps> = () => {
         dispatch<any>(getAllRequestsAPI({innID:0}))
         dispatch<any>(getAllShippersAPI({innID:0}))
         dispatch<any>(getAllTransportAPI({innID:0}))
+        dispatch<any>(getAllTrailerAPI({innID:0}))
+
         dispatch<any>(getInfoMessages({authID:0}))
 
     },[])

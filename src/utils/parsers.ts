@@ -23,6 +23,10 @@ export const parseOnlyOneDash = (val: string|undefined): string => val ? val
 // только один пробел
 export const parseOnlyOneSpace = (val: string|undefined): string => val ? val
     .replace(/\s\s+/g, ' ') : ''
+// без пробелов в начале строки
+export const parseNoFirstSpaces = (val: string|undefined): string => val ? val
+    .replace(/^\s*/g, '') : ''
+
 
 // только псевдолатинские русские буквы
 export const parsePseudoLatinCharsAndNumbers = (val: string|undefined): string => val ? val

@@ -7,9 +7,10 @@ import {useNavigate} from 'react-router-dom';
 import {ColumnDataList} from './column-data-list/column-data-list';
 import {
     getConsigneesOptionsStore,
-    getEmployeesOptionsStore,
     getShippersOptionsStore,
-    getTrailerOptionsStore, getTransportOptionsStore,
+    getTransportOptionsStore,
+    getTrailerOptionsStore,
+    getEmployeesOptionsStore,
 } from '../../selectors/options/options-reselect';
 
 type OwnProps = {}
@@ -20,8 +21,8 @@ export const OptionsSection: React.FC<OwnProps> = () => {
     const shippersList = useSelector(getShippersOptionsStore)
     const consigneesList = useSelector(getConsigneesOptionsStore)
     const transport = useSelector(getTransportOptionsStore)
-    const employees = useSelector(getEmployeesOptionsStore)
     const trailer = useSelector(getTrailerOptionsStore)
+    const employees = useSelector(getEmployeesOptionsStore)
     const navigate = useNavigate()
 
     return (

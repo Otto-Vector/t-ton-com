@@ -5,12 +5,15 @@ import {
     composeValidators,
     maxLength,
     maxRangeNumber,
-    required
+    required,
 } from '../../utils/validators'
+import {initialTrailerValues} from '../initialsTestData';
 
 
 const initialState = {
-        label: {
+    currentId: 0,
+
+    label: {
         trailerNumber: 'Гос. номер авто',
         trailerTrademark: 'Марка авто',
         trailerModel: 'Модель авто',
@@ -58,6 +61,7 @@ const initialState = {
         trailerImage: undefined,
     } as TrailerCardType<ValidateType>,
 
+    content: [] as TrailerCardType[],
 }
 
 export type TrailerStoreReducerStateType = typeof initialState
@@ -68,10 +72,45 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
 
     switch (action.type) {
 
-        case 'trailer-store-reducer/SET-VALUES': {
+        case 'trailer-store-reducer/SET-CURRENT-ID': {
             return {
                 ...state,
-                initialValues: action.initialValues
+                currentId: action.currentId,
+            }
+        }
+        case 'trailer-store-reducer/SET-TRANSPORTS-CONTENT': {
+            return {
+                ...state,
+                content: [
+                    ...action.trailer,
+                ],
+            }
+        }
+        case 'trailer-store-reducer/ADD-TRANSPORT': {
+            return {
+                ...state,
+                content: [
+                    ...state.content,
+                    action.trailer,
+                ],
+            }
+
+        }
+        case 'trailer-store-reducer/CHANGE-TRANSPORT': {
+            return {
+                ...state,
+                content: [
+                    ...state.content
+                        .map(( val ) => ( +( val.id || 0 ) !== action.id ) ? val : action.trailer),
+                ],
+            }
+        }
+        case 'trailer-store-reducer/DELETE-TRANSPORT': {
+            return {
+                ...state,
+                content: [
+                    ...state.content.filter(( { id } ) => +( id || 1 ) !== action.id),
+                ],
             }
         }
         default: {
@@ -83,10 +122,27 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
 
 /* ЭКШОНЫ */
 export const trailerStoreActions = {
-    // установка значения в карточки пользователей одной страницы
-    setValues: ( initialValues: TrailerCardType ) => ( {
-        type: 'trailer-store-reducer/SET-VALUES',
-        initialValues,
+    setTrailerContent: ( trailer: TrailerCardType[] ) => ( {
+        type: 'trailer-store-reducer/SET-TRANSPORTS-CONTENT',
+        trailer,
+    } as const ),
+    setCurrentId: ( currentId: number ) => ( {
+        type: 'trailer-store-reducer/SET-CURRENT-ID',
+        currentId,
+    } as const ),
+
+    addTrailer: ( trailer: TrailerCardType ) => ( {
+        type: 'trailer-store-reducer/ADD-TRANSPORT',
+        trailer,
+    } as const ),
+    changeTrailer: ( id: number, trailer: TrailerCardType ) => ( {
+        type: 'trailer-store-reducer/CHANGE-TRANSPORT',
+        id,
+        trailer,
+    } as const ),
+    deleteTrailer: ( id: number ) => ( {
+        type: 'trailer-store-reducer/DELETE-TRANSPORT',
+        id,
     } as const ),
 
 }
@@ -96,16 +152,13 @@ export const trailerStoreActions = {
 export type TrailerStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-// export const getIcons = ( { domain }: GetIconsType ): TrailerStoreReducerThunkActionType =>
-//     async ( dispatch ) => {
-//         // dispatch( requestFormActions.setIcons( null ) )
-//         try {
-//             const response = await getIconsFromApi( { domain } )
-//             dispatch( baseStoreActions.setIcons( domain, response ) )
-//         } catch (e) {
-//             alert( e )
-//             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
-//         }
-//
-//     }
+export const getAllTrailerAPI = ( { innID }: { innID: number } ): TrailerStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = initialTrailerValues
+            dispatch(trailerStoreActions.setTrailerContent(response))
+        } catch (e) {
+            alert(e)
+        }
 
+    }

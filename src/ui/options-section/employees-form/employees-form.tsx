@@ -10,7 +10,6 @@ import {useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {parseFIO, parseOnlyOneDash, parseOnlyOneSpace} from '../../../utils/parsers'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {EmployeesCardType} from '../../../types/form-types'
@@ -20,10 +19,9 @@ import {
     getMaskOnEmployeesStore, getParsersEmployeesStore,
     getValidatorsEmployeesStore,
 } from '../../../selectors/options/employees-reselect'
-import {composeParsers} from '../../../utils/parsers';
+
 
 type OwnProps = {
-    // onSubmit: (requisites: employeesCardType) => void
 }
 
 export const EmployeesForm: React.FC<OwnProps> = () => {
@@ -38,6 +36,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
+    // const dispatch = useDispatch()
 
     const onSubmit = ( values: EmployeesCardType ) => {
     }
@@ -50,13 +49,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
 
-    // const dispatch = useDispatch()
-    // const employeeSaveHandleClick = () => { // onSubmit
-    // }
-    //
-    // const fakeFetch = () => { // @ts-ignore
-    //     // dispatch(fakeAuthFetching())
-    // }
+    const employeeSaveHandleClick = () => { // onSubmit
+    }
 
     return (
         <div className={ styles.employeesForm }>
@@ -193,6 +187,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                             disabled={ submitting || submitError || hasValidationErrors }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
+                                                            onClick={()=>{employeeSaveHandleClick()}}
                                                             rounded
                                                     />
                                                 </div>

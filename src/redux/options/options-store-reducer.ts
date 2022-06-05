@@ -32,22 +32,7 @@ const initialState = {
     transport: {
         label: 'Транспорт',
         placeholder: 'Поиск по гос.номеру',
-        content: [
-            { id: 1, title: 'В 367 Р А' },
-            { id: 2, title: 'Р 571 А Е' },
-            { id: 5, title: 'Н 436 Х В' },
-            { id: 10, title: 'В 358 Е Т' },
-            { id: 11, title: 'Е 916 Р У' },
-            { id: 22, title: 'А 055 У Т' },
-            { id: 54, title: 'А 426 У Х' },
-            { id: 140, title: 'О 805 С М' },
-            { id: 12, title: 'Х 538 К У' },
-            { id: 27, title: 'Р 321 К Т' },
-            { id: 56, title: 'Е 749 Т В' },
-            { id: 180, title: 'А 355 В С' },
-            { id: 15, title: 'К 796 О Р' },
-            { id: 23, title: 'Н 916 О М' },
-            { id: 45, title: 'Р 209 К Х' } ],
+        content: [] as OptionsLabelType[],
     },
     trailer: {
         label: 'Прицеп',

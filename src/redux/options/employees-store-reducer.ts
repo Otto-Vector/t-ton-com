@@ -9,7 +9,14 @@ import {
     required,
 } from '../../utils/validators'
 import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-types'
-import {composeParsers, parseFIO, parseOnlyOneDash, parseOnlyOneDot, parseOnlyOneSpace} from '../../utils/parsers';
+import {
+    composeParsers,
+    parseFIO,
+    parseNoFirstSpaces,
+    parseOnlyOneDash,
+    parseOnlyOneDot,
+    parseOnlyOneSpace,
+} from '../../utils/parsers';
 
 const initialState = {
     label: {
@@ -81,19 +88,19 @@ const initialState = {
         rating: composeValidators(maxNumbers(2)),
     } as EmployeesCardType<ValidateType>,
     parsers: {
-        employeeFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot),
+        employeeFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         employeePhoneNumber: undefined,
         passportSerial: undefined,
         passportImage: undefined,
-        passportFMS: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot),
+        passportFMS: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         passportDate: undefined,
-        drivingLicenseNumber: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot),
+        drivingLicenseNumber: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         drivingLicenseImage: undefined,
-        drivingCategory: undefined,
+        drivingCategory: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         personnelNumber: undefined,
         garageNumber: undefined,
-        mechanicFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot),
-        dispatcherFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot),
+        mechanicFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        dispatcherFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         photoFace: undefined,
         rating: undefined,
     } as EmployeesCardType<ParserType>,

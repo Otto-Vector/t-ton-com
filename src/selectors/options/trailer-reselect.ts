@@ -1,5 +1,7 @@
 import {AppStateType} from '../../redux/redux-store'
 import {TrailerStoreReducerStateType} from '../../redux/options/trailer-store-reducer'
+import {createSelector} from 'reselect';
+import {TrailerCardType} from '../../types/form-types';
 
 type TrailerStoreSelectors<T extends keyof Y, Y = TrailerStoreReducerStateType> = (state: AppStateType) => Y[T]
 
@@ -7,11 +9,12 @@ export const getLabelTrailerStore: TrailerStoreSelectors<'label'> = (state) => s
 export const getInitialValuesTrailerStore: TrailerStoreSelectors<'initialValues'> = (state) => state.trailerStoreReducer.initialValues
 export const getMaskOnTrailerStore: TrailerStoreSelectors<'maskOn'> = (state) => state.trailerStoreReducer.maskOn
 export const getValidatorsTrailerStore: TrailerStoreSelectors<'validators'> = (state) => state.trailerStoreReducer.validators
+export const getAllTrailerStore: TrailerStoreSelectors<'content'> = (state) => state.trailerStoreReducer.content
+export const getCurrentIdTrailerStore: TrailerStoreSelectors<'currentId'> = (state) => state.trailerStoreReducer.currentId
 
 
+export const getOneTrailerFromLocal = createSelector( getCurrentIdTrailerStore, getAllTrailerStore, getInitialValuesTrailerStore,
+    (currentId, trailer, initials ):  TrailerCardType  => {
+        return trailer.filter( ( { id } ) => id === currentId )[0] || initials
+    } )
 
-// // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API
-// export const getOneBookFromLocal = createSelector( getBooksList, getBookToView,
-//     ( booksList, bookToView ): ItemBook['volumeInfo'] | undefined => {
-//         return booksList.filter( ( book ) => book.id === bookToView.bookId )[0]?.volumeInfo
-//     } )

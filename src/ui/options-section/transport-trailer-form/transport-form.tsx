@@ -16,8 +16,8 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoTypeType, propertyRights, TransportCardType} from '../../../types/form-types'
 import {
     getCurrentIdTransportStore,
-    getInitialValuesTranstportStore, getLabelTranstportStore, getMaskOnTranstportStore, getOneTransportFromLocal,
-    getValidatorsTranstportStore,
+    getInitialValuesTransportStore, getLabelTransportStore, getMaskOnTransportStore, getOneTransportFromLocal,
+    getValidatorsTransportStore,
 } from '../../../selectors/options/transport-reselect'
 
 import {transportStoreActions} from '../../../redux/options/transport-store-reducer';
@@ -34,12 +34,13 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const header = 'Транспорт'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const label = useSelector(getLabelTranstportStore)
-    const defaultInitialValues = useSelector(getInitialValuesTranstportStore)
+    const label = useSelector(getLabelTransportStore)
+    const defaultInitialValues = useSelector(getInitialValuesTransportStore)
+    //для проброса загруженных данных в форму
     const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
-    const maskOn = useSelector(getMaskOnTranstportStore)
-    const validators = useSelector(getValidatorsTranstportStore)
+    const maskOn = useSelector(getMaskOnTransportStore)
+    const validators = useSelector(getValidatorsTransportStore)
     const currentId = useSelector(getCurrentIdTransportStore)
     const oneTransport = useSelector(getOneTransportFromLocal)
     // вытаскиваем значение роутера
@@ -96,7 +97,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.transportNumber }
-                                                   parse={parsePseudoLatinCharsAndNumbers}
+
                                             />
                                             <Field name={ 'transportTrademark' }
                                                    placeholder={ label.transportTrademark }

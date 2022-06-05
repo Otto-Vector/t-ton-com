@@ -122,7 +122,7 @@ export const transportStoreReducer = ( state = initialState, action: ActionsType
 
 /* ЭКШОНЫ */
 export const transportStoreActions = {
-    // установка значения в карточки пользователей одной страницы
+
     setTransportContent: ( transport: TransportCardType[] ) => ( {
         type: 'transport-store-reducer/SET-TRANSPORTS-CONTENT',
         transport,

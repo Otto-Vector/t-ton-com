@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react'
+import React, {ChangeEvent, useEffect, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -6,19 +6,21 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
 import noImageTrailer from '../../../media/noImageTrailer.png'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoTypeType, propertyRights, TrailerCardType} from '../../../types/form-types'
 import {
+    getCurrentIdTrailerStore,
     getInitialValuesTrailerStore, getLabelTrailerStore,
-    getMaskOnTrailerStore,
-    getValidatorsTrailerStore
+    getMaskOnTrailerStore, getOneTrailerFromLocal,
+    getValidatorsTrailerStore,
 } from '../../../selectors/options/trailer-reselect'
+import {trailerStoreActions} from '../../../redux/options/trailer-store-reducer';
 
 
 type OwnProps = {
@@ -32,13 +34,20 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector( getIsFetchingRequisitesStore )
 
     const label = useSelector( getLabelTrailerStore )
-    const initialValues = useSelector( getInitialValuesTrailerStore )
+    const defaultInitialValues = useSelector(getInitialValuesTrailerStore)
+    //для проброса загруженных данных в форму
+    const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
+
     const maskOn = useSelector( getMaskOnTrailerStore )
     const validators = useSelector( getValidatorsTrailerStore )
+     const currentId = useSelector(getCurrentIdTrailerStore)
+    const oneTrailer = useSelector(getOneTrailerFromLocal)
+    // вытаскиваем значение роутера
+    const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
 
     const { options } = useSelector( getRoutesStore )
     const navigate = useNavigate()
-
+    const dispatch = useDispatch()
 
     const onSubmit = ( value: TrailerCardType ) => {
     }
@@ -48,6 +57,15 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
+
+     useEffect(() => {
+            if (currentId === +( currentIdForShow || 0 )) {
+                setInitialValues(oneTrailer)
+            } else {
+                dispatch(trailerStoreActions.setCurrentId(+( currentIdForShow || 0 )))
+            }
+        }, [ currentId, initialValues ],
+    )
 
     return (
         <div className={ styles.transportTrailerForm }>
