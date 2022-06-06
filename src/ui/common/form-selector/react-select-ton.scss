@@ -6,6 +6,7 @@
     border-color: #92ABC8 !important;
     border-width: 2px !important;
     border-radius: 12px !important;
+    padding-right: 6px !important;
 
     &--is-focused, &:hover {
       border-color: $accentColor !important;
@@ -14,7 +15,7 @@
   }
 
   &__indicator {
-    padding: 0 6px 0 0 !important;
+    padding: 0 0 0 0 !important;
   }
 
   &__indicator-separator {

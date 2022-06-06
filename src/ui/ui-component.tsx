@@ -21,7 +21,7 @@ import {SearchSection} from './search-section/search-section';
 import {RequestSection} from './request-section/request-section';
 import {AddDriversForm} from './add-drivers-form/add-drivers-form';
 import {getAllConsigneesAPI} from '../redux/options/consignees-store-reducer'
-import {getAllRequestsAPI} from '../redux/forms/request-store-reducer';
+import {getAllRequestsAPI, getCargoCompositionSelector} from '../redux/forms/request-store-reducer';
 import {getAllShippersAPI} from '../redux/options/shippers-store-reducer';
 import {getInfoMessages} from '../redux/info-store-reducer';
 import {InfoSection} from './info-section/info-section';
@@ -46,6 +46,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
         dispatch<any>(getAllEmployeesAPI({innID:0}))
 
         dispatch<any>(getInfoMessages({authID:0}))
+        dispatch<any>(getCargoCompositionSelector())
 
     },[])
 

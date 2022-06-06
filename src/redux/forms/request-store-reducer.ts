@@ -7,7 +7,7 @@ import {cargoComposition, initialDocumentsRequestValues, makeNTestRequests} from
 
 const initialState = {
 
-    cargoComposition: cargoComposition,
+    cargoComposition: [] as string[],
     currentRequestNumber: undefined as undefined | number,
 
     label: {
@@ -154,7 +154,13 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
                 ...state,
                 content: [ ...state.content.map(( oneRequest ) =>
                     oneRequest.requestNumber === action.requestNumber
-                        ? { ...oneRequest, visible: !oneRequest.visible } : oneRequest) ]
+                        ? { ...oneRequest, visible: !oneRequest.visible } : oneRequest) ],
+            }
+        }
+        case 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR': {
+            return {
+                ...state,
+                cargoComposition: action.cargoComposition,
             }
         }
         default: {
@@ -182,6 +188,10 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE',
         requestNumber,
     } as const ),
+    setCargoCompositionSelector: ( cargoComposition: string[] ) => ( {
+        type: 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR',
+        cargoComposition,
+    } as const ),
 }
 
 /* САНКИ */
@@ -189,16 +199,37 @@ export const requestStoreActions = {
 export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-export const getAllRequestsAPI = ( { innID }: {innID: number} ): RequestStoreReducerThunkActionType =>
+export const getAllRequestsAPI = ( { innID }: { innID: number } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         // dispatch( requestFormActions.setIcons( null ) )
         try {
             const response = makeNTestRequests(50)
-            dispatch( requestStoreActions.setContent( response ) )
+            dispatch(requestStoreActions.setContent(response))
         } catch (e) {
-            alert( e )
+            alert(e)
             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
         }
-
     }
 
+export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = cargoComposition
+            dispatch(requestStoreActions.setCargoCompositionSelector(response))
+        } catch (e) {
+            alert(e)
+            // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
+        }
+    }
+
+// отправляем изменения селектора и выставляем его значение в Initial
+export const setCargoCompositionSelector = (cargoComposition: string[]): RequestStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        try {
+            const response = cargoComposition
+            dispatch(requestStoreActions.setCargoCompositionSelector(response))
+        } catch (e) {
+            alert(e)
+            // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
+        }
+    }

@@ -33,7 +33,6 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
 }
 // на форму с реквизитами *//
 
-
 // на сотрудника
 export type EmployeesCardType<T = DefaultFormType> = {
     id: number // идентификатор

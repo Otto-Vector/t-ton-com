@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import styles from './request-form-left.module.scss'
 import {getAllShippersStore} from '../../../selectors/options/shippers-reselect';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {cargoTypeType, OneRequestType} from '../../../types/form-types';
 import {
     getCargoCompositionRequestStore,
@@ -19,6 +19,7 @@ import {getAllConsigneesStore} from '../../../selectors/options/consignees-resel
 import {Button} from '../../common/button/button';
 import {InfoText} from '../../common/info-text/into-text';
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats';
+import {setCargoCompositionSelector} from '../../../redux/forms/request-store-reducer';
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -33,6 +34,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     } ) => {
 
     const routes = useSelector(getRoutesStore)
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const cargoComposition = useSelector(getCargoCompositionRequestStore)
@@ -71,6 +73,11 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         },
     }
 
+    const onCreateCompositionValue = (value: string) => {
+        dispatch<any>(setCargoCompositionSelector([value, ...cargoComposition]))
+    }
+
+
     useEffect(() => {
     }, [ initialValues ])
 
@@ -92,6 +99,9 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                         placeholder={ placehoders.cargoComposition }
                                                         values={ stringArrayToSelectValue(cargoComposition) }
                                                         validate={ validators.cargoComposition }
+                                                        creatableSelect
+                                                        handleCreate={onCreateCompositionValue}
+                                                        isClearable
                                         />
                                         : <div className={ styles.requestFormLeft__info + ' ' +
                                             styles.requestFormLeft__info_leftAlign }>
@@ -135,6 +145,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                         placeholder={ labels.cargoType }
                                                         values={ stringArrayToSelectValue(cargoTypeType.map(x => x)) }
                                                         validate={ validators.cargoType }
+                                                        isClearable
                                         />
                                         : <div className={ styles.requestFormLeft__info }>
                                             { initialValues.cargoType }
@@ -150,6 +161,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                     placeholder={ placehoders.customer }
                                                     values={ customers }
                                                     validate={ validators.customer }
+                                                    isClearable
                                     />
                                     : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
@@ -165,6 +177,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                     placeholder={ placehoders.shipper }
                                                     values={ shippers }
                                                     validate={ validators.shipper }
+                                                    isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
                                         { oneShipper?.title + ', ' + oneShipper?.city }
@@ -179,6 +192,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                     placeholder={ placehoders.consignee }
                                                     values={ consignees }
                                                     validate={ validators.consignee }
+                                                    isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
                                         { oneConsignee?.title + ', ' + oneConsignee?.city }
