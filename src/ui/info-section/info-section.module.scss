@@ -8,16 +8,17 @@
   margin: 0 auto;
   padding: 10px;
   display: flex;
-  flex-flow: column;
+  flex-flow: row;
   height: 100%;
 
   &__messagesContainer {
     flex-grow: 1;
-    margin-bottom: 5px;
+    height: 100%;
   }
 
   &__infoPayContainer {
-    //height: 180px;
+    max-width: 445px;
+    height: 100%;
   }
 }
 
@@ -44,107 +45,7 @@
   &__item {
     width: 49.5%;
     margin: 2px 0;
-  }
-}
-
-.infoPayContainer {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-evenly;
-  align-items: center;
-
-  width: 100%;
-  padding: 3px;
-  border: {
-    radius: 25px;
-    color: $accentColor;
-    width: 2px;
-    style: solid;
-  };
-
-  &__header {
-    padding-bottom: 10px;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 28px;
-    text-align: left;
-    color: #000000;
-    //white-space: nowrap;
-  }
 
 
-  &__leftTariffs {
-    margin: 0 15px;
-    flex-basis: 420px
-  }
-
-  &__centerBarcode {
-    height: 170px;
-  }
-
-  &__rightBalance {
-    flex-wrap: wrap;
-    flex-basis: 600px
-    //flex-grow: 1;
-  }
-}
-
-.tariffItem {
-  display: flex;
-  flex-flow: row nowrap;
-  width: 100%;
-  font-size: 14px;
-  line-height: 1.2;
-  text-align: left;
-  color: $accentColor;
-  padding: 3px 0;
-
-  &__left {
-    flex-grow: 1;
-  }
-
-  &__right {
-    font-family: $PTSansFont;
-    font-weight: 700;
-    width: 100px;
-  }
-}
-
-.rightBalance {
-
-  &__upper {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-
-    &Left {
-      padding-top: 5px;
-      width: 360px;
-
-      &Subtitle {
-        font-family: $PTSansFont;
-        color: $grayFontColor;
-        font-weight: 700;
-        font-size: 12px;
-      }
-    }
-
-    &Right {
-      height: 56px;
-      border-radius: 25px;
-          background-color: transparent;
-      overflow: hidden;
-      cursor: pointer;
-    }
-
-  }
-
-  &__footer {
-    margin-top: 10px;
-    padding-right: 10px;
-    width: 100%;
-    text-align: justify;
-    font-size: 14px;
-    color: $accentColor;
   }
 }

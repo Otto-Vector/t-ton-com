@@ -88,7 +88,6 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.addDriver+ ':reqNumber' }
                                element={ <AddDriversForm /> }/>
 
-
                         <Route path={ routes.optionsEdit.shippers + ':id' } element={ <ShippersForm/> }/>
                         <Route path={ routes.optionsEdit.employees + ':id' } element={ <EmployeesForm/> }/>
                         <Route path={ routes.optionsEdit.transport + ':id' } element={ <TransportForm/> }/>

@@ -84,8 +84,8 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const getTransportOneImage = ( searchId: string ) => transport.filter(( { id } ) => id === +searchId)[0].transportImage
     const getTrailerOneImage = ( searchId: string ) => trailer.filter(( { id } ) => id === +searchId)[0].trailerImage
 
-    const getTransportOneCargoWeight = ( searchId?: string ) => transport.filter(( { id } ) => id === +(searchId||0))[0]?.cargoWeight
-    const getTrailerOneCargoWeight = ( searchId?: string ) => trailer.filter(( { id } ) => id === +(searchId||0))[0]?.cargoWeight
+    const getTransportOneCargoWeight = ( searchId?: string ) => transport.filter(( { id } ) => id === +( searchId || 0 ))[0]?.cargoWeight
+    const getTrailerOneCargoWeight = ( searchId?: string ) => trailer.filter(( { id } ) => id === +( searchId || 0 ))[0]?.cargoWeight
 
     // const employeeSaveHandleClick = () => { // onSubmit
     // }
@@ -104,7 +104,15 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, handleSubmit, pristine, form, submitting, values } ) => (
+                                ( {
+                                      submitError,
+                                      hasValidationErrors,
+                                      handleSubmit,
+                                      pristine,
+                                      form,
+                                      submitting,
+                                      values,
+                                  } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }>
                                         <div
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
@@ -113,21 +121,27 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                     className={ styles.addDriversForm__label }>{ label.driverFIO + ':' }</label>
                                                 <FormSelector named={ 'driverFIO' }
                                                               placeholder={ placeholder.driverFIO }
-                                                              values={ employeesSelect }/>
+                                                              values={ employeesSelect }
+                                                              validate={ validators.driverFIO }
+                                                />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>{ label.driverTransport + ':' }</label>
                                                 <FormSelector named={ 'driverTransport' }
                                                               placeholder={ placeholder.driverTransport }
-                                                              values={ transportSelect }/>
+                                                              values={ transportSelect }
+                                                              validate={ validators.driverTransport }
+                                                />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>{ label.driverTrailer + ':' }</label>
                                                 <FormSelector named={ 'driverTrailer' }
                                                               placeholder={ placeholder.driverTrailer }
-                                                              values={ trailerSelect }/>
+                                                              values={ trailerSelect }
+                                                              validate={ validators.driverTrailer }
+                                                />
                                             </div>
                                         </div>
                                         <div className={ styles.addDriversForm__infoPanel }>
@@ -147,19 +161,19 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }
-                                            title={'Расстояние: '+distance+'км.'}>
+                                                 title={ 'Расстояние: ' + distance + 'км.' }>
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.driverSumm + ':' }</label>
                                                 <div className={ styles.addDriversForm__info + ' ' +
                                                     styles.addDriversForm__info_long }>
                                                     {
                                                         values.driverSumm = resultDistanceCost(
-                                                            +( values.driverStavka || 0 ),
-                                                            (
-                                                                +(getTrailerOneCargoWeight(values.driverTrailer)|| 0)
-                                                                +
-                                                                +(getTransportOneCargoWeight(values.driverTransport)||0)
-                                                            )
+                                                                +( values.driverStavka || 0 ),
+                                                                (
+                                                                    +( getTrailerOneCargoWeight(values.driverTrailer) || 0 )
+                                                                    +
+                                                                    +( getTransportOneCargoWeight(values.driverTransport) || 0 )
+                                                                ),
                                                             ).toString()
                                                             || 'за весь рейс' }
                                                 </div>
@@ -185,19 +199,19 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
                                                     src={
-                                                    values.driverFIO
-                                                        ? getEmployeeOneImage(values.driverFIO)
-                                                        : noImagePhoto
-                                                }
+                                                        values.driverFIO
+                                                            ? getEmployeeOneImage(values.driverFIO)
+                                                            : noImagePhoto
+                                                    }
                                                     alt="driverPhoto"/>
                                             </div>
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
                                                     src={
-                                                    values.driverTransport
-                                                        ? getTransportOneImage(values.driverTransport)
-                                                        : noImagePhoto
-                                                }
+                                                        values.driverTransport
+                                                            ? getTransportOneImage(values.driverTransport)
+                                                            : noImagePhoto
+                                                    }
                                                     alt="driverTransportPhoto"/>
                                             </div>
                                             <div className={ styles.addDriversForm__photo }>
@@ -214,7 +228,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                         <div className={ styles.addDriversForm__buttonsPanel }>
                                             <div className={ styles.addDriversForm__button }>
                                                 <Button type={ 'submit' }
-                                                        disabled={ submitting }
+                                                        disabled={ submitting || hasValidationErrors }
                                                         colorMode={ 'green' }
                                                         title={ 'Принять' }
                                                         rounded

@@ -18,7 +18,7 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
     taxMode: T // Вид налогов
     kpp: T // КПП
     ogrn: T // ОГРН
-    okpo: T // бюджет??
+    okpo: T // OKПО
     legalAddress: T // Юридический адрес
     description: T // доп. информация
 

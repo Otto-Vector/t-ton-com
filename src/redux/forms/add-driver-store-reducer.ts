@@ -42,6 +42,9 @@ const initialState = {
         driverStavka: undefined
     },
     validators: {
+        driverFIO: composeValidators(required),
+        driverTransport: composeValidators(required),
+        driverTrailer: composeValidators(required),
         driverStavka:composeValidators(required, maxRangeNumber(3000)) as ValidateType
     }
 

@@ -10,7 +10,14 @@ const initialState = {
     isAvailableSMSrequest: false,
     isFetching: false,
 
-     tarifs: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
+    tarifsLabel: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
+        create: 'Создание Заявки Заказчиком:',
+        acceptLongRoute: 'Принятие Местной Заявки Перевозчиком:',
+        acceptShortRoute: 'Принятие Дальней Заявки Перевозчиком:',
+        paySafeTax: 'Комиссия с оплат по Безопастным сделкам:',
+    },
+
+    tarifs: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
         create: 100,
         acceptShortRoute: 100,
         acceptLongRoute: 100,
@@ -36,9 +43,9 @@ const initialState = {
     } as phoneSubmitType,
 
     validators: {
-        innNumber: composeValidators( required, mustBe0_0Numbers( 10 )( 12 ) ),
-        phoneNumber: composeValidators( required, mustBe00Numbers( 11 ) ),
-        sms: composeValidators( required, mustBe00Numbers( 5 ) )
+        innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
+        phoneNumber: composeValidators(required, mustBe00Numbers(11)),
+        sms: composeValidators(required, mustBe00Numbers(5)),
     } as phoneSubmitType<ValidateType>,
 }
 
@@ -59,19 +66,19 @@ export const authStoreReducer = ( state = initialState, action: ActionsType ): A
         case 'auth-store-reducer/SET-IS-AVAILABLE-SMS-REQUEST': {
             return {
                 ...state,
-                isAvailableSMSrequest: action.isAvailableSMSrequest
+                isAvailableSMSrequest: action.isAvailableSMSrequest,
             }
         }
         case 'auth-store-reducer/SET-IS-FETCHING': {
             return {
                 ...state,
-                isFetching: action.isFetching
+                isFetching: action.isFetching,
             }
         }
         case 'auth-store-reducer/SET-VALUES': {
             return {
                 ...state,
-                initialValues: action.initialValues
+                initialValues: action.initialValues,
             }
         }
         default: {
@@ -108,10 +115,10 @@ export type AuthStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, 
 
 export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        dispatch( authStoreActions.setIsFetching( true ) )
-        await setTimeout( () => {
-            dispatch( authStoreActions.setIsFetching( false ) )
-        }, 1000 )
+        dispatch(authStoreActions.setIsFetching(true))
+        await setTimeout(() => {
+            dispatch(authStoreActions.setIsFetching(false))
+        }, 1000)
     }
 
 // export const getIcons = ( { domain }: GetIconsType ): BaseStoreReducerThunkActionType =>

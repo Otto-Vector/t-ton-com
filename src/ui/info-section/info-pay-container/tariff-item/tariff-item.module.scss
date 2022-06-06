@@ -1,0 +1,24 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+
+.tariffItem {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: left;
+  color: $accentColor;
+  padding: 3px 0;
+
+  &__left {
+    flex-grow: 1;
+  }
+
+  &__right {
+    font-family: $PTSansFont;
+    font-weight: 700;
+    width: 100px;
+  }
+}
