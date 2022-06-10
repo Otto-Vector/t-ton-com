@@ -58,6 +58,8 @@
 
     td:nth-child(7) {
       width: 110px;
+      line-height: 20px;
+
        & > * {
           display: none;
         }
@@ -76,11 +78,11 @@
       td:nth-child(7) {
         background: none;
         & > * {
-          display: inline-block;
+          box-sizing: border-box;
+          display: block;
         }
       }
     }
-
 
 
     th,
