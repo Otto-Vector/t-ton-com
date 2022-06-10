@@ -97,10 +97,9 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             },
             {
                 Header: '',
-                // id: 'open',
                 accessor: 'price',
-
                 disableFilters: true,
+
                 Cell: ( { requestNumber, price }: { requestNumber: number, price: number } ) => {
                     if (tableModes.searchTblMode)
                         return <Button title={ 'Открыть' }

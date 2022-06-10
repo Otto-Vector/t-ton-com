@@ -49,6 +49,7 @@ export type EmployeesCardType<T = DefaultFormType> = {
     dispatcherFIO: T // ФИО диспетчера
     photoFace: T // Добавить фотографию сотрудника
     rating: T // Рейтинг
+    coordinates: T // координаты местоположения водителя
 }
 
 // на грузоПОЛУЧАТЕЛЯ

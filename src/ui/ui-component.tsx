@@ -28,7 +28,6 @@ import {InfoSection} from './info-section/info-section';
 import {getAllTransportAPI} from '../redux/options/transport-store-reducer';
 import {getAllTrailerAPI} from '../redux/options/trailer-store-reducer';
 import {getAllEmployeesAPI} from '../redux/options/employees-store-reducer';
-import {GisMapComponent} from './gis-map-component/gis-map-component';
 import {YandexMapComponent} from './yandex-map-component/yandex-map-component';
 import {geoPositionTake} from '../redux/auth-store-reducer';
 
@@ -39,7 +38,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
     const routes = useSelector(getRoutesStore)
     const dispatch = useDispatch()
 
-    useEffect(()=>{ // до реализации авторизации, подгружаем все данные здесь
+    useEffect(()=>{ // до реализации авторизации, подгружаем все данные здесь (временно)
 
         dispatch<any>(getAllConsigneesAPI({innID:0}))
         dispatch<any>(getAllRequestsAPI({innID:0}))
@@ -52,7 +51,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
         dispatch<any>(getCargoCompositionSelector())
         dispatch<any>(geoPositionTake())
 
-    },[])
+    },[dispatch])
 
     return (
         <div className={ styles.ui }>
@@ -84,7 +83,6 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.historyList }
                                element={ <SearchSection mode={ 'history' }/> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
 
-                        {/*<Route path={ routes.map } element={ <GisMapComponent /> }/>*/}
                         <Route path={ routes.map } element={ <YandexMapComponent /> }/>
                         <Route path={ routes.maps.answers + ':reqNumber' }
                                element={ <div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2>

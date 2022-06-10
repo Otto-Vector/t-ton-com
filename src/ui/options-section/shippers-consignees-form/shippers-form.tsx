@@ -23,6 +23,7 @@ import {
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer';
+import {toYandexMapLink} from '../../../api/geolocation';
 
 
 type OwnProps = {
@@ -83,8 +84,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting } ) => (
-                                    <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form } >
+                                ( { submitError, hasValidationErrors, handleSubmit, form, submitting, values } ) => (
+                                    <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
                                         <div
                                             className={ styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled }>
                                             <Field name={ 'title' }
@@ -166,7 +167,11 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                             />
 
                                             <div className={ styles.shippersConsigneesForm__map }>
-                                                <img src={ mapImage } alt="map"/>
+                                                <a href={ toYandexMapLink(values.coordinates) }
+                                                   target="_blank" rel="noopener noreferrer"
+                                                   type={ 'button' }>
+                                                    <img src={ mapImage } alt="map"/>
+                                                </a>
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>
                                                 <div className={ styles.shippersConsigneesForm__button }>

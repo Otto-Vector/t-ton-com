@@ -15,6 +15,8 @@ export const hhMmDdMmFormat = ( date: Date | undefined): string | undefined=> da
 
 // add a day
 export const addOneDay = (date: Date): Date => new Date(date.getTime() + 86400000);
+// add N days
+export const addNDay = (date: Date, daysToAdd= 1): Date => new Date(date.getTime() + (86400000*daysToAdd));
 
 export const isToday = (someDate: Date) => {
   const today = new Date()

@@ -22,6 +22,7 @@ import {
     getValidatorsConsigneesStore,
 } from '../../../selectors/options/consignees-reselect'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer';
+import {toYandexMapLink} from '../../../api/geolocation';
 
 type OwnProps = {
     // onSubmit: (requisites: consigneesCardType) => void
@@ -83,7 +84,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting } ) => (
+                                ( { submitError, hasValidationErrors, handleSubmit, values, form, submitting } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
                                         <div
                                             className={ styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled }>
@@ -166,7 +167,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                             />
 
                                             <div className={ styles.shippersConsigneesForm__map }>
-                                                <img src={ mapImage } alt="map"/>
+                                                <a href={ toYandexMapLink(values.coordinates) }
+                                                   target="_blank" rel="noopener noreferrer"
+                                                   type={ 'button' }>
+                                                    <img src={ mapImage } alt="map"/>
+                                                </a>
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>
                                                 <div className={ styles.shippersConsigneesForm__button }>
@@ -179,7 +184,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }
-                                                            // disabled={ true }
+                                                        // disabled={ true }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
                                                             onClick={ () => consigneeDeleteHandleClick() }
