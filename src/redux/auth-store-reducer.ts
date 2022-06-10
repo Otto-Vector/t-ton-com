@@ -2,6 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
 import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
+import {geoPosition} from '../api/geolocation';
 
 const initialState = {
     isAuth: true,
@@ -9,6 +10,7 @@ const initialState = {
     authCash: 100,
     isAvailableSMSrequest: false,
     isFetching: false,
+    geoPosition: [0,0] as [number, number],
 
     tarifsLabel: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
         create: 'Создание Заявки Заказчиком:',
@@ -81,6 +83,12 @@ export const authStoreReducer = ( state = initialState, action: ActionsType ): A
                 initialValues: action.initialValues,
             }
         }
+        case 'auth-store-reducer/SET-GEO-POSITION': {
+            return {
+                ...state,
+                geoPosition: [ action.latitude,action.longitude],
+            }
+        }
         default: {
             return state
         }
@@ -106,7 +114,10 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-VALUES',
         initialValues,
     } as const ),
-
+    setGeoPosition: ( { latitude, longitude }: { latitude: number, longitude: number } ) => ( {
+        type: 'auth-store-reducer/SET-GEO-POSITION',
+        latitude, longitude,
+    } as const ),
 }
 
 /* САНКИ */
@@ -114,23 +125,22 @@ export const authStoreActions = {
 export type AuthStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
+    async ( dispatch ) => {
         dispatch(authStoreActions.setIsFetching(true))
         await setTimeout(() => {
             dispatch(authStoreActions.setIsFetching(false))
         }, 1000)
     }
 
-// export const getIcons = ( { domain }: GetIconsType ): BaseStoreReducerThunkActionType =>
-//     async ( dispatch ) => {
-//         // dispatch( requestFormActions.setIcons( null ) )
-//         try {
-//             const response = await getIconsFromApi( { domain } )
-//             dispatch( baseStoreActions.setIcons( domain, response ) )
-//         } catch (e) {
-//             alert( e )
-//             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
-//         }
-//
-//     }
+export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        const reparserLonLat: PositionCallback = ( el ) =>
+            dispatch(authStoreActions.setGeoPosition({
+                latitude: el.coords.latitude || 0,
+                longitude: el.coords.longitude || 0,
+            }))
+        geoPosition(reparserLonLat)
+
+    }
+
 

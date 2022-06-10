@@ -23,7 +23,8 @@
 
     &_active {
       color: $accentColor;
-      background-color: whitesmoke;
+      //background-color: whitesmoke;
+      background-image: linear-gradient(90deg, whitesmoke 85%, transparent);
 
       .menuPanel__image {
       //  https://isotropic.co/tool/hex-color-to-css-filter/

@@ -15,3 +15,6 @@ export const getLabelAuthStore: AuthStoreSelectors<'label'> = (state) => state.a
 export const getInitialValuesAuthStore: AuthStoreSelectors<'initialValues'> = (state) => state.authStoreReducer.initialValues
 export const getMaskOnAuthStore: AuthStoreSelectors<'maskOn'> = (state) => state.authStoreReducer.maskOn
 export const getValidatorsAuthStore: AuthStoreSelectors<'validators'> = (state) => state.authStoreReducer.validators
+
+
+export const getGeoPositionAuthStore: AuthStoreSelectors<'geoPosition'> = (state) => state.authStoreReducer.geoPosition
