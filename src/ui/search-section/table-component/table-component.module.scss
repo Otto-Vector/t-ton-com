@@ -70,7 +70,7 @@
       }
     }
 
-    &:hover {
+    &:hover, &.selected {
 
       td:nth-child(7) {
         background: none;
@@ -92,31 +92,25 @@
   }
 
   &__search {
-    tr {
-      &:hover {
-        td {
-          background-color: rgba($accentColor, .5);
-        }
+    tr:hover, tr.selected {
+      td {
+        background-color: rgba($accentColor, .5);
       }
     }
   }
 
   &__history {
-    tr {
-      &:hover {
-        td {
-          background-color: rgba($grayFontColor, .5);
-        }
+    tr:hover, tr.selected {
+      td {
+        background-color: rgba($grayFontColor, .5);
       }
     }
   }
 
   &__status {
-    tr {
-      &:hover {
-        td {
-          background-color: rgba($greenColor, .5);
-        }
+    tr:hover, tr.selected {
+      td {
+        background-color: rgba($greenColor, .5);
       }
     }
   }

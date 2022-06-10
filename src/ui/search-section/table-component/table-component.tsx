@@ -148,7 +148,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
 
     return (
         <div className={ styles.tableComponent + ' ' + tableModesStyle }>
-            <Table columns={ columns } data={ data }/>
+            <Table columns={ columns } data={ data } tableModes={tableModes}/>
         </div>
     )
 }
