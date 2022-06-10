@@ -1,5 +1,5 @@
 import {
-    CargoType,
+    CargoTypeType,
     ConsigneesCardType,
     DocumentsRequestType,
     EmployeesCardType,
@@ -897,7 +897,7 @@ const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     requestDate: new Date(2022, 4, randFloorMax(30)),
     cargoComposition: randArrayValue(cargoComposition),
     shipmentDate: id === 999 ? today : new Date(2022, 5, randFloorMax(15)),
-    cargoType: randArrayValue(cargoType) as CargoType,
+    cargoType: randArrayValue(cargoType) as CargoTypeType,
     customer: randFloorMax(10),
     shipper: randFloorMax(11),
     consignee: randMinMax(12, 23),

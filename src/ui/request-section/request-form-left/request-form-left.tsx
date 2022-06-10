@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import styles from './request-form-left.module.scss'
 import {getAllShippersStore} from '../../../selectors/options/shippers-reselect';
 import {useDispatch, useSelector} from 'react-redux';
-import {cargoTypeType, OneRequestType} from '../../../types/form-types';
+import {cargoConstType, OneRequestType} from '../../../types/form-types';
 import {
     getCargoCompositionRequestStore,
     getLabelRequestStore,
@@ -143,7 +143,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     { requestModes.createMode
                                         ? <FormSelector named={ 'cargoType' }
                                                         placeholder={ labels.cargoType }
-                                                        values={ stringArrayToSelectValue(cargoTypeType.map(x => x)) }
+                                                        values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }
                                                         validate={ validators.cargoType }
                                                         isClearable
                                         />

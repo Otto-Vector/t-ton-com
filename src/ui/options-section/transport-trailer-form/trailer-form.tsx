@@ -13,7 +13,7 @@ import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
-import {cargoTypeType, propertyRights, TrailerCardType} from '../../../types/form-types'
+import {cargoConstType, propertyRights, TrailerCardType} from '../../../types/form-types'
 import {
     getCurrentIdTrailerStore,
     getInitialValuesTrailerStore,
@@ -128,7 +128,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <FormSelector named={ 'cargoType' }
-                                                              values={ stringArrayToSelectValue(cargoTypeType.map(x => x)) }/>
+                                                              values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }/>
                                             </div>
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <Field name={ 'cargoWeight' }

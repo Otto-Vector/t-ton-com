@@ -40,7 +40,7 @@ export const initialFiltersState = {
     values: {
         dayFilter: undefined as undefined | Date,
         routeFilter: [0, 99999],
-        cargoFilter: '' as string | undefined
+        cargoFilter: ''
     },
 }
 
@@ -204,7 +204,7 @@ export const filtersStoreActions = {
         type: 'filters-store-reducer/SET-LONG-ROUTE-MODE',
         mode,
     } as const),
-    setCargoFilterValue: (value: string | undefined) => ({
+    setCargoFilterValue: (value: string ) => ({
         type: 'filters-store-reducer/SET-CARGO-FILTER-VALUE',
         value
     } as const),

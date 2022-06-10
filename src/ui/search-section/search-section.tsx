@@ -5,7 +5,8 @@ import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {filtersStoreActions, initialFiltersState} from '../../redux/table/filters-store-reducer'
 import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
-import {cargoTypeType} from '../../types/form-types'
+import {cargoConstType, cargoFormats} from '../../types/form-types'
+import {JustSelect} from '../common/just-select/just-select';
 
 
 type OwnProps = {
@@ -54,7 +55,8 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
             dispatch(filtersStoreActions.setNearDriverMode(!filterButtons.nearDriverFilter.mode))
         },
         cargoFilter: ( value ) => {
-            dispatch(filtersStoreActions.setCargoFilterValue(value))
+            console.log('selectedValue in Action: ', value)
+            dispatch(filtersStoreActions.setCargoFilterValue(value || ''))
             dispatch(filtersStoreActions.setCargoFilterMode(value !== ''))
         },
         clearFilters: () => {
@@ -87,25 +89,11 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                             ( !!value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             {
                                 ( key === 'cargoFilter' )
-                                    ? <div className={ styles.searchSection__dropdown }>
-                                        {/*ToDo: выделить select в отдельный элемент*/ }
-                                        <select className={ styles.searchSection__select + ' ' +
-                                            ( !!value.mode ? styles.searchSection__select_active : '' ) }
-                                                name="cargoFilter" id="cargoFilter"
-                                                onChange={ ( e ) => {
-                                                    filtersAction.cargoFilter(e.target.value)
-                                                } }
-                                                value={ cargoFilter }
-                                        >
-                                            <option className={ styles.searchSection__option }
-                                                    value={ '' }>{ value.title }</option>
-                                            { cargoTypeType.map(( item ) =>
-                                                <option className={ styles.searchSection__option }
-                                                        key={ item } value={ item }>{ item }</option>,
-                                            )
-                                            }
-                                        </select>
-                                    </div>
+                                    ? <JustSelect optionItems={ cargoFormats }
+                                                  selectedValue={ cargoFilter }
+                                                  titleValue={ value.title }
+                                                  onChange={ filtersAction[key] }
+                                    />
                                     : ( // убираем кнопки на разных типах
                                         ( key === 'nearDriverFilter' && ( tableModes.historyTblMode || tableModes.statusTblMode ) )
                                         ||

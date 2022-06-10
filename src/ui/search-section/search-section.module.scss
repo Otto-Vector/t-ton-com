@@ -2,7 +2,7 @@
 @import 'src/styles/variables';
 
 .searchSection {
-  background-color: whitesmoke;
+  background-color: transparent;
   width: 100%;
   height: 100%;
   padding: 30px 18px 10px 18px;
@@ -53,8 +53,9 @@
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
-    margin-top: 15px;
+    margin-top: 10px;
     justify-content: space-around;
+    background-color: whitesmoke;
     height: calc(100% - 50px); // px вычисляется padding-top + padding-bottom
     overflow-y: auto;
 
@@ -64,82 +65,5 @@
     & > div { // применяем отступ ко вложенным на один уровень дивам
       margin: 5px;
     }
-  }
-
-  &__dropdown {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    background-color: transparent;
-    border-radius: 9999px;
-    height: 100%;
-
-
-    &:after {
-      @include addMaterialAfter('expand_more');
-      font-size: rem(25);
-      right: rem(5);
-      top: rem(9);
-      opacity: .5;
-    }
-  }
-
-  &__select { //ToDo: выделить в отдельный элемент
-    /*убирает стрелочку из выпадающего списка*/
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none; //чтобы select не подсвечивался по умолчанию
-
-    font-family: inherit;
-    box-sizing: border-box;
-    font-weight: 700;
-    background: $accentColor;
-    font-size: inherit;
-    line-height: 1.2;
-    cursor: pointer;
-
-    border-radius: inherit;
-    color: inherit;
-
-    padding: 5px 20px 5px 20px;
-    width: 100%;
-    height: 100%;
-    box-shadow: inset 0 0 0 #ffffff;
-    transition: box-shadow 0.2s ease-in-out;
-
-    &:focus {
-      box-shadow: inset 0 0 10px #ffffff;
-    }
-
-    &:hover {
-      box-shadow: inset 0 0 5px #ffffff;
-    }
-
-    &:active {
-      box-shadow: inset 0 0 1px #ffffff;
-    }
-
-    &:disabled {
-      opacity: .4;
-    }
-
-    &:active:disabled {
-      box-shadow: 0 0 6px rgba(red, .75);
-      color: red;
-      border-color: red;
-    }
-
-    &_active {
-      color: $redColor;
-    }
-  }
-
-  &__option {
-    display: block;
-    background-color: #023E8A;
-    color: white;
-    border: .5px solid #92ABC8;
-    //text-align: center;
   }
 }

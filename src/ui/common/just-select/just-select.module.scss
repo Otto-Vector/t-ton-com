@@ -1,0 +1,74 @@
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
+
+.justSelect {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: transparent;
+  border-radius: 9999px;
+  height: 100%;
+
+  &:after {
+    @include addMaterialAfter('expand_more');
+    font-size: rem(25);
+    right: rem(5);
+    top: rem(9);
+    color: #FFFFFF;
+    opacity: .5;
+  }
+
+  &__select {
+    /*убирает стрелочку из выпадающего списка*/
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none; //чтобы select не подсвечивался по умолчанию
+
+    font-family: inherit;
+    box-sizing: border-box;
+    font-weight: 700;
+    background: $accentColor;
+    font-size: inherit;
+    line-height: 1.2;
+    cursor: pointer;
+
+    border-radius: inherit;
+    color: inherit;
+
+    padding: 5px 20px 5px 20px;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 0 #ffffff;
+    transition: box-shadow 0.2s ease-in-out;
+
+    &:focus {
+      box-shadow: inset 0 0 10px #ffffff;
+    }
+
+    &:hover {
+      box-shadow: inset 0 0 5px #ffffff;
+    }
+
+    &:active {
+      box-shadow: inset 0 0 1px #ffffff;
+    }
+
+    &:disabled {
+      opacity: .4;
+    }
+
+    &:active:disabled {
+      box-shadow: 0 0 6px rgba(red, .75);
+      color: red;
+      border-color: red;
+    }
+  }
+
+  &__option {
+    display: block;
+    background-color: $accentColor;
+    color: white;
+    border: .5px solid #92ABC8;
+  }
+}

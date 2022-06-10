@@ -84,9 +84,11 @@ export type ShippersCardType<T = DefaultFormType> = {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-export const cargoTypeType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
+export const cargoFormats = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
+    'Тягач', 'Фургон, Борт', 'Цементовоз' ]
+export const cargoConstType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
     'Тягач', 'Фургон, Борт', 'Цементовоз' ] as const
-export type CargoType = typeof cargoTypeType[number]
+export type CargoTypeType = typeof cargoConstType[number]
 
 export const propertyRights = [ 'Собственность', 'Аренда', 'Лизинг' ] as const
 export type PropertyRightsType = typeof propertyRights[number]
@@ -99,7 +101,7 @@ export type TransportCardType<T = DefaultFormType> = {
     transportModel: T // Модель авто
     pts: T // ПТС
     dopog: T // ДОПОГ
-    cargoType: T | CargoType // Тип груза
+    cargoType: T | CargoTypeType // Тип груза
     cargoWeight: T // Вес груза
     propertyRights: T | PropertyRightsType // Право собственности
     transportImage: T // Фото транспорта
@@ -113,7 +115,7 @@ export type TrailerCardType<T = DefaultFormType> = {
     trailerModel: T // Модель авто
     pts: T // ПТС
     dopog: T // ДОПОГ
-    cargoType: T | CargoType // Тип груза
+    cargoType: T | CargoTypeType // Тип груза
     cargoWeight: T // Вес груза
     propertyRights: T | PropertyRightsType // Право собственности
     trailerImage: T // Фото транспорта
@@ -141,7 +143,7 @@ export type OneRequestType = {
     requestDate: undefined | Date, // дата создания заявки
     cargoComposition: undefined | string, // вид груза
     shipmentDate: undefined | Date, // дата погрузки
-    cargoType: undefined | CargoType, // тип груза
+    cargoType: undefined | CargoTypeType, // тип груза
     customer: undefined | number, // заказчик
     shipper: undefined | number, // грузоотправитель
     consignee: undefined | number, // грузополучатель
