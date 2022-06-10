@@ -86,7 +86,6 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                     { tabModes.right && <RequestFormDocumentsRight requestModes={requestModes} /> }
                     </div>
 
-
                     <CancelButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/>
 
                 </div>

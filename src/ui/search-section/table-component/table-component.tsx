@@ -126,23 +126,29 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                                        colorMode={ 'pink' }/>
                 },
             },
-            {
-                Header: '',
-                id: 'close',
-                accessor: 'close',
-
-                disableFilters: true,
-                Cell: ( { requestNumber }: { requestNumber: number } ) => (
-                    tableModes.historyTblMode ? null :
-                        <CancelButton onCancelClick={ () => deleteRow(requestNumber) } mode={ 'redAlert' } noAbsolute/>
-                ),
-            },
+            // {
+            //     Header: '',
+            //     id: 'close',
+            //     accessor: 'close',
+            //     disableFilters: true,
+            //     Cell: ( { requestNumber }: { requestNumber: number } ) => (
+            //         !tableModes.searchTblMode ? null :
+            //             <CancelButton onCancelClick={ () => deleteRow(requestNumber) } mode={ 'redAlert' } noAbsolute/>
+            //     ),
+            // },
         ],
         [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
     )
+    const tableModesStyle = styles['tableComponent' + '__' + (
+        tableModes.searchTblMode ? 'search'
+            : tableModes.historyTblMode
+                ? 'history'
+                : 'status'
+    )
+        ]
 
     return (
-        <div className={ styles.tableComponent }>
+        <div className={ styles.tableComponent + ' ' + tableModesStyle }>
             <Table columns={ columns } data={ data }/>
         </div>
     )

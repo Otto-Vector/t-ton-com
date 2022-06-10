@@ -17,8 +17,8 @@ export const getContentTableStore = createSelector(getAllRequestStore, getAllCon
             { requestNumber, shipmentDate, cargoType, shipper, consignee, distance, answers } ) =>
             ( {
                 requestNumber, cargoType, shipmentDate, distance,
-                answers: answers?.length, price: 100,
                 route: shippers.filter(( { id } ) => id === shipper)[0]?.city + ' в '
                     + ( consignees.filter(( { id } ) => id === consignee)[0]?.city ),
+                answers: answers?.length, price: 100,
             } )) || [ initial ]
     })
