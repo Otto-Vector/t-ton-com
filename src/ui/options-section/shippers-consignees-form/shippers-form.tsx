@@ -22,8 +22,8 @@ import {
     getOneShipperFromLocal,
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
-import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer';
-import {toYandexMapLink} from '../../../api/geolocation';
+import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
+import {toYandexMapLink, toYandexMapSreenshoot} from '../../../api/geolocation'
 
 
 type OwnProps = {
@@ -50,6 +50,10 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    // работа с изображением карты если прилетает error
+    // const [ mapImageIn, setMapImageIn ] = useState('')
+    // const [hasImgError, setHasImgError] = useState(false)
 
     const onSubmit = ( values: ShippersCardType ) => {
         dispatch(shippersStoreActions.changeShipper(currentId, values)) //сохраняем измененное значение
@@ -170,7 +174,15 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                 <a href={ toYandexMapLink(values.coordinates) }
                                                    target="_blank" rel="noopener noreferrer"
                                                    type={ 'button' }>
-                                                    <img src={ mapImage } alt="map"/>
+                                                    <img className={ styles.shippersConsigneesForm__mapImage }
+                                                         src={ toYandexMapSreenshoot(values.coordinates) }
+                                                         // onError={ ( event ) => setHasImgError(true) }
+                                                         // onLoad={ ( event ) => setMapImageIn(
+                                                         //     hasImgError ? mapImage :
+                                                         //         toYandexMapSreenshoot(values.coordinates)) }
+                                                         alt="map"
+                                                    />
+
                                                 </a>
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>
