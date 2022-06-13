@@ -30,9 +30,8 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const TABLE_CONTENT = useSelector(getContentTableStore)
     const dispatch = useDispatch()
 
-    const deleteRow = ( requestNumber: number ) => {
+    const selectRow = ( requestNumber: number ) => {
         dispatch(requestStoreActions.setToggleRequestVisible(requestNumber))
-
     }
 
     const data = React.useMemo(() => ( TABLE_CONTENT || initialValues ), [ TABLE_CONTENT ])
@@ -53,8 +52,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                     }, [])
                     return ( <></> )
                 },
-
-                // disableFilters: true,
+                disableFilters: false,
             },
             {
                 Header: 'Дата',
@@ -135,7 +133,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
 
     return (
         <div className={ styles.tableComponent + ' ' + tableModesStyle }>
-            <Table columns={ columns } data={ data } tableModes={tableModes}/>
+            <Table columns={ columns } data={ data } tableModes={ tableModes }/>
         </div>
     )
 }
