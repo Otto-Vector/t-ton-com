@@ -1,18 +1,18 @@
 import React from 'react'
 import styles from './hello-section.module.scss'
-
 // иконки
-import man from './helloSectionSVG/man.svg'
-import portfeler from './helloSectionSVG/briefcase.svg'
-import track from './helloSectionSVG/track.svg'
-import car from './helloSectionSVG/car.svg'
-import factory from './helloSectionSVG/factory.svg'
+import man from './hello-section-png/man.png'
+import briefcase from './hello-section-png/briefcase.png'
+import truck from './hello-section-png/truck.png'
+import car from './hello-section-png/car.png'
+import factory from './hello-section-png/factory.png'
+// модули
 import {DescriptionInsider} from './description-insider/description-insider'
+
 
 type OwnProps = {}
 
-export const HelloSection: React.FC<OwnProps> = () => {
-
+export const HelloSection: React.FC<OwnProps> = React.memo(() => {
 
     const description = {
         man: [
@@ -33,7 +33,7 @@ export const HelloSection: React.FC<OwnProps> = () => {
             '- Ведение учета собственных отгрузок и рейсов',
             '- Полный документооборот по перевозкам с ЭДО',
         ],
-        track: [
+        truck: [
             '- Подписание документов на сайте',
             '- Оформление путевых листов и ТТН',
             '- Работа без посредников с Заказчиками',
@@ -62,8 +62,6 @@ export const HelloSection: React.FC<OwnProps> = () => {
         ]
     }
 
-    // ToDo: helloItem в отдельный блок
-
     return (
         <section className={ styles.helloSection }>
             <h1 className={ styles.helloSection__title }>Новые возможности логистики с ТЛК</h1>
@@ -76,14 +74,14 @@ export const HelloSection: React.FC<OwnProps> = () => {
                     <DescriptionInsider srcIcon={ man } textArray={ description.man } position={'left'}/>
                 </div>
                 <div className={ styles.helloItem }>
-                    <img className={ styles.helloItem__icon } src={ portfeler } alt="Преимущество"/>
+                    <img className={ styles.helloItem__icon } src={ briefcase } alt="Преимущество"/>
                     <span className={ styles.helloItem__title }>{ 'Преимущество Поставщикам' }</span>
-                    <DescriptionInsider srcIcon={ portfeler } textArray={ description.portfeler } position={'left'}/>
+                    <DescriptionInsider srcIcon={ briefcase } textArray={ description.portfeler } position={'left'}/>
                 </div>
                 <div className={ styles.helloItem }>
-                    <img className={ styles.helloItem__icon } src={ track } alt="Возможности"/>
+                    <img className={ styles.helloItem__icon } src={ truck } alt="Возможности"/>
                     <span className={ styles.helloItem__title }>{ 'Возможности Перевозчикам' }</span>
-                    <DescriptionInsider srcIcon={ track } textArray={ description.track } position={'center'}/>
+                    <DescriptionInsider srcIcon={ truck } textArray={ description.truck } position={'center'}/>
                 </div>
                 <div className={ styles.helloItem }>
                     <img className={ styles.helloItem__icon } src={ car } alt="Комфорт"/>
@@ -98,4 +96,4 @@ export const HelloSection: React.FC<OwnProps> = () => {
             </div>
         </section>
     )
-}
+})
