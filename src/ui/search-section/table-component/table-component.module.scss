@@ -5,11 +5,12 @@
 .tableComponent {
 
   width: 100%;
+  background-color: transparent;
 
   table {
     width: 100%;
     border-spacing: 0;
-    background-color: #F4F4F4;
+    background-color: transparent;
     font-family: $PTSansFont;
     font-weight: 400;
     font-size: 16px;
@@ -33,6 +34,16 @@
       th {
         border-bottom: 1px solid #023E8A;
       }
+    }
+  }
+
+  tr:nth-child(2n+1) { //сделал зебру. посмотрим.
+    td {
+      background-color: white;
+    }
+
+    td:last-child {
+      background-color: transparent;
     }
   }
 
