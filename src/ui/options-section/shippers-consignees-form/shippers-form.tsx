@@ -6,7 +6,7 @@ import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
-import mapImage from '../../../media/mapsicle-map.png'
+import mapImage from '../../../media/mapsicle-map-text.jpg'
 import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -19,7 +19,7 @@ import {
     getInitialValuesShippersStore,
     getLabelShippersStore,
     getMaskOnShippersStore,
-    getOneShipperFromLocal,
+    getOneShipperFromLocal, getParsersShippersStore,
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
@@ -36,12 +36,14 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const header = 'Заказчики и Грузоотправители'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const label = useSelector(getLabelShippersStore)
     const defaultInitialValues = useSelector(getInitialValuesShippersStore)
     const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
+    const label = useSelector(getLabelShippersStore)
     const maskOn = useSelector(getMaskOnShippersStore)
     const validators = useSelector(getValidatorsShippersStore)
+    const parsers = useSelector(getParsersShippersStore)
+
     const currentId = useSelector(getCurrentIdShipperStore)
     const oneShipper = useSelector(getOneShipperFromLocal)
     // вытаскиваем значение роутера
@@ -50,10 +52,6 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-
-    // работа с изображением карты если прилетает error
-    // const [ mapImageIn, setMapImageIn ] = useState('')
-    // const [hasImgError, setHasImgError] = useState(false)
 
     const onSubmit = ( values: ShippersCardType ) => {
         dispatch(shippersStoreActions.changeShipper(currentId, values)) //сохраняем измененное значение
@@ -98,6 +96,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.title }
+                                                   parse={ parsers.title }
                                             />
                                         </div>
                                         <div className={ styles.shippersConsigneesForm__inputsPanel }>
@@ -107,6 +106,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.innNumber }
+                                                   parse={ parsers.innNumber }
                                             />
                                             <Field name={ 'organizationName' }
                                                    placeholder={ label.organizationName }
@@ -114,6 +114,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.organizationName }
+                                                   parse={ parsers.organizationName }
                                             />
                                             <Field name={ 'kpp' }
                                                    placeholder={ label.kpp }
@@ -121,6 +122,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.kpp }
+                                                   parse={ parsers.kpp }
                                             />
                                             <Field name={ 'ogrn' }
                                                    placeholder={ label.ogrn }
@@ -128,6 +130,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.ogrn }
+                                                   parse={ parsers.ogrn }
                                             />
                                             <Field name={ 'address' }
                                                    placeholder={ label.address }
@@ -135,6 +138,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.address }
+                                                   parse={ parsers.address }
                                             />
                                             <Field name={ 'shipperFio' }
                                                    placeholder={ label.shipperFio }
@@ -142,14 +146,16 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.shipperFio }
+                                                   parse={ parsers.shipperFio }
                                             />
                                             <Field name={ 'shipperTel' }
                                                    placeholder={ label.shipperTel }
                                                    maskFormat={ maskOn.shipperTel }
-                                                   allowEmptyFormatting
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.shipperTel }
+                                                   parse={ parsers.shipperTel }
+                                                   allowEmptyFormatting
                                             />
                                             <div className={ styles.shippersConsigneesForm__textArea }>
                                                 <Field name={ 'description' }
@@ -157,6 +163,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                        maskFormat={ maskOn.description }
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
+                                                       validate={ validators.description }
+                                                       parse={ parsers.description }
                                                        textArea
                                                 />
                                             </div>
@@ -168,6 +176,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.coordinates }
+                                                   parse={ parsers.coordinates }
                                             />
 
                                             <div className={ styles.shippersConsigneesForm__map }>
@@ -176,13 +185,12 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    type={ 'button' }>
                                                     <img className={ styles.shippersConsigneesForm__mapImage }
                                                          src={ toYandexMapSreenshoot(values.coordinates) }
-                                                         // onError={ ( event ) => setHasImgError(true) }
-                                                         // onLoad={ ( event ) => setMapImageIn(
-                                                         //     hasImgError ? mapImage :
-                                                         //         toYandexMapSreenshoot(values.coordinates)) }
+                                                         onError={ ( { currentTarget } ) => {
+                                                             currentTarget.onerror = null; // prevents looping
+                                                             currentTarget.src = mapImage
+                                                         } }
                                                          alt="map"
                                                     />
-
                                                 </a>
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>

@@ -9,6 +9,8 @@ export const getLabelConsigneesStore: ConsigneesStoreSelectors<'label'> = (state
 export const getInitialValuesConsigneesStore: ConsigneesStoreSelectors<'initialValues'> = (state) => state.consigneesStoreReducer.initialValues
 export const getMaskOnConsigneesStore: ConsigneesStoreSelectors<'maskOn'> = (state) => state.consigneesStoreReducer.maskOn
 export const getValidatorsConsigneesStore: ConsigneesStoreSelectors<'validators'> = (state) => state.consigneesStoreReducer.validators
+export const getParsersConsigneesStore: ConsigneesStoreSelectors<'parsers'> = (state) => state.consigneesStoreReducer.parsers
+
 export const getAllConsigneesStore: ConsigneesStoreSelectors<'content'> = (state) => state.consigneesStoreReducer.content
 export const getCurrentIdConsigneeStore: ConsigneesStoreSelectors<'currentId'> = (state) => state.consigneesStoreReducer.currentId
 

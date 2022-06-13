@@ -9,6 +9,8 @@ export const getLabelShippersStore: ShippersStoreSelectors<'label'> = (state) =>
 export const getInitialValuesShippersStore: ShippersStoreSelectors<'initialValues'> = (state) => state.shippersStoreReducer.initialValues
 export const getMaskOnShippersStore: ShippersStoreSelectors<'maskOn'> = (state) => state.shippersStoreReducer.maskOn
 export const getValidatorsShippersStore: ShippersStoreSelectors<'validators'> = (state) => state.shippersStoreReducer.validators
+export const getParsersShippersStore: ShippersStoreSelectors<'parsers'> = (state) => state.shippersStoreReducer.parsers
+
 export const getAllShippersStore: ShippersStoreSelectors<'content'> = (state) => state.shippersStoreReducer.content
 export const getCurrentIdShipperStore: ShippersStoreSelectors<'currentId'> = ( state) => state.shippersStoreReducer.currentId
 

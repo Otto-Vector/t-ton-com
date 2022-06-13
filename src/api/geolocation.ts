@@ -6,5 +6,5 @@ export const toYandexMapLink = ( coordinates: string | undefined ) =>
 
 
 export const toYandexMapSreenshoot = ( coordinates: string | undefined ) =>
-    `https://static-maps.yandex.ru/1.x/?z=15&l=map&pt=${
+    `https://static-maps.yandex.ru/1.x/?z=12&l=map&pt=${
         coordinates?.split(', ').reverse().join(',') || '55.185346, 25.14226' },flag&size=300,300`

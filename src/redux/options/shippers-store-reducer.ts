@@ -1,8 +1,16 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {ShippersCardType, ValidateType} from '../../types/form-types'
+import {ParserType, ShippersCardType, ValidateType} from '../../types/form-types'
 import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
 import {initialShippersContent} from '../../initials-test-data';
+import {
+    composeParsers, parseAllCoords,
+    parseFIO,
+    parseNoFirstSpaces, parseOnlyOneComma,
+    parseOnlyOneDash,
+    parseOnlyOneDot,
+    parseOnlyOneSpace,
+} from '../../utils/parsers';
 
 
 const initialState = {
@@ -57,13 +65,26 @@ const initialState = {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),
         kpp: composeValidators(required, mustBe00Numbers(9)),
-        ogrn: composeValidators(required, mustBe00Numbers(12)),
+        ogrn: composeValidators(required, mustBe00Numbers(12), maxLength(100)),
         address: composeValidators(required),
         shipperFio: composeValidators(required),
         shipperTel: composeValidators(required, mustBe00Numbers(11)),
-        description: undefined,
+        description: composeValidators(maxLength(300)),
         coordinates: composeValidators(required),
     } as ShippersCardType<ValidateType>,
+    parsers: {
+        title: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        innNumber: undefined,
+        organizationName: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        kpp: undefined,
+        ogrn: undefined,
+        address: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        shipperFio: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        shipperTel: undefined,
+        description: undefined,
+        coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
+        city: undefined,
+    } as ShippersCardType<ParserType>,
 
     content: [] as ShippersCardType[],
 }

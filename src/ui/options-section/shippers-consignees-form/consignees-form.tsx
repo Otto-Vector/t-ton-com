@@ -5,7 +5,7 @@ import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
-import mapImage from '../../../media/mapsicle-map.png'
+import mapImage from '../../../media/mapsicle-map-text.jpg'
 import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -18,11 +18,11 @@ import {
     getInitialValuesConsigneesStore,
     getLabelConsigneesStore,
     getMaskOnConsigneesStore,
-    getOneConsigneesFromLocal,
+    getOneConsigneesFromLocal, getParsersConsigneesStore,
     getValidatorsConsigneesStore,
 } from '../../../selectors/options/consignees-reselect'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer';
-import {toYandexMapLink} from '../../../api/geolocation';
+import {toYandexMapLink, toYandexMapSreenshoot} from '../../../api/geolocation';
 
 type OwnProps = {
     // onSubmit: (requisites: consigneesCardType) => void
@@ -34,12 +34,14 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const header = 'ГрузоПолучатели'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const label = useSelector(getLabelConsigneesStore)
     const defaultInitialValues = useSelector(getInitialValuesConsigneesStore)
     const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
+    const label = useSelector(getLabelConsigneesStore)
     const maskOn = useSelector(getMaskOnConsigneesStore)
     const validators = useSelector(getValidatorsConsigneesStore)
+    const parsers = useSelector(getParsersConsigneesStore)
+
     const currentId = useSelector(getCurrentIdConsigneeStore)
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     // вытаскиваем значение роутера
@@ -94,6 +96,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.title }
+                                                   parse={parsers.title}
                                             />
                                         </div>
                                         <div className={ styles.shippersConsigneesForm__inputsPanel }>
@@ -103,6 +106,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.innNumber }
+                                                   parse={parsers.innNumber}
                                             />
                                             <Field name={ 'organizationName' }
                                                    placeholder={ label.organizationName }
@@ -110,6 +114,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.organizationName }
+                                                   parse={parsers.organizationName}
                                             />
                                             <Field name={ 'kpp' }
                                                    placeholder={ label.kpp }
@@ -117,6 +122,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.kpp }
+                                                   parse={parsers.kpp}
                                             />
                                             <Field name={ 'ogrn' }
                                                    placeholder={ label.ogrn }
@@ -124,6 +130,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.ogrn }
+                                                   parse={parsers.ogrn}
                                             />
                                             <Field name={ 'address' }
                                                    placeholder={ label.address }
@@ -131,6 +138,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.address }
+                                                   parse={parsers.address}
                                             />
                                             <Field name={ 'consigneesFio' }
                                                    placeholder={ label.consigneesFio }
@@ -138,6 +146,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.consigneesFio }
+                                                   parse={parsers.consigneesFio}
                                             />
                                             <Field name={ 'consigneesTel' }
                                                    placeholder={ label.consigneesTel }
@@ -146,6 +155,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.consigneesTel }
+                                                   parse={parsers.consigneesTel}
                                             />
                                             <div className={ styles.shippersConsigneesForm__textArea }>
                                                 <Field name={ 'description' }
@@ -153,6 +163,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                        maskFormat={ maskOn.description }
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
+                                                       validate={validators.description}
+                                                       parse={parsers.description}
                                                        textArea
                                                 />
                                             </div>
@@ -164,13 +176,20 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.coordinates }
+                                                   parse={parsers.coordinates}
                                             />
-
                                             <div className={ styles.shippersConsigneesForm__map }>
                                                 <a href={ toYandexMapLink(values.coordinates) }
                                                    target="_blank" rel="noopener noreferrer"
                                                    type={ 'button' }>
-                                                    <img src={ mapImage } alt="map"/>
+                                                    <img className={ styles.shippersConsigneesForm__mapImage }
+                                                         src={ toYandexMapSreenshoot(values.coordinates) }
+                                                         onError={ ( { currentTarget } ) => {
+                                                             currentTarget.onerror = null; // prevents looping
+                                                             currentTarget.src = mapImage
+                                                         } }
+                                                         alt="map"
+                                                    />
                                                 </a>
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>

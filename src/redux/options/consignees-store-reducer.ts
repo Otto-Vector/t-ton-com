@@ -1,8 +1,16 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {ConsigneesCardType, ValidateType} from '../../types/form-types'
+import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
 import {initialConsigneesContent} from '../../initials-test-data'
+import {
+    composeParsers,
+    parseAllCoords,
+    parseFIO,
+    parseNoFirstSpaces, parseOnlyOneComma,
+    parseOnlyOneDash,
+    parseOnlyOneDot, parseOnlyOneSpace,
+} from '../../utils/parsers';
 
 const initialState = {
     currentId: 0,
@@ -52,12 +60,25 @@ const initialState = {
         organizationName: composeValidators(required, maxLength(50)),
         kpp: composeValidators(required, mustBe00Numbers(9)),
         ogrn: composeValidators(required, mustBe00Numbers(12)),
-        address: composeValidators(required),
+        address: composeValidators(required, maxLength(100)),
         consigneesFio: composeValidators(required),
         consigneesTel: composeValidators(required, mustBe00Numbers(11)),
-        description: undefined,
+        description: composeValidators(required, maxLength(300)),
         coordinates: composeValidators(required),
     } as ConsigneesCardType<ValidateType>,
+    parsers: {
+        title: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
+        innNumber: undefined,
+        organizationName: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        kpp: undefined,
+        ogrn: undefined,
+        address: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        consigneesFio: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        consigneesTel: undefined,
+        description: undefined,
+        coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
+        city: undefined,
+    } as ConsigneesCardType<ParserType>,
 
     content: [] as ConsigneesCardType[],
 }

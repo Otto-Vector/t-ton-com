@@ -5,6 +5,10 @@ export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => str
 export const parseAllNumbers = ( val: string | undefined ): string => val ? val
     .replace(/[^\d]/g, '') : ''
 
+// только координаты
+export const parseAllCoords = ( val: string | undefined ): string => val ? val
+    .replace(/[^\d.,\s]/, '') : ''
+
 // только буквы, знак тире и точка
 export const parseFIO = ( val: string | undefined ): string => val ? val
     .replace(/[^-А-ЯA-Zа-яa-z.\s]/, '') : ''
@@ -20,6 +24,9 @@ export const parseOnlyOneDash = ( val: string | undefined ): string => val ? val
     .replace(/[--]+/g, '-') : ''
 // только один пробел
 export const parseOnlyOneSpace = ( val: string | undefined ): string => val ? val
+    .replace(/\s\s+/g, ' ') : ''
+// только одна запятая
+export const parseOnlyOneComma = ( val: string | undefined ): string => val ? val
     .replace(/\s\s+/g, ' ') : ''
 // без пробелов в начале строки
 export const parseNoFirstSpaces = ( val: string | undefined ): string => val ? val

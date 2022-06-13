@@ -46,8 +46,8 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
         setIsRegisterMode( !isRegisterMode )
     }
 
-    const fakeFetch = () => { // @ts-ignore
-        dispatch( fakeAuthFetching() )
+    const fakeFetch = () => {
+        dispatch<any>( fakeAuthFetching() )
     }
 
 
