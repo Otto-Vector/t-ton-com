@@ -14,6 +14,7 @@
   &__messagesContainer {
     flex-grow: 1;
     height: 100%;
+
   }
 
   &__infoPayContainer {
@@ -27,11 +28,23 @@
   flex-flow: column wrap;
   overflow: hidden;
   color: $accentColor;
+  position: relative;
+
+  &:after { // полоска-разделитель
+    position: absolute;
+    content: '';
+    height: calc(100% - 10px);
+    width: 2px;
+    left: 50%;
+    top: 5px;
+    background-color: $accentColor;
+  }
 
   &__header {
     font-size: 24px;
     line-height: 28px;
     text-align: center;
+    width: 50%;
   }
 
   &__label {
