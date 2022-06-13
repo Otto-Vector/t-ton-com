@@ -19,7 +19,7 @@ import {
     getInitialValuesTransportStore,
     getLabelTransportStore,
     getMaskOnTransportStore,
-    getOneTransportFromLocal,
+    getOneTransportFromLocal, getParsersTransportStore,
     getValidatorsTransportStore,
 } from '../../../selectors/options/transport-reselect'
 
@@ -36,13 +36,15 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const header = 'Транспорт'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const label = useSelector(getLabelTransportStore)
     const defaultInitialValues = useSelector(getInitialValuesTransportStore)
     //для проброса загруженных данных в форму
     const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
+    const label = useSelector(getLabelTransportStore)
     const maskOn = useSelector(getMaskOnTransportStore)
     const validators = useSelector(getValidatorsTransportStore)
+    const parsers = useSelector(getParsersTransportStore)
+
     const currentId = useSelector(getCurrentIdTransportStore)
     const oneTransport = useSelector(getOneTransportFromLocal)
     // вытаскиваем значение роутера
@@ -61,7 +63,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const transportDeleteHandleClick = (currentId: number) => {
+    const transportDeleteHandleClick = ( currentId: number ) => {
 
         dispatch(transportStoreActions.deleteTransport(currentId))
         navigate(options)
@@ -99,6 +101,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.transportNumber }
+                                                   parse={ parsers.transportNumber }
                                             />
                                             <Field name={ 'transportTrademark' }
                                                    placeholder={ label.transportTrademark }
@@ -106,6 +109,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.transportTrademark }
+                                                   parse={ parsers.transportTrademark }
                                             />
                                             <Field name={ 'transportModel' }
                                                    placeholder={ label.transportModel }
@@ -113,6 +117,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.transportModel }
+                                                   parse={ parsers.transportModel }
                                             />
                                             <Field name={ 'pts' }
                                                    placeholder={ label.pts }
@@ -120,6 +125,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.pts }
+                                                   parse={ parsers.pts }
                                             />
                                             <Field name={ 'dopog' }
                                                    placeholder={ label.dopog }
@@ -127,6 +133,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.dopog }
+                                                   parse={ parsers.dopog }
                                             />
 
                                             <div className={ styles.transportTrailerForm__smallInput }>
@@ -167,13 +174,15 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                             disabled={ false }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={()=>{transportDeleteHandleClick(currentId)}}
+                                                            onClick={ () => {
+                                                                transportDeleteHandleClick(currentId)
+                                                            } }
                                                             rounded
                                                     />
                                                 </div>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting || hasValidationErrors}
+                                                            disabled={ submitting || hasValidationErrors }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

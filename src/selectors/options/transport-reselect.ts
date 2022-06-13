@@ -6,9 +6,11 @@ import {createSelector} from 'reselect';
 type TransportStoreSelectors<T extends keyof Y, Y = TransportStoreReducerStateType> = ( state: AppStateType) => Y[T]
 
 export const getLabelTransportStore: TransportStoreSelectors<'label'> = ( state) => state.transportStoreReducer.label
-export const getInitialValuesTransportStore: TransportStoreSelectors<'initialValues'> = ( state) => state.transportStoreReducer.initialValues
 export const getMaskOnTransportStore: TransportStoreSelectors<'maskOn'> = ( state) => state.transportStoreReducer.maskOn
 export const getValidatorsTransportStore: TransportStoreSelectors<'validators'> = ( state) => state.transportStoreReducer.validators
+export const getParsersTransportStore: TransportStoreSelectors<'parsers'> = ( state) => state.transportStoreReducer.parsers
+
+export const getInitialValuesTransportStore: TransportStoreSelectors<'initialValues'> = ( state) => state.transportStoreReducer.initialValues
 export const getAllTransportStore: TransportStoreSelectors<'content'> = ( state) => state.transportStoreReducer.content
 export const getCurrentIdTransportStore: TransportStoreSelectors<'currentId'> = ( state) => state.transportStoreReducer.currentId
 

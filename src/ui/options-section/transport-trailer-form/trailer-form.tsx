@@ -19,7 +19,7 @@ import {
     getInitialValuesTrailerStore,
     getLabelTrailerStore,
     getMaskOnTrailerStore,
-    getOneTrailerFromLocal,
+    getOneTrailerFromLocal, getParsersTrailerStore,
     getValidatorsTrailerStore,
 } from '../../../selectors/options/trailer-reselect'
 import {trailerStoreActions} from '../../../redux/options/trailer-store-reducer';
@@ -35,13 +35,15 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const header = 'Прицеп'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const label = useSelector(getLabelTrailerStore)
     const defaultInitialValues = useSelector(getInitialValuesTrailerStore)
     //для проброса загруженных данных в форму
     const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
+    const label = useSelector(getLabelTrailerStore)
     const maskOn = useSelector(getMaskOnTrailerStore)
     const validators = useSelector(getValidatorsTrailerStore)
+    const parsers = useSelector(getParsersTrailerStore)
+
     const currentId = useSelector(getCurrentIdTrailerStore)
     const oneTrailer = useSelector(getOneTrailerFromLocal)
     // вытаскиваем значение роутера
@@ -96,6 +98,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.trailerNumber }
+                                                   parse={parsers.trailerNumber}
                                             />
                                             <Field name={ 'trailerTrademark' }
                                                    placeholder={ label.trailerTrademark }
@@ -103,6 +106,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.trailerTrademark }
+                                                   parse={parsers.trailerTrademark}
                                             />
                                             <Field name={ 'trailerModel' }
                                                    placeholder={ label.trailerModel }
@@ -110,6 +114,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.trailerModel }
+                                                   parse={parsers.trailerModel}
                                             />
                                             <Field name={ 'pts' }
                                                    placeholder={ label.pts }
@@ -117,6 +122,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.pts }
+                                                   parse={parsers.pts}
                                             />
                                             <Field name={ 'dopog' }
                                                    placeholder={ label.dopog }
@@ -124,6 +130,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.dopog }
+                                                   parse={parsers.dopog}
                                             />
 
                                             <div className={ styles.transportTrailerForm__smallInput }>

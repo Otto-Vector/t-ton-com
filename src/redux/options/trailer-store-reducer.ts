@@ -1,8 +1,14 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {TrailerCardType, ValidateType} from '../../types/form-types'
+import {ParserType, TrailerCardType, ValidateType} from '../../types/form-types'
 import {composeValidators, maxLength, maxRangeNumber, required} from '../../utils/validators'
 import {initialTrailerValues} from '../../initials-test-data';
+import {
+    composeParsers,
+    parseNoFirstSpaces,
+    parseOnlyOneSpace,
+    parsePseudoLatinCharsAndNumbers,
+} from '../../utils/parsers';
 
 
 const initialState = {
@@ -46,8 +52,8 @@ const initialState = {
 
     validators: {
         trailerNumber: composeValidators(required, maxLength(20)),
-        trailerTrademark: composeValidators(required, maxLength(20)),
-        trailerModel: composeValidators(required, maxLength(20)),
+        trailerTrademark: composeValidators(required, maxLength(30)),
+        trailerModel: composeValidators(required, maxLength(30)),
         pts: composeValidators(required),
         dopog: composeValidators(required),
         cargoType: composeValidators(required),
@@ -55,6 +61,18 @@ const initialState = {
         propertyRights: composeValidators(required),
         trailerImage: undefined,
     } as TrailerCardType<ValidateType>,
+
+    parsers: {
+        trailerNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces),
+        trailerTrademark: undefined,
+        trailerModel: undefined,
+        pts: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces),
+        dopog: undefined,
+        cargoType: undefined,
+        cargoWeight: undefined,
+        propertyRights: undefined,
+        trailerImage: undefined,
+    } as TrailerCardType<ParserType>,
 
     content: [] as TrailerCardType[],
 }

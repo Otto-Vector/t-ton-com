@@ -1,8 +1,14 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {TransportCardType, ValidateType} from '../../types/form-types'
+import {ParserType, TransportCardType, ValidateType} from '../../types/form-types'
 import {composeValidators, maxLength, maxRangeNumber, required} from '../../utils/validators'
 import {initialTransportValues} from '../../initials-test-data';
+import {
+    composeParsers,
+    parseNoFirstSpaces,
+    parseOnlyOneSpace,
+    parsePseudoLatinCharsAndNumbers,
+} from '../../utils/parsers';
 
 
 const initialState = {
@@ -54,6 +60,18 @@ const initialState = {
         propertyRights: composeValidators(required),
         transportImage: undefined,
     } as TransportCardType<ValidateType>,
+
+    parsers: {
+        transportNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces),
+        transportTrademark: undefined,
+        transportModel: undefined,
+        pts: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces),
+        dopog: undefined,
+        cargoType: undefined,
+        cargoWeight: undefined,
+        propertyRights: undefined,
+        transportImage: undefined,
+    } as TransportCardType<ParserType>,
 
     content: [] as TransportCardType[],
 
