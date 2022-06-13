@@ -1,11 +1,12 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
+import {ddMmYearFormat} from '../../utils/date-formats';
 
 
 export type OneRequestTableType = {
     requestNumber: number | undefined
     cargoType: string | undefined
-    shipmentDate: Date | undefined
+    shipmentDate: string | undefined
     distance: number | undefined
     route: string | undefined
     answers: number | undefined
@@ -75,18 +76,7 @@ export type TableStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>,
 export const getValuesForTable = (): TableStoreReducerThunkActionType =>
     async ( dispatch , getState) => {
         try {
-            const allRequests = getState().requestStoreReducer.content
-            const allShippers = getState().shippersStoreReducer.content
-            const allConsignee = getState().consigneesStoreReducer.content
-             let createTableValues = allRequests?.map((
-            { requestNumber, shipmentDate, cargoType, shipper, consignee, distance, answers } ) =>
-            ( {
-                requestNumber, cargoType, shipmentDate, distance,
-                answers: answers?.length, price: 100,
-                route: allShippers.filter(( { id } ) => id === shipper)[0]?.city +' в '
-                    + allConsignee.filter(( { id } ) => id === consignee)[0]?.city,
-            } )) || [getState().tableStoreReducer.initialValues]
-            dispatch( tableStoreActions.setValues(createTableValues) )
+            // dispatch( tableStoreActions.setValues(createTableValues) )
         } catch (e) {
             alert( e )
         }

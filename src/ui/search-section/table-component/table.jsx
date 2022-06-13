@@ -50,8 +50,8 @@ export const Table = ({ columns, data, tableModes }) => {
                     return (
                         <tr { ...row.getRowProps() } className={
                             (selectedRow[row.id] ? styles.selected : '')}
-                            onClick={ () => { setSelectedRow(
-                                selectedRow.map(
+                            onClick={ () => {
+                                setSelectedRow( selectedRow.map(
                                     (val,id)=> val?!(id===+row.id):id===+row.id
                                 ))
                         } }>

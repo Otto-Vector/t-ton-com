@@ -7,7 +7,6 @@ import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
 import {useDispatch, useSelector} from 'react-redux'
 import {UseFiltersColumnProps} from 'react-table'
 import {geInitialValuesTableStore, getContentTableStore} from '../../../selectors/table/table-reselect'
-import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
@@ -32,7 +31,6 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const dispatch = useDispatch()
 
     const deleteRow = ( requestNumber: number ) => {
-        // dispatch(tableStoreActions.deleteRow(requestNumber))
         dispatch(requestStoreActions.setToggleRequestVisible(requestNumber))
 
     }
@@ -63,12 +61,11 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 accessor: 'shipmentDate',
                 Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
-                        column.setFilter(dayFilter)
+                        column.setFilter(ddMmYearFormat(dayFilter))
                     }, [])
                     return ( <></> )
                 },
                 disableFilters: false,
-                Cell: ( { value }: { value: Date } ) => ddMmYearFormat(value),
             },
             {
                 Header: 'Расстояние',
@@ -125,16 +122,6 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                                        colorMode={ 'pink' }/>
                 },
             },
-            // {
-            //     Header: '',
-            //     id: 'close',
-            //     accessor: 'close',
-            //     disableFilters: true,
-            //     Cell: ( { requestNumber }: { requestNumber: number } ) => (
-            //         !tableModes.searchTblMode ? null :
-            //             <CancelButton onCancelClick={ () => deleteRow(requestNumber) } mode={ 'redAlert' } noAbsolute/>
-            //     ),
-            // },
         ],
         [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
     )

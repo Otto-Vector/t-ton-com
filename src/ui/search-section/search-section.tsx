@@ -55,7 +55,6 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
             dispatch(filtersStoreActions.setNearDriverMode(!filterButtons.nearDriverFilter.mode))
         },
         cargoFilter: ( value ) => {
-            console.log('selectedValue in Action: ', value)
             dispatch(filtersStoreActions.setCargoFilterValue(value || ''))
             dispatch(filtersStoreActions.setCargoFilterMode(value !== ''))
         },

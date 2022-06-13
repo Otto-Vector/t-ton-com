@@ -39,8 +39,8 @@ export const initialFiltersState = {
     },
     values: {
         dayFilter: undefined as undefined | Date,
-        routeFilter: [0, 99999],
-        cargoFilter: ''
+        routeFilter: [ 0, 99999 ],
+        cargoFilter: '',
     },
 }
 
@@ -48,7 +48,7 @@ export type FiltersStoreReducerStateType = typeof initialFiltersState
 
 type ActionsType = GetActionsTypes<typeof filtersStoreActions>
 
-export const filtersStoreReducer = (state = initialFiltersState, action: ActionsType): FiltersStoreReducerStateType => {
+export const filtersStoreReducer = ( state = initialFiltersState, action: ActionsType ): FiltersStoreReducerStateType => {
 
     switch (action.type) {
 
@@ -67,7 +67,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 buttons: {
                     ...state.buttons,
-                    todayFilter: {...state.buttons.todayFilter, mode: action.mode},
+                    todayFilter: { ...state.buttons.todayFilter, mode: action.mode },
                 },
             }
         }
@@ -85,7 +85,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 buttons: {
                     ...state.buttons,
-                    tomorrowFilter: {...state.buttons.tomorrowFilter, mode: action.mode},
+                    tomorrowFilter: { ...state.buttons.tomorrowFilter, mode: action.mode },
                 },
             }
         }
@@ -94,7 +94,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 values: {
                     ...state.values,
-                    routeFilter: state.buttons.shortRouteFilter.mode ? [0, 100] : [0, 99999],
+                    routeFilter: state.buttons.shortRouteFilter.mode ? [ 0, 100 ] : [ 0, 99999 ],
                 },
             }
         }
@@ -103,7 +103,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 buttons: {
                     ...state.buttons,
-                    shortRouteFilter: {...state.buttons.shortRouteFilter, mode: action.mode},
+                    shortRouteFilter: { ...state.buttons.shortRouteFilter, mode: action.mode },
                 },
             }
         }
@@ -112,7 +112,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 values: {
                     ...state.values,
-                    routeFilter: state.buttons.longRouteFilter.mode ? [100, 99999] : [0, 99999],
+                    routeFilter: state.buttons.longRouteFilter.mode ? [ 100, 99999 ] : [ 0, 99999 ],
                 },
             }
         }
@@ -121,7 +121,7 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 buttons: {
                     ...state.buttons,
-                    longRouteFilter: {...state.buttons.longRouteFilter, mode: action.mode},
+                    longRouteFilter: { ...state.buttons.longRouteFilter, mode: action.mode },
                 },
             }
         }
@@ -130,8 +130,8 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 buttons: {
                     ...state.buttons,
-                    nearDriverFilter: {...state.buttons.nearDriverFilter, mode: action.mode}
-                }
+                    nearDriverFilter: { ...state.buttons.nearDriverFilter, mode: action.mode },
+                },
             }
         }
         case 'filters-store-reducer/SET-CARGO-FILTER-VALUE': {
@@ -139,8 +139,8 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 values: {
                     ...state.values,
-                    cargoFilter: action.value
-                }
+                    cargoFilter: action.value,
+                },
             }
         }
         case 'filters-store-reducer/SET-CARGO-FILTER-MODE': {
@@ -148,8 +148,8 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 buttons: {
                     ...state.buttons,
-                    cargoFilter: {...state.buttons.cargoFilter, mode: action.mode}
-                }
+                    cargoFilter: { ...state.buttons.cargoFilter, mode: action.mode },
+                },
             }
         }
 
@@ -158,8 +158,8 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
                 ...state,
                 buttons: {
                     ...state.buttons,
-                    clearFilters: {...state.buttons.clearFilters, mode: action.mode}
-                }
+                    clearFilters: { ...state.buttons.clearFilters, mode: action.mode },
+                },
             }
         }
         case 'filters-store-reducer/SET-CLEAR-FILTER': {
@@ -176,54 +176,54 @@ export const filtersStoreReducer = (state = initialFiltersState, action: Actions
 /* ЭКШОНЫ */
 export const filtersStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setTodayFilter: () => ({
+    setTodayFilter: () => ( {
         type: 'filters-store-reducer/SET-TODAY-FILTER',
-    } as const),
-    setTodayMode: (mode: boolean) => ({
+    } as const ),
+    setTodayMode: ( mode: boolean ) => ( {
         type: 'filters-store-reducer/SET-TODAY-MODE',
         mode,
-    } as const),
-    setTomorrowFilter: () => ({
+    } as const ),
+    setTomorrowFilter: () => ( {
         type: 'filters-store-reducer/SET-TOMORROW-FILTER',
-    } as const),
-    setTomorrowMode: (mode: boolean) => ({
+    } as const ),
+    setTomorrowMode: ( mode: boolean ) => ( {
         type: 'filters-store-reducer/SET-TOMORROW-MODE',
         mode,
-    } as const),
-    setShortRouteFilter: () => ({
+    } as const ),
+    setShortRouteFilter: () => ( {
         type: 'filters-store-reducer/SET-SHORT-ROUTE-FILTER',
-    } as const),
-    setShortRouteMode: (mode: boolean) => ({
+    } as const ),
+    setShortRouteMode: ( mode: boolean ) => ( {
         type: 'filters-store-reducer/SET-SHORT-ROUTE-MODE',
         mode,
-    } as const),
-    setLongRouteFilter: () => ({
+    } as const ),
+    setLongRouteFilter: () => ( {
         type: 'filters-store-reducer/SET-LONG-ROUTE-FILTER',
-    } as const),
-    setLongRouteMode: (mode: boolean) => ({
+    } as const ),
+    setLongRouteMode: ( mode: boolean ) => ( {
         type: 'filters-store-reducer/SET-LONG-ROUTE-MODE',
         mode,
-    } as const),
-    setCargoFilterValue: (value: string ) => ({
+    } as const ),
+    setCargoFilterValue: ( value: string ) => ( {
         type: 'filters-store-reducer/SET-CARGO-FILTER-VALUE',
-        value
-    } as const),
-    setCargoFilterMode: (mode: boolean) => ({
+        value,
+    } as const ),
+    setCargoFilterMode: ( mode: boolean ) => ( {
         type: 'filters-store-reducer/SET-CARGO-FILTER-MODE',
         mode,
-    } as const),
-    setNearDriverMode: (mode: boolean) => ({
+    } as const ),
+    setNearDriverMode: ( mode: boolean ) => ( {
         type: 'filters-store-reducer/SET-NEAR-DRIVER-MODE',
         mode,
-    } as const),
-    setClearFilter: (initial: FiltersStoreReducerStateType) => ({
+    } as const ),
+    setClearFilter: ( initial: FiltersStoreReducerStateType ) => ( {
         type: 'filters-store-reducer/SET-CLEAR-FILTER',
         initial,
-    } as const),
-    setClearFilterMode: (mode: boolean) => ({
+    } as const ),
+    setClearFilterMode: ( mode: boolean ) => ( {
         type: 'filters-store-reducer/SET-CLEAR-FILTER-MODE',
         mode,
-    } as const),
+    } as const ),
 
 }
 
