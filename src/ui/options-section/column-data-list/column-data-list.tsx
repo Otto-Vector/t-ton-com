@@ -38,6 +38,7 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
         <div className={ styles.columnDataList }>
             <header className={ styles.columnDataList__header }>
                 <span>{ item.label }</span>
+                {/*БЛОК ВВОДА ПОИСКА*/}
                 <div className={ styles.rowItem__label + ' ' + styles.rowItem_search }>
                     <div className={ styles.rowItem__searchIcon }><MaterialIcon icon_name={ 'search' }/></div>
                     <input className={ styles.rowItem__input }
@@ -45,6 +46,7 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
                            value={ test }
                            onChange={ onSearch }
                     />
+                    {/*КНОПКА СБРОСА*/}
                     <div className={ styles.rowItem__clear }>
                         <Button colorMode={ 'white' }
                                 disabled={ !test }
@@ -58,6 +60,7 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
                     </div>
                 </div>
             </header>
+            {/*ГЕНЕРИРУЕМЫЙ СПИСОК*/}
             <div className={ styles.columnDataList__list }>
                 { content.map(( { id, title } ) =>
                     <div className={ styles.columnDataList__item + ' ' + styles.rowItem }
@@ -70,7 +73,6 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
                             { title || 'null' }
                         </div>
 
-                        {/*<div className={styles.rowItem__expand+' '+(id===0 ? styles.rowItem__expand_plus: '')}></div>*/ }
                     </div>)
                 }
             </div>

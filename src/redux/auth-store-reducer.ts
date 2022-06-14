@@ -139,6 +139,7 @@ export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
                 latitude: el.coords.latitude || 0,
                 longitude: el.coords.longitude || 0,
             }))
+
         geoPosition(reparserLonLat)
 
     }

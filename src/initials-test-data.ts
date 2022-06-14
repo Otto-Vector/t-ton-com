@@ -856,7 +856,6 @@ export const initialEmployeesValues: EmployeesCardType[] = [
 
 ]
 
-
 // для обработки документов в заявке
 export const initialDocumentsRequestValues: DocumentsRequestType = {
     proxyWay: {

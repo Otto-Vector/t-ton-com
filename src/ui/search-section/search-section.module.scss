@@ -61,9 +61,5 @@
 
     border: 1px solid #023E8A;
     border-radius: 10px;
-
-    & > div { // применяем отступ ко вложенным на один уровень дивам
-      margin: 5px;
-    }
   }
 }

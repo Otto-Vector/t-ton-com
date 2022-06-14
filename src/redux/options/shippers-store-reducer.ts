@@ -72,13 +72,14 @@ const initialState = {
         description: composeValidators(maxLength(300)),
         coordinates: composeValidators(required),
     } as ShippersCardType<ValidateType>,
+
     parsers: {
         title: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         innNumber: undefined,
         organizationName: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         kpp: undefined,
         ogrn: undefined,
-        address: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        address: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         shipperFio: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         shipperTel: undefined,
         description: undefined,

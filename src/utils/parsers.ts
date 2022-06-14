@@ -40,4 +40,8 @@ export const parsePseudoLatinCharsAndNumbers = ( val: string | undefined ): stri
 
 // Фамилия Имя Отчество в Фамилия И.О.
 export const parseFamilyToFIO = ( val: string | undefined ): string => val ? val
-    .replace(/(?<=\S+) (\S)\S* (\S)\S*/, ' $1. $2.') : ''
+    // .replace(/(?<=\S+) (\S)\S* (\S)\S*/, ' $1. $2.') : '' // не работает на сафари
+    .split(' ')
+    .map((el,i)=> i>0 ? el[0].toUpperCase()+'.' : el)
+    .join(' ')
+    : ''
