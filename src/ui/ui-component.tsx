@@ -28,8 +28,8 @@ import {InfoSection} from './info-section/info-section';
 import {getAllTransportAPI} from '../redux/options/transport-store-reducer';
 import {getAllTrailerAPI} from '../redux/options/trailer-store-reducer';
 import {getAllEmployeesAPI} from '../redux/options/employees-store-reducer';
-import {YandexMapComponent} from './yandex-map-component/yandex-map-component';
 import {geoPositionTake} from '../redux/auth-store-reducer';
+import {MapSection} from './map-section/map-section';
 
 type OwnProps = {}
 
@@ -83,7 +83,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.historyList }
                                element={ <SearchSection mode={ 'history' }/> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
 
-                        <Route path={ routes.map } element={ <YandexMapComponent /> }/>
+                        <Route path={ routes.map } element={ <MapSection /> }/>
                         <Route path={ routes.maps.answers + ':reqNumber' }
                                element={ <div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2>
                                </div> }/>

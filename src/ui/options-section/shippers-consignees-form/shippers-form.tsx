@@ -24,6 +24,8 @@ import {
 } from '../../../selectors/options/shippers-reselect'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {toYandexMapLink, toYandexMapSreenshoot} from '../../../api/geolocation'
+import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
+import {parseAllCoords, stringToCoords} from '../../../utils/parsers';
 
 
 type OwnProps = {
@@ -179,19 +181,23 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    parse={ parsers.coordinates }
                                             />
 
-                                            <div className={ styles.shippersConsigneesForm__map }>
-                                                <a href={ toYandexMapLink(values.coordinates) }
-                                                   target="_blank" rel="noopener noreferrer"
-                                                   type={ 'button' }>
-                                                    <img className={ styles.shippersConsigneesForm__mapImage }
-                                                         src={ toYandexMapSreenshoot(values.coordinates) }
-                                                         onError={ ( { currentTarget } ) => {
-                                                             currentTarget.onerror = null; // prevents looping
-                                                             currentTarget.src = mapImage
-                                                         } }
-                                                         alt="map"
-                                                    />
-                                                </a>
+                                            <div className={ styles.shippersConsigneesForm__map+' '+
+                                                styles.shippersConsigneesForm__mapImage}>
+                                                {/*<a href={ toYandexMapLink(values.coordinates) }*/}
+                                                {/*   target="_blank" rel="noopener noreferrer"*/}
+                                                {/*   type={ 'button' }>*/}
+                                                {/*    <img className={ styles.shippersConsigneesForm__mapImage }*/}
+                                                {/*         src={ toYandexMapSreenshoot(values.coordinates) }*/}
+                                                {/*         onError={ ( { currentTarget } ) => {*/}
+                                                {/*             currentTarget.onerror = null; // prevents looping*/}
+                                                {/*             currentTarget.src = mapImage*/}
+                                                {/*         } }*/}
+                                                {/*         alt="map"*/}
+                                                {/*    />*/}
+                                                {/*</a>*/}
+                                            <YandexMapToForm
+                                                center={stringToCoords(values.coordinates)}
+                                            />
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>
                                                 <div className={ styles.shippersConsigneesForm__button }>

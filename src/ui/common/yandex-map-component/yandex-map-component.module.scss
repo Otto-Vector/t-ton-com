@@ -1,5 +1,5 @@
-@import '../../styles/mixins';
-@import '../../styles/variables';
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
 
 .yandexMapComponent {
   width: 100%;
@@ -9,7 +9,6 @@
 
   &__wrapper {
     position: relative;
-
     padding: 10px;
   }
 
