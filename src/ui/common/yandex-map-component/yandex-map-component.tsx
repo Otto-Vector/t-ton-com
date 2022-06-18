@@ -59,6 +59,7 @@ export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center } ) 
                 options={ {
                     float: 'left',
                     maxWidth: [ 25 ],
+                    panoramasItemMode: 'off'
                 } }/>
         </YandexMapComponent>
     )
@@ -78,6 +79,7 @@ export const YandexBigMap: React.FC<ToFormProps> = React.memo(( { center } ) => 
                 options={ {
                     float: 'left',
                     maxWidth: [ 25 ],
+                    panoramasItemMode: 'off',
                 } }/>
         </YandexMapComponent>
     )
