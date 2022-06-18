@@ -23,9 +23,8 @@ import {
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
-import {toYandexMapLink, toYandexMapSreenshoot} from '../../../api/geolocation'
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
-import {parseAllCoords, stringToCoords} from '../../../utils/parsers';
+import {stringToCoords} from '../../../utils/parsers';
 
 
 type OwnProps = {
@@ -38,8 +37,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const header = 'Заказчики и Грузоотправители'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const defaultInitialValues = useSelector(getInitialValuesShippersStore)
-    const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
+    const initialValues = useSelector(getInitialValuesShippersStore)
 
     const label = useSelector(getLabelShippersStore)
     const maskOn = useSelector(getMaskOnShippersStore)
@@ -57,21 +55,30 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     const onSubmit = ( values: ShippersCardType ) => {
         dispatch(shippersStoreActions.changeShipper(currentId, values)) //сохраняем измененное значение
+        dispatch(shippersStoreActions.setDefaultInitialValues())
         navigate(options) // и возвращаемся в предыдущее окно
     }
 
     const onCancelClick = () => {
+        dispatch(shippersStoreActions.setDefaultInitialValues())
         navigate(options)
     }
 
     const shipperDeleteHandleClick = () => {
+        dispatch(shippersStoreActions.setDefaultInitialValues())
         dispatch(shippersStoreActions.deleteShipper(currentId))
         navigate(options)
     }
 
+    const setCoordinatesToInitial = (coords: [number, number]) => {
+        dispatch(shippersStoreActions.setCoordinates(coords))
+    }
+
     useEffect(() => {
             if (currentId === +( currentIdForShow || 0 )) {
-                setInitialValues(oneShipper)
+                if (initialValues.coordinates === undefined) {
+                    dispatch(shippersStoreActions.setInitialValues(oneShipper))
+                }
             } else {
                 dispatch(shippersStoreActions.setCurrentId(+( currentIdForShow || 0 )))
             }
@@ -183,20 +190,9 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
                                             <div className={ styles.shippersConsigneesForm__map+' '+
                                                 styles.shippersConsigneesForm__mapImage}>
-                                                {/*<a href={ toYandexMapLink(values.coordinates) }*/}
-                                                {/*   target="_blank" rel="noopener noreferrer"*/}
-                                                {/*   type={ 'button' }>*/}
-                                                {/*    <img className={ styles.shippersConsigneesForm__mapImage }*/}
-                                                {/*         src={ toYandexMapSreenshoot(values.coordinates) }*/}
-                                                {/*         onError={ ( { currentTarget } ) => {*/}
-                                                {/*             currentTarget.onerror = null; // prevents looping*/}
-                                                {/*             currentTarget.src = mapImage*/}
-                                                {/*         } }*/}
-                                                {/*         alt="map"*/}
-                                                {/*    />*/}
-                                                {/*</a>*/}
                                             <YandexMapToForm
                                                 center={stringToCoords(values.coordinates)}
+                                                setCoordinates={setCoordinatesToInitial}
                                             />
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>

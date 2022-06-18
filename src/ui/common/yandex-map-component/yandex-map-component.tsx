@@ -1,15 +1,18 @@
 import React, {useEffect, useState} from 'react'
 import styles from './yandex-map-component.module.scss'
 import {Map, MapState, Placemark, SearchControl, TypeSelector} from 'react-yandex-maps';
+import {useDispatch, useSelector} from 'react-redux';
+import {getInitialValuesCoordinatesShippersStore} from '../../../selectors/options/shippers-reselect';
+import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer';
 
 
 type OwnProps = {
     state?: MapState
     modules?: string[]
-    instance?: (instance: React.Ref<any>)=>void
+    instance?: ( instance: React.Ref<any> ) => void
 }
 
-export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, children , instance} ) => {
+export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, children, instance } ) => {
 
     return (
         <div className={ styles.yandexMapComponent }>
@@ -28,61 +31,58 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
 
 type ToFormProps = {
     center: [ number, number ]
-    instance?: (instance: React.Ref<any>)=>void
+    setCoordinates: (coords:[number,number])=>void
 }
 
 
-export const YandexMapToForm: React.FC<ToFormProps> =
-    React.memo(
-        ( { center  } ) => {
+export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center, setCoordinates } ) => {
 
-    const [placemarkCoords, setPlacemarkCoords] = useState(center)
 
-    useEffect(()=>{
-        if (placemarkCoords[0]===0){
-            setPlacemarkCoords(center)
+        // const dispatch = useDispatch()
+
+        const inst = ( instance: React.Ref<any> ) => {
+            // @ts-ignore
+            instance?.events.add('click', function ( e ) {
+                setCoordinates(e.get('coords'))
+            })
         }
-    })
 
-    const inst = (instance:React.Ref<any>) => {
-                     // @ts-ignore
-                     instance?.events.add('click', function ( e ) {
-                         setPlacemarkCoords(e.get('coords'))
-                    })
-                 }
+        return (
+            <YandexMapComponent
+                state={ {
+                    center,
+                    zoom: 10,
 
-    return (
-        <YandexMapComponent
-            state={ {
-                center,
-                zoom: 10,
-
-            } }
-            instance={inst}
-        >
-            <Placemark geometry={ placemarkCoords }
-                       options={
-                           {
-                               preset: 'islands#violetDotIconWithCaption',
+                } }
+                instance={ inst }
+            >
+                <Placemark geometry={ center }
+                           options={
+                               {
+                                   preset: 'islands#violetDotIconWithCaption',
+                               }
                            }
-                       }
-            />
-            <SearchControl
-                options={ {
-                    float: 'right',
-                } }/>
-            <TypeSelector
-                options={ {
-                    float: 'left',
-                    maxWidth: [ 25 ],
-                    panoramasItemMode: 'off',
-                } }/>
-        </YandexMapComponent>
-    )
-}
+                />
+                <SearchControl
+                    options={ {
+                        float: 'right',
+                    } }/>
+                <TypeSelector
+                    options={ {
+                        float: 'left',
+                        maxWidth: [ 25 ],
+                        panoramasItemMode: 'off',
+                    } }/>
+            </YandexMapComponent>
+        )
+    },
 )
 
-export const YandexBigMap: React.FC<ToFormProps> = React.memo(( { center } ) => {
+type ToBigMap = {
+    center: [ number, number ]
+}
+
+export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center } ) => {
     return (
         <YandexMapComponent
             state={ {
@@ -100,4 +100,4 @@ export const YandexBigMap: React.FC<ToFormProps> = React.memo(( { center } ) => 
                 } }/>
         </YandexMapComponent>
     )
-},)
+})
