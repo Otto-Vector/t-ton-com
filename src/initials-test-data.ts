@@ -696,7 +696,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '9194',
         mechanicFIO: 'Тимофеев Андрей Федорович',
         dispatcherFIO: 'Маркова Феодосия Данииловна',
-        photoFace: randomDriverImage(1),
+        photoFace: 'https://images.unsplash.com/photo-1622426141446-5148b6fa1115?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8ZmFjZSUyMG1hbiUyMGRyaXZlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60',
         rating: randFloorMax(10).toString(),
         coordinates: '49.069515, 47.013803'
     },
@@ -713,7 +713,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '3081',
         mechanicFIO: 'Крылов Эрнест Макарович',
         dispatcherFIO: 'Пахомова Архелия Пётровна',
-        photoFace: randomDriverImage(2),
+        photoFace: 'https://images.unsplash.com/photo-1590895870999-b2c4eee2400b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8ZmFjZSUyMG1hbiUyMGRyaXZlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60',
         rating: randFloorMax(10).toString(),
         coordinates: '49.751249, 41.117407'
     },
@@ -730,7 +730,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '1854',
         mechanicFIO: 'Беляков Алан Лаврентьевич',
         dispatcherFIO: 'Меркушева Аксинья Викторовна',
-        photoFace: randomDriverImage(3),
+        photoFace: 'https://images.unsplash.com/photo-1521738218175-2b6670637c6c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGZhY2UlMjBtYW4lMjBkcml2ZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
         rating: randFloorMax(10).toString(),
         coordinates: '54.721953, 56.146108'
     },
@@ -747,7 +747,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         garageNumber: '6511',
         mechanicFIO: 'Архипов Лука Ярославович',
         dispatcherFIO: 'Козлова Сара Георгиевна',
-        photoFace: randomDriverImage(4),
+        photoFace: 'https://images.unsplash.com/photo-1640706277402-666588349146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzZ8fGZhY2UlMjBtYW4lMjBkcml2ZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
         rating: randFloorMax(10).toString(),
         coordinates: '56.997002, 65.801063'
     },

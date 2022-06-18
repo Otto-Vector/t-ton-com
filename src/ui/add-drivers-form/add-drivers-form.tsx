@@ -5,7 +5,7 @@ import {Button} from '../common/button/button'
 import {Preloader} from '../common/preloader/preloader'
 
 import noImagePhoto from '../../media/noImagePhoto2.png'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {
     getIsFetchingRequisitesStore,
     getStoredValuesRequisitesStore,
@@ -25,17 +25,26 @@ import {FormSelector, SelectOptions} from '../common/form-selector/form-selector
 import {FormInputType} from '../common/form-input-type/form-input-type';
 import {getOneRequestStore} from '../../selectors/forms/request-form-reselect';
 import {ddMmYearFormat} from '../../utils/date-formats';
-import {getAllEmployeesStore} from '../../selectors/options/employees-reselect';
-import {getAllTransportStore} from '../../selectors/options/transport-reselect';
-import {parseFamilyToFIO} from '../../utils/parsers';
-import {getAllTrailerStore} from '../../selectors/options/trailer-reselect';
+import {
+    getAllEmployeesSelectFromLocal,
+    getAllEmployeesStore,
+    getOneEmployeesFromLocal,
+} from '../../selectors/options/employees-reselect';
+import {getAllTransportSelectFromLocal, getAllTransportStore} from '../../selectors/options/transport-reselect';
 
-type OwnProps = {}
+import {getAllTrailerSelectFromLocal, getAllTrailerStore} from '../../selectors/options/trailer-reselect';
+import {employeesStoreActions} from '../../redux/options/employees-store-reducer';
 
-export const AddDriversForm: React.FC<OwnProps> = () => {
+type OwnProps = {
+    mode?: 'empty' | 'filled'
+    initialValuesOn?: AddDriverCardType
+}
+
+export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesOn }) => {
 
     const header = ( requestNumber: number, shipmentDate: Date ): string =>
         `Заявка ${ requestNumber } от ${ ddMmYearFormat(shipmentDate) }`
+
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
     const initialValues = useSelector(getInitialValuesAddDriverStore)
@@ -44,27 +53,15 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
     const { distance } = useSelector(getOneRequestStore)
-
+    const dispatch = useDispatch()
 
     const employees = useSelector(getAllEmployeesStore)
-    const employeesSelect: SelectOptions[] = employees.map(( { id, employeeFIO } ) =>
-        ( { key: id.toString(), value: id.toString(), label: parseFamilyToFIO(employeeFIO) } ))
     const transport = useSelector(getAllTransportStore)
-    const transportSelect: SelectOptions[] = transport
-        .map(( { id, transportTrademark, transportNumber, cargoWeight } ) =>
-            ( {
-                key: id.toString(),
-                value: id.toString(),
-                label: [ transportTrademark, transportNumber, cargoWeight ].join(', ') + 'т.',
-            } ))
     const trailer = useSelector(getAllTrailerStore)
-    const trailerSelect: SelectOptions[] = trailer
-        .map(( { id, trailerTrademark, trailerNumber, cargoWeight } ) =>
-            ( {
-                key: id.toString(),
-                value: id.toString(),
-                label: [ trailerTrademark, trailerNumber, cargoWeight ].join(', ') + 'т.',
-            } ))
+
+    const employeesSelect = useSelector(getAllEmployeesSelectFromLocal)
+    const transportSelect = useSelector(getAllTransportSelectFromLocal)
+    const trailerSelect = useSelector(getAllTrailerSelectFromLocal)
 
 
     const { requestInfo: { create } } = useSelector(getRoutesStore)
@@ -80,19 +77,17 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         navigate(-1)
     }
 
-    const getEmployeeOneImage = ( searchId: string ) => employees.filter(( { id } ) => id === +searchId)[0].photoFace
+    const oneEmployee = useSelector(getOneEmployeesFromLocal)
+    const setOneEmployee = (searchId: string| undefined)=>{dispatch(employeesStoreActions.setCurrentId(+(searchId||0)))}
+    const employeeOneImage = oneEmployee.photoFace
+    const getEmployeeOnePhone = oneEmployee.employeePhoneNumber
+
     const getTransportOneImage = ( searchId: string ) => transport.filter(( { id } ) => id === +searchId)[0].transportImage
     const getTrailerOneImage = ( searchId: string ) => trailer.filter(( { id } ) => id === +searchId)[0].trailerImage
 
     const getTransportOneCargoWeight = ( searchId?: string ) => transport.filter(( { id } ) => id === +( searchId || 0 ))[0]?.cargoWeight
     const getTrailerOneCargoWeight = ( searchId?: string ) => trailer.filter(( { id } ) => id === +( searchId || 0 ))[0]?.cargoWeight
 
-    // const employeeSaveHandleClick = () => { // onSubmit
-    // }
-    //
-    // const fakeFetch = () => { // @ts-ignore
-    //     // dispatch(fakeAuthFetching())
-    // }
 
     return (
         <div className={ styles.addDriversForm }>
@@ -112,8 +107,11 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                       form,
                                       submitting,
                                       values,
+
                                   } ) => (
-                                    <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }>
+                                    <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }
+
+                                    >
                                         <div
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
                                             <div className={ styles.addDriversForm__selector }>
@@ -123,6 +121,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                               placeholder={ placeholder.driverFIO }
                                                               values={ employeesSelect }
                                                               validate={ validators.driverFIO }
+                                                              handleChanger={setOneEmployee}
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
@@ -195,12 +194,11 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                         </div>
                                         {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                         <div className={ styles.addDriversForm__photoPanel }>
-
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
                                                     src={
                                                         values.driverFIO
-                                                            ? getEmployeeOneImage(values.driverFIO)
+                                                            ? employeeOneImage
                                                             : noImagePhoto
                                                     }
                                                     alt="driverPhoto"/>

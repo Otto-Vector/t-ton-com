@@ -41,6 +41,7 @@ const initialState = {
     maskOn: {
         driverStavka: undefined
     },
+
     validators: {
         driverFIO: composeValidators(required),
         driverTransport: composeValidators(required),

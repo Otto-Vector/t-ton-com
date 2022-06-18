@@ -14,6 +14,7 @@ type OwnProps = {
     isClearable?: boolean
     creatableSelect?: boolean
     handleCreate?: Function
+    handleChanger?: Function
 }
 
 
@@ -26,6 +27,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                                                       isClearable = false,
                                                       creatableSelect = false,
                                                       handleCreate,
+                                                      handleChanger,
                                                   } ) => {
 
     return <div className={ styles.dropdown }>
@@ -40,6 +42,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                               isClearable={ isClearable }
                               creatableSelect={ creatableSelect }
                               handleCreate={ handleCreate }
+                              handleChanger={ handleChanger }
                 />
             ) }
         </Field>
@@ -58,11 +61,13 @@ const CustomSelect = ( {
                            isClearable,
                            creatableSelect, //
                            handleCreate, // этот параметр только для creatableSelect
+                           handleChanger,
                            ...rest
                        }: FieldRenderProps<string, HTMLElement> ) => {
 
     const handleChange = ( option: SelectOptionType | null ) => {
         input.onChange(option?.value);
+        if (handleChanger) handleChanger(option?.value)
     }
 
     const isError = ( meta.error || meta.submitError ) && meta.touched
