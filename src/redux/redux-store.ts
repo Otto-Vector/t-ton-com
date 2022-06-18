@@ -15,7 +15,6 @@ import {tableStoreReducer} from './table/table-store-reducer';
 import {addDriverStoreReducer} from './forms/add-driver-store-reducer';
 import {requestStoreReducer} from './forms/request-store-reducer';
 import {infoStoreReducer} from './info-store-reducer';
-import {coordsStoreReducer} from './coords-store-reducer';
 
 
 const reducersObject = {
@@ -34,7 +33,6 @@ const reducersObject = {
     addDriverStoreReducer,
     requestStoreReducer,
     infoStoreReducer,
-    coordsStoreReducer,
 }
 
 const rootReducer = combineReducers(reducersObject)

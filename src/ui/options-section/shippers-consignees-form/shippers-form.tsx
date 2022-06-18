@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 
@@ -6,7 +6,6 @@ import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
-import mapImage from '../../../media/mapsicle-map-text.jpg'
 import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'

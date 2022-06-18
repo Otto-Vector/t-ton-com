@@ -19,6 +19,3 @@ export const getOneShipperFromLocal = createSelector( getCurrentIdShipperStore, 
     (currentId, shippers, initials ):  ShippersCardType  => {
         return shippers.filter( ( { id } ) => id === currentId )[0] || initials
     } )
-export const getInitialValuesCoordinatesShippersStore = createSelector(getInitialValuesShippersStore,
-    (initial): string | undefined => initial.coordinates
-)

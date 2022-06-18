@@ -12,6 +12,20 @@ import {
     parseOnlyOneDot, parseOnlyOneSpace,
 } from '../../utils/parsers';
 
+const defaultInitialValues = {
+    title: undefined,
+    innNumber: undefined,
+    organizationName: undefined,
+    kpp: undefined,
+    ogrn: undefined,
+    address: undefined,
+    consigneesFio: undefined,
+    consigneesTel: undefined,
+    description: undefined,
+    coordinates: undefined,
+} as ConsigneesCardType
+
+
 const initialState = {
     currentId: 0,
 
@@ -66,6 +80,7 @@ const initialState = {
         description: composeValidators(required, maxLength(300)),
         coordinates: composeValidators(required),
     } as ConsigneesCardType<ValidateType>,
+
     parsers: {
         title: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
         innNumber: undefined,
@@ -135,6 +150,18 @@ export const consigneesStoreReducer = ( state = initialState, action: ActionsTyp
                 ],
             }
         }
+        case 'consignees-store-reducer/SET-COORDINATES': {
+            return {
+                ...state,
+                initialValues: { ...state.initialValues, coordinates: action.coordinates.join(', ') },
+            }
+        }
+        case 'consignees-store-reducer/SET-DEFAULT-INITIAL-VALUES' : {
+            return {
+                ...state,
+                initialValues: defaultInitialValues, //обнуляем значения для номального просмотра новой карточки
+            }
+        }
         default: {
             return state
         }
@@ -149,9 +176,16 @@ export const consigneesStoreActions = {
         type: 'consignees-store-reducer/SET-INITIAL-VALUES',
         initialValues,
     } as const ),
+    setDefaultInitialValues: () => ( {
+        type: 'consignees-store-reducer/SET-DEFAULT-INITIAL-VALUES',
+    } as const ),
     setCurrentId: ( currentId: number ) => ( {
         type: 'consignees-store-reducer/SET-CURRENT-ID',
         currentId,
+    } as const ),
+    setCoordinates: ( coordinates: [ number, number ] ) => ( {
+        type: 'consignees-store-reducer/SET-COORDINATES',
+        coordinates,
     } as const ),
     setConsigneesContent: ( consignees: ConsigneesCardType[] ) => ( {
         type: 'consignees-store-reducer/SET-CONSIGNEES-CONTENT',

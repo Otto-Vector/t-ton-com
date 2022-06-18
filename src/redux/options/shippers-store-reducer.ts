@@ -164,10 +164,10 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
                 initialValues: { ...state.initialValues, coordinates: action.coordinates.join(', ') },
             }
         }
-        case 'shippers-store-reducer/SET-DEFAULT-INITIAL-VALUES':{
+        case 'shippers-store-reducer/SET-DEFAULT-INITIAL-VALUES': {
             return {
                 ...state,
-                initialValues: defaultInitialValues
+                initialValues: defaultInitialValues,
             }
         }
         default: {
@@ -191,11 +191,15 @@ export const shippersStoreActions = {
         type: 'shippers-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
+    setCoordinates: ( coordinates: [ number, number ] ) => ( {
+        type: 'shippers-store-reducer/SET-COORDINATES',
+        coordinates,
+    } as const ),
     setShippersContent: ( shippers: ShippersCardType[] ) => ( {
         type: 'shippers-store-reducer/SET-SHIPPERS-CONTENT',
         shippers,
     } as const ),
-    addShipper: ( shipper: ShippersCardType ) => ( {
+    addOneShipper: ( shipper: ShippersCardType ) => ( {
         type: 'shippers-store-reducer/ADD-SHIPPER',
         shipper,
     } as const ),
@@ -203,10 +207,6 @@ export const shippersStoreActions = {
         type: 'shippers-store-reducer/CHANGE-SHIPPER',
         id,
         shipper,
-    } as const ),
-    setCoordinates: ( coordinates: [ number, number ] ) => ( {
-        type: 'shippers-store-reducer/SET-COORDINATES',
-        coordinates,
     } as const ),
     deleteShipper: ( id: number ) => ( {
         type: 'shippers-store-reducer/DELETE-SHIPPER',

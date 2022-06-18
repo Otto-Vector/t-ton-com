@@ -1,9 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import styles from './yandex-map-component.module.scss'
 import {Map, MapState, Placemark, SearchControl, TypeSelector} from 'react-yandex-maps';
-import {useDispatch, useSelector} from 'react-redux';
-import {getInitialValuesCoordinatesShippersStore} from '../../../selectors/options/shippers-reselect';
-import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer';
+
 
 
 type OwnProps = {
@@ -18,10 +16,8 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
         <div className={ styles.yandexMapComponent }>
             <Map className={ styles.yandexMapComponent }
                  instanceRef={ instance }
-                // state={ state }
                  modules={ modules }
                  state={ state }
-
             >
                 { children }
             </Map>
@@ -29,18 +25,15 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
     )
 }
 
+
 type ToFormProps = {
     center: [ number, number ]
     setCoordinates: (coords:[number,number])=>void
 }
 
-
 export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center, setCoordinates } ) => {
 
-
-        // const dispatch = useDispatch()
-
-        const inst = ( instance: React.Ref<any> ) => {
+        const setCoordsInstance = ( instance: React.Ref<any> ) => { //для отслеживания координат по клику
             // @ts-ignore
             instance?.events.add('click', function ( e ) {
                 setCoordinates(e.get('coords'))
@@ -54,7 +47,7 @@ export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center, set
                     zoom: 10,
 
                 } }
-                instance={ inst }
+                instance={ setCoordsInstance }
             >
                 <Placemark geometry={ center }
                            options={
@@ -77,6 +70,7 @@ export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center, set
         )
     },
 )
+
 
 type ToBigMap = {
     center: [ number, number ]
