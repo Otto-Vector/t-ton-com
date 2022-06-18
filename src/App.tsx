@@ -13,6 +13,7 @@ const App: React.FC = () => {
         <Provider store={ store }>
             <YMaps
                 // enterprise={true}
+
                 version={'2.1'}
                 query={
                 {

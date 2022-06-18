@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './yandex-map-component.module.scss'
 import {Map, MapState, Placemark, SearchControl, TypeSelector} from 'react-yandex-maps';
 
@@ -6,17 +6,19 @@ import {Map, MapState, Placemark, SearchControl, TypeSelector} from 'react-yande
 type OwnProps = {
     state?: MapState
     modules?: string[]
+    instance?: (instance: React.Ref<any>)=>void
 }
 
-export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, children } ) => {
+export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, children , instance} ) => {
 
     return (
         <div className={ styles.yandexMapComponent }>
             <Map className={ styles.yandexMapComponent }
+                 instanceRef={ instance }
                 // state={ state }
                  modules={ modules }
                  state={ state }
-                // options={{}}
+
             >
                 { children }
             </Map>
@@ -26,32 +28,46 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
 
 type ToFormProps = {
     center: [ number, number ]
+    instance?: (instance: React.Ref<any>)=>void
 }
 
-export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center } ) => {
+
+export const YandexMapToForm: React.FC<ToFormProps> =
+    React.memo(
+        ( { center  } ) => {
+
+    const [placemarkCoords, setPlacemarkCoords] = useState(center)
+
+    useEffect(()=>{
+        if (placemarkCoords[0]===0){
+            setPlacemarkCoords(center)
+        }
+    })
+
+    const inst = (instance:React.Ref<any>) => {
+                     // @ts-ignore
+                     instance?.events.add('click', function ( e ) {
+                         setPlacemarkCoords(e.get('coords'))
+                    })
+                 }
+
     return (
         <YandexMapComponent
             state={ {
                 center,
                 zoom: 10,
 
-                // controls: [ 'zoomControl' ],
             } }
-            // modules={ [ 'control.ZoomControl' ] }
+            instance={inst}
         >
-            <Placemark geometry={ center }
+            <Placemark geometry={ placemarkCoords }
                        options={
                            {
                                preset: 'islands#violetDotIconWithCaption',
-                               draggable: true,
                            }
                        }
-                       onClick={ ( e: any ) => {
-                           console.log(e)
-                       } }
             />
             <SearchControl
-
                 options={ {
                     float: 'right',
                 } }/>
@@ -59,11 +75,12 @@ export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center } ) 
                 options={ {
                     float: 'left',
                     maxWidth: [ 25 ],
-                    panoramasItemMode: 'off'
+                    panoramasItemMode: 'off',
                 } }/>
         </YandexMapComponent>
     )
-})
+}
+)
 
 export const YandexBigMap: React.FC<ToFormProps> = React.memo(( { center } ) => {
     return (
@@ -83,4 +100,4 @@ export const YandexBigMap: React.FC<ToFormProps> = React.memo(( { center } ) => 
                 } }/>
         </YandexMapComponent>
     )
-})
+},)
