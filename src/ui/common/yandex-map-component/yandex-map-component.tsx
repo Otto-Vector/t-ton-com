@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './yandex-map-component.module.scss'
-import {Map, MapState, Placemark, SearchControl} from 'react-yandex-maps';
+import {Map, MapState, Placemark, SearchControl, TypeSelector} from 'react-yandex-maps';
 
 
 type OwnProps = {
@@ -16,7 +16,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
                 // state={ state }
                  modules={ modules }
                  state={ state }
-                 // options={{}}
+                // options={{}}
             >
                 { children }
             </Map>
@@ -46,11 +46,20 @@ export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center } ) 
                                draggable: true,
                            }
                        }
-                       onClick={(e:any)=>{console.log(e)}}
+                       onClick={ ( e: any ) => {
+                           console.log(e)
+                       } }
             />
-            <SearchControl options={ {
-                float: 'right',
-            } }/>
+            <SearchControl
+
+                options={ {
+                    float: 'right',
+                } }/>
+            <TypeSelector
+                options={ {
+                    float: 'left',
+                    maxWidth: [ 25 ],
+                } }/>
         </YandexMapComponent>
     )
 })
@@ -64,6 +73,12 @@ export const YandexBigMap: React.FC<ToFormProps> = React.memo(( { center } ) => 
             } }
         >
             <Placemark geometry={ center }/>
+            <TypeSelector
+                mapTypes={ [ 'yandex#satellite', 'yandex#map', 'yandex#hybrid' ] }
+                options={ {
+                    float: 'left',
+                    maxWidth: [ 25 ],
+                } }/>
         </YandexMapComponent>
     )
 })
