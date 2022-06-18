@@ -16,6 +16,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
                 // state={ state }
                  modules={ modules }
                  state={ state }
+                 // options={{}}
             >
                 { children }
             </Map>
@@ -33,6 +34,7 @@ export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center } ) 
             state={ {
                 center,
                 zoom: 10,
+
                 // controls: [ 'zoomControl' ],
             } }
             // modules={ [ 'control.ZoomControl' ] }
