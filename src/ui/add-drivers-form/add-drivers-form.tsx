@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styles from './add-drivers-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../common/button/button'
 import {Preloader} from '../common/preloader/preloader'
-
+import Lightbox from 'react-image-lightbox'
+import "react-image-lightbox/style.css";
 import noImagePhoto from '../../media/noImagePhoto2.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {
@@ -11,7 +12,6 @@ import {
     getStoredValuesRequisitesStore,
 } from '../../selectors/options/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
-import {getRoutesStore} from '../../selectors/routes-reselect'
 import {CancelButton} from '../common/cancel-button/cancel-button'
 import {AddDriverCardType} from '../../types/form-types'
 
@@ -20,27 +20,34 @@ import {
     getLabelAddDriverStore,
     getPlaceholderAddDriverStore,
     getValidatorsAddDriverStore,
-} from '../../selectors/forms/add-driver-reselect';
-import {FormSelector, SelectOptions} from '../common/form-selector/form-selector';
-import {FormInputType} from '../common/form-input-type/form-input-type';
-import {getOneRequestStore} from '../../selectors/forms/request-form-reselect';
-import {ddMmYearFormat} from '../../utils/date-formats';
+} from '../../selectors/forms/add-driver-reselect'
+import {FormSelector} from '../common/form-selector/form-selector'
+import {FormInputType} from '../common/form-input-type/form-input-type'
+import {getOneRequestStore} from '../../selectors/forms/request-form-reselect'
+import {ddMmYearFormat} from '../../utils/date-formats'
 import {
     getAllEmployeesSelectFromLocal,
-    getAllEmployeesStore,
     getOneEmployeesFromLocal,
-} from '../../selectors/options/employees-reselect';
-import {getAllTransportSelectFromLocal, getAllTransportStore} from '../../selectors/options/transport-reselect';
+} from '../../selectors/options/employees-reselect'
+import {
+    getAllTransportSelectFromLocal,
+    getOneTransportFromLocal
+} from '../../selectors/options/transport-reselect'
 
-import {getAllTrailerSelectFromLocal, getAllTrailerStore} from '../../selectors/options/trailer-reselect';
-import {employeesStoreActions} from '../../redux/options/employees-store-reducer';
+import {
+    getAllTrailerSelectFromLocal,
+    getOneTrailerFromLocal
+} from '../../selectors/options/trailer-reselect'
+import {employeesStoreActions} from '../../redux/options/employees-store-reducer'
+import {transportStoreActions} from '../../redux/options/transport-store-reducer'
+import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 
 type OwnProps = {
     mode?: 'empty' | 'filled'
     initialValuesOn?: AddDriverCardType
 }
 
-export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesOn }) => {
+export const AddDriversForm: React.FC<OwnProps> = ( { mode = 'empty', initialValuesOn } ) => {
 
     const header = ( requestNumber: number, shipmentDate: Date ): string =>
         `Заявка ${ requestNumber } от ${ ddMmYearFormat(shipmentDate) }`
@@ -55,38 +62,47 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
     const { distance } = useSelector(getOneRequestStore)
     const dispatch = useDispatch()
 
-    const employees = useSelector(getAllEmployeesStore)
-    const transport = useSelector(getAllTransportStore)
-    const trailer = useSelector(getAllTrailerStore)
+    const [ isDriverImageOpen, setIsDriverImageOpen ] = useState(false)
+
 
     const employeesSelect = useSelector(getAllEmployeesSelectFromLocal)
     const transportSelect = useSelector(getAllTransportSelectFromLocal)
     const trailerSelect = useSelector(getAllTrailerSelectFromLocal)
 
-
-    const { requestInfo: { create } } = useSelector(getRoutesStore)
+    // const { requestInfo: { create } } = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
     const onSubmit = ( values: AddDriverCardType ) => {
         // navigate(create)
     }
 
-    const resultDistanceCost = ( ...args: number[] ): number => args.reduce(( a, b ) => a * b) * ( distance || 1 )
+    const resultDistanceCost = ( ...args: number[] ): number =>
+        args.reduce(( a, b ) => a * b) * ( distance || 1 )
 
     const onCancelClick = () => {
         navigate(-1)
     }
 
     const oneEmployee = useSelector(getOneEmployeesFromLocal)
-    const setOneEmployee = (searchId: string| undefined)=>{dispatch(employeesStoreActions.setCurrentId(+(searchId||0)))}
+    const setOneEmployee = ( searchId: string | undefined ) => {
+        dispatch(employeesStoreActions.setCurrentId(+( searchId || 0 )))
+    }
     const employeeOneImage = oneEmployee.photoFace
-    const getEmployeeOnePhone = oneEmployee.employeePhoneNumber
+    // const employeeOnePhone = oneEmployee.employeePhoneNumber
 
-    const getTransportOneImage = ( searchId: string ) => transport.filter(( { id } ) => id === +searchId)[0].transportImage
-    const getTrailerOneImage = ( searchId: string ) => trailer.filter(( { id } ) => id === +searchId)[0].trailerImage
+    const oneTransport = useSelector(getOneTransportFromLocal)
+    const setOneTransport = ( searchId: string | undefined ) => {
+        dispatch(transportStoreActions.setCurrentId(+( searchId || 0 )))
+    }
+    const transportOneImage = oneTransport.transportImage
+    const transportOneCargoWeight = oneTransport.cargoWeight
 
-    const getTransportOneCargoWeight = ( searchId?: string ) => transport.filter(( { id } ) => id === +( searchId || 0 ))[0]?.cargoWeight
-    const getTrailerOneCargoWeight = ( searchId?: string ) => trailer.filter(( { id } ) => id === +( searchId || 0 ))[0]?.cargoWeight
+    const oneTrailer = useSelector(getOneTrailerFromLocal)
+    const setOneTrailer = ( searchId: string | undefined ) => {
+        dispatch(trailerStoreActions.setCurrentId(+( searchId || 0 )))
+    }
+    const trailerOneImage = oneTrailer.trailerImage
+    const trailerOneCargoWeight = oneTrailer.cargoWeight
 
 
     return (
@@ -100,15 +116,15 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
                             initialValues={ initialValues }
                             render={
                                 ( {
-                                      submitError,
-                                      hasValidationErrors,
-                                      handleSubmit,
-                                      pristine,
-                                      form,
-                                      submitting,
-                                      values,
+                                    submitError,
+                                    hasValidationErrors,
+                                    handleSubmit,
+                                    pristine,
+                                    form,
+                                    submitting,
+                                    values,
 
-                                  } ) => (
+                                } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }
 
                                     >
@@ -121,7 +137,7 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
                                                               placeholder={ placeholder.driverFIO }
                                                               values={ employeesSelect }
                                                               validate={ validators.driverFIO }
-                                                              handleChanger={setOneEmployee}
+                                                              handleChanger={ setOneEmployee }
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
@@ -131,6 +147,7 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
                                                               placeholder={ placeholder.driverTransport }
                                                               values={ transportSelect }
                                                               validate={ validators.driverTransport }
+                                                              handleChanger={ setOneTransport }
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
@@ -140,6 +157,7 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
                                                               placeholder={ placeholder.driverTrailer }
                                                               values={ trailerSelect }
                                                               validate={ validators.driverTrailer }
+                                                              handleChanger={ setOneTrailer }
                                                 />
                                             </div>
                                         </div>
@@ -169,9 +187,9 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
                                                         values.driverSumm = resultDistanceCost(
                                                                 +( values.driverStavka || 0 ),
                                                                 (
-                                                                    +( getTrailerOneCargoWeight(values.driverTrailer) || 0 )
+                                                                    +( trailerOneCargoWeight || 0 )
                                                                     +
-                                                                    +( getTransportOneCargoWeight(values.driverTransport) || 0 )
+                                                                    +( transportOneCargoWeight || 0 )
                                                                 ),
                                                             ).toString()
                                                             || 'за весь рейс' }
@@ -207,7 +225,7 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
                                                 <img
                                                     src={
                                                         values.driverTransport
-                                                            ? getTransportOneImage(values.driverTransport)
+                                                            ? transportOneImage
                                                             : noImagePhoto
                                                     }
                                                     alt="driverTransportPhoto"/>
@@ -216,10 +234,13 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
                                                 <img
                                                     src={
                                                         values.driverTrailer
-                                                            ? getTrailerOneImage(values.driverTrailer)
+                                                            ? trailerOneImage
                                                             : noImagePhoto
                                                     }
-                                                    alt="driverTrailerPhoto"/>
+                                                    alt="driverTrailerPhoto"
+                                                    onClick={ () => setIsDriverImageOpen(true) }
+                                                />
+
                                             </div>
                                         </div>
 
@@ -243,7 +264,6 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
                                                 />
                                             </div>
                                         </div>
-
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
                                     </form>
                                 )
@@ -253,6 +273,12 @@ export const AddDriversForm: React.FC<OwnProps> = ({mode='empty', initialValuesO
 
                 <CancelButton onCancelClick={ onCancelClick }/>
             </div>
+            { isDriverImageOpen && (
+                <Lightbox
+                    mainSrc={ trailerOneImage as string || noImagePhoto }
+                    onCloseRequest={ () => setIsDriverImageOpen(false) }
+                /> )
+            }
         </div>
     )
 }
