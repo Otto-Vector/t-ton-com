@@ -30,6 +30,7 @@ import {getAllTrailerAPI} from '../redux/options/trailer-store-reducer';
 import {getAllEmployeesAPI} from '../redux/options/employees-store-reducer';
 import {geoPositionTake} from '../redux/auth-store-reducer';
 import {MapSection} from './map-section/map-section';
+import {LightBoxComponent} from './common/lightbox-component/lightbox-component'
 
 type OwnProps = {}
 
@@ -55,6 +56,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
 
     return (
         <div className={ styles.ui }>
+            <LightBoxComponent />
             <Header/>
             <div className={ styles.ui__centerWrapper }>
                 <div className={ styles.ui__sideBarLeft }>

@@ -5,7 +5,7 @@ import store from './redux/redux-store'
 import {Provider} from 'react-redux'
 import {BrowserRouter} from 'react-router-dom'
 import {YMaps} from 'react-yandex-maps';
-
+import "react-image-lightbox/style.css";
 
 const App: React.FC = () => {
 

@@ -1,10 +1,8 @@
-import React, {useState} from 'react'
+import React from 'react'
 import styles from './add-drivers-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../common/button/button'
 import {Preloader} from '../common/preloader/preloader'
-import Lightbox from 'react-image-lightbox'
-import "react-image-lightbox/style.css";
 import noImagePhoto from '../../media/noImagePhoto2.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {
@@ -41,6 +39,7 @@ import {
 import {employeesStoreActions} from '../../redux/options/employees-store-reducer'
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
+import {lightBoxStoreActions} from '../../redux/lightbox-store-reducer'
 
 type OwnProps = {
     mode?: 'empty' | 'filled'
@@ -62,8 +61,9 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode = 'empty', initialVal
     const { distance } = useSelector(getOneRequestStore)
     const dispatch = useDispatch()
 
-    const [ isDriverImageOpen, setIsDriverImageOpen ] = useState(false)
-
+    const setLightBoxImage = (image?: string)=>{
+        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
+    }
 
     const employeesSelect = useSelector(getAllEmployeesSelectFromLocal)
     const transportSelect = useSelector(getAllTransportSelectFromLocal)
@@ -219,7 +219,9 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode = 'empty', initialVal
                                                             ? employeeOneImage
                                                             : noImagePhoto
                                                     }
-                                                    alt="driverPhoto"/>
+                                                    alt="driverPhoto"
+                                                    onClick={ () => setLightBoxImage(employeeOneImage) }
+                                                />
                                             </div>
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
@@ -228,7 +230,9 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode = 'empty', initialVal
                                                             ? transportOneImage
                                                             : noImagePhoto
                                                     }
-                                                    alt="driverTransportPhoto"/>
+                                                    alt="driverTransportPhoto"
+                                                    onClick={ () => setLightBoxImage(transportOneImage) }
+                                                />
                                             </div>
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
@@ -238,7 +242,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode = 'empty', initialVal
                                                             : noImagePhoto
                                                     }
                                                     alt="driverTrailerPhoto"
-                                                    onClick={ () => setIsDriverImageOpen(true) }
+                                                    onClick={ () => setLightBoxImage(trailerOneImage) }
                                                 />
 
                                             </div>
@@ -272,13 +276,9 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode = 'empty', initialVal
                     </> }
 
                 <CancelButton onCancelClick={ onCancelClick }/>
+
             </div>
-            { isDriverImageOpen && (
-                <Lightbox
-                    mainSrc={ trailerOneImage as string || noImagePhoto }
-                    onCloseRequest={ () => setIsDriverImageOpen(false) }
-                /> )
-            }
+
         </div>
     )
 }
