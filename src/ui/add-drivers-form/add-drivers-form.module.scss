@@ -90,7 +90,6 @@
   }
 
   &__photo {
-    //flex-grow: 1;
     position: relative;
     display: flex;
     justify-content: center;
@@ -100,7 +99,7 @@
     border: 1px solid #2D2D2D;
     border-radius: 10px;
     margin: 5px auto;
-    cursor: pointer;
+    cursor: zoom-in;
     overflow: hidden;
 
     img {

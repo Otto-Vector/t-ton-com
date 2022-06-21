@@ -4,15 +4,14 @@ import styles from './table-component.module.scss'
 import {Table} from './table'
 import {ColumnInputFilter} from './filter/column-filters'
 import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {UseFiltersColumnProps} from 'react-table'
-import {geInitialValuesTableStore, getContentTableStore} from '../../../selectors/table/table-reselect'
+import { getContentTableStore} from '../../../selectors/table/table-reselect'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {getAuthCashAuthStore} from '../../../selectors/auth-reselect'
 import {TableModesType} from '../search-section'
-import {requestStoreActions} from '../../../redux/forms/request-store-reducer'
 import {ddMmYearFormat} from '../../../utils/date-formats';
 
 type OwnProps = {
@@ -26,15 +25,10 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const { balance, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = useSelector(getAuthCashAuthStore)
     const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
-    const initialValues = useSelector(geInitialValuesTableStore)
+    // const initialValues = useSelector(geInitialValuesTableStore)
     const TABLE_CONTENT = useSelector(getContentTableStore)
-    const dispatch = useDispatch()
 
-    const selectRow = ( requestNumber: number ) => {
-        dispatch(requestStoreActions.setToggleRequestVisible(requestNumber))
-    }
-
-    const data = React.useMemo(() => ( TABLE_CONTENT || initialValues ), [ TABLE_CONTENT ])
+    const data = React.useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
     const columns = React.useMemo(
         () => [
@@ -49,7 +43,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 Filter: ( { column }: { column?: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column?.setFilter(cargoFilter)
-                    }, [])
+                    }, [column])
                     return ( <></> )
                 },
                 disableFilters: false,
@@ -60,7 +54,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column.setFilter(ddMmYearFormat(dayFilter))
-                    }, [])
+                    }, [column])
                     return ( <></> )
                 },
                 disableFilters: false,
@@ -71,7 +65,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column.setFilter(routeFilter)
-                    }, [])
+                    }, [column])
                     return ( <></> )
                 },
                 disableFilters: false,
@@ -123,7 +117,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
         ],
         [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT ],
     )
-    const tableModesStyle = styles['tableComponent' + '__' + (
+    const tableModesStyle = styles['tableComponent__' + (
         tableModes.searchTblMode ? 'search'
             : tableModes.historyTblMode
                 ? 'history'
