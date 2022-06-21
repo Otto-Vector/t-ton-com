@@ -23,6 +23,8 @@ import {
     getValidatorsTrailerStore,
 } from '../../../selectors/options/trailer-reselect'
 import {trailerStoreActions} from '../../../redux/options/trailer-store-reducer';
+import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
+import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
 
 
 type OwnProps = {
@@ -52,6 +54,10 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const setLightBoxImage = ( image?: string ) => {
+        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
+    }
 
     const onSubmit = ( values: TrailerCardType ) => {
         dispatch(trailerStoreActions.changeTrailer(currentId, values)) //сохраняем измененное значение
@@ -89,7 +95,14 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, handleSubmit, pristine, form, submitting } ) => (
+                                ( {
+                                      submitError,
+                                      handleSubmit,
+                                      pristine,
+                                      form,
+                                      submitting,
+                                      values,
+                                  } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.transportTrailerForm__form }>
                                         <div className={ styles.transportTrailerForm__inputsPanel }>
                                             <Field name={ 'trailerNumber' }
@@ -98,7 +111,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.trailerNumber }
-                                                   parse={parsers.trailerNumber}
+                                                   parse={ parsers.trailerNumber }
                                             />
                                             <Field name={ 'trailerTrademark' }
                                                    placeholder={ label.trailerTrademark }
@@ -106,7 +119,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.trailerTrademark }
-                                                   parse={parsers.trailerTrademark}
+                                                   parse={ parsers.trailerTrademark }
                                             />
                                             <Field name={ 'trailerModel' }
                                                    placeholder={ label.trailerModel }
@@ -114,7 +127,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.trailerModel }
-                                                   parse={parsers.trailerModel}
+                                                   parse={ parsers.trailerModel }
                                             />
                                             <Field name={ 'pts' }
                                                    placeholder={ label.pts }
@@ -122,7 +135,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.pts }
-                                                   parse={parsers.pts}
+                                                   parse={ parsers.pts }
                                             />
                                             <Field name={ 'dopog' }
                                                    placeholder={ label.dopog }
@@ -130,7 +143,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.dopog }
-                                                   parse={parsers.dopog}
+                                                   parse={ parsers.dopog }
                                             />
 
                                             <div className={ styles.transportTrailerForm__smallInput }>
@@ -154,12 +167,12 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                  title={ 'Добавить/изменить фото' }
                                             >
                                                 <img src={ initialValues.trailerImage || noImageTrailer }
-                                                     alt="uploadedPhoto"/>
-                                                <input type={ 'file' }
-                                                       className={ styles.transportTrailerForm__hiddenAttachFile }
-                                                       accept={ '.png, .jpeg, .pdf, .jpg' }
-                                                       onChange={ sendPhotoFile }
+                                                     alt="uploadedPhoto"
+                                                     onClick={ () => {
+                                                         setLightBoxImage(values.trailerImage)
+                                                     } }
                                                 />
+                                                <AttachImageButton onChange={ sendPhotoFile }/>
                                             </div>
 
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
@@ -168,7 +181,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                             disabled={ submitting }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ () => {trailerDeleteHandleClick(currentId)
+                                                            onClick={ () => {
+                                                                trailerDeleteHandleClick(currentId)
                                                             } }
                                                             rounded
                                                     />

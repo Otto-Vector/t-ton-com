@@ -24,6 +24,8 @@ import {
 } from '../../../selectors/options/transport-reselect'
 
 import {transportStoreActions} from '../../../redux/options/transport-store-reducer';
+import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
+import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
 
 
 type OwnProps = {
@@ -53,6 +55,10 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const setLightBoxImage = ( image?: string ) => {
+        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
+    }
 
     const onSubmit = ( values: TransportCardType ) => {
         dispatch(transportStoreActions.changeTransport(currentId, values)) //сохраняем измененное значение
@@ -92,7 +98,15 @@ export const TransportForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting } ) => (
+                                ( {
+                                      submitError,
+                                      hasValidationErrors,
+                                      handleSubmit,
+                                      pristine,
+                                      form,
+                                      submitting,
+                                      values,
+                                  } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.transportTrailerForm__form }>
                                         <div className={ styles.transportTrailerForm__inputsPanel }>
                                             <Field name={ 'transportNumber' }
@@ -159,13 +173,13 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__photoWrapper }
                                                  title={ 'Добавить/изменить фото транспорта' }
                                             >
-                                                <img src={ initialValues.transportImage || noImageTransport }
-                                                     alt="transportPhoto"/>
-                                                <input type={ 'file' }
-                                                       className={ styles.transportTrailerForm__hiddenAttachFile }
-                                                       accept={ '.png, .jpeg, .pdf, .jpg' }
-                                                       onChange={ sendPhotoFile }
+                                                <img src={ values.transportImage || noImageTransport }
+                                                     alt="transportPhoto"
+                                                     onClick={ () => {
+                                                         setLightBoxImage(values.transportImage)
+                                                     } }
                                                 />
+                                                <AttachImageButton onChange={ sendPhotoFile }/>
                                             </div>
 
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
