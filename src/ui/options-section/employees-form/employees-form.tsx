@@ -22,10 +22,12 @@ import {
     getValidatorsEmployeesStore,
 } from '../../../selectors/options/employees-reselect'
 import {employeesStoreActions} from '../../../redux/options/employees-store-reducer';
+import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
+import {MaterialIcon} from '../../common/material-icon/material-icon';
+import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
 
 
-type OwnProps = {
-}
+type OwnProps = {}
 
 export const EmployeesForm: React.FC<OwnProps> = () => {
 
@@ -49,7 +51,11 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-     const onSubmit = ( values: EmployeesCardType ) => {
+    const setLightBoxImage = ( image?: string ) => {
+        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
+    }
+
+    const onSubmit = ( values: EmployeesCardType ) => {
         dispatch(employeesStoreActions.changeEmployees(currentId, values)) //сохраняем измененное значение
         navigate(options) // и возвращаемся в предыдущее окно
     }
@@ -58,7 +64,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const employeesDeleteHandleClick = (currentId: number) => {
+    const employeesDeleteHandleClick = ( currentId: number ) => {
 
         dispatch(employeesStoreActions.deleteEmployees(currentId))
         navigate(options)
@@ -87,7 +93,15 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting } ) => (
+                                ( {
+                                      submitError,
+                                      hasValidationErrors,
+                                      handleSubmit,
+                                      pristine,
+                                      form,
+                                      submitting,
+                                      values,
+                                  } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.employeesForm__form }>
                                         <div
                                             className={ styles.employeesForm__inputsPanel + ' ' + styles.employeesForm__inputsPanel_titled }>
@@ -190,12 +204,13 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                             <div className={ styles.employeesForm__photo }
                                                  title={ 'Добавить/изменить фото' }>
-                                                <img src={ initialValues.photoFace || noImagePhoto } alt="facePhoto"/>
-                                                <input type={ 'file' }
-                                                       className={ styles.employeesForm__hiddenAttachFile }
-                                                       accept={ '.png, .jpeg, .pdf, .jpg' }
-                                                       onChange={ sendPhotoFile }
+                                                <img src={ initialValues.photoFace || noImagePhoto }
+                                                     alt="facePhoto"
+                                                     onClick={ () => {
+                                                         setLightBoxImage(values.photoFace)
+                                                     } }
                                                 />
+                                                <AttachImageButton onChange={ sendPhotoFile }/>
                                             </div>
 
                                             <div className={ styles.employeesForm__buttonsPanel }>
@@ -204,7 +219,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                             disabled={ submitting }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={()=>{employeesDeleteHandleClick(currentId)}}
+                                                            onClick={ () => {
+                                                                employeesDeleteHandleClick(currentId)
+                                                            } }
                                                             rounded
                                                     />
                                                 </div>
@@ -213,7 +230,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                             disabled={ submitting || submitError || hasValidationErrors }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
-                                                            // onClick={()=>{employeesSaveHandleClick()}}
+                                                        // onClick={()=>{employeesSaveHandleClick()}}
                                                             rounded
                                                     />
                                                 </div>
