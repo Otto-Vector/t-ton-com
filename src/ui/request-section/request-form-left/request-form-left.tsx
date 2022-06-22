@@ -1,6 +1,10 @@
 import React, {useEffect} from 'react'
 import styles from './request-form-left.module.scss'
-import {getAllShippersStore} from '../../../selectors/options/shippers-reselect';
+import {
+    getAllShippersSelectFromLocal,
+    getAllShippersStore,
+    getOneShipperFromLocal,
+} from '../../../selectors/options/shippers-reselect';
 import {useDispatch, useSelector} from 'react-redux';
 import {cargoConstType, OneRequestType} from '../../../types/form-types';
 import {
@@ -15,7 +19,11 @@ import {useNavigate} from 'react-router-dom';
 import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector';
 import {RequestModesType} from '../request-section';
 import {Field, Form} from 'react-final-form'
-import {getAllConsigneesStore} from '../../../selectors/options/consignees-reselect';
+import {
+    getAllConsigneesSelectFromLocal,
+    getAllConsigneesStore,
+    getOneConsigneesFromLocal,
+} from '../../../selectors/options/consignees-reselect';
 import {Button} from '../../common/button/button';
 import {InfoText} from '../../common/info-text/into-text';
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats';
@@ -23,6 +31,8 @@ import {
     getRouteFromAPI,
     setCargoCompositionSelector,
 } from '../../../redux/forms/request-store-reducer';
+import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer';
+import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer';
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -45,22 +55,27 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const placehoders = useSelector(getPlaceholderRequestStore)
     const validators = useSelector(getValidatorsRequestStore)
 
-    const allCustomers = useSelector(getAllShippersStore)
-    const oneCustomer = allCustomers.filter(( { id } ) => id === initialValues.customer)[0]
-    const oneShipper = allCustomers.filter(( { id } ) => id === initialValues.shipper)[0]
-    const oneCarrier = allCustomers.filter(( { id } ) => id === initialValues.carrier)[0]
-    const customers = allCustomers
-        .map(( { id, title } ) => ( { key: id?.toString(), value: id.toString(), label: title?.toString() || '' } ))
-    const shippers = customers // пока присвоил те что есть...
-    const allConsignees = useSelector(getAllConsigneesStore)
-    const oneConsignee = allConsignees.filter(( { id } ) => id === initialValues.consignee)[0]
-    const consignees = allConsignees
-        .map(( { id, title } ) => ( { key: id.toString(), value: id.toString(), label: title?.toString() || '' } ))
 
+    const allShippers = useSelector(getAllShippersStore)
+    const oneShipper = useSelector(getOneShipperFromLocal)
+    const setOneShipper = ( searchId: string | undefined ) => {
+        dispatch(shippersStoreActions.setCurrentId(+( searchId || 0 )))
+    }
+
+    const oneCustomer = allShippers.filter(( { id } ) => id === initialValues.customer)[0]
+    const oneCarrier = allShippers.filter(( { id } ) => id === initialValues.carrier)[0]
+
+    const oneConsignee = useSelector(getOneConsigneesFromLocal)
+    const setOneConsignee = ( searchId: string | undefined ) => {
+        dispatch(consigneesStoreActions.setCurrentId(+( searchId || 0 )))
+    }
+
+    const shippersSelect = useSelector(getAllShippersSelectFromLocal)
+    const customersSelect = shippersSelect// пока присвоил те что есть...
+    const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
 
     const buttonsAction = {
         acceptRequest: async ( values: OneRequestType ) => {
-
             navigate(routes.addDriver + values.requestNumber)
         },
         cancelRequest: () => {
@@ -82,16 +97,24 @@ export const RequestFormLeft: React.FC<OwnProps> = (
 
 
     useEffect(() => {
-        console.log(initialValues.consignee, initialValues.shipper)
-        if (initialValues.consignee && initialValues.shipper) {
+        console.log(oneShipper, oneConsignee)
+        if (!requestModes.createMode) {
+            if (oneShipper.id !== initialValues.shipper && oneConsignee.id !== initialValues.consignee)
+         {
+            dispatch(shippersStoreActions.setCurrentId(initialValues.shipper||0));
+            dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee||0));
+            debugger
+        }
+        }
+
+            if (oneShipper.coordinates && oneConsignee.coordinates) {
             dispatch<any>(
                 getRouteFromAPI({
                     from: oneShipper.coordinates as string,
                     to: oneConsignee.coordinates as string,
                 }))
-
         }
-    }, [ initialValues, oneShipper, oneConsignee ])
+    }, [ oneShipper, oneConsignee ])
 
 
     return (
@@ -146,7 +169,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.distance }</label>
                                     <div className={ styles.requestFormLeft__info }>
-                                        { ( initialValues.distance || placehoders.distance ) }
+                                        { initialValues.distance || placehoders.distance }
                                     </div>
                                 </div>
                                 <div className={ styles.requestFormLeft__inputsItem }>
@@ -171,7 +194,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 { requestModes.createMode
                                     ? <FormSelector named={ 'customer' }
                                                     placeholder={ placehoders.customer }
-                                                    values={ customers }
+                                                    values={ customersSelect }
                                                     validate={ validators.customer }
                                                     isClearable
                                     />
@@ -187,8 +210,9 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 { requestModes.createMode
                                     ? <FormSelector named={ 'shipper' }
                                                     placeholder={ placehoders.shipper }
-                                                    values={ shippers }
+                                                    values={ shippersSelect }
                                                     validate={ validators.shipper }
+                                                    handleChanger={ setOneShipper }
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
@@ -202,8 +226,9 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 { requestModes.createMode
                                     ? <FormSelector named={ 'consignee' }
                                                     placeholder={ placehoders.consignee }
-                                                    values={ consignees }
+                                                    values={ consigneesSelect }
                                                     validate={ validators.consignee }
+                                                    handleChanger={ setOneConsignee }
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>

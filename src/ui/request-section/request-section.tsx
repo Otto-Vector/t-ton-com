@@ -31,7 +31,6 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
 
-
     const initialValues = useSelector(getInitialValuesRequestStore)
     const oneRequest = useSelector(getOneRequestStore)
     const currentRequest = requestModes.createMode ? initialValues : oneRequest || initialValues
@@ -45,10 +44,10 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
         console.log('данные из заявки: ', values);
     }
 
-    const activeTab = (tab: string) =>{
-        if (tab==='left') return setTabModes({...tabModesInitial, left: true})
-        if (tab==='center') return setTabModes({...tabModesInitial, center: true})
-        if (tab==='right') return setTabModes({...tabModesInitial, right: true})
+    const activeTab = ( tab: string ) => {
+        if (tab === 'left') return setTabModes({ ...tabModesInitial, left: true })
+        if (tab === 'center') return setTabModes({ ...tabModesInitial, center: true })
+        if (tab === 'right') return setTabModes({ ...tabModesInitial, right: true })
     }
 
     const cancelNavigate = (): To => {
@@ -61,12 +60,12 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
     }
 
     useEffect(() => {
-        setTabModes({...tabModesInitial, left: true})
-    },[navigate])
+        setTabModes({ ...tabModesInitial, left: true })
+    }, [ navigate ])
 
     useEffect(() => {
         dispatch(requestStoreActions.setRequestNumber(+( reqNumber || 0 ) || undefined))
-    },[])
+    }, [])
 
     if (!oneRequest) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
     const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate || new Date()) }`
@@ -79,11 +78,13 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                     <header className={ styles.requestSection__header }>
                         { title }
                     </header>
-                    <div className={!tabModes.center ? styles.requestSection__formsWrapper : styles.requestSection__mapsWrapper}>
-                    { tabModes.left && <RequestFormLeft requestModes={ requestModes } initialValues={ currentRequest }
-                                                         onSubmit={ onSubmit }/> }
-                    { tabModes.center && <RequestMapCenter requestModes={requestModes}/> }
-                    { tabModes.right && <RequestFormDocumentsRight requestModes={requestModes} /> }
+                    <div
+                        className={ !tabModes.center ? styles.requestSection__formsWrapper : styles.requestSection__mapsWrapper }>
+                        { tabModes.left && <RequestFormLeft requestModes={ requestModes }
+                                                            initialValues={ currentRequest }
+                                                            onSubmit={ onSubmit }/> }
+                        { tabModes.center && <RequestMapCenter requestModes={ requestModes }/> }
+                        { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
                     </div>
 
                     <CancelButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/>

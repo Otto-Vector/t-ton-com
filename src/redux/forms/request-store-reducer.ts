@@ -158,6 +158,12 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
                         ? { ...oneRequest, visible: !oneRequest.visible } : oneRequest) ],
             }
         }
+        case 'request-store-reducer/SET-DISTANCE': {
+            return {
+                ...state,
+                initialValues: {...state.initialValues, distance: action.kilometers}
+            }
+        }
         case 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR': {
             return {
                 ...state,
@@ -246,7 +252,8 @@ export const getRouteFromAPI = ({from,to}: GetAvtodispetcherRouteType): RequestS
     async ( dispatch ) => {
         try {
             const response = await getRouteFromAvtodispetcherApi({from,to})
-            dispatch(requestStoreActions.setDistance((+response.kilometers*0.15)))
+            dispatch(requestStoreActions.setDistance(
+                +(+response.kilometers*1.15).toFixed(3)))
             console.log(response)
         } catch (e) {
             alert(e)
