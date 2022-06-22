@@ -42,9 +42,11 @@ import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/lightbox-store-reducer'
 
 type OwnProps = {
+    mode?: 'empty' | 'filled'
+    initialValuesOn?: AddDriverCardType
 }
 
-export const AddDriversForm: React.FC<OwnProps> = ( ) => {
+export const AddDriversForm: React.FC<OwnProps> = ( { mode = 'empty', initialValuesOn } ) => {
 
     const header = ( requestNumber: number, shipmentDate: Date ): string =>
         `Заявка ${ requestNumber } от ${ ddMmYearFormat(shipmentDate) }`

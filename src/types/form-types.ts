@@ -124,9 +124,10 @@ export type TrailerCardType<T = DefaultFormType> = {
 
 // на добавление водителя
 export type AddDriverCardType<T = DefaultFormType> = {
-    driverFIO: T, // фио водителя (из карточки водителя)
-    driverTransport: T, // транспорт (из карточки транспорт)
-    driverTrailer: T, // прицеп (из карточки прицеп)
+    requestId: T, // номер заявки, к которой привязана форма
+    driverFIO: T, // id водителя (из карточки водителя)
+    driverTransport: T, // id транспорта (из карточки транспорт)
+    driverTrailer: T, // id прицепа (из карточки прицеп)
     driverStavka: T,
     driverSumm: T,
     driverRating: T,

@@ -19,7 +19,10 @@ import {getAllConsigneesStore} from '../../../selectors/options/consignees-resel
 import {Button} from '../../common/button/button';
 import {InfoText} from '../../common/info-text/into-text';
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats';
-import {setCargoCompositionSelector} from '../../../redux/forms/request-store-reducer';
+import {
+    getRouteFromAPI,
+    setCargoCompositionSelector,
+} from '../../../redux/forms/request-store-reducer';
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -56,9 +59,9 @@ export const RequestFormLeft: React.FC<OwnProps> = (
 
 
     const buttonsAction = {
-        acceptRequest: async (values: OneRequestType) => {
+        acceptRequest: async ( values: OneRequestType ) => {
 
-            navigate(routes.addDriver+values.requestNumber)
+            navigate(routes.addDriver + values.requestNumber)
         },
         cancelRequest: () => {
             navigate(-1)
@@ -73,13 +76,22 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         },
     }
 
-    const onCreateCompositionValue = (value: string) => {
-        dispatch<any>(setCargoCompositionSelector([value, ...cargoComposition]))
+    const onCreateCompositionValue = ( value: string ) => {
+        dispatch<any>(setCargoCompositionSelector([ value, ...cargoComposition ]))
     }
 
 
     useEffect(() => {
-    }, [ initialValues ])
+        console.log(initialValues.consignee, initialValues.shipper)
+        if (initialValues.consignee && initialValues.shipper) {
+            dispatch<any>(
+                getRouteFromAPI({
+                    from: oneShipper.coordinates as string,
+                    to: oneConsignee.coordinates as string,
+                }))
+
+        }
+    }, [ initialValues, oneShipper, oneConsignee ])
 
 
     return (
@@ -100,7 +112,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                         values={ stringArrayToSelectValue(cargoComposition) }
                                                         validate={ validators.cargoComposition }
                                                         creatableSelect
-                                                        handleCreate={onCreateCompositionValue}
+                                                        handleCreate={ onCreateCompositionValue }
                                                         isClearable
                                         />
                                         : <div className={ styles.requestFormLeft__info + ' ' +

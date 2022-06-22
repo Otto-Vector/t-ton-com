@@ -25,6 +25,9 @@ export const parseOnlyOneDash = ( val: string | undefined ): string => val ? val
 // только один пробел
 export const parseOnlyOneSpace = ( val: string | undefined ): string => val ? val
     .replace(/\s\s+/g, ' ') : ''
+// ни одного пробела
+export const parseNoSpace = ( val: string | undefined ): string => val ? val
+    .replace(/\s/g, '') : ''
 // только одна запятая
 export const parseOnlyOneComma = ( val: string | undefined ): string => val ? val
     .replace(/\s\s+/g, ' ') : ''

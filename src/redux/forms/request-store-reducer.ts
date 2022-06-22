@@ -3,6 +3,7 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
 import {cargoComposition, initialDocumentsRequestValues, makeNTestRequests} from '../../initials-test-data';
+import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher';
 
 
 const initialState = {
@@ -192,6 +193,12 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR',
         cargoComposition,
     } as const ),
+    setDistance: (kilometers: number) => ({
+        type: 'request-store-reducer/SET-DISTANCE',
+        kilometers,
+    } as const
+
+    )
 }
 
 /* САНКИ */
@@ -211,6 +218,7 @@ export const getAllRequestsAPI = ( { innID }: { innID: number } ): RequestStoreR
         }
     }
 
+// забираем данные селектора из API и выставляем его значение в Initial
 export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
@@ -222,12 +230,24 @@ export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionTyp
         }
     }
 
-// отправляем изменения селектора и выставляем его значение в Initial
+// отправляем изменения селектора и выставляем его значение в Initial (это добавляемый селектор)
 export const setCargoCompositionSelector = (cargoComposition: string[]): RequestStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
+    async ( dispatch ) => {
         try {
             const response = cargoComposition
             dispatch(requestStoreActions.setCargoCompositionSelector(response))
+        } catch (e) {
+            alert(e)
+            // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
+        }
+    }
+
+export const getRouteFromAPI = ({from,to}: GetAvtodispetcherRouteType): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await getRouteFromAvtodispetcherApi({from,to})
+            dispatch(requestStoreActions.setDistance((+response.kilometers*0.15)))
+            console.log(response)
         } catch (e) {
             alert(e)
             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
