@@ -4,35 +4,34 @@ import {
     getAllShippersSelectFromLocal,
     getAllShippersStore,
     getOneShipperFromLocal,
-} from '../../../selectors/options/shippers-reselect';
-import {useDispatch, useSelector} from 'react-redux';
-import {cargoConstType, OneRequestType} from '../../../types/form-types';
+} from '../../../selectors/options/shippers-reselect'
+import {useDispatch, useSelector} from 'react-redux'
+import {cargoConstType, OneRequestType} from '../../../types/form-types'
 import {
     getCargoCompositionRequestStore,
     getLabelRequestStore,
     getPlaceholderRequestStore,
     getValidatorsRequestStore,
-} from '../../../selectors/forms/request-form-reselect';
-import {FormInputType} from '../../common/form-input-type/form-input-type';
-import {getRoutesStore} from '../../../selectors/routes-reselect';
-import {useNavigate} from 'react-router-dom';
-import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector';
-import {RequestModesType} from '../request-section';
+} from '../../../selectors/forms/request-form-reselect'
+import {FormInputType} from '../../common/form-input-type/form-input-type'
+import {getRoutesStore} from '../../../selectors/routes-reselect'
+import {useNavigate} from 'react-router-dom'
+import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
+import {RequestModesType} from '../request-section'
 import {Field, Form} from 'react-final-form'
 import {
     getAllConsigneesSelectFromLocal,
-    getAllConsigneesStore,
     getOneConsigneesFromLocal,
-} from '../../../selectors/options/consignees-reselect';
-import {Button} from '../../common/button/button';
-import {InfoText} from '../../common/info-text/into-text';
-import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats';
+} from '../../../selectors/options/consignees-reselect'
+import {Button} from '../../common/button/button'
+import {InfoText} from '../../common/info-text/into-text'
+import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
-    getRouteFromAPI,
+    getRouteFromAPI, requestStoreActions,
     setCargoCompositionSelector,
-} from '../../../redux/forms/request-store-reducer';
-import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer';
-import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer';
+} from '../../../redux/forms/request-store-reducer'
+import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
+import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -95,26 +94,34 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         dispatch<any>(setCargoCompositionSelector([ value, ...cargoComposition ]))
     }
 
-
     useEffect(() => {
-        console.log(oneShipper, oneConsignee)
+
         if (!requestModes.createMode) {
-            if (oneShipper.id !== initialValues.shipper && oneConsignee.id !== initialValues.consignee)
-         {
-            dispatch(shippersStoreActions.setCurrentId(initialValues.shipper||0));
-            dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee||0));
+            if (oneShipper.id !== initialValues.shipper) {
+                dispatch(shippersStoreActions.setCurrentId(initialValues.shipper || 0))
+            }
+            if (oneConsignee.id !== initialValues.consignee) {
+                dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee || 0))
+            }
             debugger
         }
-        }
 
-            if (oneShipper.coordinates && oneConsignee.coordinates) {
-            dispatch<any>(
-                getRouteFromAPI({
-                    from: oneShipper.coordinates as string,
-                    to: oneConsignee.coordinates as string,
-                }))
+        if (requestModes.createMode) {
+            if (oneShipper.id !== 0 && oneConsignee.id !== 0 )
+            if ((oneShipper.id !== initialValues.shipper) || (oneConsignee.id !== initialValues.consignee))
+            {
+                dispatch<any>(
+                    getRouteFromAPI({
+                        from: oneShipper.coordinates as string,
+                        to: oneConsignee.coordinates as string,
+                    }))
+                dispatch(requestStoreActions.setInitialValues(
+                    {...initialValues, shipper: oneShipper.id, consignee: oneConsignee.id}
+                ))
+                debugger
+            }
         }
-    }, [ oneShipper, oneConsignee ])
+    }, [ oneShipper, oneConsignee, requestModes ])
 
 
     return (

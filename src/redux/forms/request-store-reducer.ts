@@ -251,7 +251,8 @@ export const setCargoCompositionSelector = (cargoComposition: string[]): Request
 export const getRouteFromAPI = ({from,to}: GetAvtodispetcherRouteType): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await getRouteFromAvtodispetcherApi({from,to})
+            // const response = await getRouteFromAvtodispetcherApi({from,to})
+            const response = {kilometers: 50}
             dispatch(requestStoreActions.setDistance(
                 +(+response.kilometers*1.15).toFixed(3)))
             console.log(response)
