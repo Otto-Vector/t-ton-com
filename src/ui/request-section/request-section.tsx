@@ -69,7 +69,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
         dispatch(requestStoreActions.setRequestNumber(+( reqNumber || 0 ) || undefined))
     }, [])
 
-    if (!oneRequest) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
+    if (!oneRequest && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
     const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate || new Date()) }`
     return (
         <section className={ styles.requestSection }>

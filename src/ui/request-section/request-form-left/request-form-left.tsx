@@ -108,12 +108,11 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         setIsFirstRender(false) //первый рендер отработал
     }, [])
 
-    useEffect(()=>{
+    useEffect(()=>{ // зачистка / присвоение значений при первом рендере
         if (requestModes.historyMode)
         {
             dispatch(shippersStoreActions.setCurrentId(initialValues.shipper || 0))
             dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee || 0))
-            debugger
         }
         },[])
 

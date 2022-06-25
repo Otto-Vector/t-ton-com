@@ -1,0 +1,119 @@
+<?php
+
+$apiLoginString = "YOUR_API_LOGIN";
+$apiLoginPassword = "YOUR_API_PASSWORD";
+
+$fromCityString = "Уфа";
+$toCityString = "Казань";
+
+$ch = curl_init('https://api.avtodispetcher.ru/v1/route?from='.urlencode($fromCityString).'&to='.urlencode($toCityString));
+
+curl_setopt($ch, CURLOPT_USERPWD, join(":", [$apiLoginString, $apiLoginPassword]));
+curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['accept: application/json']);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+$jsonString = curl_exec($ch);
+
+$info = curl_getinfo($ch);
+curl_close($ch);
+
+if ($info["http_code"] == "200") {
+    $jsonArray = json_decode($jsonString, true);
+
+?>
+    <!DOCTYPE html>
+    <html lang="ru" lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+        <style>.gray{color:lightgray;}</style>
+    </head>
+    <body>
+
+    <h1>Длина маршрута: <?php echo $jsonArray["kilometers"] ?> км</h1>
+
+    <div id="map" style="width: 600px; height: 400px"></div>
+
+    <?php $sum = 0; ?>
+    <ul>
+        <?php foreach ($jsonArray["segments"] as $segmentArray) { ?>
+            <li>
+            <?php if ($segmentArray["start"]["name"] == $segmentArray["finish"]["name"]) { ?>
+                <?php echo "<b>" . $segmentArray["start"]["name"] . "</b> <span class='gray'>По городу: " . intval($segmentArray['kilometers']) . "&nbsp;км.</span>" ?>
+            <?php } else { ?>
+                <?php echo "<span class='gray'>Между городами: " . intval($segmentArray['kilometers']) . "&nbsp;км.</span>" ?>
+            <?php } ?>
+            </li>
+        <?php } ?>
+    </ul>
+    <p><?php echo $sum; ?></p>
+
+    <script type="text/javascript">
+        ymaps.ready(init);
+        function init(){
+            var map = new ymaps.Map("map", {center: [55.76, 37.64], zoom: 7});
+            var pointsArray = polyline_decode(<?php echo json_encode($jsonArray["polyline"])?>);
+            var polylineObject = new ymaps.Polyline(pointsArray, {}, { strokeColor: '#ff0000', strokeWidth: 5, opacity: 0.8 } );
+            map.geoObjects.add(polylineObject);
+            map.setBounds(map.geoObjects.getBounds());
+        }
+
+        polyline_decode = function(str, precision) {
+            var index = 0,
+                lat = 0,
+                lng = 0,
+                coordinates = [],
+                shift = 0,
+                result = 0,
+                byte_var = null,
+                latitude_change,
+                longitude_change,
+                factor = Math.pow(10, precision || 5);
+
+            // Coordinates have variable length when encoded, so just keep
+            // track of whether we've hit the end of the string. In each
+            // loop iteration, a single coordinate is decoded.
+            while (index < str.length) {
+
+                // Reset shift, result, and byte_var
+                byte_var = null;
+                shift = 0;
+                result = 0;
+
+                do {
+                    byte_var = str.charCodeAt(index++) - 63;
+                    result |= (byte_var & 0x1f) << shift;
+                    shift += 5;
+                } while (byte_var >= 0x20);
+
+                latitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+
+                shift = result = 0;
+
+                do {
+                    byte_var = str.charCodeAt(index++) - 63;
+                    result |= (byte_var & 0x1f) << shift;
+                    shift += 5;
+                } while (byte_var >= 0x20);
+
+                longitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+
+                lat += latitude_change;
+                lng += longitude_change;
+
+                coordinates.push([lat / factor, lng / factor]);
+            }
+
+            return coordinates;
+        };
+    </script>
+
+    </body>
+    </html>
+<?php
+} else {
+    // error
+    echo $jsonString;
+}
+?>

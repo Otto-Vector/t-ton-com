@@ -4,6 +4,7 @@ import {DocumentsRequestType, OneRequestType, ValidateType} from '../../types/fo
 import {composeValidators, required} from '../../utils/validators'
 import {cargoComposition, initialDocumentsRequestValues, makeNTestRequests} from '../../initials-test-data';
 import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher';
+import {polyline_decode} from '../../utils/polilyne-decode';
 
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
     currentRequestNumber: undefined as undefined | number,
     currentDistance: 0,
     currentDistanceIsFetching: false,
+    currentRoute: undefined as number[][] | undefined,
 
     label: {
         id: undefined,
@@ -172,6 +174,12 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
                 currentDistanceIsFetching: action.isFetching
             }
         }
+        case 'request-store-reducer/SET-CURRENT-ROUTE': {
+            return {
+                ...state,
+                currentRoute: action.currentRoute
+            }
+        }
         case 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR': {
             return {
                 ...state,
@@ -199,9 +207,14 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
         currentRequestNumber,
     } as const ),
+    // дистанция в километрах, отображаемая в форме ввода заявки
     setCurrentDistance: (currentDistance: number) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE',
         currentDistance,
+    } as const ),
+    setCurrentRoute: (currentRoute: number[][]) => ( {
+        type: 'request-store-reducer/SET-CURRENT-ROUTE',
+        currentRoute,
     } as const ),
     setCurrentDistanceIsFetching: (isFetching: boolean) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING',
@@ -267,6 +280,11 @@ export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): Req
             // const response = { kilometers: 50 }
             dispatch(requestStoreActions.setCurrentDistance(
                 +( +response.kilometers * 1.15 ).toFixed(3)))
+
+            dispatch(requestStoreActions.setCurrentRoute(
+                polyline_decode(response.polyline)
+            ))
+
         } catch (e) {
             alert(e)
             dispatch(requestStoreActions.setCurrentDistance(0))

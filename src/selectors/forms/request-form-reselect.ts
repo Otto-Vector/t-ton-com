@@ -17,6 +17,7 @@ export const getValidatorsRequestStore: RequestStoreSelectors<'validators'> = ( 
 export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state ) => state.requestStoreReducer.content
 export const getCurrentDistanceRequestStore: RequestStoreSelectors<'currentDistance'> = ( state ) => state.requestStoreReducer.currentDistance
 export const getCurrentDistanceIsFetchingRequestStore: RequestStoreSelectors<'currentDistanceIsFetching'> = ( state ) => state.requestStoreReducer.currentDistanceIsFetching
+export const getRouteRequestStore: RequestStoreSelectors<'currentRoute'> = ( state ) => state.requestStoreReducer.currentRoute
 const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state ) => state.requestStoreReducer.currentRequestNumber
 
 export const getOneRequestStore = createSelector(getAllRequestStore, getCurrentRequestNumberStore, getInitialValuesRequestStore,
