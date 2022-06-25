@@ -17,6 +17,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
                  instanceRef={ instance }
                  modules={ modules }
                  state={ state }
+
             >
                 { children }
             </Map>
@@ -98,17 +99,21 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center } ) => {
 type ToRouteMap = {
     center: [ number, number ]
     polyline: number[][]
+    bounds?: MapState['bounds']
     zoom?: number
 }
 
 
 // карта с отрисованным маршрутом
-export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( { center, polyline, zoom = 5 } ) => {
+export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( { center, polyline, zoom = 5 , bounds} ) => {
+
     return (
         <YandexMapComponent
+
             state={ {
                 center,
                 zoom,
+                bounds: bounds as undefined,
             } }
         >
             <TypeSelector

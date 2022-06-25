@@ -45,6 +45,10 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
         console.log('данные из заявки: ', values);
     }
 
+    const exposeValuesToInitialBuffer = ({values, valid}:{values: OneRequestType, valid: boolean}) => {
+        dispatch(requestStoreActions.setInitialValues(values as OneRequestType))
+    }
+
     const activeTab = ( tab: string ) => {
         if (tab === 'left') return setTabModes({ ...tabModesInitial, left: true })
         if (tab === 'center') return setTabModes({ ...tabModesInitial, center: true })
@@ -56,6 +60,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
         if (requestModes.historyMode) return routes.historyList
         return -1 as To
     }
+
     const onCancelButton = () => {
         navigate(cancelNavigate())
         dispatch(requestStoreActions.setRequestNumber(0))
@@ -84,7 +89,9 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                         className={ !tabModes.center ? styles.requestSection__formsWrapper : styles.requestSection__mapsWrapper }>
                         { tabModes.left && <RequestFormLeft requestModes={ requestModes }
                                                             initialValues={ currentRequest }
-                                                            onSubmit={ onSubmit }/> }
+                                                            onSubmit={ onSubmit }
+                                                            exposeValues={exposeValuesToInitialBuffer}
+                        /> }
                         { tabModes.center && <RequestMapCenter requestModes={ requestModes }/> }
                         { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
                     </div>

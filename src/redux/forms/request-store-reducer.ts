@@ -281,6 +281,7 @@ export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): Req
             dispatch(requestStoreActions.setCurrentDistance(
                 +( +response.kilometers * 1.15 ).toFixed(3)))
 
+            // переводим зашифрованную строку polyline в массив координат и записываем в стэйт
             dispatch(requestStoreActions.setCurrentRoute(
                 polyline_decode(response.polyline)
             ))

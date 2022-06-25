@@ -18,7 +18,7 @@ import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
 import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
 import {RequestModesType} from '../request-section'
-import {Field, Form} from 'react-final-form'
+import {FormSpy, Field, Form} from 'react-final-form'
 import {
     getAllConsigneesSelectFromLocal,
     getOneConsigneesFromLocal,
@@ -38,18 +38,19 @@ type OwnProps = {
     requestModes: RequestModesType,
     initialValues: OneRequestType,
     onSubmit: ( value: OneRequestType ) => void
+    exposeValues: ({values, valid}:{values: any, valid: boolean})=>void
 }
 
 
 export const RequestFormLeft: React.FC<OwnProps> = (
     {
-        requestModes, initialValues, onSubmit,
+        requestModes, initialValues, onSubmit, exposeValues,
     } ) => {
 
     const routes = useSelector(getRoutesStore)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const [isFirstRender,setIsFirstRender] = useState(true)
+    const [ isFirstRender, setIsFirstRender ] = useState(true)
 
     const cargoComposition = useSelector(getCargoCompositionRequestStore)
     const labels = useSelector(getLabelRequestStore)
@@ -108,13 +109,12 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         setIsFirstRender(false) //первый рендер отработал
     }, [])
 
-    useEffect(()=>{ // зачистка / присвоение значений при первом рендере
-        if (requestModes.historyMode)
-        {
+    useEffect(() => { // зачистка / присвоение значений при первом рендере
+        if (requestModes.historyMode) {
             dispatch(shippersStoreActions.setCurrentId(initialValues.shipper || 0))
             dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee || 0))
         }
-        },[])
+    }, [])
 
 
     useEffect(() => {
@@ -137,10 +137,12 @@ export const RequestFormLeft: React.FC<OwnProps> = (
             <Form
                 onSubmit={ onSubmit }
                 initialValues={ initialValues }
-                keepDirtyOnReinitialize
+                validateOnBlur
+                // keepDirtyOnReinitialize
                 render={
                     ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting, values } ) => (
                         <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>
+                            {form.change('requestDate', initialValues.requestDate || new Date())}
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <div className={ styles.requestFormLeft__selector }>
                                     <label className={ styles.requestFormLeft__label }>
@@ -185,10 +187,13 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.distance }</label>
                                     <div className={ styles.requestFormLeft__info }>
-                                        { !currentDistanceIfFetching ?
+                                        {form.change('distance', currentDistance || initialValues.distance)}
+                                        {
+                                            !currentDistanceIfFetching ?
                                             (
-                                                ( values.distance = currentDistance || initialValues.distance )
-                                                || placehoders.distance
+                                                // корявый, но рабочий костыль toDo: cделать по феншую
+                                                // ( values.distance = currentDistance || initialValues.distance )
+                                                values.distance || placehoders.distance
                                             )
                                             : <Preloader/>
                                         }
@@ -320,6 +325,13 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 }
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
+                            <FormSpy
+                                subscription={ { values: true, valid: true } }
+                                key={Math.random()*5} // багофикс для реакта
+                                onChange={ ( state ) => {
+                                    const { values, valid } = state
+                                    exposeValues({ values, valid })
+                                } }/>
                         </form>
                     )
                 }/>
