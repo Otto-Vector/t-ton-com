@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './request-form-left.module.scss'
 import {
     getAllShippersSelectFromLocal,
@@ -8,7 +8,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux'
 import {cargoConstType, OneRequestType} from '../../../types/form-types'
 import {
-    getCargoCompositionRequestStore,
+    getCargoCompositionRequestStore, getCurrentDistanceIsFetchingRequestStore, getCurrentDistanceRequestStore,
     getLabelRequestStore,
     getPlaceholderRequestStore,
     getValidatorsRequestStore,
@@ -32,6 +32,7 @@ import {
 } from '../../../redux/forms/request-store-reducer'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
+import {Preloader} from '../../common/preloader/preloader';
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -48,12 +49,14 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const routes = useSelector(getRoutesStore)
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const [isFirstRender,setIsFirstRender] = useState(true)
 
     const cargoComposition = useSelector(getCargoCompositionRequestStore)
     const labels = useSelector(getLabelRequestStore)
     const placehoders = useSelector(getPlaceholderRequestStore)
     const validators = useSelector(getValidatorsRequestStore)
-
+    const currentDistance = useSelector(getCurrentDistanceRequestStore)
+    const currentDistanceIfFetching = useSelector(getCurrentDistanceIsFetchingRequestStore)
 
     const allShippers = useSelector(getAllShippersStore)
     const oneShipper = useSelector(getOneShipperFromLocal)
@@ -61,13 +64,14 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         dispatch(shippersStoreActions.setCurrentId(+( searchId || 0 )))
     }
 
-    const oneCustomer = allShippers.filter(( { id } ) => id === initialValues.customer)[0]
-    const oneCarrier = allShippers.filter(( { id } ) => id === initialValues.carrier)[0]
-
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     const setOneConsignee = ( searchId: string | undefined ) => {
         dispatch(consigneesStoreActions.setCurrentId(+( searchId || 0 )))
     }
+
+    const oneCustomer = allShippers.filter(( { id } ) => id === initialValues.customer)[0]
+    const oneCarrier = allShippers.filter(( { id } ) => id === initialValues.carrier)[0]
+
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
     const customersSelect = shippersSelect// пока присвоил те что есть...
@@ -94,34 +98,40 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         dispatch<any>(setCargoCompositionSelector([ value, ...cargoComposition ]))
     }
 
-    useEffect(() => {
+    useEffect(() => { // зачистка значений при первом рендере
+        if (requestModes.createMode) {
+            dispatch(shippersStoreActions.setCurrentId(0))
+            dispatch(consigneesStoreActions.setCurrentId(0))
+        }
+        if (currentDistance) dispatch(requestStoreActions.setCurrentDistance(0))
 
-        if (!requestModes.createMode) {
-            if (oneShipper.id !== initialValues.shipper) {
-                dispatch(shippersStoreActions.setCurrentId(initialValues.shipper || 0))
-            }
-            if (oneConsignee.id !== initialValues.consignee) {
-                dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee || 0))
-            }
+        setIsFirstRender(false) //первый рендер отработал
+    }, [])
+
+    useEffect(()=>{
+        if (requestModes.historyMode)
+        {
+            dispatch(shippersStoreActions.setCurrentId(initialValues.shipper || 0))
+            dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee || 0))
             debugger
         }
+        },[])
 
-        if (requestModes.createMode) {
-            if (oneShipper.id !== 0 && oneConsignee.id !== 0 )
-            if ((oneShipper.id !== initialValues.shipper) || (oneConsignee.id !== initialValues.consignee))
-            {
+
+    useEffect(() => {
+        if (requestModes.createMode && !isFirstRender) {
+            if (oneShipper.id && oneConsignee.id) {
                 dispatch<any>(
                     getRouteFromAPI({
                         from: oneShipper.coordinates as string,
                         to: oneConsignee.coordinates as string,
                     }))
-                dispatch(requestStoreActions.setInitialValues(
-                    {...initialValues, shipper: oneShipper.id, consignee: oneConsignee.id}
-                ))
                 debugger
+            } else {
+                dispatch(requestStoreActions.setCurrentDistance(0))
             }
         }
-    }, [ oneShipper, oneConsignee, requestModes ])
+    }, [ oneShipper, oneConsignee ])
 
 
     return (
@@ -129,6 +139,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
             <Form
                 onSubmit={ onSubmit }
                 initialValues={ initialValues }
+                keepDirtyOnReinitialize
                 render={
                     ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting, values } ) => (
                         <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>
@@ -176,7 +187,14 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.distance }</label>
                                     <div className={ styles.requestFormLeft__info }>
-                                        { initialValues.distance || placehoders.distance }
+                                        { !currentDistanceIfFetching ?
+                                            (
+                                                ( values.distance = currentDistance || initialValues.distance )
+                                                || placehoders.distance
+                                            )
+                                            : <Preloader/>
+                                        }
+                                        {/*{values.distance || placehoders.distance}*/ }
                                     </div>
                                 </div>
                                 <div className={ styles.requestFormLeft__inputsItem }>

@@ -33,7 +33,8 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const initialValues = useSelector(getInitialValuesRequestStore)
     const oneRequest = useSelector(getOneRequestStore)
-    const currentRequest = requestModes.createMode ? initialValues : oneRequest || initialValues
+    // const currentRequest = requestModes.createMode ? initialValues : oneRequest || initialValues
+    const currentRequest = requestModes.createMode ? initialValues : oneRequest
 
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const routes = useSelector(getRoutesStore)
@@ -57,6 +58,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
     }
     const onCancelButton = () => {
         navigate(cancelNavigate())
+        dispatch(requestStoreActions.setRequestNumber(0))
     }
 
     useEffect(() => {

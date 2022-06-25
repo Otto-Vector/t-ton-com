@@ -10,6 +10,8 @@ const initialState = {
 
     cargoComposition: [] as string[],
     currentRequestNumber: undefined as undefined | number,
+    currentDistance: 0,
+    currentDistanceIsFetching: false,
 
     label: {
         id: undefined,
@@ -158,10 +160,16 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
                         ? { ...oneRequest, visible: !oneRequest.visible } : oneRequest) ],
             }
         }
-        case 'request-store-reducer/SET-DISTANCE': {
+        case 'request-store-reducer/SET-CURRENT-DISTANCE': {
             return {
                 ...state,
-                initialValues: {...state.initialValues, distance: action.kilometers}
+                currentDistance: action.currentDistance
+            }
+        }
+        case 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING': {
+            return {
+                ...state,
+                currentDistanceIsFetching: action.isFetching
             }
         }
         case 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR': {
@@ -191,6 +199,14 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
         currentRequestNumber,
     } as const ),
+    setCurrentDistance: (currentDistance: number) => ( {
+        type: 'request-store-reducer/SET-CURRENT-DISTANCE',
+        currentDistance,
+    } as const ),
+    setCurrentDistanceIsFetching: (isFetching: boolean) => ( {
+        type: 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING',
+        isFetching,
+    } as const ),
     setToggleRequestVisible: ( requestNumber: number ) => ( {
         type: 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE',
         requestNumber,
@@ -199,12 +215,7 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR',
         cargoComposition,
     } as const ),
-    setDistance: (kilometers: number) => ({
-        type: 'request-store-reducer/SET-DISTANCE',
-        kilometers,
-    } as const
 
-    )
 }
 
 /* САНКИ */
@@ -237,7 +248,7 @@ export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionTyp
     }
 
 // отправляем изменения селектора и выставляем его значение в Initial (это добавляемый селектор)
-export const setCargoCompositionSelector = (cargoComposition: string[]): RequestStoreReducerThunkActionType =>
+export const setCargoCompositionSelector = ( cargoComposition: string[] ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = cargoComposition
@@ -248,16 +259,18 @@ export const setCargoCompositionSelector = (cargoComposition: string[]): Request
         }
     }
 
-export const getRouteFromAPI = ({from,to}: GetAvtodispetcherRouteType): RequestStoreReducerThunkActionType =>
+export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
+            dispatch(requestStoreActions.setCurrentDistanceIsFetching(true))
         try {
-            // const response = await getRouteFromAvtodispetcherApi({from,to})
-            const response = {kilometers: 50}
-            dispatch(requestStoreActions.setDistance(
-                +(+response.kilometers*1.15).toFixed(3)))
-            console.log(response)
+            const response = await getRouteFromAvtodispetcherApi({from,to})
+            // const response = { kilometers: 50 }
+            dispatch(requestStoreActions.setCurrentDistance(
+                +( +response.kilometers * 1.15 ).toFixed(3)))
         } catch (e) {
             alert(e)
+            dispatch(requestStoreActions.setCurrentDistance(0))
             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
         }
+            dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
     }
