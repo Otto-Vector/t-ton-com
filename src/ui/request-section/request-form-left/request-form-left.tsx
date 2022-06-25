@@ -125,7 +125,6 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                         from: oneShipper.coordinates as string,
                         to: oneConsignee.coordinates as string,
                     }))
-                debugger
             } else {
                 dispatch(requestStoreActions.setCurrentDistance(0))
             }

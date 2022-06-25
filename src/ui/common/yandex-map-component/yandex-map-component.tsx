@@ -111,6 +111,13 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( { center, p
                 zoom,
             } }
         >
+            <TypeSelector
+                mapTypes={ [ 'yandex#satellite', 'yandex#map', 'yandex#hybrid' ] }
+                options={ {
+                    float: 'left',
+                    maxWidth: [ 25 ],
+                    panoramasItemMode: 'off',
+                } }/>
             <Placemark geometry={ center }/>
             <Polyline geometry={ polyline }
                       options={ { strokeColor: '#023E8A', strokeWidth: 5, opacity: 0.8 } }
