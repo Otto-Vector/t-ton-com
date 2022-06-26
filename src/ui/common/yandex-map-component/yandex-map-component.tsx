@@ -21,8 +21,8 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
                      suppressMapOpenBlock: true,
                      suppressObsoleteBrowserNotifier: true,
                      yandexMapDisablePoiInteractivity: true,
-                     maxZoom: 18,
-                     minZoom: 5
+                     // maxZoom: 18,
+                     // minZoom: 3
                  }
                  }
             >
