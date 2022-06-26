@@ -7,6 +7,64 @@ import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../a
 import {polyline_decode} from '../../utils/polilyne-decode';
 
 
+const defaultInitialStateValues = {
+    id: 0,
+    requestNumber: undefined,
+    requestDate: undefined,
+    cargoComposition: undefined,
+    shipmentDate: undefined,
+    cargoType: undefined,
+    customer: undefined,
+    distance: undefined,
+    shipper: undefined,
+    consignee: undefined,
+    carrier: undefined,
+    driver: undefined,
+    note: undefined,
+    visible: true,
+    documents: {
+        proxyWay: {
+            label: undefined,
+            proxyFreightLoader: false,
+            proxyDriver: false,
+            waybillDriver: false,
+        },
+        uploadTime: undefined,
+        cargoWeight: 0,
+        cargoDocuments: undefined,
+        cargoPrice: 0,
+        addedPrice: 0,
+        finalPrice: 0,
+        ttnECP: {
+            label: undefined,
+            customer: false,
+            carrier: false,
+            consignee: false,
+        },
+        contractECP: {
+            label: undefined,
+            customer: false,
+            carrier: false,
+            uploadDocument: undefined,
+        },
+        updECP: {
+            label: undefined,
+            customer: false,
+            carrier: false,
+            uploadDocument: undefined,
+        },
+        customerToConsigneeContractECP: {
+            label: undefined,
+            customer: false,
+            consignee: false,
+            uploadDocument: undefined,
+        },
+        paymentHasBeenTransferred: undefined,
+        paymentHasBeenReceived: false,
+        completeRequest: false,
+    },
+} as OneRequestType
+
 const initialState = {
 
     cargoComposition: [] as string[],
@@ -14,6 +72,7 @@ const initialState = {
     currentDistance: 0,
     currentDistanceIsFetching: false,
     currentRoute: undefined as number[][] | undefined,
+    isNewRequest: true,
 
     label: {
         id: undefined,
@@ -62,6 +121,8 @@ const initialState = {
         driver: undefined,
         note: undefined,
     } as Record<keyof OneRequestType, ValidateType>,
+
+    defaultInitialStateValues,
 
     initialValues: {
         id: 0,
@@ -165,25 +226,31 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
         case 'request-store-reducer/SET-CURRENT-DISTANCE': {
             return {
                 ...state,
-                currentDistance: action.currentDistance
+                currentDistance: action.currentDistance,
             }
         }
         case 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING': {
             return {
                 ...state,
-                currentDistanceIsFetching: action.isFetching
+                currentDistanceIsFetching: action.isFetching,
             }
         }
         case 'request-store-reducer/SET-CURRENT-ROUTE': {
             return {
                 ...state,
-                currentRoute: action.currentRoute
+                currentRoute: action.currentRoute,
             }
         }
         case 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR': {
             return {
                 ...state,
                 cargoComposition: action.cargoComposition,
+            }
+        }
+        case 'request-store-reducer/SET-IS-NEW-REQUEST': {
+            return {
+                ...state,
+                isNewRequest: action.isNewRequest
             }
         }
         default: {
@@ -203,20 +270,24 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-CONTENT',
         content,
     } as const ),
+     setIsNewRequest: ( isNewRequest: boolean ) => ( {
+        type: 'request-store-reducer/SET-IS-NEW-REQUEST',
+        isNewRequest,
+    } as const ),
     setRequestNumber: ( currentRequestNumber: number | undefined ) => ( {
         type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
         currentRequestNumber,
     } as const ),
     // дистанция в километрах, отображаемая в форме ввода заявки
-    setCurrentDistance: (currentDistance: number) => ( {
+    setCurrentDistance: ( currentDistance: number ) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE',
         currentDistance,
     } as const ),
-    setCurrentRoute: (currentRoute: number[][]) => ( {
+    setCurrentRoute: ( currentRoute: number[][] | undefined ) => ( {
         type: 'request-store-reducer/SET-CURRENT-ROUTE',
         currentRoute,
     } as const ),
-    setCurrentDistanceIsFetching: (isFetching: boolean) => ( {
+    setCurrentDistanceIsFetching: ( isFetching: boolean ) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING',
         isFetching,
     } as const ),
@@ -274,16 +345,16 @@ export const setCargoCompositionSelector = ( cargoComposition: string[] ): Reque
 
 export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
-            dispatch(requestStoreActions.setCurrentDistanceIsFetching(true))
+        dispatch(requestStoreActions.setCurrentDistanceIsFetching(true))
         try {
-            const response = await getRouteFromAvtodispetcherApi({from,to})
+            const response = await getRouteFromAvtodispetcherApi({ from, to })
             // const response = { kilometers: 50 }
             dispatch(requestStoreActions.setCurrentDistance(
                 +( +response.kilometers * 1.15 ).toFixed(3)))
 
             // переводим зашифрованную строку polyline в массив координат и записываем в стэйт
             dispatch(requestStoreActions.setCurrentRoute(
-                polyline_decode(response.polyline)
+                polyline_decode(response.polyline),
             ))
 
         } catch (e) {
@@ -291,5 +362,5 @@ export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): Req
             dispatch(requestStoreActions.setCurrentDistance(0))
             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
         }
-            dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
+        dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
     }

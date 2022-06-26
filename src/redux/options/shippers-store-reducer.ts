@@ -4,7 +4,7 @@ import {ParserType, ShippersCardType, ValidateType} from '../../types/form-types
 import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
 import {initialShippersContent} from '../../initials-test-data';
 import {
-    composeParsers, parseAllCoords,
+    composeParsers, coordsToString, parseAllCoords,
     parseFIO,
     parseNoFirstSpaces, parseOnlyOneComma,
     parseOnlyOneDash,
@@ -161,7 +161,7 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
         case 'shippers-store-reducer/SET-COORDINATES': {
             return {
                 ...state,
-                initialValues: { ...state.initialValues, coordinates: action.coordinates.join(', ') },
+                initialValues: { ...state.initialValues, coordinates: coordsToString(action.coordinates) },
             }
         }
         case 'shippers-store-reducer/SET-DEFAULT-INITIAL-VALUES': {

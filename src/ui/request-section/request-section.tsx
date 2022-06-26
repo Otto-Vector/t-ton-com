@@ -5,7 +5,11 @@ import {useDispatch, useSelector} from 'react-redux'
 import {To, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {requestStoreActions} from '../../redux/forms/request-store-reducer';
-import {getInitialValuesRequestStore, getOneRequestStore} from '../../selectors/forms/request-form-reselect';
+import {
+    getDefaultInitialValuesRequestStore,
+    getInitialValuesRequestStore, getIsNewRequestRequestStore,
+    getOneRequestStore,
+} from '../../selectors/forms/request-form-reselect';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
 import {RequestMapCenter} from './request-map-center/request-map-center';
@@ -19,7 +23,7 @@ type OwnProps = {
 
 export type RequestModesType = { createMode: boolean, statusMode: boolean, historyMode: boolean }
 
-export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
+export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
 
     const requestModes: RequestModesType = {
         createMode: mode === 'create',
@@ -31,10 +35,14 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
 
+    const defaultInitialValues = useSelector(getDefaultInitialValuesRequestStore)
+    const isNewRequest = useSelector(getIsNewRequestRequestStore)
     const initialValues = useSelector(getInitialValuesRequestStore)
+
     const oneRequest = useSelector(getOneRequestStore)
-    // const currentRequest = requestModes.createMode ? initialValues : oneRequest || initialValues
-    const currentRequest = requestModes.createMode ? initialValues : oneRequest
+    const currentRequest = requestModes.createMode
+        ? ( isNewRequest ? defaultInitialValues : initialValues )
+        : oneRequest
 
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const routes = useSelector(getRoutesStore)
@@ -43,10 +51,12 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const onSubmit = ( values: OneRequestType ) => {
         console.log('данные из заявки: ', values);
+        dispatch(requestStoreActions.setIsNewRequest(true))
     }
 
-    const exposeValuesToInitialBuffer = ({values, valid}:{values: OneRequestType, valid: boolean}) => {
+    const exposeValuesToInitialBuffer = ( { values, valid }: { values: OneRequestType, valid: boolean } ) => {
         console.log(values)
+        dispatch(requestStoreActions.setIsNewRequest(false))
         dispatch(requestStoreActions.setInitialValues(values as OneRequestType))
     }
 
@@ -65,15 +75,23 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
     const onCancelButton = () => {
         navigate(cancelNavigate())
         dispatch(requestStoreActions.setRequestNumber(0))
+        dispatch(requestStoreActions.setIsNewRequest(true))
     }
 
     useEffect(() => {
+
         setTabModes({ ...tabModesInitial, left: true })
+
+        if (isNewRequest) //обнуляем данные маршрута
+            dispatch(requestStoreActions.setCurrentRoute(undefined))
+
     }, [ navigate ])
 
     useEffect(() => {
         dispatch(requestStoreActions.setRequestNumber(+( reqNumber || 0 ) || undefined))
+
     }, [])
+
 
     if (!oneRequest && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
     const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate || new Date()) }`
@@ -91,7 +109,7 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                         { tabModes.left && <RequestFormLeft requestModes={ requestModes }
                                                             initialValues={ currentRequest }
                                                             onSubmit={ onSubmit }
-                                                            exposeValues={exposeValuesToInitialBuffer}
+                                                            exposeValues={ exposeValuesToInitialBuffer }
                         /> }
                         { tabModes.center && <RequestMapCenter requestModes={ requestModes }/> }
                         { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
@@ -119,7 +137,5 @@ export const RequestSection: React.FC<OwnProps> = ( { mode } ) => {
                 </div>
             </div>
         </section>
-
-
     )
-}
+})

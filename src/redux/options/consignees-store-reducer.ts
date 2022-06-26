@@ -4,7 +4,7 @@ import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-typ
 import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
 import {initialConsigneesContent} from '../../initials-test-data'
 import {
-    composeParsers,
+    composeParsers, coordsToString,
     parseAllCoords,
     parseFIO,
     parseNoFirstSpaces, parseOnlyOneComma,
@@ -153,7 +153,7 @@ export const consigneesStoreReducer = ( state = initialState, action: ActionsTyp
         case 'consignees-store-reducer/SET-COORDINATES': {
             return {
                 ...state,
-                initialValues: { ...state.initialValues, coordinates: action.coordinates.join(', ') },
+                initialValues: { ...state.initialValues, coordinates: coordsToString(action.coordinates) },
             }
         }
         case 'consignees-store-reducer/SET-DEFAULT-INITIAL-VALUES' : {

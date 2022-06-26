@@ -106,7 +106,6 @@ export const RequestFormLeft: React.FC<OwnProps> = (
             dispatch(consigneesStoreActions.setCurrentId(0))
         }
         if (currentDistance) dispatch(requestStoreActions.setCurrentDistance(0))
-
         setIsFirstRender(false) //первый рендер отработал
     }, [])
 

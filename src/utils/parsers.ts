@@ -43,14 +43,21 @@ export const parsePseudoLatinCharsAndNumbers = ( val: string | undefined ): stri
 
 // Фамилия Имя Отчество в Фамилия И.О.
 export const parseFamilyToFIO = ( val: string | undefined ): string => val ? val
-    // .replace(/(?<=\S+) (\S)\S* (\S)\S*/, ' $1. $2.') : '' // не работает на сафари
-    .split(' ')
-    .map((el,i)=> i>0 ? el[0].toUpperCase()+'.' : el)
-    .join(' ')
+        // .replace(/(?<=\S+) (\S)\S* (\S)\S*/, ' $1. $2.') : '' // не работает на сафари
+        .split(' ')
+        .map(( el, i ) => i > 0 ? el[0].toUpperCase() + '.' : el)
+        .join(' ')
     : ''
 
 // из координат в строке "10.1235, 11.6548" в массив из двух элементов [10.1235, 11.6548]
-export const stringToCoords = (coordsString?: string ): [number,number] => {
-    const retArr = coordsString?.split(', ').map(Number) || [0,0]
-    return [retArr[0]||0,retArr[1]||0]
+export const stringToCoords = ( coordsString?: string ): [ number, number ] => {
+    const retArr = coordsString?.split(', ').map(Number) || [ 0, 0 ]
+    return [ retArr[0] || 0, retArr[1] || 0 ]
+}
+
+// из массива координат в стороковое значение с обрезанием мегаточности
+export const coordsToString = ( coordsNumArray?: [ number, number ] ): string => {
+    if (coordsNumArray)
+        return coordsNumArray.map(e => e.toFixed(6)).join(', ')
+    return 'неверные входные данные'
 }
