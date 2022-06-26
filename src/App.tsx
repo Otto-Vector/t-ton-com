@@ -19,7 +19,8 @@ const App: React.FC = () => {
                         lang: 'ru_RU',
                         coordorder: 'latlong',
                     }
-                }>
+                }
+            >
                 <BrowserRouter>
                     <div className="container">
                         <UiComponent/>

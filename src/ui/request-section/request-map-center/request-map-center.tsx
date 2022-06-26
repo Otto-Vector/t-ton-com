@@ -18,7 +18,7 @@ export const RequestMapCenter: React.FC<OwnProps> = ( { requestModes } ) => {
     const route = useSelector(getRouteRequestStore) || testLine
     const routeCenterIndex = route ? Math.ceil(route.length / 2) : 0
     const center = route ? route[routeCenterIndex] as [number,number] : testCenter
-    let zoomCoords = [route[0],route[route.length-1]]
+    const zoomCoords = [route[0],route[route.length-1]]
 
     return (
         <div className={ styles.requestMapCenter }>

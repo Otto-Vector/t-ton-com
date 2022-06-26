@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './yandex-map-component.module.scss'
-import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector} from 'react-yandex-maps';
+import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps';
 
 
 type OwnProps = {
@@ -17,9 +17,24 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
                  instanceRef={ instance }
                  modules={ modules }
                  state={ state }
-
+                 options={ {
+                     suppressMapOpenBlock: true,
+                     suppressObsoleteBrowserNotifier: true,
+                     yandexMapDisablePoiInteractivity: true,
+                     maxZoom: 18,
+                     minZoom: 5
+                 }
+                 }
             >
                 { children }
+                <TypeSelector
+                    mapTypes={ [ 'yandex#satellite', 'yandex#map', 'yandex#hybrid' ] }
+                    options={ {
+                        float: 'left',
+                        maxWidth: [ 25 ],
+                        panoramasItemMode: 'off',
+                    } }/>
+                <ZoomControl/>
             </Map>
         </div>
     )
@@ -45,7 +60,7 @@ export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center, set
                 state={ {
                     center,
                     zoom: 10,
-
+                    suppressMapOpenBlock: true,
                 } }
                 instance={ setCoordsInstance }
             >
@@ -59,12 +74,7 @@ export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center, set
                 <SearchControl
                     options={ {
                         float: 'right',
-                    } }/>
-                <TypeSelector
-                    options={ {
-                        float: 'left',
-                        maxWidth: [ 25 ],
-                        panoramasItemMode: 'off',
+                        noPlacemark: true,
                     } }/>
             </YandexMapComponent>
         )
@@ -85,13 +95,6 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center } ) => {
             } }
         >
             <Placemark geometry={ center }/>
-            <TypeSelector
-                mapTypes={ [ 'yandex#satellite', 'yandex#map', 'yandex#hybrid' ] }
-                options={ {
-                    float: 'left',
-                    maxWidth: [ 25 ],
-                    panoramasItemMode: 'off',
-                } }/>
         </YandexMapComponent>
     )
 })
@@ -105,27 +108,19 @@ type ToRouteMap = {
 
 
 // карта с отрисованным маршрутом
-export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( { center, polyline, zoom = 5 , bounds} ) => {
+export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( { center, polyline, zoom = 5, bounds } ) => {
 
     return (
         <YandexMapComponent
-
             state={ {
                 center,
                 zoom,
                 bounds: bounds as undefined,
             } }
         >
-            <TypeSelector
-                mapTypes={ [ 'yandex#satellite', 'yandex#map', 'yandex#hybrid' ] }
-                options={ {
-                    float: 'left',
-                    maxWidth: [ 25 ],
-                    panoramasItemMode: 'off',
-                } }/>
             <Placemark geometry={ center }/>
             <Polyline geometry={ polyline }
-                      options={ { strokeColor: '#023E8A', strokeWidth: 5, opacity: 0.8 } }
+                      options={ { strokeColor: '#023E8A', strokeWidth: 4, opacity: 0.8 } }
             />
         </YandexMapComponent>
     )
