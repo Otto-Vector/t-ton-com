@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './yandex-map-component.module.scss'
-import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps';
+import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps'
+import {propsAreEqual} from '../../../utils/reactMemoUtils'
 
 
 type OwnProps = {
@@ -23,8 +24,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
                      yandexMapDisablePoiInteractivity: true,
                      maxZoom: 18,
                      minZoom: 3
-                 }
-                 }
+                 } }
             >
                 { children }
                 <TypeSelector
@@ -43,16 +43,18 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
 
 type ToFormProps = {
     center: [ number, number ]
-    setCoordinates: ( coords: [ number, number ] ) => void
+    setCoordinates: ( coords: [ number, number ], listener: any ) => void
 }
 
-export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center, setCoordinates } ) => {
+export const YandexMapToForm: React.FC<ToFormProps> =
+    // React.memo(
+    ( { center, setCoordinates } ) => {
 
         const setCoordsInstance = ( instance: React.Ref<any> ) => { //для отслеживания координат по клику
             // @ts-ignore
-            instance?.events.add('click', function ( e ) {
-                setCoordinates(e.get('coords'))
-            })
+            const listener = instance?.events.group().add('click', function ( e ) {
+                setCoordinates(e.get('coords'), listener)
+            }, { once: true })
         }
 
         return (
@@ -78,8 +80,8 @@ export const YandexMapToForm: React.FC<ToFormProps> = React.memo(( { center, set
                     } }/>
             </YandexMapComponent>
         )
-    },
-)
+    }
+// , propsAreEqual)
 
 
 type ToBigMap = {

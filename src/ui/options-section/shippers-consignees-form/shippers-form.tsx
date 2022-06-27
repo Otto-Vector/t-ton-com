@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 
@@ -22,8 +22,8 @@ import {
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
-import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
-import {stringToCoords} from '../../../utils/parsers';
+import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
+import {coordsToString, stringToCoords} from '../../../utils/parsers'
 
 
 type OwnProps = {
@@ -69,8 +69,10 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const setCoordinatesToInitial = (coords: [number, number]) => {
-        dispatch(shippersStoreActions.setCoordinates(coords))
+    const setCoordinatesToInitial = ( coords: [ number, number ], listener: any ) => {
+        listener.removeAll()
+        const match = initialValues.coordinates === coordsToString(coords)
+        if (!match) dispatch(shippersStoreActions.setCoordinates(coords))
     }
 
     useEffect(() => {
@@ -187,12 +189,13 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    parse={ parsers.coordinates }
                                             />
 
-                                            <div className={ styles.shippersConsigneesForm__map+' '+
-                                                styles.shippersConsigneesForm__mapImage}>
-                                            <YandexMapToForm
-                                                center={stringToCoords(values.coordinates)}
-                                                setCoordinates={setCoordinatesToInitial}
-                                            />
+                                            <div className={ styles.shippersConsigneesForm__map + ' ' +
+                                                styles.shippersConsigneesForm__mapImage }>
+                                                <YandexMapToForm
+                                                    center={ stringToCoords(values.coordinates) }
+                                                    setCoordinates={ setCoordinatesToInitial }
+                                                    // listenerRemover={listenerRemover}
+                                                />
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>
                                                 <div className={ styles.shippersConsigneesForm__button }>
