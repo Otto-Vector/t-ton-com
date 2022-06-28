@@ -190,7 +190,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                 styles.shippersConsigneesForm__mapImage }>
                                                 <YandexMapToForm
                                                     center={ stringToCoords(values.coordinates) }
-                                                    setCoordinates={ setCoordinatesToInitial }
+                                                    getCoordinates={ setCoordinatesToInitial }
                                                 />
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>

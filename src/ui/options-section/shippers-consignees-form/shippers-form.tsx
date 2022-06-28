@@ -69,10 +69,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const setCoordinatesToInitial = ( coords: [ number, number ], listener: any ) => {
-        listener.removeAll()
-        const match = initialValues.coordinates === coordsToString(coords)
-        if (!match) dispatch(shippersStoreActions.setCoordinates(coords))
+    const getCoordinatesToInitial = ( coords: [ number, number ] ) => {
+        dispatch(shippersStoreActions.setCoordinates(coords))
     }
 
     useEffect(() => {
@@ -193,8 +191,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                 styles.shippersConsigneesForm__mapImage }>
                                                 <YandexMapToForm
                                                     center={ stringToCoords(values.coordinates) }
-                                                    setCoordinates={ setCoordinatesToInitial }
-                                                    // listenerRemover={listenerRemover}
+                                                    getCoordinates={ getCoordinatesToInitial }
                                                 />
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>

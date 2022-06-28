@@ -8,9 +8,17 @@ type OwnProps = {
     state?: MapState
     modules?: string[]
     instance?: ( instance: React.Ref<any> ) => void
+    onClick?: ( e: any ) => void
 }
 
-export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, children, instance } ) => {
+
+export const YandexMapComponent: React.FC<OwnProps> = ( {
+    state,
+    modules,
+    children,
+    instance,
+    onClick
+} ) => {
 
     return (
         <div className={ styles.yandexMapComponent }>
@@ -25,6 +33,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
                      maxZoom: 18,
                      minZoom: 3
                  } }
+                 onClick={ onClick }
             >
                 { children }
                 <TypeSelector
@@ -43,19 +52,12 @@ export const YandexMapComponent: React.FC<OwnProps> = ( { state, modules, childr
 
 type ToFormProps = {
     center: [ number, number ]
-    setCoordinates: ( coords: [ number, number ], listener: any ) => void
+    getCoordinates: ( coords: [ number, number ] ) => void
 }
 
 export const YandexMapToForm: React.FC<ToFormProps> =
     // React.memo(
-    ( { center, setCoordinates } ) => {
-
-        const setCoordsInstance = ( instance: React.Ref<any> ) => { //для отслеживания координат по клику
-            // @ts-ignore
-            const listener = instance?.events.group().add('click', function ( e ) {
-                setCoordinates(e.get('coords'), listener)
-            }, { once: true })
-        }
+    ( { center, getCoordinates } ) => {
 
         return (
             <YandexMapComponent
@@ -64,7 +66,9 @@ export const YandexMapToForm: React.FC<ToFormProps> =
                     zoom: 10,
                     suppressMapOpenBlock: true,
                 } }
-                instance={ setCoordsInstance }
+                onClick={ ( e ) => {
+                    getCoordinates(e.get('coords'))
+                } }
             >
                 <Placemark geometry={ center }
                            options={
