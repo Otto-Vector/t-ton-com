@@ -193,8 +193,10 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                     getCoordinates={ setCoordinatesToInitial }
                                                 />
                                             </div>
-                                            <div className={ styles.shippersConsigneesForm__buttonsPanel }>
-                                                <div className={ styles.shippersConsigneesForm__button }>
+                                            <div className={ styles.shippersConsigneesForm__buttonsPanel }
+
+                                            >
+                                                <div className={ styles.shippersConsigneesForm__button } >
                                                     <Button type={ 'submit' }
                                                             disabled={ submitting || hasValidationErrors }
                                                             colorMode={ 'green' }

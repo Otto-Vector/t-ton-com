@@ -74,8 +74,12 @@ export const YandexMapToForm: React.FC<ToFormProps> =
                            options={
                                {
                                    preset: 'islands#violetDotIconWithCaption',
+                                   draggable: true
                                }
                            }
+                           onDragEnd={ ( e: any ) => {
+                               getCoordinates(e.originalEvent.target.geometry._coordinates)
+                           } }
                 />
                 <SearchControl
                     options={ {
