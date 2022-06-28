@@ -1,7 +1,6 @@
 import React from 'react'
 import styles from './yandex-map-component.module.scss'
 import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps'
-import {propsAreEqual} from '../../../utils/reactMemoUtils'
 
 
 type OwnProps = {

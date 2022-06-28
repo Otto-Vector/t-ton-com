@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react'
+import React, {useEffect} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 
@@ -23,7 +23,7 @@ import {
 } from '../../../selectors/options/shippers-reselect'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
-import {coordsToString, stringToCoords} from '../../../utils/parsers'
+import {stringToCoords} from '../../../utils/parsers'
 
 
 type OwnProps = {
