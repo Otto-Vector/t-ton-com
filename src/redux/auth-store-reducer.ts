@@ -10,7 +10,7 @@ const initialState = {
     authCash: 100,
     isAvailableSMSrequest: false,
     isFetching: false,
-    geoPosition: [0,0] as [number, number],
+    geoPosition: [0,0] as number[],
 
     tarifsLabel: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
         create: 'Создание Заявки Заказчиком:',

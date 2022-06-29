@@ -50,6 +50,7 @@ export type EmployeesCardType<T = DefaultFormType> = {
     photoFace: T // Добавить фотографию сотрудника
     rating: T // Рейтинг
     coordinates: T // координаты местоположения водителя
+    status: T // статус водителя
 }
 
 // на грузоПОЛУЧАТЕЛЯ

@@ -698,7 +698,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Маркова Феодосия Данииловна',
         photoFace: 'https://images.unsplash.com/photo-1622426141446-5148b6fa1115?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8ZmFjZSUyMG1hbiUyMGRyaXZlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60',
         rating: randFloorMax(10).toString(),
-        coordinates: '49.069515, 47.013803'
+        coordinates: '49.069515, 47.013803',
+        status: 'empty',
     },
     {
         id: 2,
@@ -715,7 +716,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Пахомова Архелия Пётровна',
         photoFace: 'https://images.unsplash.com/photo-1590895870999-b2c4eee2400b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8ZmFjZSUyMG1hbiUyMGRyaXZlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60',
         rating: randFloorMax(10).toString(),
-        coordinates: '49.751249, 41.117407'
+        coordinates: '49.751249, 41.117407',
+        status: 'full',
     },
     {
         id: 3,
@@ -732,7 +734,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Меркушева Аксинья Викторовна',
         photoFace: 'https://images.unsplash.com/photo-1521738218175-2b6670637c6c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGZhY2UlMjBtYW4lMjBkcml2ZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
         rating: randFloorMax(10).toString(),
-        coordinates: '54.721953, 56.146108'
+        coordinates: '54.721953, 56.146108',
+        status: 'full',
     },
     {
         id: 4,
@@ -749,7 +752,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Козлова Сара Георгиевна',
         photoFace: 'https://images.unsplash.com/photo-1640706277402-666588349146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzZ8fGZhY2UlMjBtYW4lMjBkcml2ZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
         rating: randFloorMax(10).toString(),
-        coordinates: '56.997002, 65.801063'
+        coordinates: '56.997002, 65.801063',
+        status: 'full',
     },
     {
         id: 5,
@@ -766,7 +770,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Дорофеева Евгения Арсеньевна',
         photoFace: randomDriverImage(5),
         rating: randFloorMax(10).toString(),
-        coordinates: '55.028979, 72.900294'
+        coordinates: '55.028979, 72.900294',
+        status: 'full',
     },
     {
         id: 6,
@@ -783,7 +788,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Самсонова Нева Альбертовна',
         photoFace: randomDriverImage(6),
         rating: randFloorMax(10).toString(),
-        coordinates: '57.858574, 59.944197'
+        coordinates: '57.858574, 59.944197',
+        status: 'empty',
     },
     {
         id: 7,
@@ -800,7 +806,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Макарова Эдуарда Максимовна',
         photoFace: randomDriverImage(7),
         rating: randFloorMax(10).toString(),
-        coordinates: '55.454877, 65.197628'
+        coordinates: '55.454877, 65.197628',
+        status: 'full',
     },
     {
         id: 8,
@@ -817,7 +824,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Гуляева Юстина Леонидовна',
         photoFace: randomDriverImage(8),
         rating: randFloorMax(10).toString(),
-        coordinates: '55.736270, 52.525500'
+        coordinates: '55.736270, 52.525500',
+        status: 'full',
     },
     {
         id: 9,
@@ -834,7 +842,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Герасимова Данута Филипповна',
         photoFace: randomDriverImage(9),
         rating: randFloorMax(10).toString(),
-        coordinates: '57.839648, 56.252597'
+        coordinates: '57.839648, 56.252597',
+        status: 'full',
     },
     {
         id: 10,
@@ -851,7 +860,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         dispatcherFIO: 'Савина Гелена Куприяновна',
         photoFace: randomDriverImage(10),
         rating: randFloorMax(10).toString(),
-        coordinates: '56.802767, 60.725113'
+        coordinates: '56.802767, 60.725113',
+        status: 'full',
     },
 
 ]

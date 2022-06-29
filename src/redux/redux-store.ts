@@ -16,6 +16,7 @@ import {addDriverStoreReducer} from './forms/add-driver-store-reducer';
 import {requestStoreReducer} from './forms/request-store-reducer';
 import {infoStoreReducer} from './info-store-reducer';
 import {lightBoxStoreReducer} from './lightbox-store-reducer'
+import {bigMapStoreReducer} from './maps/big-map-store-reducer';
 
 
 const reducersObject = {
@@ -35,6 +36,7 @@ const reducersObject = {
     requestStoreReducer,
     infoStoreReducer,
     lightBoxStoreReducer,
+    bigMapStoreReducer,
 }
 
 const rootReducer = combineReducers(reducersObject)

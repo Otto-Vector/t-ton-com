@@ -54,6 +54,7 @@ const initialState = {
     } as EmployeesCardType,
 
     initialValues: {
+
         employeeFIO: undefined,
         employeePhoneNumber: undefined,
         passportSerial: undefined,
@@ -67,6 +68,7 @@ const initialState = {
         dispatcherFIO: undefined,
         photoFace: undefined,
         rating: undefined,
+        status: undefined
     } as EmployeesCardType,
 
     validators: {
@@ -170,7 +172,6 @@ export const employeesStoreActions = {
         type: 'employees-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
-
     addEmployees: ( employees: EmployeesCardType ) => ( {
         type: 'employees-store-reducer/ADD-EMPLOYEE',
         employees,

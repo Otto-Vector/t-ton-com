@@ -92,18 +92,20 @@ export const YandexMapToForm: React.FC<ToFormProps> =
 
 
 type ToBigMap = {
-    center: [ number, number ]
+    center: number[],
+    zoom: number
 }
 
-export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center } ) => {
+export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center, zoom, children } ) => {
     return (
         <YandexMapComponent
             state={ {
                 center,
-                zoom: 10,
+                zoom,
             } }
+            modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
         >
-            <Placemark geometry={ center }/>
+            {children}
         </YandexMapComponent>
     )
 })
