@@ -33,6 +33,7 @@ const initialState = {
         },
         requisites: '/requisites',
         info: '/info',
+        test: '/test'
     },
 }
 

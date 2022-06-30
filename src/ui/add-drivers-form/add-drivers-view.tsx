@@ -1,45 +1,35 @@
-import React, {useLayoutEffect} from 'react'
+import React, {useEffect, useLayoutEffect} from 'react'
 import styles from './add-drivers-form.module.scss'
-import {Field, Form} from 'react-final-form'
-import {Button} from '../common/button/button'
-import {Preloader} from '../common/preloader/preloader'
 import noImagePhoto from '../../media/noImagePhoto2.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {
     getIsFetchingRequisitesStore,
     getStoredValuesRequisitesStore,
 } from '../../selectors/options/requisites-reselect'
-import {useNavigate} from 'react-router-dom'
-import {CancelButton} from '../common/cancel-button/cancel-button'
-import {AddDriverCardType} from '../../types/form-types'
 
 import {
     getInitialValuesAddDriverStore,
     getLabelAddDriverStore,
-    getPlaceholderAddDriverStore,
-    getValidatorsAddDriverStore,
 } from '../../selectors/forms/add-driver-reselect'
-import {FormSelector} from '../common/form-selector/form-selector'
-import {FormInputType} from '../common/form-input-type/form-input-type'
 import {getOneRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {
-    getAllEmployeesSelectFromLocal,
     getOneEmployeesFromLocal,
 } from '../../selectors/options/employees-reselect'
 import {
-    getAllTransportSelectFromLocal,
     getOneTransportFromLocal,
 } from '../../selectors/options/transport-reselect'
 
 import {
-    getAllTrailerSelectFromLocal,
     getOneTrailerFromLocal,
 } from '../../selectors/options/trailer-reselect'
 import {employeesStoreActions} from '../../redux/options/employees-store-reducer'
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/lightbox-store-reducer'
+import {getTestAddDriverValues} from '../../redux/forms/add-driver-store-reducer';
+import {Preloader} from '../common/preloader/preloader';
+import {requestStoreActions} from '../../redux/forms/request-store-reducer';
 
 type OwnProps = {}
 
@@ -53,7 +43,8 @@ export const AddDriversView: React.FC<OwnProps> = () => {
     const initialValues = useSelector(getInitialValuesAddDriverStore)
     const label = useSelector(getLabelAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
-    const { distance } = useSelector(getOneRequestStore)
+    // const { distance } = useSelector(getOneRequestStore)
+    const distance = 555
     const dispatch = useDispatch()
 
     const setLightBoxImage = ( image?: string ) => {
@@ -62,7 +53,6 @@ export const AddDriversView: React.FC<OwnProps> = () => {
 
     const resultDistanceCost = ( ...args: number[] ): number =>
         args.reduce(( a, b ) => a * b) * ( distance || 1 )
-
 
     const oneEmployee = useSelector(getOneEmployeesFromLocal)
     const employeeOneImage = oneEmployee.photoFace
@@ -78,10 +68,17 @@ export const AddDriversView: React.FC<OwnProps> = () => {
     const trailerOneCargoWeight = oneTrailer.cargoWeight
 
     useLayoutEffect(() => {
+        dispatch<any>(getTestAddDriverValues())
+        dispatch(requestStoreActions.setRequestNumber(999))
+    })
+
+    useEffect(()=>{
         dispatch(employeesStoreActions.setCurrentId(+( initialValues.driverFIO || 0 )))
         dispatch(transportStoreActions.setCurrentId(+( initialValues.driverTransport || 0 )))
         dispatch(trailerStoreActions.setCurrentId(+( initialValues.driverTrailer || 0 )))
-    })
+    }, [initialValues])
+
+    if (isFetching) return <Preloader/>
 
     return (
         <div className={ styles.addDriversForm__wrapper }>
@@ -93,22 +90,22 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                     <div className={ styles.addDriversForm__selector }>
                         <label
                             className={ styles.addDriversForm__label }>{ label.driverFIO + ':' }</label>
-                        <div className={ styles.addDriversForm__infoItem }>
-                            { initialValues.driverFIO }
+                        <div className={ styles.addDriversForm__info }>
+                            { oneEmployee.employeeFIO }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__selector }>
                         <label
                             className={ styles.addDriversForm__label }>{ label.driverTransport + ':' }</label>
-                        <div className={ styles.addDriversForm__infoItem }>
-                            { initialValues.driverTransport }
+                        <div className={ styles.addDriversForm__info }>
+                            { oneTransport.transportModel }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__selector }>
                         <label
                             className={ styles.addDriversForm__label }>{ label.driverTrailer + ':' }</label>
-                        <div className={ styles.addDriversForm__infoItem }>
-                            { initialValues.driverTrailer }
+                        <div className={ styles.addDriversForm__info }>
+                            { oneTrailer.trailerModel }
                         </div>
                     </div>
                 </div>
@@ -117,7 +114,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                         <label className={ styles.addDriversForm__label }>
                             { label.driverStavka + ':' }</label>
 
-                        <div className={ styles.addDriversForm__infoItem }>
+                        <div className={ styles.addDriversForm__info }>
                             { initialValues.driverStavka }
                         </div>
                     </div>
@@ -125,8 +122,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                          title={ 'Расстояние: ' + distance + 'км.' }>
                         <label className={ styles.addDriversForm__label }>
                             { label.driverSumm + ':' }</label>
-                        <div className={ styles.addDriversForm__info + ' ' +
-                            styles.addDriversForm__info_long }>
+                        <div className={ styles.addDriversForm__info }>
                             {
                                 resultDistanceCost(
                                     +( initialValues.driverStavka || 0 ),
@@ -135,7 +131,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                                         +
                                         +( transportOneCargoWeight || 0 )
                                     ),
-                                ).toString()
+                                ).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
                             }
                         </div>
                     </div>
@@ -143,7 +139,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                         <label className={ styles.addDriversForm__label }>
                             { label.driverRating + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { initialValues.driverRating || '-' }
+                            { oneEmployee.rating || '-' }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoItem }>

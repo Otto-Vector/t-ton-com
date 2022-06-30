@@ -31,6 +31,7 @@ import {getAllEmployeesAPI} from '../redux/options/employees-store-reducer';
 import {geoPositionTake} from '../redux/auth-store-reducer';
 import {MapSection} from './map-section/map-section';
 import {LightBoxComponent} from './common/lightbox-component/lightbox-component'
+import {AddDriversView} from './add-drivers-form/add-drivers-view';
 
 type OwnProps = {}
 
@@ -101,6 +102,8 @@ export const UiComponent: React.FC<OwnProps> = () => {
 
                         <Route path={ routes.options } element={ <OptionsSection/> }/>
                         <Route path={ routes.requisites } element={ <RequisitesForm/> }/>
+
+                        <Route path={ routes.test } element={ <AddDriversView/> }/>
 
                         <Route path="*" element={ <h2>This site NOT FOUND. Try another address</h2> }/>
                     </Routes>

@@ -12,7 +12,8 @@ import historySVG from './buttonsSVG/history.svg'
 import mapSVG from './buttonsSVG/map.svg'
 import infoSVG from './buttonsSVG/info.svg'
 import optionsPNG from './buttonsSVG/options.png'
-import attentionSVG from '../../media/attention.svg'
+import attentionSVG from './buttonsSVG/attention.svg'
+import testPNG from './buttonsSVG/test.png'
 
 import {getIsAuthAuthStore} from '../../selectors/auth-reselect';
 import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect';
@@ -63,6 +64,10 @@ export const MenuPanel: React.FC<OwnProps> = () => {
         {
             route: routes.info, src: infoSVG, title: 'Информация / События',
             buttonText: 'Инфо', active: isAuth,
+        },
+        {
+            route: routes.test, src: testPNG, title: 'Для тестов отрисовки компонентов',
+            buttonText: 'Тест', active: isAuth,
         },
     ]
 

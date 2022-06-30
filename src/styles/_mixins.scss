@@ -6,7 +6,7 @@
   content: $iconName;
   font-family: $MaterialFont;
   position: absolute;
-  font-size: rem(20);
+  font-size: inherit;
   color: inherit;
   right: $right;
   top: $top;
@@ -79,46 +79,24 @@
 }
 
 
-/*
- * Usage Example:
- *
- * div::after {
- *     @include pseudo;
- *     top: -1rem; left: -1rem;
- *     width: 1rem; height: 1rem;
- * }
- */
+// Usage Example:
+//  div::after {
+//     @include pseudo;
+//     top: -1rem; left: -1rem;
+//     width: 1rem; height: 1rem;
+// }
+
 @mixin pseudo($display: block, $pos: absolute, $content: '') {
   content: $content;
   display: $display;
   position: $pos;
 }
 
-/*
- * Usage Example:
- *
- * div {
- *     @include responsive-ratio(16,9);
- * }
- */
-@mixin responsive-ratio($x,$y, $pseudo: false) {
-  $padding: unquote(( $y / $x ) * 100 + '%');
-  @if $pseudo {
-    &:before {
-      @include pseudo($pos: relative);
-      width: 100%;
-      padding-top: $padding;
-    }
-  } @else {
-    padding-top: $padding;
-  }
-}
 
-/*
- * This mixin takes all the hassle out of creating that triangle you'll see coming out of most traditional tooltips,
- * all without ima_ges, you just specify it's colour, how big you want it, the direction it's going to come out of your
- * element and you're done!
- */
+// This mixin takes all the hassle out of creating that triangle you'll see coming out of most traditional tooltips,
+// all without ima_ges, you just specify it's colour, how big you want it, the direction it's going to come out of your
+// element and you're done!
+
 @mixin css-triangle($color, $direction, $size: 6px, $position: absolute, $round: false) {
   @include pseudo($pos: $position);
   width: 0;
@@ -148,6 +126,7 @@
     margin-left: -$size;
   }
 }
+
 //
 //@mixin font-source-sans($size: false, $colour: false, $weight: false,  $lh: false) {
 //  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
@@ -184,18 +163,17 @@
   }
 }
 
-/*
- * Usage Example:
- *
- * .site-header {
- *    padding: 2rem;
- *    font-size: 1.8rem;
- *    @include mq('tablet-wide') {
- *        padding-top: 4rem;
- *        font-size: 2.4rem;
- *    }
- * }
- */
+// Usage Example:
+// .site-header {
+//   padding: 2rem;
+//   font-size: 1.8rem;
+//   @include mq('tablet-wide') {
+//       padding-top: 4rem;
+//       font-size: 2.4rem;
+//   }
+// }
+
+
 $breakpoints: (
         'phone': 320px,
         'phone-wide': 480px,
@@ -217,27 +195,6 @@ $breakpoints: (
   }
 }
 
-/*
- * .site-header {
- *    z-index: z('site-header');
- * }
- */
-@function z($name) {
-  @if index($z-indexes, $name) {
-    @return (length($z-indexes) - index($z-indexes, $name)) + 1;
-  } @else {
-    @warn 'There is no item "#{$name}" in this list; choose one of: #{$z-indexes}';
-    @return null;
-  }
-}
-
-$z-indexes: (
-        'outdated-browser',
-        'modal',
-        'site-header',
-        'page-wrapper',
-        'site-footer'
-);
 
 // Simple and effective for when you need to trigger hardware acceleration for some animation,
 // keeping everything fast, slick and flicker-free.
@@ -255,13 +212,10 @@ $z-indexes: (
   text-overflow: ellipsis;
 }
 
-/*
- * Source: http://thesassway.com/intermediate/mixins-for-semi-transparent-colors
- *
- * Usage Example:
- *
- * .button { @include alpha-attribute('background-color', rgba(black, 0.5), white); }
- */
+// Source: http://thesassway.com/intermediate/mixins-for-semi-transparent-colors
+// Usage Example:
+// .button { @include alpha-attribute('background-color', rgba(black, 0.5), white); }
+
 @mixin alpha-attribute($attribute, $color, $background) {
   $percent: alpha($color) * 100%;
   $opaque: opacify($color, 1);
