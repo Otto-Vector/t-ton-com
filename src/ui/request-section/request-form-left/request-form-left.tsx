@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useLayoutEffect, useState} from 'react'
 import styles from './request-form-left.module.scss'
 import {
     getAllShippersSelectFromLocal,
@@ -33,7 +33,7 @@ import {
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
 import {Preloader} from '../../common/preloader/preloader';
-import { FormSpySimpleRequest} from '../../common/form-spy-simple/form-spy-simple';
+import {FormSpySimpleRequest} from '../../common/form-spy-simple/form-spy-simple';
 
 
 type OwnProps = {
@@ -100,7 +100,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         dispatch<any>(setCargoCompositionSelector([ value, ...cargoComposition ]))
     }
 
-    useEffect(() => { // зачистка значений при первом рендере
+    useLayoutEffect(() => { // зачистка значений при первом рендере
         if (requestModes.createMode) {
             dispatch(shippersStoreActions.setCurrentId(0))
             dispatch(consigneesStoreActions.setCurrentId(0))
@@ -192,6 +192,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                 (
                                                     // корявый, но рабочий костыль toDo: cделать по феншую
                                                     ( values.distance = currentDistance || initialValues.distance )
+                                                    // currentDistance
                                                     || placehoders.distance
                                                 )
                                                 : <Preloader/>
@@ -323,18 +324,17 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 }
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
-                            { ( requestModes.createMode && !isFirstRender ) && <FormSpySimpleRequest
-                                form={ form }
-                                onChange={ ( { values, valid } ) => {
-                                    if (exposeValues) exposeValues({ values, valid })
-                                } }/>
+                            { ( requestModes.createMode && !isFirstRender ) &&
+                                <FormSpySimpleRequest
+                                    form={ form }
+                                    onChange={ ( { values, valid } ) => {
+                                        if (exposeValues) exposeValues({ values, valid })
+                                    } }/>
                             }
                         </form>
                     )
                 }/>
             <InfoText/>
         </div>
-
-
     )
 }

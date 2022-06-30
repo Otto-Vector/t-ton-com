@@ -76,6 +76,7 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
         navigate(cancelNavigate())
         dispatch(requestStoreActions.setRequestNumber(0))
         dispatch(requestStoreActions.setIsNewRequest(true))
+        dispatch(requestStoreActions.setCurrentDistance(null))
     }
 
     useEffect(() => {
@@ -83,7 +84,7 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
         setTabModes({ ...tabModesInitial, left: true })
 
         if (isNewRequest) //обнуляем данные маршрута
-            dispatch(requestStoreActions.setCurrentRoute(undefined))
+            dispatch(requestStoreActions.setCurrentRoute(null))
 
     }, [ navigate ])
 

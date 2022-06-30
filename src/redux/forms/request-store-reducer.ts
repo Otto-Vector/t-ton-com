@@ -69,9 +69,9 @@ const initialState = {
 
     cargoComposition: [] as string[],
     currentRequestNumber: undefined as undefined | number,
-    currentDistance: 0,
+    currentDistance: 0 as number | null,
     currentDistanceIsFetching: false,
-    currentRoute: undefined as number[][] | undefined,
+    currentRoute: null as number[][] | null,
     isNewRequest: true,
 
     label: {
@@ -279,11 +279,11 @@ export const requestStoreActions = {
         currentRequestNumber,
     } as const ),
     // дистанция в километрах, отображаемая в форме ввода заявки
-    setCurrentDistance: ( currentDistance: number ) => ( {
+    setCurrentDistance: ( currentDistance: number | null ) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE',
         currentDistance,
     } as const ),
-    setCurrentRoute: ( currentRoute: number[][] | undefined ) => ( {
+    setCurrentRoute: ( currentRoute: number[][] | null ) => ( {
         type: 'request-store-reducer/SET-CURRENT-ROUTE',
         currentRoute,
     } as const ),
@@ -350,7 +350,7 @@ export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): Req
             const response = await getRouteFromAvtodispetcherApi({ from, to })
             // const response = { kilometers: 50 }
             dispatch(requestStoreActions.setCurrentDistance(
-                +( +response.kilometers * 1.15 ).toFixed(3)))
+                +( +response.kilometers * 1.05 ).toFixed(0)))
 
             // переводим зашифрованную строку polyline в массив координат и записываем в стэйт
             dispatch(requestStoreActions.setCurrentRoute(
@@ -359,7 +359,7 @@ export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): Req
 
         } catch (e) {
             alert(e)
-            dispatch(requestStoreActions.setCurrentDistance(0))
+            dispatch(requestStoreActions.setCurrentDistance(null))
             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
         }
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
