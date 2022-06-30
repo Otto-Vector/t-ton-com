@@ -30,21 +30,19 @@ import {lightBoxStoreActions} from '../../redux/lightbox-store-reducer'
 import {getTestAddDriverValues} from '../../redux/forms/add-driver-store-reducer';
 import {Preloader} from '../common/preloader/preloader';
 import {requestStoreActions} from '../../redux/forms/request-store-reducer';
+import {Button} from '../common/button/button';
 
 type OwnProps = {}
 
 export const AddDriversView: React.FC<OwnProps> = () => {
-
-    const header = ( requestNumber: number, shipmentDate: Date ): string =>
-        `Заявка ${ requestNumber } от ${ ddMmYearFormat(shipmentDate) }`
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
     const initialValues = useSelector(getInitialValuesAddDriverStore)
     const label = useSelector(getLabelAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
-    // const { distance } = useSelector(getOneRequestStore)
-    const distance = 555
+    const oneRequest = useSelector(getOneRequestStore)
+    const distance = oneRequest?.distance
     const dispatch = useDispatch()
 
     const setLightBoxImage = ( image?: string ) => {
@@ -56,7 +54,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
 
     const oneEmployee = useSelector(getOneEmployeesFromLocal)
     const employeeOneImage = oneEmployee.photoFace
-    // const employeeOnePhone = oneEmployee.employeePhoneNumber
+    const employeeOnePhone = oneEmployee.employeePhoneNumber
 
     const oneTransport = useSelector(getOneTransportFromLocal)
 
@@ -69,20 +67,22 @@ export const AddDriversView: React.FC<OwnProps> = () => {
 
     useLayoutEffect(() => {
         dispatch<any>(getTestAddDriverValues())
-        dispatch(requestStoreActions.setRequestNumber(999))
+        dispatch(requestStoreActions.setRequestNumber(375))
     })
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(employeesStoreActions.setCurrentId(+( initialValues.driverFIO || 0 )))
         dispatch(transportStoreActions.setCurrentId(+( initialValues.driverTransport || 0 )))
         dispatch(trailerStoreActions.setCurrentId(+( initialValues.driverTrailer || 0 )))
-    }, [initialValues])
+    }, [ initialValues ])
 
     if (isFetching) return <Preloader/>
 
     return (
         <div className={ styles.addDriversForm__wrapper }>
-            <h4 className={ styles.addDriversForm__header }>{ header(999, new Date()) }</h4>
+            <h4 className={ styles.addDriversForm__header }>{
+                `Заявка ${ oneRequest?.id } от ${ ddMmYearFormat(oneRequest?.requestDate) }`
+            }</h4>
 
             <div className={ styles.addDriversForm__form }>
                 <div
@@ -174,7 +174,19 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                         />
                     </div>
                 </div>
+                <div className={ styles.addDriversForm__buttonsPanel }>
+                    <a role="button" href={ `tel:${ employeeOnePhone }` }
+                    className={styles.addDriversForm__buttonHrefWrapper}>
+                        <Button type={ 'button' }
+                                disabled={ !employeeOnePhone }
+                                colorMode={ 'blue' }
+                                title={ employeeOnePhone }
+                                rounded
+                        />
+                    </a>
+                </div>
             </div>
+
         </div>
     )
 }

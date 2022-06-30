@@ -22,7 +22,7 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     useLayoutEffect(() => {
         dispatch<any>(setDriversToMap())
-    }, [])
+    }, [dispatch])
 
     const center = useSelector(getGeoPositionAuthStore)
     const zoom = 7

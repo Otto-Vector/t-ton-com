@@ -1,13 +1,11 @@
 import React, {useEffect} from 'react';
 import {createPortal} from 'react-dom';
-import {propsAreEqual} from '../../../utils/reactMemoUtils';
-
 
 type PortalType = {
     getHTMLElementId: string
 }
 
-export const Portal: React.FC<PortalType> = React.memo(
+export const Portal: React.FC<PortalType> =
     ( { children, getHTMLElementId } ) => {
 
         // находим искомый HTML по id
@@ -27,5 +25,4 @@ export const Portal: React.FC<PortalType> = React.memo(
         // собственно, пририсовываем React-элемент в div к искомому HTML
         return createPortal(children, el)
 
-    }, propsAreEqual,
-)
+    }
