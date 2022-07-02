@@ -1,7 +1,9 @@
 import axios from 'axios'
-import {qsNormalize} from '../utils/norm-query';
-import {parseNoSpace} from '../utils/parsers';
+import {qsNormalize} from '../utils/norm-query'
+import {parseNoSpace} from '../utils/parsers'
 import base64 from 'base-64'
+
+const { REACT_APP_AVTODISPETCHER_KEY } = process.env
 
 const instance = axios.create({
     baseURL: 'https://api.avtodispetcher.ru/v1/',
@@ -9,7 +11,7 @@ const instance = axios.create({
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Basic '+ base64.encode('d08F9Xg3XnCK:RzMm4Nt9ns2t'),
+        'Authorization': 'Basic ' + base64.encode(REACT_APP_AVTODISPETCHER_KEY as string),
     },
 })
 

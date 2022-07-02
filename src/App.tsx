@@ -7,6 +7,8 @@ import {BrowserRouter} from 'react-router-dom'
 import {YMaps} from 'react-yandex-maps'
 import 'react-image-lightbox/style.css' //подключаем стили ligthBox в главном компоненте
 
+const { REACT_APP_YANDEX_KEY } = process.env
+
 const App: React.FC = () => {
 
     return (
@@ -15,7 +17,7 @@ const App: React.FC = () => {
                 version={ '2.1.79' }
                 query={
                     {
-                        apikey: 'c61f2ade-a655-4ad8-be32-5381fa8bc73b',
+                        apikey: REACT_APP_YANDEX_KEY,
                         lang: 'ru_RU',
                         coordorder: 'latlong',
                     }

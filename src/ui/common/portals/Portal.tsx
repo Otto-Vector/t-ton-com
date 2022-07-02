@@ -22,6 +22,8 @@ export const Portal: React.FC<PortalType> =
             }
         }, [ el, mount ])
 
+        // отменяем отрисовку при отсутствии искомого элемента
+        if (!mount) return null
         // собственно, пририсовываем React-элемент в div к искомому HTML
         return createPortal(children, el)
 

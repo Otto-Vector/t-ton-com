@@ -29,11 +29,10 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     return (
         <div className={ styles.yandexMapComponent }>
-            <YandexBigMap center={ center } zoom={ zoom }
-
-            >
+            <YandexBigMap center={ center } zoom={ zoom } >
                 { drivers.map(( { id, position, status, fio } ) =>
                     <Placemark geometry={ position }
+                               // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
                                options={
                                    {
                                        preset: 'islands#circleIcon',
