@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
-import {phoneSubmitType, ValidateType} from '../types/form-types'
+import {CompanyRequisitesType, phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation';
 
@@ -10,21 +10,7 @@ const initialState = {
     authCash: 100,
     isAvailableSMSrequest: false,
     isFetching: false,
-    geoPosition: [0,0] as number[],
-
-    tarifsLabel: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
-        create: 'Создание Заявки Заказчиком:',
-        acceptLongRoute: 'Принятие Местной Заявки Перевозчиком:',
-        acceptShortRoute: 'Принятие Дальней Заявки Перевозчиком:',
-        paySafeTax: 'Комиссия с оплат по Безопастным сделкам:',
-    },
-
-    tarifs: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
-        create: 100,
-        acceptShortRoute: 100,
-        acceptLongRoute: 100,
-        paySafeTax: 3,
-    },
+    geoPosition: [ 0, 0 ] as number[],
 
     label: {
         innNumber: 'ИНН Компании',
@@ -86,7 +72,7 @@ export const authStoreReducer = ( state = initialState, action: ActionsType ): A
         case 'auth-store-reducer/SET-GEO-POSITION': {
             return {
                 ...state,
-                geoPosition: [ action.latitude,action.longitude],
+                geoPosition: [ action.latitude, action.longitude ],
             }
         }
         default: {
@@ -139,9 +125,6 @@ export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
                 latitude: el.coords.latitude || 0,
                 longitude: el.coords.longitude || 0,
             }))
-
         geoPosition(reparserLonLat)
-
     }
-
 

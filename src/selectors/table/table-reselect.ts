@@ -5,7 +5,8 @@ import {getAllRequestStore} from '../forms/request-form-reselect'
 import {getAllConsigneesStore} from '../options/consignees-reselect'
 import {getAllShippersStore} from '../options/shippers-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats';
-import {getTarifsAuthStore} from '../auth-reselect';
+import {getTarifsRequisitesStore} from '../options/requisites-reselect';
+
 
 type TableStoreSelectors<T extends keyof Y, Y = TableStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
@@ -18,7 +19,7 @@ export const getContentTableStore = createSelector(
     getAllConsigneesStore,
     getAllShippersStore,
     geInitialValuesTableStore,
-    getTarifsAuthStore,
+    getTarifsRequisitesStore,
     ( requests, consignees, shippers, initial, { acceptShortRoute, acceptLongRoute } ): OneRequestTableType[] => {
         return requests.filter(( { visible } ) => visible).map((
             { requestNumber, shipmentDate, cargoType, shipper, consignee, distance, answers } ) =>
@@ -31,6 +32,6 @@ export const getContentTableStore = createSelector(
                     + ( consignees.filter(( { id } ) => id === consignee)[0]?.city ),
                 answers: answers?.length || 0,
                 // ставим цену в зависимости от расстояния
-                price: ( distance || 0 ) > 100 ? acceptLongRoute : acceptShortRoute,
+                price: ( distance || 0 ) > 100 ? +( acceptLongRoute || 0 ) : +( acceptShortRoute || 0 ),
             } )) || [ initial ]
     })

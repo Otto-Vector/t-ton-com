@@ -15,6 +15,13 @@ const initialState = {
     isFetching: false,
     unreadMessages: 0,
     content: [] as OneInfoItem[],
+
+    tarifsLabel: { //тарифы на оплату (отображаются в инфо-секции, используются везде)
+        create: 'Создание Заявки Заказчиком:',
+        acceptLongRoute: 'Принятие Местной Заявки Перевозчиком:',
+        acceptShortRoute: 'Принятие Дальней Заявки Перевозчиком:',
+        paySafeTax: 'Комиссия с оплат по Безопастным сделкам:',
+    },
 }
 
 export type InfoStoreReducerStateType = typeof initialState

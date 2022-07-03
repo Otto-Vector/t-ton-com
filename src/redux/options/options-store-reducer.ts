@@ -4,6 +4,7 @@ import {ShippersCardType} from '../../types/form-types';
 
 export type OptionsLabelType = { id: number, title?: string }
 
+
 const initialState = {
     shippers: {
         label: 'Грузоотправители',
@@ -13,18 +14,7 @@ const initialState = {
     employees: {
         label: 'Сотрудники',
         placeholder: 'Поиск по Ф.И.О.',
-        content: [
-            { id: 4, title: 'Петров Анвар Васильевич' },
-            { id: 21, title: 'Беспалов Артем Юрьевич' },
-            { id: 22, title: 'Владимиров Аким Платонович' },
-            { id: 23, title: 'Кондратьев Виссарион Даниилович' },
-            { id: 24, title: 'Белоусов Людвиг Эльдарович' },
-            { id: 25, title: 'Горшков Вольдемар Миронович' },
-            { id: 62, title: 'Зиновьев Вилен Лукьевич' },
-            { id: 72, title: 'Симонов Тарас Станиславович' },
-            { id: 82, title: 'Поляков Руслан Рудольфович' },
-            { id: 92, title: 'Ершов Флор Леонидович' },
-        ],
+        content: [] as OptionsLabelType[],
     },
     transport: {
         label: 'Транспорт',
@@ -34,16 +24,7 @@ const initialState = {
     trailer: {
         label: 'Прицеп',
         placeholder: 'Поиск по гос.номеру',
-        content: [
-            { id: 15, title: 'Прицеп такой-то' },
-            { id: 1, title: 'Прицеп такой-то 2' },
-            { id: 2, title: 'Прицеп такой-то 3' },
-            { id: 3, title: 'Прицеп такой-то 44' },
-            { id: 105, title: '777 05' },
-            { id: 10, title: '3358 5522' },
-            { id: 20, title: 'Прицеп такой-то 305' },
-            { id: 33, title: 'Прицеп такой-то 404' },
-        ],
+        content: [] as OptionsLabelType[],
     },
     consignees: {
         label: 'Грузополучатели',

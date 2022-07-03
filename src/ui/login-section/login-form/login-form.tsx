@@ -17,37 +17,37 @@ import {Preloader} from '../../common/preloader/preloader'
 import {fakeAuthFetching} from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
 import {phoneSubmitType} from '../../../types/form-types'
+import {getOrganizationByInn} from '../../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {
     // onSubmit: (login: phoneSubmitType) => void
 }
 
-export const LoginForm: React.FC<OwnProps> = ( ) => {
+export const LoginForm: React.FC<OwnProps> = () => {
 
-    const [ isRegisterMode, setIsRegisterMode ] = useState( false )
-    const isAvailableSMS = useSelector( getIsAvailableSMSrequest )
+    const [ isRegisterMode, setIsRegisterMode ] = useState(false)
+    const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
 
-    const label = useSelector( getLabelAuthStore )
-    const initialValues = useSelector( getInitialValuesAuthStore )
-    const maskOn = useSelector( getMaskOnAuthStore )
-    const validators = useSelector( getValidatorsAuthStore )
+    const label = useSelector(getLabelAuthStore)
+    const initialValues = useSelector(getInitialValuesAuthStore)
+    const maskOn = useSelector(getMaskOnAuthStore)
+    const validators = useSelector(getValidatorsAuthStore)
 
-    const isFetching = useSelector( getIsFetchingAuth )
+    const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
 
 
     const onSubmit = ( val: phoneSubmitType ) => {
-        for (let value in val) {
-            console.log( value + ' = ' + parseAllNumbers( val[value as keyof phoneSubmitType] ) ) // убираем мусор после маски
-        }
+        dispatch<any>(getOrganizationByInn({ inn: +parseAllNumbers(val.innNumber) }))
     }
+
     const registerHandleClick = () => {
-        setIsRegisterMode( !isRegisterMode )
+        setIsRegisterMode(!isRegisterMode)
     }
 
     const fakeFetch = () => {
-        dispatch<any>( fakeAuthFetching() )
+        dispatch<any>(fakeAuthFetching())
     }
 
 
@@ -64,13 +64,13 @@ export const LoginForm: React.FC<OwnProps> = ( ) => {
                                 <form onSubmit={ handleSubmit }>
                                     <div className={ styles.loginForm__inputsPanel }>
                                         { isRegisterMode &&
-                                          < Field name={ 'innNumber' }
-                                                  placeholder={ label.innNumber }
-                                                  component={ FormInputType }
-                                                  resetFieldBy={ form }
-                                                  maskFormat={ maskOn.innNumber }
-                                                  validate={ validators.innNumber }
-                                          />
+                                            < Field name={ 'innNumber' }
+                                                    placeholder={ label.innNumber }
+                                                    component={ FormInputType }
+                                                    resetFieldBy={ form }
+                                                    maskFormat={ maskOn.innNumber }
+                                                    validate={ validators.innNumber }
+                                            />
                                         }
                                         <Field name={ 'phoneNumber' }
                                                placeholder={ label.phoneNumber }

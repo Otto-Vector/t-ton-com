@@ -9,6 +9,8 @@ import {
     mustBeMail,
     required,
 } from '../../utils/validators';
+import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata';
+
 
 const initialState = {
     isFetching: false,
@@ -54,45 +56,6 @@ const initialState = {
         korrAccount: '#### #### #### #### ####', // 20 цифр
     } as CompanyRequisitesType,
 
-    initialValues: {
-        innNumber: undefined,
-        organizationName: undefined,
-        taxMode: undefined,
-        kpp: undefined,
-        ogrn: undefined,
-        okpo: undefined,
-        legalAddress: undefined,
-        description: undefined,
-
-        postAddress: undefined,
-        phoneDirector: undefined,
-        phoneAccountant: undefined,
-        email: undefined,
-        bikBank: undefined,
-        nameBank: undefined,
-        checkingAccount: undefined,
-        korrAccount: undefined,
-    } as CompanyRequisitesType,
-
-    storedValues: {
-        innNumber: '4265631947',
-        organizationName: "Тестовое наименование",
-        taxMode: "УСН",
-        kpp: '839646136',
-        ogrn: '5179220547402',
-        okpo: '7512278594',
-        legalAddress: 'Россия, г. Нижний Тагил, Пушкина ул., д. 23 кв.173',
-        description: undefined,
-
-        postAddress: 'Россия, г. Магнитогорск, Колхозная ул., д. 19 кв.40',
-        phoneDirector: '+7 (965) 461-43-67',
-        phoneAccountant: '+7 (993) 383-63-63',
-        email: 'valentina19@outlook.com',
-        bikBank: '648417961',
-        nameBank: 'СБЕРБАНК СБЕР СБЕРБАНК',
-        checkingAccount: '40560033000000009122',
-        korrAccount: '50934220600000004673',
-    } as CompanyRequisitesType,
     validators: {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),
@@ -112,13 +75,67 @@ const initialState = {
         checkingAccount: composeValidators(required, mustBe00Numbers(20)),
         korrAccount: composeValidators(required, mustBe00Numbers(20)),
     } as CompanyRequisitesType<ValidateType>,
+
+    initialValues: {
+        innNumber: undefined,
+        organizationName: undefined,
+        taxMode: undefined,
+        kpp: undefined,
+        ogrn: undefined,
+        okpo: undefined,
+        legalAddress: undefined,
+        description: undefined,
+
+        postAddress: undefined,
+        phoneDirector: undefined,
+        phoneAccountant: undefined,
+        email: undefined,
+        bikBank: undefined,
+        nameBank: undefined,
+        checkingAccount: undefined,
+        korrAccount: undefined,
+        tarifs: {
+            create: undefined,
+            acceptShortRoute: undefined,
+            acceptLongRoute: undefined,
+            paySafeTax: undefined,
+        },
+
+    } as CompanyRequisitesType,
+
+    storedValues: {
+        innNumber: '4265631947',
+        organizationName: 'Тестовое наименование',
+        taxMode: 'УСН',
+        kpp: '839646136',
+        ogrn: '5179220547402',
+        okpo: '7512278594',
+        legalAddress: 'Россия, г. Нижний Тагил, Пушкина ул., д. 23 кв.173',
+        description: undefined,
+
+        postAddress: 'Россия, г. Магнитогорск, Колхозная ул., д. 19 кв.40',
+        phoneDirector: '+7 (965) 461-43-67',
+        phoneAccountant: '+7 (993) 383-63-63',
+        email: 'valentina19@outlook.com',
+        bikBank: '648417961',
+        nameBank: 'СБЕРБАНК СБЕР СБЕРБАНК',
+        checkingAccount: '40560033000000009122',
+        korrAccount: '50934220600000004673',
+        tarifs: {
+            create: '100',
+            acceptShortRoute: '100',
+            acceptLongRoute: '100',
+            paySafeTax: '3',
+        },
+    } as CompanyRequisitesType,
+
 }
 
 export type RequisitesStoreReducerStateType = typeof initialState
 
 type ActionsType = GetActionsTypes<typeof requisitesStoreActions>
 
-export const requisitesStoreReducer = (state = initialState, action: ActionsType): RequisitesStoreReducerStateType => {
+export const requisitesStoreReducer = ( state = initialState, action: ActionsType ): RequisitesStoreReducerStateType => {
 
     switch (action.type) {
 
@@ -128,13 +145,18 @@ export const requisitesStoreReducer = (state = initialState, action: ActionsType
                 isFetching: action.isFetching,
             }
         }
-        case 'requisites-store-reducer/SET-VALUES' : {
+        case 'requisites-store-reducer/SET-INITIAL-VALUES' : {
             return {
                 ...state,
                 initialValues: action.initialValues,
             }
         }
-
+        case 'requisites-store-reducer/SET-STORED-VALUES' : {
+            return {
+                ...state,
+                storedValues: action.storedValues,
+            }
+        }
         default: {
             return state
         }
@@ -145,14 +167,18 @@ export const requisitesStoreReducer = (state = initialState, action: ActionsType
 /* ЭКШОНЫ */
 export const requisitesStoreActions = {
 
-    setIsFetching: (isFetching: boolean) => ({
+    setIsFetching: ( isFetching: boolean ) => ( {
         type: 'requisites-store-reducer/CHANGE-IS-FETCHING',
         isFetching,
-    } as const),
-    setValues: (initialValues: CompanyRequisitesType) => ({
-        type: 'requisites-store-reducer/SET-VALUES',
+    } as const ),
+    setInitialValues: ( initialValues: CompanyRequisitesType ) => ( {
+        type: 'requisites-store-reducer/SET-INITIAL-VALUES',
         initialValues,
-    } as const),
+    } as const ),
+    setStoredValues: ( storedValues: CompanyRequisitesType ) => ( {
+        type: 'requisites-store-reducer/SET-STORED-VALUES',
+        storedValues,
+    } as const ),
 }
 
 /* САНКИ */
@@ -160,16 +186,27 @@ export const requisitesStoreActions = {
 export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-// export const getIcons = ( { domain }: GetIconsType ): RequisitesStoreReducerThunkActionType =>
-//     async ( dispatch ) => {
-//         // dispatch( requestFormActions.setIcons( null ) )
-//         try {
-//             const response = await getIconsFromApi( { domain } )
-//             dispatch( baseStoreActions.setIcons( domain, response ) )
-//         } catch (e) {
-//             alert( e )
-//             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
-//         }
-//
-//     }
+export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ): RequisitesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
 
+        try {
+            const response = await getOrganizationByInnDaDataAPI({ inn })
+            const { data } = response[0]
+            dispatch(requisitesStoreActions.setInitialValues({
+                ...getState().requisitesStoreReducer.initialValues,
+                innNumber: data.inn,
+                organizationName: response[0].value,
+                taxMode: data.finance?.tax_system,
+                kpp: data.kpp,
+                ogrn: data.ogrn,
+                okpo: data.okpo,
+                legalAddress: data.address.value,
+                postAddress: data.address.value,
+                phoneDirector: data.phones[0]?.value,
+                email: data.emails[0]?.value,
+            }))
+
+        } catch (e) {
+            alert(e)
+        }
+    }

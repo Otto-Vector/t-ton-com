@@ -4,8 +4,10 @@ import barcode from '../../../media/barcode.png'
 import ucassa from '../../../media/ukassa.jpg'
 import {useSelector} from 'react-redux'
 
-import {getAuthCashAuthStore, getTarifsAuthStore, getTarifsLabelAuthStore} from '../../../selectors/auth-reselect';
+import {getAuthCashAuthStore} from '../../../selectors/auth-reselect';
 import {TariffItem} from './tariff-item/tariff-item';
+import {getTarifsLabelInfoStore} from '../../../selectors/info-reselect';
+import {getTarifsRequisitesStore} from '../../../selectors/options/requisites-reselect';
 
 
 type OwnProps = {}
@@ -15,11 +17,11 @@ export const InfoPayContainer: React.FC<OwnProps> = () => {
     const balance = useSelector(getAuthCashAuthStore)
 
     const tarifsHeader = 'Тарифы оказания услуг на сайте'
-    const tarifsPrice = useSelector(getTarifsAuthStore)
-    const tarifsLabel = useSelector(getTarifsLabelAuthStore)
+    const tarifsPrice = useSelector(getTarifsRequisitesStore)
+    const tarifsLabel = useSelector(getTarifsLabelInfoStore)
 
 
-    const balanceHeader = `Ваш баланс: \n ${balance} руб.`
+    const balanceHeader = `Ваш баланс: \n ${ balance } руб.`
     const subTitle = [ 'Укажите номер Пользователя при пополнении Баланса.', 'Рекомендуется пополнять счёт каждого из Пользователей заранее!' ]
     const textInfo = 'Для пополнения Баланса счета Пользователя через сайт Т-Л-К.РФ, отсканируйте QR-код в мобильном приложении своей банковской карты. К оплате принимаются любые виды банковских карт личные и корпоративные. При невозможности оплаты через QR-код, воспользуйтесь оплатой через ЮКасса.'
 
@@ -29,7 +31,7 @@ export const InfoPayContainer: React.FC<OwnProps> = () => {
 
             <div className={ styles.infoPayContainer__balanceInfo }>
 
-                <h3 className={ styles.infoPayContainer__header+' '+ styles.balanceInfo__header}>
+                <h3 className={ styles.infoPayContainer__header + ' ' + styles.balanceInfo__header }>
                     { balanceHeader }
                 </h3>
                 <div className={ styles.balanceInfo__subtitle }>

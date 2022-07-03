@@ -6,9 +6,9 @@ type InfoStoreSelectors<T extends keyof Y, Y = InfoStoreReducerStateType> = (sta
 
 export const getIsFetchingInfoStore: InfoStoreSelectors<'isFetching'> = (state) => state.infoStoreReducer.isFetching
 export const getContentInfoStore: InfoStoreSelectors<'content'> = (state) => state.infoStoreReducer.content
+export const getTarifsLabelInfoStore: InfoStoreSelectors<'tarifsLabel'> = (state) => state.infoStoreReducer.tarifsLabel
 
-// export const getUnreadMessagesCountInfoStore: InfoStoreSelectors<'unreadMessages'> = (state) => state.infoStoreReducer.unreadMessages
-
+// подсчитывает количество непрочитанных сообщений во вкладке 'инфо'
 export const getUnreadMessagesCountInfoStore = createSelector( getContentInfoStore,
     ( content  ): number => {
         return content.reduce(
