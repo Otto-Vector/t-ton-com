@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {CompanyRequisitesType, ValidateType} from '../../types/form-types';
+import {CompanyRequisitesType, phoneSubmitType, ValidateType} from '../../types/form-types';
 import {
     composeValidators,
     maxLength,
@@ -15,6 +15,7 @@ import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../
 const initialState = {
     isFetching: false,
     storedMode: false, // подгружать данные или вводить новые м.б удалю
+    innError: null as null | string,
 
     label: {
         innNumber: 'ИНН Организации',
@@ -157,6 +158,12 @@ export const requisitesStoreReducer = ( state = initialState, action: ActionsTyp
                 storedValues: action.storedValues,
             }
         }
+        case 'requisites-store-reducer/SET-INN-ERROR': {
+            return {
+                ...state,
+                innError: action.innError,
+            }
+        }
         default: {
             return state
         }
@@ -179,6 +186,10 @@ export const requisitesStoreActions = {
         type: 'requisites-store-reducer/SET-STORED-VALUES',
         storedValues,
     } as const ),
+    setInnError: ( innError: string | null ) => ( {
+        type: 'requisites-store-reducer/SET-INN-ERROR',
+        innError,
+    } as const ),
 }
 
 /* САНКИ */
@@ -186,11 +197,13 @@ export const requisitesStoreActions = {
 export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ): RequisitesStoreReducerThunkActionType =>
+export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
+    RequisitesStoreReducerThunkActionType<{ innNumber: string } | null> =>
     async ( dispatch, getState ) => {
 
-        try {
-            const response = await getOrganizationByInnDaDataAPI({ inn })
+        const response = await getOrganizationByInnDaDataAPI({ inn })
+
+        if (response.length > 0) {
             const { data } = response[0]
             dispatch(requisitesStoreActions.setInitialValues({
                 ...getState().requisitesStoreReducer.initialValues,
@@ -202,11 +215,13 @@ export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
                 okpo: data.okpo,
                 legalAddress: data.address.value,
                 postAddress: data.address.value,
-                phoneDirector: data.phones[0]?.value,
-                email: data.emails[0]?.value,
+                phoneDirector: data.phones && data.phones[0]?.value,
+                email: data.emails && data.emails[0]?.value
             }))
 
-        } catch (e) {
-            alert(e)
+            return null
+
+        } else {
+            return { innNumber: 'Неверный ИНН!' }
         }
     }

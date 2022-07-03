@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import styles from './login-form.module.scss'
 import {Field, Form} from 'react-final-form'
+import {FORM_ERROR} from 'final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 
@@ -18,6 +19,7 @@ import {fakeAuthFetching} from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
 import {phoneSubmitType} from '../../../types/form-types'
 import {getOrganizationByInn} from '../../../redux/options/requisites-store-reducer';
+import {getInnErrorRequisitesStore} from '../../../selectors/options/requisites-reselect';
 
 
 type OwnProps = {
@@ -33,13 +35,20 @@ export const LoginForm: React.FC<OwnProps> = () => {
     const initialValues = useSelector(getInitialValuesAuthStore)
     const maskOn = useSelector(getMaskOnAuthStore)
     const validators = useSelector(getValidatorsAuthStore)
+    const innError = useSelector(getInnErrorRequisitesStore)
 
     const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
 
 
-    const onSubmit = ( val: phoneSubmitType ) => {
-        dispatch<any>(getOrganizationByInn({ inn: +parseAllNumbers(val.innNumber) }))
+    const onSubmit = async ( val: phoneSubmitType ) => {
+        const error = await dispatch<any>(getOrganizationByInn({ inn: +parseAllNumbers(val.innNumber) }))
+
+        if (!error) {
+            return { [FORM_ERROR]: null }
+        }
+
+        return error
     }
 
     const registerHandleClick = () => {
@@ -59,17 +68,26 @@ export const LoginForm: React.FC<OwnProps> = () => {
                     <Form
                         onSubmit={ onSubmit }
                         initialValues={ initialValues }
+
                         render={
-                            ( { submitError, handleSubmit, pristine, form, submitting } ) => (
+                            ( {
+                                  errors,
+                                  submitError,
+                                  handleSubmit,
+                                  hasValidationErrors,
+                                  pristine,
+                                  form,
+                                  submitting,
+                              } ) => (
                                 <form onSubmit={ handleSubmit }>
                                     <div className={ styles.loginForm__inputsPanel }>
                                         { isRegisterMode &&
-                                            < Field name={ 'innNumber' }
-                                                    placeholder={ label.innNumber }
-                                                    component={ FormInputType }
-                                                    resetFieldBy={ form }
-                                                    maskFormat={ maskOn.innNumber }
-                                                    validate={ validators.innNumber }
+                                            <Field name={ 'innNumber' }
+                                                   placeholder={ label.innNumber }
+                                                   component={ FormInputType }
+                                                   resetFieldBy={ form }
+                                                   maskFormat={ maskOn.innNumber }
+                                                   validate={ validators.innNumber }
                                             />
                                         }
                                         <Field name={ 'phoneNumber' }
@@ -100,13 +118,13 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                     </div>
                                     <div className={ styles.loginForm__buttonsPanel }>
                                         <Button type={ 'submit' }
-                                                disabled={ submitting }
+                                                disabled={ submitting || hasValidationErrors }
                                                 colorMode={ 'green' }
                                                 title={ 'Далее' }
                                                 rounded
                                         />
                                     </div>
-                                    {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
+                                    { submitError && <span className={ styles.onError }>{ submitError }</span> }
                                 </form>
                             )
                         }/>
