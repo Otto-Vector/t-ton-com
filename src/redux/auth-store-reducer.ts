@@ -3,11 +3,13 @@ import {AppStateType, GetActionsTypes} from './redux-store'
 import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation';
-import {authAPI} from '../api/auth-request';
+import {authAPI, AuthValidateRequestType} from '../api/auth-request';
+
 
 const initialState = {
-    isAuth: true,
+    isAuth: false,
     authID: 'sfadsfsadfa',
+    authPhone: '',
     authCash: 100,
     isAvailablePhoneEdit: true,
     isAvailableSMSRequest: false,
@@ -30,13 +32,13 @@ const initialState = {
     maskOn: {
         innNumber: '########## ##',
         phoneNumber: '+7 (###) ###-##-##',
-        sms: '#####',
+        sms: '####',
     } as phoneSubmitType,
 
     validators: {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         phoneNumber: composeValidators(required, mustBe00Numbers(11)),
-        sms: composeValidators(required, mustBe00Numbers(5)),
+        sms: composeValidators(required, mustBe00Numbers(4)),
     } as phoneSubmitType<ValidateType>,
 }
 
@@ -78,6 +80,12 @@ export const authStoreReducer = ( state = initialState, action: ActionsType ): A
                 geoPosition: [ action.latitude, action.longitude ],
             }
         }
+        case 'auth-store-reducer/SET-AUTH-PHONE': {
+            return {
+                ...state,
+                authPhone: action.authPhone,
+            }
+        }
         default: {
             return state
         }
@@ -103,6 +111,10 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-VALUES',
         initialValues,
     } as const ),
+    setAuthPhone: ( authPhone: string ) => ( {
+        type: 'auth-store-reducer/SET-AUTH-PHONE',
+        authPhone,
+    } as const ),
     setGeoPosition: ( { latitude, longitude }: { latitude: number, longitude: number } ) => ( {
         type: 'auth-store-reducer/SET-GEO-POSITION',
         latitude, longitude,
@@ -121,6 +133,7 @@ export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
         }, 1000)
     }
 
+// прописываем актуальную геопозицию в стэйт
 export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
     async ( dispatch ) => {
         const reparserLonLat: PositionCallback = ( el ) =>
@@ -131,17 +144,41 @@ export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
         geoPosition(reparserLonLat)
     }
 
-export const sendCodeToPhone = ( phone: string ): AuthStoreReducerThunkActionType<{}|null> =>
+// отправляем запрос на код авторизации в телефон
+export const sendCodeToPhone = ( phone: string ): AuthStoreReducerThunkActionType<{} | null> =>
     async ( dispatch ) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
-            const response = await authAPI.sendCodeToPhone({ phone })
-            console.log(response)
+            await authAPI.sendCodeToPhone({ phone })
+
+            dispatch(authStoreActions.setIsAvailableSMSRequest(false))
             dispatch(authStoreActions.setIsFetching(false))
+
             return null
         } catch (error) {
-            console.log(error)
             dispatch(authStoreActions.setIsFetching(false))
-            return {phoneNumber: error}
+            dispatch(authStoreActions.setIsAvailableSMSRequest(true))
+            // @ts-ignore
+            return { phoneNumber: error.response.data.message }
+        }
+    }
+
+export const loginAuthorization = ( {
+                                        phone,
+                                        phoneCode,
+                                    }: AuthValidateRequestType ): AuthStoreReducerThunkActionType<{} | null> =>
+    async ( dispatch ) => {
+        dispatch(authStoreActions.setIsFetching(true))
+        try {
+            const response = await authAPI.login({ phone, phoneCode })
+            dispatch(authStoreActions.setIsFetching(false))
+            dispatch(authStoreActions.setIsAuth(true))
+            dispatch(authStoreActions.setAuthPhone(phone))
+            return null
+        } catch (error) {
+            dispatch(authStoreActions.setIsFetching(false))
+
+            // @ts-ignore
+            return { sms: error.response.data.message }
         }
     }

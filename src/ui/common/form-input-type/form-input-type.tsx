@@ -72,7 +72,7 @@ export const FormInputType: React.FC<OwnProps> = (
                 :
                 <InInput { ...input }
                          type={ inputType }
-                         min={inputType==='date' ? min : undefined}
+                         min={ inputType === 'date' ? min : undefined }
                          className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
                          placeholder={ placeholder }
                          disabled={ disabled }/>
@@ -84,7 +84,11 @@ export const FormInputType: React.FC<OwnProps> = (
             {/*сообщение об ошибке появляется в этом спане*/ }
             { isError && ( <span className={
                 styles.errorSpan + ' ' + ( errorBottom ? styles.errorSpan_bottom : styles.errorSpan_top )
-            }>{ meta.error || meta.submitError }</span> ) }
+            }>{ meta.error ||
+                (
+                    meta.dirtySinceLastSubmit ||
+                    meta.submitError
+                ) }</span> ) }
         </div>
     )
 }
