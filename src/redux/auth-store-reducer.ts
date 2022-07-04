@@ -1,14 +1,17 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
-import {CompanyRequisitesType, phoneSubmitType, ValidateType} from '../types/form-types'
+import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation';
+import {authAPI} from '../api/auth-request';
 
 const initialState = {
     isAuth: true,
     authID: 'sfadsfsadfa',
     authCash: 100,
-    isAvailableSMSrequest: false,
+    isAvailablePhoneEdit: true,
+    isAvailableSMSRequest: false,
+
     isFetching: false,
     geoPosition: [ 0, 0 ] as number[],
 
@@ -54,7 +57,7 @@ export const authStoreReducer = ( state = initialState, action: ActionsType ): A
         case 'auth-store-reducer/SET-IS-AVAILABLE-SMS-REQUEST': {
             return {
                 ...state,
-                isAvailableSMSrequest: action.isAvailableSMSrequest,
+                isAvailableSMSRequest: action.isAvailableSMSRequest,
             }
         }
         case 'auth-store-reducer/SET-IS-FETCHING': {
@@ -88,9 +91,9 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-IS-AUTH',
         isAuth,
     } as const ),
-    setIsAvailableSMSRequest: ( isAvailableSMSrequest: boolean ) => ( {
+    setIsAvailableSMSRequest: ( isAvailableSMSRequest: boolean ) => ( {
         type: 'auth-store-reducer/SET-IS-AVAILABLE-SMS-REQUEST',
-        isAvailableSMSrequest: isAvailableSMSrequest,
+        isAvailableSMSRequest: isAvailableSMSRequest,
     } as const ),
     setIsFetching: ( isFetching: boolean ) => ( {
         type: 'auth-store-reducer/SET-IS-FETCHING',
@@ -128,3 +131,17 @@ export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
         geoPosition(reparserLonLat)
     }
 
+export const sendCodeToPhone = ( phone: string ): AuthStoreReducerThunkActionType<{}|null> =>
+    async ( dispatch ) => {
+        dispatch(authStoreActions.setIsFetching(true))
+        try {
+            const response = await authAPI.sendCodeToPhone({ phone })
+            console.log(response)
+            dispatch(authStoreActions.setIsFetching(false))
+            return null
+        } catch (error) {
+            console.log(error)
+            dispatch(authStoreActions.setIsFetching(false))
+            return {phoneNumber: error}
+        }
+    }

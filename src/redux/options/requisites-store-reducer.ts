@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {CompanyRequisitesType, phoneSubmitType, ValidateType} from '../../types/form-types';
+import {CompanyRequisitesType, ValidateType} from '../../types/form-types';
 import {
     composeValidators,
     maxLength,
@@ -215,7 +215,6 @@ export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
                 okpo: data.okpo,
                 legalAddress: data.address.value,
                 postAddress: data.address.value,
-                phoneDirector: data.phones && data.phones[0]?.value,
                 email: data.emails && data.emails[0]?.value
             }))
 

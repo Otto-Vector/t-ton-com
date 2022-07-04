@@ -84,7 +84,6 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
                         rounded colorMode={ 'lightBlue' }>
                     <MaterialIcon icon_name={ 'add' }/></Button>
             </div>
-            {/*<button className={styles.columnDataList__addItemButton}><MaterialIcon icon_name={'add'}/></button>*/ }
         </div>
     )
 }

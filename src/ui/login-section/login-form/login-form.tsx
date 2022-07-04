@@ -7,7 +7,7 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {
-    getInitialValuesAuthStore,
+    getInitialValuesAuthStore, getIsAvailablePhoneEdit,
     getIsAvailableSMSrequest,
     getIsFetchingAuth,
     getLabelAuthStore,
@@ -15,7 +15,7 @@ import {
     getValidatorsAuthStore,
 } from '../../../selectors/auth-reselect'
 import {Preloader} from '../../common/preloader/preloader'
-import {fakeAuthFetching} from '../../../redux/auth-store-reducer'
+import {fakeAuthFetching, sendCodeToPhone} from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
 import {phoneSubmitType} from '../../../types/form-types'
 import {getOrganizationByInn} from '../../../redux/options/requisites-store-reducer';
@@ -30,25 +30,31 @@ export const LoginForm: React.FC<OwnProps> = () => {
 
     const [ isRegisterMode, setIsRegisterMode ] = useState(false)
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
+    const isAvailablePhoneEdit = useSelector(getIsAvailablePhoneEdit)
 
     const label = useSelector(getLabelAuthStore)
     const initialValues = useSelector(getInitialValuesAuthStore)
     const maskOn = useSelector(getMaskOnAuthStore)
     const validators = useSelector(getValidatorsAuthStore)
-    const innError = useSelector(getInnErrorRequisitesStore)
 
     const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
 
 
     const onSubmit = async ( val: phoneSubmitType ) => {
-        const error = await dispatch<any>(getOrganizationByInn({ inn: +parseAllNumbers(val.innNumber) }))
-
-        if (!error) {
-            return { [FORM_ERROR]: null }
+        let innError,phoneError
+        if (isRegisterMode) {
+            innError = await dispatch<any>(getOrganizationByInn({ inn: +parseAllNumbers(val.innNumber) }))
+            if (innError) {
+                return innError
+            } else {
+                phoneError = await dispatch<any>(sendCodeToPhone(val.phoneNumber as string))
+                if (phoneError) {
+                    return phoneError
+                }
+            }
         }
-
-        return error
+        return { [FORM_ERROR]: null }
     }
 
     const registerHandleClick = () => {
@@ -97,24 +103,25 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                                allowEmptyFormatting
                                                maskFormat={ maskOn.phoneNumber }
                                                validate={ validators.phoneNumber }
+                                            // disabled={isRegisterMode ? isAvailablePhoneEdit: false}
                                         />
-                                        { !isAvailableSMS && <Field name={ 'sms' }
-                                                                    placeholder={ label.sms }
-                                                                    component={ FormInputType }
-                                                                    maskFormat={ maskOn.sms }
-                                                                    disabled={ !isAvailableSMS }
-                                                                    validate={ isAvailableSMS ? validators.sms : undefined }
-                                                                    children={ <div className={
-                                                                        styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position }>
-                                                                        <Button type={ 'button' }
-                                                                                disabled={ !isAvailableSMS }
-                                                                                title={ 'Новый запрос на пароль из SMS' }
-                                                                                colorMode={ 'gray' }
-                                                                                onClick={ fakeFetch }
-                                                                                rounded
-                                                                        >Новый пароль</Button>
-                                                                    </div> }
-                                        /> }
+                                        <Field name={ 'sms' }
+                                               placeholder={ label.sms }
+                                               component={ FormInputType }
+                                               maskFormat={ maskOn.sms }
+                                               disabled={ isRegisterMode ? !isAvailableSMS : false }
+                                            // validate={ isAvailableSMS ? validators.sms : undefined }
+                                               children={ <div className={
+                                                   styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position }>
+                                                   <Button type={ 'button' }
+                                                       // disabled={ !isAvailableSMS }
+                                                           title={ 'Новый запрос на пароль из SMS' }
+                                                           colorMode={ 'gray' }
+                                                           onClick={ fakeFetch }
+                                                           rounded
+                                                   >Новый пароль</Button>
+                                               </div> }
+                                        />
                                     </div>
                                     <div className={ styles.loginForm__buttonsPanel }>
                                         <Button type={ 'submit' }
