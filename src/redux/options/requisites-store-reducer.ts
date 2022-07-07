@@ -10,6 +10,8 @@ import {
     required,
 } from '../../utils/validators';
 import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata';
+import {requisitesAPI} from '../../api/requisites-api';
+import {authStoreActions} from '../auth-store-reducer';
 
 
 const initialState = {
@@ -196,7 +198,7 @@ export const requisitesStoreActions = {
 
 export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-
+// запрос параметров организации из DaData
 export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
     RequisitesStoreReducerThunkActionType<{ innNumber: string } | null> =>
     async ( dispatch, getState ) => {
@@ -215,12 +217,25 @@ export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
                 okpo: data.okpo,
                 legalAddress: data.address.value,
                 postAddress: data.address.value,
-                email: data.emails && data.emails[0]?.value
+                email: data.emails && data.emails[0]?.value,
             }))
 
             return null
 
         } else {
             return { innNumber: 'Неверный ИНН!' }
+        }
+    }
+
+// запрос данных активного пользователя
+export const getPersonalReqisites = ():RequisitesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await requisitesAPI.getPersonalData()
+            dispatch<any>(authStoreActions.setIsAuth(true))
+            console.log(response)
+        } catch (error) {
+
+            console.log(error)
         }
     }

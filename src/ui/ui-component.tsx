@@ -20,40 +20,27 @@ import {TrailerForm} from './options-section/transport-trailer-form/trailer-form
 import {SearchSection} from './search-section/search-section';
 import {RequestSection} from './request-section/request-section';
 import {AddDriversForm} from './add-drivers-form/add-drivers-form';
-import {getAllConsigneesAPI} from '../redux/options/consignees-store-reducer'
-import {getAllRequestsAPI, getCargoCompositionSelector} from '../redux/forms/request-store-reducer';
-import {getAllShippersAPI} from '../redux/options/shippers-store-reducer';
-import {getInfoMessages} from '../redux/info-store-reducer';
 import {InfoSection} from './info-section/info-section';
-import {getAllTransportAPI} from '../redux/options/transport-store-reducer';
-import {getAllTrailerAPI} from '../redux/options/trailer-store-reducer';
-import {getAllEmployeesAPI} from '../redux/options/employees-store-reducer';
-import {geoPositionTake} from '../redux/auth-store-reducer';
 import {MapSection} from './map-section/map-section';
 import {LightBoxComponent} from './common/lightbox-component/lightbox-component'
 import {AddDriversView} from './add-drivers-form/add-drivers-view';
+import {AppStateType} from '../redux/redux-store';
+import {initializedAll} from '../redux/app-store-reducer';
+import {Preloader} from './common/preloader/preloader';
 
 type OwnProps = {}
 
 export const UiComponent: React.FC<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
+    const initialazed = useSelector( ( state: AppStateType ) => state.appStoreReducer.initialazed )
     const dispatch = useDispatch()
 
-    useEffect(()=>{ // до реализации авторизации, подгружаем все данные здесь (временно)
+    useEffect( () => {
+        if (!initialazed) dispatch<any>( initializedAll() )
+    }, [ initialazed ] )
 
-        dispatch<any>(getAllConsigneesAPI({innID:0}))
-        dispatch<any>(getAllRequestsAPI({innID:0}))
-        dispatch<any>(getAllShippersAPI({innID:0}))
-        dispatch<any>(getAllTransportAPI({innID:0}))
-        dispatch<any>(getAllTrailerAPI({innID:0}))
-        dispatch<any>(getAllEmployeesAPI({innID:0}))
-
-        dispatch<any>(getInfoMessages({authID:0}))
-        dispatch<any>(getCargoCompositionSelector())
-        dispatch<any>(geoPositionTake())
-
-    },[dispatch])
+    if (!initialazed) return <div className={ styles.ui__preloader }><Preloader/></div>
 
     return (
         <div className={ styles.ui }>

@@ -52,7 +52,7 @@ export const requisitesAPI = {
         return instanceBack.patch<PersonalResponseType>('personality/',{idUser: ''})
             .then(response => response.data)
     },
-    //изменение персональных данных
+    // изменение персональных данных
     changePersonalData() {
         return instanceBack.put<InfoResponseType>('personality/',{ } as PersonalResponseType)
             .then(response => response.data)

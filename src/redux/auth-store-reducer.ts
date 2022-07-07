@@ -163,6 +163,8 @@ export const sendCodeToPhone = ( phone: string ): AuthStoreReducerThunkActionTyp
         }
     }
 
+
+// логинимся по номеру телефона и паролю
 export const loginAuthorization = ( {
                                         phone,
                                         password,
@@ -183,3 +185,4 @@ export const loginAuthorization = ( {
             return { sms: error.response.data.message }
         }
     }
+// запрашиваем данные пользователя
