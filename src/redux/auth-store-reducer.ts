@@ -3,7 +3,7 @@ import {AppStateType, GetActionsTypes} from './redux-store'
 import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation';
-import {authAPI, AuthValidateRequestType} from '../api/auth-request';
+import {authAPI, AuthValidateRequestType} from '../api/auth-api';
 
 
 const initialState = {
@@ -165,15 +165,16 @@ export const sendCodeToPhone = ( phone: string ): AuthStoreReducerThunkActionTyp
 
 export const loginAuthorization = ( {
                                         phone,
-                                        phoneCode,
+                                        password,
                                     }: AuthValidateRequestType ): AuthStoreReducerThunkActionType<{} | null> =>
     async ( dispatch ) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
-            const response = await authAPI.login({ phone, phoneCode })
+            const response = await authAPI.login({ phone, password })
             dispatch(authStoreActions.setIsFetching(false))
             dispatch(authStoreActions.setIsAuth(true))
             dispatch(authStoreActions.setAuthPhone(phone))
+
             return null
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))

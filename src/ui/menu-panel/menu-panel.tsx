@@ -34,7 +34,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     // легче редактировать и меньше кода на перебор
     const menuItems = [
         {
-            route: routes.login, src: loginSVG, title: 'Авторизация',
+            route: routes.login, src: loginSVG, title: `${ !isAuth ? 'Авторизация' : 'Выход' }`,
             buttonText: `${ !isAuth ? 'Вход' : 'Выход' }`, active: true,
         },
         {

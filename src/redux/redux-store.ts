@@ -17,9 +17,11 @@ import {requestStoreReducer} from './forms/request-store-reducer';
 import {infoStoreReducer} from './info-store-reducer';
 import {lightBoxStoreReducer} from './lightbox-store-reducer'
 import {bigMapStoreReducer} from './maps/big-map-store-reducer';
+import {appStoreReducer} from './app-store-reducer';
 
 
 const reducersObject = {
+    appStoreReducer,
     baseStoreReducer,
     authStoreReducer,
     routesStoreReducer,

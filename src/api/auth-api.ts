@@ -1,13 +1,5 @@
 import axios from 'axios'
-
-const instance = axios.create({
-    baseURL: 'http://185.46.11.30:8000/api/',
-    // withCredentials: true,
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    },
-})
+import {InfoResponseType, instanceBack} from './back-api-data';
 
 
 export type AuthRequestType = {
@@ -16,33 +8,30 @@ export type AuthRequestType = {
 
 export type AuthValidateRequestType = {
     phone: string,
-    phoneCode: string,
+    password: string,
 }
 
-export type AuthResponseType = {
-    message?: string
-}
 
 export const authAPI = {
 
     // отправка запроса на код по номеру телефона
     sendCodeToPhone( { phone }: AuthRequestType ) {
-        return instance.put<AuthResponseType>('codesend/', { phone })
+        return instanceBack.put<InfoResponseType>('codesend/', { phone })
             .then(response => response.data)
     },
     // вход по паролю
-    login( { phone, phoneCode }: AuthValidateRequestType ) {
-        return instance.post<AuthResponseType>('login/', { phone, phoneCode })
+    login( { phone, password }: AuthValidateRequestType ) {
+        return instanceBack.post<InfoResponseType>('login/', { phone, password })
             .then(response => response.data)
     },
     // выход
     logout( { phone }: AuthRequestType ) {
-        return instance.post<AuthResponseType>('logout/', { phone })
+        return instanceBack.post<InfoResponseType>('logout/', { phone })
             .then(response => response.data)
     },
     // запрос на сброс пароля
     passwordRecovery( { phone }: AuthRequestType ) {
-        return instance.put<AuthResponseType>('passwordrecoverysend/', { phone })
+        return instanceBack.put<InfoResponseType>('passwordrecoverysend/', { phone })
             .then(response => response.data)
     },
 }

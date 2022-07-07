@@ -66,11 +66,12 @@ export const LoginForm: React.FC<OwnProps> = () => {
         }
         if (!isRegisterMode) {
             loginError = await dispatch<any>(
-                loginAuthorization({ phone: val.phoneNumber as string, phoneCode: val.sms as string }))
+                loginAuthorization({ phone: val.phoneNumber as string, password: val.sms as string }))
             if (loginError) {
                 return loginError
             }
         }
+        dispatch(authStoreActions.setIsAuth(true))
         return { [FORM_ERROR]: null }
     }
 
