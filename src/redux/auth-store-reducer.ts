@@ -198,7 +198,7 @@ export const logoutAuth = ( ): AuthStoreReducerThunkActionType =>
             const response = await authAPI.logout({ phone })
             dispatch(authStoreActions.setIsAuth(false))
 
-            if (response.status) console.log(response.status)
+            if (response.status) console.log(response)
 
         } catch (error) {
             alert(error)

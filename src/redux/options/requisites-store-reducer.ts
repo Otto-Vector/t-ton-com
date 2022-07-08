@@ -231,11 +231,12 @@ export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
 export const getPersonalReqisites = ():RequisitesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await requisitesAPI.getPersonalData()
+            const response = await requisitesAPI.getPersonalAuthData()
             // dispatch<any>(authStoreActions.setIsAuth(true))
             console.log(response)
         } catch (error) {
 
-            console.log(error)
+            // @ts-ignore
+            console.log(error.response.data.message)
         }
     }

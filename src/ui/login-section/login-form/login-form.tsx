@@ -7,7 +7,7 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {
-    getInitialValuesAuthStore, getIsAvailablePhoneEdit,
+    getInitialValuesAuthStore, getIsAuthAuthStore, getIsAvailablePhoneEdit,
     getIsAvailableSMSrequest,
     getIsFetchingAuth,
     getLabelAuthStore,
@@ -23,7 +23,7 @@ import {
 } from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
 import {phoneSubmitType} from '../../../types/form-types'
-import {getOrganizationByInn} from '../../../redux/options/requisites-store-reducer';
+import {getOrganizationByInn, getPersonalReqisites} from '../../../redux/options/requisites-store-reducer';
 import {getInnErrorRequisitesStore} from '../../../selectors/options/requisites-reselect';
 
 
@@ -36,6 +36,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
     const [ isRegisterMode, setIsRegisterMode ] = useState(false)
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
     const isAvailablePhoneEdit = useSelector(getIsAvailablePhoneEdit)
+    const isAuth = useSelector(getIsAuthAuthStore)
 
     const label = useSelector(getLabelAuthStore)
     const initialValues = useSelector(getInitialValuesAuthStore)
@@ -65,10 +66,16 @@ export const LoginForm: React.FC<OwnProps> = () => {
             }
         }
         if (!isRegisterMode) {
+            if (isAuth)
+            { dispatch<any>(getPersonalReqisites())}
+            else
+            {
+
             loginError = await dispatch<any>(
                 loginAuthorization({ phone: val.phoneNumber as string, password: val.sms as string }))
             if (loginError) {
                 return loginError
+            }
             }
         }
         dispatch(authStoreActions.setIsAuth(true))

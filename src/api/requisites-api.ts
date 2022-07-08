@@ -37,24 +37,29 @@ export type PersonalResponseType = {
 export const requisitesAPI = {
 
     // отправка запроса на данные пользователя
-    getPersonalData() {
+    getPersonalAuthData() {
+        return instanceBack.post<PersonalResponseType>('me/', {})
+            .then(response => response.data)
+    },
+    // отправка запроса на данные пользователя
+    getPersonalDataList() {
         return instanceBack.get<PersonalResponseType>('personality/')
             .then(response => response.data)
     },
     // добавление персональных данных
     setPersonalData() {
         return instanceBack.post<InfoResponseType>
-        ('personality/',{} as PersonalResponseType)
+        ('personality/', {} as PersonalResponseType)
             .then(response => response.data)
     },
     // запрос данных по Id пользователя
     getPersonalDataFromId() {
-        return instanceBack.patch<PersonalResponseType>('personality/',{idUser: ''})
+        return instanceBack.patch<PersonalResponseType>('personality/', { idUser: '' })
             .then(response => response.data)
     },
     // изменение персональных данных
     changePersonalData() {
-        return instanceBack.put<InfoResponseType>('personality/',{ } as PersonalResponseType)
+        return instanceBack.put<InfoResponseType>('personality/', {} as PersonalResponseType)
             .then(response => response.data)
     },
 }
