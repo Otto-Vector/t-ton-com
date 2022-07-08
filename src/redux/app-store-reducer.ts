@@ -53,13 +53,13 @@ export type InitializedThunkActionType = ThunkAction<void, AppStateType, unknown
 export const initializedAll = (): InitializedThunkActionType =>
     ( dispatch ) => {
         let getPersonal = dispatch(getPersonalReqisites())
-        let getGeoPosition = dispatch<any>(geoPositionTake())
-        let getConsignees = dispatch<any>(getAllConsigneesAPI({ innID: 0 }))
-        let getAllRequests = dispatch<any>(getAllRequestsAPI({ innID: 0 }))
-        let getAllShippers = dispatch<any>(getAllShippersAPI({ innID: 0 }))
-        let getAllTransport = dispatch<any>(getAllTransportAPI({ innID: 0 }))
-        let getAllTrailer = dispatch<any>(getAllTrailerAPI({ innID: 0 }))
-        let getAllEmployees = dispatch<any>(getAllEmployeesAPI({ innID: 0 }))
+        let getGeoPosition = dispatch(geoPositionTake())
+        let getConsignees = dispatch(getAllConsigneesAPI({ innID: 0 }))
+        let getAllRequests = dispatch(getAllRequestsAPI({ innID: 0 }))
+        let getAllShippers = dispatch(getAllShippersAPI({ innID: 0 }))
+        let getAllTransport = dispatch(getAllTransportAPI({ innID: 0 }))
+        let getAllTrailer = dispatch(getAllTrailerAPI({ innID: 0 }))
+        let getAllEmployees = dispatch(getAllEmployeesAPI({ innID: 0 }))
 
         let getAllInfoMessages = dispatch(getInfoMessages({ authID: 0 }))
         let getCargoComposition = dispatch(getCargoCompositionSelector())

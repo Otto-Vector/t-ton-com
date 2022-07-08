@@ -14,4 +14,5 @@ export type InfoResponseType = {
     message?: string
     success?: string
     failed?: string
+    status?: string
 }

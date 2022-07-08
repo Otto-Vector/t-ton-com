@@ -232,7 +232,7 @@ export const getPersonalReqisites = ():RequisitesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await requisitesAPI.getPersonalData()
-            dispatch<any>(authStoreActions.setIsAuth(true))
+            // dispatch<any>(authStoreActions.setIsAuth(true))
             console.log(response)
         } catch (error) {
 

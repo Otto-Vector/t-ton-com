@@ -174,8 +174,12 @@ export const loginAuthorization = ( {
         try {
             const response = await authAPI.login({ phone, password })
             dispatch(authStoreActions.setIsFetching(false))
-            dispatch(authStoreActions.setIsAuth(true))
-            dispatch(authStoreActions.setAuthPhone(phone))
+
+            if (response.success) {
+                console.log(response.success)
+                dispatch(authStoreActions.setIsAuth(true))
+                dispatch(authStoreActions.setAuthPhone(phone))
+            }
 
             return null
         } catch (error) {
@@ -185,4 +189,18 @@ export const loginAuthorization = ( {
             return { sms: error.response.data.message }
         }
     }
-// запрашиваем данные пользователя
+
+// разлогиниваемся
+export const logoutAuth = ( ): AuthStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        try {
+            const phone = getState().authStoreReducer.authPhone
+            const response = await authAPI.logout({ phone })
+            dispatch(authStoreActions.setIsAuth(false))
+
+            if (response.status) console.log(response.status)
+
+        } catch (error) {
+            alert(error)
+        }
+    }
