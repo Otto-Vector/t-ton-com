@@ -4,7 +4,7 @@ import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation';
 import {authAPI, AuthValidateRequestType} from '../api/auth-api';
-
+import Cookies from 'js-cookie'
 
 const initialState = {
     isAuth: false,
@@ -179,6 +179,7 @@ export const loginAuthorization = ( {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
                 dispatch(authStoreActions.setAuthPhone(phone))
+                Cookies.set('userid', '30672918-39e6-44f9-b8be-eedfa9c99fc7')
             }
 
             return null
@@ -191,7 +192,7 @@ export const loginAuthorization = ( {
     }
 
 // разлогиниваемся
-export const logoutAuth = ( ): AuthStoreReducerThunkActionType =>
+export const logoutAuth = (): AuthStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
             const phone = getState().authStoreReducer.authPhone

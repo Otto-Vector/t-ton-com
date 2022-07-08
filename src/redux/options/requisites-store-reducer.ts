@@ -237,6 +237,6 @@ export const getPersonalReqisites = ():RequisitesStoreReducerThunkActionType =>
         } catch (error) {
 
             // @ts-ignore
-            console.log(error.response.data.message)
+            if (error.response) console.log(error.response.data.message)
         }
     }

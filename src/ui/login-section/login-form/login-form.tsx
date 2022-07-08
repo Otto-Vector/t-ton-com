@@ -66,16 +66,32 @@ export const LoginForm: React.FC<OwnProps> = () => {
             }
         }
         if (!isRegisterMode) {
-            if (isAuth)
-            { dispatch<any>(getPersonalReqisites())}
-            else
-            {
+            if (isAuth) {
+                // dispatch<any>(getPersonalReqisites())
+                const myHeaders = new Headers();
+                myHeaders.append('Cookie', 'session=79386930727; sessionid=t7wxneki0syaiyq5wqd94jxefefrhuhu; userid=30672918-39e6-44f9-b8be-eedfa9c99fc7');
 
-            loginError = await dispatch<any>(
-                loginAuthorization({ phone: val.phoneNumber as string, password: val.sms as string }))
-            if (loginError) {
-                return loginError
-            }
+                const formdata = new FormData();
+
+                const requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: formdata,
+                    redirect: 'follow',
+                    mode: 'cors',
+                } as RequestInit;
+
+                fetch('http://185.46.11.30:8000/api/me/', requestOptions)
+                    .then(response => response.text())
+                    .then(result => console.log(result))
+                    .catch(error => console.log('error', error));
+            } else {
+
+                loginError = await dispatch<any>(
+                    loginAuthorization({ phone: val.phoneNumber as string, password: val.sms as string }))
+                if (loginError) {
+                    return loginError
+                }
             }
         }
         dispatch(authStoreActions.setIsAuth(true))
