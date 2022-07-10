@@ -179,7 +179,7 @@ export const loginAuthorization = ( {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
                 dispatch(authStoreActions.setAuthPhone(phone))
-                Cookies.set('userid', '30672918-39e6-44f9-b8be-eedfa9c99fc7')
+                // Cookies.set('userid', '30672918-39e6-44f9-b8be-eedfa9c99fc7')
             }
 
             return null

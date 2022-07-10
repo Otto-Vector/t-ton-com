@@ -38,7 +38,7 @@ export const requisitesAPI = {
 
     // отправка запроса на данные пользователя
     getPersonalAuthData() {
-        return instanceBack.post<PersonalResponseType>('me/', {})
+        return instanceBack.post<PersonalResponseType>('/api/me/', {})
             .then(response => response.data)
     },
     // отправка запроса на данные пользователя
