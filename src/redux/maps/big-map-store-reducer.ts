@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './../redux-store'
 
 import {geoPosition} from './../../api/geolocation';
-import {coordsToString, parseFamilyToFIO, stringToCoords} from '../../utils/parsers';
+import {parseFamilyToFIO, stringToCoords} from '../../utils/parsers';
 
 export type DriverOnMapType = {
     id: number,

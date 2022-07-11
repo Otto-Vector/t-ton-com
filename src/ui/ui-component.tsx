@@ -27,24 +27,26 @@ import {AddDriversView} from './add-drivers-form/add-drivers-view';
 import {AppStateType} from '../redux/redux-store';
 import {initializedAll} from '../redux/app-store-reducer';
 import {Preloader} from './common/preloader/preloader';
+import {WithAuthRedirect} from './common/redirect/with-auth-redirect/with-auth-redirect';
+import {ТoAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redirect';
 
 type OwnProps = {}
 
 export const UiComponent: React.FC<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
-    const initialazed = useSelector( ( state: AppStateType ) => state.appStoreReducer.initialazed )
+    const initialazed = useSelector(( state: AppStateType ) => state.appStoreReducer.initialazed)
     const dispatch = useDispatch()
 
-    useEffect( () => {
-        if (!initialazed) dispatch<any>( initializedAll() )
-    }, [ initialazed ] )
+    useEffect(() => {
+        if (!initialazed) dispatch<any>(initializedAll())
+    }, [ initialazed ])
 
     if (!initialazed) return <div className={ styles.ui__preloader }><Preloader/></div>
 
     return (
         <div className={ styles.ui }>
-            <LightBoxComponent />
+            <LightBoxComponent/>
             <Header/>
             <div className={ styles.ui__centerWrapper }>
                 <div className={ styles.ui__sideBarLeft }>
@@ -55,39 +57,52 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path="/" element={ <Navigate to={ routes.hello }/> }/>
 
                         <Route path={ routes.hello } element={ <HelloSection/> }/> {/*ОКНО ПРИВЕТСТВИЯ*/ }
-                        <Route path={ routes.login } element={ <LoginSection/> }/> {/*ОКНО АВТОРИЗАЦИИ*/ }
+                        <Route path={ routes.login } element={
+                            <WithAuthRedirect><LoginSection/></WithAuthRedirect> }/> {/*ОКНО АВТОРИЗАЦИИ*/ }
                         <Route path={ routes.requestInfo.create }
-                               element={ <RequestSection mode={ 'create' }/> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
-                        <Route path={ routes.requestInfo.history+':reqNumber' }
-                               element={ <RequestSection mode={ 'history' }/> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
+                               element={ <ТoAuthRedirect><RequestSection
+                                   mode={ 'create' }/></ТoAuthRedirect> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
+                        <Route path={ routes.requestInfo.history + ':reqNumber' }
+                               element={ <ТoAuthRedirect><RequestSection
+                                   mode={ 'history' }/></ТoAuthRedirect> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
                         <Route path={ routes.searchList }
-                               element={ <SearchSection mode={ 'search' }/> }/> {/*ПОИСК активных заявок*/ }
+                               element={ <ТoAuthRedirect><SearchSection
+                                   mode={ 'search' }/></ТoAuthRedirect> }/> {/*ПОИСК активных заявок*/ }
                         <Route path={ routes.requestInfo.driver + ':reqNumber' }
-                               element={ <RequestSection
-                                   mode={ 'status' }/> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
-                        <Route path={ routes.requestsList } element={ <SearchSection
-                            mode={ 'status' }/> }/> {/*таблица статусов по активным заявкам*/ }
+                               element={ <ТoAuthRedirect> <RequestSection
+                                   mode={ 'status' }/></ТoAuthRedirect> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
+                        <Route path={ routes.requestsList } element={ <ТoAuthRedirect><SearchSection
+                            mode={ 'status' }/></ТoAuthRedirect> }/> {/*таблица статусов по активным заявкам*/ }
                         <Route path={ routes.requestInfo.status + ':reqNumber' }
-                               element={ <div className={ styles.ui__fake }><h2>СТАТУС ЗАЯВКИ</h2>
-                               </div> }/> {/*статус заявки*/ }
+                               element={ <ТoAuthRedirect>
+                                   <div className={ styles.ui__fake }><h2>СТАТУС ЗАЯВКИ</h2></div>
+                               </ТoAuthRedirect> }/> {/*статус заявки*/ }
                         <Route path={ routes.historyList }
-                               element={ <SearchSection mode={ 'history' }/> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
+                               element={ <ТoAuthRedirect><SearchSection
+                                   mode={ 'history' }/></ТoAuthRedirect> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
 
-                        <Route path={ routes.map } element={ <MapSection /> }/>
+                        <Route path={ routes.map } element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.maps.answers + ':reqNumber' }
-                               element={ <div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2>
-                               </div> }/>
-                        <Route path={ routes.info } element={ <InfoSection/> }/>
-                        <Route path={ routes.addDriver+ ':reqNumber' }
-                               element={ <AddDriversForm /> }/>
+                               element={ <ТoAuthRedirect>
+                                   <div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2>
+                                   </div>
+                               </ТoAuthRedirect> }/>
+                        <Route path={ routes.info } element={ <ТoAuthRedirect><InfoSection/></ТoAuthRedirect> }/>
+                        <Route path={ routes.addDriver + ':reqNumber' }
+                               element={ <ТoAuthRedirect><AddDriversForm/></ТoAuthRedirect> }/>
 
-                        <Route path={ routes.optionsEdit.shippers + ':id' } element={ <ShippersForm/> }/>
-                        <Route path={ routes.optionsEdit.employees + ':id' } element={ <EmployeesForm/> }/>
-                        <Route path={ routes.optionsEdit.transport + ':id' } element={ <TransportForm/> }/>
-                        <Route path={ routes.optionsEdit.trailer + ':id' } element={ <TrailerForm/> }/>
-                        <Route path={ routes.optionsEdit.consignees + ':id' } element={ <ConsigneesForm/> }/>
+                        <Route path={ routes.optionsEdit.shippers + ':id' }
+                               element={ <ТoAuthRedirect><ShippersForm/></ТoAuthRedirect> }/>
+                        <Route path={ routes.optionsEdit.employees + ':id' }
+                               element={ <ТoAuthRedirect><EmployeesForm/></ТoAuthRedirect> }/>
+                        <Route path={ routes.optionsEdit.transport + ':id' }
+                               element={ <ТoAuthRedirect><TransportForm/></ТoAuthRedirect> }/>
+                        <Route path={ routes.optionsEdit.trailer + ':id' }
+                               element={ <ТoAuthRedirect><TrailerForm/></ТoAuthRedirect> }/>
+                        <Route path={ routes.optionsEdit.consignees + ':id' }
+                               element={ <ТoAuthRedirect><ConsigneesForm/></ТoAuthRedirect> }/>
 
-                        <Route path={ routes.options } element={ <OptionsSection/> }/>
+                        <Route path={ routes.options } element={ <ТoAuthRedirect><OptionsSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.requisites } element={ <RequisitesForm/> }/>
 
                         <Route path={ routes.test } element={ <AddDriversView/> }/>

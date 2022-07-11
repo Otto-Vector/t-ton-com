@@ -24,6 +24,8 @@ import {
 import {parseAllNumbers} from '../../../utils/parsers'
 import {phoneSubmitType} from '../../../types/form-types'
 import {getOrganizationByInn} from '../../../redux/options/requisites-store-reducer';
+import {Navigate, useNavigate} from 'react-router-dom';
+import {getRoutesStore} from '../../../selectors/routes-reselect';
 
 
 type OwnProps = {
@@ -32,10 +34,14 @@ type OwnProps = {
 
 export const LoginForm: React.FC<OwnProps> = () => {
 
+    const { options, requisites } = useSelector(getRoutesStore)
+    const navigate = useNavigate()
+
     const [ isRegisterMode, setIsRegisterMode ] = useState(false)
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
     const isAvailablePhoneEdit = useSelector(getIsAvailablePhoneEdit)
     const isAuth = useSelector(getIsAuthAuthStore)
+
 
     const label = useSelector(getLabelAuthStore)
     const initialValues = useSelector(getInitialValuesAuthStore)
@@ -57,7 +63,6 @@ export const LoginForm: React.FC<OwnProps> = () => {
                 if (phoneError) {
                     return phoneError
                 } else {
-
                 }
             }
             if (isAvailableSMS) {
@@ -66,24 +71,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
         }
         if (!isRegisterMode) {
             if (isAuth) {
-                // dispatch<any>(getPersonalReqisites())
-                const myHeaders = new Headers();
-                myHeaders.append('Cookie', 'session=79386930727; sessionid=t7wxneki0syaiyq5wqd94jxefefrhuhu; userid=30672918-39e6-44f9-b8be-eedfa9c99fc7');
-
-                const formdata = new FormData();
-
-                const requestOptions = {
-                    method: 'POST',
-                    headers: myHeaders,
-                    body: formdata,
-                    redirect: 'follow',
-                    mode: 'cors',
-                } as RequestInit;
-
-                fetch('http://185.46.11.30:8000/api/me/', requestOptions)
-                    .then(response => response.text())
-                    .then(result => console.log(result))
-                    .catch(error => console.log('error', error));
+               navigate(options)
             } else {
 
                 loginError = await dispatch<any>(

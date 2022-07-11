@@ -1,6 +1,5 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {ddMmYearFormat} from '../../utils/date-formats';
 
 
 export type OneRequestTableType = {

@@ -4,7 +4,7 @@ import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation';
 import {authAPI, AuthValidateRequestType} from '../api/auth-api';
-import Cookies from 'js-cookie'
+
 
 const initialState = {
     isAuth: false,

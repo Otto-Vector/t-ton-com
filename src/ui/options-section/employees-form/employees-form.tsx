@@ -23,7 +23,6 @@ import {
 } from '../../../selectors/options/employees-reselect'
 import {employeesStoreActions} from '../../../redux/options/employees-store-reducer';
 import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
-import {MaterialIcon} from '../../common/material-icon/material-icon';
 import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
 
 
