@@ -2,7 +2,7 @@ import axios from 'axios'
 
 
 export const instanceBack = axios.create({
-    // baseURL: 'https://server.t-ton.com',
+    baseURL: 'https://server.t-ton.com',
     withCredentials: true,
     headers: {
         'Accept': 'application/json',
