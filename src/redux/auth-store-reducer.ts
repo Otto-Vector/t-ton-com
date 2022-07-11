@@ -184,6 +184,9 @@ export const loginAuthorization = ( {
 
             return null
         } catch (error) {
+
+            dispatch(authStoreActions.setIsAuth(true))
+
             dispatch(authStoreActions.setIsFetching(false))
 
             // @ts-ignore

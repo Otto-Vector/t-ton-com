@@ -38,12 +38,12 @@ export const requisitesAPI = {
 
     // отправка запроса на данные пользователя
     getPersonalAuthData() {
-        return instanceBack.post<PersonalResponseType>('/api/me/', {})
+        return instanceBack.post<{ userid?: string, message?: string }>('/api/me/', {})
             .then(response => response.data)
     },
     // отправка запроса на данные пользователя
     getPersonalDataList() {
-        return instanceBack.get<PersonalResponseType>('personality/')
+        return instanceBack.get<PersonalResponseType>('/api/personality/')
             .then(response => response.data)
     },
     // добавление персональных данных
@@ -53,13 +53,13 @@ export const requisitesAPI = {
             .then(response => response.data)
     },
     // запрос данных по Id пользователя
-    getPersonalDataFromId() {
-        return instanceBack.patch<PersonalResponseType>('personality/', { idUser: '' })
+    getPersonalDataFromId( { idUser }: { idUser: string } ) {
+        return instanceBack.patch<PersonalResponseType>('/api/personality/', { idUser })
             .then(response => response.data)
     },
     // изменение персональных данных
     changePersonalData() {
-        return instanceBack.put<InfoResponseType>('personality/', {} as PersonalResponseType)
+        return instanceBack.put<InfoResponseType>('/api/personality/', {} as PersonalResponseType)
             .then(response => response.data)
     },
 }

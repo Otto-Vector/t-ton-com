@@ -6,7 +6,8 @@ import base64 from 'base-64'
 const { REACT_APP_AVTODISPETCHER_KEY } = process.env
 
 const instance = axios.create({
-    baseURL: 'https://api.avtodispetcher.ru/v1/',
+    // baseURL: 'https://api.avtodispetcher.ru/v1/',
+    // baseURL: 'https://api.avtodispetcher.ru/v1/',
     // withCredentials: true,
     headers: {
         'Accept': 'application/json',
@@ -41,6 +42,6 @@ export const getRouteFromAvtodispetcherApi = ( { from, to }: GetAvtodispetcherRo
         to: parseNoSpace(to),
     }, false, false)
 
-    return instance.get<AvtodispetcherResponseType>(`route?${ decodedQuery }`)
+    return instance.get<AvtodispetcherResponseType>(`/v1/route?${ decodedQuery }`)
         .then(response => response.data)
 }

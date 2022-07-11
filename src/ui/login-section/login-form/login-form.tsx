@@ -23,8 +23,7 @@ import {
 } from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
 import {phoneSubmitType} from '../../../types/form-types'
-import {getOrganizationByInn, getPersonalReqisites} from '../../../redux/options/requisites-store-reducer';
-import {getInnErrorRequisitesStore} from '../../../selectors/options/requisites-reselect';
+import {getOrganizationByInn} from '../../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {

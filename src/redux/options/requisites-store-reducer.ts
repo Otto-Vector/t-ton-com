@@ -10,7 +10,7 @@ import {
     required,
 } from '../../utils/validators';
 import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata';
-import {requisitesAPI} from '../../api/requisites-api';
+import {PersonalResponseType, requisitesAPI} from '../../api/requisites-api';
 import {authStoreActions} from '../auth-store-reducer';
 
 
@@ -228,12 +228,41 @@ export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
     }
 
 // запрос данных активного пользователя
-export const getPersonalReqisites = ():RequisitesStoreReducerThunkActionType =>
+export const getPersonalReqisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await requisitesAPI.getPersonalAuthData()
-            // dispatch<any>(authStoreActions.setIsAuth(true))
-            console.log(response)
+            let user: PersonalResponseType
+            if (response.userid) {
+                user = await requisitesAPI.getPersonalDataFromId({ idUser: response.userid })
+                console.log(user)
+                dispatch(requisitesStoreActions.setInitialValues({
+                    innNumber: user.nnNumber,
+                    organizationName: user.organizationName,
+                    taxMode: user.taxMode,
+                    kpp: user.kpp,
+                    ogrn: user.ogrn,
+                    okpo: user.okpo,
+                    legalAddress: user.legalAddress,
+                    description: user.description,
+
+                    postAddress: user.postAddress,
+                    phoneDirector: user.phoneDirector,
+                    phoneAccountant: user.phoneAccountant,
+                    email: user.email,
+                    bikBank: user.bikBank,
+                    nameBank: user.nameBank,
+                    checkingAccount: user.checkingAccount,
+                    korrAccount: user.korrAccount,
+                    tarifs: {
+                        create: user.tarifCreate,
+                        acceptShortRoute: user.tarifAcceptShortRoute,
+                        acceptLongRoute: user.tarifAcceptLongRoute,
+                        paySafeTax: user.tarifPaySafeTax,
+                    },
+                } as CompanyRequisitesType))
+            }
+            dispatch<any>(authStoreActions.setIsAuth(true))
         } catch (error) {
 
             // @ts-ignore

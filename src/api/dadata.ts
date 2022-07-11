@@ -6,7 +6,7 @@ import {DaDataResponseAPIType} from '../types/api-types';
 const { REACT_APP_DADATA_KEY } = process.env
 
 const instance = axios.create({
-    baseURL: 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/',
+    // baseURL: 'https://suggestions.dadata.ru/suggestions/',
     // withCredentials: true,
     headers: {
         'Accept': 'application/json',
@@ -23,7 +23,7 @@ export type GetOrganizationByInnDaDataType = {
 // запрос на сервер
 export const getOrganizationByInnDaDataAPI = ( { inn }: GetOrganizationByInnDaDataType ) => {
 
-    return instance.post<DaDataResponseAPIType>('party', {
+    return instance.post<DaDataResponseAPIType>('/suggestions/api/4_1/rs/findById/party', {
         query: inn,
         branch_type: 'MAIN', // только головная организация
     } )
