@@ -9,7 +9,6 @@
     "base-64": "^1.0.0",
     "date-format-parse": "^0.2.7",
     "inputmask-core": "^2.2.0",
-    "js-cookie": "^3.0.1",
     "match-sorter": "^6.3.1",
     "native-querystring": "^1.1.1",
     "querystring-es3": "^0.2.1",
@@ -29,7 +28,6 @@
     "uuid": "^7.0.3",
     "web-vitals": "^2.1.0"
   },
-
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

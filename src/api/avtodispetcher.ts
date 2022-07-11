@@ -3,11 +3,11 @@ import {qsNormalize} from '../utils/norm-query'
 import {parseNoSpace} from '../utils/parsers'
 import base64 from 'base-64'
 
-const { REACT_APP_AVTODISPETCHER_KEY } = process.env
+
+const { REACT_APP_AVTODISPETCHER_KEY, REACT_APP_DEPLOY_MODE } = process.env
 
 const instance = axios.create({
-    baseURL: 'https://api.avtodispetcher.ru/v1/',
-    // withCredentials: true,
+    baseURL: REACT_APP_DEPLOY_MODE === 'true' ? 'https://api.avtodispetcher.ru/v1/' : undefined,
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

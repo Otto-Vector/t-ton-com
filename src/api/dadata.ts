@@ -1,13 +1,11 @@
 import axios from 'axios'
-import {qsNormalize} from '../utils/norm-query'
 import {DaDataResponseAPIType} from '../types/api-types';
 
 
-const { REACT_APP_DADATA_KEY } = process.env
+const { REACT_APP_DADATA_KEY, REACT_APP_DEPLOY_MODE } = process.env
 
 const instance = axios.create({
-    baseURL: 'https://suggestions.dadata.ru/suggestions/',
-    // withCredentials: true,
+    baseURL: REACT_APP_DEPLOY_MODE === 'true' ? 'https://suggestions.dadata.ru/suggestions/' : undefined,
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

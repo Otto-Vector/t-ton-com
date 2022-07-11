@@ -1,8 +1,9 @@
 import axios from 'axios'
 
+const { REACT_APP_DEPLOY_MODE } = process.env
 
 export const instanceBack = axios.create({
-    baseURL: 'https://server.t-ton.com',
+    baseURL: REACT_APP_DEPLOY_MODE === 'true' ? 'https://server.t-ton.com' : undefined,
     withCredentials: true,
     headers: {
         'Accept': 'application/json',
