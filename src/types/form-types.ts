@@ -31,6 +31,9 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
     checkingAccount: T // Расчётный счёт
     korrAccount: T // Корреспондентский счёт
 
+    mechanicFIO: T // ФИО механика
+    dispatcherFIO: T // ФИО диспетчера
+
     cash: T // количество денег на счету
     requestActiveCount: T // количество активных заявок
     maxRequests: T // максимальное количество заявок (редактируется админом)
@@ -55,8 +58,6 @@ export type EmployeesCardType<T = DefaultFormType> = {
     drivingCategory: T // Водительские категории
     personnelNumber: T // Табельный номер
     garageNumber: T // Гаражный номер
-    mechanicFIO: T // ФИО механика
-    dispatcherFIO: T // ФИО диспетчера
     photoFace: T // Добавить фотографию сотрудника
     rating: T // количество успешно завершённых заказов (считатется автоматически) // как считать, пока хз на бэке или чз фронт...
     coordinates: T // координаты местоположения водителя

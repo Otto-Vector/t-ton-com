@@ -11,7 +11,6 @@ const initialState = {
     authID: 'sfadsfsadfa',
     authPhone: '',
     authCash: 100,
-    isAvailablePhoneEdit: true,
     isAvailableSMSRequest: false,
 
     isFetching: false,
@@ -179,13 +178,11 @@ export const loginAuthorization = ( {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
                 dispatch(authStoreActions.setAuthPhone(phone))
-
+                dispatch(authStoreActions.setIsFetching(false))
             }
-
             return null
         } catch (error) {
-            
-            dispatch(authStoreActions.setIsAuth(true))
+
             dispatch(authStoreActions.setIsFetching(false))
 
             // @ts-ignore

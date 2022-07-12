@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {CompanyRequisitesType, ValidateType} from '../../types/form-types';
+import {CompanyRequisitesType, ParserType, ValidateType} from '../../types/form-types';
 import {
     composeValidators,
     maxLength,
@@ -12,6 +12,14 @@ import {
 import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata';
 import {PersonalResponseType, requisitesAPI} from '../../api/requisites-api';
 import {authStoreActions} from '../auth-store-reducer';
+import {
+    composeParsers,
+    parseFIO,
+    parseNoFirstSpaces, parseNoSpace,
+    parseOnlyOneDash,
+    parseOnlyOneDot,
+    parseOnlyOneSpace,
+} from '../../utils/parsers';
 
 
 const initialState = {
@@ -27,7 +35,8 @@ const initialState = {
         ogrn: 'ОГРН',
         okpo: 'ОКПО',
         legalAddress: 'Юридический адрес',
-        description: 'Доп. информация',
+        mechanicFIO: 'ФИО механика',
+        dispatcherFIO: 'ФИО диспетчера',
 
         postAddress: 'Почтовый адрес',
         phoneDirector: 'Телефон директора',
@@ -47,8 +56,8 @@ const initialState = {
         ogrn: '#############', // 13 цифр
         okpo: '##########', // 8,10 цифр
         legalAddress: undefined, //  юридический адрес
-        description: undefined, // много букав
-
+        mechanicFIO: undefined, // просто текст
+        dispatcherFIO: undefined, // просто текст
         postAddress: undefined, // просто адрес
         phoneDirector: '+7 (###) ###-##-##', //
         phoneAccountant: '+7 (###) ###-##-##',
@@ -67,7 +76,8 @@ const initialState = {
         ogrn: composeValidators(required, mustBe00Numbers(13)),
         okpo: composeValidators(required, mustBe0_0Numbers(8)(10)),
         legalAddress: composeValidators(required),
-        description: undefined,
+        mechanicFIO: composeValidators(maxLength(50)),
+        dispatcherFIO: composeValidators(maxLength(50)),
 
         postAddress: composeValidators(required),
         phoneDirector: composeValidators(required, mustBe00Numbers(11)),
@@ -79,6 +89,34 @@ const initialState = {
         korrAccount: composeValidators(required, mustBe00Numbers(20)),
     } as CompanyRequisitesType<ValidateType>,
 
+    parsers: {
+        innNumber: undefined,
+        organizationName: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        taxMode: composeParsers(parseNoSpace),
+        kpp: undefined,
+        ogrn: undefined,
+        okpo: undefined,
+        legalAddress: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        mechanicFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        dispatcherFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+
+        postAddress: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        phoneDirector: undefined,
+        phoneAccountant: undefined,
+        email: undefined,
+        bikBank: undefined,
+        nameBank: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        checkingAccount: undefined,
+        korrAccount: undefined,
+        tarifs: {
+            create: undefined,
+            acceptShortRoute: undefined,
+            acceptLongRoute: undefined,
+            paySafeTax: undefined,
+        },
+
+    } as CompanyRequisitesType<ParserType>,
+
     initialValues: {
         innNumber: undefined,
         organizationName: undefined,
@@ -87,7 +125,8 @@ const initialState = {
         ogrn: undefined,
         okpo: undefined,
         legalAddress: undefined,
-        description: undefined,
+        mechanicFIO: undefined,
+        dispatcherFIO: undefined,
 
         postAddress: undefined,
         phoneDirector: undefined,

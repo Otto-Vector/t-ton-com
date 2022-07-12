@@ -8,7 +8,6 @@ export const getAuthCashAuthStore: AuthStoreSelectors<'authCash'> = (state) => s
 
 export const getIsFetchingAuth: AuthStoreSelectors<'isFetching'> = (state) => state.authStoreReducer.isFetching
 export const getIsAvailableSMSrequest: AuthStoreSelectors<'isAvailableSMSRequest'> = ( state) => state.authStoreReducer.isAvailableSMSRequest
-export const getIsAvailablePhoneEdit: AuthStoreSelectors<'isAvailablePhoneEdit'> = ( state) => state.authStoreReducer.isAvailablePhoneEdit
 
 export const getLabelAuthStore: AuthStoreSelectors<'label'> = (state) => state.authStoreReducer.label
 export const getInitialValuesAuthStore: AuthStoreSelectors<'initialValues'> = (state) => state.authStoreReducer.initialValues

@@ -164,22 +164,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.garageNumber }
                                                    parse={ parsers.garageNumber }
                                             />
-                                            <Field name={ 'mechanicFIO' }
-                                                   placeholder={ label.mechanicFIO }
-                                                   maskFormat={ maskOn.mechanicFIO }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.mechanicFIO }
-                                                   parse={ parsers.mechanicFIO }
-                                            />
-                                            <Field name={ 'dispatcherFIO' }
-                                                   placeholder={ label.dispatcherFIO }
-                                                   maskFormat={ maskOn.dispatcherFIO }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.dispatcherFIO }
-                                                   parse={ parsers.dispatcherFIO }
-                                            />
                                         </div>
                                         {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                         <div className={ styles.employeesForm__inputsWithPhoto }>

@@ -31,8 +31,6 @@ const initialState = {
         drivingCategory: 'Водительские категории',
         personnelNumber: 'Табельный номер',
         garageNumber: 'Гаражный номер',
-        mechanicFIO: 'ФИО механика',
-        dispatcherFIO: 'ФИО диспетчера',
         photoFace: 'Добавить фотографию сотрудника',
         rating: 'Рейтинг:',
     } as EmployeesCardType,
@@ -47,8 +45,6 @@ const initialState = {
         drivingCategory: undefined, // просто текст же?
         personnelNumber: '##### #####', // поставим ДО 10 цифр
         garageNumber: '##### #####', // поставим ДО 10 цифр
-        mechanicFIO: undefined, // просто текст
-        dispatcherFIO: undefined, // просто текст
         photoFace: undefined, // путь к файлу изображения
         rating: '##', // чило ДО 2-х цифр
     } as EmployeesCardType,
@@ -64,8 +60,6 @@ const initialState = {
         drivingCategory: undefined,
         personnelNumber: undefined,
         garageNumber: undefined,
-        mechanicFIO: undefined,
-        dispatcherFIO: undefined,
         photoFace: undefined,
         rating: undefined,
         status: undefined
@@ -81,8 +75,6 @@ const initialState = {
         drivingCategory: undefined,
         personnelNumber: composeValidators(maxNumbers(10)),
         garageNumber: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
-        mechanicFIO: composeValidators(maxLength(50)),
-        dispatcherFIO: composeValidators(maxLength(50)),
         photoFace: undefined,
         rating: composeValidators(maxNumbers(2)),
     } as EmployeesCardType<ValidateType>,
@@ -97,8 +89,6 @@ const initialState = {
         drivingCategory: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         personnelNumber: undefined,
         garageNumber: undefined,
-        mechanicFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
-        dispatcherFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         photoFace: undefined,
         rating: undefined,
     } as EmployeesCardType<ParserType>,

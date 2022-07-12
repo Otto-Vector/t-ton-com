@@ -7,7 +7,8 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {
-    getInitialValuesAuthStore, getIsAuthAuthStore, getIsAvailablePhoneEdit,
+    getInitialValuesAuthStore,
+    getIsAuthAuthStore,
     getIsAvailableSMSrequest,
     getIsFetchingAuth,
     getLabelAuthStore,
@@ -24,7 +25,7 @@ import {
 import {parseAllNumbers} from '../../../utils/parsers'
 import {phoneSubmitType} from '../../../types/form-types'
 import {getOrganizationByInn} from '../../../redux/options/requisites-store-reducer';
-import {Navigate, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 
 
@@ -39,7 +40,6 @@ export const LoginForm: React.FC<OwnProps> = () => {
 
     const [ isRegisterMode, setIsRegisterMode ] = useState(false)
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
-    const isAvailablePhoneEdit = useSelector(getIsAvailablePhoneEdit)
     const isAuth = useSelector(getIsAuthAuthStore)
 
 
@@ -52,26 +52,35 @@ export const LoginForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
 
-    const onSubmit = async ( val: phoneSubmitType ) => {
+    const onSubmit = async ( val: phoneSubmitType ) => { // при нажатии кнопки ДАЛЕЕ
         let innError, phoneError, loginError
-        if (isRegisterMode) {
-            innError = await dispatch<any>(getOrganizationByInn({ inn: +parseAllNumbers(val.innNumber) }))
-            if (innError) {
-                return innError
-            } else {
-                phoneError = await dispatch<any>(sendCodeToPhone(val.phoneNumber as string))
-                if (phoneError) {
-                    return phoneError
-                } else {
+        if (isRegisterMode) { // если РЕГИСТРАЦИЯ, то сначала проверяем ИНН на сущестование
+            if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан
+                innError = await dispatch<any>(getOrganizationByInn({ inn: +parseAllNumbers(val.innNumber) }))
+                if (innError) { // если ошибка, то выводим её в форму
+                    dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
+                    return innError
+                } else { // потом отправляем sms на регистрацию
+                    phoneError = await dispatch<any>(sendCodeToPhone(val.phoneNumber as string))
+                    if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
+                        dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
+                        return phoneError
+                    }
+                }
+            } else { // если SMS отослан
+                loginError = await dispatch<any>(
+                    loginAuthorization({ phone: val.phoneNumber as string, password: val.sms as string }))
+                if (loginError) {
+                    return loginError
                 }
             }
-            if (isAvailableSMS) {
-                // loginError = await dispatch<any>(sendCodeToPhone(val.phoneNumber as string))
-            }
+
         }
-        if (!isRegisterMode) {
-            if (isAuth) {
-               navigate(options)
+
+
+        if (!isRegisterMode) { // если АВТОРИЗАЦИЯ
+            if (isAuth) { // если уже авторизован, то просто перекидываем на НАСТРОЙКИ
+                navigate(options)
             } else {
 
                 loginError = await dispatch<any>(
@@ -81,14 +90,14 @@ export const LoginForm: React.FC<OwnProps> = () => {
                 }
             }
         }
-        dispatch(authStoreActions.setIsAuth(true))
+
         return { [FORM_ERROR]: null }
     }
 
     const registerHandleClick = () => {
         setIsRegisterMode(!isRegisterMode)
 
-        dispatch(authStoreActions.setIsAvailableSMSRequest(isRegisterMode))
+        // dispatch(authStoreActions.setIsAvailableSMSRequest(isRegisterMode))
     }
 
     const fakeFetch = () => {
@@ -139,8 +148,8 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                        placeholder={ label.sms }
                                        component={ FormInputType }
                                        maskFormat={ maskOn.sms }
-                                       disabled={ isRegisterMode ? !isAvailableSMS : false }
-                                       validate={ !isAvailableSMS ? validators.sms : undefined }
+                                    // disabled={ !isAvailableSMS && isRegisterMode}
+                                       validate={ isAvailableSMS ? validators.sms : undefined }
                                 >
                                     { !isRegisterMode && <div className={
                                         styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position }>
