@@ -150,7 +150,6 @@ export type AddDriverCardType<T = DefaultFormType> = {
 }
 
 
-
 export type OneRequestType = {
     id: number | undefined,
     requestNumber: number | undefined, // номер заявки

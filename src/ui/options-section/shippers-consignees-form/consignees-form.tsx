@@ -17,7 +17,8 @@ import {
     getInitialValuesConsigneesStore,
     getLabelConsigneesStore,
     getMaskOnConsigneesStore,
-    getOneConsigneesFromLocal, getParsersConsigneesStore,
+    getOneConsigneesFromLocal,
+    getParsersConsigneesStore,
     getValidatorsConsigneesStore,
 } from '../../../selectors/options/consignees-reselect'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer';
@@ -196,7 +197,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }
 
                                             >
-                                                <div className={ styles.shippersConsigneesForm__button } >
+                                                <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'submit' }
                                                             disabled={ submitting || hasValidationErrors }
                                                             colorMode={ 'green' }

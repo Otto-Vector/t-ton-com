@@ -5,7 +5,7 @@ import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {filtersStoreActions, initialFiltersState} from '../../redux/table/filters-store-reducer'
 import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
-import {cargoConstType, cargoFormats} from '../../types/form-types'
+import {cargoFormats} from '../../types/form-types'
 import {JustSelect} from '../common/just-select/just-select';
 
 

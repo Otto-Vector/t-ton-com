@@ -47,7 +47,7 @@ type StateType = typeof rootReducer
 export type AppStateType = ReturnType<StateType>
 
 // создал тип с обязательным type среди возвращаемых ключей для actions
-export type ActionsAnyType = Record<string, (...args: any[]) => { type: string, [key: string]: any }>
+export type ActionsAnyType = Record<string, ( ...args: any[] ) => { type: string, [key: string]: any }>
 // комбайним все значения объекта
 export type PropertiesType<T> = T extends { [key: string]: infer U } ? U : never;
 // возвращаем комбайн возвращаемых значений, также extends-ом проверяем, является ли он типом ActionsAnyType

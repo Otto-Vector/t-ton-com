@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-const instance = axios.create( {
+const instance = axios.create({
     baseURL: 'https://www.google.com/s2/',
-} )
+})
 
 // https://github.com/antongunov/favicongrabber.com
 

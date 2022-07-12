@@ -21,7 +21,7 @@ export const WithAttachForm: React.FC<OwnProps> = (
         disabledAttach,
         addViewButton,
         disabledView,
-        onViewClick
+        onViewClick,
     } ) => {
 
     return (
@@ -45,16 +45,16 @@ export const WithAttachForm: React.FC<OwnProps> = (
                 </Button>
             </div>
             { addViewButton &&
-              <div className={ styles.withAttach__button }>
-                <Button colorMode={ 'white' }
-                        title={ 'Просмотреть' + title }
-                        disabled={ disabledView }
-                        onClick={ onViewClick }
-                        rounded
-                >
-                  <MaterialIcon icon_name={ 'search' }/>
-                </Button>
-              </div>
+                <div className={ styles.withAttach__button }>
+                    <Button colorMode={ 'white' }
+                            title={ 'Просмотреть' + title }
+                            disabled={ disabledView }
+                            onClick={ onViewClick }
+                            rounded
+                    >
+                        <MaterialIcon icon_name={ 'search' }/>
+                    </Button>
+                </div>
             }
         </div>
     )

@@ -27,8 +27,8 @@
       background-image: linear-gradient(90deg, whitesmoke 85%, transparent);
 
       .menuPanel__image {
-      //  https://isotropic.co/tool/hex-color-to-css-filter/
-      filter: invert(90%) sepia(77%) saturate(5045%) hue-rotate(205deg) brightness(96%) contrast(98%);
+        //  https://isotropic.co/tool/hex-color-to-css-filter/
+        filter: invert(90%) sepia(77%) saturate(5045%) hue-rotate(205deg) brightness(96%) contrast(98%);
       }
     }
 
@@ -56,6 +56,7 @@
   @include size(16px);
   border-radius: 50%;
   background-color: transparent;
+
   img {
     height: 100%;
     width: 100%;

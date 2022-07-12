@@ -10,14 +10,14 @@ type OwnProps = {
     baseHref: string
 }
 
-export const Logo: React.FC<OwnProps> = ({companyName, baseHref}) => {
-    const {hello} = useSelector(getRoutesStore)
+export const Logo: React.FC<OwnProps> = ( { companyName, baseHref } ) => {
+    const { hello } = useSelector(getRoutesStore)
     return (
-        <div className={styles.logo}>
-            <Link to={hello} role={'button'} title={'Домой'}>
-                <img className={styles.logo__img} src={logo} alt="logo"/>
+        <div className={ styles.logo }>
+            <Link to={ hello } role={ 'button' } title={ 'Домой' }>
+                <img className={ styles.logo__img } src={ logo } alt="logo"/>
             </Link>
-            <h1 className={styles.logo__title} title={baseHref}>{companyName}</h1>
+            <h1 className={ styles.logo__title } title={ baseHref }>{ companyName }</h1>
         </div>
     )
 }

@@ -73,11 +73,11 @@ export type TableStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>,
 
 
 export const getValuesForTable = (): TableStoreReducerThunkActionType =>
-    async ( dispatch , getState) => {
+    async ( dispatch, getState ) => {
         try {
             // dispatch( tableStoreActions.setValues(createTableValues) )
         } catch (e) {
-            alert( e )
+            alert(e)
         }
 
     }

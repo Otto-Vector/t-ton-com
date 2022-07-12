@@ -4,12 +4,15 @@ import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-typ
 import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
 import {initialConsigneesContent} from '../../initials-test-data'
 import {
-    composeParsers, coordsToString,
+    composeParsers,
+    coordsToString,
     parseAllCoords,
     parseFIO,
-    parseNoFirstSpaces, parseOnlyOneComma,
+    parseNoFirstSpaces,
+    parseOnlyOneComma,
     parseOnlyOneDash,
-    parseOnlyOneDot, parseOnlyOneSpace,
+    parseOnlyOneDot,
+    parseOnlyOneSpace,
 } from '../../utils/parsers';
 
 const defaultInitialValues = {

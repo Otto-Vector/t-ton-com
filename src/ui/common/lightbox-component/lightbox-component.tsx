@@ -19,15 +19,15 @@ export const LightBoxComponent: React.FC<LightboxType> = () => {
         dispatch(lightBoxStoreActions.setLightBoxClose())
     }
 
-    return (<div>
+    return ( <div>
 
             { isLightBoxOpen ? (
-                <Lightbox
-                    mainSrc={ image || noImagePhoto }
-                    onCloseRequest={ closeLigthBox }
-                /> )
+                    <Lightbox
+                        mainSrc={ image || noImagePhoto }
+                        onCloseRequest={ closeLigthBox }
+                    /> )
                 : null
             }
-    </div>
+        </div>
     )
 }

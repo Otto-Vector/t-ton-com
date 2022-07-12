@@ -7,22 +7,13 @@ import {
     getStoredValuesRequisitesStore,
 } from '../../selectors/options/requisites-reselect'
 
-import {
-    getInitialValuesAddDriverStore,
-    getLabelAddDriverStore,
-} from '../../selectors/forms/add-driver-reselect'
+import {getInitialValuesAddDriverStore, getLabelAddDriverStore} from '../../selectors/forms/add-driver-reselect'
 import {getOneRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
-import {
-    getOneEmployeesFromLocal,
-} from '../../selectors/options/employees-reselect'
-import {
-    getOneTransportFromLocal,
-} from '../../selectors/options/transport-reselect'
+import {getOneEmployeesFromLocal} from '../../selectors/options/employees-reselect'
+import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
 
-import {
-    getOneTrailerFromLocal,
-} from '../../selectors/options/trailer-reselect'
+import {getOneTrailerFromLocal} from '../../selectors/options/trailer-reselect'
 import {employeesStoreActions} from '../../redux/options/employees-store-reducer'
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
@@ -176,7 +167,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                 </div>
                 <div className={ styles.addDriversForm__buttonsPanel }>
                     <a role="button" href={ `tel:${ employeeOnePhone }` }
-                    className={styles.addDriversForm__buttonHrefWrapper}>
+                       className={ styles.addDriversForm__buttonHrefWrapper }>
                         <Button type={ 'button' }
                                 disabled={ !employeeOnePhone }
                                 colorMode={ 'blue' }

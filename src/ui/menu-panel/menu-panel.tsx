@@ -41,7 +41,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     const menuItems = [
         {
             route: routes.login, src: loginSVG, title: `${ !isAuth ? 'Авторизация' : 'Выход' }`,
-            buttonText: `${ !isAuth ? 'Вход' : 'Выход' }`, active: true, action: !isAuth ? null: logout,
+            buttonText: `${ !isAuth ? 'Вход' : 'Выход' }`, active: true, action: !isAuth ? null : logout,
         },
         {
             route: routes.requestInfo.create, src: createSVG, title: 'Создать заявку',
@@ -79,10 +79,12 @@ export const MenuPanel: React.FC<OwnProps> = () => {
 
     return (
         <nav className={ styles.menuPanel }>
-            { menuItems.map(( { route, src, title, buttonText, active , action} ) =>
+            { menuItems.map(( { route, src, title, buttonText, active, action } ) =>
                 active &&
                 <NavLink to={ route } className={ activeClass } role={ 'button' } title={ title } key={ route + src }
-                         onClick={()=>{if (action) action()}}
+                         onClick={ () => {
+                             if (action) action()
+                         } }
                 >
                     <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>
                     <div className={ styles.menuPanel__text }>{ buttonText }</div>

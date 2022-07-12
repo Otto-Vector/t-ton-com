@@ -7,17 +7,17 @@ const initialState = {
     header: {
         companyName: 'Транспортно-Логистическая Компания',
         baseHref: 'http://t-ton.com',
-        directPhoneNumber: '+79-500-510-520'
+        directPhoneNumber: '+79-500-510-520',
     },
 
     footer: {
-        linkToOfer: '#oferIsHere'
+        linkToOfer: '#oferIsHere',
     },
 
     links: [
         { domain: 'https://yandex.ru', title: 'Поисковик' },
         { domain: 'https://github.com', title: 'Хранение' },
-        { domain: 'https://google.ru', title: 'Другой поисковик' }
+        { domain: 'https://google.ru', title: 'Другой поисковик' },
     ],
 
 }

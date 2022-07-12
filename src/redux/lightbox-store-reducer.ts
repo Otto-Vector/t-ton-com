@@ -2,7 +2,7 @@ import {GetActionsTypes} from './redux-store'
 
 const initialState = {
     isLightBoxOpen: false as boolean,
-    image: '' as string | undefined
+    image: '' as string | undefined,
 }
 
 export type LightboxStoreReducerStateType = typeof initialState
@@ -30,7 +30,7 @@ export const lightBoxStoreReducer = ( state = initialState, action: ActionsType 
             return {
                 ...state,
                 isLightBoxOpen: true,
-                image: action.image
+                image: action.image,
             }
         }
         default: {
@@ -50,6 +50,6 @@ export const lightBoxStoreActions = {
     } as const ),
     setLightBoxImage: ( image: string ) => ( {
         type: 'lightBox-store-reducer/SET-IMAGE',
-        image
+        image,
     } as const ),
 }

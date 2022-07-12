@@ -15,7 +15,8 @@ import {authStoreActions} from '../auth-store-reducer';
 import {
     composeParsers,
     parseFIO,
-    parseNoFirstSpaces, parseNoSpace,
+    parseNoFirstSpaces,
+    parseNoSpace,
     parseOnlyOneDash,
     parseOnlyOneDot,
     parseOnlyOneSpace,

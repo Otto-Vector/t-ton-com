@@ -14,12 +14,12 @@ type OwnProps = {
 
 
 export const YandexMapComponent: React.FC<OwnProps> = ( {
-    state,
-    modules,
-    children,
-    instance,
-    onClick
-} ) => {
+                                                            state,
+                                                            modules,
+                                                            children,
+                                                            instance,
+                                                            onClick,
+                                                        } ) => {
 
     return (
         <div className={ styles.yandexMapComponent }>
@@ -32,7 +32,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                      suppressObsoleteBrowserNotifier: true,
                      yandexMapDisablePoiInteractivity: true,
                      maxZoom: 18,
-                     minZoom: 3
+                     minZoom: 3,
                  } }
                  onClick={ onClick }
             >
@@ -75,7 +75,7 @@ export const YandexMapToForm: React.FC<ToFormProps> =
                            options={
                                {
                                    preset: 'islands#violetDotIconWithCaption',
-                                   draggable: true
+                                   draggable: true,
                                }
                            }
                            onDragEnd={ ( e: any ) => {
@@ -107,7 +107,7 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center, zoom, chi
             } }
             modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
         >
-            {children}
+            { children }
         </YandexMapComponent>
     )
 })

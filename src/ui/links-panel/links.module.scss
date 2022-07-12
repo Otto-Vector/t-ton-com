@@ -1,4 +1,4 @@
-@import "src/styles/mixins";
+@import 'src/styles/mixins';
 
 .links {
   margin: 0 auto;
@@ -17,6 +17,7 @@
     overflow: hidden;
     text-align: center;
   }
+
   &__img {
 
     width: 39px;

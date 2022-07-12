@@ -1,10 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {
-    Column,
-    useFilters,
-    useGlobalFilter,
-    useTable,
-} from 'react-table';
+import {Column, useFilters, useGlobalFilter, useTable} from 'react-table';
 import styles from './table-component.module.scss'
 import {TableModesType} from '../search-section';
 // import {GlobalFilter} from './filter/global-filter';

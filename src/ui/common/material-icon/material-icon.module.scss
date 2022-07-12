@@ -1,10 +1,10 @@
 //добавляем только нужные иконки
 //@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Round:search:expand_more:close:expand_less:menu_book:reply:info:add:attach_file:file_upload:info:highlight_off');
-@import "src/styles/variables";
+@import 'src/styles/variables';
 
 .iconsContent {
-    font-family: $MaterialFont;
-    font-size: inherit;
-    color: inherit;
-    background-color: transparent;
+  font-family: $MaterialFont;
+  font-size: inherit;
+  color: inherit;
+  background-color: transparent;
 }

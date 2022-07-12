@@ -7,7 +7,8 @@ import {getRoutesStore} from '../../selectors/routes-reselect';
 import {requestStoreActions} from '../../redux/forms/request-store-reducer';
 import {
     getDefaultInitialValuesRequestStore,
-    getInitialValuesRequestStore, getIsNewRequestRequestStore,
+    getInitialValuesRequestStore,
+    getIsNewRequestRequestStore,
     getOneRequestStore,
 } from '../../selectors/forms/request-form-reselect';
 import {CancelButton} from '../common/cancel-button/cancel-button';

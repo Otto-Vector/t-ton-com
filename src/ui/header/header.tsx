@@ -8,11 +8,11 @@ import {getHeaderStore} from '../../selectors/base-reselect';
 type OwnProps = {}
 
 export const Header: React.FC<OwnProps> = () => {
-    const {directPhoneNumber, companyName, baseHref} = useSelector(getHeaderStore)
+    const { directPhoneNumber, companyName, baseHref } = useSelector(getHeaderStore)
     return (
-        <header className={styles.header}>
-            <Logo companyName={companyName} baseHref={baseHref}/>
-            <Phone directPhoneNumber={directPhoneNumber}/>
+        <header className={ styles.header }>
+            <Logo companyName={ companyName } baseHref={ baseHref }/>
+            <Phone directPhoneNumber={ directPhoneNumber }/>
         </header>
     )
 }

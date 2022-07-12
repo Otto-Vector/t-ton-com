@@ -8,7 +8,9 @@ import {
 import {useDispatch, useSelector} from 'react-redux'
 import {cargoConstType, OneRequestType} from '../../../types/form-types'
 import {
-    getCargoCompositionRequestStore, getCurrentDistanceIsFetchingRequestStore, getCurrentDistanceRequestStore,
+    getCargoCompositionRequestStore,
+    getCurrentDistanceIsFetchingRequestStore,
+    getCurrentDistanceRequestStore,
     getLabelRequestStore,
     getPlaceholderRequestStore,
     getValidatorsRequestStore,
@@ -27,7 +29,8 @@ import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
-    getRouteFromAPI, requestStoreActions,
+    getRouteFromAPI,
+    requestStoreActions,
     setCargoCompositionSelector,
 } from '../../../redux/forms/request-store-reducer'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'

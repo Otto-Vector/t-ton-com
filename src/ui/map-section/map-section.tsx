@@ -22,17 +22,17 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     useLayoutEffect(() => {
         dispatch<any>(setDriversToMap())
-    }, [dispatch])
+    }, [ dispatch ])
 
     const center = useSelector(getGeoPositionAuthStore)
     const zoom = 7
 
     return (
         <div className={ styles.yandexMapComponent }>
-            <YandexBigMap center={ center } zoom={ zoom } >
+            <YandexBigMap center={ center } zoom={ zoom }>
                 { drivers.map(( { id, position, status, fio } ) =>
                     <Placemark geometry={ position }
-                               // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
+                        // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
                                options={
                                    {
                                        preset: 'islands#circleIcon',

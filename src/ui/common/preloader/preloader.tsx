@@ -5,8 +5,8 @@ import preLoader from './svg/Spinner.svg'
 export const Preloader: React.FC = () => {
 
     return (
-      <div className={styles.preloader}>
-        <img className={styles.image} src={preLoader} alt='preload' />
-      </div>
+        <div className={ styles.preloader }>
+            <img className={ styles.image } src={ preLoader } alt="preload"/>
+        </div>
     )
 }

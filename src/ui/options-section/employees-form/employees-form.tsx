@@ -17,7 +17,8 @@ import {
     getCurrentIdEmployeesStore,
     getInitialValuesEmployeesStore,
     getLabelEmployeesStore,
-    getMaskOnEmployeesStore, getOneEmployeesFromLocal,
+    getMaskOnEmployeesStore,
+    getOneEmployeesFromLocal,
     getParsersEmployeesStore,
     getValidatorsEmployeesStore,
 } from '../../../selectors/options/employees-reselect'

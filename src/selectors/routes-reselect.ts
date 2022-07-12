@@ -2,9 +2,9 @@ import {AppStateType} from '../redux/redux-store'
 import {RoutesStoreReducerStateType} from '../redux/routes-store-reducer';
 
 
-type RoutesStoreSelectors<T extends keyof Y, Y = RoutesStoreReducerStateType> = (state: AppStateType) => Y[T]
+type RoutesStoreSelectors<T extends keyof Y, Y = RoutesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
-export const getRoutesStore: RoutesStoreSelectors<'routes'> = (state) => state.routesStoreReducer.routes
+export const getRoutesStore: RoutesStoreSelectors<'routes'> = ( state ) => state.routesStoreReducer.routes
 
 
 // // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API

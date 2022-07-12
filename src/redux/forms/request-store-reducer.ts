@@ -250,7 +250,7 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
         case 'request-store-reducer/SET-IS-NEW-REQUEST': {
             return {
                 ...state,
-                isNewRequest: action.isNewRequest
+                isNewRequest: action.isNewRequest,
             }
         }
         default: {
@@ -270,7 +270,7 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-CONTENT',
         content,
     } as const ),
-     setIsNewRequest: ( isNewRequest: boolean ) => ( {
+    setIsNewRequest: ( isNewRequest: boolean ) => ( {
         type: 'request-store-reducer/SET-IS-NEW-REQUEST',
         isNewRequest,
     } as const ),

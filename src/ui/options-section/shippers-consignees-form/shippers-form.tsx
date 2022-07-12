@@ -18,7 +18,8 @@ import {
     getInitialValuesShippersStore,
     getLabelShippersStore,
     getMaskOnShippersStore,
-    getOneShipperFromLocal, getParsersShippersStore,
+    getOneShipperFromLocal,
+    getParsersShippersStore,
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'

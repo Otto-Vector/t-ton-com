@@ -25,7 +25,7 @@ export const getIsNewRequestRequestStore: RequestStoreSelectors<'isNewRequest'> 
 
 const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state ) => state.requestStoreReducer.currentRequestNumber
 
-export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance })=>distance)
+export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
 
 export const getOneRequestStore = createSelector(getAllRequestStore, getCurrentRequestNumberStore,
     ( content, numberValue ): OneRequestType => {

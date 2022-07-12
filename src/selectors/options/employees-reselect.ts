@@ -22,6 +22,9 @@ export const getOneEmployeesFromLocal = createSelector(getCurrentIdEmployeesStor
         return employees.filter(( { id } ) => id === currentId)[0] || initials
     })
 
-export const getAllEmployeesSelectFromLocal= createSelector(getAllEmployeesStore, (employees):SelectOptions[] => employees.map(( { id, employeeFIO } ) =>
-        ( { key: id.toString(), value: id.toString(), label: parseFamilyToFIO(employeeFIO) } ))
+export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStore, ( employees ): SelectOptions[] => employees.map(( {
+                                                                                                                                         id,
+                                                                                                                                         employeeFIO,
+                                                                                                                                     } ) =>
+    ( { key: id.toString(), value: id.toString(), label: parseFamilyToFIO(employeeFIO) } )),
 )

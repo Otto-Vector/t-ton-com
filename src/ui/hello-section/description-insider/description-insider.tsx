@@ -18,10 +18,10 @@ export const DescriptionInsider: React.FC<OwnProps> = ( { srcIcon, textArray, po
     const viewedIs = ( trigger: boolean ): string => trigger ? '' : styles.descriptionInsider_viewed
 
     return (
-        <div className={ styles.descriptionInsider + ' ' + positionIs( position ) + ' ' + viewedIs( hide ) }>
+        <div className={ styles.descriptionInsider + ' ' + positionIs(position) + ' ' + viewedIs(hide) }>
             <img className={ styles.descriptionInsider__icon } src={ srcIcon } alt="hidden"/>
-            { textArray.map( ( text ) =>
-                <p className={ styles.descriptionInsider__text } key={ text }>{ text }</p> ) }
+            { textArray.map(( text ) =>
+                <p className={ styles.descriptionInsider__text } key={ text }>{ text }</p>) }
         </div>
     )
 }

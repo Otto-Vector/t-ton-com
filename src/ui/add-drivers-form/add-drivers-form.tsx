@@ -23,28 +23,18 @@ import {FormSelector} from '../common/form-selector/form-selector'
 import {FormInputType} from '../common/form-input-type/form-input-type'
 import {getOneRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
-import {
-    getAllEmployeesSelectFromLocal,
-    getOneEmployeesFromLocal,
-} from '../../selectors/options/employees-reselect'
-import {
-    getAllTransportSelectFromLocal,
-    getOneTransportFromLocal
-} from '../../selectors/options/transport-reselect'
+import {getAllEmployeesSelectFromLocal, getOneEmployeesFromLocal} from '../../selectors/options/employees-reselect'
+import {getAllTransportSelectFromLocal, getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
 
-import {
-    getAllTrailerSelectFromLocal,
-    getOneTrailerFromLocal
-} from '../../selectors/options/trailer-reselect'
+import {getAllTrailerSelectFromLocal, getOneTrailerFromLocal} from '../../selectors/options/trailer-reselect'
 import {employeesStoreActions} from '../../redux/options/employees-store-reducer'
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/lightbox-store-reducer'
 
-type OwnProps = {
-}
+type OwnProps = {}
 
-export const AddDriversForm: React.FC<OwnProps> = ( ) => {
+export const AddDriversForm: React.FC<OwnProps> = () => {
 
     const header = ( requestNumber: number, shipmentDate: Date ): string =>
         `Заявка ${ requestNumber } от ${ ddMmYearFormat(shipmentDate) }`
@@ -59,7 +49,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( ) => {
     const { distance } = useSelector(getOneRequestStore)
     const dispatch = useDispatch()
 
-    const setLightBoxImage = (image?: string)=>{
+    const setLightBoxImage = ( image?: string ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
@@ -114,16 +104,16 @@ export const AddDriversForm: React.FC<OwnProps> = ( ) => {
                             initialValues={ initialValues }
                             render={
                                 ( {
-                                    submitError,
-                                    hasValidationErrors,
-                                    handleSubmit,
-                                    pristine,
-                                    form,
-                                    submitting,
-                                    values,
+                                      submitError,
+                                      hasValidationErrors,
+                                      handleSubmit,
+                                      pristine,
+                                      form,
+                                      submitting,
+                                      values,
 
-                                } ) => (
-                                    <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form } >
+                                  } ) => (
+                                    <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }>
                                         <div
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
                                             <div className={ styles.addDriversForm__selector }>

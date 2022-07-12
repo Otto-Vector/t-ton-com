@@ -19,7 +19,7 @@ const initialState = {
         id: 2 as number,
         position: [ 0, 0 ] as number[],
         status: 'empty' as 'empty' | 'full' | 'unknown',
-        fio: ''
+        fio: '',
     },
     ] as DriverOnMapType[],
     requests: [ {} ] as number[],
@@ -45,10 +45,10 @@ export const bigMapStoreReducer = ( state = initialState, action: ActionsType ):
                 isFetching: action.isFetching,
             }
         }
-        case 'big-map-store-reducer/SET-DRIVERS-LIST':{
+        case 'big-map-store-reducer/SET-DRIVERS-LIST': {
             return {
                 ...state,
-                drivers: action.drivers
+                drivers: action.drivers,
             }
         }
         default: {
@@ -93,11 +93,11 @@ export const geoPositionTake = (): BigMapStoreReducerThunkActionType =>
 export const setDriversToMap = (): BigMapStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         const drivers: DriverOnMapType[] = getState().employeesStoreReducer.content.map(
-            ( { id, coordinates, status , employeeFIO} ) => ({
+            ( { id, coordinates, status, employeeFIO } ) => ( {
                 id,
                 position: stringToCoords(coordinates),
                 status: status as string,
-                fio: parseFamilyToFIO(employeeFIO)
-            }))
+                fio: parseFamilyToFIO(employeeFIO),
+            } ))
         dispatch(bigMapStoreActions.setDriversList(drivers))
     }

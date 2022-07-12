@@ -19,7 +19,8 @@ import {
     getInitialValuesTransportStore,
     getLabelTransportStore,
     getMaskOnTransportStore,
-    getOneTransportFromLocal, getParsersTransportStore,
+    getOneTransportFromLocal,
+    getParsersTransportStore,
     getValidatorsTransportStore,
 } from '../../../selectors/options/transport-reselect'
 

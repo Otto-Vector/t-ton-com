@@ -62,7 +62,7 @@ const initialState = {
         garageNumber: undefined,
         photoFace: undefined,
         rating: undefined,
-        status: undefined
+        status: undefined,
     } as EmployeesCardType,
 
     validators: {
@@ -93,7 +93,7 @@ const initialState = {
         rating: undefined,
     } as EmployeesCardType<ParserType>,
 
-    content: [] as EmployeesCardType[]
+    content: [] as EmployeesCardType[],
 }
 
 export type EmployeesStoreReducerStateType = typeof initialState

@@ -10,7 +10,8 @@ import {Preloader} from '../../common/preloader/preloader';
 import {
     getIsFetchingRequisitesStore,
     getLabelRequisitesStore,
-    getMaskOnRequisitesStore, getParsersRequisitesStore,
+    getMaskOnRequisitesStore,
+    getParsersRequisitesStore,
     getStoredValuesRequisitesStore,
     getValidatorsRequisitesStore,
 } from '../../../selectors/options/requisites-reselect';

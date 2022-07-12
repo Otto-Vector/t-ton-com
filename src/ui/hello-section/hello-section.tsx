@@ -59,7 +59,7 @@ export const HelloSection: React.FC<OwnProps> = React.memo(() => {
             '- Отслеживание передвижения груза',
             '- Отслеживание и рейсы своему транспорту',
             '- Местоположение авто до и после разгрузки',
-        ]
+        ],
     }
 
     return (
@@ -71,27 +71,27 @@ export const HelloSection: React.FC<OwnProps> = React.memo(() => {
                 <div className={ styles.helloItem }>
                     <img className={ styles.helloItem__icon } src={ man } alt="Выгода"/>
                     <span className={ styles.helloItem__title }>{ 'Выгода Заказчикам' }</span>
-                    <DescriptionInsider srcIcon={ man } textArray={ description.man } position={'left'}/>
+                    <DescriptionInsider srcIcon={ man } textArray={ description.man } position={ 'left' }/>
                 </div>
                 <div className={ styles.helloItem }>
                     <img className={ styles.helloItem__icon } src={ briefcase } alt="Преимущество"/>
                     <span className={ styles.helloItem__title }>{ 'Преимущество Поставщикам' }</span>
-                    <DescriptionInsider srcIcon={ briefcase } textArray={ description.portfeler } position={'left'}/>
+                    <DescriptionInsider srcIcon={ briefcase } textArray={ description.portfeler } position={ 'left' }/>
                 </div>
                 <div className={ styles.helloItem }>
                     <img className={ styles.helloItem__icon } src={ truck } alt="Возможности"/>
                     <span className={ styles.helloItem__title }>{ 'Возможности Перевозчикам' }</span>
-                    <DescriptionInsider srcIcon={ truck } textArray={ description.truck } position={'center'}/>
+                    <DescriptionInsider srcIcon={ truck } textArray={ description.truck } position={ 'center' }/>
                 </div>
                 <div className={ styles.helloItem }>
                     <img className={ styles.helloItem__icon } src={ car } alt="Комфорт"/>
                     <span className={ styles.helloItem__title }>{ 'Комфорт Водителям' }</span>
-                    <DescriptionInsider srcIcon={ car } textArray={ description.car } position={'right'}/>
+                    <DescriptionInsider srcIcon={ car } textArray={ description.car } position={ 'right' }/>
                 </div>
                 <div className={ styles.helloItem }>
                     <img className={ styles.helloItem__icon } src={ factory } alt="Удобство"/>
                     <span className={ styles.helloItem__title }>{ 'Удобство Контрагентам' }</span>
-                    <DescriptionInsider srcIcon={ factory } textArray={ description.factory } position={'right'}/>
+                    <DescriptionInsider srcIcon={ factory } textArray={ description.factory } position={ 'right' }/>
                 </div>
             </div>
         </section>

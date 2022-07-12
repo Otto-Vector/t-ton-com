@@ -4,11 +4,7 @@ import styles from './request-map-center.module.scss'
 import {RequestModesType} from '../request-section';
 import {YandexMapWithRoute} from '../../common/yandex-map-component/yandex-map-component';
 import {useSelector} from 'react-redux';
-import {
-    getCurrentDistanceRequestStore,
-    getInitialDistanceRequestStore,
-    getRouteRequestStore,
-} from '../../../selectors/forms/request-form-reselect';
+import {getInitialDistanceRequestStore, getRouteRequestStore} from '../../../selectors/forms/request-form-reselect';
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -22,20 +18,20 @@ export const RequestMapCenter: React.FC<OwnProps> = ( { requestModes } ) => {
     const distance = useSelector(getInitialDistanceRequestStore) || 0
     const route = useSelector(getRouteRequestStore) || testLine
     const routeCenterIndex = route ? Math.ceil(route.length / 2) : 0
-    const center = route !== testLine ? route[routeCenterIndex] as [number,number] : testCenter
+    const center = route !== testLine ? route[routeCenterIndex] as [ number, number ] : testCenter
 
     // bounds почему-то не всегда отрабатывает поставил зум вручную
     // const zoomCoords = [route[0],route[route.length-1]]
 
-    const zoom = (distance < 200) ? 9 : (distance > 2000) ? 4 : 6
+    const zoom = ( distance < 200 ) ? 9 : ( distance > 2000 ) ? 4 : 6
 
     return (
         <div className={ styles.requestMapCenter }>
             <div className={ styles.requestMapCenter__wrapper }>
                 <YandexMapWithRoute center={ center }
                                     polyline={ route || testLine }
-                                    zoom={zoom}
-                                    // bounds={zoomCoords}
+                                    zoom={ zoom }
+                    // bounds={zoomCoords}
                 />
             </div>
         </div>

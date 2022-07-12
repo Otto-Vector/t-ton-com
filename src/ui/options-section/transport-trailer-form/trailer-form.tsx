@@ -19,7 +19,8 @@ import {
     getInitialValuesTrailerStore,
     getLabelTrailerStore,
     getMaskOnTrailerStore,
-    getOneTrailerFromLocal, getParsersTrailerStore,
+    getOneTrailerFromLocal,
+    getParsersTrailerStore,
     getValidatorsTrailerStore,
 } from '../../../selectors/options/trailer-reselect'
 import {trailerStoreActions} from '../../../redux/options/trailer-store-reducer';

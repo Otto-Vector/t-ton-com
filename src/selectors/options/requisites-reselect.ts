@@ -3,20 +3,20 @@ import {RequisitesStoreReducerStateType} from '../../redux/options/requisites-st
 import {CompanyRequisitesType} from '../../types/form-types';
 import {createSelector} from 'reselect';
 
-type RequisitesStoreSelectors<T extends keyof Y, Y = RequisitesStoreReducerStateType> = (state: AppStateType) => Y[T]
+type RequisitesStoreSelectors<T extends keyof Y, Y = RequisitesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
-export const getIsFetchingRequisitesStore: RequisitesStoreSelectors<'isFetching'> = (state) => state.requisitesStoreReducer.isFetching
+export const getIsFetchingRequisitesStore: RequisitesStoreSelectors<'isFetching'> = ( state ) => state.requisitesStoreReducer.isFetching
 
-export const getLabelRequisitesStore: RequisitesStoreSelectors<'label'> = (state) => state.requisitesStoreReducer.label
-export const getInitialValuesRequisitesStore: RequisitesStoreSelectors<'initialValues'> = (state) => state.requisitesStoreReducer.initialValues
-export const getStoredValuesRequisitesStore: RequisitesStoreSelectors<'storedValues'> = (state) => state.requisitesStoreReducer.storedValues
-export const getMaskOnRequisitesStore: RequisitesStoreSelectors<'maskOn'> = (state) => state.requisitesStoreReducer.maskOn
-export const getValidatorsRequisitesStore: RequisitesStoreSelectors<'validators'> = (state) => state.requisitesStoreReducer.validators
-export const getParsersRequisitesStore: RequisitesStoreSelectors<'parsers'> = (state) => state.requisitesStoreReducer.parsers
-export const getInnErrorRequisitesStore: RequisitesStoreSelectors<'innError'> = (state) => state.requisitesStoreReducer.innError
+export const getLabelRequisitesStore: RequisitesStoreSelectors<'label'> = ( state ) => state.requisitesStoreReducer.label
+export const getInitialValuesRequisitesStore: RequisitesStoreSelectors<'initialValues'> = ( state ) => state.requisitesStoreReducer.initialValues
+export const getStoredValuesRequisitesStore: RequisitesStoreSelectors<'storedValues'> = ( state ) => state.requisitesStoreReducer.storedValues
+export const getMaskOnRequisitesStore: RequisitesStoreSelectors<'maskOn'> = ( state ) => state.requisitesStoreReducer.maskOn
+export const getValidatorsRequisitesStore: RequisitesStoreSelectors<'validators'> = ( state ) => state.requisitesStoreReducer.validators
+export const getParsersRequisitesStore: RequisitesStoreSelectors<'parsers'> = ( state ) => state.requisitesStoreReducer.parsers
+export const getInnErrorRequisitesStore: RequisitesStoreSelectors<'innError'> = ( state ) => state.requisitesStoreReducer.innError
 
 // выгрузка тарифов из локальных данных пользователя
-export const getTarifsRequisitesStore = createSelector( getStoredValuesRequisitesStore,
-    ( requisites ): CompanyRequisitesType['tarifs']  => {
+export const getTarifsRequisitesStore = createSelector(getStoredValuesRequisitesStore,
+    ( requisites ): CompanyRequisitesType['tarifs'] => {
         return requisites.tarifs
-    } )
+    })

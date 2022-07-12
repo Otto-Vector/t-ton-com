@@ -33,7 +33,7 @@ const initialState = {
         },
         requisites: '/requisites',
         info: '/info',
-        test: '/test'
+        test: '/test',
     },
 }
 
@@ -41,14 +41,14 @@ export type RoutesStoreReducerStateType = typeof initialState
 
 type ActionsType = GetActionsTypes<typeof routeStoreActions>
 
-export const routesStoreReducer = (state = initialState, action: ActionsType): RoutesStoreReducerStateType => {
+export const routesStoreReducer = ( state = initialState, action: ActionsType ): RoutesStoreReducerStateType => {
 
     switch (action.type) {
 
         case 'base-store-reducer/CHANGE-ROUTE': {
             return {
                 ...state,
-                routes: {...state.routes, [action.routeName]: action.routePath},
+                routes: { ...state.routes, [action.routeName]: action.routePath },
             }
         }
         default: {
@@ -61,8 +61,8 @@ export const routesStoreReducer = (state = initialState, action: ActionsType): R
 /* ЭКШОНЫ */
 export const routeStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setRoute: (routeName: string, routePath: string) => ({
+    setRoute: ( routeName: string, routePath: string ) => ( {
         type: 'base-store-reducer/CHANGE-ROUTE',
         routeName, routePath,
-    } as const),
+    } as const ),
 }

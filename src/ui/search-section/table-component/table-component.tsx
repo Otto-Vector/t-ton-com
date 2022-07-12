@@ -6,7 +6,7 @@ import {ColumnInputFilter} from './filter/column-filters'
 import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
 import {useSelector} from 'react-redux'
 import {UseFiltersColumnProps} from 'react-table'
-import { getContentTableStore} from '../../../selectors/table/table-reselect'
+import {getContentTableStore} from '../../../selectors/table/table-reselect'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
@@ -43,7 +43,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 Filter: ( { column }: { column?: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column?.setFilter(cargoFilter)
-                    }, [column])
+                    }, [ column ])
                     return ( <></> )
                 },
                 disableFilters: false,
@@ -54,7 +54,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column.setFilter(ddMmYearFormat(dayFilter))
-                    }, [column])
+                    }, [ column ])
                     return ( <></> )
                 },
                 disableFilters: false,
@@ -65,7 +65,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
                     useEffect(() => {
                         column.setFilter(routeFilter)
-                    }, [column])
+                    }, [ column ])
                     return ( <></> )
                 },
                 disableFilters: false,
