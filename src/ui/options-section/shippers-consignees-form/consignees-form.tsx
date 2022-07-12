@@ -21,9 +21,10 @@ import {
     getParsersConsigneesStore,
     getValidatorsConsigneesStore,
 } from '../../../selectors/options/consignees-reselect'
-import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer';
-import {stringToCoords} from '../../../utils/parsers';
+import {consigneesStoreActions, getOrganizationByInnConsignee} from '../../../redux/options/consignees-store-reducer';
+import {parseAllNumbers, stringToCoords} from '../../../utils/parsers';
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
+
 
 type OwnProps = {
     // onSubmit: (requisites: consigneesCardType) => void
@@ -73,6 +74,12 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         dispatch(consigneesStoreActions.setCoordinates(coords))
     }
 
+    const innValidate = async ( value: string ) => {
+        const parsedValue = parseAllNumbers(value)
+        const response = await dispatch<any>(getOrganizationByInnConsignee({ inn: +parsedValue }))
+        return response
+    }
+
     useEffect(() => {
             if (currentId === +( currentIdForShow || 0 )) {
                 if (initialValues.coordinates === undefined) {
@@ -114,7 +121,12 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ maskOn.innNumber }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.innNumber }
+                                                   validate={ async ( value ) => {
+                                                       let valid
+                                                       valid = ( validators.innNumber !== undefined ) ? validators.innNumber(value) : undefined
+                                                       if (!valid) valid = await innValidate(value)
+                                                       return valid
+                                                   } }
                                                    parse={ parsers.innNumber }
                                             />
                                             <Field name={ 'organizationName' }

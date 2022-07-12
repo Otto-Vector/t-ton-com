@@ -66,7 +66,7 @@ export const FormInputType: React.FC<OwnProps> = (
                     { ...input }
                     className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
                     placeholder={ placeholder }
-                    disabled={ disabled }
+                    disabled={ disabled || meta.validating}
                 >
                 </NumberFormat>
                 :
@@ -75,7 +75,7 @@ export const FormInputType: React.FC<OwnProps> = (
                          min={ inputType === 'date' ? min : undefined }
                          className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
                          placeholder={ placeholder }
-                         disabled={ disabled }/>
+                         disabled={ disabled || meta.validating}/>
             }
             { labelToView &&
                 <label className={ styles.label }>{ placeholder }</label>

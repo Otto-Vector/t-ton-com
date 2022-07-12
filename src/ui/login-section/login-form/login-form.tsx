@@ -61,7 +61,9 @@ export const LoginForm: React.FC<OwnProps> = () => {
                     dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                     return innError
                 } else { // потом отправляем sms на регистрацию
-                    phoneError = await dispatch<any>(sendCodeToPhone(val.phoneNumber as string))
+                    phoneError = await dispatch<any>(sendCodeToPhone({
+                        phone: val.phoneNumber as string, innNumber: parseAllNumbers(val.innNumber) as string,
+                    }))
                     if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
                         dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                         return phoneError
@@ -133,6 +135,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                            resetFieldBy={ form }
                                            maskFormat={ maskOn.innNumber }
                                            validate={ validators.innNumber }
+                                           disabled={ isAvailableSMS }
                                     />
                                 }
                                 <Field name={ 'phoneNumber' }
@@ -142,19 +145,17 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                        allowEmptyFormatting
                                        maskFormat={ maskOn.phoneNumber }
                                        validate={ validators.phoneNumber }
-                                    // disabled={isRegisterMode ? isAvailablePhoneEdit: false}
+                                       disabled={ isAvailableSMS }
                                 />
                                 <Field name={ 'sms' }
                                        placeholder={ label.sms }
                                        component={ FormInputType }
                                        maskFormat={ maskOn.sms }
-                                    // disabled={ !isAvailableSMS && isRegisterMode}
                                        validate={ isAvailableSMS ? validators.sms : undefined }
                                 >
                                     { !isRegisterMode && <div className={
                                         styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position }>
                                         <Button type={ 'button' }
-                                            // disabled={ !isAvailableSMS }
                                                 title={ 'Новый запрос на пароль из SMS' }
                                                 colorMode={ 'gray' }
                                                 onClick={ fakeFetch }

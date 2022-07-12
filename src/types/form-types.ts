@@ -82,18 +82,30 @@ export type ConsigneesCardType<T = DefaultFormType> = {
 
 // на грузоотправителя
 export type ShippersCardType<T = DefaultFormType> = {
-    id: number // идентификатор
-    title: T // укороченное название
-    innNumber: T // ИНН
-    organizationName: T // Наименование организации
-    kpp: T // КПП
-    ogrn: T // ОГРН
-    address: T // Юридический адрес
-    shipperFio: T // ФИО отправителя
-    shipperTel: T // Телефон отправителя
-    description: T // Доп. данные для ТТН
-    coordinates: T // Местоположение в координатах
-    city: T // город (присваивается автоматически)
+    // идентификатор
+    id: number
+    // укороченное название
+    title: T
+    // ИНН
+    innNumber: T
+    // Наименование организации
+    organizationName: T
+    // КПП
+    kpp: T
+    // ОГРН
+    ogrn: T
+    // Юридический адрес
+    address: T
+    // ФИО отправителя
+    shipperFio: T
+    // Телефон отправителя
+    shipperTel: T
+    // Доп. данные для ТТН
+    description: T
+    // Местоположение в координатах
+    coordinates: T
+    // город (присваивается автоматически)
+    city: T
 }
 
 /////////////////////////////////////////////////////////////////////////////

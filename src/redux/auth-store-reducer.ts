@@ -144,15 +144,24 @@ export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
     }
 
 // отправляем запрос на код авторизации в телефон
-export const sendCodeToPhone = ( phone: string ): AuthStoreReducerThunkActionType<{} | null> =>
+export const sendCodeToPhone = ( {
+                                     phone,
+                                     innNumber,
+                                 }: { innNumber: string, phone: string } ): AuthStoreReducerThunkActionType<{} | null> =>
     async ( dispatch ) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
-            await authAPI.sendCodeToPhone({ phone })
-
-            dispatch(authStoreActions.setIsAvailableSMSRequest(false))
+            const response = await authAPI.sendCodeToPhone({ phone, innNumber })
+            console.log(response)
             dispatch(authStoreActions.setIsFetching(false))
-
+            // обрабатываем ошибку ИНН
+            if (response.message) {
+                return { innNumber: response.message }
+                dispatch(authStoreActions.setIsAvailableSMSRequest(false))
+            }
+            if (response.success) {
+                dispatch(authStoreActions.setIsAvailableSMSRequest(true))
+            }
             return null
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))

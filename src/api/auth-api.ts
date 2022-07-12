@@ -14,8 +14,8 @@ export type AuthValidateRequestType = {
 export const authAPI = {
 
     // отправка запроса на код по номеру телефона
-    sendCodeToPhone( { phone }: AuthRequestType ) {
-        return instanceBack.put<InfoResponseType>('/api/codesend/', { phone })
+    sendCodeToPhone( { phone, innNumber }: { innNumber: string, phone: string } ) {
+        return instanceBack.put<InfoResponseType>('/api/codesend/', { phone, innNumber })
             .then(response => response.data)
     },
     // вход по паролю

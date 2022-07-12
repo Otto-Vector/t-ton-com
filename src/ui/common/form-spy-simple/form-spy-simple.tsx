@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {FormApi} from 'final-form';
-import {OneRequestType} from '../../../types/form-types';
+import {OneRequestType, ShippersCardType} from '../../../types/form-types';
 import {AnyObject} from 'react-final-form';
 
 type Props<T = AnyObject> = {
@@ -25,6 +25,21 @@ export const FormSpySimpleRequest: React.VFC<Props<OneRequestType>> = ( { onChan
     useEffect(() => {
         onChange({ values, valid })
     }, [ values, valid ])
+
+    return null
+}
+
+export const FormSpySimpleInnShippers: React.VFC<Props<ShippersCardType>> = ( { onChange, form } ) => {
+    const state = form.getFieldState('innNumber')
+
+    const value = state?.value
+    const valid = state?.valid
+
+    useEffect(() => {
+        if (value && valid) {
+            onChange({ value, valid })
+        }
+    }, [ value, valid ])
 
     return null
 }

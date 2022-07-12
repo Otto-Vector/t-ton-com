@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
+import {setIn} from 'final-form'
 
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
@@ -22,9 +23,10 @@ import {
     getParsersShippersStore,
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
-import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
+import {getOrganizationByInnShipper, shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
-import {stringToCoords} from '../../../utils/parsers'
+import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
+import {FormSpySimpleInnShippers} from '../../common/form-spy-simple/form-spy-simple';
 
 
 type OwnProps = {
@@ -74,6 +76,13 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         dispatch(shippersStoreActions.setCoordinates(coords))
     }
 
+    const innValidate = async (value: string) => {
+        const parsedValue = parseAllNumbers(value)
+        const response = await dispatch<any>(getOrganizationByInnShipper({inn: +parsedValue}))
+        return response
+    }
+
+
     useEffect(() => {
             if (currentId === +( currentIdForShow || 0 )) {
                 if (initialValues.coordinates === undefined) {
@@ -114,7 +123,12 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ maskOn.innNumber }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.innNumber }
+                                                   validate={ async (value)=>{
+                                                       let valid
+                                                           valid = (validators.innNumber !== undefined) ? validators.innNumber(value) : undefined
+                                                       if (!valid) valid = await innValidate(value)
+                                                       return valid
+                                                   } }
                                                    parse={ parsers.innNumber }
                                             />
                                             <Field name={ 'organizationName' }

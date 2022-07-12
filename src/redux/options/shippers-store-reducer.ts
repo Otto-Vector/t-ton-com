@@ -14,6 +14,7 @@ import {
     parseOnlyOneDot,
     parseOnlyOneSpace,
 } from '../../utils/parsers';
+import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata';
 
 
 const defaultInitialValues = {
@@ -50,7 +51,7 @@ const initialState = {
     maskOn: {
         // id: undefined,
         title: undefined,
-        innNumber: '############', // 10,12 цифр
+        innNumber: '########## ##', // 10,12 цифр
         organizationName: undefined,
         kpp: '#########', // 9 цифр
         ogrn: '############', // 12 цифр
@@ -233,3 +234,32 @@ export const getAllShippersAPI = ( { innID }: { innID: number } ): ShippersStore
 
     }
 
+// запрос параметров организации из DaData
+export const getOrganizationByInnShipper = ( { inn }: GetOrganizationByInnDaDataType ):
+    ShippersStoreReducerThunkActionType<string | null> =>
+    async ( dispatch, getState ) => {
+
+        const innNumber = getState().shippersStoreReducer.initialValues.innNumber
+        const booleanMemo = ( +( innNumber || 0 ) !== inn )
+        const response = booleanMemo
+            ? await getOrganizationByInnDaDataAPI({ inn })
+            : null
+        console.log(response)
+        if (response !== null) {
+            if (response.length > 0) {
+                const { data } = response[0]
+                dispatch(shippersStoreActions.setInitialValues({
+                    ...getState().shippersStoreReducer.initialValues,
+                    innNumber: data.inn,
+                    organizationName: response[0].value,
+                    kpp: data.kpp,
+                    ogrn: data.ogrn,
+                    address: data.address.value,
+                }))
+                return null
+            } else {
+                return 'Неверный ИНН!'
+            }
+        } else return null
+
+    }
