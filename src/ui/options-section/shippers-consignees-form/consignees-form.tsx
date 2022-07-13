@@ -122,10 +122,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ async ( value ) => {
-                                                       let valid
-                                                       valid = ( validators.innNumber !== undefined ) ? validators.innNumber(value) : undefined
-                                                       if (!valid) valid = await innValidate(value)
-                                                       return valid
+                                                       const preValue = parseAllNumbers(form.getFieldState('innNumber')?.value)
+                                                       // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+                                                       if (preValue && ( preValue !== parseAllNumbers(value) ))
+                                                           // запускаем асинхронную валидацию только после синхронной
+                                                           return ( validators.innNumber && validators.innNumber(value) ) || await innValidate(value)
                                                    } }
                                                    parse={ parsers.innNumber }
                                             />

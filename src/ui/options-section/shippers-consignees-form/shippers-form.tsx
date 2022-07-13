@@ -26,7 +26,7 @@ import {
 import {getOrganizationByInnShipper, shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
-import {FormSpySimpleInnShippers} from '../../common/form-spy-simple/form-spy-simple';
+import {FormSpySimpleInnShippers} from '../../common/form-spy-simple/form-spy-simple'
 
 
 type OwnProps = {
@@ -76,9 +76,9 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         dispatch(shippersStoreActions.setCoordinates(coords))
     }
 
-    const innValidate = async (value: string) => {
+    const innValidate = async ( value: string ) => {
         const parsedValue = parseAllNumbers(value)
-        const response = await dispatch<any>(getOrganizationByInnShipper({inn: +parsedValue}))
+        const response = await dispatch<any>(getOrganizationByInnShipper({ inn: +parsedValue }))
         return response
     }
 
@@ -123,11 +123,12 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ maskOn.innNumber }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ async (value)=>{
-                                                       let valid
-                                                           valid = (validators.innNumber !== undefined) ? validators.innNumber(value) : undefined
-                                                       if (!valid) valid = await innValidate(value)
-                                                       return valid
+                                                   validate={ async ( value ) => {
+                                                       const preValue = parseAllNumbers(form.getFieldState('innNumber')?.value)
+                                                       // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+                                                       if (preValue && ( preValue !== parseAllNumbers(value) ))
+                                                           // запускаем асинхронную валидацию только после синхронной
+                                                           return ( validators.innNumber && validators.innNumber(value) ) || await innValidate(value)
                                                    } }
                                                    parse={ parsers.innNumber }
                                             />
