@@ -5,7 +5,7 @@ import {DaDataResponseAPIType} from '../types/api-types';
 const { REACT_APP_DADATA_KEY, REACT_APP_DEPLOY_MODE } = process.env
 
 const instance = axios.create({
-    baseURL: REACT_APP_DEPLOY_MODE === 'true' ? 'https://suggestions.dadata.ru/suggestions/' : undefined,
+    baseURL: REACT_APP_DEPLOY_MODE === 'true' ? 'https://suggestions.dadata.ru' : undefined,
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

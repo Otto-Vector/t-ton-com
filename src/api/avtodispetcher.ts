@@ -7,7 +7,7 @@ import base64 from 'base-64'
 const { REACT_APP_AVTODISPETCHER_KEY, REACT_APP_DEPLOY_MODE } = process.env
 
 const instance = axios.create({
-    baseURL: REACT_APP_DEPLOY_MODE === 'true' ? 'https://api.avtodispetcher.ru/v1/' : undefined,
+    baseURL: REACT_APP_DEPLOY_MODE === 'true' ? 'https://api.avtodispetcher.ru' : undefined,
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
