@@ -26,7 +26,6 @@ import {
 import {getOrganizationByInnShipper, shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
-import {FormSpySimpleInnShippers} from '../../common/form-spy-simple/form-spy-simple'
 
 
 type OwnProps = {
