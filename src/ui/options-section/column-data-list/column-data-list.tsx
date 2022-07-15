@@ -5,7 +5,7 @@ import {Button} from '../../common/button/button';
 import {useNavigate} from 'react-router-dom';
 import {parseCharsAndNumbers} from '../../../utils/parsers';
 import {OptionsLabelType} from '../../../redux/options/options-store-reducer';
-import {Modal} from 'antd';
+import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 
 
 type OwnProps = {
@@ -22,8 +22,6 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
     const navigate = useNavigate();
 
     const [ content, setContent ] = useState(item.content)
-    const [ showModal, setShowModal ] = useState(false)
-
     const [ test, setTest ] = useState<string>('')
 
     const onSearch = ( event: ChangeEvent<HTMLInputElement> ) => {
@@ -88,25 +86,7 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
                         rounded colorMode={ 'lightBlue' }>
                     <MaterialIcon icon_name={ 'add' }/></Button>
             </div>
-            <div className={ styles.columnDataList__button + ' ' + styles.columnDataList__button_right }>
-                <Button onClick={ () => {
-                    setShowModal(true)
-                } }
-                        title={ 'Информация' }
-                        rounded colorMode={ 'lightBlue' }>
-                    <MaterialIcon icon_name={ 'question_mark' }/></Button>
-                <Modal title={ 'Информация' }
-                       visible={ showModal }
-                       onOk={ () => {
-                           setShowModal(false)
-                       } }
-                       onCancel={ () => {
-                           setShowModal(false)
-                       } }
-                >
-                    <p>{ item.info }</p>
-                </Modal>
-            </div>
+            <InfoButtonToModal textToModal={item.info} mode={'in'} />
         </div>
     )
 }

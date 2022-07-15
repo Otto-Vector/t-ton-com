@@ -12,7 +12,7 @@ import {Button} from '../../common/button/button';
 import {InfoText} from '../../common/info-text/into-text';
 import {MaterialIcon} from '../../common/material-icon/material-icon';
 import {hhMmDdMmFormat} from '../../../utils/date-formats';
-import {Modal} from 'antd';
+import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -24,17 +24,10 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
         requestModes,
     } ) => {
 
-
     const labels = useSelector(getLabelDocumentsRequestValuesStore)
     const initialValues = useSelector(getInitialDocumentsRequestValuesStore)
     const modalsText = useSelector(getInfoTextModalsRequestValuesStore)
 
-    const [ modalShow, setModalShow ] = useState({
-        contractECP: false,
-        updECP: false,
-        customerToConsigneeContractECP: false,
-        paymentHasBeenTransferred: false,
-    })
     const buttonsAction = {
         acceptRequest: () => {
         },
@@ -200,25 +193,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    onChange={ buttonsAction.sendContractECPFile }
                             />
                         </Button>
-                        <div className={ styles.requestFormDocumentRight__infoButton }>
-                            <Button onClick={ () => {
-                                setModalShow({ ...modalShow, contractECP: true })
-                            } }
-                                    title={ 'Информация' }
-                                    rounded colorMode={ 'lightBlue' }>
-                                <MaterialIcon icon_name={ 'question_mark' }/></Button>
-                            <Modal title={ 'Информация' }
-                                   visible={ modalShow.contractECP }
-                                   onOk={ () => {
-                                       setModalShow({ ...modalShow, contractECP: false })
-                                   } }
-                                   onCancel={ () => {
-                                       setModalShow({ ...modalShow, contractECP: false })
-                                   } }
-                            >
-                                <p>{ modalsText.contractECP }</p>
-                            </Modal>
-                        </div>
+                        <InfoButtonToModal textToModal={modalsText.contractECP}/>
                     </div>
                 </div>
             </div>
@@ -250,25 +225,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    onChange={ buttonsAction.sendContractECPFile }
                             />
                         </Button>
-                        <div className={ styles.requestFormDocumentRight__infoButton }>
-                            <Button onClick={ () => {
-                                setModalShow({ ...modalShow, updECP: true })
-                            } }
-                                    title={ 'Информация' }
-                                    rounded colorMode={ 'lightBlue' }>
-                                <MaterialIcon icon_name={ 'question_mark' }/></Button>
-                            <Modal title={ 'Информация' }
-                                   visible={ modalShow.updECP }
-                                   onOk={ () => {
-                                       setModalShow({ ...modalShow, updECP: false })
-                                   } }
-                                   onCancel={ () => {
-                                       setModalShow({ ...modalShow, updECP: false })
-                                   } }
-                            >
-                                <p>{ modalsText.updECP }</p>
-                            </Modal>
-                        </div>
+                       <InfoButtonToModal textToModal={modalsText.updECP}/>
                     </div>
                 </div>
             </div>
@@ -301,25 +258,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    onChange={ buttonsAction.sendContractECPFile }
                             />
                         </Button>
-                        <div className={ styles.requestFormDocumentRight__infoButton }>
-                            <Button onClick={ () => {
-                                setModalShow({ ...modalShow, customerToConsigneeContractECP: true })
-                            } }
-                                    title={ 'Информация' }
-                                    rounded colorMode={ 'lightBlue' }>
-                                <MaterialIcon icon_name={ 'question_mark' }/></Button>
-                            <Modal title={ 'Информация' }
-                                   visible={ modalShow.customerToConsigneeContractECP }
-                                   onOk={ () => {
-                                       setModalShow({ ...modalShow, customerToConsigneeContractECP: false })
-                                   } }
-                                   onCancel={ () => {
-                                       setModalShow({ ...modalShow, customerToConsigneeContractECP: false })
-                                   } }
-                            >
-                                <p>{ modalsText.customerToConsigneeContractECP }</p>
-                            </Modal>
-                        </div>
+                        <InfoButtonToModal textToModal={modalsText.customerToConsigneeContractECP}/>
                     </div>
                 </div>
             </div>
@@ -338,25 +277,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    onChange={ buttonsAction.sendPaymentHasBeenTransferred }
                             />
                         </Button>
-                        <div className={ styles.requestFormDocumentRight__infoButton }>
-                            <Button onClick={ () => {
-                                setModalShow({ ...modalShow, paymentHasBeenTransferred: true })
-                            } }
-                                    title={ 'Информация' }
-                                    rounded colorMode={ 'lightBlue' }>
-                                <MaterialIcon icon_name={ 'question_mark' }/></Button>
-                            <Modal title={ 'Информация' }
-                                   visible={ modalShow.paymentHasBeenTransferred }
-                                   onOk={ () => {
-                                       setModalShow({ ...modalShow, paymentHasBeenTransferred: false })
-                                   } }
-                                   onCancel={ () => {
-                                       setModalShow({ ...modalShow, paymentHasBeenTransferred: false })
-                                   } }
-                            >
-                                <p>{ modalsText.paymentHasBeenTransferred }</p>
-                            </Modal>
-                        </div>
+                        <InfoButtonToModal textToModal={modalsText.paymentHasBeenTransferred}/>
                     </div>
                 </div>
                 <div className={ styles.requestFormDocumentRight__panelButton }>

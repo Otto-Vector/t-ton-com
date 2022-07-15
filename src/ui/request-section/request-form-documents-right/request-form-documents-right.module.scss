@@ -52,15 +52,6 @@
     }
   }
 
-  &__infoButton {
-    @include size(20px);
-    @include flex-center(column);
-    position: absolute;
-    font-size: 12px;
-    right: -20px;
-    top: -10px;
-  }
-
   &__bottomButton {
     position: absolute;
     height: 42px;

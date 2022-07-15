@@ -1,0 +1,17 @@
+@import 'src/styles/mixins';
+
+.infoButtonToModal {
+    position: absolute;
+    @include size(20px);
+    @include flex-center(column);
+    font-size: 12px;
+
+  &__out {
+    right: -20px;
+    top: -10px;
+  }
+
+  &__in {
+    right: 11px;
+  }
+}
