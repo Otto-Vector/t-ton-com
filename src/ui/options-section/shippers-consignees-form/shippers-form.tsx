@@ -123,6 +123,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ async ( value ) => {
+                                                       // забираем данные ДО рендера этого же элемента и "чистим" его от маски
                                                        const preValue = parseAllNumbers(form.getFieldState('innNumber')?.value)
                                                        // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
                                                        if (preValue && ( preValue !== parseAllNumbers(value) ))

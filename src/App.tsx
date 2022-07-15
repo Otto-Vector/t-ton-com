@@ -6,6 +6,8 @@ import {Provider} from 'react-redux'
 import {BrowserRouter} from 'react-router-dom'
 import {YMaps} from 'react-yandex-maps'
 import 'react-image-lightbox/style.css' //подключаем стили ligthBox в главном компоненте
+import 'antd/dist/antd.css' // используем стили antd для модальных инфоокон
+
 
 const { REACT_APP_YANDEX_KEY } = process.env
 

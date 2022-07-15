@@ -20,9 +20,9 @@ export const OptionsSection: React.FC<OwnProps> = () => {
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
     const shippersList = useSelector(getShippersOptionsStore)
     const consigneesList = useSelector(getConsigneesOptionsStore)
-    const transport = useSelector(getTransportOptionsStore)
-    const trailer = useSelector(getTrailerOptionsStore)
-    const employees = useSelector(getEmployeesOptionsStore)
+    const transportList = useSelector(getTransportOptionsStore)
+    const trailerList = useSelector(getTrailerOptionsStore)
+    const employeesList = useSelector(getEmployeesOptionsStore)
     const navigate = useNavigate()
 
     return (
@@ -40,9 +40,9 @@ export const OptionsSection: React.FC<OwnProps> = () => {
             </header>
             <div className={ styles.optionsSection__table }>
                 <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/>
-                <ColumnDataList item={ employees } route={ optionsEdit.employees }/>
-                <ColumnDataList item={ transport } route={ optionsEdit.transport }/>
-                <ColumnDataList item={ trailer } route={ optionsEdit.trailer }/>
+                <ColumnDataList item={ employeesList } route={ optionsEdit.employees }/>
+                <ColumnDataList item={ transportList } route={ optionsEdit.transport }/>
+                <ColumnDataList item={ trailerList } route={ optionsEdit.trailer }/>
                 <ColumnDataList item={ consigneesList } route={ optionsEdit.consignees }/>
             </div>
         </section>

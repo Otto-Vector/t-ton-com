@@ -5,6 +5,7 @@
   "dependencies": {
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^12.1.5",
+    "antd": "^4.21.6",
     "axios": "^0.26.1",
     "base-64": "^1.0.0",
     "date-format-parse": "^0.2.7",

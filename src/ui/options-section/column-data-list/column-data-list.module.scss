@@ -39,16 +39,25 @@
     cursor: pointer;
   }
 
-  &__addItemButton {
+  &__button {
     @include size(20px);
     @include flex-center(column);
     position: absolute;
     font-size: 14px;
     top: 6px;
-    left: 11px;
+
     background-color: transparent;
     cursor: pointer;
+
+    &_left {
+      left: 11px;
+    }
+    &_right {
+      right: 11px;
+    }
   }
+
+
 }
 
 

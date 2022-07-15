@@ -176,7 +176,7 @@ const initialState = {
             uploadDocument: 'Загрузить',
         },
         customerToConsigneeContractECP: {
-            label: 'Документы от Заказчика для Получателя с ЭЦП',
+            label: 'Документы от Заказчика для Грузополучателя с ЭЦП',
             customer: 'Заказчик',
             consignee: 'Грузополучатель',
             uploadDocument: 'Загрузить',
