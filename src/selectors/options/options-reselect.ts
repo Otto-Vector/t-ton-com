@@ -23,6 +23,7 @@ const getTrailerTitleOptionsStore: OptionsStoreSelectors<'trailer'> = ( state ) 
 const getEmployeesTitleOptionsStore: OptionsStoreSelectors<'employees'> = ( state ) => state.optionsStoreReducer.employees
 
 
+
 // выборка из списка загруженных грузоотправителей
 export const getShippersOptionsStore = createSelector(getAllShippersStore, getShippersTitleOptionsStore,
     ( shippers: ShippersCardType[], titles ) => {

@@ -30,7 +30,11 @@
     flex-flow: nowrap row;
     justify-content: space-evenly;
     height: 30px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+
+    &_top {
+      height: 38px;
+    }
   }
 
   &__inputsItem, &__buttonItem {
@@ -40,7 +44,26 @@
   }
 
   &__buttonItem {
+    position: relative;
     max-height: 33px;
+
+    &_twoLines {
+      max-height: 38px;
+    }
+  }
+
+  &__infoButton {
+    @include size(20px);
+    @include flex-center(column);
+    position: absolute;
+    font-size: 12px;
+    right: -20px;
+    top: -10px;
+  }
+
+  &__bottomButton {
+    position: absolute;
+    height: 42px;
   }
 
   &__info {

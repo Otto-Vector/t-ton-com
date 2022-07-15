@@ -176,7 +176,7 @@ const initialState = {
             uploadDocument: 'Загрузить',
         },
         customerToConsigneeContractECP: {
-            label: 'Документы от Заказчика для Грузополучателя с ЭЦП',
+            label: 'Документы от Заказчика для ГрузоПолучателя с ЭЦП',
             customer: 'Заказчик',
             consignee: 'Грузополучатель',
             uploadDocument: 'Загрузить',
@@ -185,6 +185,14 @@ const initialState = {
         paymentHasBeenReceived: 'Оплату получил',
         completeRequest: 'Закрыть заявку',
     } as DocumentsRequestType,
+
+    // инфо для модальных окон после нажатия на кнопку
+    infoTextModals: {
+        contractECP: 'Используется стандартный шаблон транспортного договора, подпишите по ЭЦП или Загрузите свой экземпляр для пописания.',
+        updECP: 'Используется стандартный шаблон УПД, проверьте и подпишите по ЭЦП или Загрузите свой экземпляр для пописания.',
+        customerToConsigneeContractECP: 'Загрузите документы для подписания по ЭЦП, данный документ  доступен только для Заказчика и Грузополучателя.',
+        paymentHasBeenTransferred: 'Загрузите платежное поручение из банка с синей отметкой, для подтверждения оплаты.',
+    },
 
     initialDocumentsRequestValues: initialDocumentsRequestValues,
 }
