@@ -53,8 +53,8 @@
   }
 
   &__bottomButton {
-    position: absolute;
-    height: 42px;
+    //position: relative;
+    //height: 42px;
   }
 
   &__info {
@@ -108,7 +108,7 @@
 
   &__buttonsPanel {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     height: 40px;
     min-width: 300px;
     font-family: $RalewayFont;
@@ -119,9 +119,9 @@
   }
 
   &__panelButton {
-    width: 150px;
+    position: relative;
+    max-width: 110px;
     height: 100%;
-    margin: 0 15px;
   }
 
   &__inAttachText {

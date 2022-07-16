@@ -267,7 +267,6 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__buttonsPanel }>
 
                 <div className={ styles.requestFormDocumentRight__panelButton }>
-                    <div className={ styles.requestFormDocumentRight__bottomButton }>
                         <Button colorMode={ 'gray' } wordWrap rounded>
                             { labels.paymentHasBeenTransferred }
                             <MaterialIcon icon_name={ 'attach_file' }/>
@@ -278,20 +277,16 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                             />
                         </Button>
                         <InfoButtonToModal textToModal={modalsText.paymentHasBeenTransferred}/>
-                    </div>
                 </div>
                 <div className={ styles.requestFormDocumentRight__panelButton }>
-                    <div className={ styles.requestFormDocumentRight__bottomButton }>
                         <Button colorMode={ 'gray' }
                                 wordWrap rounded
                                 title={ labels.paymentHasBeenReceived as string }
                                 onClick={ () => {
                                 } }
                         />
-                    </div>
                 </div>
                 <div className={ styles.requestFormDocumentRight__panelButton }>
-                    <div className={ styles.requestFormDocumentRight__bottomButton }>
                         <Button colorMode={ 'gray' }
                                 wordWrap
                                 rounded
@@ -299,7 +294,6 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                 onClick={ () => {
                                 } }
                         />
-                    </div>
                 </div>
             </div>
             <InfoText/>
