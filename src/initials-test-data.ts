@@ -11,7 +11,7 @@ import {
 import {randArrayValue, randFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from './utils/random-utils';
 import {OneInfoItem} from './redux/info-store-reducer';
 import {addNDay, randomDate, randomPassportDate} from './utils/date-formats';
-import {randomDriverImage, randomTrailerImage, randomTruckImage} from './api/randomImage';
+import {randomDriverImage, randomTrailerImage, randomTruckImage} from './api/randomImage.api';
 
 const today = new Date()
 

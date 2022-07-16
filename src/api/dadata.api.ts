@@ -20,10 +20,10 @@ export type GetOrganizationByInnDaDataType = {
 
 // запрос на сервер
 export const getOrganizationByInnDaDataAPI = ( { inn }: GetOrganizationByInnDaDataType ) => {
-
     return instance.post<DaDataResponseAPIType>('/suggestions/api/4_1/rs/findById/party', {
         query: inn,
-        branch_type: 'MAIN', // только головная организация
+        count: 100,
+        // branch_type: 'MAIN', // только головная организация
     })
         .then(response => response.data.suggestions)
 }

@@ -1,4 +1,4 @@
-import {InfoResponseType, instanceBack} from './back-api-data';
+import {InfoResponseType, instanceBack} from './back-instance.api';
 
 
 export type AuthRequestType = {
@@ -11,7 +11,7 @@ export type AuthValidateRequestType = {
 }
 
 
-export const authAPI = {
+export const authApi = {
 
     // отправка запроса на код по номеру телефона
     sendCodeToPhone( { phone, innNumber }: { innNumber: string, phone: string } ) {

@@ -9,8 +9,8 @@ import {
     mustBeMail,
     required,
 } from '../../utils/validators';
-import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata';
-import {PersonalResponseType, requisitesAPI} from '../../api/requisites-api';
+import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata.api';
+import {PersonalResponseType, requisitesApi} from '../../api/requisites.api';
 import {authStoreActions} from '../auth-store-reducer';
 import {
     composeParsers,
@@ -271,10 +271,10 @@ export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
 export const getPersonalReqisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await requisitesAPI.getPersonalAuthData()
+            const response = await requisitesApi.getPersonalAuthData()
             let user: PersonalResponseType
             if (response.userid) {
-                user = await requisitesAPI.getPersonalDataFromId({ idUser: response.userid })
+                user = await requisitesApi.getPersonalDataFromId({ idUser: response.userid })
                 console.log(user)
                 dispatch(requisitesStoreActions.setInitialValues({
                     innNumber: user.nnNumber,

@@ -76,6 +76,7 @@ export const FormInputType: React.FC<OwnProps> = (
                          className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
                          placeholder={ placeholder }
                          disabled={ disabled || meta.validating}/>
+
             }
             { labelToView &&
                 <label className={ styles.label }>{ placeholder }</label>

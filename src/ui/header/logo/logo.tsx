@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './logo.module.scss';
-import logo from './../../../media/logo.png'
+import logo from './../../../media/logo192.png'
 import {useSelector} from 'react-redux';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {Link} from 'react-router-dom';

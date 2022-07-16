@@ -1,4 +1,4 @@
-import {InfoResponseType, instanceBack} from './back-api-data';
+import {InfoResponseType, instanceBack} from './back-instance.api';
 
 export type PersonalResponseType = {
     idUser: string,
@@ -34,7 +34,7 @@ export type PersonalResponseType = {
     tarifPaySafeTax: string,
 }
 
-export const requisitesAPI = {
+export const requisitesApi = {
 
     // отправка запроса на данные пользователя
     getPersonalAuthData() {

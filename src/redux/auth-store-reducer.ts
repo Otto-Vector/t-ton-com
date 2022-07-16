@@ -2,8 +2,8 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
 import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
-import {geoPosition} from '../api/geolocation';
-import {authAPI, AuthValidateRequestType} from '../api/auth-api';
+import {geoPosition} from '../api/geolocation.api';
+import {authApi, AuthValidateRequestType} from '../api/auth.api';
 
 
 const initialState = {
@@ -151,7 +151,7 @@ export const sendCodeToPhone = ( {
     async ( dispatch ) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
-            const response = await authAPI.sendCodeToPhone({ phone, innNumber })
+            const response = await authApi.sendCodeToPhone({ phone, innNumber })
             console.log(response)
             dispatch(authStoreActions.setIsFetching(false))
             // обрабатываем ошибку ИНН
@@ -180,7 +180,7 @@ export const loginAuthorization = ( {
     async ( dispatch ) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
-            const response = await authAPI.login({ phone, password })
+            const response = await authApi.login({ phone, password })
             dispatch(authStoreActions.setIsFetching(false))
 
             if (response.success) {
@@ -204,7 +204,7 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
             const phone = getState().authStoreReducer.authPhone
-            const response = await authAPI.logout({ phone })
+            const response = await authApi.logout({ phone })
             dispatch(authStoreActions.setIsAuth(false))
 
             if (response.status) console.log(response)

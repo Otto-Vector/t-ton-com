@@ -113,21 +113,22 @@ $input--disabled-font-color: $mainFontColor;
 
   &:focus, &:hover {
     border: solid $input--border-color--focused $input--border-width;
+    color: gold;
   }
 
   &:valid { //поставил, потому что менялся цвет в настройках браузера при разфокусировке
-    color: black;
+    color: inherit;
   }
 
-  &:invalid {
+  &:invalid, &invalid:focus {
     color: red;
+    //border: solid red $input--border-width;
   }
 
   &:active {
   }
 
   &:empty {
-
   }
 
   &:disabled {

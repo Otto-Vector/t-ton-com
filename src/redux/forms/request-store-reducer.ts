@@ -3,7 +3,7 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
 import {cargoComposition, initialDocumentsRequestValues, makeNTestRequests} from '../../initials-test-data';
-import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher';
+import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
 import {polyline_decode} from '../../utils/polilyne-decode';
 
 
