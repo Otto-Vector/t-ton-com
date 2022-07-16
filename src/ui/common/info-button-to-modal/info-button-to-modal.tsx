@@ -1,5 +1,9 @@
 import React, {useState} from 'react'
 import styles from './info-button-to-modal.module.scss'
+import 'antd/lib/style/index.css' // используем core стили antd
+import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфоокон
+import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
+
 import {MaterialIcon} from '../material-icon/material-icon';
 import {Button} from '../button/button';
 import {Modal} from 'antd';

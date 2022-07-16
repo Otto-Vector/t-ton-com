@@ -8,18 +8,25 @@
   width: 40px;
 
   &__item {
-    //@include flex-center('column');
     margin: 5px;
     background-color: white;
     border-radius: 5px;
-    height: 39px;
-    width: 39px;
+    height: 30px;
+    width: 30px;
     overflow: hidden;
     text-align: center;
+
+    // небольшая анимация для ховера
+    filter: invert(0);
+    transition: filter;
+    transition-duration: .6s;
+
+    &:hover {
+      filter: invert(25%);
+    }
   }
 
   &__img {
-
-    width: 39px;
+    width: 30px;
   }
 }
