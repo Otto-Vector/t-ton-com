@@ -36,7 +36,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
     const distance = oneRequest?.distance
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string ) => {
+    const setLightBoxImage = ( image?: string | null) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
@@ -171,7 +171,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                         <Button type={ 'button' }
                                 disabled={ !employeeOnePhone }
                                 colorMode={ 'blue' }
-                                title={ employeeOnePhone }
+                                title={ employeeOnePhone+'' }
                                 rounded
                         />
                     </a>

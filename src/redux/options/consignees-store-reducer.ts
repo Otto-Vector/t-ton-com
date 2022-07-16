@@ -44,7 +44,7 @@ const initialState = {
         consigneesTel: 'Телефон получателя',
         description: 'Доп. данные для ТТН',
         coordinates: 'Местоположение в координатах',
-    } as ConsigneesCardType,
+    } as ConsigneesCardType<string|undefined>,
 
     maskOn: {
         title: undefined,

@@ -47,7 +47,7 @@ const initialState = {
         nameBank: 'Наименование Банка',
         checkingAccount: 'Расчётный счёт',
         korrAccount: 'Корреспондентский счёт',
-    } as CompanyRequisitesType,
+    } as CompanyRequisitesType<string|undefined>,
 
     maskOn: {
         innNumber: '############', // 10,12 цифр

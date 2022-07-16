@@ -33,7 +33,7 @@ const initialState = {
         garageNumber: 'Гаражный номер',
         photoFace: 'Добавить фотографию сотрудника',
         rating: 'Рейтинг:',
-    } as EmployeesCardType,
+    } as EmployeesCardType<string|undefined>,
 
     maskOn: {
         employeeFIO: undefined, // просто текст

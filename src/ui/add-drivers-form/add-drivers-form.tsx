@@ -49,7 +49,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const { distance } = useSelector(getOneRequestStore)
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string ) => {
+    const setLightBoxImage = ( image?: string | null) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
@@ -202,7 +202,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <img
                                                     src={
                                                         values.driverFIO
-                                                            ? employeeOneImage
+                                                            ? employeeOneImage+''
                                                             : noImagePhoto
                                                     }
                                                     alt="driverPhoto"
@@ -213,7 +213,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <img
                                                     src={
                                                         values.driverTransport
-                                                            ? transportOneImage
+                                                            ? transportOneImage+''
                                                             : noImagePhoto
                                                     }
                                                     alt="driverTransportPhoto"
@@ -224,7 +224,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <img
                                                     src={
                                                         values.driverTrailer
-                                                            ? trailerOneImage
+                                                            ? trailerOneImage+''
                                                             : noImagePhoto
                                                     }
                                                     alt="driverTrailerPhoto"

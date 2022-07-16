@@ -12,30 +12,34 @@ const initialState = {
     authPhone: '',
     authCash: 100,
     isAvailableSMSRequest: false,
-
+    kppBuffer: [] as string[] | null,
     isFetching: false,
     geoPosition: [ 0, 0 ] as number[],
 
     label: {
-        innNumber: 'ИНН Компании',
+        innNumber: 'ИНН Организации',
+        kppNumber: 'КПП Организации',
         phoneNumber: 'Контактный номер',
         sms: 'Пароль из sms',
-    } as phoneSubmitType,
+    } as phoneSubmitType<string|undefined>,
 
     initialValues: {
         innNumber: undefined,
+        kppNumber: undefined,
         phoneNumber: undefined,
         sms: undefined,
     } as phoneSubmitType,
 
     maskOn: {
         innNumber: '########## ##',
+        kppNumber: undefined,
         phoneNumber: '+7 (###) ###-##-##',
         sms: '####',
     } as phoneSubmitType,
 
     validators: {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
+        kppNumber: undefined,
         phoneNumber: composeValidators(required, mustBe00Numbers(11)),
         sms: composeValidators(required, mustBe00Numbers(4)),
     } as phoneSubmitType<ValidateType>,
@@ -53,6 +57,12 @@ export const authStoreReducer = ( state = initialState, action: ActionsType ): A
             return {
                 ...state,
                 isAuth: action.isAuth,
+            }
+        }
+        case 'auth-store-reducer/SET-AUTH-ID': {
+            return {
+                ...state,
+                authID: action.id,
             }
         }
         case 'auth-store-reducer/SET-IS-AVAILABLE-SMS-REQUEST': {
@@ -114,6 +124,10 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-AUTH-PHONE',
         authPhone,
     } as const ),
+    setAuthId: ( id: string ) => ( {
+        type: 'auth-store-reducer/SET-AUTH-ID',
+        id,
+    } as const ),
     setGeoPosition: ( { latitude, longitude }: { latitude: number, longitude: number } ) => ( {
         type: 'auth-store-reducer/SET-GEO-POSITION',
         latitude, longitude,
@@ -156,8 +170,8 @@ export const sendCodeToPhone = ( {
             dispatch(authStoreActions.setIsFetching(false))
             // обрабатываем ошибку ИНН
             if (response.message) {
-                return { innNumber: response.message }
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
+                return { innNumber: response.message }
             }
             if (response.success) {
                 dispatch(authStoreActions.setIsAvailableSMSRequest(true))
@@ -187,6 +201,9 @@ export const loginAuthorization = ( {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
                 dispatch(authStoreActions.setAuthPhone(phone))
+
+                dispatch(authStoreActions.setAuthId(response.success)) // исправить на нормальную
+
                 dispatch(authStoreActions.setIsFetching(false))
             }
             return null

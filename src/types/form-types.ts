@@ -2,12 +2,13 @@
 export type ValidateType = undefined | ( ( val: string ) => string | undefined )
 export type ParserType = undefined | ( ( val: string | undefined ) => string )
 // на поля для форм
-type DefaultFormType = string | undefined
+type DefaultFormType = string | undefined | null
 
 // на форму авторизации
 export type phoneSubmitType<T = DefaultFormType> = {
     innNumber: T
     phoneNumber: T
+    kppNumber: T
     sms: T
 }
 

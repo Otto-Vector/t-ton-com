@@ -24,9 +24,12 @@ import {
 } from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
 import {phoneSubmitType} from '../../../types/form-types'
-import {getOrganizationByInn} from '../../../redux/options/requisites-store-reducer';
+
 import {useNavigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
+import {FormSelector} from '../../common/form-selector/form-selector';
+import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
+import {getOrganizationsByInn, getOrganizationsByInnKPP} from '../../../redux/dadata-response-reducer';
 
 
 type OwnProps = {
@@ -47,22 +50,32 @@ export const LoginForm: React.FC<OwnProps> = () => {
     const initialValues = useSelector(getInitialValuesAuthStore)
     const maskOn = useSelector(getMaskOnAuthStore)
     const validators = useSelector(getValidatorsAuthStore)
+    const kppSelect = useSelector(getAllKPPSelectFromLocal)
 
     const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
 
+    const innValidate = async ( value: string ) => {
+        const parsedValue = parseAllNumbers(value)
+        const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue}))
+        return response
+    }
+
+    const setOneOrganization = ( value: string ) => {
+        console.log(value)
+    }
 
     const onSubmit = async ( val: phoneSubmitType ) => { // при нажатии кнопки ДАЛЕЕ
         let innError, phoneError, loginError
         if (isRegisterMode) { // если РЕГИСТРАЦИЯ, то сначала проверяем ИНН на сущестование
             if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан
-                innError = await dispatch<any>(getOrganizationByInn({ inn: +parseAllNumbers(val.innNumber) }))
+                innError = await dispatch<any>(getOrganizationsByInnKPP({ inn: +parseAllNumbers(val.innNumber), kpp: +parseAllNumbers(val.kppNumber) }))
                 if (innError) { // если ошибка, то выводим её в форму
                     dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                     return innError
                 } else { // потом отправляем sms на регистрацию
                     phoneError = await dispatch<any>(sendCodeToPhone({
-                        phone: val.phoneNumber as string, innNumber: parseAllNumbers(val.innNumber) as string,
+                        phone: val.phoneNumber as string, innNumber: parseAllNumbers(val.innNumber),
                     }))
                     if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
                         dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
@@ -129,14 +142,31 @@ export const LoginForm: React.FC<OwnProps> = () => {
                             <span className={ styles.onError }>{ submitError }</span>
                             <div className={ styles.loginForm__inputsPanel }>
                                 { isRegisterMode &&
-                                    <Field name={ 'innNumber' }
-                                           placeholder={ label.innNumber }
-                                           component={ FormInputType }
-                                           resetFieldBy={ form }
-                                           maskFormat={ maskOn.innNumber }
-                                           validate={ validators.innNumber }
-                                           disabled={ isAvailableSMS }
-                                    />
+                                    <>
+                                        <Field name={ 'innNumber' }
+                                               placeholder={ label.innNumber }
+                                               component={ FormInputType }
+                                               resetFieldBy={ form }
+                                               maskFormat={ maskOn.innNumber }
+                                               validate={ async ( value ) => {
+                                                   // забираем данные ДО рендера этого же элемента и "чистим" его от маски
+                                                   const preValue = parseAllNumbers(form.getFieldState('innNumber')?.value)
+                                                   // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+                                                   if (preValue && ( preValue !== parseAllNumbers(value) ))
+                                                       // запускаем асинхронную валидацию только после синхронной
+                                                       return ( validators.innNumber && validators.innNumber(value) ) || await innValidate(value)
+                                               } }
+
+                                               disabled={ isAvailableSMS }
+                                        />
+                                        <FormSelector named={ 'kppNumber' }
+                                                      placeholder={ label.kppNumber }
+                                                      values={ kppSelect }
+                                                      validate={ validators.kppNumber }
+                                                      handleChanger={ setOneOrganization }
+                                                      isClearable
+                                        />
+                                    </>
                                 }
                                 <Field name={ 'phoneNumber' }
                                        placeholder={ label.phoneNumber }

@@ -23,7 +23,7 @@ const initialState = {
         cargoWeight: 'Вес груза (тн.)',
         propertyRights: 'Право собственности',
         transportImage: 'Фото транспорта',
-    } as TransportCardType,
+    } as TransportCardType<string | undefined>,
 
     maskOn: {
         transportNumber: undefined, // просто текст

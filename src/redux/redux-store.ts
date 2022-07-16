@@ -18,6 +18,7 @@ import {infoStoreReducer} from './info-store-reducer';
 import {lightBoxStoreReducer} from './lightbox-store-reducer'
 import {bigMapStoreReducer} from './maps/big-map-store-reducer';
 import {appStoreReducer} from './app-store-reducer';
+import {daDataStoreReducer} from './dadata-response-reducer';
 
 
 const reducersObject = {
@@ -39,6 +40,7 @@ const reducersObject = {
     infoStoreReducer,
     lightBoxStoreReducer,
     bigMapStoreReducer,
+    daDataStoreReducer,
 }
 
 const rootReducer = combineReducers(reducersObject)

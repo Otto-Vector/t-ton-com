@@ -24,7 +24,7 @@ const initialState = {
         cargoWeight: 'Вес груза (тн.)',
         propertyRights: 'Право собственности',
         trailerImage: 'Фото транспорта',
-    } as TrailerCardType,
+    } as TrailerCardType<string|undefined>,
 
     maskOn: {
         trailerNumber: undefined, // просто текст

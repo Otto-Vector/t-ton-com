@@ -28,12 +28,12 @@ export const getRequisitesInfoOptionsStore: OptionsStoreSelectors<'requisitesInf
 // выборка из списка загруженных грузоотправителей
 export const getShippersOptionsStore = createSelector(getAllShippersStore, getShippersTitleOptionsStore,
     ( shippers: ShippersCardType[], titles ) => {
-        return { ...titles, content: shippers.map(( { id, title } ) => ( { id, title } )) }
+        return { ...titles, content: shippers.map(( { id, title } ) => ( { id, title: title + '' } )) }
     })
 // выборка из списка загруженных грузополучателей
 export const getConsigneesOptionsStore = createSelector(getAllConsigneesStore, getConsigneesTitleOptionsStore,
     ( consignee: ConsigneesCardType[], titles ) => {
-        return { ...titles, content: consignee.map(( { id, title } ) => ( { id, title } )) }
+        return { ...titles, content: consignee.map(( { id, title } ) => ( { id, title: title + '' } )) }
     })
 
 // выборка из списка загруженных грузовиков/тягачей

@@ -46,7 +46,7 @@ const initialState = {
         description: 'Доп. данные для ТТН',
         coordinates: 'Местоположение в координатах',
         city: undefined,
-    } as ShippersCardType,
+    } as ShippersCardType<string|undefined>,
 
     maskOn: {
         // id: undefined,
