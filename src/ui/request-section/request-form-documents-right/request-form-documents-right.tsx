@@ -276,7 +276,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    onChange={ buttonsAction.sendPaymentHasBeenTransferred }
                             />
                         </Button>
-                        <InfoButtonToModal textToModal={modalsText.paymentHasBeenTransferred}/>
+                        <InfoButtonToModal textToModal={modalsText.paymentHasBeenTransferred} />
                 </div>
                 <div className={ styles.requestFormDocumentRight__panelButton }>
                         <Button colorMode={ 'gray' }

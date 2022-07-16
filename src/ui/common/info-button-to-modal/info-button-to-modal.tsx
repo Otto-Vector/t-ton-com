@@ -11,7 +11,7 @@ import {Modal} from 'antd';
 type OwnProps = {
     textToModal?: string
     onCloseModal?: () => void
-    mode?: 'out' | 'in'
+    mode?: 'out' | 'in' | 'inForm' | 'outClose'
 }
 
 

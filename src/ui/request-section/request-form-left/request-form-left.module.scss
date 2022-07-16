@@ -7,6 +7,7 @@
   font-size: 14px;
 
   &__inputsPanel {
+    position: relative;
     width: 100%;
     color: $accentColor;
     margin-bottom: 6px;
@@ -19,10 +20,12 @@
   }
 
   &__inputsItem {
+    position: relative;
     width: 32%;
   }
 
   &__selector {
+    position: relative;
     margin-bottom: 10px;
   }
 
@@ -72,6 +75,7 @@
   }
 
   &__panelButton {
+    position: relative;
     width: 150px;
     height: 100%;
     margin: 0 15px;

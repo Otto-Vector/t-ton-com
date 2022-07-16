@@ -11,6 +11,7 @@ import {
     getCargoCompositionRequestStore,
     getCurrentDistanceIsFetchingRequestStore,
     getCurrentDistanceRequestStore,
+    getInfoTextModalsRequestValuesStore,
     getLabelRequestStore,
     getPlaceholderRequestStore,
     getValidatorsRequestStore,
@@ -37,6 +38,7 @@ import {shippersStoreActions} from '../../../redux/options/shippers-store-reduce
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
 import {Preloader} from '../../common/preloader/preloader';
 import {FormSpySimpleRequest} from '../../common/form-spy-simple/form-spy-simple';
+import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 
 
 type OwnProps = {
@@ -60,6 +62,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const labels = useSelector(getLabelRequestStore)
     const placehoders = useSelector(getPlaceholderRequestStore)
     const validators = useSelector(getValidatorsRequestStore)
+    const fieldInformation = useSelector(getInfoTextModalsRequestValuesStore)
     const currentDistance = useSelector(getCurrentDistanceRequestStore)
     const currentDistanceIfFetching = useSelector(getCurrentDistanceIsFetchingRequestStore)
 
@@ -163,6 +166,8 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                             { initialValues.cargoComposition }
                                         </div>
                                     }
+                                    <InfoButtonToModal textToModal={ fieldInformation.cargoComposition }
+                                                       mode={ 'inForm' }/>
                                 </div>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel + ' ' +
@@ -185,6 +190,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                             { ddMmYearFormat(initialValues.shipmentDate) }
                                         </div>
                                     }
+                                    <InfoButtonToModal textToModal={ fieldInformation.shipmentDate } mode={ 'inForm' }/>
                                 </div>
                                 <div className={ styles.requestFormLeft__inputsItem }>
                                     <label className={ styles.requestFormLeft__label }>
@@ -201,6 +207,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                 : <Preloader/>
                                         }
                                     </div>
+                                    <InfoButtonToModal textToModal={ fieldInformation.distance } mode={ 'inForm' }/>
                                 </div>
                                 <div className={ styles.requestFormLeft__inputsItem }>
                                     <label className={ styles.requestFormLeft__label }>
@@ -216,6 +223,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                             { initialValues.cargoType }
                                         </div>
                                     }
+                                    <InfoButtonToModal textToModal={ fieldInformation.cargoType } mode={ 'inForm' }/>
                                 </div>
                             </div>
                             <div className={ styles.requestFormLeft__selector }>
@@ -233,6 +241,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                         { oneCustomer?.title + ', ' + oneCustomer?.city }
                                     </div>
                                 }
+                                <InfoButtonToModal textToModal={ fieldInformation.customer } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
@@ -249,6 +258,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                         { oneShipper?.title + ', ' + oneShipper?.city }
                                     </div>
                                 }
+                                <InfoButtonToModal textToModal={ fieldInformation.shipper } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
@@ -265,6 +275,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                         { oneConsignee?.title + ', ' + oneConsignee?.city }
                                     </div>
                                 }
+                                <InfoButtonToModal textToModal={ fieldInformation.consignee } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
@@ -273,6 +284,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     styles.requestFormLeft__info_leftAlign }>
                                     { oneCarrier ? ( oneCarrier.title + ', ' + oneCarrier.city ) : placehoders.carrier }
                                 </div>
+                                <InfoButtonToModal textToModal={ fieldInformation.carrier } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
@@ -281,6 +293,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     styles.requestFormLeft__info_leftAlign }>
                                     { initialValues.driver || placehoders.driver }
                                 </div>
+                                <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
@@ -296,6 +309,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                         { initialValues.note }
                                     </div>
                                 }
+                                <InfoButtonToModal textToModal={ fieldInformation.note } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__buttonsPanel }>
                                 { !requestModes.historyMode ? <>
@@ -322,6 +336,10 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                 } }
                                                 disabled={ hasValidationErrors }
                                                 rounded/>
+                                        { requestModes.createMode &&
+                                            <InfoButtonToModal textToModal={ fieldInformation.selfDeliveryButton }
+                                                               mode={ 'outClose' }/>
+                                        }
                                     </div>
                                 </> : null
                                 }
