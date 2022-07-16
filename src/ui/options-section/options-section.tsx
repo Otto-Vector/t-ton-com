@@ -11,19 +11,24 @@ import {
     getShippersOptionsStore,
     getTrailerOptionsStore,
     getTransportOptionsStore,
+    getRequisitesInfoOptionsStore,
 } from '../../selectors/options/options-reselect';
+import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
 
 type OwnProps = {}
 
 export const OptionsSection: React.FC<OwnProps> = () => {
 
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
+    const navigate = useNavigate()
+
     const shippersList = useSelector(getShippersOptionsStore)
     const consigneesList = useSelector(getConsigneesOptionsStore)
     const transportList = useSelector(getTransportOptionsStore)
     const trailerList = useSelector(getTrailerOptionsStore)
     const employeesList = useSelector(getEmployeesOptionsStore)
-    const navigate = useNavigate()
+
+    const requisitesInfoText = useSelector(getRequisitesInfoOptionsStore)
 
     return (
         <section className={ styles.optionsSection }>
@@ -36,6 +41,7 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                             rounded onClick={ () => {
                         navigate(requisites)
                     } }> Реквизиты </Button>
+                    <InfoButtonToModal textToModal={requisitesInfoText}/>
                 </div>
             </header>
             <div className={ styles.optionsSection__table }>

@@ -22,6 +22,7 @@ const getTransportTitleOptionsStore: OptionsStoreSelectors<'transport'> = ( stat
 const getTrailerTitleOptionsStore: OptionsStoreSelectors<'trailer'> = ( state ) => state.optionsStoreReducer.trailer
 const getEmployeesTitleOptionsStore: OptionsStoreSelectors<'employees'> = ( state ) => state.optionsStoreReducer.employees
 
+export const getRequisitesInfoOptionsStore: OptionsStoreSelectors<'requisitesInfo'> = ( state ) => state.optionsStoreReducer.requisitesInfo
 
 
 // выборка из списка загруженных грузоотправителей

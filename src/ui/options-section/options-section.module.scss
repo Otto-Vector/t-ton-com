@@ -23,11 +23,13 @@
   }
 
   &__buttonRequisites {
+    position: relative;
     @include size(160px, 34px);
     font-family: $RalewayFont;
     font-weight: 700;
     font-size: 18px;
     line-height: 21px;
+    margin-right: 20px;
   }
 
   &__table {
