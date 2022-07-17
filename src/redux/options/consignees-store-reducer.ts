@@ -231,12 +231,12 @@ export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDa
     ConsigneesStoreReducerThunkActionType<string | null> =>
     async ( dispatch, getState ) => {
 
-        const innNumber = getState().consigneesStoreReducer.initialValues.innNumber
+        const { innNumber } = getState().consigneesStoreReducer.initialValues
         const booleanMemo = ( +( innNumber || 0 ) !== inn )
         const response = booleanMemo
             ? await getOrganizationByInnDaDataAPI({ inn })
             : null
-        console.log(response)
+
         if (response !== null) {
             if (response.length > 0) {
                 const { data } = response[0]
@@ -250,5 +250,5 @@ export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDa
                 }))
                 return null
             } else return 'Неверный ИНН!'
-        } else  return null
+        } else return null
     }

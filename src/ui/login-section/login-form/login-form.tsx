@@ -57,7 +57,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
 
     const innValidate = async ( value: string ) => {
         const parsedValue = parseAllNumbers(value)
-        const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue}))
+        const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue }))
         return response
     }
 
@@ -69,7 +69,10 @@ export const LoginForm: React.FC<OwnProps> = () => {
         let innError, phoneError, loginError
         if (isRegisterMode) { // если РЕГИСТРАЦИЯ, то сначала проверяем ИНН на сущестование
             if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан
-                innError = await dispatch<any>(getOrganizationsByInnKPP({ inn: +parseAllNumbers(val.innNumber), kpp: +parseAllNumbers(val.kppNumber) }))
+                innError = await dispatch<any>(getOrganizationsByInnKPP({
+                    inn: +parseAllNumbers(val.innNumber),
+                    kpp: +parseAllNumbers(val.kppNumber),
+                }))
                 if (innError) { // если ошибка, то выводим её в форму
                     dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                     return innError
@@ -149,10 +152,11 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
                                                validate={ async ( value ) => {
-                                                   // забираем данные ДО рендера этого же элемента и "чистим" его от маски
-                                                   const preValue = parseAllNumbers(form.getFieldState('innNumber')?.value)
+                                                   // расчищаем значения от лишних символов и пробелов после маски
+                                                   const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
+                                                       .map(val => parseAllNumbers(val) || undefined)
                                                    // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-                                                   if (preValue && ( preValue !== parseAllNumbers(value) ))
+                                                   if (currentValue && ( preValue !== currentValue ))
                                                        // запускаем асинхронную валидацию только после синхронной
                                                        return ( validators.innNumber && validators.innNumber(value) ) || await innValidate(value)
                                                } }
@@ -164,6 +168,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }
                                                       handleChanger={ setOneOrganization }
+
                                                       isClearable
                                         />
                                     </>

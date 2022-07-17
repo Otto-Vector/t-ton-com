@@ -39,7 +39,7 @@ const initialState = {
 
     validators: {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
-        kppNumber: undefined,
+        kppNumber: composeValidators(required),
         phoneNumber: composeValidators(required, mustBe00Numbers(11)),
         sms: composeValidators(required, mustBe00Numbers(4)),
     } as phoneSubmitType<ValidateType>,

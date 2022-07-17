@@ -34,7 +34,7 @@ export const initialShippersContent: ShippersCardType[] = [
     {
         id: 1,
         title: 'Черепахи',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Черепахи',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -47,7 +47,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 2, title: 'Зайцы',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Мастера боевых искусств',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -60,7 +60,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 3, title: 'Бегемоты',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Локтекусательный комбинат',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -73,7 +73,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 4, title: 'Лоси',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Манерные водовозы',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -86,7 +86,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 5, title: 'Пауки',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Усомокающая станция',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -99,7 +99,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 6, title: 'Крокодилы',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Распилы подельника',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -112,7 +112,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 7, title: 'Чайки',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Бодрые бородачи и мухи',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -125,7 +125,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 8, title: 'Гуси',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Б и Ко Лимитэд',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -138,7 +138,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 9, title: 'Лебеди',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Мощное Хозяйство',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -151,7 +151,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 10, title: 'Очень сильные тигры',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Каменные скрипели',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -164,7 +164,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 11, title: 'Везучие атоллы',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Бабтистский Разогрев',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -177,7 +177,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 12, title: 'Хранители попкорна',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Юстиция почивает',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -190,7 +190,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 13, title: 'Б и Ко',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Поночка Хряк',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -203,7 +203,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 14, title: 'Южный Мак',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Северный полюс2',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -216,7 +216,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 15, title: 'Ретир Заново',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Чемпионы неугомонны',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -229,7 +229,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 16, title: 'Загребущие тараканы',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Черепа',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -242,7 +242,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 17, title: 'Насекомоядные',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Черешенный запах молотилки',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -255,7 +255,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 18, title: 'Растительные жиры',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Пашня Луговая',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -268,7 +268,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 19, title: 'Собаки гавкающие',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Настигатор',
         kpp: '606369470',
         ogrn: '8179195353032',
@@ -281,7 +281,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 20, title: 'Собаки лающие',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'ЧерепаПАхи',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -294,7 +294,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 21, title: 'Собаки кусающие',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Чере--пахи',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -307,7 +307,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 22, title: 'Рыба, плавающая очень глубоко, пока никого нет',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Черепахи и Кит',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -320,7 +320,7 @@ export const initialShippersContent: ShippersCardType[] = [
     },
     {
         id: 23, title: 'Кит',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Черепахи',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -337,7 +337,7 @@ export const initialShippersContent: ShippersCardType[] = [
 export const initialConsigneesContent: ConsigneesCardType[] = [
     {
         id: 12, title: 'Хранители попкорна',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Юстиция почивает',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -350,7 +350,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 13, title: 'Б и Ко',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Поночка Хряк',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -363,7 +363,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 14, title: 'Южный Мак',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Северный полюс2',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -376,7 +376,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 15, title: 'Ретир Заново',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Чемпионы неугомонны',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -389,7 +389,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 16, title: 'Загребущие тараканы',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Черепа',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -402,7 +402,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 17, title: 'Насекомоядные',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Черешенный запах молотилки',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -415,7 +415,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 18, title: 'Растительные жиры',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Пашня Луговая',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -428,7 +428,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 19, title: 'Собаки гавкающие',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Настигатор',
         kpp: '606369470',
         ogrn: '8179195353032',
@@ -441,7 +441,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 20, title: 'Собаки лающие',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'ЧерепаПАхи',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -454,7 +454,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 21, title: 'Собаки кусающие',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Чере--пахи',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -467,7 +467,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 22, title: 'Рыба, плавающая очень глубоко, пока никого нет',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Черепахи и Кит',
         kpp: '123456789',
         ogrn: '123456789012',
@@ -480,7 +480,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
     },
     {
         id: 23, title: 'Кит',
-        innNumber: '1234567890',
+        innNumber: randMinMax(1000000000,9999999999).toString(),
         organizationName: 'Черепахи',
         kpp: '123456789',
         ogrn: '123456789012',

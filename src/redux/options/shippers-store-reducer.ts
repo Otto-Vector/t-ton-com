@@ -46,7 +46,7 @@ const initialState = {
         description: 'Доп. данные для ТТН',
         coordinates: 'Местоположение в координатах',
         city: undefined,
-    } as ShippersCardType<string|undefined>,
+    } as ShippersCardType<string | undefined>,
 
     maskOn: {
         // id: undefined,
@@ -239,12 +239,12 @@ export const getOrganizationByInnShipper = ( { inn }: GetOrganizationByInnDaData
     ShippersStoreReducerThunkActionType<string | null> =>
     async ( dispatch, getState ) => {
 
-        const innNumber = getState().shippersStoreReducer.initialValues.innNumber
+        const { innNumber } = getState().shippersStoreReducer.initialValues
         const booleanMemo = ( +( innNumber || 0 ) !== inn )
         const response = booleanMemo
             ? await getOrganizationByInnDaDataAPI({ inn })
             : null
-        console.log(response)
+
         if (response !== null) {
             if (response.length > 0) {
                 const { data } = response[0]
@@ -257,9 +257,7 @@ export const getOrganizationByInnShipper = ( { inn }: GetOrganizationByInnDaData
                     address: data.address.value,
                 }))
                 return null
-            } else {
-                return 'Неверный ИНН!'
-            }
+            } else return 'Неверный ИНН!'
         } else return null
 
     }
