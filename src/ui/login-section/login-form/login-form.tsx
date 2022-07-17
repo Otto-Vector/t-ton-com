@@ -168,7 +168,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }
                                                       handleChanger={ setOneOrganization }
-
+                                                      errorTop
                                                       isClearable
                                         />
                                     </>

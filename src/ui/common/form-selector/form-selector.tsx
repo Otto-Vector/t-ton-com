@@ -15,6 +15,7 @@ type OwnProps = {
     creatableSelect?: boolean
     handleCreate?: Function
     handleChanger?: Function
+    errorTop?: boolean
 }
 
 
@@ -28,6 +29,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                                                       creatableSelect = false,
                                                       handleCreate,
                                                       handleChanger,
+                                                      errorTop,
                                                   } ) => {
 
     return <div className={ styles.dropdown }>
@@ -43,6 +45,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                               creatableSelect={ creatableSelect }
                               handleCreate={ handleCreate }
                               handleChanger={ handleChanger }
+                              errorTop={ errorTop }
                 />
             ) }
         </Field>
@@ -62,6 +65,7 @@ const CustomSelect = ( {
                            creatableSelect, //
                            handleCreate, // этот параметр только для creatableSelect
                            handleChanger,
+                           errorTop,
                            ...rest
                        }: FieldRenderProps<string, HTMLElement> ) => {
 
@@ -95,7 +99,10 @@ const CustomSelect = ( {
                     options={ options }
                     value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
                 /> }
-            { isError && <span className={ styles.errorSpan }>{ meta.error }</span> }
+            { isError &&
+                <span className={ styles.errorSpan + ' ' + styles[`errorSpan_${ errorTop ? 'top' : 'bottom' }`] }>
+                    { meta.error }
+                </span> }
         </>
     );
 };
