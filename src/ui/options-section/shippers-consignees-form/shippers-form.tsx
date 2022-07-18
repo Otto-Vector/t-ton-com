@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {setIn} from 'final-form'
 
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'

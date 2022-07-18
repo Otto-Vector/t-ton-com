@@ -85,11 +85,9 @@ export const FormInputType: React.FC<OwnProps> = (
             {/*сообщение об ошибке появляется в этом спане*/ }
             { isError && ( <span className={
                 styles.errorSpan + ' ' + ( errorBottom ? styles.errorSpan_bottom : styles.errorSpan_top )
-            }>{ meta.error ||
-                (
-                    meta.dirtySinceLastSubmit ||
-                    meta.submitError
-                ) }</span> ) }
+            }>{ meta.error || // обычная ошибка
+                ( meta.dirtySinceLastSubmit || meta.submitError ) // ошибка из сабмита
+            }</span> ) }
         </div>
     )
 }
