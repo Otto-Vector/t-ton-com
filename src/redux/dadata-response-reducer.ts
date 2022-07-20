@@ -75,7 +75,6 @@ export const getOrganizationsByInnKPP = ( {
             return ( { innNumber: 'Неверный ИНН/КПП!' } )
         }
 
-
         dispatch(daDataStoreActions.setSuggectionsValues(response))
 
         return null
