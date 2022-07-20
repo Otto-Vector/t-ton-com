@@ -15,4 +15,5 @@ export const getMaskOnAuthStore: AuthStoreSelectors<'maskOn'> = ( state ) => sta
 export const getValidatorsAuthStore: AuthStoreSelectors<'validators'> = ( state ) => state.authStoreReducer.validators
 
 export const getGeoPositionAuthStore: AuthStoreSelectors<'geoPosition'> = ( state ) => state.authStoreReducer.geoPosition
+export const getModalMessageAuthStore: AuthStoreSelectors<'modalMessage'> = ( state ) => state.authStoreReducer.modalMessage
 

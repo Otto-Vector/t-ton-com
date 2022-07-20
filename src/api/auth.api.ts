@@ -10,12 +10,17 @@ export type AuthValidateRequestType = {
     password: string,
 }
 
+export type NewUserRequestType = {
+    inn: string,
+    kpp: string,
+    phone: string
+}
 
 export const authApi = {
 
     // отправка запроса на код по номеру телефона
-    sendCodeToPhone( { phone, innNumber }: { innNumber: string, phone: string } ) {
-        return instanceBack.put<InfoResponseType>('/api/codesend/', { phone, innNumber })
+    sendCodeToPhone( { phone, inn, kpp }: NewUserRequestType ) {
+        return instanceBack.put<InfoResponseType>('/api/codesend/', { phone, innNumber: inn, kpp })
             .then(response => response.data)
     },
     // вход по паролю

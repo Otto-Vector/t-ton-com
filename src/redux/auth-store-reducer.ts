@@ -3,7 +3,7 @@ import {AppStateType, GetActionsTypes} from './redux-store'
 import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation.api';
-import {authApi, AuthValidateRequestType} from '../api/auth.api';
+import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
 
 
 const initialState = {
@@ -15,13 +15,14 @@ const initialState = {
     kppBuffer: [] as string[] | null,
     isFetching: false,
     geoPosition: [ 0, 0 ] as number[],
+    modalMessage: null as string | null, // сообщение в модалку (если null, то модалки нет)
 
     label: {
         innNumber: 'ИНН Организации',
         kppNumber: 'КПП Организации',
         phoneNumber: 'Контактный номер',
         sms: 'Пароль из sms',
-    } as phoneSubmitType<string|undefined>,
+    } as phoneSubmitType<string | undefined>,
 
     initialValues: {
         innNumber: undefined,
@@ -95,6 +96,12 @@ export const authStoreReducer = ( state = initialState, action: ActionsType ): A
                 authPhone: action.authPhone,
             }
         }
+        case 'auth-store-reducer/SET-MODAL-MESSAGE': {
+            return {
+                ...state,
+                modalMessage: action.message,
+            }
+        }
         default: {
             return state
         }
@@ -132,6 +139,10 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-GEO-POSITION',
         latitude, longitude,
     } as const ),
+    setModalMessage: ( message: string | null) => ( {
+        type: 'auth-store-reducer/SET-MODAL-MESSAGE',
+        message
+    } as const ),
 }
 
 /* САНКИ */
@@ -160,12 +171,13 @@ export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
 // отправляем запрос на код авторизации в телефон
 export const sendCodeToPhone = ( {
                                      phone,
-                                     innNumber,
-                                 }: { innNumber: string, phone: string } ): AuthStoreReducerThunkActionType<{} | null> =>
+                                     inn,
+                                     kpp,
+                                 }: NewUserRequestType ): AuthStoreReducerThunkActionType<{} | null> =>
     async ( dispatch ) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
-            const response = await authApi.sendCodeToPhone({ phone, innNumber })
+            const response = await authApi.sendCodeToPhone({ phone, inn, kpp })
             console.log(response)
             dispatch(authStoreActions.setIsFetching(false))
             // обрабатываем ошибку ИНН
@@ -225,6 +237,21 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
             dispatch(authStoreActions.setIsAuth(false))
 
             if (response.status) console.log(response)
+
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+// разлогиниваемся
+export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            dispatch(authStoreActions.setIsFetching(true))
+            const response = await authApi.passwordRecovery({ phone })
+            // const response = {success: 'Сообщение!'}
+            console.log(response)
+            if (response.success) dispatch(authStoreActions.setModalMessage(response.success))
 
         } catch (error) {
             alert(error)

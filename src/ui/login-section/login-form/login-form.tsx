@@ -13,6 +13,7 @@ import {
     getIsFetchingAuth,
     getLabelAuthStore,
     getMaskOnAuthStore,
+    getModalMessageAuthStore,
     getValidatorsAuthStore,
 } from '../../../selectors/auth-reselect'
 import {Preloader} from '../../common/preloader/preloader'
@@ -20,6 +21,7 @@ import {
     authStoreActions,
     fakeAuthFetching,
     loginAuthorization,
+    newPassword,
     sendCodeToPhone,
 } from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
@@ -30,6 +32,7 @@ import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
 import {getOrganizationsByInn, getOrganizationsByInnKPP} from '../../../redux/dadata-response-reducer';
+import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 
 
 type OwnProps = {
@@ -44,7 +47,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
     const [ isRegisterMode, setIsRegisterMode ] = useState(false)
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
     const isAuth = useSelector(getIsAuthAuthStore)
-
+    const modalMessage = useSelector(getModalMessageAuthStore)
 
     const label = useSelector(getLabelAuthStore)
     const initialValues = useSelector(getInitialValuesAuthStore)
@@ -61,25 +64,21 @@ export const LoginForm: React.FC<OwnProps> = () => {
         return response
     }
 
-    const setOneOrganization = ( value: string ) => {
-        console.log(value)
-    }
+    // const setOneOrganization = ( value: string ) => {
+    //     console.log(value)
+    // }
 
-    const onSubmit = async ( val: phoneSubmitType ) => { // при нажатии кнопки ДАЛЕЕ
+    const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: phoneSubmitType ) => { // при нажатии кнопки ДАЛЕЕ
+        const [ inn, kpp, phone ] = [ innNumber, kppNumber, phoneNumber ].map(parseAllNumbers)
         let innError, phoneError, loginError
         if (isRegisterMode) { // если РЕГИСТРАЦИЯ, то сначала проверяем ИНН на сущестование
             if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан
-                innError = await dispatch<any>(getOrganizationsByInnKPP({
-                    inn: +parseAllNumbers(val.innNumber),
-                    kpp: +parseAllNumbers(val.kppNumber),
-                }))
+                innError = await dispatch<any>(getOrganizationsByInnKPP({ inn, kpp }))
                 if (innError) { // если ошибка, то выводим её в форму
                     dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                     return innError
                 } else { // потом отправляем sms на регистрацию
-                    phoneError = await dispatch<any>(sendCodeToPhone({
-                        phone: val.phoneNumber as string, innNumber: parseAllNumbers(val.innNumber),
-                    }))
+                    phoneError = await dispatch<any>(sendCodeToPhone({ phone, kpp, inn }))
                     if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
                         dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                         return phoneError
@@ -87,7 +86,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
                 }
             } else { // если SMS отослан
                 loginError = await dispatch<any>(
-                    loginAuthorization({ phone: val.phoneNumber as string, password: val.sms as string }))
+                    loginAuthorization({ phone: phoneNumber as string, password: sms as string }))
                 if (loginError) {
                     return loginError
                 }
@@ -102,7 +101,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
             } else {
 
                 loginError = await dispatch<any>(
-                    loginAuthorization({ phone: val.phoneNumber as string, password: val.sms as string }))
+                    loginAuthorization({ phone: phoneNumber as string, password: sms as string }))
                 if (loginError) {
                     return loginError
                 }
@@ -118,8 +117,13 @@ export const LoginForm: React.FC<OwnProps> = () => {
         // dispatch(authStoreActions.setIsAvailableSMSRequest(isRegisterMode))
     }
 
-    const fakeFetch = () => {
+    const newCode = ( phone: string ) => {
         dispatch<any>(fakeAuthFetching())
+        dispatch<any>(newPassword({ phone }))
+    }
+
+    const clearMessage = ()=> {
+        dispatch(authStoreActions.setModalMessage(null))
     }
 
 
@@ -140,6 +144,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
                           pristine,
                           form,
                           submitting,
+                          values,
                       } ) => (
                         <form onSubmit={ handleSubmit }>
                             <span className={ styles.onError }>{ submitError }</span>
@@ -167,7 +172,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                                       placeholder={ label.kppNumber }
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }
-                                                      handleChanger={ setOneOrganization }
+                                            // handleChanger={ setOneOrganization }
                                                       errorTop
                                                       isClearable
                                         />
@@ -193,11 +198,19 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                         <Button type={ 'button' }
                                                 title={ 'Новый запрос на пароль из SMS' }
                                                 colorMode={ 'gray' }
-                                                onClick={ fakeFetch }
+                                                disabled={ !form.getFieldState('phoneNumber')?.valid }
+                                                onClick={ () => {
+                                                    newCode(values.phoneNumber as string)
+                                                } }
                                                 rounded
                                         >Новый пароль</Button>
                                     </div> }
                                 </Field>
+                                { modalMessage &&
+                                    <InfoButtonToModal textToModal={ modalMessage }
+                                                       mode={ 'invisible' }
+                                                       onCloseModal={()=>{clearMessage()}}
+                                    /> }
                             </div>
                             <div className={ styles.loginForm__buttonsPanel }>
                                 <Button type={ 'submit' }

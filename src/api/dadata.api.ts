@@ -18,8 +18,8 @@ export type GetOrganizationByInnDaDataType = {
 }
 
 export type GetOrganizationByInnKPPDaDataType = {
-    inn: number,
-    kpp: number
+    inn: string,
+    kpp: string
 }
 
 type localResponseType = {

@@ -215,7 +215,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     { requestModes.createMode
                                         ? <FormSelector named={ 'cargoType' }
                                                         placeholder={ labels.cargoType }
-                                                        values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }
+                                                        values={ stringArrayToSelectValue([ ...cargoConstType ]) }
                                                         validate={ validators.cargoType }
                                                         isClearable
                                         />
