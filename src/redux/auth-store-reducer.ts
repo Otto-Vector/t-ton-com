@@ -252,6 +252,7 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             // const response = {success: 'Сообщение!'}
             console.log(response)
             if (response.success) dispatch(authStoreActions.setModalMessage(response.success))
+            if (response.message) dispatch(authStoreActions.setModalMessage(response.message))
 
         } catch (error) {
             alert(error)

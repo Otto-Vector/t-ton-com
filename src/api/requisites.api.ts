@@ -54,7 +54,7 @@ export const requisitesApi = {
     },
     // запрос данных по Id пользователя
     getPersonalDataFromId( { idUser }: { idUser: string } ) {
-        return instanceBack.patch<PersonalResponseType>('/api/personality/', { idUser })
+        return instanceBack.patch<PersonalResponseType[]>('/api/personality/', { idUser })
             .then(response => response.data)
     },
     // изменение персональных данных

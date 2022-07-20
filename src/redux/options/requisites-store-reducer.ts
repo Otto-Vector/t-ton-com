@@ -47,7 +47,7 @@ const initialState = {
         nameBank: 'Наименование Банка',
         checkingAccount: 'Расчётный счёт',
         korrAccount: 'Корреспондентский счёт',
-    } as CompanyRequisitesType<string|undefined>,
+    } as CompanyRequisitesType<string | undefined>,
 
     maskOn: {
         innNumber: '############', // 10,12 цифр
@@ -247,7 +247,7 @@ export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
 
         if (response.length > 0) {
             const { data } = response[0]
-            dispatch(requisitesStoreActions.setInitialValues({
+            dispatch(requisitesStoreActions.setStoredValues({
                 ...getState().requisitesStoreReducer.initialValues,
                 innNumber: data.inn,
                 organizationName: response[0].value,
@@ -269,40 +269,43 @@ export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
 
 // запрос данных активного пользователя
 export const getPersonalReqisites = (): RequisitesStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+    async ( dispatch, getState ) => {
         try {
             const response = await requisitesApi.getPersonalAuthData()
-            let user: PersonalResponseType
+            let user: PersonalResponseType[]
             if (response.userid) {
                 user = await requisitesApi.getPersonalDataFromId({ idUser: response.userid })
-                console.log(user)
-                dispatch(requisitesStoreActions.setInitialValues({
-                    innNumber: user.nnNumber,
-                    organizationName: user.organizationName,
-                    taxMode: user.taxMode,
-                    kpp: user.kpp,
-                    ogrn: user.ogrn,
-                    okpo: user.okpo,
-                    legalAddress: user.legalAddress,
-                    description: user.description,
 
-                    postAddress: user.postAddress,
-                    phoneDirector: user.phoneDirector,
-                    phoneAccountant: user.phoneAccountant,
-                    email: user.email,
-                    bikBank: user.bikBank,
-                    nameBank: user.nameBank,
-                    checkingAccount: user.checkingAccount,
-                    korrAccount: user.korrAccount,
-                    tarifs: {
-                        create: user.tarifCreate,
-                        acceptShortRoute: user.tarifAcceptShortRoute,
-                        acceptLongRoute: user.tarifAcceptLongRoute,
-                        paySafeTax: user.tarifPaySafeTax,
-                    },
-                } as CompanyRequisitesType))
+                if (user.length > 0) {
+                    dispatch(requisitesStoreActions.setStoredValues({
+                        ...getState().requisitesStoreReducer.initialValues,
+                        innNumber: user[0].nnNumber,
+                        organizationName: user[0].organizationName,
+                        taxMode: user[0].taxMode,
+                        kpp: user[0].kpp,
+                        ogrn: user[0].ogrn,
+                        okpo: user[0].okpo,
+                        legalAddress: user[0].legalAddress,
+                        description: user[0].description,
+
+                        postAddress: user[0].postAddress,
+                        phoneDirector: user[0].phoneDirector,
+                        phoneAccountant: user[0].phoneAccountant,
+                        email: user[0].email,
+                        bikBank: user[0].bikBank,
+                        nameBank: user[0].nameBank,
+                        checkingAccount: user[0].checkingAccount,
+                        korrAccount: user[0].korrAccount,
+                        tarifs: {
+                            create: user[0].tarifCreate,
+                            acceptShortRoute: user[0].tarifAcceptShortRoute,
+                            acceptLongRoute: user[0].tarifAcceptLongRoute,
+                            paySafeTax: user[0].tarifPaySafeTax,
+                        },
+                    } as CompanyRequisitesType))
+                }
+                dispatch<any>(authStoreActions.setIsAuth(true))
             }
-            dispatch<any>(authStoreActions.setIsAuth(true))
         } catch (error) {
 
             // @ts-ignore
