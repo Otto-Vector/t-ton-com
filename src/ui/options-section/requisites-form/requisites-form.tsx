@@ -59,7 +59,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, handleSubmit, pristine, form, submitting } ) => (
+                                ( { submitError, handleSubmit, pristine, form, submitting, hasValidationErrors } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.requisitesForm__form }>
                                         <div className={ styles.requisitesForm__inputsPanel }>
                                             <Field name={ 'innNumber' }
@@ -204,9 +204,10 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                             />
                                             <div className={ styles.requisitesForm__buttonsPanel }>
                                                 <Button type={ 'submit' }
-                                                        disabled={ submitting }
+                                                        disabled={ submitting || hasValidationErrors}
                                                         colorMode={ 'green' }
                                                         title={ 'Cохранить' }
+
                                                         rounded
                                                 />
                                             </div>

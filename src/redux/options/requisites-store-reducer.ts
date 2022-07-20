@@ -275,7 +275,7 @@ export const getPersonalReqisites = (): RequisitesStoreReducerThunkActionType =>
             let user: PersonalResponseType[]
             if (response.userid) {
                 user = await requisitesApi.getPersonalDataFromId({ idUser: response.userid })
-
+                console.log(user)
                 if (user.length > 0) {
                     dispatch(requisitesStoreActions.setStoredValues({
                         ...getState().requisitesStoreReducer.initialValues,
