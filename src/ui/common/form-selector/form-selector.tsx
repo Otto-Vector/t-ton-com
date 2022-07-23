@@ -16,6 +16,7 @@ type OwnProps = {
     handleCreate?: Function
     handleChanger?: Function
     errorTop?: boolean
+    disabled?: boolean
 }
 
 
@@ -30,6 +31,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                                                       handleCreate,
                                                       handleChanger,
                                                       errorTop,
+                                                      disabled,
                                                   } ) => {
 
     return <div className={ styles.dropdown }>
@@ -38,6 +40,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                name={ named }
                placeholder={ placeholder }
                validate={ validate }
+               disabled={ disabled }
         >
             { ( { input, meta, placeholder } ) => (
                 <CustomSelect input={ input } meta={ meta } options={ values } placeholder={ placeholder }
@@ -46,6 +49,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                               handleCreate={ handleCreate }
                               handleChanger={ handleChanger }
                               errorTop={ errorTop }
+                              disabled={ disabled }
                 />
             ) }
         </Field>
@@ -66,6 +70,7 @@ const CustomSelect = ( {
                            handleCreate, // этот параметр только для creatableSelect
                            handleChanger,
                            errorTop,
+                           disabled,
                            ...rest
                        }: FieldRenderProps<string, HTMLElement> ) => {
 
@@ -86,6 +91,7 @@ const CustomSelect = ( {
                     isClearable={ isClearable }
                     classNamePrefix={ 'react-select-ton' }
                     onChange={ handleChange }
+                    isDisabled={disabled}
                     onCreateOption={ handleCreate }
                     options={ options }
                     value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
@@ -97,6 +103,7 @@ const CustomSelect = ( {
                     classNamePrefix={ 'react-select-ton' }
                     onChange={ handleChange }
                     options={ options }
+                    isDisabled={disabled}
                     value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
                 /> }
             { isError &&

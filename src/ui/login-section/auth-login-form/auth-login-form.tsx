@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import styles from './login-form.module.scss'
+import styles from './auth-login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {FORM_ERROR} from 'final-form'
 import {Button} from '../../common/button/button'
@@ -39,7 +39,7 @@ type OwnProps = {
     // onSubmit: (login: phoneSubmitType) => void
 }
 
-export const LoginForm: React.FC<OwnProps> = () => {
+export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     const { options, requisites } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -69,7 +69,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
     // }
 
     const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: phoneSubmitType ) => { // при нажатии кнопки ДАЛЕЕ
-        const [ inn, kpp, phone ] = [ innNumber, kppNumber, phoneNumber ].map(parseAllNumbers)
+        const [ inn, kpp ] = [ innNumber, kppNumber ].map(parseAllNumbers)
         let innError, phoneError, loginError
         if (isRegisterMode) { // если РЕГИСТРАЦИЯ, то сначала проверяем ИНН на сущестование
             if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан
@@ -78,7 +78,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
                     dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                     return innError
                 } else { // потом отправляем sms на регистрацию
-                    phoneError = await dispatch<any>(sendCodeToPhone({ phone, kpp, inn }))
+                    phoneError = await dispatch<any>(sendCodeToPhone({ phone: phoneNumber as string, kpp, inn }))
                     if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
                         dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                         return phoneError
@@ -122,7 +122,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
         dispatch<any>(newPassword({ phone }))
     }
 
-    const clearMessage = ()=> {
+    const clearMessage = () => {
         dispatch(authStoreActions.setModalMessage(null))
     }
 
@@ -161,7 +161,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                                    const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
                                                        .map(val => parseAllNumbers(val) || undefined)
                                                    // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-                                                   if (currentValue && ( preValue !== currentValue ))
+                                                   if (preValue && ( preValue !== currentValue ))
                                                        // запускаем асинхронную валидацию только после синхронной
                                                        return ( validators.innNumber && validators.innNumber(value) ) || await innValidate(value)
                                                } }
@@ -172,7 +172,7 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                                       placeholder={ label.kppNumber }
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }
-                                            // handleChanger={ setOneOrganization }
+                                                      disabled={ isAvailableSMS || !form.getFieldState('innNumber')?.valid }
                                                       errorTop
                                                       isClearable
                                         />
@@ -185,13 +185,14 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                        allowEmptyFormatting
                                        maskFormat={ maskOn.phoneNumber }
                                        validate={ validators.phoneNumber }
-                                       disabled={ isAvailableSMS }
+                                       disabled={ isRegisterMode ? isAvailableSMS : false }
                                 />
                                 <Field name={ 'sms' }
                                        placeholder={ label.sms }
                                        component={ FormInputType }
                                        maskFormat={ maskOn.sms }
                                        validate={ isAvailableSMS ? validators.sms : undefined }
+                                       disabled={ isRegisterMode ? !isAvailableSMS : false }
                                 >
                                     { !isRegisterMode && <div className={
                                         styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position }>
@@ -209,7 +210,9 @@ export const LoginForm: React.FC<OwnProps> = () => {
                                 { modalMessage &&
                                     <InfoButtonToModal textToModal={ modalMessage }
                                                        mode={ 'invisible' }
-                                                       onCloseModal={()=>{clearMessage()}}
+                                                       onCloseModal={ () => {
+                                                           clearMessage()
+                                                       } }
                                     /> }
                             </div>
                             <div className={ styles.loginForm__buttonsPanel }>

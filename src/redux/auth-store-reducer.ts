@@ -180,13 +180,14 @@ export const sendCodeToPhone = ( {
             const response = await authApi.sendCodeToPhone({ phone, inn, kpp })
             console.log(response)
             dispatch(authStoreActions.setIsFetching(false))
-            // обрабатываем ошибку ИНН
+            // обрабатываем ошибку
             if (response.message) {
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
                 return { innNumber: response.message }
             }
             if (response.success) {
                 dispatch(authStoreActions.setIsAvailableSMSRequest(true))
+                dispatch(authStoreActions.setModalMessage(response.success))
             }
             return null
         } catch (error) {
@@ -213,7 +214,7 @@ export const loginAuthorization = ( {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
                 dispatch(authStoreActions.setAuthPhone(phone))
-
+                dispatch(authStoreActions.setIsAvailableSMSRequest(false))
                 dispatch(authStoreActions.setAuthId(response.success)) // исправить на нормальную
 
                 dispatch(authStoreActions.setIsFetching(false))
@@ -255,6 +256,11 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             if (response.message) dispatch(authStoreActions.setModalMessage(response.message))
 
         } catch (error) {
-            alert(error)
+            // @ts-ignore
+            if (error.response.data.message) dispatch(authStoreActions.setModalMessage(error.response.data.message))
+            else alert(error)
+
+
+
         }
     }

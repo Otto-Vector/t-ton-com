@@ -52,7 +52,6 @@ export const getOrganizationsByInn = ( { inn }: GetOrganizationByInnDaDataType )
         const response = await getOrganizationByInnDaDataAPI({ inn })
         console.log(response)
         if (response.length < 1) {
-
             return 'Неверный ИНН!'
         }
 
