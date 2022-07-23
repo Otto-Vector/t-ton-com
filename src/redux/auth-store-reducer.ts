@@ -6,6 +6,13 @@ import {geoPosition} from '../api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
 
 
+const initialValues: phoneSubmitType = {
+        innNumber: undefined,
+        kppNumber: undefined,
+        phoneNumber: undefined,
+        sms: undefined,
+    }
+
 const initialState = {
     isAuth: false,
     authID: 'sfadsfsadfa',
@@ -24,12 +31,7 @@ const initialState = {
         sms: 'Пароль из sms',
     } as phoneSubmitType<string | undefined>,
 
-    initialValues: {
-        innNumber: undefined,
-        kppNumber: undefined,
-        phoneNumber: undefined,
-        sms: undefined,
-    } as phoneSubmitType,
+    initialValues: {...initialValues},
 
     maskOn: {
         innNumber: '########## ##',
@@ -214,6 +216,7 @@ export const loginAuthorization = ( {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
                 dispatch(authStoreActions.setAuthPhone(phone))
+                dispatch(authStoreActions.setInitialValues({...initialValues}))
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
                 dispatch(authStoreActions.setAuthId(response.success)) // исправить на нормальную
 

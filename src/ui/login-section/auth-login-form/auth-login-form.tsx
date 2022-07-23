@@ -172,7 +172,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                       placeholder={ label.kppNumber }
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }
-                                                      disabled={ isAvailableSMS || !form.getFieldState('innNumber')?.valid }
+                                                      disabled={ isAvailableSMS }
                                                       errorTop
                                                       isClearable
                                         />
