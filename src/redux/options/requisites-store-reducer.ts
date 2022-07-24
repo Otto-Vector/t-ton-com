@@ -9,7 +9,7 @@ import {
     mustBeMail,
     required,
 } from '../../utils/validators';
-import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata.api';
+import {getOrganizationByInnKPPDaDataAPI, GetOrganizationByInnKPPDaDataType} from '../../api/dadata.api';
 import {PersonalResponseType, requisitesApi} from '../../api/requisites.api';
 import {authStoreActions} from '../auth-store-reducer';
 import {
@@ -22,6 +22,37 @@ import {
     parseOnlyOneSpace,
 } from '../../utils/parsers';
 
+
+const initialValues: CompanyRequisitesType = {
+    innNumber: undefined,
+    organizationName: undefined,
+    taxMode: undefined,
+    kpp: undefined,
+    ogrn: undefined,
+    okpo: undefined,
+    legalAddress: undefined,
+    mechanicFIO: undefined,
+    dispatcherFIO: undefined,
+
+    postAddress: undefined,
+    phoneDirector: undefined,
+    phoneAccountant: undefined,
+    email: undefined,
+    bikBank: undefined,
+    nameBank: undefined,
+    checkingAccount: undefined,
+    korrAccount: undefined,
+    tarifs: {
+        create: undefined,
+        acceptShortRoute: undefined,
+        acceptLongRoute: undefined,
+        paySafeTax: undefined,
+    },
+    cash: undefined,
+    description: undefined,
+    maxRequests: undefined,
+    requestActiveCount: undefined,
+}
 
 const initialState = {
     isFetching: false,
@@ -118,33 +149,7 @@ const initialState = {
 
     } as CompanyRequisitesType<ParserType>,
 
-    initialValues: {
-        innNumber: undefined,
-        organizationName: undefined,
-        taxMode: undefined,
-        kpp: undefined,
-        ogrn: undefined,
-        okpo: undefined,
-        legalAddress: undefined,
-        mechanicFIO: undefined,
-        dispatcherFIO: undefined,
-
-        postAddress: undefined,
-        phoneDirector: undefined,
-        phoneAccountant: undefined,
-        email: undefined,
-        bikBank: undefined,
-        nameBank: undefined,
-        checkingAccount: undefined,
-        korrAccount: undefined,
-        tarifs: {
-            create: undefined,
-            acceptShortRoute: undefined,
-            acceptLongRoute: undefined,
-            paySafeTax: undefined,
-        },
-
-    } as CompanyRequisitesType,
+    initialValues: { ...initialValues },
 
     storedValues: {
         innNumber: '4265631947',
@@ -238,27 +243,29 @@ export const requisitesStoreActions = {
 
 export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-// запрос параметров организации из DaData
-export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
+// запрос параметров организации из DaData и установка этих данных в бэк
+export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDaDataType ):
     RequisitesStoreReducerThunkActionType<{ innNumber: string } | null> =>
     async ( dispatch, getState ) => {
 
-        const response = await getOrganizationByInnDaDataAPI({ inn })
-
+        const response = await getOrganizationByInnKPPDaDataAPI({ inn, kpp })
+        console.log("innKPPdaDataResp: ",response)
         if (response.length > 0) {
             const { data } = response[0]
-            dispatch(requisitesStoreActions.setStoredValues({
-                ...getState().requisitesStoreReducer.initialValues,
+            const setPersonal = await requisitesApi.setPersonalData({
+                // idUser: 'e041ccb0-7848-4064-981d-f861897a8fdd',
+                idUser: getState().authStoreReducer.authID,
                 innNumber: data.inn,
                 organizationName: response[0].value,
-                taxMode: data.finance?.tax_system,
+                taxMode: data.finance?.tax_system || undefined,
                 kpp: data.kpp,
                 ogrn: data.ogrn,
                 okpo: data.okpo,
                 legalAddress: data.address.value,
                 postAddress: data.address.value,
-                email: data.emails && data.emails[0]?.value,
-            }))
+                email: data.emails && data.emails[0]?.value || undefined,
+            } as PersonalResponseType )
+            console.log('setPersonal: ', setPersonal)
 
             return null
 
@@ -267,12 +274,38 @@ export const getOrganizationByInn = ( { inn }: GetOrganizationByInnDaDataType ):
         }
     }
 
+// сохранение данных реквизитов в БЭК
+export const setOrganizationRequisites = ( ):
+    RequisitesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+            const setPersonal = await requisitesApi.changePersonalData({
+                idUser: 'e041ccb0-7848-4064-981d-f861897a8fdd',
+                innNumber: '3459008089',
+                organizationName: 'Тестовые данн-ые',
+                taxMode: 'УСН',
+                kpp: '345901010',
+                ogrn: '12345678',
+                okpo: '22403359',
+                legalAddress: '400078, г Волгоград, пр-кт им. В.И. Ленина, д 67, офис 207',
+                postAddress: '400078, г Волгоград, пр-кт им. В.И. Ленина, д 67, офис 207',
+                email: 'ttt@yaya.ru',
+                phone: '+7 (938) 693-07-27'
+            } as PersonalResponseType )
+            console.log('setPersonal: ', setPersonal)
+        // if (setPersonal.success) {
+        //     return null
+        // } else {
+        //     return { innNumber: 'Неверный ИНН!' }
+        // }
+    }
+
 // запрос данных активного пользователя
 export const getPersonalReqisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
             const response = await requisitesApi.getPersonalAuthData()
-            console.log("ответ от api/me/ ",response)
+            console.log('ответ от api/me/ ', response)
             let user: PersonalResponseType[]
             if (response.userid) {
                 user = await requisitesApi.getPersonalDataFromId({ idUser: response.userid })
@@ -305,6 +338,7 @@ export const getPersonalReqisites = (): RequisitesStoreReducerThunkActionType =>
                         },
                     } as CompanyRequisitesType))
                 }
+                dispatch<any>(authStoreActions.setAuthId(response.userid))
                 dispatch<any>(authStoreActions.setIsAuth(true))
             }
         } catch (error) {

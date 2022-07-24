@@ -22,6 +22,7 @@ import {getTestAddDriverValues} from '../../redux/forms/add-driver-store-reducer
 import {Preloader} from '../common/preloader/preloader';
 import {requestStoreActions} from '../../redux/forms/request-store-reducer';
 import {Button} from '../common/button/button';
+import {setOrganizationRequisites} from '../../redux/options/requisites-store-reducer';
 
 type OwnProps = {}
 
@@ -55,6 +56,10 @@ export const AddDriversView: React.FC<OwnProps> = () => {
     const oneTrailer = useSelector(getOneTrailerFromLocal)
     const trailerOneImage = oneTrailer.trailerImage
     const trailerOneCargoWeight = oneTrailer.cargoWeight
+
+    const clickForTests = ()=>{
+        dispatch<any>(setOrganizationRequisites())
+    }
 
     useLayoutEffect(() => {
         dispatch<any>(getTestAddDriverValues())
@@ -166,11 +171,13 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                     </div>
                 </div>
                 <div className={ styles.addDriversForm__buttonsPanel }>
-                    <a role="button" href={ `tel:${ employeeOnePhone }` }
+                    <a role="button"
+                       // href={ `tel:${ employeeOnePhone }` }
                        className={ styles.addDriversForm__buttonHrefWrapper }>
                         <Button type={ 'button' }
                                 disabled={ !employeeOnePhone }
                                 colorMode={ 'blue' }
+                                onClick={()=>{clickForTests()}}
                                 title={ employeeOnePhone+'' }
                                 rounded
                         />

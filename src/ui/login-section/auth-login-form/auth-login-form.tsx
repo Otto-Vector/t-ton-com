@@ -33,6 +33,7 @@ import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
 import {getOrganizationsByInn, getOrganizationsByInnKPP} from '../../../redux/dadata-response-reducer';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
+import {setOrganizationByInnKpp} from '../../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {
@@ -79,6 +80,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                     return innError
                 } else { // потом отправляем sms на регистрацию
                     phoneError = await dispatch<any>(sendCodeToPhone({ phone: phoneNumber as string, kpp, inn }))
+                    // phoneError = await dispatch<any>(setOrganizationByInnKpp({kpp,inn})) // для тестов
                     if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
                         dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                         return phoneError
@@ -86,12 +88,14 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                 }
             } else { // если SMS отослан
                 loginError = await dispatch<any>(
-                    loginAuthorization({ phone: phoneNumber as string, password: sms as string }))
+                    loginAuthorization({ phone: phoneNumber as string, password: sms as string })
+                )
                 if (loginError) {
                     return loginError
+                } else {
+                    navigate(requisites)
                 }
             }
-
         }
 
 
@@ -113,7 +117,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     const registerHandleClick = () => {
         setIsRegisterMode(!isRegisterMode)
-
         // dispatch(authStoreActions.setIsAvailableSMSRequest(isRegisterMode))
     }
 

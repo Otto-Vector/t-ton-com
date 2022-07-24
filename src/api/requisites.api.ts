@@ -1,37 +1,38 @@
 import {InfoResponseType, instanceBack} from './back-instance.api';
 
 export type PersonalResponseType = {
-    idUser: string,
-    nnNumber: string,
+    idUser: string | undefined,
+    innNumber: string | undefined,
+    nnNumber: string | undefined,
     organizationName: string,
-    taxMode: string,
-    kpp: string,
-    ogrn: string,
-    okpo: string,
-    legalAddress: string,
-    description: string,
-    postAddress: string,
-    phoneDirector: string,
-    phoneAccountant: string,
-    email: string,
-    bikBank: string,
-    nameBank: string,
-    checkingAccount: string,
-    korrAccount: string,
-    is_staff: boolean,
-    is_active: boolean,
-    phone: string,
-    phoneCode: string,
-    phoneValidate: boolean,
-    password: string,
-    role: string,
-    cash: string,
-    requestActiveCount: string,
-    maxRequests: string,
-    tarifCreate: string,
-    tarifAcceptShortRoute: string,
-    tarifAcceptLongRoute: string,
-    tarifPaySafeTax: string,
+    taxMode: string | undefined | null,
+    kpp: string | undefined,
+    ogrn: string | undefined,
+    okpo: string | undefined,
+    legalAddress: string | undefined,
+    description: string | undefined,
+    postAddress: string | undefined,
+    phoneDirector: string | undefined,
+    phoneAccountant: string | undefined,
+    email: string | undefined,
+    bikBank: string | undefined,
+    nameBank: string | undefined,
+    checkingAccount: string | undefined,
+    korrAccount: string | undefined,
+    is_staff: boolean | undefined,
+    is_active: boolean | undefined,
+    phone: string | undefined,
+    phoneCode: string | undefined,
+    phoneValidate: boolean | undefined,
+    password: string | undefined,
+    role: string | undefined,
+    cash: string | undefined,
+    requestActiveCount: string | undefined,
+    maxRequests: string | undefined,
+    tarifCreate: string | undefined,
+    tarifAcceptShortRoute: string | undefined,
+    tarifAcceptLongRoute: string | undefined,
+    tarifPaySafeTax: string | undefined,
 }
 
 export const requisitesApi = {
@@ -47,9 +48,9 @@ export const requisitesApi = {
             .then(response => response.data)
     },
     // добавление персональных данных
-    setPersonalData() {
+    setPersonalData(requisites: PersonalResponseType) {
         return instanceBack.post<InfoResponseType>
-        ('personality/', {} as PersonalResponseType)
+        ('/api/personality/', requisites)
             .then(response => response.data)
     },
     // запрос данных по Id пользователя
@@ -58,8 +59,8 @@ export const requisitesApi = {
             .then(response => response.data)
     },
     // изменение персональных данных
-    changePersonalData() {
-        return instanceBack.put<InfoResponseType>('/api/personality/', {} as PersonalResponseType)
+    changePersonalData(requisites: PersonalResponseType) {
+        return instanceBack.put<InfoResponseType>('/api/personality/', requisites)
             .then(response => response.data)
     },
 }

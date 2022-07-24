@@ -216,6 +216,7 @@ export const loginAuthorization = ( {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
                 dispatch(authStoreActions.setAuthPhone(phone))
+                // dispatch(authStoreActions.setAuthId())
                 dispatch(authStoreActions.setInitialValues({...initialValues}))
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
                 dispatch(authStoreActions.setAuthId(response.success)) // исправить на нормальную
@@ -262,8 +263,5 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             // @ts-ignore
             if (error.response.data.message) dispatch(authStoreActions.setModalMessage(error.response.data.message))
             else alert(error)
-
-
-
         }
     }
