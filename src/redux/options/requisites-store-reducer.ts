@@ -272,6 +272,7 @@ export const getPersonalReqisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
             const response = await requisitesApi.getPersonalAuthData()
+            console.log("ответ от api/me/ ",response)
             let user: PersonalResponseType[]
             if (response.userid) {
                 user = await requisitesApi.getPersonalDataFromId({ idUser: response.userid })
