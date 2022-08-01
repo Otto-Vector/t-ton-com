@@ -21,6 +21,8 @@ import {
     parseOnlyOneSpace,
 } from '../../utils/parsers';
 import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata.api';
+import {shippersStoreActions} from './shippers-store-reducer';
+import {getOrganizationsByInn} from '../dadata-response-reducer';
 
 const defaultInitialValues = {
     title: undefined,
@@ -231,12 +233,26 @@ export const getAllConsigneesAPI = ( { innID }: { innID: number } ): ConsigneesS
         }
 
     }
+export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDataType ):
+    ConsigneesStoreReducerThunkActionType<string | null> =>
+    async ( dispatch, getState ) => {
+        // обрезаем повторное срабатывание
+        const { innNumber } = getState().consigneesStoreReducer.initialValues
+        const booleanMemo = ( +( innNumber || 0 ) !== inn )
+        const response = booleanMemo
+            ? await dispatch<any>(getOrganizationsByInn({ inn }))
+            : null
+
+        if (response !== null) {
+            return response
+        } else return null
+
+    }
 
 // запрос параметров организации из DaData
 export const setOrganizationByInnKppConsignee = ( { kppNumber }: {kppNumber: string | undefined} ):
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-
 
         const response = getState().daDataStoreReducer.suggestions.filter(({data:{kpp}})=>kpp===kppNumber)[0]
 

@@ -22,7 +22,7 @@ import {
     getValidatorsConsigneesStore,
 } from '../../../selectors/options/consignees-reselect'
 import {
-    consigneesStoreActions,
+    consigneesStoreActions, getOrganizationByInnConsignee,
     setOrganizationByInnKppConsignee,
 } from '../../../redux/options/consignees-store-reducer';
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers';
@@ -83,9 +83,9 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const innValidate = async ( value: string ) => {
         const parsedValue = parseAllNumbers(value)
-        // const response = await dispatch<any>(getOrganizationByInnConsignee({ inn: +parsedValue }))
+        const response = await dispatch<any>(getOrganizationByInnConsignee({ inn: +parsedValue }))
 
-        const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue }))
+        // const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue }))
 
         return response
     }
