@@ -14,9 +14,9 @@ const initialState = {
 
 export type DaDataStoreReducerStateType = typeof initialState
 
-type ActionsType = GetActionsTypes<typeof daDataStoreActions>
+export type DaDataStoreActionsType = GetActionsTypes<typeof daDataStoreActions>
 
-export const daDataStoreReducer = ( state = initialState, action: ActionsType ): DaDataStoreReducerStateType => {
+export const daDataStoreReducer = ( state = initialState, action: DaDataStoreActionsType ): DaDataStoreReducerStateType => {
 
     switch (action.type) {
         case 'daData-store-reducer/SET-VALUES': {
@@ -42,7 +42,7 @@ export const daDataStoreActions = {
 
 /* САНКИ */
 // конструктор для типов санок
-export type DaDataThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type DaDataThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, DaDataStoreActionsType>
 
 // запрос параметров организации из DaData
 export const getOrganizationsByInn = ( { inn }: GetOrganizationByInnDaDataType ): DaDataThunkActionType<string | null> =>

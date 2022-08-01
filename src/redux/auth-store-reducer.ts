@@ -4,6 +4,7 @@ import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
+import {daDataStoreActions, DaDataStoreActionsType} from './dadata-response-reducer';
 
 
 const initialValues: phoneSubmitType = {
@@ -50,9 +51,9 @@ const initialState = {
 
 export type AuthStoreReducerStateType = typeof initialState
 
-type ActionsType = GetActionsTypes<typeof authStoreActions>
+export type AuthStoreActionsType = GetActionsTypes<typeof authStoreActions>
 
-export const authStoreReducer = ( state = initialState, action: ActionsType ): AuthStoreReducerStateType => {
+export const authStoreReducer = ( state = initialState, action: AuthStoreActionsType ): AuthStoreReducerStateType => {
 
     switch (action.type) {
 
@@ -149,7 +150,8 @@ export const authStoreActions = {
 
 /* САНКИ */
 
-export type AuthStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type AuthStoreReducerThunkActionType<R = void> =
+    ThunkAction<Promise<R>, AppStateType, unknown, AuthStoreActionsType | DaDataStoreActionsType>
 
 export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
     async ( dispatch ) => {
@@ -216,7 +218,7 @@ export const loginAuthorization = ( {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
                 dispatch(authStoreActions.setAuthPhone(phone))
-                // dispatch(authStoreActions.setAuthId())
+                dispatch(daDataStoreActions.setSuggectionsValues([]))
                 dispatch(authStoreActions.setInitialValues({...initialValues}))
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
                 dispatch(authStoreActions.setAuthId(response.success)) // исправить на нормальную

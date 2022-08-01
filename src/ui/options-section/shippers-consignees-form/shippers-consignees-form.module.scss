@@ -38,7 +38,7 @@
 
   &__inputsPanel {
     padding: 5px 10px;
-    min-width: 320px;
+    width: 330px;
 
     & > div {
       margin-bottom: 13px;
@@ -48,7 +48,7 @@
       width: 100%;
 
       & > div {
-        max-width: 320px;
+        width: 340px;
         margin: 0 auto 5px;
       }
     }

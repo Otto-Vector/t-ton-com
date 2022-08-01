@@ -1,7 +1,13 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-types'
-import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
+import {
+    composeValidators,
+    maxLength,
+    mustBe00Numbers,
+    mustBe0_0Numbers,
+    required,
+} from '../../utils/validators'
 import {initialConsigneesContent} from '../../initials-test-data'
 import {
     composeParsers,
@@ -227,28 +233,23 @@ export const getAllConsigneesAPI = ( { innID }: { innID: number } ): ConsigneesS
     }
 
 // запрос параметров организации из DaData
-export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDataType ):
-    ConsigneesStoreReducerThunkActionType<string | null> =>
+export const setOrganizationByInnKppConsignee = ( { kppNumber }: {kppNumber: string | undefined} ):
+    ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
-        const { innNumber } = getState().consigneesStoreReducer.initialValues
-        const booleanMemo = ( +( innNumber || 0 ) !== inn )
-        const response = booleanMemo
-            ? await getOrganizationByInnDaDataAPI({ inn })
-            : null
 
-        if (response !== null) {
-            if (response.length > 0) {
-                const { data } = response[0]
+        const response = getState().daDataStoreReducer.suggestions.filter(({data:{kpp}})=>kpp===kppNumber)[0]
+
+        if (response !== undefined) {
+                const { data } = response
                 dispatch(consigneesStoreActions.setInitialValues({
                     ...getState().consigneesStoreReducer.initialValues,
                     innNumber: data.inn,
-                    organizationName: response[0].value,
+                    organizationName: response.value,
                     kpp: data.kpp,
                     ogrn: data.ogrn,
                     address: data.address.value,
                 }))
-                return null
-            } else return 'Неверный ИНН!'
-        } else return null
+            } else alert('Фильтр КПП локально не сработал!')
+
     }

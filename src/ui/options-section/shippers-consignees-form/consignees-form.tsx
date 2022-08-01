@@ -21,9 +21,15 @@ import {
     getParsersConsigneesStore,
     getValidatorsConsigneesStore,
 } from '../../../selectors/options/consignees-reselect'
-import {consigneesStoreActions, getOrganizationByInnConsignee} from '../../../redux/options/consignees-store-reducer';
+import {
+    consigneesStoreActions,
+    setOrganizationByInnKppConsignee,
+} from '../../../redux/options/consignees-store-reducer';
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers';
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
+import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
+import {FormSelector} from '../../common/form-selector/form-selector';
+import {getOrganizationsByInn} from '../../../redux/dadata-response-reducer';
 
 
 type OwnProps = {
@@ -37,6 +43,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
     const initialValues = useSelector(getInitialValuesConsigneesStore)
+    const kppSelect = useSelector(getAllKPPSelectFromLocal)
 
     const label = useSelector(getLabelConsigneesStore)
     const maskOn = useSelector(getMaskOnConsigneesStore)
@@ -76,8 +83,15 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const innValidate = async ( value: string ) => {
         const parsedValue = parseAllNumbers(value)
-        const response = await dispatch<any>(getOrganizationByInnConsignee({ inn: +parsedValue }))
+        // const response = await dispatch<any>(getOrganizationByInnConsignee({ inn: +parsedValue }))
+
+        const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue }))
+
         return response
+    }
+
+    const setDataToForm = async ( value: string | undefined ) => {
+        dispatch<any>(setOrganizationByInnKppConsignee({kppNumber: value}))
     }
 
     useEffect(() => {
@@ -132,6 +146,23 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    } }
                                                    parse={ parsers.innNumber }
                                             />
+                                            <FormSelector named={ 'kpp' }
+                                                          placeholder={ label.kpp }
+                                                          values={ kppSelect }
+                                                          validate={ validators.kpp }
+                                                          handleChanger={ setDataToForm }
+                                                          disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
+                                                          errorTop
+                                                          isClearable
+                                            />
+                                            {/*<Field name={ 'kpp' }*/ }
+                                            {/*       placeholder={ label.kpp }*/ }
+                                            {/*       maskFormat={ maskOn.kpp }*/ }
+                                            {/*       component={ FormInputType }*/ }
+                                            {/*       resetFieldBy={ form }*/ }
+                                            {/*       validate={ validators.kpp }*/ }
+                                            {/*       parse={ parsers.kpp }*/ }
+                                            {/*/>*/ }
                                             <Field name={ 'organizationName' }
                                                    placeholder={ label.organizationName }
                                                    maskFormat={ maskOn.organizationName }
@@ -139,14 +170,6 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.organizationName }
                                                    parse={ parsers.organizationName }
-                                            />
-                                            <Field name={ 'kpp' }
-                                                   placeholder={ label.kpp }
-                                                   maskFormat={ maskOn.kpp }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.kpp }
-                                                   parse={ parsers.kpp }
                                             />
                                             <Field name={ 'ogrn' }
                                                    placeholder={ label.ogrn }
