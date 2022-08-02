@@ -60,7 +60,7 @@ const initialState = {
         innNumber: '########## ##', // 10,12 цифр
         organizationName: undefined,
         kpp: '#########', // 9 цифр
-        ogrn: '############', // 12 цифр
+        ogrn: '############# ##', // 13,15 цифр
         address: undefined, // понятно. просто адрес
         shipperFio: undefined, //
         shipperTel: '+7 (###) ###-##-##', // 11 цифр
@@ -87,10 +87,10 @@ const initialState = {
     validators: {
         title: composeValidators(required, maxLength(50)),
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
-        organizationName: composeValidators(required, maxLength(50)),
+        organizationName: composeValidators(required, maxLength(100)),
         kpp: composeValidators(required, mustBe00Numbers(9)),
-        ogrn: composeValidators(required, mustBe00Numbers(12), maxLength(100)),
-        address: composeValidators(required),
+        ogrn: composeValidators(required, mustBe0_0Numbers(13)(15) ),
+        address: composeValidators(required,maxLength(150)),
         shipperFio: composeValidators(required),
         shipperTel: composeValidators(required, mustBe00Numbers(11)),
         description: composeValidators(maxLength(300)),

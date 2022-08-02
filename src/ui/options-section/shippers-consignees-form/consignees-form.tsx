@@ -22,14 +22,16 @@ import {
     getValidatorsConsigneesStore,
 } from '../../../selectors/options/consignees-reselect'
 import {
-    consigneesStoreActions, getOrganizationByInnConsignee,
+    consigneesStoreActions,
+    getOrganizationByInnConsignee,
     setOrganizationByInnKppConsignee,
 } from '../../../redux/options/consignees-store-reducer';
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers';
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
 import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
 import {FormSelector} from '../../common/form-selector/form-selector';
-import {getOrganizationsByInn} from '../../../redux/dadata-response-reducer';
+import {FormSpySimpleConsignee} from '../../common/form-spy-simple/form-spy-simple';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 
 type OwnProps = {
@@ -53,15 +55,20 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const currentId = useSelector(getCurrentIdConsigneeStore)
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     // вытаскиваем значение роутера
-    const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
-
+    const { id: currentIdFromNavigate } = useParams<{ id: string | undefined }>()
+    const isNew = currentIdFromNavigate === 'new'
+    const fromFormDemaskedValues = ( values: ConsigneesCardType ) => ( {
+        ...values,
+        innNumber: parseAllNumbers(values.innNumber) || undefined,
+        ogrn: parseAllNumbers(values.ogrn) || undefined,
+    } )
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const onSubmit = ( values: ConsigneesCardType ) => {
-        dispatch(consigneesStoreActions.changeOneConsignee(currentId, values)) //сохраняем измененное значение
+        dispatch(consigneesStoreActions.changeOneConsignee(currentId, fromFormDemaskedValues(values))) //сохраняем измененное значение
         dispatch(consigneesStoreActions.setDefaultInitialValues())
         navigate(options) // и возвращаемся в предыдущее окно
     }
@@ -91,16 +98,32 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     }
 
     const setDataToForm = async ( value: string | undefined ) => {
-        dispatch<any>(setOrganizationByInnKppConsignee({kppNumber: value}))
+
+        if (value)
+            dispatch<any>(setOrganizationByInnKppConsignee({ kppNumber: value }))
+    }
+
+    const exposeValues = ( { values, valid }: { values: ConsigneesCardType, valid: boolean } ) => {
+        // очищаем от масок
+        const demaskedValues = fromFormDemaskedValues(values)
+        // сравниваем значения
+        if (!valuesAreEqual(demaskedValues, initialValues)) {
+            dispatch(consigneesStoreActions.setInitialValues(
+                // если прилетело от смены селектора, то ставим initialValues
+                ( demaskedValues.ogrn === initialValues.ogrn ) ? demaskedValues : initialValues),
+            )
+        }
     }
 
     useEffect(() => {
-            if (currentId === +( currentIdForShow || 0 )) {
-                if (initialValues.coordinates === undefined) {
-                    dispatch(consigneesStoreActions.setInitialValues(oneConsignee))
+            if (!isNew) {
+                if (currentId === +( currentIdFromNavigate || 0 )) {
+                    if (initialValues.coordinates === undefined) {
+                        dispatch(consigneesStoreActions.setInitialValues(oneConsignee))
+                    }
+                } else {
+                    dispatch(consigneesStoreActions.setCurrentId(+( currentIdFromNavigate || 0 )))
                 }
-            } else {
-                dispatch(consigneesStoreActions.setCurrentId(+( currentIdForShow || 0 )))
             }
             // debugger;
         }, [ currentId, initialValues ],
@@ -135,34 +158,40 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ maskOn.innNumber }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ async ( value ) => {
+                                                   disabled={ !isNew }
+                                                   validate={ ( value ) => {
                                                        // расчищаем значения от лишних символов и пробелов после маски
                                                        const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
                                                            .map(val => parseAllNumbers(val) || undefined)
                                                        // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
                                                        if (currentValue && ( preValue !== currentValue ))
                                                            // запускаем асинхронную валидацию только после синхронной
-                                                           return ( validators.innNumber && validators.innNumber(value) ) || await innValidate(value)
+                                                           return ( validators.innNumber && validators.innNumber(value) ) || innValidate(value)
                                                    } }
                                                    parse={ parsers.innNumber }
                                             />
-                                            <FormSelector named={ 'kpp' }
-                                                          placeholder={ label.kpp }
-                                                          values={ kppSelect }
-                                                          validate={ validators.kpp }
-                                                          handleChanger={ setDataToForm }
-                                                          disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
-                                                          errorTop
-                                                          isClearable
-                                            />
-                                            {/*<Field name={ 'kpp' }*/ }
-                                            {/*       placeholder={ label.kpp }*/ }
-                                            {/*       maskFormat={ maskOn.kpp }*/ }
-                                            {/*       component={ FormInputType }*/ }
-                                            {/*       resetFieldBy={ form }*/ }
-                                            {/*       validate={ validators.kpp }*/ }
-                                            {/*       parse={ parsers.kpp }*/ }
-                                            {/*/>*/ }
+                                            { isNew
+                                                ?
+                                                <FormSelector named={ 'kpp' }
+                                                              placeholder={ label.kpp }
+                                                              values={ kppSelect }
+                                                              validate={ validators.kpp }
+                                                              handleChanger={ setDataToForm }
+                                                              disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
+                                                              errorTop
+                                                              isClearable
+                                                />
+                                                :
+                                                <Field name={ 'kpp' }
+                                                       placeholder={ label.kpp }
+                                                       maskFormat={ maskOn.kpp }
+                                                       component={ FormInputType }
+                                                       resetFieldBy={ form }
+                                                       validate={ validators.kpp }
+                                                       parse={ parsers.kpp }
+                                                       disabled={ !isNew }
+                                                />
+                                            }
                                             <Field name={ 'organizationName' }
                                                    placeholder={ label.organizationName }
                                                    maskFormat={ maskOn.organizationName }
@@ -170,6 +199,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.organizationName }
                                                    parse={ parsers.organizationName }
+                                                // disabled={ !isNew }
                                             />
                                             <Field name={ 'ogrn' }
                                                    placeholder={ label.ogrn }
@@ -178,6 +208,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.ogrn }
                                                    parse={ parsers.ogrn }
+                                                   disabled={ !isNew }
                                             />
                                             <Field name={ 'address' }
                                                    placeholder={ label.address }
@@ -186,6 +217,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.address }
                                                    parse={ parsers.address }
+                                                // disabled={ !isNew }
                                             />
                                             <Field name={ 'consigneesFio' }
                                                    placeholder={ label.consigneesFio }
@@ -245,7 +277,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }
-                                                        // disabled={ true }
+                                                            disabled={ isNew }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
                                                             onClick={ () => consigneeDeleteHandleClick() }
@@ -254,7 +286,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
+                                        <FormSpySimpleConsignee
+                                            form={ form }
+                                            onChange={ ( { values, valid } ) => {
+                                                if (exposeValues) exposeValues({ values, valid })
+                                            } }/>
                                     </form>
                                 )
                             }/>

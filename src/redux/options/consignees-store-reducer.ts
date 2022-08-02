@@ -20,8 +20,7 @@ import {
     parseOnlyOneDot,
     parseOnlyOneSpace,
 } from '../../utils/parsers';
-import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata.api';
-import {shippersStoreActions} from './shippers-store-reducer';
+import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
 import {getOrganizationsByInn} from '../dadata-response-reducer';
 
 const defaultInitialValues = {
@@ -59,7 +58,7 @@ const initialState = {
         innNumber: '########## ##', // 10,12 цифр
         organizationName: undefined,
         kpp: '#########', // 9 цифр
-        ogrn: '############', // 12 цифр
+        ogrn: '############# ##', // 13,15 цифр
         address: undefined, // понятно. просто адрес
         consigneesFio: undefined, //
         consigneesTel: '+7 (###) ###-##-##', //
@@ -83,13 +82,13 @@ const initialState = {
     validators: {
         title: composeValidators(required, maxLength(50)),
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
-        organizationName: composeValidators(required, maxLength(50)),
+        organizationName: composeValidators(required, maxLength(100)),
         kpp: composeValidators(required, mustBe00Numbers(9)),
-        ogrn: composeValidators(required, mustBe00Numbers(12)),
-        address: composeValidators(required, maxLength(100)),
+        ogrn: composeValidators(required, mustBe0_0Numbers(13)(15)),
+        address: composeValidators(required, maxLength(150)),
         consigneesFio: composeValidators(required),
         consigneesTel: composeValidators(required, mustBe00Numbers(11)),
-        description: composeValidators(required, maxLength(300)),
+        description: composeValidators(maxLength(300)),
         coordinates: composeValidators(required),
     } as ConsigneesCardType<ValidateType>,
 
@@ -233,6 +232,8 @@ export const getAllConsigneesAPI = ( { innID }: { innID: number } ): ConsigneesS
         }
 
     }
+
+// запрос параметров организации из DaData
 export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDataType ):
     ConsigneesStoreReducerThunkActionType<string | null> =>
     async ( dispatch, getState ) => {
@@ -249,8 +250,8 @@ export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDa
 
     }
 
-// запрос параметров организации из DaData
-export const setOrganizationByInnKppConsignee = ( { kppNumber }: {kppNumber: string | undefined} ):
+// сохранение параметров организации из ранее загруженного списка DaData
+export const setOrganizationByInnKppConsignee = ( { kppNumber }: {kppNumber: string} ):
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 

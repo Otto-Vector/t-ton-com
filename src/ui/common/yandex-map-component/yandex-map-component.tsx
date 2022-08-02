@@ -3,6 +3,7 @@ import styles from './yandex-map-component.module.scss'
 import './yandex-map-restyle-ballon.scss'
 
 import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps'
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 
 type OwnProps = {
@@ -57,40 +58,40 @@ type ToFormProps = {
 }
 
 export const YandexMapToForm: React.FC<ToFormProps> =
-    // React.memo(
-    ( { center, getCoordinates } ) => {
+    React.memo(
+        ( { center, getCoordinates } ) => {
 
-        return (
-            <YandexMapComponent
-                state={ {
-                    center,
-                    zoom: 10,
-                    suppressMapOpenBlock: true,
-                } }
-                onClick={ ( e ) => {
-                    getCoordinates(e.get('coords'))
-                } }
-            >
-                <Placemark geometry={ center }
-                           options={
-                               {
-                                   preset: 'islands#violetDotIconWithCaption',
-                                   draggable: true,
+            return (
+                <YandexMapComponent
+                    state={ {
+                        center,
+                        zoom: 10,
+                        suppressMapOpenBlock: true,
+                    } }
+                    onClick={ ( e ) => {
+                        getCoordinates(e.get('coords'))
+                    } }
+                >
+                    <Placemark geometry={ center }
+                               options={
+                                   {
+                                       preset: 'islands#violetDotIconWithCaption',
+                                       draggable: true,
+                                   }
                                }
-                           }
-                           onDragEnd={ ( e: any ) => {
-                               getCoordinates(e.originalEvent.target.geometry._coordinates)
-                           } }
-                />
-                <SearchControl
-                    options={ {
-                        float: 'right',
-                        noPlacemark: true,
-                    } }/>
-            </YandexMapComponent>
-        )
-    }
-// , propsAreEqual)
+                               onDragEnd={ ( e: any ) => {
+                                   getCoordinates(e.originalEvent.target.geometry._coordinates)
+                               } }
+                    />
+                    <SearchControl
+                        options={ {
+                            float: 'right',
+                            noPlacemark: true,
+                        } }/>
+                </YandexMapComponent>
+            )
+        }
+        , valuesAreEqual)
 
 
 type ToBigMap = {

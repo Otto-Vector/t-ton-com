@@ -26,7 +26,6 @@ $input--disabled-font-color: $mainFontColor;
   position: relative;
   background-color: white;
   border-radius: $input--border-radius;
-  //margin-bottom: 12px; // для спана с ошибкой
   height: inherit;
   width: 100%;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.02);
@@ -39,7 +38,6 @@ $input--disabled-font-color: $mainFontColor;
     font-family: $input--font;
     position: absolute;
     color: rgba($mainFontColor, .6);
-    //font-weight: 700;
     top: 0;
     left: $input--padding-left + 2px;
     transition-property: all;
@@ -84,7 +82,7 @@ $input--disabled-font-color: $mainFontColor;
   }
 }
 
-//// добавление 2 иконки со значком справа или слева
+//// добавление 2-ой иконки со значком справа или слева
 //.search:after {
 //    cursor: unset;
 //    opacity: .5;
@@ -104,6 +102,7 @@ $input--disabled-font-color: $mainFontColor;
     radius: $input--border-radius;
     width: $input--border-width;
   }
+
   padding: $input--padding-top + 3px rem(25) $input--padding-top - 3px $input--padding-left;
   width: 100%;
   height: inherit;
@@ -122,7 +121,6 @@ $input--disabled-font-color: $mainFontColor;
 
   &:invalid, &invalid:focus {
     color: red;
-    //border: solid red $input--border-width;
   }
 
   &:active {
@@ -138,26 +136,17 @@ $input--disabled-font-color: $mainFontColor;
 
     & ~ .label { // цвет для заголовка на заблокированном элементе
       color: rgba($mainFontColor, .5);
+      font-weight: 800;
     }
   }
 
   //обработка манипуляций с :placeholder
   @include placeholder() {
     font-family: $input--font;
-    //position: absolute;
-    //top: $input--padding-top+1px;
-    //transition-property: all;
-    //transition-duration: .3s;
   }
 }
 
-//&:focus {
-//  //при фокусе, сообщение placeholder уходит вверх
-//  @include placeholder() {
-//    top: -1px;
-//    font-size: 70%;
-//  }
-//}
+
 
 // кастомизация сообщения об ошибке под/над инпутом
 .errorSpan {

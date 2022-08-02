@@ -23,8 +23,8 @@ import {
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
 import {getOrganizationByInnShipper, shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
-import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
+import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
 
 
 type OwnProps = {
@@ -121,14 +121,14 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ maskOn.innNumber }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ async ( value ) => {
+                                                   validate={ ( value ) => {
                                                        // расчищаем значения от лишних символов и пробелов после маски
                                                        const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
                                                            .map(val => parseAllNumbers(val) || undefined)
                                                        // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
                                                        if (currentValue && ( preValue !== currentValue ))
                                                            // запускаем асинхронную валидацию только после синхронной
-                                                           return ( validators.innNumber && validators.innNumber(value) ) || await innValidate(value)
+                                                           return ( validators.innNumber && validators.innNumber(value) ) || innValidate(value)
                                                    } }
                                                    parse={ parsers.innNumber }
                                             />

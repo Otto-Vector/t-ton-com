@@ -143,8 +143,6 @@ export const RequestFormLeft: React.FC<OwnProps> = (
             <Form
                 onSubmit={ onSubmit }
                 initialValues={ initialValues }
-                // validateOnBlur
-                // keepDirtyOnReinitialize
                 render={
                     ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting, values } ) => (
                         <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>

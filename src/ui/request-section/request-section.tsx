@@ -56,7 +56,7 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
     }
 
     const exposeValuesToInitialBuffer = ( { values, valid }: { values: OneRequestType, valid: boolean } ) => {
-        console.log(values)
+        console.log(values, valid)
         dispatch(requestStoreActions.setIsNewRequest(false))
         dispatch(requestStoreActions.setInitialValues(values as OneRequestType))
     }

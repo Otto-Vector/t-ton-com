@@ -144,7 +144,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                           submitError,
                           handleSubmit,
                           hasValidationErrors,
-                          pristine,
                           form,
                           submitting,
                           values,
@@ -159,14 +158,14 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                component={ FormInputType }
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
-                                               validate={ async ( value ) => {
+                                               validate={ ( value ) => {
                                                    // расчищаем значения от лишних символов и пробелов после маски
                                                    const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
                                                        .map(val => parseAllNumbers(val) || undefined)
                                                    // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
                                                    if (preValue && ( preValue !== currentValue ))
                                                        // запускаем асинхронную валидацию только после синхронной
-                                                       return ( validators.innNumber && validators.innNumber(value) ) || await innValidate(value)
+                                                       return ( validators.innNumber && validators.innNumber(value) ) || innValidate(value)
                                                } }
 
                                                disabled={ isAvailableSMS }
