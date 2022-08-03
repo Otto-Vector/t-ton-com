@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 
@@ -22,9 +22,17 @@ import {
     getParsersShippersStore,
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
-import {getOrganizationByInnShipper, shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
+import {
+    getOrganizationByInnShipper,
+    setOrganizationByInnKppShippers,
+    shippersStoreActions,
+} from '../../../redux/options/shippers-store-reducer'
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
+import {FormSpySimpleShippers} from '../../common/form-spy-simple/form-spy-simple';
+import {FormSelector} from '../../common/form-selector/form-selector';
+import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 
 type OwnProps = {
@@ -38,6 +46,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
     const initialValues = useSelector(getInitialValuesShippersStore)
+    const kppSelect = useSelector(getAllKPPSelectFromLocal)
+    const [isSelectorChange, setIsSelectorChange] = useState(false)
 
     const label = useSelector(getLabelShippersStore)
     const maskOn = useSelector(getMaskOnShippersStore)
@@ -47,7 +57,15 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const currentId = useSelector(getCurrentIdShipperStore)
     const oneShipper = useSelector(getOneShipperFromLocal)
     // вытаскиваем значение роутера
-    const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
+    const { id: currentIdFromNavigate } = useParams<{ id: string | undefined }>()
+    const isNew = currentIdFromNavigate === 'new'
+
+    const fromFormDemaskedValues = ( values: ShippersCardType ) => ( {
+        ...values,
+        innNumber: parseAllNumbers(values.innNumber) || undefined,
+        ogrn: parseAllNumbers(values.ogrn) || undefined,
+        shipperTel: (parseAllNumbers(values.shipperTel) === '7') ? '' : values.shipperTel
+    } )
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -74,20 +92,43 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         dispatch(shippersStoreActions.setCoordinates(coords))
     }
 
+    // онлайн валидация ИНН с подгрузкой КПП в селектор
     const innValidate = async ( value: string ) => {
         const parsedValue = parseAllNumbers(value)
         const response = await dispatch<any>(getOrganizationByInnShipper({ inn: +parsedValue }))
         return response
     }
 
+    // автозаполнение полей при выборе селектора
+    const setDataToForm = ( value: string | undefined ) => {
+        if (value)
+            dispatch<any>(setOrganizationByInnKppShippers({ kppNumber: value }))
+            setIsSelectorChange(true)
+    }
+
+    // для синхры с redux стейтом
+    const exposeValues = ( { values, valid }: { values: ShippersCardType, valid: boolean } ) => {
+        // очищаем от масок
+        const demaskedValues = fromFormDemaskedValues(values)
+        // сравниваем значения
+        if (!valuesAreEqual(demaskedValues, initialValues)) {
+            dispatch(shippersStoreActions.setInitialValues(
+                // если прилетело от смены селектора, то ставим initialValues
+                !isSelectorChange ? demaskedValues : initialValues),
+            )
+            setIsSelectorChange(false)
+        }
+    }
 
     useEffect(() => {
-            if (currentId === +( currentIdForShow || 0 )) {
-                if (initialValues.coordinates === undefined) {
-                    dispatch(shippersStoreActions.setInitialValues(oneShipper))
+            if (!isNew) {
+                if (currentId === +( currentIdFromNavigate || 0 )) {
+                    if (initialValues.coordinates === undefined) {
+                        dispatch(shippersStoreActions.setInitialValues(oneShipper))
+                    }
+                } else {
+                    dispatch(shippersStoreActions.setCurrentId(+( currentIdFromNavigate || 0 )))
                 }
-            } else {
-                dispatch(shippersStoreActions.setCurrentId(+( currentIdForShow || 0 )))
             }
         }, [ currentId, initialValues ],
     )
@@ -131,7 +172,30 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                            return ( validators.innNumber && validators.innNumber(value) ) || innValidate(value)
                                                    } }
                                                    parse={ parsers.innNumber }
+                                                   disabled={ !isNew }
                                             />
+                                           { isNew
+                                                ?
+                                                <FormSelector named={ 'kpp' }
+                                                              placeholder={ label.kpp }
+                                                              values={ kppSelect }
+                                                              validate={ validators.kpp }
+                                                              handleChanger={ setDataToForm }
+                                                              disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
+                                                              errorTop
+                                                              isClearable
+                                                />
+                                                :
+                                                <Field name={ 'kpp' }
+                                                       placeholder={ label.kpp }
+                                                       maskFormat={ maskOn.kpp }
+                                                       component={ FormInputType }
+                                                       resetFieldBy={ form }
+                                                       validate={ validators.kpp }
+                                                       parse={ parsers.kpp }
+                                                       disabled={ !isNew }
+                                                />
+                                            }
                                             <Field name={ 'organizationName' }
                                                    placeholder={ label.organizationName }
                                                    maskFormat={ maskOn.organizationName }
@@ -140,14 +204,6 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.organizationName }
                                                    parse={ parsers.organizationName }
                                             />
-                                            <Field name={ 'kpp' }
-                                                   placeholder={ label.kpp }
-                                                   maskFormat={ maskOn.kpp }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.kpp }
-                                                   parse={ parsers.kpp }
-                                            />
                                             <Field name={ 'ogrn' }
                                                    placeholder={ label.ogrn }
                                                    maskFormat={ maskOn.ogrn }
@@ -155,6 +211,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.ogrn }
                                                    parse={ parsers.ogrn }
+                                                   disabled={ !isNew }
                                             />
                                             <Field name={ 'address' }
                                                    placeholder={ label.address }
@@ -217,21 +274,23 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded
-                                                        // onClick={()=>shipperSaveHandleClick()}
                                                     />
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }
-                                                        // disabled={ true }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
                                                             rounded
-                                                            onClick={ () => shipperDeleteHandleClick() }
+                                                            onClick={ shipperDeleteHandleClick }
                                                     />
                                                 </div>
                                             </div>
                                         </div>
-                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
+                                        <FormSpySimpleShippers
+                                            form={ form }
+                                            onChange={ ( { values, valid } ) => {
+                                                exposeValues({ values, valid })
+                                            } }/>
                                     </form>
                                 )
                             }/>

@@ -38,17 +38,11 @@ export const FormSpySimpleConsignee: React.VFC<Props<ConsigneesCardType>> = ( { 
     return null
 }
 
-export const FormSpySimpleInnShippers: React.VFC<Props<ShippersCardType>> = ( { onChange, form } ) => {
-    const state = form.getFieldState('innNumber')
-
-    const value = state?.value
-    const valid = state?.valid
-
+export const FormSpySimpleShippers: React.VFC<Props<ShippersCardType>> = ( { onChange, form } ) => {
+    const { values, valid } = form.getState()
     useEffect(() => {
-        if (value && valid) {
-            onChange({ value, valid })
-        }
-    }, [ value, valid ])
+        onChange({ values, valid })
+    }, [ values, valid ])
 
     return null
 }

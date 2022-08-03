@@ -21,6 +21,7 @@ import {
     parseOnlyOneSpace,
 } from '../../utils/parsers';
 import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata.api';
+import {getOrganizationsByInn} from '../dadata-response-reducer';
 
 
 const defaultInitialValues = {
@@ -248,22 +249,32 @@ export const getOrganizationByInnShipper = ( { inn }: GetOrganizationByInnDaData
         const { innNumber } = getState().shippersStoreReducer.initialValues
         const booleanMemo = ( +( innNumber || 0 ) !== inn )
         const response = booleanMemo
-            ? await getOrganizationByInnDaDataAPI({ inn })
+            ? await dispatch<any>(getOrganizationsByInn({ inn }))
             : null
 
         if (response !== null) {
-            if (response.length > 0) {
-                const { data } = response[0]
+            return response
+        } else return null
+
+    }
+
+// сохранение параметров организации из ранее загруженного списка DaData
+export const setOrganizationByInnKppShippers = ( { kppNumber }: {kppNumber: string} ):
+    ShippersStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+        const response = getState().daDataStoreReducer.suggestions.filter(({data:{kpp}})=>kpp===kppNumber)[0]
+
+        if (response !== undefined) {
+                const { data } = response
                 dispatch(shippersStoreActions.setInitialValues({
                     ...getState().shippersStoreReducer.initialValues,
                     innNumber: data.inn,
-                    organizationName: response[0].value,
+                    organizationName: response.value,
                     kpp: data.kpp,
                     ogrn: data.ogrn,
                     address: data.address.value,
                 }))
-                return null
-            } else return 'Неверный ИНН!'
-        } else return null
+            } else alert('Фильтр КПП локально не сработал!')
 
     }

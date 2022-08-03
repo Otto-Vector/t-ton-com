@@ -25,7 +25,7 @@ type OwnProps = {
 export const FormInputType: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
-        children, disabled, mask = '_', maskFormat,
+        children, disabled=false, mask = '_', maskFormat,
         textArea, allowEmptyFormatting, inputType = 'text', errorBottom, noLabel, min,
     } ) => {
 
@@ -38,7 +38,7 @@ export const FormInputType: React.FC<OwnProps> = (
             {/*кнопка для сброса параметров поля
             (проявляется, если переданы методы resetFieldBy={form} в объявленном объекте Field
             а также при введенных данных*/ }
-            { resetFieldBy && input.value && <div
+            { resetFieldBy && input.value && !disabled && <div
                 className={ styles.clearSearch + ' ' + ( !meta.dirty && styles.clearSearch_unfocused ) }
                 onClick={ () => {
                     resetFieldBy.change(input.name, '')

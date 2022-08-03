@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -46,6 +46,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesConsigneesStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
+    const [isSelectorChange, setIsSelectorChange] = useState(false)
 
     const label = useSelector(getLabelConsigneesStore)
     const maskOn = useSelector(getMaskOnConsigneesStore)
@@ -57,10 +58,12 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     // вытаскиваем значение роутера
     const { id: currentIdFromNavigate } = useParams<{ id: string | undefined }>()
     const isNew = currentIdFromNavigate === 'new'
+
     const fromFormDemaskedValues = ( values: ConsigneesCardType ) => ( {
         ...values,
         innNumber: parseAllNumbers(values.innNumber) || undefined,
         ogrn: parseAllNumbers(values.ogrn) || undefined,
+        consigneesTel: ( parseAllNumbers(values.consigneesTel) === '7' ) ? '' : values.consigneesTel,
     } )
 
     const { options } = useSelector(getRoutesStore)
@@ -88,30 +91,33 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         dispatch(consigneesStoreActions.setCoordinates(coords))
     }
 
+    // онлайн валидация ИНН с подгрузкой КПП в селектор
     const innValidate = async ( value: string ) => {
         const parsedValue = parseAllNumbers(value)
         const response = await dispatch<any>(getOrganizationByInnConsignee({ inn: +parsedValue }))
 
-        // const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue }))
-
         return response
     }
 
-    const setDataToForm = async ( value: string | undefined ) => {
-
+    // автозаполнение полей при выборе селектора
+    const setDataToForm = ( value: string | undefined ) => {
         if (value)
             dispatch<any>(setOrganizationByInnKppConsignee({ kppNumber: value }))
+            setIsSelectorChange(true)
     }
 
+    // для синхры с redux стейтом
     const exposeValues = ( { values, valid }: { values: ConsigneesCardType, valid: boolean } ) => {
         // очищаем от масок
         const demaskedValues = fromFormDemaskedValues(values)
         // сравниваем значения
         if (!valuesAreEqual(demaskedValues, initialValues)) {
+            debugger
             dispatch(consigneesStoreActions.setInitialValues(
                 // если прилетело от смены селектора, то ставим initialValues
-                ( demaskedValues.ogrn === initialValues.ogrn ) ? demaskedValues : initialValues),
+                !isSelectorChange ? demaskedValues : initialValues),
             )
+            setIsSelectorChange(false)
         }
     }
 
@@ -125,7 +131,6 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                     dispatch(consigneesStoreActions.setCurrentId(+( currentIdFromNavigate || 0 )))
                 }
             }
-            // debugger;
         }, [ currentId, initialValues ],
     )
 
@@ -280,7 +285,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                             disabled={ isNew }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ () => consigneeDeleteHandleClick() }
+                                                            onClick={ consigneeDeleteHandleClick }
                                                             rounded
                                                     />
                                                 </div>
@@ -289,7 +294,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                         <FormSpySimpleConsignee
                                             form={ form }
                                             onChange={ ( { values, valid } ) => {
-                                                if (exposeValues) exposeValues({ values, valid })
+                                                exposeValues({ values, valid })
                                             } }/>
                                     </form>
                                 )

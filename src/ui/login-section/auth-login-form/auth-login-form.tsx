@@ -33,7 +33,6 @@ import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
 import {getOrganizationsByInn, getOrganizationsByInnKPP} from '../../../redux/dadata-response-reducer';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
-import {setOrganizationByInnKpp} from '../../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {
