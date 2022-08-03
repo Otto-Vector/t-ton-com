@@ -1,4 +1,4 @@
-import {InfoResponseType, instanceBack} from './back-instance.api';
+import {InfoResponseType, instanceBack} from '../back-instance.api';
 
 
 export type ShippersApiType = {

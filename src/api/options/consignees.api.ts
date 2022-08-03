@@ -1,4 +1,4 @@
-import {InfoResponseType, instanceBack} from './back-instance.api';
+import {InfoResponseType, instanceBack} from '../back-instance.api';
 
 
 export type ConsigneesApiType = {
@@ -17,7 +17,7 @@ export type ConsigneesApiType = {
     city: string
 }
 
-export type CreateConsigneesApiType = Omit<ConsigneesApiType, 'idSender'>
+export type CreateConsigneesApiType = Omit<ConsigneesApiType, 'idRecipient'>
 
 
 export const consigneesApi = {
