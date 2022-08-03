@@ -33,7 +33,7 @@ import {FormSpySimpleShippers} from '../../common/form-spy-simple/form-spy-simpl
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
-
+import {daDataStoreActions} from '../../../redux/dadata-response-reducer';
 
 type OwnProps = {
     // onSubmit: (requisites: shippersCardType) => void
@@ -47,6 +47,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesShippersStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
+    const [ isFirstRender, setIsFirstRender ] = useState(true)
     const [ isSelectorChange, setIsSelectorChange ] = useState(false)
     const [ isCoordsChange, setIsCoordsChange ] = useState(false)
 
@@ -121,6 +122,14 @@ export const ShippersForm: React.FC<OwnProps> = () => {
             setIsSelectorChange(false)
         }
     }
+
+    // зачищаем селектор при первом рендере
+    useEffect(() => {
+        if (isFirstRender) {
+            dispatch(daDataStoreActions.setSuggectionsValues([]))
+            setIsFirstRender(false)
+        }
+    })
 
     useEffect(() => {
             if (!isNew) {
@@ -280,6 +289,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }
+                                                            disabled={isNew}
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
                                                             rounded

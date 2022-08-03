@@ -32,6 +32,7 @@ import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {FormSpySimpleConsignee} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {daDataStoreActions} from '../../../redux/dadata-response-reducer';
 
 
 type OwnProps = {
@@ -46,6 +47,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesConsigneesStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
+    const [ isFirstRender, setIsFirstRender ] = useState(true)
     const [ isSelectorChange, setIsSelectorChange ] = useState(false)
     const [ isCoordsChange, setIsCoordsChange ] = useState(false)
 
@@ -124,6 +126,14 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
             setIsCoordsChange(false)
         }
     }
+
+    // зачищаем селектор при первом рендере
+    useEffect(() => {
+        if (isFirstRender) {
+            dispatch(daDataStoreActions.setSuggectionsValues([]))
+            setIsFirstRender(false)
+        }
+    })
 
     useEffect(() => {
             if (!isNew) {
