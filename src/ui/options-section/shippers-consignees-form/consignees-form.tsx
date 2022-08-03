@@ -46,7 +46,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesConsigneesStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
-    const [isSelectorChange, setIsSelectorChange] = useState(false)
+    const [ isSelectorChange, setIsSelectorChange ] = useState(false)
+    const [ isCoordsChange, setIsCoordsChange ] = useState(false)
 
     const label = useSelector(getLabelConsigneesStore)
     const maskOn = useSelector(getMaskOnConsigneesStore)
@@ -89,6 +90,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const setCoordinatesToInitial = ( coords: [ number, number ] ) => {
         dispatch(consigneesStoreActions.setCoordinates(coords))
+        setIsCoordsChange(true)
     }
 
     // онлайн валидация ИНН с подгрузкой КПП в селектор
@@ -103,21 +105,23 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const setDataToForm = ( value: string | undefined ) => {
         if (value)
             dispatch<any>(setOrganizationByInnKppConsignee({ kppNumber: value }))
-            setIsSelectorChange(true)
+        setIsSelectorChange(true)
     }
 
-    // для синхры с redux стейтом
+    // для синхры с redux стейтом (только после изменения координат или селектора)
     const exposeValues = ( { values, valid }: { values: ConsigneesCardType, valid: boolean } ) => {
         // очищаем от масок
         const demaskedValues = fromFormDemaskedValues(values)
         // сравниваем значения
         if (!valuesAreEqual(demaskedValues, initialValues)) {
-            debugger
+            // debugger
             dispatch(consigneesStoreActions.setInitialValues(
                 // если прилетело от смены селектора, то ставим initialValues
                 !isSelectorChange ? demaskedValues : initialValues),
             )
+
             setIsSelectorChange(false)
+            setIsCoordsChange(false)
         }
     }
 
@@ -291,11 +295,13 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <FormSpySimpleConsignee
-                                            form={ form }
-                                            onChange={ ( { values, valid } ) => {
-                                                exposeValues({ values, valid })
-                                            } }/>
+                                        { ( isCoordsChange || isSelectorChange ) &&
+                                            <FormSpySimpleConsignee
+                                                form={ form }
+                                                onChange={ ( { values, valid } ) => {
+                                                    exposeValues({ values, valid })
+                                                } }/>
+                                        }
                                     </form>
                                 )
                             }/>

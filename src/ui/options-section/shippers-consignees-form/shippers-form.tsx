@@ -47,7 +47,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesShippersStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
-    const [isSelectorChange, setIsSelectorChange] = useState(false)
+    const [ isSelectorChange, setIsSelectorChange ] = useState(false)
+    const [ isCoordsChange, setIsCoordsChange ] = useState(false)
 
     const label = useSelector(getLabelShippersStore)
     const maskOn = useSelector(getMaskOnShippersStore)
@@ -64,7 +65,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         ...values,
         innNumber: parseAllNumbers(values.innNumber) || undefined,
         ogrn: parseAllNumbers(values.ogrn) || undefined,
-        shipperTel: (parseAllNumbers(values.shipperTel) === '7') ? '' : values.shipperTel
+        shipperTel: ( parseAllNumbers(values.shipperTel) === '7' ) ? '' : values.shipperTel,
     } )
 
     const { options } = useSelector(getRoutesStore)
@@ -90,6 +91,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     const getCoordinatesToInitial = ( coords: [ number, number ] ) => {
         dispatch(shippersStoreActions.setCoordinates(coords))
+        setIsCoordsChange(true)
     }
 
     // онлайн валидация ИНН с подгрузкой КПП в селектор
@@ -103,7 +105,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const setDataToForm = ( value: string | undefined ) => {
         if (value)
             dispatch<any>(setOrganizationByInnKppShippers({ kppNumber: value }))
-            setIsSelectorChange(true)
+        setIsSelectorChange(true)
     }
 
     // для синхры с redux стейтом
@@ -174,7 +176,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />
-                                           { isNew
+                                            { isNew
                                                 ?
                                                 <FormSelector named={ 'kpp' }
                                                               placeholder={ label.kpp }
@@ -286,11 +288,13 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <FormSpySimpleShippers
-                                            form={ form }
-                                            onChange={ ( { values, valid } ) => {
-                                                exposeValues({ values, valid })
-                                            } }/>
+                                        { ( isCoordsChange || isSelectorChange ) &&
+                                            <FormSpySimpleShippers
+                                                form={ form }
+                                                onChange={ ( { values, valid } ) => {
+                                                    exposeValues({ values, valid })
+                                                } }/>
+                                        }
                                     </form>
                                 )
                             }/>
