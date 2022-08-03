@@ -3,7 +3,7 @@ import {InfoResponseType, instanceBack} from './back-instance.api';
 
 export type ConsigneesApiType = {
     idUser: string
-    idSender: string
+    idRecipient: string
     title: string
     innNumber: string
     organizationName: string
@@ -28,8 +28,8 @@ export const consigneesApi = {
             .then(response => response.data)
     },
     // запрос на одного выбранного грузополучателя
-    getOneConsigneeById( { idSender }: { idSender: string } ) {
-        return instanceBack.patch<InfoResponseType | ConsigneesApiType[]>('/api/recipient/', { idSender })
+    getOneConsigneeById( { idRecipient }: { idRecipient: string } ) {
+        return instanceBack.patch<InfoResponseType | ConsigneesApiType[]>('/api/recipient/', { idRecipient })
             .then(response => response.data)
     },
     // создать одного грузополучателя
@@ -43,8 +43,8 @@ export const consigneesApi = {
             .then(response => response.data)
     },
     // УДАЛИТЬ одного грузополучателя
-    deleteOneConsignee( { idSender }: { idSender: string } ) {
-        return instanceBack.put<InfoResponseType>('/api/recipient/', { idSender })
+    deleteOneConsignee( { idRecipient }: { idRecipient: string } ) {
+        return instanceBack.put<InfoResponseType>('/api/recipient/', { idRecipient })
             .then(response => response.data)
     },
 }
