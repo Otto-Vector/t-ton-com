@@ -17,7 +17,7 @@ const App: React.FC = () => {
                 version={ '2.1.79' }
                 query={
                     {
-                        apikey: REACT_APP_YANDEX_KEY,
+                        // apikey: REACT_APP_YANDEX_KEY,
                         lang: 'ru_RU',
                         coordorder: 'latlong',
                     }

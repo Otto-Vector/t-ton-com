@@ -33,7 +33,7 @@ import {FormSelector} from '../../common/form-selector/form-selector';
 import {FormSpySimpleConsignee} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 import {daDataStoreActions} from '../../../redux/dadata-response-reducer';
-
+import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
 
 type OwnProps = {
     // onSubmit: (requisites: consigneesCardType) => void
@@ -56,6 +56,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsConsigneesStore)
     const parsers = useSelector(getParsersConsigneesStore)
 
+    const localCoords = useSelector(getGeoPositionAuthStore)
     const currentId = useSelector(getCurrentIdConsigneeStore)
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     // вытаскиваем значение роутера
@@ -116,21 +117,24 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         const demaskedValues = fromFormDemaskedValues(values)
         // сравниваем значения
         if (!valuesAreEqual(demaskedValues, initialValues)) {
-            // debugger
-            dispatch(consigneesStoreActions.setInitialValues(
-                // если прилетело от смены селектора, то ставим initialValues
-                !isSelectorChange ? demaskedValues : initialValues),
-            )
-
-            setIsSelectorChange(false)
-            setIsCoordsChange(false)
+            if (!isSelectorChange && !isCoordsChange) {
+                dispatch(consigneesStoreActions.setInitialValues(demaskedValues))
+            }
         }
+        setIsSelectorChange(false)
+        setIsCoordsChange(false)
     }
 
-    // зачищаем селектор при первом рендере
+
     useEffect(() => {
         if (isFirstRender) {
-            dispatch(daDataStoreActions.setSuggectionsValues([]))
+            if (isNew) {
+                // зачищаем селектор при первом рендере
+                dispatch(daDataStoreActions.setSuggectionsValues([]))
+                // выставляем координаты геолокации
+                dispatch(consigneesStoreActions.setCoordinates(localCoords as [ number, number ]))
+                setIsCoordsChange(true)
+            }
             setIsFirstRender(false)
         }
     })
@@ -305,13 +309,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        { ( isCoordsChange || isSelectorChange ) &&
-                                            <FormSpySimpleConsignee
-                                                form={ form }
-                                                onChange={ ( { values, valid } ) => {
-                                                    exposeValues({ values, valid })
-                                                } }/>
-                                        }
+                                        <FormSpySimpleConsignee
+                                            form={ form }
+                                            onChange={ ( { values, valid } ) => {
+                                                exposeValues({ values, valid })
+                                            } }/>
                                     </form>
                                 )
                             }/>

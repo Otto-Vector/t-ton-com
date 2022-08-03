@@ -175,6 +175,12 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
                 initialValues: { ...state.initialValues, coordinates: coordsToString(action.coordinates) },
             }
         }
+        case 'shippers-store-reducer/SET-ORGANIZATION-VALUES': {
+            return {
+                ...state,
+                initialValues: {...state.initialValues, ...action.payload}
+            }
+        }
         case 'shippers-store-reducer/SET-DEFAULT-INITIAL-VALUES': {
             return {
                 ...state,
@@ -206,6 +212,11 @@ export const shippersStoreActions = {
         type: 'shippers-store-reducer/SET-COORDINATES',
         coordinates,
     } as const ),
+    setOrganizationValues: (payload: {organizationName: string, ogrn: string, address: string, kpp: string})=> ( {
+        type: 'shippers-store-reducer/SET-ORGANIZATION-VALUES',
+        payload,
+    } as const ),
+
     setShippersContent: ( shippers: ShippersCardType[] ) => ( {
         type: 'shippers-store-reducer/SET-SHIPPERS-CONTENT',
         shippers,
@@ -267,11 +278,9 @@ export const setOrganizationByInnKppShippers = ( { kppNumber }: {kppNumber: stri
 
         if (response !== undefined) {
                 const { data } = response
-                dispatch(shippersStoreActions.setInitialValues({
-                    ...getState().shippersStoreReducer.initialValues,
-                    innNumber: data.inn,
-                    organizationName: response.value,
+                dispatch(shippersStoreActions.setOrganizationValues({
                     kpp: data.kpp,
+                    organizationName: response.value,
                     ogrn: data.ogrn,
                     address: data.address.value,
                 }))

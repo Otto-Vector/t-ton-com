@@ -32,8 +32,9 @@ import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-comp
 import {FormSpySimpleShippers} from '../../common/form-spy-simple/form-spy-simple';
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 import {daDataStoreActions} from '../../../redux/dadata-response-reducer';
+import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 type OwnProps = {
     // onSubmit: (requisites: shippersCardType) => void
@@ -56,6 +57,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsShippersStore)
     const parsers = useSelector(getParsersShippersStore)
 
+    const localCoords = useSelector(getGeoPositionAuthStore)
     const currentId = useSelector(getCurrentIdShipperStore)
     const oneShipper = useSelector(getOneShipperFromLocal)
     // вытаскиваем значение роутера
@@ -111,22 +113,26 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     // для синхры с redux стейтом
     const exposeValues = ( { values, valid }: { values: ShippersCardType, valid: boolean } ) => {
-        // очищаем от масок
         const demaskedValues = fromFormDemaskedValues(values)
-        // сравниваем значения
         if (!valuesAreEqual(demaskedValues, initialValues)) {
-            dispatch(shippersStoreActions.setInitialValues(
-                // если прилетело от смены селектора, то ставим initialValues
-                !isSelectorChange ? demaskedValues : initialValues),
-            )
-            setIsSelectorChange(false)
+            if (!isSelectorChange && !isCoordsChange) {
+                dispatch(shippersStoreActions.setInitialValues(demaskedValues))
+            }
         }
+        setIsSelectorChange(false)
+        setIsCoordsChange(false)
     }
 
-    // зачищаем селектор при первом рендере
+
     useEffect(() => {
         if (isFirstRender) {
-            dispatch(daDataStoreActions.setSuggectionsValues([]))
+            if (isNew) {
+                // зачищаем селектор при первом рендере
+                dispatch(daDataStoreActions.setSuggectionsValues([]))
+                // выставляем координаты геолокации
+                dispatch(shippersStoreActions.setCoordinates(localCoords as [ number, number ]))
+                setIsCoordsChange(true)
+            }
             setIsFirstRender(false)
         }
     })
@@ -289,7 +295,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }
-                                                            disabled={isNew}
+                                                            disabled={ isNew }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
                                                             rounded
@@ -298,13 +304,11 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        { ( isCoordsChange || isSelectorChange ) &&
-                                            <FormSpySimpleShippers
-                                                form={ form }
-                                                onChange={ ( { values, valid } ) => {
-                                                    exposeValues({ values, valid })
-                                                } }/>
-                                        }
+                                        <FormSpySimpleShippers
+                                            form={ form }
+                                            onChange={ ( { values, valid } ) => {
+                                                exposeValues({ values, valid })
+                                            } }/>
                                     </form>
                                 )
                             }/>

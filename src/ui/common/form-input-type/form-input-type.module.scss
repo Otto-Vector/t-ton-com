@@ -97,6 +97,8 @@ $input--disabled-font-color: $mainFontColor;
   background: inherit;
   font-size: $input--font-size;
   line-height: $input--line-height;
+  resize: none;
+
   border: solid {
     color: $input--border-color;
     radius: $input--border-radius;
