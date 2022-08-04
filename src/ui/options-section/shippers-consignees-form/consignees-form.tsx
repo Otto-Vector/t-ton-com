@@ -75,9 +75,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     const onSubmit = ( values: ConsigneesCardType ) => {
-        dispatch(consigneesStoreActions.changeOneConsignee(currentId, fromFormDemaskedValues(values))) //сохраняем измененное значение
+        //сохраняем измененное значение
+        dispatch(consigneesStoreActions.changeOneConsignee(currentId, fromFormDemaskedValues(values)))
         dispatch(consigneesStoreActions.setDefaultInitialValues())
-        navigate(options) // и возвращаемся в предыдущее окно
+        // и возвращаемся в предыдущее окно
+        navigate(options)
     }
 
     const onCancelClick = () => {
@@ -141,12 +143,12 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     useEffect(() => {
             if (!isNew) {
-                if (currentId === +( currentIdFromNavigate || 0 )) {
+                if (currentId === currentIdFromNavigate) {
                     if (initialValues.coordinates === undefined) {
                         dispatch(consigneesStoreActions.setInitialValues(oneConsignee))
                     }
                 } else {
-                    dispatch(consigneesStoreActions.setCurrentId(+( currentIdFromNavigate || 0 )))
+                    dispatch(consigneesStoreActions.setCurrentId(currentIdFromNavigate || ''))
                 }
             }
         }, [ currentId, initialValues ],

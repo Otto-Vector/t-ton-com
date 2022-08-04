@@ -37,7 +37,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
     const distance = oneRequest?.distance
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string | null) => {
+    const setLightBoxImage = ( image?: string | null ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
@@ -57,7 +57,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
     const trailerOneImage = oneTrailer.trailerImage
     const trailerOneCargoWeight = oneTrailer.cargoWeight
 
-    const clickForTests = ()=>{
+    const clickForTests = () => {
         dispatch<any>(setOrganizationRequisites())
     }
 
@@ -67,9 +67,9 @@ export const AddDriversView: React.FC<OwnProps> = () => {
     })
 
     useEffect(() => {
-        dispatch(employeesStoreActions.setCurrentId(+( initialValues.driverFIO || 0 )))
-        dispatch(transportStoreActions.setCurrentId(+( initialValues.driverTransport || 0 )))
-        dispatch(trailerStoreActions.setCurrentId(+( initialValues.driverTrailer || 0 )))
+        dispatch(employeesStoreActions.setCurrentId(initialValues.driverFIO || ''))
+        dispatch(transportStoreActions.setCurrentId(initialValues.driverTransport || ''))
+        dispatch(trailerStoreActions.setCurrentId(initialValues.driverTrailer || ''))
     }, [ initialValues ])
 
     if (isFetching) return <Preloader/>
@@ -172,13 +172,15 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                 </div>
                 <div className={ styles.addDriversForm__buttonsPanel }>
                     <a role="button"
-                       // href={ `tel:${ employeeOnePhone }` }
+                        // href={ `tel:${ employeeOnePhone }` }
                        className={ styles.addDriversForm__buttonHrefWrapper }>
                         <Button type={ 'button' }
                                 disabled={ !employeeOnePhone }
                                 colorMode={ 'blue' }
-                                onClick={()=>{clickForTests()}}
-                                title={ employeeOnePhone+'' }
+                                onClick={ () => {
+                                    clickForTests()
+                                } }
+                                title={ employeeOnePhone + '' }
                                 rounded
                         />
                     </a>

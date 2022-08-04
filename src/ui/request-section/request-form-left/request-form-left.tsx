@@ -69,16 +69,16 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const allShippers = useSelector(getAllShippersStore)
     const oneShipper = useSelector(getOneShipperFromLocal)
     const setOneShipper = ( searchId: string | undefined ) => {
-        dispatch(shippersStoreActions.setCurrentId(+( searchId || 0 )))
+        dispatch(shippersStoreActions.setCurrentId(searchId || ''))
     }
 
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     const setOneConsignee = ( searchId: string | undefined ) => {
-        dispatch(consigneesStoreActions.setCurrentId(+( searchId || 0 )))
+        dispatch(consigneesStoreActions.setCurrentId(searchId || ''))
     }
 
-    const oneCustomer = allShippers.filter(( { id } ) => id === initialValues.customer)[0]
-    const oneCarrier = allShippers.filter(( { id } ) => id === initialValues.carrier)[0]
+    const oneCustomer = allShippers.filter(( { idSender } ) => idSender === initialValues.customer)[0]
+    const oneCarrier = allShippers.filter(( { idSender } ) => idSender === initialValues.carrier)[0]
 
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
@@ -108,8 +108,8 @@ export const RequestFormLeft: React.FC<OwnProps> = (
 
     useLayoutEffect(() => { // зачистка значений при первом рендере
         if (requestModes.createMode) {
-            dispatch(shippersStoreActions.setCurrentId(0))
-            dispatch(consigneesStoreActions.setCurrentId(0))
+            dispatch(shippersStoreActions.setCurrentId(''))
+            dispatch(consigneesStoreActions.setCurrentId(''))
         }
         if (currentDistance) dispatch(requestStoreActions.setCurrentDistance(0))
         setIsFirstRender(false) //первый рендер отработал
@@ -117,15 +117,15 @@ export const RequestFormLeft: React.FC<OwnProps> = (
 
     useEffect(() => { // зачистка / присвоение значений при первом рендере
         if (requestModes.historyMode) {
-            dispatch(shippersStoreActions.setCurrentId(initialValues.shipper || 0))
-            dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee || 0))
+            dispatch(shippersStoreActions.setCurrentId(initialValues.shipper + ''))
+            dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee + ''))
         }
     }, [])
 
 
     useEffect(() => {
         if (requestModes.createMode && !isFirstRender) {
-            if (oneShipper.id && oneConsignee.id) {
+            if (oneShipper.idSender && oneConsignee.idRecipient) {
                 dispatch<any>(
                     getRouteFromAPI({
                         from: oneShipper.coordinates as string,

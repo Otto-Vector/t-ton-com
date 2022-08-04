@@ -27,11 +27,17 @@ export const shippersApi = {
         return instanceBack.get<ShippersApiType[]>('/api/sender/')
             .then(response => response.data)
     },
+    // запрос списка грузополучателей, созданных данным пользователем
+    getAllShippersByUserId( idUser: { idUser: string } ) {
+        return instanceBack.patch<ShippersApiType[]>('/api/senderuser/', { ...idUser })
+            .then(response => response.data)
+    },
     // запрос на одного выбранного грузоотправителя
     getOneShipperById( { idSender }: { idSender: string } ) {
         return instanceBack.patch<InfoResponseType | ShippersApiType[]>('/api/sender/', { idSender })
             .then(response => response.data)
     },
+
     // создать одного грузоотправителя
     createOneShipper( requestData: CreateShippersApiType ) {
         return instanceBack.post<InfoResponseType>('/api/sender/', { ...requestData })

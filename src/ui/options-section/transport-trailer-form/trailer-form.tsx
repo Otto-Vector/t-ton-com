@@ -72,16 +72,16 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
 
-    const trailerDeleteHandleClick = ( currentId: number ) => {
+    const trailerDeleteHandleClick = ( currentId: string ) => {
         dispatch(trailerStoreActions.deleteTrailer(currentId))
         navigate(options)
     }
 
     useEffect(() => {
-            if (currentId === +( currentIdForShow || 0 )) {
+            if (currentId === currentIdForShow) {
                 setInitialValues(oneTrailer)
             } else {
-                dispatch(trailerStoreActions.setCurrentId(+( currentIdForShow || 0 )))
+                dispatch(trailerStoreActions.setCurrentId(currentIdForShow || ''))
             }
         }, [ currentId, initialValues ],
     )

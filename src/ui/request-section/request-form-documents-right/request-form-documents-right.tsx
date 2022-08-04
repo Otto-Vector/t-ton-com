@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react'
+import React, {ChangeEvent, useEffect} from 'react'
 import styles from './request-form-documents-right.module.scss'
 import {useSelector} from 'react-redux';
 import {
@@ -193,7 +193,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    onChange={ buttonsAction.sendContractECPFile }
                             />
                         </Button>
-                        <InfoButtonToModal textToModal={modalsText.contractECP}/>
+                        <InfoButtonToModal textToModal={ modalsText.contractECP }/>
                     </div>
                 </div>
             </div>
@@ -225,7 +225,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    onChange={ buttonsAction.sendContractECPFile }
                             />
                         </Button>
-                       <InfoButtonToModal textToModal={modalsText.updECP}/>
+                        <InfoButtonToModal textToModal={ modalsText.updECP }/>
                     </div>
                 </div>
             </div>
@@ -258,7 +258,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    onChange={ buttonsAction.sendContractECPFile }
                             />
                         </Button>
-                        <InfoButtonToModal textToModal={modalsText.customerToConsigneeContractECP}/>
+                        <InfoButtonToModal textToModal={ modalsText.customerToConsigneeContractECP }/>
                     </div>
                 </div>
             </div>
@@ -267,33 +267,33 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__buttonsPanel }>
 
                 <div className={ styles.requestFormDocumentRight__panelButton }>
-                        <Button colorMode={ 'gray' } wordWrap rounded>
-                            { labels.paymentHasBeenTransferred }
-                            <MaterialIcon icon_name={ 'attach_file' }/>
-                            <input type={ 'file' }
-                                   className={ styles.requestFormDocumentRight__hiddenAttachFile }
-                                   accept={ '.png, .jpeg, .pdf, .jpg' }
-                                   onChange={ buttonsAction.sendPaymentHasBeenTransferred }
-                            />
-                        </Button>
-                        <InfoButtonToModal textToModal={modalsText.paymentHasBeenTransferred} />
+                    <Button colorMode={ 'gray' } wordWrap rounded>
+                        { labels.paymentHasBeenTransferred }
+                        <MaterialIcon icon_name={ 'attach_file' }/>
+                        <input type={ 'file' }
+                               className={ styles.requestFormDocumentRight__hiddenAttachFile }
+                               accept={ '.png, .jpeg, .pdf, .jpg' }
+                               onChange={ buttonsAction.sendPaymentHasBeenTransferred }
+                        />
+                    </Button>
+                    <InfoButtonToModal textToModal={ modalsText.paymentHasBeenTransferred }/>
                 </div>
                 <div className={ styles.requestFormDocumentRight__panelButton }>
-                        <Button colorMode={ 'gray' }
-                                wordWrap rounded
-                                title={ labels.paymentHasBeenReceived as string }
-                                onClick={ () => {
-                                } }
-                        />
+                    <Button colorMode={ 'gray' }
+                            wordWrap rounded
+                            title={ labels.paymentHasBeenReceived as string }
+                            onClick={ () => {
+                            } }
+                    />
                 </div>
                 <div className={ styles.requestFormDocumentRight__panelButton }>
-                        <Button colorMode={ 'gray' }
-                                wordWrap
-                                rounded
-                                title={ labels.completeRequest as string }
-                                onClick={ () => {
-                                } }
-                        />
+                    <Button colorMode={ 'gray' }
+                            wordWrap
+                            rounded
+                            title={ labels.completeRequest as string }
+                            onClick={ () => {
+                            } }
+                    />
                 </div>
             </div>
             <InfoText/>

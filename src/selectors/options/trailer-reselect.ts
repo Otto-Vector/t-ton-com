@@ -18,15 +18,15 @@ export const getCurrentIdTrailerStore: TrailerStoreSelectors<'currentId'> = ( st
 
 export const getOneTrailerFromLocal = createSelector(getCurrentIdTrailerStore, getAllTrailerStore, getInitialValuesTrailerStore,
     ( currentId, trailer, initials ): TrailerCardType => {
-        return trailer.filter(( { id } ) => id === currentId)[0] || initials
+        return trailer.filter(( { idTrailer } ) => idTrailer === currentId)[0] || initials
     })
 
 export const getAllTrailerSelectFromLocal = createSelector(getAllTrailerStore, ( trailer ): SelectOptions[] =>
     trailer
-        .map(( { id, trailerTrademark, trailerNumber, cargoWeight } ) =>
+        .map(( { idTrailer, trailerTrademark, trailerNumber, cargoWeight } ) =>
             ( {
-                key: id.toString(),
-                value: id.toString(),
+                key: idTrailer,
+                value: idTrailer,
                 label: [ trailerTrademark, trailerNumber, cargoWeight ].join(', ') + 'т.',
             } )),
 )

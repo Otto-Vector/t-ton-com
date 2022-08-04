@@ -12,7 +12,7 @@ import {
 
 
 const initialState = {
-    currentId: 0,
+    currentId: '',
     label: {
         transportNumber: 'Гос. номер авто',
         transportTrademark: 'Марка авто',
@@ -114,7 +114,7 @@ export const transportStoreReducer = ( state = initialState, action: ActionsType
                 ...state,
                 content: [
                     ...state.content
-                        .map(( val ) => ( +( val.id || 0 ) !== action.id ) ? val : action.transport),
+                        .map(( val ) => ( val.idTransport !== action.idTransport ) ? val : action.transport),
                 ],
             }
         }
@@ -122,7 +122,7 @@ export const transportStoreReducer = ( state = initialState, action: ActionsType
             return {
                 ...state,
                 content: [
-                    ...state.content.filter(( { id } ) => +( id || 1 ) !== action.id),
+                    ...state.content.filter(( { idTransport } ) => idTransport !== action.idTransport),
                 ],
             }
         }
@@ -140,7 +140,7 @@ export const transportStoreActions = {
         type: 'transport-store-reducer/SET-TRANSPORTS-CONTENT',
         transport,
     } as const ),
-    setCurrentId: ( currentId: number ) => ( {
+    setCurrentId: ( currentId: string ) => ( {
         type: 'transport-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
@@ -149,14 +149,14 @@ export const transportStoreActions = {
         type: 'transport-store-reducer/ADD-TRANSPORT',
         transport,
     } as const ),
-    changeTransport: ( id: number, transport: TransportCardType ) => ( {
+    changeTransport: ( idTransport: string, transport: TransportCardType ) => ( {
         type: 'transport-store-reducer/CHANGE-TRANSPORT',
-        id,
+        idTransport,
         transport,
     } as const ),
-    deleteTransport: ( id: number ) => ( {
+    deleteTransport: ( idTransport: string ) => ( {
         type: 'transport-store-reducer/DELETE-TRANSPORT',
-        id,
+        idTransport,
     } as const ),
 }
 

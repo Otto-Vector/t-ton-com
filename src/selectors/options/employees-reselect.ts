@@ -19,12 +19,10 @@ export const getCurrentIdEmployeesStore: EmployeesStoreSelectors<'currentId'> = 
 
 export const getOneEmployeesFromLocal = createSelector(getCurrentIdEmployeesStore, getAllEmployeesStore, getInitialValuesEmployeesStore,
     ( currentId, employees, initials ): EmployeesCardType => {
-        return employees.filter(( { id } ) => id === currentId)[0] || initials
+        return employees.filter(( { idEmployee } ) => idEmployee === currentId)[0] || initials
     })
 
-export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStore, ( employees ): SelectOptions[] => employees.map(( {
-                                                                                                                                         id,
-                                                                                                                                         employeeFIO,
-                                                                                                                                     } ) =>
-    ( { key: id.toString(), value: id.toString(), label: parseFamilyToFIO(employeeFIO) } )),
+export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStore,
+    ( employees ): SelectOptions[] => employees.map(( { idEmployee, employeeFIO } ) =>
+        ( { key: idEmployee, value: idEmployee, label: parseFamilyToFIO(employeeFIO) } )),
 )

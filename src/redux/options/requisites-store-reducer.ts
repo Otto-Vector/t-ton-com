@@ -10,7 +10,7 @@ import {
     required,
 } from '../../utils/validators';
 import {getOrganizationByInnKPPDaDataAPI, GetOrganizationByInnKPPDaDataType} from '../../api/dadata.api';
-import {PersonalResponseType, requisitesApi} from '../../api/requisites.api';
+import {PersonalResponseType, requisitesApi} from '../../api/options/requisites.api';
 import {authStoreActions} from '../auth-store-reducer';
 import {
     composeParsers,
@@ -249,7 +249,7 @@ export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDa
     async ( dispatch, getState ) => {
 
         const response = await getOrganizationByInnKPPDaDataAPI({ inn, kpp })
-        console.log("innKPPdaDataResp: ",response)
+        console.log('innKPPdaDataResp: ', response)
         if (response.length > 0) {
             const { data } = response[0]
             const setPersonal = await requisitesApi.setPersonalData({
@@ -264,7 +264,7 @@ export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDa
                 legalAddress: data.address.value,
                 postAddress: data.address.value,
                 email: data.emails && data.emails[0]?.value || undefined,
-            } as PersonalResponseType )
+            } as PersonalResponseType)
             console.log('setPersonal: ', setPersonal)
 
             return null
@@ -275,24 +275,24 @@ export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDa
     }
 
 // сохранение данных реквизитов в БЭК
-export const setOrganizationRequisites = ( ):
+export const setOrganizationRequisites = ():
     RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
-            const setPersonal = await requisitesApi.changePersonalData({
-                idUser: 'e041ccb0-7848-4064-981d-f861897a8fdd',
-                innNumber: '3459008089',
-                organizationName: 'Тестовые данн-ые',
-                taxMode: 'УСН',
-                kpp: '345901010',
-                ogrn: '12345678',
-                okpo: '22403359',
-                legalAddress: '400078, г Волгоград, пр-кт им. В.И. Ленина, д 67, офис 207',
-                postAddress: '400078, г Волгоград, пр-кт им. В.И. Ленина, д 67, офис 207',
-                email: 'ttt@yaya.ru',
-                phone: '+7 (938) 693-07-27'
-            } as PersonalResponseType )
-            console.log('setPersonal: ', setPersonal)
+        const setPersonal = await requisitesApi.changePersonalData({
+            idUser: 'e041ccb0-7848-4064-981d-f861897a8fdd',
+            innNumber: '3459008089',
+            organizationName: 'Тестовые данн-ые',
+            taxMode: 'УСН',
+            kpp: '345901010',
+            ogrn: '12345678',
+            okpo: '22403359',
+            legalAddress: '400078, г Волгоград, пр-кт им. В.И. Ленина, д 67, офис 207',
+            postAddress: '400078, г Волгоград, пр-кт им. В.И. Ленина, д 67, офис 207',
+            email: 'ttt@yaya.ru',
+            phone: '+7 (938) 693-07-27',
+        } as PersonalResponseType)
+        console.log('setPersonal: ', setPersonal)
         // if (setPersonal.success) {
         //     return null
         // } else {

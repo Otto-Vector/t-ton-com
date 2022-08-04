@@ -20,7 +20,7 @@ import {
 import {initialEmployeesValues} from '../../initials-test-data';
 
 const initialState = {
-    currentId: 0,
+    currentId: '',
     label: {
         employeeFIO: 'ФИО сотрудника',
         employeePhoneNumber: 'Телефон сотрудника',
@@ -33,7 +33,7 @@ const initialState = {
         garageNumber: 'Гаражный номер',
         photoFace: 'Добавить фотографию сотрудника',
         rating: 'Рейтинг:',
-    } as EmployeesCardType<string|undefined>,
+    } as EmployeesCardType<string | undefined>,
 
     maskOn: {
         employeeFIO: undefined, // просто текст
@@ -133,7 +133,7 @@ export const employeesStoreReducer = ( state = initialState, action: ActionsType
                 ...state,
                 content: [
                     ...state.content
-                        .map(( val ) => ( +( val.id || 0 ) !== action.id ) ? val : action.employees),
+                        .map(( val ) => ( val.idEmployee !== action.idEmployee ) ? val : action.employees),
                 ],
             }
         }
@@ -141,7 +141,7 @@ export const employeesStoreReducer = ( state = initialState, action: ActionsType
             return {
                 ...state,
                 content: [
-                    ...state.content.filter(( { id } ) => +( id || 0 ) !== action.id),
+                    ...state.content.filter(( { idEmployee } ) => idEmployee !== action.idEmployee),
                 ],
             }
         }
@@ -158,7 +158,7 @@ export const employeesStoreActions = {
         type: 'employees-store-reducer/SET-EMPLOYEES-CONTENT',
         employees,
     } as const ),
-    setCurrentId: ( currentId: number ) => ( {
+    setCurrentId: ( currentId: string ) => ( {
         type: 'employees-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
@@ -166,14 +166,14 @@ export const employeesStoreActions = {
         type: 'employees-store-reducer/ADD-EMPLOYEE',
         employees,
     } as const ),
-    changeEmployees: ( id: number, employees: EmployeesCardType ) => ( {
+    changeEmployees: ( idEmployee: string, employees: EmployeesCardType ) => ( {
         type: 'employees-store-reducer/CHANGE-EMPLOYEE',
-        id,
+        idEmployee,
         employees,
     } as const ),
-    deleteEmployees: ( id: number ) => ( {
+    deleteEmployees: ( idEmployee: string ) => ( {
         type: 'employees-store-reducer/DELETE-EMPLOYEE',
-        id,
+        idEmployee,
     } as const ),
 
 }

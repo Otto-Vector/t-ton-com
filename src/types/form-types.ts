@@ -49,7 +49,7 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
 
 // на сотрудника
 export type EmployeesCardType<T = DefaultFormType> = {
-    id: number // идентификатор
+    idEmployee: string // идентификатор
     employeeFIO: T // ФИО сотрудника
     employeePhoneNumber: T // Телефон сотрудника
     passportSerial: T // Серия, № паспорта
@@ -67,7 +67,7 @@ export type EmployeesCardType<T = DefaultFormType> = {
 
 // на грузоПОЛУЧАТЕЛЯ
 export type ConsigneesCardType<T = DefaultFormType> = {
-    id: number // идентификатор
+    idRecipient: string // идентификатор
     title: T // укороченное название
     innNumber: T // ИНН
     organizationName: T // Наименование организации
@@ -84,7 +84,7 @@ export type ConsigneesCardType<T = DefaultFormType> = {
 // на грузоотправителя
 export type ShippersCardType<T = DefaultFormType> = {
     // идентификатор
-    id: number
+    idSender: string
     // укороченное название
     title: T
     // ИНН
@@ -121,7 +121,7 @@ export type PropertyRightsType = typeof propertyRights[number]
 
 // на транспорт
 export type TransportCardType<T = DefaultFormType> = {
-    id: number // идентификатор
+    idTransport: string // идентификатор
     transportNumber: T // Гос. номер авто
     transportTrademark: T // Марка авто
     transportModel: T // Модель авто
@@ -135,7 +135,7 @@ export type TransportCardType<T = DefaultFormType> = {
 
 // на прицеп
 export type TrailerCardType<T = DefaultFormType> = {
-    id: number // идентификатор
+    idTrailer: string // идентификатор
     trailerNumber: T // Гос. номер авто
     trailerTrademark: T // Марка авто
     trailerModel: T // Модель авто
@@ -170,11 +170,11 @@ export type OneRequestType = {
     cargoComposition: undefined | string, // вид груза
     shipmentDate: undefined | Date, // дата погрузки
     cargoType: undefined | CargoTypeType, // тип груза
-    customer: undefined | number, // заказчик
-    shipper: undefined | number, // грузоотправитель
-    consignee: undefined | number, // грузополучатель
-    carrier: undefined | number, // перевозчик
-    driver: undefined | number, // водитель
+    customer: undefined | string, // заказчик
+    shipper: undefined | string, // грузоотправитель
+    consignee: undefined | string, // грузополучатель
+    carrier: undefined | string, // перевозчик
+    driver: undefined | string, // водитель
     distance: undefined | number, // расстояние
     note: undefined | string, // примечание
     answers: number[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками

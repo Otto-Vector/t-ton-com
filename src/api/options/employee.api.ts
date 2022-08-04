@@ -28,27 +28,32 @@ export const employeesApi = {
 
     // запрос списка всех водителей
     getAllEmployees() {
-        return instanceBack.get<EmployeesApiType[]>('/api/emploee/')
+        return instanceBack.get<EmployeesApiType[]>('/api/employee/')
+            .then(response => response.data)
+    },
+    // запрос списка всех водителей созданных данным пользователем
+    getAllEmployeesByUserId( idUser: { idUser: string } ) {
+        return instanceBack.patch<EmployeesApiType[]>('/api/emploeeuser/', { ...idUser })
             .then(response => response.data)
     },
     // запрос на одного выбранного водителя
     getOneEmployeeById( { idEmployee }: { idEmployee: string } ) {
-        return instanceBack.patch<InfoResponseType | EmployeesApiType[]>('/api/emploee/', { idEmployee })
+        return instanceBack.patch<InfoResponseType | EmployeesApiType[]>('/api/employee/', { idEmployee })
             .then(response => response.data)
     },
     // создать одного водителя
     createOneEmployee( requestData: CreateEmployeesApiType ) {
-        return instanceBack.post<InfoResponseType>('/api/emploee/', { ...requestData })
+        return instanceBack.post<InfoResponseType>('/api/employee/', { ...requestData })
             .then(response => response.data)
     },
     // ИЗМЕНИТЬ одного водителя
     modifyOneEmployee( requestData: EmployeesApiType ) {
-        return instanceBack.put<InfoResponseType>('/api/emploee/', { ...requestData })
+        return instanceBack.put<InfoResponseType>('/api/employee/', { ...requestData })
             .then(response => response.data)
     },
     // УДАЛИТЬ одного водителя
     deleteOneEmployee( { idEmployee }: { idEmployee: string } ) {
-        return instanceBack.put<InfoResponseType>('/api/emploee/', { idEmployee })
+        return instanceBack.put<InfoResponseType>('/api/employee/', { idEmployee })
             .then(response => response.data)
     },
 }

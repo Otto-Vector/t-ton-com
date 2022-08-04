@@ -87,7 +87,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                 }
             } else { // если SMS отослан
                 loginError = await dispatch<any>(
-                    loginAuthorization({ phone: phoneNumber as string, password: sms as string })
+                    loginAuthorization({ phone: phoneNumber as string, password: sms as string }),
                 )
                 if (loginError) {
                     return loginError

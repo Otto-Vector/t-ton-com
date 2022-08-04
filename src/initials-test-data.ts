@@ -32,9 +32,9 @@ export const cargoComposition = [
 // фейковые грузоотправители
 export const initialShippersContent: ShippersCardType[] = [
     {
-        id: 1,
+        idSender: '1',
         title: 'Черепахи',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Черепахи',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -46,8 +46,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Саратов',
     },
     {
-        id: 2, title: 'Зайцы',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '2', title: 'Зайцы',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Мастера боевых искусств',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -59,8 +59,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Бийск',
     },
     {
-        id: 3, title: 'Бегемоты',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '3', title: 'Бегемоты',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Локтекусательный комбинат',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -72,8 +72,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Волгодонск',
     },
     {
-        id: 4, title: 'Лоси',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '4', title: 'Лоси',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Манерные водовозы',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -85,8 +85,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Махачкала',
     },
     {
-        id: 5, title: 'Пауки',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '5', title: 'Пауки',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Усомокающая станция',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -98,8 +98,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Челябинск',
     },
     {
-        id: 6, title: 'Крокодилы',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '6', title: 'Крокодилы',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Распилы подельника',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -111,8 +111,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Киров',
     },
     {
-        id: 7, title: 'Чайки',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '7', title: 'Чайки',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Бодрые бородачи и мухи',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -124,8 +124,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Елец',
     },
     {
-        id: 8, title: 'Гуси',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '8', title: 'Гуси',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Б и Ко Лимитэд',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -137,8 +137,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Пермь',
     },
     {
-        id: 9, title: 'Лебеди',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '9', title: 'Лебеди',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Мощное Хозяйство',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -150,8 +150,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Каменск-Уральский',
     },
     {
-        id: 10, title: 'Очень сильные тигры',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '10', title: 'Очень сильные тигры',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Каменные скрипели',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -163,8 +163,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Волгоград',
     },
     {
-        id: 11, title: 'Везучие атоллы',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '11', title: 'Везучие атоллы',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Бабтистский Разогрев',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -176,8 +176,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Петропавловск-Камчатский',
     },
     {
-        id: 12, title: 'Хранители попкорна',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '12', title: 'Хранители попкорна',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Юстиция почивает',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -189,8 +189,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Казань',
     },
     {
-        id: 13, title: 'Б и Ко',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '13', title: 'Б и Ко',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Поночка Хряк',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -202,8 +202,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Йошкар-Ола',
     },
     {
-        id: 14, title: 'Южный Мак',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '14', title: 'Южный Мак',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Северный полюс2',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -215,8 +215,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Астрахань',
     },
     {
-        id: 15, title: 'Ретир Заново',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '15', title: 'Ретир Заново',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Чемпионы неугомонны',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -228,8 +228,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Москва',
     },
     {
-        id: 16, title: 'Загребущие тараканы',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '16', title: 'Загребущие тараканы',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Черепа',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -241,8 +241,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Новошахтинск',
     },
     {
-        id: 17, title: 'Насекомоядные',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '17', title: 'Насекомоядные',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Черешенный запах молотилки',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -254,8 +254,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Усолье-Сибирское',
     },
     {
-        id: 18, title: 'Растительные жиры',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '18', title: 'Растительные жиры',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Пашня Луговая',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -267,8 +267,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Северск',
     },
     {
-        id: 19, title: 'Собаки гавкающие',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '19', title: 'Собаки гавкающие',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Настигатор',
         kpp: '606369470',
         ogrn: '8179195353032',
@@ -280,8 +280,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Рубцовск',
     },
     {
-        id: 20, title: 'Собаки лающие',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '20', title: 'Собаки лающие',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'ЧерепаПАхи',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -293,8 +293,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Нижний Тагил',
     },
     {
-        id: 21, title: 'Собаки кусающие',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '21', title: 'Собаки кусающие',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Чере--пахи',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -306,8 +306,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Чебоксары',
     },
     {
-        id: 22, title: 'Рыба, плавающая очень глубоко, пока никого нет',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '22', title: 'Рыба, плавающая очень глубоко, пока никого нет',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Черепахи и Кит',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -319,8 +319,8 @@ export const initialShippersContent: ShippersCardType[] = [
         city: 'Новокуйбышевск',
     },
     {
-        id: 23, title: 'Кит',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idSender: '23', title: 'Кит',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Черепахи',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -336,8 +336,8 @@ export const initialShippersContent: ShippersCardType[] = [
 // фейковые грузополучатели
 export const initialConsigneesContent: ConsigneesCardType[] = [
     {
-        id: 12, title: 'Хранители попкорна',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '12', title: 'Хранители попкорна',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Юстиция почивает',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -349,8 +349,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Казань',
     },
     {
-        id: 13, title: 'Б и Ко',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '13', title: 'Б и Ко',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Поночка Хряк',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -362,8 +362,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Йошкар-Ола',
     },
     {
-        id: 14, title: 'Южный Мак',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '14', title: 'Южный Мак',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Северный полюс2',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -375,8 +375,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Астрахань',
     },
     {
-        id: 15, title: 'Ретир Заново',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '15', title: 'Ретир Заново',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Чемпионы неугомонны',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -388,8 +388,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Москва',
     },
     {
-        id: 16, title: 'Загребущие тараканы',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '16', title: 'Загребущие тараканы',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Черепа',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -401,8 +401,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Новошахтинск',
     },
     {
-        id: 17, title: 'Насекомоядные',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '17', title: 'Насекомоядные',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Черешенный запах молотилки',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -414,8 +414,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Усолье-Сибирское',
     },
     {
-        id: 18, title: 'Растительные жиры',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '18', title: 'Растительные жиры',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Пашня Луговая',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -427,8 +427,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Северск',
     },
     {
-        id: 19, title: 'Собаки гавкающие',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '19', title: 'Собаки гавкающие',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Настигатор',
         kpp: '606369470',
         ogrn: '8179195353032',
@@ -440,8 +440,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Рубцовск',
     },
     {
-        id: 20, title: 'Собаки лающие',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '20', title: 'Собаки лающие',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'ЧерепаПАхи',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -453,8 +453,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Нижний Тагил',
     },
     {
-        id: 21, title: 'Собаки кусающие',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '21', title: 'Собаки кусающие',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Чере--пахи',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -466,8 +466,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Чебоксары',
     },
     {
-        id: 22, title: 'Рыба, плавающая очень глубоко, пока никого нет',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '22', title: 'Рыба, плавающая очень глубоко, пока никого нет',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Черепахи и Кит',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -479,8 +479,8 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
         city: 'Новокуйбышевск',
     },
     {
-        id: 23, title: 'Кит',
-        innNumber: randMinMax(1000000000,9999999999).toString(),
+        idRecipient: '23', title: 'Кит',
+        innNumber: randMinMax(1000000000, 9999999999).toString(),
         organizationName: 'Черепахи',
         kpp: '123456789',
         ogrn: '1234567890123',
@@ -496,7 +496,7 @@ export const initialConsigneesContent: ConsigneesCardType[] = [
 // фейковый транспорт
 export const initialTransportValues: TransportCardType[] = [
     {
-        id: 1,
+        idTransport: '1',
         transportNumber: 'В 367 РА',
         transportTrademark: 'Dacia',
         transportModel: 'Maruti',
@@ -508,7 +508,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: 'https://www.fraikinrus.ru/upload/iblock/eb9/eb9b0dc47eb0d3340cdad41d5c25c101.png',
     },
     {
-        id: 2,
+        idTransport: '2',
         transportNumber: 'Р 571 АЕ',
         transportTrademark: 'Dadi',
         transportModel: 'Maserati',
@@ -520,7 +520,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: randomTruckImage(2),
     },
     {
-        id: 3,
+        idTransport: '3',
         transportNumber: 'Н 436 ХВ',
         transportTrademark: 'Daewoo',
         transportModel: 'Maybach',
@@ -532,7 +532,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: randomTruckImage(3),
     },
     {
-        id: 4,
+        idTransport: '4',
         transportNumber: 'В 358 ЕТ',
         transportTrademark: 'Daihatsu',
         transportModel: 'Mazda',
@@ -544,7 +544,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: randomTruckImage(4),
     },
     {
-        id: 15,
+        idTransport: '15',
         transportNumber: 'Е 916 РУ',
         transportTrademark: 'Daimler',
         transportModel: 'McLaren',
@@ -556,7 +556,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: randomTruckImage(15),
     },
     {
-        id: 5,
+        idTransport: '5',
         transportNumber: 'А 055 УТ',
         transportTrademark: 'Dallas',
         transportModel: 'Mega',
@@ -568,7 +568,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: randomTruckImage(5),
     },
     {
-        id: 6,
+        idTransport: '6',
         transportNumber: 'А 426 УХ',
         transportTrademark: 'Derways',
         transportModel: 'Mercedes-Benz',
@@ -580,7 +580,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: randomTruckImage(6),
     },
     {
-        id: 7,
+        idTransport: '7',
         transportNumber: 'О 805 СМ',
         transportTrademark: 'De Tomaso',
         transportModel: 'Mercury',
@@ -592,7 +592,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: randomTruckImage(7),
     },
     {
-        id: 8,
+        idTransport: '8',
         transportNumber: 'Х 538 КУ',
         transportTrademark: 'Dodge',
         transportModel: 'Metrocab',
@@ -604,7 +604,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: randomTruckImage(8),
     },
     {
-        id: 9,
+        idTransport: '9',
         transportNumber: 'Р 321 КТ',
         transportTrademark: 'Dong Feng',
         transportModel: 'MG',
@@ -616,7 +616,7 @@ export const initialTransportValues: TransportCardType[] = [
         transportImage: randomTruckImage(9),
     },
     {
-        id: 10,
+        idTransport: '10',
         transportNumber: 'Е 749 ТВ',
         transportTrademark: 'Doninvest',
         transportModel: 'Minelli',
@@ -632,7 +632,7 @@ export const initialTransportValues: TransportCardType[] = [
 // фейковые прицепы
 export const initialTrailerValues: TrailerCardType[] = [
     {
-        id: 11,
+        idTrailer: '11',
         trailerNumber: 'А 355 ВС',
         trailerTrademark: 'Jeep',
         trailerModel: 'Mini',
@@ -644,7 +644,7 @@ export const initialTrailerValues: TrailerCardType[] = [
         trailerImage: 'http://maz-kam.ru/wp-content/uploads/2018/01/pritsep-1.jpg',
     },
     {
-        id: 12,
+        idTrailer: '12',
         trailerNumber: 'К 796 ОР',
         trailerTrademark: 'Jiangling',
         trailerModel: 'Mitsubishi',
@@ -656,7 +656,7 @@ export const initialTrailerValues: TrailerCardType[] = [
         trailerImage: randomTrailerImage(12),
     },
     {
-        id: 13,
+        idTrailer: '13',
         trailerNumber: 'Н 916 ОМ',
         trailerTrademark: 'Jiangnan',
         trailerModel: 'Mitsuoka',
@@ -668,7 +668,7 @@ export const initialTrailerValues: TrailerCardType[] = [
         trailerImage: randomTrailerImage(13),
     },
     {
-        id: 14,
+        idTrailer: '14',
         trailerNumber: 'Р 209 КХ',
         trailerTrademark: 'КАМАЗ',
         trailerModel: 'Monte Carlo',
@@ -684,7 +684,7 @@ export const initialTrailerValues: TrailerCardType[] = [
 // фейковые водители
 export const initialEmployeesValues: EmployeesCardType[] = [
     {
-        id: 1,
+        idEmployee: '1',
         employeeFIO: 'Петров Анвар Васильевич',
         employeePhoneNumber: '+7(938)155-22-43',
         passportSerial: '7806563706',
@@ -700,7 +700,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         status: 'empty',
     },
     {
-        id: 2,
+        idEmployee: '2',
         employeeFIO: 'Беспалов Артем Юрьевич',
         employeePhoneNumber: '+7(938)747-31-53',
         passportSerial: '5839444355',
@@ -716,7 +716,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         status: 'full',
     },
     {
-        id: 3,
+        idEmployee: '3',
         employeeFIO: 'Владимиров Аким Платонович',
         employeePhoneNumber: '+7(938)304-98-05',
         passportSerial: '4542766432',
@@ -732,7 +732,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         status: 'full',
     },
     {
-        id: 4,
+        idEmployee: '4',
         employeeFIO: 'Кондратьев Виссарион Даниилович',
         employeePhoneNumber: '+7(938)368-92-65',
         passportSerial: '6157722598',
@@ -748,7 +748,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         status: 'full',
     },
     {
-        id: 5,
+        idEmployee: '5',
         employeeFIO: 'Белоусов Людвиг Эльдарович',
         employeePhoneNumber: '+7(938)206-44-01',
         passportSerial: '7331537327',
@@ -764,7 +764,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         status: 'full',
     },
     {
-        id: 6,
+        idEmployee: '6',
         employeeFIO: 'Горшков Вольдемар Миронович',
         employeePhoneNumber: '+7(938)495-55-95',
         passportSerial: '9888557656',
@@ -780,7 +780,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         status: 'empty',
     },
     {
-        id: 7,
+        idEmployee: '7',
         employeeFIO: 'Зиновьев Вилен Лукьевич',
         employeePhoneNumber: '+7(938)998-79-38',
         passportSerial: '7805913257',
@@ -796,7 +796,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         status: 'full',
     },
     {
-        id: 8,
+        idEmployee: '8',
         employeeFIO: 'Симонов Тарас Станиславович',
         employeePhoneNumber: '+7(938)062-23-76',
         passportSerial: '8455069157',
@@ -812,7 +812,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         status: 'full',
     },
     {
-        id: 9,
+        idEmployee: '9',
         employeeFIO: 'Поляков Руслан Рудольфович',
         employeePhoneNumber: '+7(938)730-23-14',
         passportSerial: '9269743181',
@@ -828,7 +828,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         status: 'full',
     },
     {
-        id: 10,
+        idEmployee: '10',
         employeeFIO: 'Ершов Флор Леонидович',
         employeePhoneNumber: '+7(938)194-68-95',
         passportSerial: '8416910459',
@@ -897,11 +897,11 @@ const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     cargoComposition: randArrayValue(cargoComposition),
     shipmentDate: id === 999 ? today : randomDate(today, addNDay(today, 4)),
     cargoType: randArrayValue(cargoType) as CargoTypeType,
-    customer: randFloorMax(10),
-    shipper: randFloorMax(11),
-    consignee: randMinMax(12, 23),
-    carrier: randFloorMax(9),
-    driver: randFloorMax(9),
+    customer: randFloorMax(10).toString(),
+    shipper: randFloorMax(11).toString(),
+    consignee: randMinMax(12, 23).toString(),
+    carrier: randFloorMax(9).toString(),
+    driver: randFloorMax(9).toString(),
     distance: randMinMax(20, 400),
     note: 'Насос на 120, рукава, ДОПОГ.',
     answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),

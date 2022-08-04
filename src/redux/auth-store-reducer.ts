@@ -8,15 +8,15 @@ import {daDataStoreActions, DaDataStoreActionsType} from './dadata-response-redu
 
 
 const initialValues: phoneSubmitType = {
-        innNumber: undefined,
-        kppNumber: undefined,
-        phoneNumber: undefined,
-        sms: undefined,
-    }
+    innNumber: undefined,
+    kppNumber: undefined,
+    phoneNumber: undefined,
+    sms: undefined,
+}
 
 const initialState = {
     isAuth: false,
-    authID: 'sfadsfsadfa',
+    authID: '',
     authPhone: '',
     authCash: 100,
     isAvailableSMSRequest: false,
@@ -32,7 +32,7 @@ const initialState = {
         sms: 'Пароль из sms',
     } as phoneSubmitType<string | undefined>,
 
-    initialValues: {...initialValues},
+    initialValues: { ...initialValues },
 
     maskOn: {
         innNumber: '########## ##',
@@ -142,9 +142,9 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-GEO-POSITION',
         latitude, longitude,
     } as const ),
-    setModalMessage: ( message: string | null) => ( {
+    setModalMessage: ( message: string | null ) => ( {
         type: 'auth-store-reducer/SET-MODAL-MESSAGE',
-        message
+        message,
     } as const ),
 }
 
@@ -219,7 +219,7 @@ export const loginAuthorization = ( {
                 dispatch(authStoreActions.setIsAuth(true))
                 dispatch(authStoreActions.setAuthPhone(phone))
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
-                dispatch(authStoreActions.setInitialValues({...initialValues}))
+                dispatch(authStoreActions.setInitialValues({ ...initialValues }))
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
                 dispatch(authStoreActions.setAuthId(response.success)) // исправить на нормальную
 

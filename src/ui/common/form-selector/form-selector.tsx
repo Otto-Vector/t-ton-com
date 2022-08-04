@@ -91,7 +91,7 @@ const CustomSelect = ( {
                     isClearable={ isClearable }
                     classNamePrefix={ 'react-select-ton' }
                     onChange={ handleChange }
-                    isDisabled={disabled}
+                    isDisabled={ disabled }
                     onCreateOption={ handleCreate }
                     options={ options }
                     value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
@@ -103,7 +103,7 @@ const CustomSelect = ( {
                     classNamePrefix={ 'react-select-ton' }
                     onChange={ handleChange }
                     options={ options }
-                    isDisabled={disabled}
+                    isDisabled={ disabled }
                     value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
                 /> }
             { isError &&

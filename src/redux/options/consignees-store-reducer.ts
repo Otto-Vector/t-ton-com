@@ -1,14 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-types'
-import {
-    composeValidators,
-    maxLength,
-    mustBe00Numbers,
-    mustBe0_0Numbers,
-    required,
-} from '../../utils/validators'
-import {initialConsigneesContent} from '../../initials-test-data'
+import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
 import {
     composeParsers,
     coordsToString,
@@ -22,8 +15,10 @@ import {
 } from '../../utils/parsers';
 import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
 import {getOrganizationsByInn} from '../dadata-response-reducer';
+import {consigneesApi} from '../../api/options/consignees.api';
 
 const defaultInitialValues = {
+    idRecipient: '',
     title: undefined,
     innNumber: undefined,
     organizationName: undefined,
@@ -38,7 +33,7 @@ const defaultInitialValues = {
 
 
 const initialState = {
-    currentId: 0,
+    currentId: '',
 
     label: {
         title: 'Название грузополучателя',
@@ -51,7 +46,7 @@ const initialState = {
         consigneesTel: 'Телефон получателя',
         description: 'Доп. данные для ТТН',
         coordinates: 'Местоположение в координатах',
-    } as ConsigneesCardType<string|undefined>,
+    } as ConsigneesCardType<string | undefined>,
 
     maskOn: {
         title: undefined,
@@ -149,7 +144,7 @@ export const consigneesStoreReducer = ( state = initialState, action: ActionsTyp
             return {
                 ...state,
                 content: [
-                    ...state.content.map(( val ) => ( +( val.id || 0 ) !== action.id ) ? val : action.consignee),
+                    ...state.content.map(( val ) => ( val.idRecipient !== action.idRecipient ) ? val : action.consignee),
                 ],
             }
         }
@@ -157,7 +152,7 @@ export const consigneesStoreReducer = ( state = initialState, action: ActionsTyp
             return {
                 ...state,
                 content: [
-                    ...state.content.filter(( { id } ) => +( id || 1 ) !== action.id),
+                    ...state.content.filter(( { idRecipient } ) => idRecipient !== action.idRecipient),
                 ],
             }
         }
@@ -190,7 +185,7 @@ export const consigneesStoreActions = {
     setDefaultInitialValues: () => ( {
         type: 'consignees-store-reducer/SET-DEFAULT-INITIAL-VALUES',
     } as const ),
-    setCurrentId: ( currentId: number ) => ( {
+    setCurrentId: ( currentId: string ) => ( {
         type: 'consignees-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
@@ -206,14 +201,14 @@ export const consigneesStoreActions = {
         type: 'consignees-store-reducer/ADD-CONSIGNEE',
         consignee,
     } as const ),
-    changeOneConsignee: ( id: number, consignee: ConsigneesCardType ) => ( {
+    changeOneConsignee: ( idRecipient: string, consignee: ConsigneesCardType ) => ( {
         type: 'consignees-store-reducer/CHANGE-CONSIGNEE',
-        id,
+        idRecipient,
         consignee,
     } as const ),
-    deleteConsignee: ( id: number ) => ( {
+    deleteConsignee: ( idRecipient: string ) => ( {
         type: 'consignees-store-reducer/DELETE-CONSIGNEE',
-        id,
+        idRecipient,
     } as const ),
 }
 
@@ -222,11 +217,18 @@ export const consigneesStoreActions = {
 export type ConsigneesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-export const getAllConsigneesAPI = ( { innID }: { innID: number } ): ConsigneesStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
         try {
-            const response = initialConsigneesContent
-            await dispatch(consigneesStoreActions.setConsigneesContent(response))
+            const idUser = getState().authStoreReducer.authID
+            if (idUser) {
+                const response = await consigneesApi.getAllCosigneesByUserId({ idUser })
+                dispatch(consigneesStoreActions.setConsigneesContent(response
+                    .map(( { idUser, ...values } ) => values)))
+                if (!!response.length) console.log('Пока ни одного Грузополучателя!')
+            } else {
+                console.log('Пока не авторизован!')
+            }
         } catch (e) {
             alert(e)
         }
@@ -251,22 +253,22 @@ export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDa
     }
 
 // сохранение параметров организации из ранее загруженного списка DaData
-export const setOrganizationByInnKppConsignee = ( { kppNumber }: {kppNumber: string} ):
+export const setOrganizationByInnKppConsignee = ( { kppNumber }: { kppNumber: string } ):
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
-        const response = getState().daDataStoreReducer.suggestions.filter(({data:{kpp}})=>kpp===kppNumber)[0]
+        const response = getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
 
         if (response !== undefined) {
-                const { data } = response
-                dispatch(consigneesStoreActions.setInitialValues({
-                    ...getState().consigneesStoreReducer.initialValues,
-                    innNumber: data.inn,
-                    organizationName: response.value,
-                    kpp: data.kpp,
-                    ogrn: data.ogrn,
-                    address: data.address.value,
-                }))
-            } else alert('Фильтр КПП локально не сработал!')
+            const { data } = response
+            dispatch(consigneesStoreActions.setInitialValues({
+                ...getState().consigneesStoreReducer.initialValues,
+                innNumber: data.inn,
+                organizationName: response.value,
+                kpp: data.kpp,
+                ogrn: data.ogrn,
+                address: data.address.value,
+            }))
+        } else alert('Фильтр КПП локально не сработал!')
 
     }

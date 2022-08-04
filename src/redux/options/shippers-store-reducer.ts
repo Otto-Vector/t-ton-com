@@ -1,14 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, ShippersCardType, ValidateType} from '../../types/form-types'
-import {
-    composeValidators,
-    maxLength,
-    mustBe00Numbers,
-    mustBe0_0Numbers,
-    required,
-} from '../../utils/validators'
-import {initialShippersContent} from '../../initials-test-data';
+import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
 import {
     composeParsers,
     coordsToString,
@@ -20,11 +13,13 @@ import {
     parseOnlyOneDot,
     parseOnlyOneSpace,
 } from '../../utils/parsers';
-import {getOrganizationByInnDaDataAPI, GetOrganizationByInnDaDataType} from '../../api/dadata.api';
+import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
 import {getOrganizationsByInn} from '../dadata-response-reducer';
+import {shippersApi} from '../../api/options/shippers.api';
 
 
 const defaultInitialValues = {
+    idSender: '',
     title: undefined,
     innNumber: undefined,
     organizationName: undefined,
@@ -39,7 +34,7 @@ const defaultInitialValues = {
 } as ShippersCardType
 
 const initialState = {
-    currentId: 0,
+    currentId: '',
     label: {
         // id: undefined,
         title: 'Название грузоотправителя',
@@ -90,8 +85,8 @@ const initialState = {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(100)),
         kpp: composeValidators(required, mustBe00Numbers(9)),
-        ogrn: composeValidators(required, mustBe0_0Numbers(13)(15) ),
-        address: composeValidators(required,maxLength(150)),
+        ogrn: composeValidators(required, mustBe0_0Numbers(13)(15)),
+        address: composeValidators(required, maxLength(150)),
         shipperFio: composeValidators(required),
         shipperTel: composeValidators(required, mustBe00Numbers(11)),
         description: composeValidators(maxLength(300)),
@@ -157,7 +152,7 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
             return {
                 ...state,
                 content: [
-                    ...state.content.map(( val ) => ( +( val.id || 0 ) !== action.id ) ? val : action.shipper),
+                    ...state.content.map(( val ) => ( val.idSender !== action.idSender ) ? val : action.shipper),
                 ],
             }
         }
@@ -165,7 +160,7 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
             return {
                 ...state,
                 content: [
-                    ...state.content.filter(( { id } ) => +( id || 1 ) !== action.id),
+                    ...state.content.filter(( { idSender } ) => idSender !== action.idSender),
                 ],
             }
         }
@@ -178,7 +173,7 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
         case 'shippers-store-reducer/SET-ORGANIZATION-VALUES': {
             return {
                 ...state,
-                initialValues: {...state.initialValues, ...action.payload}
+                initialValues: { ...state.initialValues, ...action.payload },
             }
         }
         case 'shippers-store-reducer/SET-DEFAULT-INITIAL-VALUES': {
@@ -204,15 +199,17 @@ export const shippersStoreActions = {
     setDefaultInitialValues: () => ( {
         type: 'shippers-store-reducer/SET-DEFAULT-INITIAL-VALUES',
     } as const ),
-    setCurrentId: ( currentId: number ) => ( {
+    setCurrentId: ( currentId: string ) => ( {
         type: 'shippers-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
+    // подгрузка во временный стейт координат
     setCoordinates: ( coordinates: [ number, number ] ) => ( {
         type: 'shippers-store-reducer/SET-COORDINATES',
         coordinates,
     } as const ),
-    setOrganizationValues: (payload: {organizationName: string, ogrn: string, address: string, kpp: string})=> ( {
+    // подгрузка во временный стейт данных организации
+    setOrganizationValues: ( payload: { organizationName: string, ogrn: string, address: string, kpp: string } ) => ( {
         type: 'shippers-store-reducer/SET-ORGANIZATION-VALUES',
         payload,
     } as const ),
@@ -225,14 +222,14 @@ export const shippersStoreActions = {
         type: 'shippers-store-reducer/ADD-SHIPPER',
         shipper,
     } as const ),
-    changeShipper: ( id: number, shipper: ShippersCardType ) => ( {
+    changeShipper: ( idSender: string, shipper: ShippersCardType ) => ( {
         type: 'shippers-store-reducer/CHANGE-SHIPPER',
-        id,
+        idSender,
         shipper,
     } as const ),
-    deleteShipper: ( id: number ) => ( {
+    deleteShipper: ( idSender: string ) => ( {
         type: 'shippers-store-reducer/DELETE-SHIPPER',
-        id,
+        idSender,
     } as const ),
 }
 
@@ -241,11 +238,17 @@ export const shippersStoreActions = {
 export type ShippersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-export const getAllShippersAPI = ( { innID }: { innID: number } ): ShippersStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
         try {
-            const response = initialShippersContent
-            await dispatch(shippersStoreActions.setShippersContent(response))
+            // const response = initialShippersContent
+            const idUser = getState().authStoreReducer.authID
+            const response = await shippersApi.getAllShippersByUserId({ idUser })
+
+            dispatch(shippersStoreActions.setShippersContent(response.map(( { idUser, ...values } ) => values)))
+
+            if (!!response.length) console.log('Пока ни одного Грузоотправителя')
+
         } catch (e) {
             alert(e)
         }
@@ -270,20 +273,20 @@ export const getOrganizationByInnShipper = ( { inn }: GetOrganizationByInnDaData
     }
 
 // сохранение параметров организации из ранее загруженного списка DaData
-export const setOrganizationByInnKppShippers = ( { kppNumber }: {kppNumber: string} ):
+export const setOrganizationByInnKppShippers = ( { kppNumber }: { kppNumber: string } ):
     ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
-        const response = getState().daDataStoreReducer.suggestions.filter(({data:{kpp}})=>kpp===kppNumber)[0]
+        const response = getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
 
         if (response !== undefined) {
-                const { data } = response
-                dispatch(shippersStoreActions.setOrganizationValues({
-                    kpp: data.kpp,
-                    organizationName: response.value,
-                    ogrn: data.ogrn,
-                    address: data.address.value,
-                }))
-            } else alert('Фильтр КПП локально не сработал!')
+            const { data } = response
+            dispatch(shippersStoreActions.setOrganizationValues({
+                kpp: data.kpp,
+                organizationName: response.value,
+                ogrn: data.ogrn,
+                address: data.address.value,
+            }))
+        } else alert('Фильтр КПП локально не сработал!')
 
     }

@@ -25,7 +25,7 @@ type OwnProps = {
 export const FormInputType: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
-        children, disabled=false, mask = '_', maskFormat,
+        children, disabled = false, mask = '_', maskFormat,
         textArea, allowEmptyFormatting, inputType = 'text', errorBottom, noLabel, min,
     } ) => {
 
@@ -66,7 +66,7 @@ export const FormInputType: React.FC<OwnProps> = (
                     { ...input }
                     className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
                     placeholder={ placeholder }
-                    disabled={ disabled || meta.validating}
+                    disabled={ disabled || meta.validating }
                 >
                 </NumberFormat>
                 :
@@ -75,7 +75,7 @@ export const FormInputType: React.FC<OwnProps> = (
                          min={ inputType === 'date' ? min : undefined }
                          className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
                          placeholder={ placeholder }
-                         disabled={ disabled || meta.validating}/>
+                         disabled={ disabled || meta.validating }/>
 
             }
             { labelToView &&

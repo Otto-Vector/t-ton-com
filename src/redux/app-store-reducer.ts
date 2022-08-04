@@ -54,9 +54,9 @@ export const initializedAll = (): InitializedThunkActionType =>
     ( dispatch ) => {
         let getPersonal = dispatch(getPersonalReqisites())
         let getGeoPosition = dispatch(geoPositionTake())
-        let getConsignees = dispatch(getAllConsigneesAPI({ innID: 0 }))
+        let getAllShippers = dispatch(getAllShippersAPI())
+        let getAllConsignees = dispatch(getAllConsigneesAPI())
         let getAllRequests = dispatch(getAllRequestsAPI({ innID: 0 }))
-        let getAllShippers = dispatch(getAllShippersAPI({ innID: 0 }))
         let getAllTransport = dispatch(getAllTransportAPI({ innID: 0 }))
         let getAllTrailer = dispatch(getAllTrailerAPI({ innID: 0 }))
         let getAllEmployees = dispatch(getAllEmployeesAPI({ innID: 0 }))
@@ -67,16 +67,18 @@ export const initializedAll = (): InitializedThunkActionType =>
         Promise.all([
             getPersonal,
             getGeoPosition,
-            getConsignees,
-            getAllRequests,
-            getAllShippers,
-            getAllTransport,
-            getAllTrailer,
-            getAllEmployees,
-            getAllInfoMessages,
             getCargoComposition,
-        ])
-            .then(() => {
+        ]).then(() => {
+            Promise.all([
+                getAllConsignees,
+                getAllRequests,
+                getAllShippers,
+                getAllTransport,
+                getAllTrailer,
+                getAllEmployees,
+                getAllInfoMessages,
+            ]).then(() => {
                 dispatch(appActions.setInitialazedSuccess())
             })
+        })
     }

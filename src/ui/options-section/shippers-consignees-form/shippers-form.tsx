@@ -139,12 +139,12 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     useEffect(() => {
             if (!isNew) {
-                if (currentId === +( currentIdFromNavigate || 0 )) {
+                if (currentId === currentIdFromNavigate) {
                     if (initialValues.coordinates === undefined) {
                         dispatch(shippersStoreActions.setInitialValues(oneShipper))
                     }
                 } else {
-                    dispatch(shippersStoreActions.setCurrentId(+( currentIdFromNavigate || 0 )))
+                    dispatch(shippersStoreActions.setCurrentId(currentIdFromNavigate + ''))
                 }
             }
         }, [ currentId, initialValues ],

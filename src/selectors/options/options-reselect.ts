@@ -28,19 +28,19 @@ export const getRequisitesInfoOptionsStore: OptionsStoreSelectors<'requisitesInf
 // выборка из списка загруженных грузоотправителей
 export const getShippersOptionsStore = createSelector(getAllShippersStore, getShippersTitleOptionsStore,
     ( shippers: ShippersCardType[], titles ) => {
-        return { ...titles, content: shippers.map(( { id, title } ) => ( { id, title: title + '' } )) }
+        return { ...titles, content: shippers.map(( { idSender: id, title } ) => ( { id, title: title + '' } )) }
     })
 // выборка из списка загруженных грузополучателей
 export const getConsigneesOptionsStore = createSelector(getAllConsigneesStore, getConsigneesTitleOptionsStore,
     ( consignee: ConsigneesCardType[], titles ) => {
-        return { ...titles, content: consignee.map(( { id, title } ) => ( { id, title: title + '' } )) }
+        return { ...titles, content: consignee.map(( { idRecipient: id, title } ) => ( { id, title: title + '' } )) }
     })
 
 // выборка из списка загруженных грузовиков/тягачей
 export const getTransportOptionsStore = createSelector(getAllTransportStore, getTransportTitleOptionsStore,
     ( transport: TransportCardType[], titles ) => {
         return {
-            ...titles, content: transport.map(( { id, transportTrademark, transportNumber } ) =>
+            ...titles, content: transport.map(( { idTransport: id, transportTrademark, transportNumber } ) =>
                 ( { id, title: transportTrademark + ', ' + transportNumber } )),
         }
     })
@@ -49,7 +49,7 @@ export const getTransportOptionsStore = createSelector(getAllTransportStore, get
 export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrailerTitleOptionsStore,
     ( trailer: TrailerCardType[], titles ) => {
         return {
-            ...titles, content: trailer.map(( { id, trailerTrademark, trailerNumber } ) =>
+            ...titles, content: trailer.map(( { idTrailer: id, trailerTrademark, trailerNumber } ) =>
                 ( { id, title: trailerTrademark + ', ' + trailerNumber } )),
         }
     })
@@ -58,7 +58,7 @@ export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrai
 export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, getEmployeesTitleOptionsStore,
     ( employees: EmployeesCardType[], titles ) => {
         return {
-            ...titles, content: employees.map(( { id, employeeFIO } ) =>
+            ...titles, content: employees.map(( { idEmployee: id, employeeFIO } ) =>
                 ( { id, title: employeeFIO + '' } )),
         }
     })

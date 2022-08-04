@@ -49,7 +49,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const { distance } = useSelector(getOneRequestStore)
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string | null) => {
+    const setLightBoxImage = ( image?: string | null ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
@@ -73,21 +73,21 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
 
     const oneEmployee = useSelector(getOneEmployeesFromLocal)
     const setOneEmployee = ( searchId: string | undefined ) => {
-        dispatch(employeesStoreActions.setCurrentId(+( searchId || 0 )))
+        dispatch(employeesStoreActions.setCurrentId(searchId || ''))
     }
     const employeeOneImage = oneEmployee.photoFace
     // const employeeOnePhone = oneEmployee.employeePhoneNumber
 
     const oneTransport = useSelector(getOneTransportFromLocal)
     const setOneTransport = ( searchId: string | undefined ) => {
-        dispatch(transportStoreActions.setCurrentId(+( searchId || 0 )))
+        dispatch(transportStoreActions.setCurrentId(searchId || ''))
     }
     const transportOneImage = oneTransport.transportImage
     const transportOneCargoWeight = oneTransport.cargoWeight
 
     const oneTrailer = useSelector(getOneTrailerFromLocal)
     const setOneTrailer = ( searchId: string | undefined ) => {
-        dispatch(trailerStoreActions.setCurrentId(+( searchId || 0 )))
+        dispatch(trailerStoreActions.setCurrentId(searchId || ''))
     }
     const trailerOneImage = oneTrailer.trailerImage
     const trailerOneCargoWeight = oneTrailer.cargoWeight
@@ -202,7 +202,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <img
                                                     src={
                                                         values.driverFIO
-                                                            ? employeeOneImage+''
+                                                            ? employeeOneImage + ''
                                                             : noImagePhoto
                                                     }
                                                     alt="driverPhoto"
@@ -213,7 +213,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <img
                                                     src={
                                                         values.driverTransport
-                                                            ? transportOneImage+''
+                                                            ? transportOneImage + ''
                                                             : noImagePhoto
                                                     }
                                                     alt="driverTransportPhoto"
@@ -224,7 +224,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <img
                                                     src={
                                                         values.driverTrailer
-                                                            ? trailerOneImage+''
+                                                            ? trailerOneImage + ''
                                                             : noImagePhoto
                                                     }
                                                     alt="driverTrailerPhoto"

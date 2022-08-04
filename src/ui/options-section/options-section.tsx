@@ -8,10 +8,10 @@ import {ColumnDataList} from './column-data-list/column-data-list';
 import {
     getConsigneesOptionsStore,
     getEmployeesOptionsStore,
+    getRequisitesInfoOptionsStore,
     getShippersOptionsStore,
     getTrailerOptionsStore,
     getTransportOptionsStore,
-    getRequisitesInfoOptionsStore,
 } from '../../selectors/options/options-reselect';
 import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
 
@@ -41,7 +41,7 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                             rounded onClick={ () => {
                         navigate(requisites)
                     } }> Реквизиты </Button>
-                    <InfoButtonToModal textToModal={requisitesInfoText}/>
+                    <InfoButtonToModal textToModal={ requisitesInfoText }/>
                 </div>
             </header>
             <div className={ styles.optionsSection__table }>

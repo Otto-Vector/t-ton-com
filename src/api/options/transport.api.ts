@@ -25,6 +25,11 @@ export const transportApi = {
         return instanceBack.get<TransportApiType[]>('/api/transport/')
             .then(response => response.data)
     },
+    // запрос списка всего ТРАНСПОРТА созданного данным пользователем
+    getAllTransportByUserId( idUser: { idUser: string } ) {
+        return instanceBack.patch<TransportApiType[]>('/api/transportuser/', { ...idUser })
+            .then(response => response.data)
+    },
     // запрос на один ТРАНСПОРТ
     getOneConsigneeById( { idTransport }: { idTransport: string } ) {
         return instanceBack.patch<InfoResponseType | TransportApiType[]>('/api/transport/', { idTransport })

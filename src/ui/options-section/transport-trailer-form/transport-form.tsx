@@ -57,7 +57,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string | null) => {
+    const setLightBoxImage = ( image?: string | null ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
@@ -70,7 +70,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const transportDeleteHandleClick = ( currentId: number ) => {
+    const transportDeleteHandleClick = ( currentId: string ) => {
 
         dispatch(transportStoreActions.deleteTransport(currentId))
         navigate(options)
@@ -81,10 +81,10 @@ export const TransportForm: React.FC<OwnProps> = () => {
     }
 
     useEffect(() => {
-            if (currentId === +( currentIdForShow || 0 )) {
+            if (currentId === currentIdForShow) {
                 setInitialValues(oneTransport)
             } else {
-                dispatch(transportStoreActions.setCurrentId(+( currentIdForShow || 0 )))
+                dispatch(transportStoreActions.setCurrentId(currentIdForShow || ''))
             }
         }, [ currentId, initialValues ],
     )

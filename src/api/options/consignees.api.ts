@@ -10,8 +10,8 @@ export type ConsigneesApiType = {
     kpp: string
     ogrn: string
     address: string
-    consigneeFio: string
-    consigneeTel: string
+    consigneesFio: string
+    consigneesTel: string
     description: string
     coordinates: string
     city: string
@@ -25,6 +25,11 @@ export const consigneesApi = {
     // запрос списка всех грузополучателей
     getAllConsignees() {
         return instanceBack.get<ConsigneesApiType[]>('/api/recipient/')
+            .then(response => response.data)
+    },
+    // запрос списка всех грузополучателей созданных данным пользователем
+    getAllCosigneesByUserId( idUser: { idUser: string } ) {
+        return instanceBack.patch<ConsigneesApiType[]>('/api/recipientuser/', { ...idUser })
             .then(response => response.data)
     },
     // запрос на одного выбранного грузополучателя

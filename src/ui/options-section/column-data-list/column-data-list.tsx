@@ -86,7 +86,7 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
                         rounded colorMode={ 'lightBlue' }>
                     <MaterialIcon icon_name={ 'add' }/></Button>
             </div>
-            <InfoButtonToModal textToModal={item.info} mode={'in'} />
+            <InfoButtonToModal textToModal={ item.info } mode={ 'in' }/>
         </div>
     )
 }

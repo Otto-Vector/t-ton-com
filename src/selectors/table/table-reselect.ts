@@ -28,8 +28,8 @@ export const getContentTableStore = createSelector(
                 cargoType,
                 shipmentDate: ddMmYearFormat(shipmentDate),
                 distance,
-                route: shippers.filter(( { id } ) => id === shipper)[0]?.city + ' в '
-                    + ( consignees.filter(( { id } ) => id === consignee)[0]?.city ),
+                route: shippers.filter(( { idSender } ) => idSender === shipper)[0]?.city + ' в '
+                    + ( consignees.filter(( { idRecipient } ) => idRecipient === consignee)[0]?.city ),
                 answers: answers?.length || 0,
                 // ставим цену в зависимости от расстояния
                 price: ( distance || 0 ) > 100 ? +( acceptLongRoute || 0 ) : +( acceptShortRoute || 0 ),

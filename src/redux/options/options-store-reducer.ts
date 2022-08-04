@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 
-export type OptionsLabelType = { id: number, title?: string }
+export type OptionsLabelType = { id: string, title?: string }
 
 
 const initialState = {
@@ -69,9 +69,7 @@ export const optionsStoreReducer = ( state = initialState, action: ActionsType )
 }
 
 /* ЭКШОНЫ */
-export const optionsStoreActions = {
-
-}
+export const optionsStoreActions = {}
 
 /* САНКИ */
 

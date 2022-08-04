@@ -51,7 +51,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string | null) => {
+    const setLightBoxImage = ( image?: string | null ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
@@ -64,7 +64,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const employeesDeleteHandleClick = ( currentId: number ) => {
+    const employeesDeleteHandleClick = ( currentId: string ) => {
 
         dispatch(employeesStoreActions.deleteEmployees(currentId))
         navigate(options)
@@ -75,10 +75,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     }
 
     useEffect(() => {
-            if (currentId === +( currentIdForShow || 0 )) {
+            if (currentId === currentIdForShow) {
                 setInitialValues(oneEmployees)
             } else {
-                dispatch(employeesStoreActions.setCurrentId(+( currentIdForShow || 0 )))
+                dispatch(employeesStoreActions.setCurrentId(currentIdForShow || ''))
             }
         }, [ currentId, initialValues ],
     )

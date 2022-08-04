@@ -21,10 +21,10 @@ export const getOneShipperFromLocal = createSelector(
     getAllShippersStore,
     getInitialValuesShippersStore,
     ( currentId, shippers, initials ): ShippersCardType => {
-        return shippers.filter(( { id } ) => id === currentId)[0] || initials
+        return shippers.filter(( { idSender } ) => idSender === currentId)[0] || initials
     })
 
 export const getAllShippersSelectFromLocal = createSelector(getAllShippersStore,
-    ( shippers ): SelectOptions[] => shippers.map(( { id, title } ) =>
-        ( { key: id.toString(), value: id.toString(), label: title || '' } )),
+    ( shippers ): SelectOptions[] => shippers.map(( { idSender, title } ) =>
+        ( { key: idSender + '', value: idSender + '', label: title + '' } )),
 )

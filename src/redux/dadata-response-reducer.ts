@@ -62,9 +62,9 @@ export const getOrganizationsByInn = ( { inn }: GetOrganizationByInnDaDataType )
 
 // запрос параметров организации из DaData
 export const getOrganizationsByInnKPP = ( {
-    inn,
-    kpp,
-}: GetOrganizationByInnKPPDaDataType ): DaDataThunkActionType<{ innNumber: string } | null> =>
+                                              inn,
+                                              kpp,
+                                          }: GetOrganizationByInnKPPDaDataType ): DaDataThunkActionType<{ innNumber: string } | null> =>
     async ( dispatch, getState ) => {
 
         const response = await getOrganizationByInnKPPDaDataAPI({ inn, kpp })

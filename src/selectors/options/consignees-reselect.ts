@@ -21,10 +21,10 @@ export const getOneConsigneesFromLocal = createSelector(
     getAllConsigneesStore,
     getInitialValuesConsigneesStore,
     ( currentId, consignees, initials ): ConsigneesCardType => {
-        return consignees.filter(( { id } ) => id === currentId)[0] || initials
+        return consignees.filter(( { idRecipient } ) => idRecipient === currentId)[0] || initials
     })
 
 export const getAllConsigneesSelectFromLocal = createSelector(getAllConsigneesStore,
-    ( consignees ): SelectOptions[] => consignees.map(( { id, title } ) =>
-        ( { key: id.toString(), value: id.toString(), label: title || '' } )),
+    ( consignees ): SelectOptions[] => consignees.map(( { idRecipient, title } ) =>
+        ( { key: idRecipient + '', value: idRecipient + '', label: title || '' } )),
 )

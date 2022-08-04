@@ -93,8 +93,8 @@ export const geoPositionTake = (): BigMapStoreReducerThunkActionType =>
 export const setDriversToMap = (): BigMapStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         const drivers: DriverOnMapType[] = getState().employeesStoreReducer.content.map(
-            ( { id, coordinates, status, employeeFIO } ) => ( {
-                id,
+            ( { idEmployee, coordinates, status, employeeFIO }, index ) => ( {
+                id: index + 1,
                 position: stringToCoords(coordinates),
                 status: status as string,
                 fio: parseFamilyToFIO(employeeFIO),

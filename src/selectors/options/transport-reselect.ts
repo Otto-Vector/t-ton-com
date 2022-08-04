@@ -18,15 +18,15 @@ export const getCurrentIdTransportStore: TransportStoreSelectors<'currentId'> = 
 
 export const getOneTransportFromLocal = createSelector(getCurrentIdTransportStore, getAllTransportStore, getInitialValuesTransportStore,
     ( currentId, transport, initials ): TransportCardType => {
-        return transport.filter(( { id } ) => id === currentId)[0] || initials
+        return transport.filter(( { idTransport } ) => idTransport === currentId)[0] || initials
     })
 
 export const getAllTransportSelectFromLocal = createSelector(getAllTransportStore, ( transport ): SelectOptions[] =>
     transport
-        .map(( { id, transportTrademark, transportNumber, cargoWeight } ) =>
+        .map(( { idTransport, transportTrademark, transportNumber, cargoWeight } ) =>
             ( {
-                key: id.toString(),
-                value: id.toString(),
+                key: idTransport,
+                value: idTransport,
                 label: [ transportTrademark, transportNumber, cargoWeight ].join(', ') + 'т.',
             } )),
 )

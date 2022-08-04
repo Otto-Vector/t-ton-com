@@ -1,4 +1,4 @@
-import {InfoResponseType, instanceBack} from './back-instance.api';
+import {InfoResponseType, instanceBack} from '../back-instance.api';
 
 export type PersonalResponseType = {
     idUser: string | undefined,
@@ -48,7 +48,7 @@ export const requisitesApi = {
             .then(response => response.data)
     },
     // добавление персональных данных
-    setPersonalData(requisites: PersonalResponseType) {
+    setPersonalData( requisites: PersonalResponseType ) {
         return instanceBack.post<InfoResponseType>
         ('/api/personality/', requisites)
             .then(response => response.data)
@@ -59,7 +59,7 @@ export const requisitesApi = {
             .then(response => response.data)
     },
     // изменение персональных данных
-    changePersonalData(requisites: PersonalResponseType) {
+    changePersonalData( requisites: PersonalResponseType ) {
         return instanceBack.put<InfoResponseType>('/api/personality/', requisites)
             .then(response => response.data)
     },

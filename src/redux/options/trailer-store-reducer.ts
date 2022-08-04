@@ -12,7 +12,7 @@ import {
 
 
 const initialState = {
-    currentId: 0,
+    currentId: '',
 
     label: {
         trailerNumber: 'Гос. номер авто',
@@ -24,7 +24,7 @@ const initialState = {
         cargoWeight: 'Вес груза (тн.)',
         propertyRights: 'Право собственности',
         trailerImage: 'Фото транспорта',
-    } as TrailerCardType<string|undefined>,
+    } as TrailerCardType<string | undefined>,
 
     maskOn: {
         trailerNumber: undefined, // просто текст
@@ -114,7 +114,7 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
                 ...state,
                 content: [
                     ...state.content
-                        .map(( val ) => ( +( val.id || 0 ) !== action.id ) ? val : action.trailer),
+                        .map(( val ) => ( val.idTrailer !== action.idTrailer ) ? val : action.trailer),
                 ],
             }
         }
@@ -122,7 +122,7 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
             return {
                 ...state,
                 content: [
-                    ...state.content.filter(( { id } ) => +( id || 1 ) !== action.id),
+                    ...state.content.filter(( { idTrailer } ) => idTrailer !== action.idTrailer),
                 ],
             }
         }
@@ -139,7 +139,7 @@ export const trailerStoreActions = {
         type: 'trailer-store-reducer/SET-TRANSPORTS-CONTENT',
         trailer,
     } as const ),
-    setCurrentId: ( currentId: number ) => ( {
+    setCurrentId: ( currentId: string ) => ( {
         type: 'trailer-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
@@ -148,14 +148,14 @@ export const trailerStoreActions = {
         type: 'trailer-store-reducer/ADD-TRANSPORT',
         trailer,
     } as const ),
-    changeTrailer: ( id: number, trailer: TrailerCardType ) => ( {
+    changeTrailer: ( idTrailer: string, trailer: TrailerCardType ) => ( {
         type: 'trailer-store-reducer/CHANGE-TRANSPORT',
-        id,
+        idTrailer,
         trailer,
     } as const ),
-    deleteTrailer: ( id: number ) => ( {
+    deleteTrailer: ( idTrailer: string ) => ( {
         type: 'trailer-store-reducer/DELETE-TRANSPORT',
-        id,
+        idTrailer,
     } as const ),
 
 }
