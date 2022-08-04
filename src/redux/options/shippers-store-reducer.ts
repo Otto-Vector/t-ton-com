@@ -244,10 +244,8 @@ export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
             // const response = initialShippersContent
             const idUser = getState().authStoreReducer.authID
             const response = await shippersApi.getAllShippersByUserId({ idUser })
-
             dispatch(shippersStoreActions.setShippersContent(response.map(( { idUser, ...values } ) => values)))
-
-            if (!!response.length) console.log('Пока ни одного Грузоотправителя')
+            if (!response.length) console.log('Пока ни одного Грузоотправителя')
 
         } catch (e) {
             alert(e)

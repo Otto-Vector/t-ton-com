@@ -38,11 +38,6 @@ export type PersonalResponseType = {
 export const requisitesApi = {
 
     // отправка запроса на данные пользователя
-    getPersonalAuthData() {
-        return instanceBack.post<{ userid?: string, message?: string }>('/api/me/', {})
-            .then(response => response.data)
-    },
-    // отправка запроса на данные пользователя
     getPersonalDataList() {
         return instanceBack.get<PersonalResponseType>('/api/personality/')
             .then(response => response.data)

@@ -29,6 +29,8 @@ import {initializedAll} from '../redux/app-store-reducer';
 import {Preloader} from './common/preloader/preloader';
 import {WithAuthRedirect} from './common/redirect/with-auth-redirect/with-auth-redirect';
 import {ТoAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redirect';
+import {getAutologinAuthStore} from '../selectors/auth-reselect';
+import {autoLoginMe} from '../redux/auth-store-reducer';
 
 type OwnProps = {}
 
@@ -36,11 +38,13 @@ export const UiComponent: React.FC<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
     const initialazed = useSelector(( state: AppStateType ) => state.appStoreReducer.initialazed)
+    const authTry = useSelector(getAutologinAuthStore)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!initialazed) dispatch<any>(initializedAll())
-    }, [ initialazed ])
+        if (!authTry) dispatch<any>(autoLoginMe())
+        if (authTry && !initialazed) dispatch<any>(initializedAll())
+    }, [ initialazed, authTry ])
 
     if (!initialazed) return <div className={ styles.ui__preloader }><Preloader/></div>
 

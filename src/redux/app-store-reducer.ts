@@ -52,33 +52,33 @@ export type InitializedThunkActionType = ThunkAction<void, AppStateType, unknown
 // запускаем комбайн загрузок/обращений к API
 export const initializedAll = (): InitializedThunkActionType =>
     ( dispatch ) => {
-        let getPersonal = dispatch(getPersonalReqisites())
-        let getGeoPosition = dispatch(geoPositionTake())
-        let getAllShippers = dispatch(getAllShippersAPI())
-        let getAllConsignees = dispatch(getAllConsigneesAPI())
-        let getAllRequests = dispatch(getAllRequestsAPI({ innID: 0 }))
-        let getAllTransport = dispatch(getAllTransportAPI({ innID: 0 }))
-        let getAllTrailer = dispatch(getAllTrailerAPI({ innID: 0 }))
-        let getAllEmployees = dispatch(getAllEmployeesAPI({ innID: 0 }))
+        const getPersonal = dispatch(getPersonalReqisites())
+        const getGeoPosition = dispatch(geoPositionTake())
+        const getAllShippers = dispatch(getAllShippersAPI())
+        const getAllConsignees = dispatch(getAllConsigneesAPI())
+        const getAllRequests = dispatch(getAllRequestsAPI({ innID: 0 }))
+        const getAllTransport = dispatch(getAllTransportAPI({ innID: 0 }))
+        const getAllTrailer = dispatch(getAllTrailerAPI({ innID: 0 }))
+        const getAllEmployees = dispatch(getAllEmployeesAPI({ innID: 0 }))
 
-        let getAllInfoMessages = dispatch(getInfoMessages({ authID: 0 }))
-        let getCargoComposition = dispatch(getCargoCompositionSelector())
+
+        const getAllInfoMessages = dispatch(getInfoMessages({ authID: 0 }))
+        const getCargoComposition = dispatch(getCargoCompositionSelector())
 
         Promise.all([
             getPersonal,
             getGeoPosition,
             getCargoComposition,
+            getAllShippers,
+            getAllConsignees,
+            getAllRequests,
+            getAllTransport,
+            getAllTrailer,
+            getAllEmployees,
+            getAllInfoMessages,
         ]).then(() => {
-            Promise.all([
-                getAllConsignees,
-                getAllRequests,
-                getAllShippers,
-                getAllTransport,
-                getAllTrailer,
-                getAllEmployees,
-                getAllInfoMessages,
-            ]).then(() => {
-                dispatch(appActions.setInitialazedSuccess())
-            })
+            dispatch(appActions.setInitialazedSuccess())
         })
     }
+
+

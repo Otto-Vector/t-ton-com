@@ -17,7 +17,11 @@ export type NewUserRequestType = {
 }
 
 export const authApi = {
-
+    // отправка запроса на данные пользователя
+    getPersonalAuthData() {
+        return instanceBack.post<{ userid?: string, message?: string }>('/api/me/', )
+            .then(response => response.data)
+    },
     // отправка запроса на код по номеру телефона
     sendCodeToPhone( { phone, inn, kpp }: NewUserRequestType ) {
         return instanceBack.put<InfoResponseType>('/api/codesend/', { phone, innNumber: inn, kpp })
@@ -33,6 +37,7 @@ export const authApi = {
         return instanceBack.post<InfoResponseType>('/api/logout/', { phone })
             .then(response => response.data)
     },
+
     // запрос на сброс пароля
     passwordRecovery( { phone }: AuthRequestType ) {
         return instanceBack.put<InfoResponseType>('/api/passwordrecoverysend/', { phone })

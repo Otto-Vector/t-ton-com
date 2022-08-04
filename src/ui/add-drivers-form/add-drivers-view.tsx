@@ -23,6 +23,7 @@ import {Preloader} from '../common/preloader/preloader';
 import {requestStoreActions} from '../../redux/forms/request-store-reducer';
 import {Button} from '../common/button/button';
 import {setOrganizationRequisites} from '../../redux/options/requisites-store-reducer';
+import {getAllShippersAPI} from '../../redux/options/shippers-store-reducer';
 
 type OwnProps = {}
 
@@ -58,7 +59,8 @@ export const AddDriversView: React.FC<OwnProps> = () => {
     const trailerOneCargoWeight = oneTrailer.cargoWeight
 
     const clickForTests = () => {
-        dispatch<any>(setOrganizationRequisites())
+        // dispatch<any>(setOrganizationRequisites())
+        // dispatch<any>(getAllShippersAPI())
     }
 
     useLayoutEffect(() => {

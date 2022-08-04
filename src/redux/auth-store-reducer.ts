@@ -15,6 +15,7 @@ const initialValues: phoneSubmitType = {
 }
 
 const initialState = {
+    isAutoLoginTry: false,
     isAuth: false,
     authID: '',
     authPhone: '',
@@ -105,6 +106,12 @@ export const authStoreReducer = ( state = initialState, action: AuthStoreActions
                 modalMessage: action.message,
             }
         }
+        case 'auth-store-reducer/SET-AUTOLOGIN-DONE': {
+            return {
+                ...state,
+                isAutoLoginTry: true,
+            }
+        }
         default: {
             return state
         }
@@ -117,6 +124,9 @@ export const authStoreActions = {
     setIsAuth: ( isAuth: boolean ) => ( {
         type: 'auth-store-reducer/SET-IS-AUTH',
         isAuth,
+    } as const ),
+    setAutologinDone: ( ) => ( {
+        type: 'auth-store-reducer/SET-AUTOLOGIN-DONE',
     } as const ),
     setIsAvailableSMSRequest: ( isAvailableSMSRequest: boolean ) => ( {
         type: 'auth-store-reducer/SET-IS-AVAILABLE-SMS-REQUEST',
@@ -217,8 +227,11 @@ export const loginAuthorization = ( {
             if (response.success) {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
+
                 dispatch(authStoreActions.setAuthPhone(phone))
+                // зачищаем список КПП
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
+                // чистим форму ввода для следующих авторизаций
                 dispatch(authStoreActions.setInitialValues({ ...initialValues }))
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
                 dispatch(authStoreActions.setAuthId(response.success)) // исправить на нормальную
@@ -266,4 +279,24 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             if (error.response.data.message) dispatch(authStoreActions.setModalMessage(error.response.data.message))
             else alert(error)
         }
+    }
+
+export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        dispatch(authStoreActions.setAuthId(''))
+        try {
+            const response = await authApi.getPersonalAuthData()
+            console.log('ответ от api/me/', response)
+            if (response.userid) {
+                dispatch(authStoreActions.setAuthId(response.userid))
+                dispatch(authStoreActions.setIsAuth(true))
+            }
+            if (response.message) console.log(response.message)
+        } catch (error) {
+            // @ts-ignore
+            if (error.response.data.message) console.log(error.response.data.message)
+            else alert(error)
+            dispatch(authStoreActions.setAutologinDone())
+        }
+        dispatch(authStoreActions.setAutologinDone())
     }

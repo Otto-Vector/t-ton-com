@@ -11,7 +11,6 @@ import {
 } from '../../utils/validators';
 import {getOrganizationByInnKPPDaDataAPI, GetOrganizationByInnKPPDaDataType} from '../../api/dadata.api';
 import {PersonalResponseType, requisitesApi} from '../../api/options/requisites.api';
-import {authStoreActions} from '../auth-store-reducer';
 import {
     composeParsers,
     parseFIO,
@@ -21,6 +20,7 @@ import {
     parseOnlyOneDot,
     parseOnlyOneSpace,
 } from '../../utils/parsers';
+import {authStoreActions} from '../auth-store-reducer';
 
 
 const initialValues: CompanyRequisitesType = {
@@ -301,46 +301,41 @@ export const setOrganizationRequisites = ():
     }
 
 // запрос данных активного пользователя
-export const getPersonalReqisites = (): RequisitesStoreReducerThunkActionType =>
+export const getPersonalReqisites = ( ): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
-            const response = await requisitesApi.getPersonalAuthData()
-            console.log('ответ от api/me/ ', response)
-            let user: PersonalResponseType[]
-            if (response.userid) {
-                user = await requisitesApi.getPersonalDataFromId({ idUser: response.userid })
-                console.log(user)
-                if (user.length > 0) {
-                    dispatch(requisitesStoreActions.setStoredValues({
-                        ...getState().requisitesStoreReducer.initialValues,
-                        innNumber: user[0].nnNumber,
-                        organizationName: user[0].organizationName,
-                        taxMode: user[0].taxMode,
-                        kpp: user[0].kpp,
-                        ogrn: user[0].ogrn,
-                        okpo: user[0].okpo,
-                        legalAddress: user[0].legalAddress,
-                        description: user[0].description,
+            const idUser = getState().authStoreReducer.authID
+            const user = await requisitesApi.getPersonalDataFromId({idUser})
+            if (user.length > 0) {
+                dispatch<any>(authStoreActions.setAuthPhone(user[0].phone||''))
+                dispatch(requisitesStoreActions.setStoredValues({
+                    ...getState().requisitesStoreReducer.initialValues,
+                    innNumber: user[0].nnNumber,
+                    organizationName: user[0].organizationName,
+                    taxMode: user[0].taxMode,
+                    kpp: user[0].kpp,
+                    ogrn: user[0].ogrn,
+                    okpo: user[0].okpo,
+                    legalAddress: user[0].legalAddress,
+                    description: user[0].description,
 
-                        postAddress: user[0].postAddress,
-                        phoneDirector: user[0].phoneDirector,
-                        phoneAccountant: user[0].phoneAccountant,
-                        email: user[0].email,
-                        bikBank: user[0].bikBank,
-                        nameBank: user[0].nameBank,
-                        checkingAccount: user[0].checkingAccount,
-                        korrAccount: user[0].korrAccount,
-                        tarifs: {
-                            create: user[0].tarifCreate,
-                            acceptShortRoute: user[0].tarifAcceptShortRoute,
-                            acceptLongRoute: user[0].tarifAcceptLongRoute,
-                            paySafeTax: user[0].tarifPaySafeTax,
-                        },
-                    } as CompanyRequisitesType))
-                }
-                dispatch<any>(authStoreActions.setAuthId(response.userid))
-                dispatch<any>(authStoreActions.setIsAuth(true))
+                    postAddress: user[0].postAddress,
+                    phoneDirector: user[0].phoneDirector,
+                    phoneAccountant: user[0].phoneAccountant,
+                    email: user[0].email,
+                    bikBank: user[0].bikBank,
+                    nameBank: user[0].nameBank,
+                    checkingAccount: user[0].checkingAccount,
+                    korrAccount: user[0].korrAccount,
+                    tarifs: {
+                        create: user[0].tarifCreate,
+                        acceptShortRoute: user[0].tarifAcceptShortRoute,
+                        acceptLongRoute: user[0].tarifAcceptLongRoute,
+                        paySafeTax: user[0].tarifPaySafeTax,
+                    },
+                } as CompanyRequisitesType))
             }
+
         } catch (error) {
 
             // @ts-ignore
