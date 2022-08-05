@@ -149,7 +149,10 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
         case 'shippers-store-reducer/SET-COORDINATES': {
             return {
                 ...state,
-                initialValues: { ...state.initialValues, coordinates: coordsToString(action.coordinates) },
+                initialValues: {
+                    ...action.payload.formValue,
+                    coordinates: coordsToString(action.payload.coordinates),
+                },
             }
         }
         case 'shippers-store-reducer/SET-ORGANIZATION-VALUES': {
@@ -186,9 +189,9 @@ export const shippersStoreActions = {
         currentId,
     } as const ),
     // подгрузка во временный стейт координат
-    setCoordinates: ( coordinates: [ number, number ] ) => ( {
+    setCoordinates: ( payload: { formValue: ShippersCardType, coordinates: [ number, number ] } ) => ( {
         type: 'shippers-store-reducer/SET-COORDINATES',
-        coordinates,
+        payload,
     } as const ),
     // подгрузка во временный стейт данных организации
     setOrganizationValues: ( payload: { organizationName: string, ogrn: string, address: string, kpp: string } ) => ( {
@@ -246,7 +249,10 @@ export const getOrganizationByInnShipper = ( { inn }: GetOrganizationByInnDaData
     }
 
 // сохранение параметров организации из ранее загруженного списка DaData
-export const setOrganizationByInnKppShippers = ( { kppNumber }: { kppNumber: string } ):
+export const setOrganizationByInnKppShippers = ( {
+                                                     kppNumber,
+                                                     formValue,
+                                                 }: { kppNumber: string, formValue: ShippersCardType } ):
     ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
@@ -254,7 +260,9 @@ export const setOrganizationByInnKppShippers = ( { kppNumber }: { kppNumber: str
 
         if (response !== undefined) {
             const { data } = response
-            dispatch(shippersStoreActions.setOrganizationValues({
+            dispatch(shippersStoreActions.setInitialValues({
+                ...formValue,
+                innNumber: data.inn,
                 kpp: data.kpp,
                 organizationName: response.value,
                 ogrn: data.ogrn,
@@ -283,12 +291,16 @@ export const modifyOneShipperToAPI = ( values: ShippersCardType<string> ): Shipp
 
         try {
             const idUser = getState().authStoreReducer.authID
-            // toDo: убрать заглушку
-            const response = await shippersApi.modifyOneShipper({ idUser, ...values, city:'-', description:'+' })
+            const response = await shippersApi.modifyOneShipper({
+                idUser, ...values,
+                // toDo: убрать заглушку после того как настрою https
+                description: values.description || '-',
+                city: values.city || '-',
+            })
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(e.response.data.failed)
+            alert(JSON.stringify(e.response.data))
         }
         await dispatch(getAllShippersAPI())
     }
