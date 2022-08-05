@@ -17,8 +17,6 @@ export type ConsigneesApiType = {
     city: string
 }
 
-export type CreateConsigneesApiType = Omit<ConsigneesApiType, 'idRecipient'>
-
 
 export const consigneesApi = {
 
@@ -38,7 +36,7 @@ export const consigneesApi = {
             .then(response => response.data)
     },
     // создать одного грузополучателя
-    createOneConsignee( requestData: CreateConsigneesApiType ) {
+    createOneConsignee( {idRecipient, ...requestData}: ConsigneesApiType ) {
         return instanceBack.post<InfoResponseType>('/api/recipient/', { ...requestData })
             .then(response => response.data)
     },

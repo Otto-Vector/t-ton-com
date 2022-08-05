@@ -37,7 +37,6 @@ export const shippersApi = {
         return instanceBack.patch<InfoResponseType | ShippersApiType[]>('/api/sender/', { idSender })
             .then(response => response.data)
     },
-
     // создать одного грузоотправителя
     createOneShipper( { idSender, ...requestData }: ShippersApiType ) {
         return instanceBack.post<InfoResponseType>('/api/sender/', { ...requestData })
