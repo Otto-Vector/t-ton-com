@@ -7,8 +7,10 @@ import {SelectOptions} from '../../ui/common/form-selector/form-selector';
 
 type EmployeesStoreSelectors<T extends keyof Y, Y = EmployeesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
-export const getLabelEmployeesStore: EmployeesStoreSelectors<'label'> = ( state ) => state.employeesStoreReducer.label
 export const getInitialValuesEmployeesStore: EmployeesStoreSelectors<'initialValues'> = ( state ) => state.employeesStoreReducer.initialValues
+export const getIsFetchingEmployeesStore: EmployeesStoreSelectors<'employeeIsFetching'> = ( state ) => state.employeesStoreReducer.employeeIsFetching
+
+export const getLabelEmployeesStore: EmployeesStoreSelectors<'label'> = ( state ) => state.employeesStoreReducer.label
 export const getMaskOnEmployeesStore: EmployeesStoreSelectors<'maskOn'> = ( state ) => state.employeesStoreReducer.maskOn
 export const getValidatorsEmployeesStore: EmployeesStoreSelectors<'validators'> = ( state ) => state.employeesStoreReducer.validators
 export const getParsersEmployeesStore: EmployeesStoreSelectors<'parsers'> = ( state ) => state.employeesStoreReducer.parsers

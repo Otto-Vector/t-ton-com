@@ -50,7 +50,6 @@ export const baseStoreActions = {
         type: 'base-store-reducer/CHANGE-URL',
         href,
     } as const ),
-
 }
 
 /* САНКИ */

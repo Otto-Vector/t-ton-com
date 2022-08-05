@@ -20,6 +20,7 @@ import {
 import {initialEmployeesValues} from '../../initials-test-data';
 
 const initialState = {
+    employeeIsFetching: false,
     currentId: '',
     label: {
         employeeFIO: 'ФИО сотрудника',
@@ -118,15 +119,11 @@ export const employeesStoreReducer = ( state = initialState, action: ActionsType
                 ],
             }
         }
-        case 'employees-store-reducer/ADD-EMPLOYEE': {
+        case 'employees-store-reducer/TOGGLE-EMPLOYEE-IS-FETCHING': {
             return {
                 ...state,
-                content: [
-                    ...state.content,
-                    action.employees,
-                ],
+                employeeIsFetching: action.employeeIsFetching,
             }
-
         }
         case 'employees-store-reducer/CHANGE-EMPLOYEE': {
             return {
@@ -162,10 +159,6 @@ export const employeesStoreActions = {
         type: 'employees-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
-    addEmployees: ( employees: EmployeesCardType ) => ( {
-        type: 'employees-store-reducer/ADD-EMPLOYEE',
-        employees,
-    } as const ),
     changeEmployees: ( idEmployee: string, employees: EmployeesCardType ) => ( {
         type: 'employees-store-reducer/CHANGE-EMPLOYEE',
         idEmployee,
@@ -175,7 +168,10 @@ export const employeesStoreActions = {
         type: 'employees-store-reducer/DELETE-EMPLOYEE',
         idEmployee,
     } as const ),
-
+    toggleEmployeeIsFetching: ( employeeIsFetching: boolean ) => ( {
+        type: 'employees-store-reducer/TOGGLE-EMPLOYEE-IS-FETCHING',
+        employeeIsFetching,
+    } as const ),
 }
 
 /* САНКИ */
@@ -185,11 +181,12 @@ export type EmployeesStoreReducerThunkActionType<R = void> = ThunkAction<Promise
 
 export const getAllEmployeesAPI = ( { innID }: { innID: number } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
+        dispatch(employeesStoreActions.toggleEmployeeIsFetching(true))
         try {
             const response = initialEmployeesValues
             dispatch(employeesStoreActions.setEmployeesContent(response))
         } catch (e) {
             alert(e)
         }
-
+        dispatch(employeesStoreActions.toggleEmployeeIsFetching(false))
     }

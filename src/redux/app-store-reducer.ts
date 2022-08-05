@@ -22,10 +22,10 @@ export const appStoreReducer = ( state = initialState,
 
     switch (action.type) {
 
-        case 'app-reducer/SET_INITIALIZED' : {
+        case 'app-reducer/SET-INITIALIZED' : {
             return {
                 ...state,
-                initialazed: true,
+                initialazed: action.initialazed,
             }
         }
 
@@ -39,9 +39,12 @@ export const appStoreReducer = ( state = initialState,
 
 
 /* ЭКШОНЫ */
-const appActions: ActionsAnyType = {
-    // при обращении, изменяет стейт initialazed на true
-    setInitialazedSuccess: () => ( { type: 'app-reducer/SET_INITIALIZED' } as const ),
+export const appActions = {
+    // при обращении, изменяет стейт initialazed
+    setInitialazed: ( initialazed: boolean ) => ( {
+        type: 'app-reducer/SET-INITIALIZED',
+        initialazed,
+    } as const ),
 }
 
 
@@ -77,7 +80,7 @@ export const initializedAll = (): InitializedThunkActionType =>
             getAllEmployees,
             getAllInfoMessages,
         ]).then(() => {
-            dispatch(appActions.setInitialazedSuccess())
+            dispatch(appActions.setInitialazed(true))
         })
     }
 

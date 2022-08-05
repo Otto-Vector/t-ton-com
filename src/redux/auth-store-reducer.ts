@@ -5,6 +5,7 @@ import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '..
 import {geoPosition} from '../api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
 import {daDataStoreActions, DaDataStoreActionsType} from './dadata-response-reducer';
+import {appActions} from './app-store-reducer';
 
 
 const initialValues: phoneSubmitType = {
@@ -125,7 +126,7 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-IS-AUTH',
         isAuth,
     } as const ),
-    setAutologinDone: ( ) => ( {
+    setAutologinDone: () => ( {
         type: 'auth-store-reducer/SET-AUTOLOGIN-DONE',
     } as const ),
     setIsAvailableSMSRequest: ( isAvailableSMSRequest: boolean ) => ( {
@@ -227,15 +228,13 @@ export const loginAuthorization = ( {
             if (response.success) {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
-
+                dispatch<any>(appActions.setInitialazed(false))
                 dispatch(authStoreActions.setAuthPhone(phone))
                 // зачищаем список КПП
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
                 // чистим форму ввода для следующих авторизаций
                 dispatch(authStoreActions.setInitialValues({ ...initialValues }))
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
-                dispatch(authStoreActions.setAuthId(response.success)) // исправить на нормальную
-
                 dispatch(authStoreActions.setIsFetching(false))
             }
             return null
@@ -255,7 +254,8 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
             const phone = getState().authStoreReducer.authPhone
             const response = await authApi.logout({ phone })
             dispatch(authStoreActions.setIsAuth(false))
-
+            dispatch(authStoreActions.setAuthId(''))
+            // dispatch()
             if (response.status) console.log(response)
 
         } catch (error) {
@@ -269,7 +269,7 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
         try {
             dispatch(authStoreActions.setIsFetching(true))
             const response = await authApi.passwordRecovery({ phone })
-            // const response = {success: 'Сообщение!'}
+
             console.log(response)
             if (response.success) dispatch(authStoreActions.setModalMessage(response.success))
             if (response.message) dispatch(authStoreActions.setModalMessage(response.message))

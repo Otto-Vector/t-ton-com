@@ -26,7 +26,7 @@ export const consigneesApi = {
             .then(response => response.data)
     },
     // запрос списка всех грузополучателей созданных данным пользователем
-    getAllCosigneesByUserId( idUser: { idUser: string } ) {
+    getAllConsigneesByUserId( idUser: { idUser: string } ) {
         return instanceBack.patch<ConsigneesApiType[]>('/api/recipientuser/', { ...idUser })
             .then(response => response.data)
     },

@@ -33,6 +33,7 @@ const defaultInitialValues = {
 
 
 const initialState = {
+    consigneeIsFetching: false,
     currentId: '',
 
     label: {
@@ -127,45 +128,31 @@ export const consigneesStoreReducer = ( state = initialState, action: ActionsTyp
         case 'consignees-store-reducer/SET-CONSIGNEES-CONTENT': {
             return {
                 ...state,
-                content: action.consignees,
+                content: [
+                    ...action.consignees,
+                ],
             }
         }
-        case 'consignees-store-reducer/ADD-CONSIGNEE': {
+        case 'consignees-store-reducer/TOGGLE-CONSIGNEE-IS-FETCHING': {
             return {
                 ...state,
-                content: [
-                    ...state.content,
-                    action.consignee,
-                ],
+                consigneeIsFetching: action.consigneeIsFetching,
             }
 
-        }
-        case 'consignees-store-reducer/CHANGE-CONSIGNEE': {
-            return {
-                ...state,
-                content: [
-                    ...state.content.map(( val ) => ( val.idRecipient !== action.idRecipient ) ? val : action.consignee),
-                ],
-            }
-        }
-        case 'consignees-store-reducer/DELETE-CONSIGNEE': {
-            return {
-                ...state,
-                content: [
-                    ...state.content.filter(( { idRecipient } ) => idRecipient !== action.idRecipient),
-                ],
-            }
         }
         case 'consignees-store-reducer/SET-COORDINATES': {
             return {
                 ...state,
-                initialValues: { ...state.initialValues, coordinates: coordsToString(action.coordinates) },
+                initialValues: {
+                    ...action.payload.formValue,
+                    coordinates: coordsToString(action.payload.coordinates),
+                },
             }
         }
-        case 'consignees-store-reducer/SET-DEFAULT-INITIAL-VALUES' : {
+        case 'consignees-store-reducer/SET-DEFAULT-INITIAL-VALUES': {
             return {
                 ...state,
-                initialValues: defaultInitialValues, //обнуляем значения для номального просмотра новой карточки
+                initialValues: defaultInitialValues,
             }
         }
         default: {
@@ -189,28 +176,22 @@ export const consigneesStoreActions = {
         type: 'consignees-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
-    setCoordinates: ( coordinates: [ number, number ] ) => ( {
+    // подгрузка во временный стейт координат
+    setCoordinates: ( payload: { formValue: ConsigneesCardType, coordinates: [ number, number ] } ) => ( {
         type: 'consignees-store-reducer/SET-COORDINATES',
-        coordinates,
+        payload,
     } as const ),
     setConsigneesContent: ( consignees: ConsigneesCardType[] ) => ( {
         type: 'consignees-store-reducer/SET-CONSIGNEES-CONTENT',
         consignees,
     } as const ),
-    addOneConsignee: ( consignee: ConsigneesCardType ) => ( {
-        type: 'consignees-store-reducer/ADD-CONSIGNEE',
-        consignee,
+    toggleConsigneeIsFetching: ( consigneeIsFetching: boolean ) => ( {
+        type: 'consignees-store-reducer/TOGGLE-CONSIGNEE-IS-FETCHING',
+        consigneeIsFetching,
     } as const ),
-    changeOneConsignee: ( idRecipient: string, consignee: ConsigneesCardType ) => ( {
-        type: 'consignees-store-reducer/CHANGE-CONSIGNEE',
-        idRecipient,
-        consignee,
-    } as const ),
-    deleteConsignee: ( idRecipient: string ) => ( {
-        type: 'consignees-store-reducer/DELETE-CONSIGNEE',
-        idRecipient,
-    } as const ),
+
 }
+
 
 /* САНКИ */
 
@@ -219,27 +200,25 @@ export type ConsigneesStoreReducerThunkActionType<R = void> = ThunkAction<Promis
 
 export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
+        dispatch(consigneesStoreActions.toggleConsigneeIsFetching(true))
         try {
+
             const idUser = getState().authStoreReducer.authID
-            if (idUser) {
-                const response = await consigneesApi.getAllCosigneesByUserId({ idUser })
-                dispatch(consigneesStoreActions.setConsigneesContent(response
-                    .map(( { idUser, ...values } ) => values)))
-                if (!!response.length) console.log('Пока ни одного Грузополучателя!')
-            } else {
-                console.log('Пока не авторизован!')
-            }
+            const response = await consigneesApi.getAllConsigneesByUserId({ idUser })
+            dispatch(consigneesStoreActions.setConsigneesContent(response.map(( { idUser, ...values } ) => values)))
+
+            if (!response.length) console.log('Пока ни одного ГрузоПОЛУЧАТЕЛЯ')
         } catch (e) {
             alert(e)
         }
-
+        dispatch(consigneesStoreActions.toggleConsigneeIsFetching(false))
     }
 
 // запрос параметров организации из DaData
 export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDataType ):
     ConsigneesStoreReducerThunkActionType<string | null> =>
     async ( dispatch, getState ) => {
-        // обрезаем повторное срабатывание
+
         const { innNumber } = getState().consigneesStoreReducer.initialValues
         const booleanMemo = ( +( innNumber || 0 ) !== inn )
         const response = booleanMemo
@@ -253,7 +232,10 @@ export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDa
     }
 
 // сохранение параметров организации из ранее загруженного списка DaData
-export const setOrganizationByInnKppConsignee = ( { kppNumber }: { kppNumber: string } ):
+export const setOrganizationByInnKppConsignees = ( {
+                                                     kppNumber,
+                                                     formValue,
+                                                 }: { kppNumber: string, formValue: ConsigneesCardType } ):
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
@@ -262,13 +244,64 @@ export const setOrganizationByInnKppConsignee = ( { kppNumber }: { kppNumber: st
         if (response !== undefined) {
             const { data } = response
             dispatch(consigneesStoreActions.setInitialValues({
-                ...getState().consigneesStoreReducer.initialValues,
+                ...formValue,
                 innNumber: data.inn,
-                organizationName: response.value,
                 kpp: data.kpp,
+                organizationName: response.value,
                 ogrn: data.ogrn,
                 address: data.address.value,
             }))
         } else alert('Фильтр КПП локально не сработал!')
 
+    }
+
+// добавить одну запись грузоПОЛУЧАТЕЛЯ через АПИ
+export const newConsigneeSaveToAPI = ( values: ConsigneesCardType<string> ): ConsigneesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+        try {
+            const idUser = getState().authStoreReducer.authID
+            const response = await consigneesApi.createOneConsignee({ idUser, ...values })
+            if (response.success) console.log(response.success)
+        } catch (e) {
+            // @ts-ignore
+            alert(e.response.data.failed)
+        }
+        await dispatch(getAllConsigneesAPI())
+    }
+
+// изменить одну запись ГРУЗОполучателя через АПИ
+export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): ConsigneesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+        try {
+            const idUser = getState().authStoreReducer.authID
+            debugger
+            const response = await consigneesApi.modifyOneConsignee({
+                ...values,
+                idUser,
+                // toDo: убрать заглушку после того как настрою https
+                description: values.description || '-',
+                city: values.city || '-',
+            })
+            if (response.success) console.log(response.success)
+        } catch (e) {
+            // @ts-ignore
+            alert(JSON.stringify(e.response.data))
+        }
+        await dispatch(getAllConsigneesAPI())
+    }
+
+
+export const oneConsigneeDeleteToAPI = ( idRecipient: string ): ConsigneesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+
+        try {
+            const response = await consigneesApi.deleteOneConsignee({ idRecipient })
+            if (response.message) console.log(response.message)
+        } catch (e) {
+            // @ts-ignore
+            alert(JSON.stringify(e.response.data))
+        }
+        await dispatch(getAllConsigneesAPI())
     }

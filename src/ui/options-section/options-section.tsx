@@ -1,10 +1,8 @@
 import React from 'react'
 import styles from './options-section.module.scss'
-import {Button} from '../common/button/button';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {ColumnDataList} from './column-data-list/column-data-list';
 import {
     getConsigneesOptionsStore,
     getEmployeesOptionsStore,
@@ -13,11 +11,19 @@ import {
     getTrailerOptionsStore,
     getTransportOptionsStore,
 } from '../../selectors/options/options-reselect';
-import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
 import {getIsFetchingShippersStore} from '../../selectors/options/shippers-reselect';
+import {getIsFetchingConsigneesStore} from '../../selectors/options/consignees-reselect';
+
+import {Button} from '../common/button/button';
+import {ColumnDataList} from './column-data-list/column-data-list';
+import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
 import {Preloader} from '../common/preloader/preloader';
+import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect';
+
 
 type OwnProps = {}
+
+const ColumnPreloader: React.FC = () => <div style={ { height: '260px', width: '260px' } }><Preloader/></div>
 
 export const OptionsSection: React.FC<OwnProps> = () => {
 
@@ -28,9 +34,13 @@ export const OptionsSection: React.FC<OwnProps> = () => {
     const shipperIsFetching = useSelector(getIsFetchingShippersStore)
 
     const consigneesList = useSelector(getConsigneesOptionsStore)
+    const consigneeIsFetching = useSelector(getIsFetchingConsigneesStore)
+
     const transportList = useSelector(getTransportOptionsStore)
     const trailerList = useSelector(getTrailerOptionsStore)
+
     const employeesList = useSelector(getEmployeesOptionsStore)
+    const employeeIsFetching = useSelector(getIsFetchingEmployeesStore)
 
     const requisitesInfoText = useSelector(getRequisitesInfoOptionsStore)
 
@@ -50,12 +60,14 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                 </div>
             </header>
             <div className={ styles.optionsSection__table }>
-                { shipperIsFetching ? <div style={{height: '260px', width: '260px'}}><Preloader/></div> :
+                { shipperIsFetching ? <ColumnPreloader/> :
                     <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/> }
-                <ColumnDataList item={ employeesList } route={ optionsEdit.employees }/>
+                { employeeIsFetching ? <ColumnPreloader/> :
+                    <ColumnDataList item={ employeesList } route={ optionsEdit.employees }/> }
                 <ColumnDataList item={ transportList } route={ optionsEdit.transport }/>
                 <ColumnDataList item={ trailerList } route={ optionsEdit.trailer }/>
-                <ColumnDataList item={ consigneesList } route={ optionsEdit.consignees }/>
+                { consigneeIsFetching ? <ColumnPreloader/> :
+                    <ColumnDataList item={ consigneesList } route={ optionsEdit.consignees }/>}
             </div>
         </section>
     )

@@ -15,7 +15,7 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {ShippersCardType} from '../../../types/form-types'
 import {
     getCurrentIdShipperStore,
-    getInitialValuesShippersStore,
+    getInitialValuesShippersStore, getIsFetchingShippersStore,
     getLabelShippersStore,
     getMaskOnShippersStore,
     getOneShipperFromLocal,
@@ -36,6 +36,7 @@ import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
 import {daDataStoreActions} from '../../../redux/dadata-response-reducer';
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
+import {FormApi} from 'final-form';
 
 type OwnProps = {
     // onSubmit: (requisites: shippersCardType) => void
@@ -45,7 +46,7 @@ type OwnProps = {
 export const ShippersForm: React.FC<OwnProps> = () => {
 
     const header = 'Заказчики и Грузоотправители'
-    const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const isFetching = useSelector(getIsFetchingShippersStore)
 
     const initialValues = useSelector(getInitialValuesShippersStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
@@ -100,7 +101,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const getCoordinatesToInitial = ( formValue: ShippersCardType ) => ( coordinates: [ number, number ] ) => {
+    const getCoordinatesToInitial = ( form: FormApi<ShippersCardType> ) => ( coordinates: [ number, number ] ) => {
+        const formValue = form.getState().values
         dispatch(shippersStoreActions.setCoordinates({ formValue, coordinates }))
     }
 
@@ -117,11 +119,11 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     // расчищаем значения от лишних символов и пробелов после маски
     const innPlusApiValidator = ( preValue: string ) => ( currentValue: string ) => {
-        [ preValue, currentValue ] = [ preValue, currentValue ].map(parseAllNumbers)
+        const [ prev, current ] = [ preValue, currentValue ].map(parseAllNumbers)
         // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-        if (currentValue && ( preValue !== currentValue ))
+        if (current && ( prev !== current ))
             // запускаем асинхронную валидацию только после синхронной
-            return ( validators.innNumber && validators.innNumber(currentValue) ) || innValidate(currentValue)
+            return ( validators.innNumber && validators.innNumber(current) ) || innValidate(current)
     }
 
 
@@ -279,7 +281,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                 styles.shippersConsigneesForm__mapImage }>
                                                 <YandexMapToForm
                                                     center={ stringToCoords(values.coordinates) }
-                                                    getCoordinates={ getCoordinatesToInitial(values) }
+                                                    getCoordinates={ getCoordinatesToInitial(form) }
                                                 />
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>

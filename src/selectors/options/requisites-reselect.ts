@@ -13,7 +13,7 @@ export const getStoredValuesRequisitesStore: RequisitesStoreSelectors<'storedVal
 export const getMaskOnRequisitesStore: RequisitesStoreSelectors<'maskOn'> = ( state ) => state.requisitesStoreReducer.maskOn
 export const getValidatorsRequisitesStore: RequisitesStoreSelectors<'validators'> = ( state ) => state.requisitesStoreReducer.validators
 export const getParsersRequisitesStore: RequisitesStoreSelectors<'parsers'> = ( state ) => state.requisitesStoreReducer.parsers
-export const getInnErrorRequisitesStore: RequisitesStoreSelectors<'innError'> = ( state ) => state.requisitesStoreReducer.innError
+
 
 // выгрузка тарифов из локальных данных пользователя
 export const getTarifsRequisitesStore = createSelector(getStoredValuesRequisitesStore,

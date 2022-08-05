@@ -36,8 +36,8 @@ const defaultInitialValues = {
 const initialState = {
     shipperIsFetching: false,
     currentId: '',
+
     label: {
-        // id: undefined,
         title: 'Название грузоотправителя',
         innNumber: 'ИНН',
         organizationName: 'Наименование организации',
@@ -52,7 +52,6 @@ const initialState = {
     } as ShippersCardType<string | undefined>,
 
     maskOn: {
-        // id: undefined,
         title: undefined,
         innNumber: '########## ##', // 10,12 цифр
         organizationName: undefined,
@@ -67,7 +66,6 @@ const initialState = {
     } as ShippersCardType,
 
     initialValues: {
-        // id: undefined,
         title: undefined,
         innNumber: undefined,
         organizationName: undefined,
@@ -155,12 +153,6 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
                 },
             }
         }
-        case 'shippers-store-reducer/SET-ORGANIZATION-VALUES': {
-            return {
-                ...state,
-                initialValues: { ...state.initialValues, ...action.payload },
-            }
-        }
         case 'shippers-store-reducer/SET-DEFAULT-INITIAL-VALUES': {
             return {
                 ...state,
@@ -191,11 +183,6 @@ export const shippersStoreActions = {
     // подгрузка во временный стейт координат
     setCoordinates: ( payload: { formValue: ShippersCardType, coordinates: [ number, number ] } ) => ( {
         type: 'shippers-store-reducer/SET-COORDINATES',
-        payload,
-    } as const ),
-    // подгрузка во временный стейт данных организации
-    setOrganizationValues: ( payload: { organizationName: string, ogrn: string, address: string, kpp: string } ) => ( {
-        type: 'shippers-store-reducer/SET-ORGANIZATION-VALUES',
         payload,
     } as const ),
     setShippersContent: ( shippers: ShippersCardType[] ) => ( {
@@ -272,7 +259,7 @@ export const setOrganizationByInnKppShippers = ( {
 
     }
 
-
+// добавить одну запись ГРУЗООТПРАВИТЕЛЯ через АПИ
 export const newShipperSaveToAPI = ( values: ShippersCardType<string> ): ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
@@ -286,6 +273,8 @@ export const newShipperSaveToAPI = ( values: ShippersCardType<string> ): Shipper
         }
         await dispatch(getAllShippersAPI())
     }
+
+// изменить одну запись ГРУЗООТПРАВИТЕЛЯ через АПИ
 export const modifyOneShipperToAPI = ( values: ShippersCardType<string> ): ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
@@ -313,8 +302,9 @@ export const oneShipperDeleteToAPI = ( idSender: string ): ShippersStoreReducerT
             const response = await shippersApi.deleteOneShipper({ idSender })
             if (response.message) console.log(response.message)
         } catch (e) {
+            // alert(e.response.data.error)
             // @ts-ignore
-            alert(e.response.data.error)
+            alert(JSON.stringify(e.response.data))
         }
         await dispatch(getAllShippersAPI())
     }

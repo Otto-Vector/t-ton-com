@@ -6,8 +6,10 @@ import {SelectOptions} from '../../ui/common/form-selector/form-selector';
 
 type ConsigneesStoreSelectors<T extends keyof Y, Y = ConsigneesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
-export const getLabelConsigneesStore: ConsigneesStoreSelectors<'label'> = ( state ) => state.consigneesStoreReducer.label
 export const getInitialValuesConsigneesStore: ConsigneesStoreSelectors<'initialValues'> = ( state ) => state.consigneesStoreReducer.initialValues
+export const getIsFetchingConsigneesStore: ConsigneesStoreSelectors<'consigneeIsFetching'> = ( state ) => state.consigneesStoreReducer.consigneeIsFetching
+
+export const getLabelConsigneesStore: ConsigneesStoreSelectors<'label'> = ( state ) => state.consigneesStoreReducer.label
 export const getMaskOnConsigneesStore: ConsigneesStoreSelectors<'maskOn'> = ( state ) => state.consigneesStoreReducer.maskOn
 export const getValidatorsConsigneesStore: ConsigneesStoreSelectors<'validators'> = ( state ) => state.consigneesStoreReducer.validators
 export const getParsersConsigneesStore: ConsigneesStoreSelectors<'parsers'> = ( state ) => state.consigneesStoreReducer.parsers
