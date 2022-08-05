@@ -276,7 +276,6 @@ export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): C
 
         try {
             const idUser = getState().authStoreReducer.authID
-            debugger
             const response = await consigneesApi.modifyOneConsignee({
                 ...values,
                 idUser,
