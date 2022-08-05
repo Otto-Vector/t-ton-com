@@ -34,6 +34,7 @@ const defaultInitialValues = {
 } as ShippersCardType
 
 const initialState = {
+    shipperIsFetching: false,
     currentId: '',
     label: {
         // id: undefined,
@@ -138,31 +139,12 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
                 ],
             }
         }
-        case 'shippers-store-reducer/ADD-SHIPPER': {
+        case 'shippers-store-reducer/TOGGLE-SHIPPER-IS-FETSHING': {
             return {
                 ...state,
-                content: [
-                    ...state.content,
-                    action.shipper,
-                ],
+                shipperIsFetching: action.shipperIsFetching,
             }
 
-        }
-        case 'shippers-store-reducer/CHANGE-SHIPPER': {
-            return {
-                ...state,
-                content: [
-                    ...state.content.map(( val ) => ( val.idSender !== action.idSender ) ? val : action.shipper),
-                ],
-            }
-        }
-        case 'shippers-store-reducer/DELETE-SHIPPER': {
-            return {
-                ...state,
-                content: [
-                    ...state.content.filter(( { idSender } ) => idSender !== action.idSender),
-                ],
-            }
         }
         case 'shippers-store-reducer/SET-COORDINATES': {
             return {
@@ -213,24 +195,15 @@ export const shippersStoreActions = {
         type: 'shippers-store-reducer/SET-ORGANIZATION-VALUES',
         payload,
     } as const ),
-
     setShippersContent: ( shippers: ShippersCardType[] ) => ( {
         type: 'shippers-store-reducer/SET-SHIPPERS-CONTENT',
         shippers,
     } as const ),
-    addOneShipper: ( shipper: ShippersCardType ) => ( {
-        type: 'shippers-store-reducer/ADD-SHIPPER',
-        shipper,
+    toggleShipperIsFetching: ( shipperIsFetching: boolean ) => ( {
+        type: 'shippers-store-reducer/TOGGLE-SHIPPER-IS-FETSHING',
+        shipperIsFetching,
     } as const ),
-    changeShipper: ( idSender: string, shipper: ShippersCardType ) => ( {
-        type: 'shippers-store-reducer/CHANGE-SHIPPER',
-        idSender,
-        shipper,
-    } as const ),
-    deleteShipper: ( idSender: string ) => ( {
-        type: 'shippers-store-reducer/DELETE-SHIPPER',
-        idSender,
-    } as const ),
+
 }
 
 /* САНКИ */
@@ -240,17 +213,19 @@ export type ShippersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<
 
 export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
+        dispatch(shippersStoreActions.toggleShipperIsFetching(true))
         try {
-            // const response = initialShippersContent
+
             const idUser = getState().authStoreReducer.authID
             const response = await shippersApi.getAllShippersByUserId({ idUser })
             dispatch(shippersStoreActions.setShippersContent(response.map(( { idUser, ...values } ) => values)))
+
             if (!response.length) console.log('Пока ни одного Грузоотправителя')
 
         } catch (e) {
             alert(e)
         }
-
+        dispatch(shippersStoreActions.toggleShipperIsFetching(false))
     }
 
 // запрос параметров организации из DaData
@@ -287,4 +262,47 @@ export const setOrganizationByInnKppShippers = ( { kppNumber }: { kppNumber: str
             }))
         } else alert('Фильтр КПП локально не сработал!')
 
+    }
+
+
+export const newShipperSaveToAPI = ( values: ShippersCardType<string> ): ShippersStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+        try {
+            const idUser = getState().authStoreReducer.authID
+            const response = await shippersApi.createOneShipper({ idUser, ...values })
+            if (response.success) console.log(response.success)
+        } catch (e) {
+            // @ts-ignore
+            alert(e.response.data.failed)
+        }
+        await dispatch(getAllShippersAPI())
+    }
+export const modifyOneShipperToAPI = ( values: ShippersCardType<string> ): ShippersStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+        try {
+            const idUser = getState().authStoreReducer.authID
+            // toDo: убрать заглушку
+            const response = await shippersApi.modifyOneShipper({ idUser, ...values, city:'-', description:'+' })
+            if (response.success) console.log(response.success)
+        } catch (e) {
+            // @ts-ignore
+            alert(e.response.data.failed)
+        }
+        await dispatch(getAllShippersAPI())
+    }
+
+
+export const oneShipperDeleteToAPI = ( idSender: string ): ShippersStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+
+        try {
+            const response = await shippersApi.deleteOneShipper({ idSender })
+            if (response.message) console.log(response.message)
+        } catch (e) {
+            // @ts-ignore
+            alert(e.response.data.error)
+        }
+        await dispatch(getAllShippersAPI())
     }

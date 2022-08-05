@@ -24,6 +24,9 @@ import {
 } from '../../../selectors/options/shippers-reselect'
 import {
     getOrganizationByInnShipper,
+    modifyOneShipperToAPI,
+    newShipperSaveToAPI,
+    oneShipperDeleteToAPI,
     setOrganizationByInnKppShippers,
     shippersStoreActions,
 } from '../../../redux/options/shippers-store-reducer'
@@ -76,7 +79,14 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     const onSubmit = ( values: ShippersCardType ) => {
-        dispatch(shippersStoreActions.changeShipper(currentId, values)) //сохраняем измененное значение
+        if (isNew) {
+            // создаём нового
+            dispatch<any>(newShipperSaveToAPI(values as ShippersCardType<string>))
+        } else {
+            // сохраняем измененное значение
+            dispatch<any>(modifyOneShipperToAPI(values as ShippersCardType<string>))
+        }
+        // зачищаем поля
         dispatch(shippersStoreActions.setDefaultInitialValues())
         navigate(options) // и возвращаемся в предыдущее окно
     }
@@ -87,8 +97,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     }
 
     const shipperDeleteHandleClick = () => {
+        dispatch<any>(oneShipperDeleteToAPI(currentId))
         dispatch(shippersStoreActions.setDefaultInitialValues())
-        dispatch(shippersStoreActions.deleteShipper(currentId))
         navigate(options)
     }
 
@@ -180,13 +190,15 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ ( value ) => {
-                                                       // расчищаем значения от лишних символов и пробелов после маски
-                                                       const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
-                                                           .map(val => parseAllNumbers(val) || undefined)
-                                                       // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-                                                       if (currentValue && ( preValue !== currentValue ))
-                                                           // запускаем асинхронную валидацию только после синхронной
-                                                           return ( validators.innNumber && validators.innNumber(value) ) || innValidate(value)
+                                                       if (isNew) {
+                                                           // расчищаем значения от лишних символов и пробелов после маски
+                                                           const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
+                                                               .map(val => parseAllNumbers(val) || undefined)
+                                                           // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+                                                           if (currentValue && ( preValue !== currentValue ))
+                                                               // запускаем асинхронную валидацию только после синхронной
+                                                               return ( validators.innNumber && validators.innNumber(value) ) || innValidate(value)
+                                                       }
                                                    } }
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }

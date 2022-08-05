@@ -49,7 +49,7 @@ export const consigneesApi = {
     },
     // УДАЛИТЬ одного грузополучателя
     deleteOneConsignee( { idRecipient }: { idRecipient: string } ) {
-        return instanceBack.put<InfoResponseType>('/api/recipient/', { idRecipient })
+        return instanceBack.delete<InfoResponseType>('/api/recipient/', { data: { idRecipient } })
             .then(response => response.data)
     },
 }

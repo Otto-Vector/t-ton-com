@@ -53,7 +53,7 @@ export const employeesApi = {
     },
     // УДАЛИТЬ одного водителя
     deleteOneEmployee( { idEmployee }: { idEmployee: string } ) {
-        return instanceBack.put<InfoResponseType>('/api/employee/', { idEmployee })
+        return instanceBack.delete<InfoResponseType>('/api/employee/', { data: { idEmployee } })
             .then(response => response.data)
     },
 }

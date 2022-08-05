@@ -7,6 +7,8 @@ import {SelectOptions} from '../../ui/common/form-selector/form-selector';
 type ShippersStoreSelectors<T extends keyof Y, Y = ShippersStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
 export const getLabelShippersStore: ShippersStoreSelectors<'label'> = ( state ) => state.shippersStoreReducer.label
+export const getIsFetchingShippersStore: ShippersStoreSelectors<'shipperIsFetching'> = ( state ) => state.shippersStoreReducer.shipperIsFetching
+
 export const getInitialValuesShippersStore: ShippersStoreSelectors<'initialValues'> = ( state ) => state.shippersStoreReducer.initialValues
 export const getMaskOnShippersStore: ShippersStoreSelectors<'maskOn'> = ( state ) => state.shippersStoreReducer.maskOn
 export const getValidatorsShippersStore: ShippersStoreSelectors<'validators'> = ( state ) => state.shippersStoreReducer.validators

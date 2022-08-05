@@ -47,7 +47,7 @@ export const trailerApi = {
     },
     // УДАЛИТЬ один ПРИЦЕП
     deleteOneConsignee( { idTrailer }: { idTrailer: string } ) {
-        return instanceBack.put<InfoResponseType>('/api/trailer/', { idTrailer })
+        return instanceBack.delete<InfoResponseType>('/api/trailer/', { data: { idTrailer } })
             .then(response => response.data)
     },
 }

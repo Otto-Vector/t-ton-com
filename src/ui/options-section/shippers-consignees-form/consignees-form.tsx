@@ -185,13 +185,15 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    disabled={ !isNew }
                                                    validate={ ( value ) => {
-                                                       // расчищаем значения от лишних символов и пробелов после маски
-                                                       const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
-                                                           .map(val => parseAllNumbers(val) || undefined)
-                                                       // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-                                                       if (currentValue && ( preValue !== currentValue ))
-                                                           // запускаем асинхронную валидацию только после синхронной
-                                                           return ( validators.innNumber && validators.innNumber(value) ) || innValidate(value)
+                                                       if (isNew) {
+                                                           // расчищаем значения от лишних символов и пробелов после маски
+                                                           const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
+                                                               .map(val => parseAllNumbers(val) || undefined)
+                                                           // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+                                                           if (currentValue && ( preValue !== currentValue ))
+                                                               // запускаем асинхронную валидацию только после синхронной
+                                                               return ( validators.innNumber && validators.innNumber(value) ) || innValidate(value)
+                                                       }
                                                    } }
                                                    parse={ parsers.innNumber }
                                             />

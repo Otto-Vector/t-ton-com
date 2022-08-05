@@ -14,6 +14,8 @@ import {
     getTransportOptionsStore,
 } from '../../selectors/options/options-reselect';
 import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
+import {getIsFetchingShippersStore} from '../../selectors/options/shippers-reselect';
+import {Preloader} from '../common/preloader/preloader';
 
 type OwnProps = {}
 
@@ -23,12 +25,15 @@ export const OptionsSection: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
 
     const shippersList = useSelector(getShippersOptionsStore)
+    const shipperIsFetching = useSelector(getIsFetchingShippersStore)
+
     const consigneesList = useSelector(getConsigneesOptionsStore)
     const transportList = useSelector(getTransportOptionsStore)
     const trailerList = useSelector(getTrailerOptionsStore)
     const employeesList = useSelector(getEmployeesOptionsStore)
 
     const requisitesInfoText = useSelector(getRequisitesInfoOptionsStore)
+
 
     return (
         <section className={ styles.optionsSection }>
@@ -45,7 +50,8 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                 </div>
             </header>
             <div className={ styles.optionsSection__table }>
-                <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/>
+                { shipperIsFetching ? <div style={{height: '260px', width: '260px'}}><Preloader/></div> :
+                    <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/> }
                 <ColumnDataList item={ employeesList } route={ optionsEdit.employees }/>
                 <ColumnDataList item={ transportList } route={ optionsEdit.transport }/>
                 <ColumnDataList item={ trailerList } route={ optionsEdit.trailer }/>

@@ -47,7 +47,7 @@ export const transportApi = {
     },
     // УДАЛИТЬ один ТРАНСПОРТ
     deleteOneConsignee( { idTransport }: { idTransport: string } ) {
-        return instanceBack.put<InfoResponseType>('/api/transport/', { idTransport })
+        return instanceBack.delete<InfoResponseType>('/api/transport/', { data: { idTransport } })
             .then(response => response.data)
     },
 }

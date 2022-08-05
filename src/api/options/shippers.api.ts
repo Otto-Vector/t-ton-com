@@ -39,7 +39,7 @@ export const shippersApi = {
     },
 
     // создать одного грузоотправителя
-    createOneShipper( requestData: CreateShippersApiType ) {
+    createOneShipper( { idSender, ...requestData }: ShippersApiType ) {
         return instanceBack.post<InfoResponseType>('/api/sender/', { ...requestData })
             .then(response => response.data)
     },
@@ -50,7 +50,7 @@ export const shippersApi = {
     },
     // УДАЛИТЬ одного грузоотправителя
     deleteOneShipper( { idSender }: { idSender: string } ) {
-        return instanceBack.put<InfoResponseType>('/api/sender/', { idSender })
+        return instanceBack.delete<InfoResponseType>('/api/sender/', { data: { idSender } })
             .then(response => response.data)
     },
 }
