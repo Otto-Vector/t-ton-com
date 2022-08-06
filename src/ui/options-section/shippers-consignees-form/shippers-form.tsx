@@ -64,7 +64,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     // вытаскиваем значение роутера
     const { id: currentIdFromNavigate } = useParams<{ id: string | undefined }>()
     const isNew = currentIdFromNavigate === 'new'
-
+    // расчищаем значения от лишних символов и пробелов после маски
     const fromFormDemaskedValues = ( values: ShippersCardType ) => ( {
         ...values,
         innNumber: parseAllNumbers(values.innNumber) || undefined,
@@ -117,7 +117,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         return await dispatch<any>(getOrganizationByInnShipper({ inn: +value }))
     }
 
-    // расчищаем значения от лишних символов и пробелов после маски
+    // синхронно/асинхронный валидатор на поле ИНН
     const innPlusApiValidator = ( preValue: string ) => ( currentValue: string ) => {
         const [ prev, current ] = [ preValue, currentValue ].map(parseAllNumbers)
         // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)

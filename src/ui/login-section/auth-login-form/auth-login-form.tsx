@@ -35,9 +35,7 @@ import {getOrganizationsByInn, getOrganizationsByInnKPP} from '../../../redux/da
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 
 
-type OwnProps = {
-    // onSubmit: (login: phoneSubmitType) => void
-}
+type OwnProps = {}
 
 export const AuthLoginForm: React.FC<OwnProps> = () => {
 
@@ -58,19 +56,11 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
 
-    const innValidate = async ( value: string ) => {
-        const parsedValue = parseAllNumbers(value)
-        const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue }))
-        return response
-    }
-
-    // const setOneOrganization = ( value: string ) => {
-    //     console.log(value)
-    // }
-
-    const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: phoneSubmitType ) => { // при нажатии кнопки ДАЛЕЕ
+    // при нажатии кнопки ДАЛЕЕ
+    const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: phoneSubmitType ) => {
         const [ inn, kpp ] = [ innNumber, kppNumber ].map(parseAllNumbers)
         let innError, phoneError, loginError
+
         if (isRegisterMode) { // если РЕГИСТРАЦИЯ, то сначала проверяем ИНН на сущестование
             if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан
                 innError = await dispatch<any>(getOrganizationsByInnKPP({ inn, kpp }))
@@ -79,7 +69,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                     return innError
                 } else { // потом отправляем sms на регистрацию
                     phoneError = await dispatch<any>(sendCodeToPhone({ phone: phoneNumber as string, kpp, inn }))
-                    // phoneError = await dispatch<any>(setOrganizationByInnKpp({kpp,inn})) // для тестов
                     if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
                         dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                         return phoneError
@@ -97,12 +86,10 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
             }
         }
 
-
         if (!isRegisterMode) { // если АВТОРИЗАЦИЯ
             if (isAuth) { // если уже авторизован, то просто перекидываем на НАСТРОЙКИ
                 navigate(options)
             } else {
-
                 loginError = await dispatch<any>(
                     loginAuthorization({ phone: phoneNumber as string, password: sms as string }))
                 if (loginError) {
@@ -116,18 +103,31 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     const registerHandleClick = () => {
         setIsRegisterMode(!isRegisterMode)
-        // dispatch(authStoreActions.setIsAvailableSMSRequest(isRegisterMode))
     }
 
     const newCode = ( phone: string ) => {
-        dispatch<any>(fakeAuthFetching())
         dispatch<any>(newPassword({ phone }))
     }
 
+    // зачистка данных всплывающего модульного окна
     const clearMessage = () => {
         dispatch(authStoreActions.setModalMessage(null))
     }
 
+    // асинхронный валидатор ИНН через АПИ
+    const innValidate = async ( value: string ) => {
+        const parsedValue = parseAllNumbers(value)
+        const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue }))
+        return response
+    }
+    // синхронно/асинхронный валидатор на поле ИНН
+    const innPlusApiValidator = ( preValue: string ) => ( currentValue: string ) => {
+        const [ prev, current ] = [ preValue, currentValue ].map(parseAllNumbers)
+        // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+        if (current && ( prev !== current ))
+            // запускаем асинхронную валидацию только после синхронной
+            return ( validators.innNumber && validators.innNumber(current) ) || innValidate(current)
+    }
 
     return (
         <div className={ styles.loginForm }>
@@ -139,7 +139,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
                 render={
                     ( {
-                          errors,
                           submitError,
                           handleSubmit,
                           hasValidationErrors,
@@ -157,23 +156,14 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                component={ FormInputType }
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
-                                               validate={ ( value ) => {
-                                                   // расчищаем значения от лишних символов и пробелов после маски
-                                                   const [ preValue, currentValue ] = [ form.getFieldState('innNumber')?.value, value ]
-                                                       .map(val => parseAllNumbers(val) || undefined)
-                                                   // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-                                                   if (preValue && ( preValue !== currentValue ))
-                                                       // запускаем асинхронную валидацию только после синхронной
-                                                       return ( validators.innNumber && validators.innNumber(value) ) || innValidate(value)
-                                               } }
-
+                                               validate = {innPlusApiValidator(values.innNumber || '')}
                                                disabled={ isAvailableSMS }
                                         />
                                         <FormSelector named={ 'kppNumber' }
                                                       placeholder={ label.kppNumber }
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }
-                                                      disabled={ isAvailableSMS }
+                                                      disabled={ isAvailableSMS || kppSelect.length < 1}
                                                       errorTop
                                                       isClearable
                                         />

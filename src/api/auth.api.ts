@@ -1,6 +1,6 @@
 import {InfoResponseType, instanceBack} from './back-instance.api';
 // 0905
-
+// '+7 (950) 051-05-20' password: '7701'
 export type AuthRequestType = {
     phone: string,
 }
