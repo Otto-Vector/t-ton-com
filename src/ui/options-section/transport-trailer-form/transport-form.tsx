@@ -43,7 +43,7 @@ type OwnProps = {
 
 export const TransportForm: React.FC<OwnProps> = () => {
 
-    const currentURL = useSelector((state: AppStateType)=> state.baseStoreReducer.serverURL)
+    const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
     const header = 'Транспорт'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
@@ -189,6 +189,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
                                                        validate={ validators.cargoWeight }
+                                                       disabled={ values.cargoType === 'Тягач' }
                                                 />
                                             </div>
                                             <FormSelector named={ 'propertyRights' }
@@ -203,13 +204,13 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             >
                                                 <img className={ styles.transportTrailerForm__photo }
                                                      src={ ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                         || (values.transportImage && currentURL+values.transportImage)
+                                                         || ( values.transportImage && currentURL + values.transportImage )
                                                          || noImage }
                                                      alt="transportPhoto"
                                                      onClick={ () => {
                                                          setLightBoxImage(
                                                              ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                             || (values.transportImage && currentURL+values.transportImage)
+                                                             || ( values.transportImage && currentURL + values.transportImage )
                                                              || noImage)
                                                      } }
                                                 />
