@@ -41,8 +41,28 @@ export const transportApi = {
             .then(response => response.data)
     },
     // ИЗМЕНИТЬ один ТРАНСПОРТ
-    modifyOneTranstport( {transportImage,...requestData}: TransportApiType, image: File | undefined ) {
-        return instanceBack.put<InfoResponseType>('/api/transport/', { ...requestData, transportImage: image })
+    modifyOneTranstport( { transportImage, ...requestData }: TransportApiType, image: File | undefined ) {
+        let formData = new FormData();
+        formData.append('idUser', requestData.idUser);
+        formData.append('transportNumber', requestData.transportNumber);
+        formData.append('transportTrademark', requestData.transportTrademark);
+        formData.append('transportModel', requestData.transportModel);
+        formData.append('pts', requestData.pts);
+        formData.append('dopog', requestData.dopog);
+        formData.append('cargoType', requestData.cargoType);
+        formData.append('propertyRights', requestData.propertyRights);
+        formData.append('cargoWeight', requestData.cargoWeight);
+        if (image) {
+            formData.append('transportImage', image);
+        }
+
+        // debugger
+        // formData.append("image", fs.createReadStream(URL.createObjectURL(image)));
+        // console.log('form:', formData.get('transportImage'))
+        // console.log('file:', image)
+        return instanceBack.put<InfoResponseType>('/api/transport/', formData
+            // { ...requestData, formData }
+        )
             .then(response => response.data)
     },
     // УДАЛИТЬ один ТРАНСПОРТ

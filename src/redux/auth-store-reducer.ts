@@ -228,6 +228,7 @@ export const loginAuthorization = ( {
             if (response.success) {
                 console.log(response.success)
                 dispatch(authStoreActions.setIsAuth(true))
+                // dispatch(authStoreActions.setIsAuth(response.userid))
                 dispatch<any>(appActions.setInitialazed(false))
                 dispatch(authStoreActions.setAuthPhone(phone))
                 // зачищаем список КПП

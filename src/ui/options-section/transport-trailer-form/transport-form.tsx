@@ -208,10 +208,15 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                  title={ 'Добавить/изменить фото транспорта' }
                                             >
                                                 <img className={ styles.transportTrailerForm__photo }
-                                                     src={ ( selectedImage && URL.createObjectURL(selectedImage) ) || values.transportImage || noImageTransport }
+                                                     src={ ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                         || (values.transportImage && 'https://server.t-ton.com/'+values.transportImage)
+                                                         || noImageTransport }
                                                      alt="transportPhoto"
                                                      onClick={ () => {
-                                                         setLightBoxImage(( selectedImage && URL.createObjectURL(selectedImage) ) || values.transportImage || noImageTransport)
+                                                         setLightBoxImage(
+                                                             ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                             || (values.transportImage && 'https://server.t-ton.com/'+values.transportImage)
+                                                             || noImageTransport)
                                                      } }
                                                 />
                                                 <AttachImageButton onChange={ sendPhotoFile }/>
