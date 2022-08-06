@@ -24,9 +24,15 @@ import {
     getValidatorsTransportStore,
 } from '../../../selectors/options/transport-reselect'
 
-import {transportStoreActions} from '../../../redux/options/transport-store-reducer';
+import {
+    modifyOneTransportToAPI,
+    newTransportSaveToAPI,
+    oneTransportDeleteToAPI,
+    transportStoreActions,
+} from '../../../redux/options/transport-store-reducer';
 import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
 import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
+import {parseAllNumbers} from '../../../utils/parsers';
 
 
 type OwnProps = {
@@ -52,6 +58,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const oneTransport = useSelector(getOneTransportFromLocal)
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
+    const isNew = currentIdForShow === 'new'
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -61,8 +68,15 @@ export const TransportForm: React.FC<OwnProps> = () => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
-    const onSubmit = ( values: TransportCardType ) => {
-        dispatch(transportStoreActions.changeTransport(currentId, values)) //сохраняем измененное значение
+    const onSubmit = ( values: TransportCardType<string> ) => {
+        const demaskedValues={...values, cargoWeight: parseAllNumbers(values.cargoWeight)}
+        if (isNew) {
+            //сохраняем НОВОЕ значение
+            dispatch<any>(newTransportSaveToAPI(demaskedValues))
+        } else {
+            //сохраняем измененное значение
+            dispatch<any>(modifyOneTransportToAPI(demaskedValues))
+        }
         navigate(options) // и возвращаемся в предыдущее окно
     }
 
@@ -70,9 +84,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const transportDeleteHandleClick = ( currentId: string ) => {
-
-        dispatch(transportStoreActions.deleteTransport(currentId))
+    const transportDeleteHandleClick = () => {
+        dispatch<any>(oneTransportDeleteToAPI(currentId))
         navigate(options)
     }
 
@@ -154,7 +167,9 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <FormSelector named={ 'cargoType' }
                                                               placeholder={ label.cargoType }
-                                                              values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }/>
+                                                              values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }
+                                                              validate={ validators.cargoType }
+                                                />
                                             </div>
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <Field name={ 'cargoWeight' }
@@ -168,6 +183,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             <FormSelector named={ 'propertyRights' }
                                                           placeholder={ label.propertyRights }
                                                           values={ stringArrayToSelectValue(propertyRights.map(x => x)) }
+                                                          validate={ validators.propertyRights }
                                             />
                                         </div>
                                         <div>
@@ -186,13 +202,11 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'button' }
-                                                            disabled={ false }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ () => {
-                                                                transportDeleteHandleClick(currentId)
-                                                            } }
+                                                            onClick={ transportDeleteHandleClick }
                                                             rounded
+                                                            disabled={ isNew }
                                                     />
                                                 </div>
                                                 <div className={ styles.transportTrailerForm__button }>

@@ -202,7 +202,6 @@ export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(consigneesStoreActions.toggleConsigneeIsFetching(true))
         try {
-
             const idUser = getState().authStoreReducer.authID
             const response = await consigneesApi.getAllConsigneesByUserId({ idUser })
             dispatch(consigneesStoreActions.setConsigneesContent(response.map(( { idUser, ...values } ) => values)))
@@ -294,7 +293,6 @@ export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): C
 
 export const oneConsigneeDeleteToAPI = ( idRecipient: string ): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch ) => {
-
         try {
             const response = await consigneesApi.deleteOneConsignee({ idRecipient })
             if (response.message) console.log(response.message)

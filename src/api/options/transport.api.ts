@@ -31,22 +31,22 @@ export const transportApi = {
             .then(response => response.data)
     },
     // запрос на один ТРАНСПОРТ
-    getOneConsigneeById( { idTransport }: { idTransport: string } ) {
+    getOneTranstportById( { idTransport }: { idTransport: string } ) {
         return instanceBack.patch<InfoResponseType | TransportApiType[]>('/api/transport/', { idTransport })
             .then(response => response.data)
     },
     // создать один ТРАНСПОРТ
-    createOneConsignee( requestData: CreateTransportApiType ) {
+    createOneTranstport( requestData: CreateTransportApiType ) {
         return instanceBack.post<InfoResponseType>('/api/transport/', { ...requestData })
             .then(response => response.data)
     },
     // ИЗМЕНИТЬ один ТРАНСПОРТ
-    modifyOneConsignee( requestData: TransportApiType ) {
+    modifyOneTranstport( {transportImage,...requestData}: TransportApiType ) {
         return instanceBack.put<InfoResponseType>('/api/transport/', { ...requestData })
             .then(response => response.data)
     },
     // УДАЛИТЬ один ТРАНСПОРТ
-    deleteOneConsignee( { idTransport }: { idTransport: string } ) {
+    deleteOneTranstport( { idTransport }: { idTransport: string } ) {
         return instanceBack.delete<InfoResponseType>('/api/transport/', { data: { idTransport } })
             .then(response => response.data)
     },

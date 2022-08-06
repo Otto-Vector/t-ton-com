@@ -60,7 +60,7 @@ export const initializedAll = (): InitializedThunkActionType =>
         const getAllShippers = dispatch(getAllShippersAPI())
         const getAllConsignees = dispatch(getAllConsigneesAPI())
         const getAllRequests = dispatch(getAllRequestsAPI({ innID: 0 }))
-        const getAllTransport = dispatch(getAllTransportAPI({ innID: 0 }))
+        const getAllTransport = dispatch(getAllTransportAPI())
         const getAllTrailer = dispatch(getAllTrailerAPI({ innID: 0 }))
         const getAllEmployees = dispatch(getAllEmployeesAPI({ innID: 0 }))
 

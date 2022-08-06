@@ -12,6 +12,7 @@ import {
 
 
 const initialState = {
+    trailerIsFetching: false,
     currentId: '',
 
     label: {
@@ -99,16 +100,11 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
                 ],
             }
         }
-        case 'trailer-store-reducer/ADD-TRANSPORT': {
+        case 'trailer-store-reducer/SET-IS-FETCHING':
             return {
                 ...state,
-                content: [
-                    ...state.content,
-                    action.trailer,
-                ],
+                trailerIsFetching: action.trailerIsFetchig,
             }
-
-        }
         case 'trailer-store-reducer/CHANGE-TRANSPORT': {
             return {
                 ...state,
@@ -144,10 +140,6 @@ export const trailerStoreActions = {
         currentId,
     } as const ),
 
-    addTrailer: ( trailer: TrailerCardType ) => ( {
-        type: 'trailer-store-reducer/ADD-TRANSPORT',
-        trailer,
-    } as const ),
     changeTrailer: ( idTrailer: string, trailer: TrailerCardType ) => ( {
         type: 'trailer-store-reducer/CHANGE-TRANSPORT',
         idTrailer,
@@ -157,7 +149,10 @@ export const trailerStoreActions = {
         type: 'trailer-store-reducer/DELETE-TRANSPORT',
         idTrailer,
     } as const ),
-
+    toggleTrailerIsFetching: ( trailerIsFetchig: boolean ) => ( {
+        type: 'trailer-store-reducer/SET-IS-FETCHING',
+        trailerIsFetchig,
+    } as const ),
 }
 
 /* САНКИ */
@@ -167,11 +162,12 @@ export type TrailerStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 
 export const getAllTrailerAPI = ( { innID }: { innID: number } ): TrailerStoreReducerThunkActionType =>
     async ( dispatch ) => {
+        dispatch(trailerStoreActions.toggleTrailerIsFetching(true))
         try {
             const response = initialTrailerValues
             dispatch(trailerStoreActions.setTrailerContent(response))
         } catch (e) {
             alert(e)
         }
-
+        dispatch(trailerStoreActions.toggleTrailerIsFetching(false))
     }

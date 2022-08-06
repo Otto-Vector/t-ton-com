@@ -12,6 +12,7 @@ export const getValidatorsTrailerStore: TrailerStoreSelectors<'validators'> = ( 
 export const getParsersTrailerStore: TrailerStoreSelectors<'parsers'> = ( state ) => state.trailerStoreReducer.parsers
 
 export const getInitialValuesTrailerStore: TrailerStoreSelectors<'initialValues'> = ( state ) => state.trailerStoreReducer.initialValues
+export const getIsFetchingTrailerStore: TrailerStoreSelectors<'trailerIsFetching'> = ( state ) => state.trailerStoreReducer.trailerIsFetching
 export const getAllTrailerStore: TrailerStoreSelectors<'content'> = ( state ) => state.trailerStoreReducer.content
 export const getCurrentIdTrailerStore: TrailerStoreSelectors<'currentId'> = ( state ) => state.trailerStoreReducer.currentId
 

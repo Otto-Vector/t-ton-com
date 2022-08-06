@@ -19,6 +19,8 @@ import {ColumnDataList} from './column-data-list/column-data-list';
 import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
 import {Preloader} from '../common/preloader/preloader';
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect';
+import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect';
+import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect';
 
 
 type OwnProps = {}
@@ -37,7 +39,10 @@ export const OptionsSection: React.FC<OwnProps> = () => {
     const consigneeIsFetching = useSelector(getIsFetchingConsigneesStore)
 
     const transportList = useSelector(getTransportOptionsStore)
+    const transportIsFetching = useSelector(getIsFetchingTransportStore)
+
     const trailerList = useSelector(getTrailerOptionsStore)
+    const trailerIsFetching = useSelector(getIsFetchingTrailerStore)
 
     const employeesList = useSelector(getEmployeesOptionsStore)
     const employeeIsFetching = useSelector(getIsFetchingEmployeesStore)
@@ -64,10 +69,12 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                     <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/> }
                 { employeeIsFetching ? <ColumnPreloader/> :
                     <ColumnDataList item={ employeesList } route={ optionsEdit.employees }/> }
-                <ColumnDataList item={ transportList } route={ optionsEdit.transport }/>
-                <ColumnDataList item={ trailerList } route={ optionsEdit.trailer }/>
+                { transportIsFetching ? <ColumnPreloader/> :
+                    <ColumnDataList item={ transportList } route={ optionsEdit.transport }/> }
+                { trailerIsFetching ? <ColumnPreloader/> :
+                    <ColumnDataList item={ trailerList } route={ optionsEdit.trailer }/> }
                 { consigneeIsFetching ? <ColumnPreloader/> :
-                    <ColumnDataList item={ consigneesList } route={ optionsEdit.consignees }/>}
+                    <ColumnDataList item={ consigneesList } route={ optionsEdit.consignees }/> }
             </div>
         </section>
     )
