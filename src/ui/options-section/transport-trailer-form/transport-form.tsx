@@ -56,6 +56,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
 
     const currentId = useSelector(getCurrentIdTransportStore)
     const oneTransport = useSelector(getOneTransportFromLocal)
+
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
     const isNew = currentIdForShow === 'new'
