@@ -60,7 +60,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    min-width: 200px;
+    width: 200px;
     height: 200px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid #2D2D2D;
@@ -71,10 +71,14 @@
     cursor: zoom-in;
   }
 
+  &__photo {
+    width: 100%;
+  }
+
   &__buttonsPanel {
     @include flex-center(column);
     justify-content: space-between;
-    height: 90px;
+    height: 100px;
     margin: 30px auto 10px;
     font-family: $RalewayFont;
     font-weight: 700;

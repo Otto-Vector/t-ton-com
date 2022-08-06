@@ -69,14 +69,27 @@ export const TransportForm: React.FC<OwnProps> = () => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
+    const [ selectedImage, setSelectedImage ] = useState<File>();
+    // // https://www.kindacode.com/article/react-show-image-preview-before-uploading/
+    // // This function will be triggered when the file field change
+    // const imageChange = (e) => {
+    //   if (e.target.files && e.target.files.length > 0) {
+    //     setSelectedImage(e.target.files[0]);
+    //   }
+    // };
+
+
+    // изменить размер картинки
+    // https://javascript.plainenglish.io/compression-images-before-upload-in-a-react-app-with-react-image-file-resizer-c1870c9bcf47
+
     const onSubmit = ( values: TransportCardType<string> ) => {
-        const demaskedValues={...values, cargoWeight: parseAllNumbers(values.cargoWeight)}
+        const demaskedValues = { ...values, cargoWeight: parseAllNumbers(values.cargoWeight) }
         if (isNew) {
             //сохраняем НОВОЕ значение
-            dispatch<any>(newTransportSaveToAPI(demaskedValues))
+            dispatch<any>(newTransportSaveToAPI(demaskedValues, selectedImage))
         } else {
             //сохраняем измененное значение
-            dispatch<any>(modifyOneTransportToAPI(demaskedValues))
+            dispatch<any>(modifyOneTransportToAPI(demaskedValues, selectedImage))
         }
         navigate(options) // и возвращаемся в предыдущее окно
     }
@@ -92,6 +105,9 @@ export const TransportForm: React.FC<OwnProps> = () => {
 
     const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
         // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
+        if (event.target.files && event.target.files.length > 0) {
+            setSelectedImage(event.target.files[0]);
+        }
     }
 
     useEffect(() => {
@@ -191,10 +207,11 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__photoWrapper }
                                                  title={ 'Добавить/изменить фото транспорта' }
                                             >
-                                                <img src={ values.transportImage || noImageTransport }
+                                                <img className={ styles.transportTrailerForm__photo }
+                                                     src={ ( selectedImage && URL.createObjectURL(selectedImage) ) || values.transportImage || noImageTransport }
                                                      alt="transportPhoto"
                                                      onClick={ () => {
-                                                         setLightBoxImage(values.transportImage)
+                                                         setLightBoxImage(( selectedImage && URL.createObjectURL(selectedImage) ) || values.transportImage || noImageTransport)
                                                      } }
                                                 />
                                                 <AttachImageButton onChange={ sendPhotoFile }/>

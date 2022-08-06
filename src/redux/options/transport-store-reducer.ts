@@ -179,12 +179,12 @@ export const getAllTransportAPI = (): TransportStoreReducerThunkActionType =>
     }
 
 // добавить одну запись ТРАНСПОРТА через АПИ
-export const newTransportSaveToAPI = ( values: TransportCardType<string> ): TransportStoreReducerThunkActionType =>
+export const newTransportSaveToAPI = ( values: TransportCardType<string>, image: File | undefined ): TransportStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await transportApi.createOneTranstport({ idUser, ...values, cargoWeight: values.cargoWeight || '0' })
+            const response = await transportApi.createOneTranstport({ idUser, ...values, cargoWeight: values.cargoWeight || '0' }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
@@ -194,7 +194,7 @@ export const newTransportSaveToAPI = ( values: TransportCardType<string> ): Tran
     }
 
 // изменить одну запись ГРУЗОполучателя через АПИ
-export const modifyOneTransportToAPI = ( values: TransportCardType<string> ): TransportStoreReducerThunkActionType =>
+export const modifyOneTransportToAPI = ( values: TransportCardType<string>, image: File | undefined ): TransportStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
         try {
@@ -202,8 +202,8 @@ export const modifyOneTransportToAPI = ( values: TransportCardType<string> ): Tr
             const response = await transportApi.modifyOneTranstport({
                 ...values,
                 idUser,
-                cargoWeight: values.cargoWeight || '0'
-            })
+                cargoWeight: values.cargoWeight || '0',
+            }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore

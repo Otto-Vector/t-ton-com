@@ -36,13 +36,13 @@ export const transportApi = {
             .then(response => response.data)
     },
     // создать один ТРАНСПОРТ
-    createOneTranstport( requestData: CreateTransportApiType ) {
-        return instanceBack.post<InfoResponseType>('/api/transport/', { ...requestData })
+    createOneTranstport( requestData: CreateTransportApiType, image: File | undefined ) {
+        return instanceBack.post<InfoResponseType>('/api/transport/', { ...requestData, transportImage: image })
             .then(response => response.data)
     },
     // ИЗМЕНИТЬ один ТРАНСПОРТ
-    modifyOneTranstport( {transportImage,...requestData}: TransportApiType ) {
-        return instanceBack.put<InfoResponseType>('/api/transport/', { ...requestData })
+    modifyOneTranstport( {transportImage,...requestData}: TransportApiType, image: File | undefined ) {
+        return instanceBack.put<InfoResponseType>('/api/transport/', { ...requestData, transportImage: image })
             .then(response => response.data)
     },
     // УДАЛИТЬ один ТРАНСПОРТ
