@@ -29,7 +29,7 @@ import {initializedAll} from '../redux/app-store-reducer';
 import {Preloader} from './common/preloader/preloader';
 import {WithAuthRedirect} from './common/redirect/with-auth-redirect/with-auth-redirect';
 import {ТoAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redirect';
-import {getAutologinAuthStore} from '../selectors/auth-reselect';
+import {getAutologinAuthStore, getIsAuthAuthStore} from '../selectors/auth-reselect';
 import {autoLoginMe} from '../redux/auth-store-reducer';
 
 type OwnProps = {}
@@ -39,14 +39,16 @@ export const UiComponent: React.FC<OwnProps> = () => {
     const routes = useSelector(getRoutesStore)
     const initialazed = useSelector(( state: AppStateType ) => state.appStoreReducer.initialazed)
     const authTry = useSelector(getAutologinAuthStore)
+    const isAuth = useSelector(getIsAuthAuthStore)
+
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!authTry) dispatch<any>(autoLoginMe())
-        if (authTry && !initialazed) dispatch<any>(initializedAll())
-    }, [ initialazed, authTry ])
+        if (!isAuth && !authTry) dispatch<any>(autoLoginMe())
+        if (isAuth && authTry && !initialazed) dispatch<any>(initializedAll())
+    }, [ initialazed, authTry, isAuth ])
 
-    if (!initialazed) return <div className={ styles.ui__preloader }><Preloader/></div>
+    if (isAuth && !initialazed) return <div className={ styles.ui__preloader }><Preloader/></div>
 
     return (
         <div className={ styles.ui }>

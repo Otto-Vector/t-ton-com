@@ -18,7 +18,7 @@ export type NewUserRequestType = {
 
 export const authApi = {
     // отправка запроса на данные пользователя
-    getPersonalAuthData() {
+    autoLogin() {
         return instanceBack.post<{ userid?: string, message?: string }>('/api/me/', )
             .then(response => response.data)
     },

@@ -201,16 +201,16 @@ export const sendCodeToPhone = ( {
                 return { innNumber: response.message }
             }
             if (response.success) {
-                dispatch(authStoreActions.setIsAvailableSMSRequest(true))
                 dispatch(authStoreActions.setModalMessage(response.success))
             }
-            return null
         } catch (error) {
-            dispatch(authStoreActions.setIsFetching(false))
-            dispatch(authStoreActions.setIsAvailableSMSRequest(true))
             // @ts-ignore
             return { phoneNumber: error.response.data.message }
         }
+
+        dispatch(authStoreActions.setIsAvailableSMSRequest(true))
+        dispatch(authStoreActions.setIsFetching(false))
+        return null
     }
 
 
@@ -227,25 +227,33 @@ export const loginAuthorization = ( {
 
             if (response.success) {
                 console.log(response.success)
-                dispatch(authStoreActions.setIsAuth(true))
-                // dispatch(authStoreActions.setIsAuth(response.userid))
-                dispatch<any>(appActions.setInitialazed(false))
+                // вносим данные об активном пользователе
+                dispatch(authStoreActions.setAuthId(response.userid || ''))
                 dispatch(authStoreActions.setAuthPhone(phone))
+
+                // ЗАЧИЩАЕМ ФОРМУ АВТОРИЗАЦИИ
                 // зачищаем список КПП
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
                 // чистим форму ввода для следующих авторизаций
                 dispatch(authStoreActions.setInitialValues({ ...initialValues }))
+                // ???
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
-                dispatch(authStoreActions.setIsFetching(false))
+
+                // для случаев с перелогиниванием
+                dispatch<any>(appActions.setInitialazed(false))
+
+                // сама авторизация
+                dispatch(authStoreActions.setIsAuth(true))
             }
-            return null
+
         } catch (error) {
-
             dispatch(authStoreActions.setIsFetching(false))
-
             // @ts-ignore
             return { sms: error.response.data.message }
         }
+
+        dispatch(authStoreActions.setIsFetching(false))
+        return null
     }
 
 // разлогиниваемся
@@ -264,11 +272,11 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
         }
     }
 
-// разлогиниваемся
+// обновляем пароль
 export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunkActionType =>
     async ( dispatch ) => {
+        dispatch(authStoreActions.setIsFetching(true))
         try {
-            dispatch(authStoreActions.setIsFetching(true))
             const response = await authApi.passwordRecovery({ phone })
 
             console.log(response)
@@ -276,17 +284,20 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             if (response.message) dispatch(authStoreActions.setModalMessage(response.message))
 
         } catch (error) {
+            dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
             if (error.response.data.message) dispatch(authStoreActions.setModalMessage(error.response.data.message))
             else alert(error)
         }
+        dispatch(authStoreActions.setIsFetching(false))
     }
 
+// запрос idUser (авторизован или нет)
 export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(authStoreActions.setAuthId(''))
         try {
-            const response = await authApi.getPersonalAuthData()
+            const response = await authApi.autoLogin()
             console.log('ответ от api/me/', response)
             if (response.userid) {
                 dispatch(authStoreActions.setAuthId(response.userid))
@@ -297,7 +308,7 @@ export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
             // @ts-ignore
             if (error.response.data.message) console.log(error.response.data.message)
             else alert(error)
-            dispatch(authStoreActions.setAutologinDone())
         }
+
         dispatch(authStoreActions.setAutologinDone())
     }
