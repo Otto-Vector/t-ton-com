@@ -15,8 +15,6 @@ export type TrailerApiType = {
     trailerImage: string
 }
 
-export type CreateTrailerApiType = Omit<TrailerApiType, 'idTrailer'>
-
 
 export const trailerApi = {
 
@@ -25,28 +23,56 @@ export const trailerApi = {
         return instanceBack.get<TrailerApiType[]>('/api/trailer/')
             .then(response => response.data)
     },
-    // запрос списка всеx ПРИЦЕПОВ созданных данным пользователем
+    // запрос списка всех ПРИЦЕПОВ созданных данным пользователем
     getAllTrailerByUserId( idUser: { idUser: string } ) {
         return instanceBack.patch<TrailerApiType[]>('/api/traileruser/', { ...idUser })
             .then(response => response.data)
     },
-    // запрос на один ПРИЦЕП
-    getOneConsigneeById( { idTrailer }: { idTrailer: string } ) {
+    // запрос на один ПРИЦЕП по id
+    getOneTrailerById( { idTrailer }: { idTrailer: string } ) {
         return instanceBack.patch<InfoResponseType | TrailerApiType[]>('/api/trailer/', { idTrailer })
             .then(response => response.data)
     },
     // создать один ПРИЦЕП
-    createOneConsignee( requestData: CreateTrailerApiType ) {
-        return instanceBack.post<InfoResponseType>('/api/trailer/', { ...requestData })
+    createOneTrailer( { idTrailer, ...requestData }: TrailerApiType, image: File | undefined ) {
+        let formData = new FormData();
+        formData.append('idUser', requestData.idUser);
+        formData.append('trailerNumber', requestData.trailerNumber);
+        formData.append('trailerTrademark', requestData.trailerTrademark);
+        formData.append('trailerModel', requestData.trailerModel);
+        formData.append('pts', requestData.pts);
+        formData.append('dopog', requestData.dopog);
+        formData.append('cargoType', requestData.cargoType);
+        formData.append('propertyRights', requestData.propertyRights);
+        formData.append('cargoWeight', requestData.cargoWeight);
+        if (image) {
+            formData.append('trailerImage', image);
+        }
+        return instanceBack.post<InfoResponseType>('/api/trailer/', formData)
             .then(response => response.data)
     },
     // ИЗМЕНИТЬ один ПРИЦЕП
-    modifyOneConsignee( requestData: TrailerApiType ) {
-        return instanceBack.put<InfoResponseType>('/api/trailer/', { ...requestData })
+    modifyOneTrailer( { trailerImage, ...requestData }: TrailerApiType, image: File | undefined ) {
+        let formData = new FormData();
+        formData.append('idUser', requestData.idUser);
+        formData.append('idTrailer', requestData.idTrailer);
+        formData.append('trailerNumber', requestData.trailerNumber);
+        formData.append('trailerTrademark', requestData.trailerTrademark);
+        formData.append('trailerModel', requestData.trailerModel);
+        formData.append('pts', requestData.pts);
+        formData.append('dopog', requestData.dopog);
+        formData.append('cargoType', requestData.cargoType);
+        formData.append('propertyRights', requestData.propertyRights);
+        formData.append('cargoWeight', requestData.cargoWeight);
+        if (image) {
+            formData.append('trailerImage', image);
+        }
+
+        return instanceBack.put<InfoResponseType>('/api/trailer/', formData)
             .then(response => response.data)
     },
     // УДАЛИТЬ один ПРИЦЕП
-    deleteOneConsignee( { idTrailer }: { idTrailer: string } ) {
+    deleteOneTrailer( { idTrailer }: { idTrailer: string } ) {
         return instanceBack.delete<InfoResponseType>('/api/trailer/', { data: { idTrailer } })
             .then(response => response.data)
     },

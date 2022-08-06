@@ -7,7 +7,6 @@ import {Preloader} from '../../common/preloader/preloader'
 
 import noImage from '../../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
-import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
@@ -16,27 +15,32 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoConstType, propertyRights, TrailerCardType} from '../../../types/form-types'
 import {
     getCurrentIdTrailerStore,
-    getInitialValuesTrailerStore,
+    getInitialValuesTrailerStore, getIsFetchingTrailerStore,
     getLabelTrailerStore,
     getMaskOnTrailerStore,
     getOneTrailerFromLocal,
     getParsersTrailerStore,
     getValidatorsTrailerStore,
 } from '../../../selectors/options/trailer-reselect'
-import {trailerStoreActions} from '../../../redux/options/trailer-store-reducer';
+import {
+    modifyOneTrailerToAPI,
+    newTrailerSaveToAPI, oneTrailerDeleteToAPI,
+    trailerStoreActions,
+} from '../../../redux/options/trailer-store-reducer';
 import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
 import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
+import {AppStateType} from '../../../redux/redux-store';
+import {parseAllNumbers} from '../../../utils/parsers';
 
 
-type OwnProps = {
-    // onSubmit: (requisites: trailerCardType) => void
-}
+type OwnProps = {}
 
 
 export const TrailerForm: React.FC<OwnProps> = () => {
 
     const header = 'Прицеп'
-    const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const isFetching = useSelector(getIsFetchingTrailerStore)
+    const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
 
     const defaultInitialValues = useSelector(getInitialValuesTrailerStore)
     //для проброса загруженных данных в форму
@@ -49,32 +53,46 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
     const currentId = useSelector(getCurrentIdTrailerStore)
     const oneTrailer = useSelector(getOneTrailerFromLocal)
+
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
+    const isNew = currentIdForShow === 'new'
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string | null ) => {
+    const setLightBoxImage = ( image?: string ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
+    // для манипуляции с картинкой
+    const [ selectedImage, setSelectedImage ] = useState<File>();
 
-    const onSubmit = ( values: TrailerCardType ) => {
-        dispatch(trailerStoreActions.changeTrailer(currentId, values)) //сохраняем измененное значение
+    const onSubmit = ( values: TrailerCardType<string> ) => {
+        const demaskedValues = { ...values, cargoWeight: parseAllNumbers(values.cargoWeight) }
+        if (isNew) {
+            //сохраняем НОВОЕ значение
+            dispatch<any>(newTrailerSaveToAPI(demaskedValues, selectedImage))
+        } else {
+            //сохраняем измененное значение
+            dispatch<any>(modifyOneTrailerToAPI(demaskedValues, selectedImage))
+        }
         navigate(options) // и возвращаемся в предыдущее окно
     }
 
     const onCancelClick = () => {
         navigate(options)
     }
-    const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
-        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
+
+    const trailerDeleteHandleClick = () => {
+        dispatch<any>(oneTrailerDeleteToAPI(currentId))
+        navigate(options)
     }
 
-    const trailerDeleteHandleClick = ( currentId: string ) => {
-        dispatch(trailerStoreActions.deleteTrailer(currentId))
-        navigate(options)
+    const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
+        if (event.target.files && event.target.files.length > 0) {
+            setSelectedImage(event.target.files[0]);
+        }
     }
 
     useEffect(() => {
@@ -97,9 +115,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                             initialValues={ initialValues }
                             render={
                                 ( {
-                                      submitError,
+                                      hasValidationErrors,
                                       handleSubmit,
-                                      pristine,
                                       form,
                                       submitting,
                                       values,
@@ -149,7 +166,10 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <FormSelector named={ 'cargoType' }
-                                                              values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }/>
+                                                              placeholder={ label.cargoType }
+                                                              values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }
+                                                              validate={ validators.cargoType }
+                                                />
                                             </div>
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <Field name={ 'cargoWeight' }
@@ -158,19 +178,29 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
                                                        validate={ validators.cargoWeight }
+                                                       disabled={ values.cargoType === 'Тягач' }
                                                 />
                                             </div>
                                             <FormSelector named={ 'propertyRights' }
-                                                          values={ stringArrayToSelectValue(propertyRights.map(x => x)) }/>
+                                                          placeholder={ label.propertyRights }
+                                                          values={ stringArrayToSelectValue(propertyRights.map(x => x)) }
+                                                          validate={ validators.propertyRights }
+                                            />
                                         </div>
                                         <div>
                                             <div className={ styles.transportTrailerForm__photoWrapper }
-                                                 title={ 'Добавить/изменить фото' }
+                                                 title={ 'Добавить/изменить фото транспорта' }
                                             >
-                                                <img src={ initialValues.trailerImage || noImage }
-                                                     alt="uploadedPhoto"
+                                                <img className={ styles.transportTrailerForm__photo }
+                                                     src={ ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                         || ( values.trailerImage && currentURL + values.trailerImage )
+                                                         || noImage }
+                                                     alt="trailerPhoto"
                                                      onClick={ () => {
-                                                         setLightBoxImage(values.trailerImage)
+                                                         setLightBoxImage(
+                                                             ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                             || ( values.trailerImage && currentURL + values.trailerImage )
+                                                             || noImage)
                                                      } }
                                                 />
                                                 <AttachImageButton onChange={ sendPhotoFile }/>
@@ -179,18 +209,16 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'button' }
-                                                            disabled={ submitting }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ () => {
-                                                                trailerDeleteHandleClick(currentId)
-                                                            } }
+                                                            onClick={ trailerDeleteHandleClick }
+                                                            disabled={ isNew }
                                                             rounded
                                                     />
                                                 </div>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting }
+                                                            disabled={ submitting || hasValidationErrors }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

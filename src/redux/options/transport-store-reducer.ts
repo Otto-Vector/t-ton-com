@@ -12,7 +12,7 @@ import {transportApi} from '../../api/options/transport.api';
 
 
 const initialState = {
-    transportIsFetchig: false,
+    transportIsFetching: false,
     currentId: '',
     label: {
         transportNumber: 'Гос. номер авто',
@@ -92,7 +92,7 @@ export const transportStoreReducer = ( state = initialState, action: ActionsType
                 currentId: action.currentId,
             }
         }
-        case 'transport-store-reducer/SET-TRANSPORTS-CONTENT': {
+        case 'transport-store-reducer/SET-CONTENT': {
             return {
                 ...state,
                 content: [
@@ -103,24 +103,7 @@ export const transportStoreReducer = ( state = initialState, action: ActionsType
         case 'transport-store-reducer/SET-IS-FETCHING': {
             return {
                 ...state,
-                transportIsFetchig: action.transportIsFetchig,
-            }
-        }
-        case 'transport-store-reducer/CHANGE-TRANSPORT': {
-            return {
-                ...state,
-                content: [
-                    ...state.content
-                        .map(( val ) => ( val.idTransport !== action.idTransport ) ? val : action.transport),
-                ],
-            }
-        }
-        case 'transport-store-reducer/DELETE-TRANSPORT': {
-            return {
-                ...state,
-                content: [
-                    ...state.content.filter(( { idTransport } ) => idTransport !== action.idTransport),
-                ],
+                transportIsFetching: action.transportIsFetching,
             }
         }
         default: {
@@ -134,26 +117,16 @@ export const transportStoreReducer = ( state = initialState, action: ActionsType
 export const transportStoreActions = {
 
     setTransportContent: ( transport: TransportCardType[] ) => ( {
-        type: 'transport-store-reducer/SET-TRANSPORTS-CONTENT',
+        type: 'transport-store-reducer/SET-CONTENT',
         transport,
     } as const ),
     setCurrentId: ( currentId: string ) => ( {
         type: 'transport-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
-
-    changeTransport: ( idTransport: string, transport: TransportCardType ) => ( {
-        type: 'transport-store-reducer/CHANGE-TRANSPORT',
-        idTransport,
-        transport,
-    } as const ),
-    deleteTransport: ( idTransport: string ) => ( {
-        type: 'transport-store-reducer/DELETE-TRANSPORT',
-        idTransport,
-    } as const ),
-    toggleTransportIsFetching: ( transportIsFetchig: boolean ) => ( {
+    toggleTransportIsFetching: ( transportIsFetching: boolean ) => ( {
         type: 'transport-store-reducer/SET-IS-FETCHING',
-        transportIsFetchig,
+        transportIsFetching,
     } as const ),
 }
 
@@ -167,7 +140,7 @@ export const getAllTransportAPI = (): TransportStoreReducerThunkActionType =>
         dispatch(transportStoreActions.toggleTransportIsFetching(true))
         try {
             const idUser = getState().authStoreReducer.authID
-            // const response = initialTransportValues
+
             const response = await transportApi.getAllTransportByUserId({ idUser })
             dispatch(transportStoreActions.setTransportContent(response.map(( { idUser, ...values } ) => values)))
 
@@ -184,7 +157,7 @@ export const newTransportSaveToAPI = ( values: TransportCardType<string>, image:
 
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await transportApi.createOneTranstport({ idUser, ...values, cargoWeight: values.cargoWeight || '0' }, image)
+            const response = await transportApi.createOneTransport({ idUser, ...values, cargoWeight: values.cargoWeight || '0' }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
@@ -193,13 +166,13 @@ export const newTransportSaveToAPI = ( values: TransportCardType<string>, image:
         await dispatch(getAllTransportAPI())
     }
 
-// изменить одну запись ГРУЗОполучателя через АПИ
+// изменить одну запись ТРАНСПОРТА через АПИ
 export const modifyOneTransportToAPI = ( values: TransportCardType<string>, image: File | undefined ): TransportStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await transportApi.modifyOneTranstport({
+            const response = await transportApi.modifyOneTransport({
                 ...values,
                 idUser,
                 cargoWeight: values.cargoWeight || '0',
@@ -216,7 +189,7 @@ export const modifyOneTransportToAPI = ( values: TransportCardType<string>, imag
 export const oneTransportDeleteToAPI = ( idTransport: string ): TransportStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await transportApi.deleteOneTranstport({ idTransport })
+            const response = await transportApi.deleteOneTransport({ idTransport })
             if (response.message) console.log(response.message)
         } catch (e) {
             // @ts-ignore

@@ -2,13 +2,13 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, TrailerCardType, ValidateType} from '../../types/form-types'
 import {composeValidators, maxLength, maxRangeNumber, required} from '../../utils/validators'
-import {initialTrailerValues} from '../../initials-test-data';
 import {
     composeParsers,
     parseNoFirstSpaces,
     parseOnlyOneSpace,
     parsePseudoLatinCharsAndNumbers,
 } from '../../utils/parsers';
+import {trailerApi} from '../../api/options/trailer.api';
 
 
 const initialState = {
@@ -16,9 +16,9 @@ const initialState = {
     currentId: '',
 
     label: {
-        trailerNumber: 'Гос. номер авто',
-        trailerTrademark: 'Марка авто',
-        trailerModel: 'Модель авто',
+        trailerNumber: 'Гос. номер прицепа',
+        trailerTrademark: 'Марка прицепа',
+        trailerModel: 'Модель прицепа',
         pts: 'ПТС',
         dopog: 'ДОПОГ',
         cargoType: 'Тип груза',
@@ -58,7 +58,7 @@ const initialState = {
         pts: composeValidators(required),
         dopog: composeValidators(required),
         cargoType: composeValidators(required),
-        cargoWeight: composeValidators(required, maxRangeNumber(50)),
+        cargoWeight: composeValidators(maxRangeNumber(50)),
         propertyRights: composeValidators(required),
         trailerImage: undefined,
     } as TrailerCardType<ValidateType>,
@@ -84,6 +84,7 @@ type ActionsType = GetActionsTypes<typeof trailerStoreActions>
 
 export const trailerStoreReducer = ( state = initialState, action: ActionsType ): TrailerStoreReducerStateType => {
 
+
     switch (action.type) {
 
         case 'trailer-store-reducer/SET-CURRENT-ID': {
@@ -92,7 +93,7 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
                 currentId: action.currentId,
             }
         }
-        case 'trailer-store-reducer/SET-TRANSPORTS-CONTENT': {
+        case 'trailer-store-reducer/SET-CONTENT': {
             return {
                 ...state,
                 content: [
@@ -100,26 +101,10 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
                 ],
             }
         }
-        case 'trailer-store-reducer/SET-IS-FETCHING':
+        case 'trailer-store-reducer/SET-IS-FETCHING': {
             return {
                 ...state,
-                trailerIsFetching: action.trailerIsFetchig,
-            }
-        case 'trailer-store-reducer/CHANGE-TRANSPORT': {
-            return {
-                ...state,
-                content: [
-                    ...state.content
-                        .map(( val ) => ( val.idTrailer !== action.idTrailer ) ? val : action.trailer),
-                ],
-            }
-        }
-        case 'trailer-store-reducer/DELETE-TRANSPORT': {
-            return {
-                ...state,
-                content: [
-                    ...state.content.filter(( { idTrailer } ) => idTrailer !== action.idTrailer),
-                ],
+                trailerIsFetching: action.trailerIsFetching
             }
         }
         default: {
@@ -131,27 +116,18 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
 
 /* ЭКШОНЫ */
 export const trailerStoreActions = {
+
     setTrailerContent: ( trailer: TrailerCardType[] ) => ( {
-        type: 'trailer-store-reducer/SET-TRANSPORTS-CONTENT',
+        type: 'trailer-store-reducer/SET-CONTENT',
         trailer,
     } as const ),
     setCurrentId: ( currentId: string ) => ( {
         type: 'trailer-store-reducer/SET-CURRENT-ID',
         currentId,
     } as const ),
-
-    changeTrailer: ( idTrailer: string, trailer: TrailerCardType ) => ( {
-        type: 'trailer-store-reducer/CHANGE-TRANSPORT',
-        idTrailer,
-        trailer,
-    } as const ),
-    deleteTrailer: ( idTrailer: string ) => ( {
-        type: 'trailer-store-reducer/DELETE-TRANSPORT',
-        idTrailer,
-    } as const ),
-    toggleTrailerIsFetching: ( trailerIsFetchig: boolean ) => ( {
+    toggleTrailerIsFetching: ( trailerIsFetching: boolean ) => ( {
         type: 'trailer-store-reducer/SET-IS-FETCHING',
-        trailerIsFetchig,
+        trailerIsFetching,
     } as const ),
 }
 
@@ -159,15 +135,66 @@ export const trailerStoreActions = {
 
 export type TrailerStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-
-export const getAllTrailerAPI = ( { innID }: { innID: number } ): TrailerStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+// запрос всего транспорта пользователя от сервера
+export const getAllTrailerAPI = (): TrailerStoreReducerThunkActionType =>
+    async ( dispatch,getState ) => {
         dispatch(trailerStoreActions.toggleTrailerIsFetching(true))
         try {
-            const response = initialTrailerValues
-            dispatch(trailerStoreActions.setTrailerContent(response))
+            const idUser = getState().authStoreReducer.authID
+
+            const response = await trailerApi.getAllTrailerByUserId({ idUser })
+            dispatch(trailerStoreActions.setTrailerContent(response.map(( { idUser, ...values } ) => values)))
+
+            if (!response.length) console.log('Пока ни одного ПРИЦЕПА')
         } catch (e) {
             alert(e)
         }
         dispatch(trailerStoreActions.toggleTrailerIsFetching(false))
+    }
+
+// добавить одну запись ТРАНСПОРТА через АПИ
+export const newTrailerSaveToAPI = ( values: TrailerCardType<string>, image: File | undefined ): TrailerStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+        try {
+            const idUser = getState().authStoreReducer.authID
+            const response = await trailerApi.createOneTrailer({ idUser, ...values, cargoWeight: values.cargoWeight || '0' }, image)
+            if (response.success) console.log(response.success)
+        } catch (e) {
+            // @ts-ignore
+            alert(e.response.data.failed)
+        }
+        await dispatch(getAllTrailerAPI())
+    }
+
+// изменить одну запись ПРИЦЕПА через АПИ
+export const modifyOneTrailerToAPI = ( values: TrailerCardType<string>, image: File | undefined ): TrailerStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+        try {
+            const idUser = getState().authStoreReducer.authID
+            const response = await trailerApi.modifyOneTrailer({
+                ...values,
+                idUser,
+                cargoWeight: values.cargoWeight || '0',
+            }, image)
+            if (response.success) console.log(response.success)
+        } catch (e) {
+            // @ts-ignore
+            alert(JSON.stringify(e.response.data))
+        }
+        await dispatch(getAllTrailerAPI())
+    }
+
+// удаляем один ПРИЦЕП
+export const oneTrailerDeleteToAPI = ( idTrailer: string ): TrailerStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await trailerApi.deleteOneTrailer({ idTrailer })
+            if (response.message) console.log(response.message)
+        } catch (e) {
+            // @ts-ignore
+            alert(JSON.stringify(e.response.data))
+        }
+        await dispatch(getAllTrailerAPI())
     }

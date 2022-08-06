@@ -12,7 +12,7 @@ export const getValidatorsTransportStore: TransportStoreSelectors<'validators'> 
 export const getParsersTransportStore: TransportStoreSelectors<'parsers'> = ( state ) => state.transportStoreReducer.parsers
 
 export const getInitialValuesTransportStore: TransportStoreSelectors<'initialValues'> = ( state ) => state.transportStoreReducer.initialValues
-export const getIsFetchingTransportStore: TransportStoreSelectors<'transportIsFetchig'> = ( state ) => state.transportStoreReducer.transportIsFetchig
+export const getIsFetchingTransportStore: TransportStoreSelectors<'transportIsFetching'> = ( state ) => state.transportStoreReducer.transportIsFetching
 export const getAllTransportStore: TransportStoreSelectors<'content'> = ( state ) => state.transportStoreReducer.content
 export const getCurrentIdTransportStore: TransportStoreSelectors<'currentId'> = ( state ) => state.transportStoreReducer.currentId
 

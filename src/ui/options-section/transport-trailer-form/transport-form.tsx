@@ -4,10 +4,8 @@ import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
-
 import noImage from '../../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
-import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
@@ -16,7 +14,7 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoConstType, propertyRights, TransportCardType} from '../../../types/form-types'
 import {
     getCurrentIdTransportStore,
-    getInitialValuesTransportStore,
+    getInitialValuesTransportStore, getIsFetchingTransportStore,
     getLabelTransportStore,
     getMaskOnTransportStore,
     getOneTransportFromLocal,
@@ -36,16 +34,14 @@ import {parseAllNumbers} from '../../../utils/parsers';
 import {AppStateType} from '../../../redux/redux-store';
 
 
-type OwnProps = {
-    // onSubmit: (requisites: transportCardType) => void
-}
+type OwnProps = {}
 
 
 export const TransportForm: React.FC<OwnProps> = () => {
 
-    const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
     const header = 'Транспорт'
-    const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const isFetching = useSelector(getIsFetchingTransportStore)
+    const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
 
     const defaultInitialValues = useSelector(getInitialValuesTransportStore)
     //для проброса загруженных данных в форму
@@ -67,14 +63,11 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string | null ) => {
-        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
+    const setLightBoxImage = ( image?: string ) => {
+        dispatch(lightBoxStoreActions.setLightBoxImage(image||''))
     }
-
+    // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
-
-    // изменить размер картинки
-    // https://javascript.plainenglish.io/compression-images-before-upload-in-a-react-app-with-react-image-file-resizer-c1870c9bcf47
 
     const onSubmit = ( values: TransportCardType<string> ) => {
         const demaskedValues = { ...values, cargoWeight: parseAllNumbers(values.cargoWeight) }
@@ -98,7 +91,6 @@ export const TransportForm: React.FC<OwnProps> = () => {
     }
 
     const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
-        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
         if (event.target.files && event.target.files.length > 0) {
             setSelectedImage(event.target.files[0]);
         }
@@ -124,10 +116,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
                             initialValues={ initialValues }
                             render={
                                 ( {
-                                      submitError,
                                       hasValidationErrors,
                                       handleSubmit,
-                                      pristine,
                                       form,
                                       submitting,
                                       values,

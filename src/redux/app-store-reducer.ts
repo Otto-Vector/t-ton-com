@@ -19,22 +19,18 @@ type ActionsType = GetActionsTypes<typeof appActions>
 
 export const appStoreReducer = ( state = initialState,
                                  action: ActionsType ): AppReducerStateType => {
-
     switch (action.type) {
-
         case 'app-reducer/SET-INITIALIZED' : {
             return {
                 ...state,
                 initialazed: action.initialazed,
             }
         }
-
         default : {
             // возвращаем вообще без изменений
             return state
         }
     }
-
 }
 
 
@@ -59,10 +55,10 @@ export const initializedAll = (): InitializedThunkActionType =>
         const getGeoPosition = dispatch(geoPositionTake())
         const getAllShippers = dispatch(getAllShippersAPI())
         const getAllConsignees = dispatch(getAllConsigneesAPI())
-        const getAllRequests = dispatch(getAllRequestsAPI({ innID: 0 }))
         const getAllTransport = dispatch(getAllTransportAPI())
-        const getAllTrailer = dispatch(getAllTrailerAPI({ innID: 0 }))
+        const getAllTrailer = dispatch(getAllTrailerAPI())
         const getAllEmployees = dispatch(getAllEmployeesAPI({ innID: 0 }))
+        const getAllRequests = dispatch(getAllRequestsAPI({ innID: 0 }))
 
 
         const getAllInfoMessages = dispatch(getInfoMessages({ authID: 0 }))
