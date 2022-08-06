@@ -18,4 +18,5 @@ export type InfoResponseType = {
     failed?: string
     status?: string
     userid?: string
+    password?: string
 }

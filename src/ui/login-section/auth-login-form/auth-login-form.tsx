@@ -106,6 +106,8 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     }
 
     const newCode = ( phone: string ) => {
+        // сразу блокируем повторное нажание на минуту
+        dispatch<any>(fakeAuthFetching())
         dispatch<any>(newPassword({ phone }))
     }
 
@@ -156,14 +158,14 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                component={ FormInputType }
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
-                                               validate = {innPlusApiValidator(values.innNumber || '')}
+                                               validate={ innPlusApiValidator(values.innNumber || '') }
                                                disabled={ isAvailableSMS }
                                         />
                                         <FormSelector named={ 'kppNumber' }
                                                       placeholder={ label.kppNumber }
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }
-                                                      disabled={ isAvailableSMS || kppSelect.length < 1}
+                                                      disabled={ isAvailableSMS || kppSelect.length < 1 }
                                                       errorTop
                                                       isClearable
                                         />
@@ -190,7 +192,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                         <Button type={ 'button' }
                                                 title={ 'Новый запрос на пароль из SMS' }
                                                 colorMode={ 'gray' }
-                                                disabled={ !form.getFieldState('phoneNumber')?.valid }
+                                                disabled={ !form.getFieldState('phoneNumber')?.valid || isFetching }
                                                 onClick={ () => {
                                                     newCode(values.phoneNumber as string)
                                                 } }
@@ -208,7 +210,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                             </div>
                             <div className={ styles.loginForm__buttonsPanel }>
                                 <Button type={ 'submit' }
-                                        disabled={ submitting || hasValidationErrors }
+                                        disabled={ submitting || hasValidationErrors || isFetching }
                                         colorMode={ 'green' }
                                         title={ 'Далее' }
                                         rounded

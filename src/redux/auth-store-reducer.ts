@@ -164,6 +164,7 @@ export const authStoreActions = {
 export type AuthStoreReducerThunkActionType<R = void> =
     ThunkAction<Promise<R>, AppStateType, unknown, AuthStoreActionsType | DaDataStoreActionsType>
 
+// для блокировки нажатия НОВЫЙ ПАРОЛЬ на одну минуту
 export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(authStoreActions.setIsFetching(true))
@@ -172,7 +173,7 @@ export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
         }, 1000)
     }
 
-// прописываем актуальную геопозицию в стэйт
+    // прописываем актуальную геопозицию в стэйт
 export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
     async ( dispatch ) => {
         const reparserLonLat: PositionCallback = ( el ) =>
@@ -201,7 +202,7 @@ export const sendCodeToPhone = ( {
                 return { innNumber: response.message }
             }
             if (response.success) {
-                dispatch(authStoreActions.setModalMessage(response.success))
+                dispatch(authStoreActions.setModalMessage(response.success + 'ПАРОЛЬ: ' + response.password))
             }
         } catch (error) {
             // @ts-ignore
@@ -236,7 +237,7 @@ export const loginAuthorization = ( {
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
                 // чистим форму ввода для следующих авторизаций
                 dispatch(authStoreActions.setInitialValues({ ...initialValues }))
-                // ???
+                // надо для двойно логики рег/авт
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
 
                 // для случаев с перелогиниванием
@@ -280,7 +281,7 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             const response = await authApi.passwordRecovery({ phone })
 
             console.log(response)
-            if (response.success) dispatch(authStoreActions.setModalMessage(response.success))
+            if (response.success) dispatch(authStoreActions.setModalMessage(response.success+ '\n ПАРОЛЬ: ' + response.password))
             if (response.message) dispatch(authStoreActions.setModalMessage(response.message))
 
         } catch (error) {
