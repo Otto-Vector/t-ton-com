@@ -44,6 +44,7 @@ export const transportApi = {
     modifyOneTranstport( { transportImage, ...requestData }: TransportApiType, image: File | undefined ) {
         let formData = new FormData();
         formData.append('idUser', requestData.idUser);
+        formData.append('idTransport', requestData.idTransport);
         formData.append('transportNumber', requestData.transportNumber);
         formData.append('transportTrademark', requestData.transportTrademark);
         formData.append('transportModel', requestData.transportModel);
@@ -56,13 +57,7 @@ export const transportApi = {
             formData.append('transportImage', image);
         }
 
-        // debugger
-        // formData.append("image", fs.createReadStream(URL.createObjectURL(image)));
-        // console.log('form:', formData.get('transportImage'))
-        // console.log('file:', image)
-        return instanceBack.put<InfoResponseType>('/api/transport/', formData
-            // { ...requestData, formData }
-        )
+        return instanceBack.put<InfoResponseType>('/api/transport/', formData )
             .then(response => response.data)
     },
     // УДАЛИТЬ один ТРАНСПОРТ

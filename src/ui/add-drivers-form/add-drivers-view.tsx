@@ -1,6 +1,6 @@
 import React, {useEffect, useLayoutEffect} from 'react'
 import styles from './add-drivers-form.module.scss'
-import noImagePhoto from '../../media/noImagePhoto2.png'
+import noImage from '../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {
     getIsFetchingRequisitesStore,
@@ -152,21 +152,21 @@ export const AddDriversView: React.FC<OwnProps> = () => {
                 <div className={ styles.addDriversForm__photoPanel }>
                     <div className={ styles.addDriversForm__photo }>
                         <img
-                            src={ employeeOneImage || noImagePhoto }
+                            src={ employeeOneImage || noImage }
                             alt="driverPhoto"
                             onClick={ () => setLightBoxImage(employeeOneImage) }
                         />
                     </div>
                     <div className={ styles.addDriversForm__photo }>
                         <img
-                            src={ transportOneImage || noImagePhoto }
+                            src={ transportOneImage || noImage }
                             alt="driverTransportPhoto"
                             onClick={ () => setLightBoxImage(transportOneImage) }
                         />
                     </div>
                     <div className={ styles.addDriversForm__photo }>
                         <img
-                            src={ trailerOneImage || noImagePhoto }
+                            src={ trailerOneImage || noImage }
                             alt="driverTrailerPhoto"
                             onClick={ () => setLightBoxImage(trailerOneImage) }
                         />

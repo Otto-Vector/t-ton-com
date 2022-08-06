@@ -14,7 +14,7 @@ export const FormSpySimple: React.VFC<Props> = ( { onChange, form } ) => {
     const { values, valid } = form.getState()
     useEffect(() => {
         onChange({ values, valid })
-    }, [ values, valid ])
+    }, [ values, valid, onChange ])
 
     return null
 }
@@ -24,7 +24,7 @@ export const FormSpySimpleRequest: React.VFC<Props<OneRequestType>> = ( { onChan
     const { values, valid } = form.getState()
     useEffect(() => {
         onChange({ values, valid })
-    }, [ values, valid ])
+    }, [ values, valid, onChange ])
 
     return null
 }
@@ -33,7 +33,7 @@ export const FormSpySimpleConsignee: React.VFC<Props<ConsigneesCardType>> = ( { 
     const { values, valid } = form.getState()
     useEffect(() => {
         onChange({ values, valid })
-    }, [ values, valid ])
+    }, [ values, valid, onChange ])
 
     return null
 }
@@ -42,7 +42,7 @@ export const FormSpySimpleShippers: React.VFC<Props<ShippersCardType>> = ( { onC
     const { values, valid } = form.getState()
     useEffect(() => {
         onChange({ values, valid })
-    }, [ values, valid ])
+    }, [ values, valid, onChange ])
 
     return null
 }

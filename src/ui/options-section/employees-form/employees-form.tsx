@@ -5,7 +5,7 @@ import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
-import noImagePhoto from '../../../media/noImagePhoto2.png'
+import noImage from '../../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -188,7 +188,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                             <div className={ styles.employeesForm__photo }
                                                  title={ 'Добавить/изменить фото' }>
-                                                <img src={ initialValues.photoFace || noImagePhoto }
+                                                <img src={ initialValues.photoFace || noImage }
                                                      alt="facePhoto"
                                                      onClick={ () => {
                                                          setLightBoxImage(values.photoFace)

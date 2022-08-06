@@ -3,7 +3,7 @@ import {AppStateType, GetActionsTypes} from './redux-store'
 
 
 const initialState = {
-
+    serverURL: 'https://server.t-ton.com/',
     header: {
         companyName: 'Транспортно-Логистическая Компания',
         baseHref: 'http://t-ton.com',

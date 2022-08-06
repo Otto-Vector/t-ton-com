@@ -249,12 +249,11 @@ export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDa
     async ( dispatch, getState ) => {
 
         const response = await getOrganizationByInnKPPDaDataAPI({ inn, kpp })
-        console.log('innKPPdaDataResp: ', response)
+        const idUser = getState().authStoreReducer.authID
         if (response.length > 0) {
             const { data } = response[0]
             const setPersonal = await requisitesApi.setPersonalData({
-                // idUser: 'e041ccb0-7848-4064-981d-f861897a8fdd',
-                idUser: getState().authStoreReducer.authID,
+                idUser,
                 innNumber: data.inn,
                 organizationName: response[0].value,
                 taxMode: data.finance?.tax_system || undefined,
@@ -263,7 +262,7 @@ export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDa
                 okpo: data.okpo,
                 legalAddress: data.address.value,
                 postAddress: data.address.value,
-                email: data.emails && data.emails[0]?.value || undefined,
+                email: data.emails && data.emails[0]?.value,
             } as PersonalResponseType)
             console.log('setPersonal: ', setPersonal)
 

@@ -5,7 +5,7 @@ import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
-import noImageTransport from '../../../media/noImageTransport.png'
+import noImage from '../../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -33,6 +33,7 @@ import {
 import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
 import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
 import {parseAllNumbers} from '../../../utils/parsers';
+import {AppStateType} from '../../../redux/redux-store';
 
 
 type OwnProps = {
@@ -42,6 +43,7 @@ type OwnProps = {
 
 export const TransportForm: React.FC<OwnProps> = () => {
 
+    const currentURL = useSelector((state: AppStateType)=> state.baseStoreReducer.serverURL)
     const header = 'Транспорт'
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
@@ -70,14 +72,6 @@ export const TransportForm: React.FC<OwnProps> = () => {
     }
 
     const [ selectedImage, setSelectedImage ] = useState<File>();
-    // // https://www.kindacode.com/article/react-show-image-preview-before-uploading/
-    // // This function will be triggered when the file field change
-    // const imageChange = (e) => {
-    //   if (e.target.files && e.target.files.length > 0) {
-    //     setSelectedImage(e.target.files[0]);
-    //   }
-    // };
-
 
     // изменить размер картинки
     // https://javascript.plainenglish.io/compression-images-before-upload-in-a-react-app-with-react-image-file-resizer-c1870c9bcf47
@@ -209,14 +203,14 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             >
                                                 <img className={ styles.transportTrailerForm__photo }
                                                      src={ ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                         || (values.transportImage && 'https://server.t-ton.com/'+values.transportImage)
-                                                         || noImageTransport }
+                                                         || (values.transportImage && currentURL+values.transportImage)
+                                                         || noImage }
                                                      alt="transportPhoto"
                                                      onClick={ () => {
                                                          setLightBoxImage(
                                                              ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                             || (values.transportImage && 'https://server.t-ton.com/'+values.transportImage)
-                                                             || noImageTransport)
+                                                             || (values.transportImage && currentURL+values.transportImage)
+                                                             || noImage)
                                                      } }
                                                 />
                                                 <AttachImageButton onChange={ sendPhotoFile }/>
@@ -242,7 +236,6 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
                                     </form>
                                 )
                             }/>

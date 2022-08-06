@@ -2,7 +2,7 @@ import React from 'react'
 import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 
-import noImagePhoto from '../../../media/noImagePhoto2.png'
+import noImage from '../../../media/logo192.png'
 import {getImageLightboxStore, getIsLightBoxOpenLightboxStore} from '../../../selectors/lightbox-reselect'
 import {useDispatch, useSelector} from 'react-redux'
 import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer'
@@ -23,7 +23,7 @@ export const LightBoxComponent: React.FC<LightboxType> = () => {
 
             { isLightBoxOpen ? (
                     <Lightbox
-                        mainSrc={ image || noImagePhoto }
+                        mainSrc={ image || noImage }
                         onCloseRequest={ closeLigthBox }
                     /> )
                 : null

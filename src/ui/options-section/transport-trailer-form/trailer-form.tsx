@@ -5,7 +5,7 @@ import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
-import noImageTrailer from '../../../media/noImageTrailer.png'
+import noImage from '../../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -167,7 +167,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__photoWrapper }
                                                  title={ 'Добавить/изменить фото' }
                                             >
-                                                <img src={ initialValues.trailerImage || noImageTrailer }
+                                                <img src={ initialValues.trailerImage || noImage }
                                                      alt="uploadedPhoto"
                                                      onClick={ () => {
                                                          setLightBoxImage(values.trailerImage)

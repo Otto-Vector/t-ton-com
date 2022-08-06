@@ -3,7 +3,7 @@ import styles from './add-drivers-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../common/button/button'
 import {Preloader} from '../common/preloader/preloader'
-import noImagePhoto from '../../media/noImagePhoto2.png'
+import noImage from '../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {
     getIsFetchingRequisitesStore,
@@ -203,7 +203,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                     src={
                                                         values.driverFIO
                                                             ? employeeOneImage + ''
-                                                            : noImagePhoto
+                                                            : noImage
                                                     }
                                                     alt="driverPhoto"
                                                     onClick={ () => setLightBoxImage(employeeOneImage) }
@@ -214,7 +214,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                     src={
                                                         values.driverTransport
                                                             ? transportOneImage + ''
-                                                            : noImagePhoto
+                                                            : noImage
                                                     }
                                                     alt="driverTransportPhoto"
                                                     onClick={ () => setLightBoxImage(transportOneImage) }
@@ -225,7 +225,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                     src={
                                                         values.driverTrailer
                                                             ? trailerOneImage + ''
-                                                            : noImagePhoto
+                                                            : noImage
                                                     }
                                                     alt="driverTrailerPhoto"
                                                     onClick={ () => setLightBoxImage(trailerOneImage) }
