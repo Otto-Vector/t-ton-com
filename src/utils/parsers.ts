@@ -40,8 +40,11 @@ export const parseNoFirstSpaces = ( val: parsePropType ): string => val ? val
 
 // только псевдолатинские русские буквы
 export const parsePseudoLatinCharsAndNumbers = ( val: parsePropType ): string => val ? val
-    .replace(/[^АВЕКМНОРСТУХ\s\d]/, '') : ''
+    .replace(/[^АВЕКМНОРСТУХавекмнорстух\s\d]/, '') : ''
 // export const parseTransportNumber = (val: string|null): string => val ? val.replace(/^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/ui,'') : ''
+
+// преобразовывает в заглавные буквы
+export const parseToUpperCase = ( val: parsePropType ): string => val ? val.toUpperCase() : ''
 
 // Фамилия Имя Отчество в Фамилия И.О.
 export const parseFamilyToFIO = ( val: parsePropType ): string => val ? val

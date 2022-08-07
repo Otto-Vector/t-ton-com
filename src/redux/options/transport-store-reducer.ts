@@ -6,7 +6,7 @@ import {
     composeParsers,
     parseNoFirstSpaces,
     parseOnlyOneSpace,
-    parsePseudoLatinCharsAndNumbers,
+    parsePseudoLatinCharsAndNumbers, parseToUpperCase,
 } from '../../utils/parsers';
 import {transportApi} from '../../api/options/transport.api';
 
@@ -63,10 +63,10 @@ const initialState = {
     } as TransportCardType<ValidateType>,
 
     parsers: {
-        transportNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces),
+        transportNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
         transportTrademark: undefined,
         transportModel: undefined,
-        pts: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces),
+        pts: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
         dopog: undefined,
         cargoType: undefined,
         cargoWeight: undefined,

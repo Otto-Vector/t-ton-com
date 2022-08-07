@@ -6,7 +6,7 @@ import {
     composeParsers,
     parseNoFirstSpaces,
     parseOnlyOneSpace,
-    parsePseudoLatinCharsAndNumbers,
+    parsePseudoLatinCharsAndNumbers, parseToUpperCase,
 } from '../../utils/parsers';
 import {trailerApi} from '../../api/options/trailer.api';
 
@@ -64,10 +64,10 @@ const initialState = {
     } as TrailerCardType<ValidateType>,
 
     parsers: {
-        trailerNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces),
+        trailerNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
         trailerTrademark: undefined,
         trailerModel: undefined,
-        pts: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces),
+        pts: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
         dopog: undefined,
         cargoType: undefined,
         cargoWeight: undefined,
