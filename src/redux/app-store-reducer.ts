@@ -1,5 +1,5 @@
 import {ThunkAction} from 'redux-thunk';
-import {ActionsAnyType, AppStateType, GetActionsTypes} from './redux-store';
+import {AppStateType, GetActionsTypes} from './redux-store';
 import {getPersonalReqisites} from './options/requisites-store-reducer';
 import {getAllEmployeesAPI} from './options/employees-store-reducer';
 import {getAllConsigneesAPI} from './options/consignees-store-reducer';

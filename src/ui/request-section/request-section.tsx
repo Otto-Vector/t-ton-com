@@ -35,6 +35,7 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
     const tabModesInitial = { left: false, center: false, right: false }
 
     const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
+    const [ isFirstRender, setIsFirstRender ] = useState(true)
 
     const defaultInitialValues = useSelector(getDefaultInitialValuesRequestStore)
     const isNewRequest = useSelector(getIsNewRequestRequestStore)
@@ -84,15 +85,19 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
 
         setTabModes({ ...tabModesInitial, left: true })
 
-        if (isNewRequest) //обнуляем данные маршрута
+        if (isNewRequest) {//обнуляем данные маршрута
             dispatch(requestStoreActions.setCurrentRoute(null))
-
-    }, [ navigate ])
+            dispatch(requestStoreActions.setIsNewRequest(false))
+        }
+    }, [ ])
 
     useEffect(() => {
-        dispatch(requestStoreActions.setRequestNumber(+( reqNumber || 0 ) || undefined))
+        if (isFirstRender) {
+            dispatch(requestStoreActions.setRequestNumber(+( reqNumber || 0 ) || undefined))
+            setIsFirstRender(false)
+        }
 
-    }, [])
+    }, [ isFirstRender, dispatch, reqNumber, setIsFirstRender ])
 
 
     if (!oneRequest && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>

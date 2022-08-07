@@ -14,7 +14,8 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoConstType, propertyRights, TransportCardType} from '../../../types/form-types'
 import {
     getCurrentIdTransportStore,
-    getInitialValuesTransportStore, getIsFetchingTransportStore,
+    getInitialValuesTransportStore,
+    getIsFetchingTransportStore,
     getLabelTransportStore,
     getMaskOnTransportStore,
     getOneTransportFromLocal,
@@ -32,7 +33,7 @@ import {AttachImageButton} from '../../common/attach-image-button/attach-image-b
 import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
 import {parseAllNumbers} from '../../../utils/parsers';
 import {AppStateType} from '../../../redux/redux-store';
-
+import imageCompression from 'browser-image-compression'
 
 type OwnProps = {}
 
@@ -64,7 +65,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     const setLightBoxImage = ( image?: string ) => {
-        dispatch(lightBoxStoreActions.setLightBoxImage(image||''))
+        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
@@ -90,9 +91,21 @@ export const TransportForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
+    const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
         if (event.target.files && event.target.files.length > 0) {
-            setSelectedImage(event.target.files[0]);
+            const imageFile = event.target.files[0];
+            const options = {
+                maxSizeMB: 0.9,
+                maxWidthOrHeight: 1024,
+                useWebWorker: true,
+                fileType: 'image/jpeg',
+            }
+            try { // компресим файл и отправляем
+                const compressedFile = await imageCompression(imageFile, options);
+                setSelectedImage(compressedFile);
+            } catch (error) {
+                alert(error)
+            }
         }
     }
 

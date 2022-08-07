@@ -46,7 +46,7 @@ export const trailerApi = {
         formData.append('propertyRights', requestData.propertyRights);
         formData.append('cargoWeight', requestData.cargoWeight);
         if (image) {
-            formData.append('trailerImage', image);
+            formData.append('trailerImage', image, 'trailerImage.jpg');
         }
         return instanceBack.post<InfoResponseType>('/api/trailer/', formData)
             .then(response => response.data)
@@ -65,9 +65,11 @@ export const trailerApi = {
         formData.append('propertyRights', requestData.propertyRights);
         formData.append('cargoWeight', requestData.cargoWeight);
         if (image) {
-            formData.append('trailerImage', image);
+            formData.append('trailerImage', image, 'trailerImage.jpg' );
         }
-
+        console.log('-----------API---------------')
+        console.log(`compressedFile name: ${ image?.name } `);
+        console.log(`compressedFile type: ${ image?.type } `);
         return instanceBack.put<InfoResponseType>('/api/trailer/', formData)
             .then(response => response.data)
     },

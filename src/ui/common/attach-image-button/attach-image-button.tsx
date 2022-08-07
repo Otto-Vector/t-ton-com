@@ -11,7 +11,7 @@ export const AttachImageButton: React.FC<OwnProps> = ( { onChange } ) => {
         <div className={ styles.attachImageButton }>
             <input type={ 'file' }
                    className={ styles.attachImageButton__hiddenInput }
-                   accept={ '.png, .jpeg, .jpg' }
+                   accept={ '.png, .jpeg, .jpg, .bmp' }
                    onChange={ ( e ) => {
                        onChange(e)
                    } }

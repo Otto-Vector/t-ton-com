@@ -46,7 +46,7 @@ export const transportApi = {
         formData.append('propertyRights', requestData.propertyRights);
         formData.append('cargoWeight', requestData.cargoWeight);
         if (image) {
-            formData.append('transportImage', image);
+            formData.append('transportImage', image, 'transportImage.jpg');
         }
         return instanceBack.post<InfoResponseType>('/api/transport/', formData)
             .then(response => response.data)
@@ -65,7 +65,7 @@ export const transportApi = {
         formData.append('propertyRights', requestData.propertyRights);
         formData.append('cargoWeight', requestData.cargoWeight);
         if (image) {
-            formData.append('transportImage', image);
+            formData.append('transportImage', image, 'transportImage.jpg');
         }
 
         return instanceBack.put<InfoResponseType>('/api/transport/', formData )

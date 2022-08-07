@@ -8,6 +8,7 @@
     "antd": "^4.21.6",
     "axios": "^0.26.1",
     "base-64": "^1.0.0",
+    "browser-image-compression": "^2.0.0",
     "date-format-parse": "^0.2.7",
     "inputmask-core": "^2.2.0",
     "match-sorter": "^6.3.1",

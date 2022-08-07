@@ -15,7 +15,8 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoConstType, propertyRights, TrailerCardType} from '../../../types/form-types'
 import {
     getCurrentIdTrailerStore,
-    getInitialValuesTrailerStore, getIsFetchingTrailerStore,
+    getInitialValuesTrailerStore,
+    getIsFetchingTrailerStore,
     getLabelTrailerStore,
     getMaskOnTrailerStore,
     getOneTrailerFromLocal,
@@ -24,14 +25,15 @@ import {
 } from '../../../selectors/options/trailer-reselect'
 import {
     modifyOneTrailerToAPI,
-    newTrailerSaveToAPI, oneTrailerDeleteToAPI,
+    newTrailerSaveToAPI,
+    oneTrailerDeleteToAPI,
     trailerStoreActions,
 } from '../../../redux/options/trailer-store-reducer';
 import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
 import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
 import {AppStateType} from '../../../redux/redux-store';
 import {parseAllNumbers} from '../../../utils/parsers';
-
+import imageCompression from 'browser-image-compression'
 
 type OwnProps = {}
 
@@ -89,9 +91,22 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
+    const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
         if (event.target.files && event.target.files.length > 0) {
-            setSelectedImage(event.target.files[0]);
+            const imageFile = event.target.files[0];
+            const options = {
+                maxSizeMB: 0.9,
+                maxWidthOrHeight: 1024,
+                useWebWorker: true,
+                fileType: 'image/jpeg',
+            }
+            try {
+                // компресим файл и отправляем
+                const compressedFile = await imageCompression(imageFile, options);
+                setSelectedImage(compressedFile);
+            } catch (error) {
+                alert(error)
+            }
         }
     }
 

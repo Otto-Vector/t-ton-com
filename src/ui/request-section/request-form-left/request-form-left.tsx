@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './request-form-left.module.scss'
 import {
     getAllShippersSelectFromLocal,
@@ -106,21 +106,23 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         dispatch<any>(setCargoCompositionSelector([ value, ...cargoComposition ]))
     }
 
-    useLayoutEffect(() => { // зачистка значений при первом рендере
-        if (requestModes.createMode) {
-            dispatch(shippersStoreActions.setCurrentId(''))
-            dispatch(consigneesStoreActions.setCurrentId(''))
-        }
-        if (currentDistance) dispatch(requestStoreActions.setCurrentDistance(0))
-        setIsFirstRender(false) //первый рендер отработал
-    }, [])
-
     useEffect(() => { // зачистка / присвоение значений при первом рендере
-        if (requestModes.historyMode) {
-            dispatch(shippersStoreActions.setCurrentId(initialValues.shipper + ''))
-            dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee + ''))
+        if (isFirstRender) {
+            // зачистка значений при первом рендере
+            if (requestModes.createMode) {
+                dispatch(shippersStoreActions.setCurrentId(''))
+                dispatch(consigneesStoreActions.setCurrentId(''))
+            }
+
+            if (currentDistance) dispatch(requestStoreActions.setCurrentDistance(0))
+
+            if (requestModes.historyMode) {
+                dispatch(shippersStoreActions.setCurrentId(initialValues.shipper + ''))
+                dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee + ''))
+            }
+            setIsFirstRender(false) //первый рендер отработал
         }
-    }, [])
+    }, [isFirstRender])
 
 
     useEffect(() => {
@@ -343,13 +345,13 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 }
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
-                            { ( requestModes.createMode && !isFirstRender ) &&
-                                <FormSpySimpleRequest
-                                    form={ form }
-                                    onChange={ ( { values, valid } ) => {
-                                        if (exposeValues) exposeValues({ values, valid })
-                                    } }/>
-                            }
+                            {/*{ ( requestModes.createMode && !isFirstRender ) &&*/}
+                            {/*    <FormSpySimpleRequest*/}
+                            {/*        form={ form }*/}
+                            {/*        onChange={ ( { values, valid } ) => {*/}
+                            {/*            if (exposeValues) exposeValues({ values, valid })*/}
+                            {/*        } }/>*/}
+                            {/*}*/}
                         </form>
                     )
                 }/>

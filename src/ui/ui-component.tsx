@@ -46,7 +46,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
     useEffect(() => {
         if (!isAuth && !authTry) dispatch<any>(autoLoginMe())
         if (isAuth && !initialazed) dispatch<any>(initializedAll())
-    }, [ initialazed, authTry, isAuth ])
+    }, [ initialazed, authTry, isAuth, dispatch ])
 
     if (isAuth && !initialazed) return <div className={ styles.ui__preloader }><Preloader/></div>
 
