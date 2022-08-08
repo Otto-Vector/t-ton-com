@@ -21,8 +21,6 @@ export type EmployeesApiType = {
     idTrailer: string
 }
 
-export type CreateEmployeesApiType = Omit<EmployeesApiType, 'idEmployee'>
-
 
 export const employeesApi = {
 
@@ -42,12 +40,48 @@ export const employeesApi = {
             .then(response => response.data)
     },
     // создать одного водителя
-    createOneEmployee( requestData: CreateEmployeesApiType ) {
-        return instanceBack.post<InfoResponseType>('/api/employee/', { ...requestData })
+    createOneEmployee( {idEmployee,...requestData}: EmployeesApiType, image: File | undefined ) {
+        let formData = new FormData()
+        formData.append('idUser', requestData.idUser)
+        formData.append('employeeFIO', requestData.employeeFIO)
+        formData.append('employeePhoneNumber', requestData.employeePhoneNumber)
+        formData.append('passportSerial', requestData.passportSerial)
+        formData.append('passportFMS', requestData.passportFMS)
+        formData.append('passportDate', requestData.passportDate)
+        formData.append('drivingLicenseNumber', requestData.drivingLicenseNumber)
+        formData.append('drivingCategory', requestData.drivingCategory)
+        formData.append('personnelNumber', requestData.personnelNumber)
+        formData.append('garageNumber', requestData.garageNumber)
+        formData.append('idTransport', requestData.idTransport)
+        formData.append('idTrailer', requestData.idTrailer)
+
+        if (image) {
+            formData.append('photoFace', image, 'employeeImage.jpg')
+        }
+        return instanceBack.post<InfoResponseType>('/api/employee/', formData)
             .then(response => response.data)
     },
     // ИЗМЕНИТЬ одного водителя
-    modifyOneEmployee( requestData: EmployeesApiType ) {
+    modifyOneEmployee( requestData: EmployeesApiType, image: File | undefined ) {
+        let formData = new FormData()
+        formData.append('idUser', requestData.idUser)
+        formData.append('idEmployee', requestData.idEmployee)
+        formData.append('employeeFIO', requestData.employeeFIO)
+        formData.append('employeePhoneNumber', requestData.employeePhoneNumber)
+        formData.append('passportSerial', requestData.passportSerial)
+        formData.append('passportFMS', requestData.passportFMS)
+        formData.append('passportDate', requestData.passportDate)
+        formData.append('drivingLicenseNumber', requestData.drivingLicenseNumber)
+        formData.append('drivingCategory', requestData.drivingCategory)
+        formData.append('personnelNumber', requestData.personnelNumber)
+        formData.append('garageNumber', requestData.garageNumber)
+        formData.append('idTransport', requestData.idTransport)
+        formData.append('idTrailer', requestData.idTrailer)
+
+        if (image) {
+            formData.append('photoFace', image, 'employeeImage.jpg')
+        }
+
         return instanceBack.put<InfoResponseType>('/api/employee/', { ...requestData })
             .then(response => response.data)
     },

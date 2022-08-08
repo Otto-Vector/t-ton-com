@@ -57,7 +57,7 @@ export const initializedAll = (): InitializedThunkActionType =>
         const getAllConsignees = dispatch(getAllConsigneesAPI())
         const getAllTransport = dispatch(getAllTransportAPI())
         const getAllTrailer = dispatch(getAllTrailerAPI())
-        const getAllEmployees = dispatch(getAllEmployeesAPI({ innID: 0 }))
+        const getAllEmployees = dispatch(getAllEmployeesAPI())
         const getAllRequests = dispatch(getAllRequestsAPI({ innID: 0 }))
 
 

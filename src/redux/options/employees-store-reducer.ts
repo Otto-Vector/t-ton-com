@@ -15,9 +15,11 @@ import {
     parseNoFirstSpaces,
     parseOnlyOneDash,
     parseOnlyOneDot,
-    parseOnlyOneSpace, parsePseudoLatinCharsAndNumbers, parseToUpperCase,
+    parseOnlyOneSpace,
+    parsePseudoLatinCharsAndNumbers,
+    parseToUpperCase,
 } from '../../utils/parsers';
-import {initialEmployeesValues} from '../../initials-test-data';
+import {employeesApi} from '../../api/options/employee.api';
 
 const initialState = {
     employeeIsFetching: false,
@@ -62,7 +64,7 @@ const initialState = {
         passportDate: undefined,
         drivingLicenseNumber: composeValidators(required, maxLength(20)),
         drivingCategory: undefined,
-        personnelNumber: composeValidators(maxNumbers(10),mustNotBeOnlyNull),
+        personnelNumber: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
         garageNumber: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
         photoFace: undefined,
         rating: composeValidators(maxNumbers(2)),
@@ -167,14 +169,64 @@ export const employeesStoreActions = {
 export type EmployeesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-export const getAllEmployeesAPI = ( { innID }: { innID: number } ): EmployeesStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+// запрос всего транспорта пользователя от сервера
+export const getAllEmployeesAPI = (): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
         dispatch(employeesStoreActions.toggleEmployeeIsFetching(true))
         try {
-            const response = initialEmployeesValues
-            dispatch(employeesStoreActions.setEmployeesContent(response))
+            const idUser = getState().authStoreReducer.authID
+
+            const response = await employeesApi.getAllEmployeesByUserId({ idUser })
+            dispatch(employeesStoreActions.setEmployeesContent(response.map(( { idUser, ...values } ) => values)))
+
+            if (!response.length) console.log('Пока ни одного СОТРУДНИКА')
         } catch (e) {
             alert(e)
         }
         dispatch(employeesStoreActions.toggleEmployeeIsFetching(false))
+    }
+
+// добавить одну запись ТРАНСПОРТА через АПИ
+export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: File | undefined ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+        try {
+            const idUser = getState().authStoreReducer.authID
+            const response = await employeesApi.createOneEmployee({ idUser, ...values }, image)
+            if (response.success) console.log(response.success)
+        } catch (e) {
+            // @ts-ignore
+            alert(e.response.data.failed)
+        }
+        await dispatch(getAllEmployeesAPI())
+    }
+
+// изменить одну запись ПРИЦЕПА через АПИ
+export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image: File | undefined ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+
+        try {
+            const idUser = getState().authStoreReducer.authID
+            const response = await employeesApi.modifyOneEmployee({
+                ...values, idUser,
+            }, image)
+            if (response.success) console.log(response.success)
+        } catch (e) {
+            // @ts-ignore
+            alert(JSON.stringify(e.response.data))
+        }
+        await dispatch(getAllEmployeesAPI())
+    }
+
+// удаляем один ПРИЦЕП
+export const oneEmployeesDeleteToAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await employeesApi.deleteOneEmployee({ idEmployee })
+            if (response.message) console.log(response.message)
+        } catch (e) {
+            // @ts-ignore
+            alert(JSON.stringify(e.response.data))
+        }
+        await dispatch(getAllEmployeesAPI())
     }

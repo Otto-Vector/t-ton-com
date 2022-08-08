@@ -22,7 +22,12 @@ import {
     getParsersEmployeesStore,
     getValidatorsEmployeesStore,
 } from '../../../selectors/options/employees-reselect'
-import {employeesStoreActions} from '../../../redux/options/employees-store-reducer';
+import {
+    employeesStoreActions,
+    modifyOneEmployeeToAPI,
+    newEmployeeSaveToAPI,
+    oneEmployeesDeleteToAPI,
+} from '../../../redux/options/employees-store-reducer';
 import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
 import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
 import {FormSelector} from '../../common/form-selector/form-selector';
@@ -30,6 +35,7 @@ import {getAllTrailerSelectFromLocal} from '../../../selectors/options/trailer-r
 import {getAllTransportSelectFromLocal} from '../../../selectors/options/transport-reselect';
 import {AppStateType} from '../../../redux/redux-store';
 import imageCompression from 'browser-image-compression'
+import {parseAllNumbers} from '../../../utils/parsers';
 
 type OwnProps = {}
 
@@ -53,11 +59,14 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployees = useSelector(getOneEmployeesFromLocal)
+
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
+    const isNew = currentIdForShow === 'new'
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
+
     const dispatch = useDispatch()
 
     // для манипуляции с картинкой
@@ -85,10 +94,21 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
-    const onSubmit = ( values: EmployeesCardType ) => {
-        console.log(values)
-        // dispatch(employeesStoreActions.changeEmployees(currentId, values)) //сохраняем измененное значение
-        // navigate(options) // и возвращаемся в предыдущее окно
+    const onSubmit = ( values: EmployeesCardType<string> ) => {
+        const demaskedValues: EmployeesCardType<string> = {
+            ...values,
+            personnelNumber: parseAllNumbers(values.personnelNumber),
+            garageNumber: parseAllNumbers(values.garageNumber),
+        }
+
+        if (isNew) {
+            //сохраняем НОВОЕ значение
+            dispatch<any>(newEmployeeSaveToAPI(demaskedValues, selectedImage))
+        } else {
+            //сохраняем измененное значение
+            dispatch<any>(modifyOneEmployeeToAPI(demaskedValues, selectedImage))
+        }
+        navigate(options) // и возвращаемся в предыдущее окно
     }
 
     const onCancelClick = () => {
@@ -96,8 +116,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     }
 
     const employeesDeleteHandleClick = ( currentId: string ) => {
-
-        dispatch(employeesStoreActions.deleteEmployees(currentId))
+        dispatch<any>(oneEmployeesDeleteToAPI(currentId))
         navigate(options)
     }
 

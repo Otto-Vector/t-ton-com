@@ -35,41 +35,39 @@ export const trailerApi = {
     },
     // создать один ПРИЦЕП
     createOneTrailer( { idTrailer, ...requestData }: TrailerApiType, image: File | undefined ) {
-        let formData = new FormData();
-        formData.append('idUser', requestData.idUser);
-        formData.append('trailerNumber', requestData.trailerNumber);
-        formData.append('trailerTrademark', requestData.trailerTrademark);
-        formData.append('trailerModel', requestData.trailerModel);
-        formData.append('pts', requestData.pts);
-        formData.append('dopog', requestData.dopog);
-        formData.append('cargoType', requestData.cargoType);
-        formData.append('propertyRights', requestData.propertyRights);
-        formData.append('cargoWeight', requestData.cargoWeight);
+        let formData = new FormData()
+        formData.append('idUser', requestData.idUser)
+        formData.append('trailerNumber', requestData.trailerNumber)
+        formData.append('trailerTrademark', requestData.trailerTrademark)
+        formData.append('trailerModel', requestData.trailerModel)
+        formData.append('pts', requestData.pts)
+        formData.append('dopog', requestData.dopog)
+        formData.append('cargoType', requestData.cargoType)
+        formData.append('propertyRights', requestData.propertyRights)
+        formData.append('cargoWeight', requestData.cargoWeight)
         if (image) {
-            formData.append('trailerImage', image, 'trailerImage.jpg');
+            formData.append('trailerImage', image, 'trailerImage.jpg')
         }
         return instanceBack.post<InfoResponseType>('/api/trailer/', formData)
             .then(response => response.data)
     },
     // ИЗМЕНИТЬ один ПРИЦЕП
     modifyOneTrailer( { trailerImage, ...requestData }: TrailerApiType, image: File | undefined ) {
-        let formData = new FormData();
-        formData.append('idUser', requestData.idUser);
-        formData.append('idTrailer', requestData.idTrailer);
-        formData.append('trailerNumber', requestData.trailerNumber);
-        formData.append('trailerTrademark', requestData.trailerTrademark);
-        formData.append('trailerModel', requestData.trailerModel);
-        formData.append('pts', requestData.pts);
-        formData.append('dopog', requestData.dopog);
-        formData.append('cargoType', requestData.cargoType);
-        formData.append('propertyRights', requestData.propertyRights);
-        formData.append('cargoWeight', requestData.cargoWeight);
+        let formData = new FormData()
+        formData.append('idUser', requestData.idUser)
+        formData.append('idTrailer', requestData.idTrailer)
+        formData.append('trailerNumber', requestData.trailerNumber)
+        formData.append('trailerTrademark', requestData.trailerTrademark)
+        formData.append('trailerModel', requestData.trailerModel)
+        formData.append('pts', requestData.pts)
+        formData.append('dopog', requestData.dopog)
+        formData.append('cargoType', requestData.cargoType)
+        formData.append('propertyRights', requestData.propertyRights)
+        formData.append('cargoWeight', requestData.cargoWeight)
         if (image) {
-            formData.append('trailerImage', image, 'trailerImage.jpg' );
+            formData.append('trailerImage', image, 'trailerImage.jpg')
         }
-        console.log('-----------API---------------')
-        console.log(`compressedFile name: ${ image?.name } `);
-        console.log(`compressedFile type: ${ image?.type } `);
+
         return instanceBack.put<InfoResponseType>('/api/trailer/', formData)
             .then(response => response.data)
     },
