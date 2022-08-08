@@ -7,7 +7,6 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
 import {useDispatch, useSelector} from 'react-redux'
-import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../../common/info-text/into-text'
@@ -15,7 +14,8 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {ShippersCardType} from '../../../types/form-types'
 import {
     getCurrentIdShipperStore,
-    getInitialValuesShippersStore, getIsFetchingShippersStore,
+    getInitialValuesShippersStore,
+    getIsFetchingShippersStore,
     getLabelShippersStore,
     getMaskOnShippersStore,
     getOneShipperFromLocal,
@@ -37,6 +37,11 @@ import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
 import {daDataStoreActions} from '../../../redux/dadata-response-reducer';
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
 import {FormApi} from 'final-form';
+import {
+    getShippersAllNamesListOptionsStore,
+    getShippersNamesListOptionsStore,
+} from '../../../selectors/options/options-reselect';
+import {includesTitleValidator} from '../../../utils/validators';
 
 type OwnProps = {
     // onSubmit: (requisites: shippersCardType) => void
@@ -50,6 +55,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesShippersStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
+    const consigneesListToValidate = useSelector(getShippersNamesListOptionsStore)
+    const consigneesAllListToValidate = useSelector(getShippersAllNamesListOptionsStore)
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
     const label = useSelector(getLabelShippersStore)
@@ -126,6 +133,12 @@ export const ShippersForm: React.FC<OwnProps> = () => {
             return ( validators.innNumber && validators.innNumber(current) ) || innValidate(current)
     }
 
+    // валидатор на одинаковые названия заголовков
+    const titleValidator = ( preValue: string ) => ( currentValue: string ) => {
+        if (currentValue && ( preValue !== currentValue ))
+            return ( validators.title && validators.title(currentValue) ) ||
+                includesTitleValidator(isNew ? consigneesAllListToValidate : consigneesListToValidate, currentValue)
+    }
 
     useEffect(() => {
         if (isFirstRender) {
@@ -140,7 +153,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
             }
             setIsFirstRender(false)
         }
-    },[])
+    }, [])
 
     useEffect(() => {
             if (!isNew) {
@@ -174,7 +187,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ maskOn.title }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.title }
+                                                   validate={ titleValidator(values.title as string) }
                                                    parse={ parsers.title }
                                             />
                                         </div>

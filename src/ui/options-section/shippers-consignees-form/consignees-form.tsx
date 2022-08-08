@@ -23,7 +23,10 @@ import {
 } from '../../../selectors/options/consignees-reselect'
 import {
     consigneesStoreActions,
-    getOrganizationByInnConsignee, modifyOneConsigneeToAPI, newConsigneeSaveToAPI, oneConsigneeDeleteToAPI,
+    getOrganizationByInnConsignee,
+    modifyOneConsigneeToAPI,
+    newConsigneeSaveToAPI,
+    oneConsigneeDeleteToAPI,
     setOrganizationByInnKppConsignees,
 } from '../../../redux/options/consignees-store-reducer';
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers';
@@ -33,10 +36,13 @@ import {FormSelector} from '../../common/form-selector/form-selector';
 import {daDataStoreActions} from '../../../redux/dadata-response-reducer';
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
 import {FormApi} from 'final-form';
+import {
+    getConsigneesAllNamesListOptionsStore,
+    getConsigneesNamesListOptionsStore,
+} from '../../../selectors/options/options-reselect';
+import {includesTitleValidator} from '../../../utils/validators';
 
-type OwnProps = {
-    // onSubmit: (requisites: consigneesCardType) => void
-}
+type OwnProps = {}
 
 
 export const ConsigneesForm: React.FC<OwnProps> = () => {
@@ -46,6 +52,9 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesConsigneesStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
+    const consigneesListToValidate = useSelector(getConsigneesNamesListOptionsStore)
+    const consigneesAllListToValidate = useSelector(getConsigneesAllNamesListOptionsStore)
+
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
     const label = useSelector(getLabelConsigneesStore)
@@ -122,6 +131,12 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
             return ( validators.innNumber && validators.innNumber(currentValue) ) || innValidate(currentValue)
     }
 
+    // валидатор на одинаковые названия заголовков
+    const titleValidator = ( preValue: string ) => ( currentValue: string ) => {
+        if (currentValue && ( preValue !== currentValue ))
+            return ( validators.title && validators.title(currentValue) ) ||
+                includesTitleValidator(isNew ? consigneesAllListToValidate : consigneesListToValidate, currentValue)
+    }
 
     useEffect(() => {
         if (isFirstRender) {
@@ -136,7 +151,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
             }
             setIsFirstRender(false)
         }
-    },[])
+    }, [])
 
     useEffect(() => {
             if (!isNew) {
@@ -170,7 +185,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ maskOn.title }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.title }
+                                                   validate={ titleValidator(values.title as string) }
                                                    parse={ parsers.title }
                                             />
                                         </div>

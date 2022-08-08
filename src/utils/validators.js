@@ -17,3 +17,5 @@ export const mustNotBeOnlyNull = (value) => ( value && ( +parseAllNumbers(value)
 export const mustBe0_0Numbers = (from) => (to) => (value) => (
     ( parseAllNumbers(value).length !== from && parseAllNumbers(value).length !== to ) ? `Должно быть ${ from } или ${ to } цифр!` : undefined );
 export const mustBeMail = (value) => value ? value.match(/^\S+@\S+\.\S+$/) ? undefined : 'Введите email корректно' : undefined
+
+export const includesTitleValidator = (list, include) => list.includes(include) ? 'Такой заголовок уже существует. Измените его' : undefined
