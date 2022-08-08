@@ -82,7 +82,7 @@ export const employeesApi = {
             formData.append('photoFace', image, 'employeeImage.jpg')
         }
 
-        return instanceBack.put<InfoResponseType>('/api/employee/', { ...requestData })
+        return instanceBack.put<InfoResponseType>('/api/employee/', formData)
             .then(response => response.data)
     },
     // УДАЛИТЬ одного водителя
