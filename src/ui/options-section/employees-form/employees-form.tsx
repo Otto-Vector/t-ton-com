@@ -267,7 +267,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.employeesForm__buttonsPanel }>
                                                 <div className={ styles.employeesForm__button }>
                                                     <Button type={ 'button' }
-                                                            disabled={ submitting }
+                                                            disabled={ submitting || isNew }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
                                                             onClick={ () => {

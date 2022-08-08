@@ -11,6 +11,7 @@ import {
 import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {
     composeParsers,
+    parseAllNumbers,
     parseFIO,
     parseNoFirstSpaces,
     parseOnlyOneDash,
@@ -59,11 +60,11 @@ const initialState = {
     validators: {
         employeeFIO: composeValidators(required, maxLength(50)),
         employeePhoneNumber: composeValidators(required, mustBe00Numbers(11)),
-        passportSerial: composeValidators(mustBe00Numbers(10), mustNotBeOnlyNull),
-        passportFMS: undefined,
-        passportDate: undefined,
+        passportSerial: composeValidators(required, mustBe00Numbers(10), mustNotBeOnlyNull),
+        passportFMS: composeValidators(required),
+        passportDate: composeValidators(required),
         drivingLicenseNumber: composeValidators(required, maxLength(20)),
-        drivingCategory: undefined,
+        drivingCategory: composeValidators(required),
         personnelNumber: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
         garageNumber: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
         photoFace: undefined,
@@ -115,23 +116,6 @@ export const employeesStoreReducer = ( state = initialState, action: ActionsType
                 employeeIsFetching: action.employeeIsFetching,
             }
         }
-        case 'employees-store-reducer/CHANGE-EMPLOYEE': {
-            return {
-                ...state,
-                content: [
-                    ...state.content
-                        .map(( val ) => ( val.idEmployee !== action.idEmployee ) ? val : action.employees),
-                ],
-            }
-        }
-        case 'employees-store-reducer/DELETE-EMPLOYEE': {
-            return {
-                ...state,
-                content: [
-                    ...state.content.filter(( { idEmployee } ) => idEmployee !== action.idEmployee),
-                ],
-            }
-        }
         default: {
             return state
         }
@@ -148,15 +132,6 @@ export const employeesStoreActions = {
     setCurrentId: ( currentId: string ) => ( {
         type: 'employees-store-reducer/SET-CURRENT-ID',
         currentId,
-    } as const ),
-    changeEmployees: ( idEmployee: string, employees: EmployeesCardType ) => ( {
-        type: 'employees-store-reducer/CHANGE-EMPLOYEE',
-        idEmployee,
-        employees,
-    } as const ),
-    deleteEmployees: ( idEmployee: string ) => ( {
-        type: 'employees-store-reducer/DELETE-EMPLOYEE',
-        idEmployee,
     } as const ),
     toggleEmployeeIsFetching: ( employeeIsFetching: boolean ) => ( {
         type: 'employees-store-reducer/TOGGLE-EMPLOYEE-IS-FETCHING',
@@ -192,11 +167,15 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
 
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await employeesApi.createOneEmployee({ idUser, ...values }, image)
+            const response = await employeesApi.createOneEmployee({
+                idUser, ...values,
+                // toDo: исправить на нормальный тип (у него в апи должно быть 15 символов) а у нас 18
+                employeePhoneNumber: '+' + parseAllNumbers(values.employeePhoneNumber),
+            }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(e.response.data.failed)
+            alert(JSON.stringify(e.response.data))
         }
         await dispatch(getAllEmployeesAPI())
     }
@@ -209,6 +188,11 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.modifyOneEmployee({
                 ...values, idUser,
+                // toDo: исправить на нормальный тип (у него в апи должно быть 15 символов) а у нас 18
+                employeePhoneNumber: '+' + parseAllNumbers(values.employeePhoneNumber),
+                rating: '5',
+                coordinates: '48.671049, 40.660313',
+                status: 'free'
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
