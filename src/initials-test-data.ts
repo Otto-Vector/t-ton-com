@@ -698,6 +698,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '49.069515, 47.013803',
         status: 'empty',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
     {
         idEmployee: '2',
@@ -714,6 +716,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '49.751249, 41.117407',
         status: 'full',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
     {
         idEmployee: '3',
@@ -730,6 +734,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '54.721953, 56.146108',
         status: 'full',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
     {
         idEmployee: '4',
@@ -746,6 +752,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '56.997002, 65.801063',
         status: 'full',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
     {
         idEmployee: '5',
@@ -762,6 +770,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '55.028979, 72.900294',
         status: 'full',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
     {
         idEmployee: '6',
@@ -778,6 +788,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '57.858574, 59.944197',
         status: 'empty',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
     {
         idEmployee: '7',
@@ -794,6 +806,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '55.454877, 65.197628',
         status: 'full',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
     {
         idEmployee: '8',
@@ -810,6 +824,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '55.736270, 52.525500',
         status: 'full',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
     {
         idEmployee: '9',
@@ -826,6 +842,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '57.839648, 56.252597',
         status: 'full',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
     {
         idEmployee: '10',
@@ -842,6 +860,8 @@ export const initialEmployeesValues: EmployeesCardType[] = [
         rating: randFloorMax(10).toString(),
         coordinates: '56.802767, 60.725113',
         status: 'full',
+        idTransport: undefined,
+        idTrailer: undefined,
     },
 
 ]

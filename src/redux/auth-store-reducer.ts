@@ -265,7 +265,7 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
             const response = await authApi.logout({ phone })
             dispatch(authStoreActions.setIsAuth(false))
             dispatch(authStoreActions.setAuthId(''))
-            // dispatch()
+
             if (response.status) console.log(response)
 
         } catch (error) {
@@ -287,7 +287,7 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            if (error.response.data.message) dispatch(authStoreActions.setModalMessage(error.response.data.message))
+            if (error.response.data.message) dispatch(authStoreActions.setModalMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
             else alert(error)
         }
         dispatch(authStoreActions.setIsFetching(false))
@@ -296,7 +296,6 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
 // запрос idUser (авторизован или нет)
 export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
     async ( dispatch ) => {
-        dispatch(authStoreActions.setAuthId(''))
         try {
             const response = await authApi.autoLogin()
             console.log('ответ от api/me/', response)

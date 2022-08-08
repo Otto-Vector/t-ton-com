@@ -15,7 +15,7 @@ import {
     parseNoFirstSpaces,
     parseOnlyOneDash,
     parseOnlyOneDot,
-    parseOnlyOneSpace,
+    parseOnlyOneSpace, parsePseudoLatinCharsAndNumbers, parseToUpperCase,
 } from '../../utils/parsers';
 import {initialEmployeesValues} from '../../initials-test-data';
 
@@ -34,12 +34,14 @@ const initialState = {
         garageNumber: 'Гаражный номер',
         photoFace: 'Добавить фотографию сотрудника',
         rating: 'Рейтинг:',
-    } as EmployeesCardType<string | undefined>,
+        idTransport: 'Прикреплённый транспорт',
+        idTrailer: 'Прикреплённый прицеп',
+    } as EmployeesCardType<string>,
 
     maskOn: {
         employeeFIO: undefined, // просто текст
         employeePhoneNumber: '+7 (###) ###-##-##', // 11 цифр
-        passportSerial: '## ## ### ###', // 10 цифр
+        passportSerial: 'Серия: ## ## №: ### ###', // 10 цифр
         passportFMS: undefined, // просто текст
         passportDate: undefined, // режим ввода даты
         drivingLicenseNumber: undefined, // 10 цифр
@@ -50,21 +52,7 @@ const initialState = {
         rating: '##', // чило ДО 2-х цифр
     } as EmployeesCardType,
 
-    initialValues: {
-
-        employeeFIO: undefined,
-        employeePhoneNumber: undefined,
-        passportSerial: undefined,
-        passportFMS: undefined,
-        passportDate: undefined,
-        drivingLicenseNumber: undefined,
-        drivingCategory: undefined,
-        personnelNumber: undefined,
-        garageNumber: undefined,
-        photoFace: undefined,
-        rating: undefined,
-        status: undefined,
-    } as EmployeesCardType,
+    initialValues: {} as EmployeesCardType,
 
     validators: {
         employeeFIO: composeValidators(required, maxLength(50)),
@@ -72,9 +60,9 @@ const initialState = {
         passportSerial: composeValidators(mustBe00Numbers(10), mustNotBeOnlyNull),
         passportFMS: undefined,
         passportDate: undefined,
-        drivingLicenseNumber: composeValidators(mustBe00Numbers(10), mustNotBeOnlyNull),
+        drivingLicenseNumber: composeValidators(required, maxLength(20)),
         drivingCategory: undefined,
-        personnelNumber: composeValidators(maxNumbers(10)),
+        personnelNumber: composeValidators(maxNumbers(10),mustNotBeOnlyNull),
         garageNumber: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
         photoFace: undefined,
         rating: composeValidators(maxNumbers(2)),
@@ -86,7 +74,7 @@ const initialState = {
         passportSerial: undefined,
         passportFMS: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         passportDate: undefined,
-        drivingLicenseNumber: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        drivingLicenseNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseToUpperCase),
         drivingCategory: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         personnelNumber: undefined,
         garageNumber: undefined,

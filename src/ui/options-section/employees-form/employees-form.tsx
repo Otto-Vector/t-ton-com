@@ -7,7 +7,6 @@ import {Preloader} from '../../common/preloader/preloader'
 
 import noImage from '../../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
-import {getIsFetchingRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../../common/info-text/into-text'
@@ -16,6 +15,7 @@ import {EmployeesCardType} from '../../../types/form-types'
 import {
     getCurrentIdEmployeesStore,
     getInitialValuesEmployeesStore,
+    getIsFetchingEmployeesStore,
     getLabelEmployeesStore,
     getMaskOnEmployeesStore,
     getOneEmployeesFromLocal,
@@ -25,14 +25,20 @@ import {
 import {employeesStoreActions} from '../../../redux/options/employees-store-reducer';
 import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
 import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
-
+import {FormSelector} from '../../common/form-selector/form-selector';
+import {getAllTrailerSelectFromLocal} from '../../../selectors/options/trailer-reselect';
+import {getAllTransportSelectFromLocal} from '../../../selectors/options/transport-reselect';
+import {AppStateType} from '../../../redux/redux-store';
+import imageCompression from 'browser-image-compression'
 
 type OwnProps = {}
 
 export const EmployeesForm: React.FC<OwnProps> = () => {
 
     const header = 'Сотрудник'
-    const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const isFetching = useSelector(getIsFetchingEmployeesStore)
+    const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
+
     const defaultInitialValues = useSelector(getInitialValuesEmployeesStore)
     //для проброса загруженных данных в форму
     const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
@@ -41,6 +47,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnEmployeesStore)
     const validators = useSelector(getValidatorsEmployeesStore)
     const parsers = useSelector(getParsersEmployeesStore)
+
+    const trailerSelect = useSelector(getAllTrailerSelectFromLocal)
+    const transtportSelect = useSelector(getAllTransportSelectFromLocal)
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployees = useSelector(getOneEmployeesFromLocal)
@@ -51,13 +60,35 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string | null ) => {
+    // для манипуляции с картинкой
+    const [ selectedImage, setSelectedImage ] = useState<File>();
+
+    const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const imageFile = event.target.files[0];
+            const options = {
+                maxSizeMB: 0.9,
+                maxWidthOrHeight: 1024,
+                useWebWorker: true,
+                fileType: 'image/jpeg',
+            }
+            try { // компресим файл и отправляем
+                const compressedFile = await imageCompression(imageFile, options);
+                setSelectedImage(compressedFile);
+            } catch (error) {
+                alert(error)
+            }
+        }
+    }
+
+    const setLightBoxImage = ( image?: string ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
     const onSubmit = ( values: EmployeesCardType ) => {
-        dispatch(employeesStoreActions.changeEmployees(currentId, values)) //сохраняем измененное значение
-        navigate(options) // и возвращаемся в предыдущее окно
+        console.log(values)
+        // dispatch(employeesStoreActions.changeEmployees(currentId, values)) //сохраняем измененное значение
+        // navigate(options) // и возвращаемся в предыдущее окно
     }
 
     const onCancelClick = () => {
@@ -68,10 +99,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
         dispatch(employeesStoreActions.deleteEmployees(currentId))
         navigate(options)
-    }
-
-    const sendPhotoFile = ( event: ChangeEvent<HTMLInputElement> ) => {
-        // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
     }
 
     useEffect(() => {
@@ -97,7 +124,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                       submitError,
                                       hasValidationErrors,
                                       handleSubmit,
-                                      pristine,
                                       form,
                                       submitting,
                                       values,
@@ -112,6 +138,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.employeeFIO }
                                                    parse={ parsers.employeeFIO }
+                                                   allowEmptyFormatting
                                             />
                                         </div>
 
@@ -165,6 +192,20 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.garageNumber }
                                                    parse={ parsers.garageNumber }
                                             />
+                                            <FormSelector named={ 'idTransport' }
+                                                          placeholder={ label.idTransport }
+                                                          values={ transtportSelect }
+                                                          validate={ validators.idTransport }
+                                                          isClearable
+                                            />
+                                            <FormSelector named={ 'idTrailer' }
+                                                          placeholder={ label.idTrailer }
+                                                          values={ trailerSelect }
+                                                          validate={ validators.idTrailer }
+                                                          disabled={ !values.idTransport }
+                                                          isClearable
+                                            />
+
                                         </div>
                                         {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                         <div className={ styles.employeesForm__inputsWithPhoto }>
@@ -186,15 +227,22 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.passportDate }
                                                    parse={ parsers.passportDate }
                                             />
-                                            <div className={ styles.employeesForm__photo }
+                                            <div className={ styles.employeesForm__photoWrapper }
                                                  title={ 'Добавить/изменить фото' }>
-                                                <img src={ initialValues.photoFace || noImage }
+                                                <img className={ styles.employeesForm__photo }
+                                                     src={ ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                         || ( values.photoFace && currentURL + values.photoFace )
+                                                         || noImage }
                                                      alt="facePhoto"
                                                      onClick={ () => {
-                                                         setLightBoxImage(values.photoFace)
+                                                         setLightBoxImage(
+                                                             ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                             || ( values.photoFace && currentURL + values.photoFace )
+                                                             || noImage)
                                                      } }
                                                 />
                                                 <AttachImageButton onChange={ sendPhotoFile }/>
+
                                             </div>
 
                                             <div className={ styles.employeesForm__buttonsPanel }>
@@ -214,14 +262,11 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                             disabled={ submitting || submitError || hasValidationErrors }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
-                                                        // onClick={()=>{employeesSaveHandleClick()}}
                                                             rounded
                                                     />
                                                 </div>
                                             </div>
                                         </div>
-
-                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
                                     </form>
                                 )
                             }/>
