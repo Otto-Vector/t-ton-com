@@ -26,7 +26,7 @@ export const cargoComposition = [
     'Битум БНД 90/130 дорожный вязкий, в танк-контейнере',
     'Битум 90/130, фасованный в кловертейнеры',
     'Мазут топочный марки М-100 малозольный 0,5% серности',
-    'Битум 90/130, фасованный в кловертейнеры',
+    'Битум 100/130, фасованный в кловертейнеры',
 ]
 
 // фейковые грузоотправители
@@ -911,22 +911,20 @@ export const initialDocumentsRequestValues: DocumentsRequestType = {
 
 // создание рандомной заявки
 const makeOneTestRequest = ( id: number ): OneRequestType => ( {
-    id: id,
+    requestId: id.toString(),
     requestNumber: id,
     requestDate: new Date(2022, 4, randFloorMax(30)),
     cargoComposition: randArrayValue(cargoComposition),
     shipmentDate: id === 999 ? today : randomDate(today, addNDay(today, 4)),
     cargoType: randArrayValue(cargoType) as CargoTypeType,
-    customer: randFloorMax(10).toString(),
-    shipper: randFloorMax(11).toString(),
-    consignee: randMinMax(12, 23).toString(),
-    carrier: randFloorMax(9).toString(),
-    driver: randFloorMax(9).toString(),
+    idUserCustomer: randFloorMax(10).toString(),
+    idSender: randFloorMax(11).toString(),
+    idRecipient: randMinMax(12, 23).toString(),
+    idCarrier: randFloorMax(9).toString(),
+    idEmployee: randFloorMax(9).toString(),
     distance: randMinMax(20, 400),
     note: 'Насос на 120, рукава, ДОПОГ.',
     answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
-    driverPrice: undefined,
-    driverTax: undefined,
     visible: true,
     documents: initialDocumentsRequestValues,
 } )

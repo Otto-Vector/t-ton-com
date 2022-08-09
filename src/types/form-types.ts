@@ -155,33 +155,31 @@ export type AddDriverCardType<T = DefaultFormType> = {
     driverFIO: T, // id водителя (из карточки водителя)
     driverTransport: T, // id транспорта (из карточки транспорт)
     driverTrailer: T, // id прицепа (из карточки прицеп)
-    driverStavka: T,
-    driverSumm: T,
-    driverRating: T,
-    driverTax: T,
+    driverStavka: T, // тариф ставки перевозки 1 тонны на 1 км
+    driverSumm: T, // подсчитанная сумма
+    driverTax: T, // система налогообложения?
     driverPhoto: T,
     driverTransportPhoto: T,
     driverTrailerPhoto: T,
+    driverRating: T,
 }
 
-
+// ЗАЯВКА
 export type OneRequestType = {
-    id: number | undefined,
-    requestNumber: number | undefined, // номер заявки
+    requestId: string | undefined, // уникальный номер в базе
+    requestNumber: number | undefined, // номер заявки (числовой номер/каждая новая заявка созаётся с номером+1 от предыдущей на бэке)
     requestDate: undefined | Date, // дата создания заявки
     cargoComposition: undefined | string, // вид груза
     shipmentDate: undefined | Date, // дата погрузки
     cargoType: undefined | CargoTypeType, // тип груза
-    customer: undefined | string, // заказчик
-    shipper: undefined | string, // грузоотправитель
-    consignee: undefined | string, // грузополучатель
-    carrier: undefined | string, // перевозчик
-    driver: undefined | string, // водитель
+    idUserCustomer: undefined | string, // заказчик (совпадает с id пользователя (потому как данные по инн/кпп и счетам будут браться оттуда)
+    idSender: undefined | string, // грузоотправитель
+    idRecipient: undefined | string, // грузополучатель
+    idCarrier: undefined | string, // перевозчик
+    idEmployee: undefined | string, // водитель
     distance: undefined | number, // расстояние
     note: undefined | string, // примечание
     answers: number[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками
-    driverPrice: number | undefined // стоимость перевозки
-    driverTax: number | undefined // ставка тн.км.
     visible: boolean // видимость для таблицы
     documents: DocumentsRequestType
 }

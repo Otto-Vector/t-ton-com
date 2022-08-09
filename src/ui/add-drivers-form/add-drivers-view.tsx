@@ -78,7 +78,7 @@ export const AddDriversView: React.FC<OwnProps> = () => {
     return (
         <div className={ styles.addDriversForm__wrapper }>
             <h4 className={ styles.addDriversForm__header }>{
-                `Заявка ${ oneRequest?.id } от ${ ddMmYearFormat(oneRequest?.requestDate) }`
+                `Заявка ${ oneRequest?.requestNumber } от ${ ddMmYearFormat(oneRequest?.requestDate) }`
             }</h4>
 
             <div className={ styles.addDriversForm__form }>

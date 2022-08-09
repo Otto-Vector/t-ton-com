@@ -22,9 +22,7 @@ import {InfoText} from '../../common/info-text/into-text';
 import {setOrganizationRequisites} from '../../../redux/options/requisites-store-reducer';
 
 
-type OwnProps = {
-    // onSubmit: (requisites: companyRequisitesType) => void
-}
+type OwnProps = {}
 
 export const RequisitesForm: React.FC<OwnProps> = () => {
 
@@ -59,7 +57,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, handleSubmit, pristine, form, submitting, hasValidationErrors } ) => (
+                                ( { handleSubmit, form, submitting, hasValidationErrors } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.requisitesForm__form }>
                                         <div className={ styles.requisitesForm__inputsPanel }>
                                             <Field name={ 'innNumber' }
@@ -211,7 +209,6 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                                 >{ submitting && <Preloader/>}</Button>
                                             </div>
                                         </div>
-                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
                                     </form>
                                 )
                             }/>

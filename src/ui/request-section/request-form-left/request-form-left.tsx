@@ -77,8 +77,8 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         dispatch(consigneesStoreActions.setCurrentId(searchId || ''))
     }
 
-    const oneCustomer = allShippers.filter(( { idSender } ) => idSender === initialValues.customer)[0]
-    const oneCarrier = allShippers.filter(( { idSender } ) => idSender === initialValues.carrier)[0]
+    const oneCustomer = allShippers.filter(( { idSender } ) => idSender === initialValues.idUserCustomer)[0]
+    const oneCarrier = allShippers.filter(( { idSender } ) => idSender === initialValues.idCarrier)[0]
 
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
@@ -117,8 +117,8 @@ export const RequestFormLeft: React.FC<OwnProps> = (
             if (currentDistance) dispatch(requestStoreActions.setCurrentDistance(0))
 
             if (requestModes.historyMode) {
-                dispatch(shippersStoreActions.setCurrentId(initialValues.shipper + ''))
-                dispatch(consigneesStoreActions.setCurrentId(initialValues.consignee + ''))
+                dispatch(shippersStoreActions.setCurrentId(initialValues.idSender + ''))
+                dispatch(consigneesStoreActions.setCurrentId(initialValues.idRecipient + ''))
             }
             setIsFirstRender(false) //первый рендер отработал
         }
@@ -228,12 +228,12 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                             </div>
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
-                                    className={ styles.requestFormLeft__label }>{ labels.customer }</label>
+                                    className={ styles.requestFormLeft__label }>{ labels.idUserCustomer }</label>
                                 { requestModes.createMode
                                     ? <FormSelector named={ 'customer' }
-                                                    placeholder={ placehoders.customer }
+                                                    placeholder={ placehoders.idUserCustomer }
                                                     values={ customersSelect }
-                                                    validate={ validators.customer }
+                                                    validate={ validators.idUserCustomer }
                                                     isClearable
                                     />
                                     : <div className={ styles.requestFormLeft__info + ' ' +
@@ -245,12 +245,12 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                             </div>
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
-                                    className={ styles.requestFormLeft__label }>{ labels.shipper }</label>
+                                    className={ styles.requestFormLeft__label }>{ labels.idSender }</label>
                                 { requestModes.createMode
                                     ? <FormSelector named={ 'shipper' }
-                                                    placeholder={ placehoders.shipper }
+                                                    placeholder={ placehoders.idSender }
                                                     values={ shippersSelect }
-                                                    validate={ validators.shipper }
+                                                    validate={ validators.idSender }
                                                     handleChanger={ setOneShipper }
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
@@ -262,12 +262,12 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                             </div>
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
-                                    className={ styles.requestFormLeft__label }>{ labels.consignee }</label>
+                                    className={ styles.requestFormLeft__label }>{ labels.idRecipient }</label>
                                 { requestModes.createMode
                                     ? <FormSelector named={ 'consignee' }
-                                                    placeholder={ placehoders.consignee }
+                                                    placeholder={ placehoders.idRecipient }
                                                     values={ consigneesSelect }
-                                                    validate={ validators.consignee }
+                                                    validate={ validators.idRecipient }
                                                     handleChanger={ setOneConsignee }
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
@@ -279,19 +279,19 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
-                                    { labels.carrier }</label>
+                                    { labels.idCarrier }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { oneCarrier ? ( oneCarrier.title + ', ' + oneCarrier.city ) : placehoders.carrier }
+                                    { oneCarrier ? ( oneCarrier.title + ', ' + oneCarrier.city ) : placehoders.idCarrier }
                                 </div>
                                 <InfoButtonToModal textToModal={ fieldInformation.carrier } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
-                                    { labels.driver }</label>
+                                    { labels.idEmployee }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { initialValues.driver || placehoders.driver }
+                                    { initialValues.idEmployee || placehoders.idEmployee }
                                 </div>
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>

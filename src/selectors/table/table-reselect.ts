@@ -22,7 +22,7 @@ export const getContentTableStore = createSelector(
     getTarifsRequisitesStore,
     ( requests, consignees, shippers, initial, { acceptShortRoute, acceptLongRoute } ): OneRequestTableType[] => {
         return requests.filter(( { visible } ) => visible).map((
-            { requestNumber, shipmentDate, cargoType, shipper, consignee, distance, answers } ) =>
+            { requestNumber, shipmentDate, cargoType, idSender: shipper, idRecipient: consignee, distance, answers } ) =>
             ( {
                 requestNumber,
                 cargoType,
