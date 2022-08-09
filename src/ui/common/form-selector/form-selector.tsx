@@ -26,40 +26,39 @@ type OwnProps = {
 const NewSingleValue = () => null;
 
 // @ts-ignore
-const NewInput = ({ value: inputValue, isHidden, ...props }) => {
-  const {
-    selectProps: { value, getOptionLabel }
-  } = props;
-  const label = useMemo(() => {
-    if (!value) {
-      return "";
-    }
-    return getOptionLabel(value);
-  }, [getOptionLabel, value]);
-  const v = useMemo(() => {
-    if (!inputValue) {
-      return label;
-    }
-    return inputValue;
-  }, [inputValue, label]);
-  const hidden = useMemo(() => {
-    if (v) {
-      return false;
-    }
-    return isHidden;
-  }, [isHidden, v]);
-  // @ts-ignore
-    return <cs.Input isHidden={hidden} value={v} {...props} />;
+const NewInput = ( { value: inputValue, isHidden, ...props } ) => {
+    const {
+        selectProps: { value, getOptionLabel },
+    } = props;
+    const label = useMemo(() => {
+        if (!value) {
+            return '';
+        }
+        return getOptionLabel(value);
+    }, [ getOptionLabel, value ]);
+    const v = useMemo(() => {
+        if (!inputValue) {
+            return label;
+        }
+        return inputValue;
+    }, [ inputValue, label ]);
+    const hidden = useMemo(() => {
+        if (v) {
+            return false;
+        }
+        return isHidden;
+    }, [ isHidden, v ]);
+    // @ts-ignore
+    return <cs.Input isHidden={ hidden } value={ v } { ...props } />;
 };
 
 const components = {
-  ...cs,
-  Input: NewInput,
-  SingleValue: NewSingleValue
+    ...cs,
+    Input: NewInput,
+    SingleValue: NewSingleValue,
 };
 // КОНЕЦ //
 ////////////////////////////////////////
-
 
 
 // передача в обработчик react-form
@@ -120,7 +119,7 @@ const CustomSelect = ( {
     const handleChange = useCallback(( option: SelectOptionType | null ) => {
         input.onChange(option?.value);
         if (handleChanger) handleChanger(option?.value)
-    },[])
+    }, [])
 
     const isError = ( meta.error || meta.submitError ) && meta.touched
 
@@ -133,15 +132,15 @@ const CustomSelect = ( {
                     { ...input }
                     { ...rest }
                     // для изменяемого input при вводе нового значения
-                    components={components as Partial<SelectComponents<any, boolean, GroupBase<unknown>>>}
+                    components={ components as Partial<SelectComponents<any, boolean, GroupBase<unknown>>> }
                     isClearable={ isClearable }
-                    aria-invalid={'grammar'}
+                    backspaceRemovesValue={ false }
+                    aria-invalid={ 'grammar' }
                     classNamePrefix={ 'react-select-ton' }
                     onChange={ handleChange }
                     // onInputChange={handleChange} // возможно будет нужен при обработке нового знаения
-                    backspaceRemovesValue = {false}
-                    aria-label={'555'}
-                    aria-labelledby={'666'}
+                    // aria-label={'555'}
+                    // aria-labelledby={'666'}
                     isDisabled={ disabled }
                     onCreateOption={ handleCreate }
                     options={ options }
@@ -151,7 +150,7 @@ const CustomSelect = ( {
                     { ...input }
                     { ...rest }
                     isClearable={ isClearable }
-                    aria-invalid={'grammar'}
+                    aria-invalid={ 'grammar' }
                     classNamePrefix={ 'react-select-ton' }
                     onChange={ handleChange }
                     // isMulti={true}
@@ -166,9 +165,6 @@ const CustomSelect = ( {
         </>
     );
 };
-
-
-
 
 
 export type SelectOptions = { value: string, label: string, key: string }
