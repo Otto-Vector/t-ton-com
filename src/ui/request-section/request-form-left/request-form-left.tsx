@@ -102,8 +102,8 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         },
     }
 
-    const onCreateCompositionValue = ( value: string ) => {
-        dispatch<any>(setCargoCompositionSelector([ value, ...cargoComposition ]))
+    const onCreateCompositionValue = ( newCargoCompositionItem: string ) => {
+        dispatch<any>(setCargoCompositionSelector(newCargoCompositionItem))
     }
 
     useEffect(() => { // зачистка / присвоение значений при первом рендере

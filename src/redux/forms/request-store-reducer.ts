@@ -2,9 +2,10 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
-import {cargoComposition, initialDocumentsRequestValues, makeNTestRequests} from '../../initials-test-data';
+import {initialDocumentsRequestValues, makeNTestRequests} from '../../initials-test-data';
 import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
 import {polyline_decode} from '../../utils/polilyne-decode';
+import {cargoEditableSelectorApi, CargoRequestType} from '../../api/cargoEditableSelector.api';
 
 
 const defaultInitialStateValues = {
@@ -343,23 +344,27 @@ export const getAllRequestsAPI = ( { innID }: { innID: number } ): RequestStoreR
 export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = cargoComposition
-            dispatch(requestStoreActions.setCargoCompositionSelector(response))
+            const response = await cargoEditableSelectorApi.getCargoComposition()
+            const reparsedResponse = response.map(({text})=>text).reverse()
+            dispatch(requestStoreActions.setCargoCompositionSelector(reparsedResponse))
         } catch (e) {
             alert(e)
-            // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
         }
     }
 
 // отправляем изменения селектора и выставляем его значение в Initial (это добавляемый селектор)
-export const setCargoCompositionSelector = ( cargoComposition: string[] ): RequestStoreReducerThunkActionType =>
+export const setCargoCompositionSelector = ( newCargoCompositionItem: string ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = cargoComposition
-            dispatch(requestStoreActions.setCargoCompositionSelector(response))
+
+            const text = newCargoCompositionItem.replaceAll('|', '')
+            const response = await cargoEditableSelectorApi.addOneCargoComposition(text)
+            if (response.success) {
+                await dispatch(getCargoCompositionSelector())
+            }
         } catch (e) {
-            alert(e)
-            // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
+            // @ts-ignore
+            alert(JSON.stringify(e.response.data))
         }
     }
 
@@ -368,7 +373,7 @@ export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): Req
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(true))
         try {
             const response = await getRouteFromAvtodispetcherApi({ from, to })
-            // const response = { kilometers: 50 }
+
             dispatch(requestStoreActions.setCurrentDistance(
                 +( +response.kilometers * 1.05 ).toFixed(0)))
 
