@@ -42,9 +42,7 @@ export const employeesApi = {
     // создать одного водителя
     createOneEmployee( { idEmployee, photoFace, ...requestData }: EmployeesApiType, image: File | undefined ) {
         let formData = new FormData()
-        for (let [ key, value ] of Object.entries(requestData)) {
-            formData.append(key, value)
-        }
+        Object.entries(requestData).map(( [ key, value ] ) => formData.append(key, value))
         if (image) {
             formData.append('photoFace', image, 'employeeImage.jpg')
         }
@@ -54,9 +52,7 @@ export const employeesApi = {
     // ИЗМЕНИТЬ одного водителя
     modifyOneEmployee( { photoFace, ...requestData }: EmployeesApiType, image: File | undefined ) {
         let formData = new FormData()
-        for (let [ key, value ] of Object.entries(requestData)) {
-            formData.append(key, value)
-        }
+        Object.entries(requestData).map(( [ key, value ] ) => formData.append(key, value))
         if (image) {
             formData.append('photoFace', image, 'employeeImage.jpg')
         }

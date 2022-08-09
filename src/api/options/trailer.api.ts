@@ -36,9 +36,7 @@ export const trailerApi = {
     // создать один ПРИЦЕП
     createOneTrailer( { idTrailer, trailerImage, ...requestData }: TrailerApiType, image: File | undefined ) {
         let formData = new FormData()
-        for (let [ key, value ] of Object.entries(requestData)) {
-            formData.append(key, value)
-        }
+        Object.entries(requestData).map(( [ key, value ] ) => formData.append(key, value))
         if (image) {
             formData.append('trailerImage', image, 'trailerImage.jpg')
         }
@@ -48,9 +46,7 @@ export const trailerApi = {
     // ИЗМЕНИТЬ один ПРИЦЕП
     modifyOneTrailer( { trailerImage, ...requestData }: TrailerApiType, image: File | undefined ) {
         let formData = new FormData()
-        for (let [ key, value ] of Object.entries(requestData)) {
-            formData.append(key, value)
-        }
+        Object.entries(requestData).map(( [ key, value ] ) => formData.append(key, value))
         if (image) {
             formData.append('trailerImage', image, 'trailerImage.jpg')
         }

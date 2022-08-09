@@ -36,9 +36,7 @@ export const transportApi = {
     // создать один ТРАНСПОРТ
     createOneTransport( { idTransport, transportImage, ...requestData }: TransportApiType, image: File | undefined ) {
         let formData = new FormData()
-        for (let [ key, value ] of Object.entries(requestData)) {
-            formData.append(key, value)
-        }
+        Object.entries(requestData).map(( [ key, value ] ) => formData.append(key, value))
         if (image) {
             formData.append('transportImage', image, 'transportImage.jpg')
         }
@@ -48,9 +46,7 @@ export const transportApi = {
     // ИЗМЕНИТЬ один ТРАНСПОРТ
     modifyOneTransport( { transportImage, ...requestData }: TransportApiType, image: File | undefined ) {
         let formData = new FormData()
-        for (let [ key, value ] of Object.entries(requestData)) {
-            formData.append(key, value)
-        }
+        Object.entries(requestData).map(( [ key, value ] ) => formData.append(key, value))
         if (image) {
             formData.append('transportImage', image, 'transportImage.jpg')
         }
