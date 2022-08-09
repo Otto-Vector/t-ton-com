@@ -270,7 +270,6 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
     async ( dispatch, getState ) => {
         const idUser = getState().authStoreReducer.authID
         try {
-
             const setPersonal = await requisitesApi.changePersonalData({
                 idUser,
                 nnNumber: values.innNumber,
@@ -298,13 +297,8 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
                 await dispatch(getPersonalOrganizationReqisites())
             }
         } catch (e) {
-
+            alert(e)
         }
-        // if (setPersonal.success) {
-        //     return null
-        // } else {
-        //     return { innNumber: 'Неверный ИНН!' }
-        // }
     }
 
 // запрос данных активного пользователя
