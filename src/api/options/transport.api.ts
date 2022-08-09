@@ -34,17 +34,11 @@ export const transportApi = {
             .then(response => response.data)
     },
     // создать один ТРАНСПОРТ
-    createOneTransport( {idTransport, ...requestData}: TransportApiType, image: File | undefined ) {
+    createOneTransport( { idTransport, transportImage, ...requestData }: TransportApiType, image: File | undefined ) {
         let formData = new FormData()
-        formData.append('idUser', requestData.idUser)
-        formData.append('transportNumber', requestData.transportNumber)
-        formData.append('transportTrademark', requestData.transportTrademark)
-        formData.append('transportModel', requestData.transportModel)
-        formData.append('pts', requestData.pts)
-        formData.append('dopog', requestData.dopog)
-        formData.append('cargoType', requestData.cargoType)
-        formData.append('propertyRights', requestData.propertyRights)
-        formData.append('cargoWeight', requestData.cargoWeight)
+        for (let [ key, value ] of Object.entries(requestData)) {
+            formData.append(key, value)
+        }
         if (image) {
             formData.append('transportImage', image, 'transportImage.jpg')
         }
@@ -54,21 +48,13 @@ export const transportApi = {
     // ИЗМЕНИТЬ один ТРАНСПОРТ
     modifyOneTransport( { transportImage, ...requestData }: TransportApiType, image: File | undefined ) {
         let formData = new FormData()
-        formData.append('idUser', requestData.idUser)
-        formData.append('idTransport', requestData.idTransport)
-        formData.append('transportNumber', requestData.transportNumber)
-        formData.append('transportTrademark', requestData.transportTrademark)
-        formData.append('transportModel', requestData.transportModel)
-        formData.append('pts', requestData.pts)
-        formData.append('dopog', requestData.dopog)
-        formData.append('cargoType', requestData.cargoType)
-        formData.append('propertyRights', requestData.propertyRights)
-        formData.append('cargoWeight', requestData.cargoWeight)
+        for (let [ key, value ] of Object.entries(requestData)) {
+            formData.append(key, value)
+        }
         if (image) {
             formData.append('transportImage', image, 'transportImage.jpg')
         }
-
-        return instanceBack.put<InfoResponseType>('/api/transport/', formData )
+        return instanceBack.put<InfoResponseType>('/api/transport/', formData)
             .then(response => response.data)
     },
     // УДАЛИТЬ один ТРАНСПОРТ

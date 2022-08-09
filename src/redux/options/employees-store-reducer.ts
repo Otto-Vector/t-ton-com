@@ -169,8 +169,6 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.createOneEmployee({
                 idUser, ...values,
-                // toDo: исправить на нормальный тип (у него в апи должно быть 15 символов) а у нас 18
-                employeePhoneNumber: '+' + parseAllNumbers(values.employeePhoneNumber),
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
@@ -188,8 +186,6 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.modifyOneEmployee({
                 ...values, idUser,
-                // toDo: исправить на нормальный тип (у него в апи должно быть 15 символов) а у нас 18
-                employeePhoneNumber: '+' + parseAllNumbers(values.employeePhoneNumber),
                 rating: '5',
                 coordinates: '48.671049, 40.660313',
                 status: 'free'

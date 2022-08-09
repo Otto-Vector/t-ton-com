@@ -34,17 +34,11 @@ export const trailerApi = {
             .then(response => response.data)
     },
     // создать один ПРИЦЕП
-    createOneTrailer( { idTrailer, ...requestData }: TrailerApiType, image: File | undefined ) {
+    createOneTrailer( { idTrailer, trailerImage, ...requestData }: TrailerApiType, image: File | undefined ) {
         let formData = new FormData()
-        formData.append('idUser', requestData.idUser)
-        formData.append('trailerNumber', requestData.trailerNumber)
-        formData.append('trailerTrademark', requestData.trailerTrademark)
-        formData.append('trailerModel', requestData.trailerModel)
-        formData.append('pts', requestData.pts)
-        formData.append('dopog', requestData.dopog)
-        formData.append('cargoType', requestData.cargoType)
-        formData.append('propertyRights', requestData.propertyRights)
-        formData.append('cargoWeight', requestData.cargoWeight)
+        for (let [ key, value ] of Object.entries(requestData)) {
+            formData.append(key, value)
+        }
         if (image) {
             formData.append('trailerImage', image, 'trailerImage.jpg')
         }
@@ -54,20 +48,12 @@ export const trailerApi = {
     // ИЗМЕНИТЬ один ПРИЦЕП
     modifyOneTrailer( { trailerImage, ...requestData }: TrailerApiType, image: File | undefined ) {
         let formData = new FormData()
-        formData.append('idUser', requestData.idUser)
-        formData.append('idTrailer', requestData.idTrailer)
-        formData.append('trailerNumber', requestData.trailerNumber)
-        formData.append('trailerTrademark', requestData.trailerTrademark)
-        formData.append('trailerModel', requestData.trailerModel)
-        formData.append('pts', requestData.pts)
-        formData.append('dopog', requestData.dopog)
-        formData.append('cargoType', requestData.cargoType)
-        formData.append('propertyRights', requestData.propertyRights)
-        formData.append('cargoWeight', requestData.cargoWeight)
+        for (let [ key, value ] of Object.entries(requestData)) {
+            formData.append(key, value)
+        }
         if (image) {
             formData.append('trailerImage', image, 'trailerImage.jpg')
         }
-
         return instanceBack.put<InfoResponseType>('/api/trailer/', formData)
             .then(response => response.data)
     },
