@@ -19,6 +19,7 @@ import {CompanyRequisitesType} from '../../../types/form-types';
 import {CancelButton} from '../../common/cancel-button/cancel-button';
 import {useNavigate} from 'react-router-dom';
 import {InfoText} from '../../common/info-text/into-text';
+import {setOrganizationRequisites} from '../../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {
@@ -38,16 +39,15 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsRequisitesStore)
     const parsers = useSelector(getParsersRequisitesStore)
 
-    const onSubmit = ( requisites: CompanyRequisitesType ) => {
-        console.log(requisites)
+    const onSubmit = async ( requisites: CompanyRequisitesType<string> ) => {
+        await dispatch<any>(setOrganizationRequisites(requisites))
+        navigate(-1)
     }
 
     const onCancelClick = () => {
         navigate(-1)
     }
-    // const fakeFetch = () => { // @ts-ignore
-    //     // dispatch(fakeAuthFetching())
-    // }
+
 
     return (
         <div className={ styles.requisitesForm }>
@@ -207,9 +207,8 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                                         disabled={ submitting || hasValidationErrors }
                                                         colorMode={ 'green' }
                                                         title={ 'Cохранить' }
-
                                                         rounded
-                                                />
+                                                >{ submitting && <Preloader/>}</Button>
                                             </div>
                                         </div>
                                         {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }

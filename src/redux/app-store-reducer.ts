@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk';
 import {AppStateType, GetActionsTypes} from './redux-store';
-import {getPersonalReqisites} from './options/requisites-store-reducer';
+import {getPersonalOrganizationReqisites} from './options/requisites-store-reducer';
 import {getAllEmployeesAPI} from './options/employees-store-reducer';
 import {getAllConsigneesAPI} from './options/consignees-store-reducer';
 import {getAllRequestsAPI, getCargoCompositionSelector} from './forms/request-store-reducer';
@@ -51,14 +51,14 @@ export type InitializedThunkActionType = ThunkAction<void, AppStateType, unknown
 // запускаем комбайн загрузок/обращений к API
 export const initializedAll = (): InitializedThunkActionType =>
     ( dispatch ) => {
-        const getPersonal = dispatch(getPersonalReqisites())
+        const getPersonal = dispatch(getPersonalOrganizationReqisites())
         const getGeoPosition = dispatch(geoPositionTake())
         const getAllShippers = dispatch(getAllShippersAPI())
         const getAllConsignees = dispatch(getAllConsigneesAPI())
         const getAllTransport = dispatch(getAllTransportAPI())
         const getAllTrailer = dispatch(getAllTrailerAPI())
         const getAllEmployees = dispatch(getAllEmployeesAPI())
-        const getAllRequests = dispatch(getAllRequestsAPI({ innID: 0 }))
+        const getAllRequests = dispatch(getAllRequestsAPI({innID: 0}))
 
 
         const getAllInfoMessages = dispatch(getInfoMessages({ authID: 0 }))

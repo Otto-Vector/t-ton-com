@@ -152,29 +152,29 @@ const initialState = {
     initialValues: { ...initialValues },
 
     storedValues: {
-        innNumber: '4265631947',
-        organizationName: 'Тестовое наименование',
-        taxMode: 'УСН',
-        kpp: '839646136',
-        ogrn: '5179220547402',
-        okpo: '7512278594',
-        legalAddress: 'Россия, г. Нижний Тагил, Пушкина ул., д. 23 кв.173',
-        description: undefined,
-
-        postAddress: 'Россия, г. Магнитогорск, Колхозная ул., д. 19 кв.40',
-        phoneDirector: '+7 (965) 461-43-67',
-        phoneAccountant: '+7 (993) 383-63-63',
-        email: 'valentina19@outlook.com',
-        bikBank: '648417961',
-        nameBank: 'СБЕРБАНК СБЕР СБЕРБАНК',
-        checkingAccount: '40560033000000009122',
-        korrAccount: '50934220600000004673',
-        tarifs: {
-            create: '100',
-            acceptShortRoute: '100',
-            acceptLongRoute: '100',
-            paySafeTax: '3',
-        },
+        // innNumber: '4265631947',
+        // organizationName: 'Тестовое наименование',
+        // taxMode: 'УСН',
+        // kpp: '839646136',
+        // ogrn: '5179220547402',
+        // okpo: '7512278594',
+        // legalAddress: 'Россия, г. Нижний Тагил, Пушкина ул., д. 23 кв.173',
+        // description: undefined,
+        //
+        // postAddress: 'Россия, г. Магнитогорск, Колхозная ул., д. 19 кв.40',
+        // phoneDirector: '+7 (965) 461-43-67',
+        // phoneAccountant: '+7 (993) 383-63-63',
+        // email: 'valentina19@outlook.com',
+        // bikBank: '648417961',
+        // nameBank: 'СБЕРБАНК СБЕР СБЕРБАНК',
+        // checkingAccount: '40560033000000009122',
+        // korrAccount: '50934220600000004673',
+        // tarifs: {
+        //     create: '100',
+        //     acceptShortRoute: '100',
+        //     acceptLongRoute: '100',
+        //     paySafeTax: '3',
+        // },
     } as CompanyRequisitesType,
 
 }
@@ -205,12 +205,6 @@ export const requisitesStoreReducer = ( state = initialState, action: ActionsTyp
                 storedValues: action.storedValues,
             }
         }
-        case 'requisites-store-reducer/SET-INN-ERROR': {
-            return {
-                ...state,
-                innError: action.innError,
-            }
-        }
         default: {
             return state
         }
@@ -233,10 +227,7 @@ export const requisitesStoreActions = {
         type: 'requisites-store-reducer/SET-STORED-VALUES',
         storedValues,
     } as const ),
-    setInnError: ( innError: string | null ) => ( {
-        type: 'requisites-store-reducer/SET-INN-ERROR',
-        innError,
-    } as const ),
+
 }
 
 /* САНКИ */
@@ -254,9 +245,9 @@ export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDa
             const { data } = response[0]
             const setPersonal = await requisitesApi.setPersonalData({
                 idUser,
-                innNumber: data.inn,
+                nnNumber: data.inn,
                 organizationName: response[0].value,
-                taxMode: data.finance?.tax_system || undefined,
+                taxMode: data.finance?.tax_system || '',
                 kpp: data.kpp,
                 ogrn: data.ogrn,
                 okpo: data.okpo,
@@ -274,24 +265,41 @@ export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDa
     }
 
 // сохранение данных реквизитов в БЭК
-export const setOrganizationRequisites = ():
+export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
     RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
+        const idUser = getState().authStoreReducer.authID
+        try {
 
-        const setPersonal = await requisitesApi.changePersonalData({
-            idUser: 'e041ccb0-7848-4064-981d-f861897a8fdd',
-            innNumber: '3459008089',
-            organizationName: 'Тестовые данн-ые',
-            taxMode: 'УСН',
-            kpp: '345901010',
-            ogrn: '12345678',
-            okpo: '22403359',
-            legalAddress: '400078, г Волгоград, пр-кт им. В.И. Ленина, д 67, офис 207',
-            postAddress: '400078, г Волгоград, пр-кт им. В.И. Ленина, д 67, офис 207',
-            email: 'ttt@yaya.ru',
-            phone: '+7 (938) 693-07-27',
-        } as PersonalResponseType)
-        console.log('setPersonal: ', setPersonal)
+            const setPersonal = await requisitesApi.changePersonalData({
+                idUser,
+                nnNumber: values.innNumber,
+                organizationName: values.organizationName,
+                taxMode: values.taxMode,
+                kpp: values.kpp,
+                ogrn: values.ogrn,
+                okpo: values.okpo,
+                legalAddress: values.legalAddress,
+                dispatcherFIO: values.dispatcherFIO,
+                mechanicFIO: values.mechanicFIO,
+                postAddress: values.postAddress,
+                phoneDirector: values.phoneDirector,
+                phoneAccountant: values.phoneAccountant,
+                email: values.email,
+                nameBank: values.nameBank,
+                bikBank: values.bikBank,
+                checkingAccount: values.checkingAccount,
+                korrAccount: values.korrAccount,
+            } as PersonalResponseType)
+
+            console.log('setPersonal: ', setPersonal)
+
+            if (setPersonal.success) {
+                await dispatch(getPersonalOrganizationReqisites())
+            }
+        } catch (e) {
+
+        }
         // if (setPersonal.success) {
         //     return null
         // } else {
@@ -300,13 +308,13 @@ export const setOrganizationRequisites = ():
     }
 
 // запрос данных активного пользователя
-export const getPersonalReqisites = ( ): RequisitesStoreReducerThunkActionType =>
+export const getPersonalOrganizationReqisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
             const idUser = getState().authStoreReducer.authID
-            const user = await requisitesApi.getPersonalDataFromId({idUser})
+            const user = await requisitesApi.getPersonalDataFromId({ idUser })
             if (user.length > 0) {
-                dispatch<any>(authStoreActions.setAuthPhone(user[0].phone||''))
+                dispatch<any>(authStoreActions.setAuthPhone(user[0].phone || ''))
                 dispatch(requisitesStoreActions.setStoredValues({
                     ...getState().requisitesStoreReducer.initialValues,
                     innNumber: user[0].nnNumber,
@@ -317,6 +325,8 @@ export const getPersonalReqisites = ( ): RequisitesStoreReducerThunkActionType =
                     okpo: user[0].okpo,
                     legalAddress: user[0].legalAddress,
                     description: user[0].description,
+                    dispatcherFIO: user[0].dispatcherFIO,
+                    mechanicFIO: user[0].mechanicFIO,
 
                     postAddress: user[0].postAddress,
                     phoneDirector: user[0].phoneDirector,
@@ -336,8 +346,12 @@ export const getPersonalReqisites = ( ): RequisitesStoreReducerThunkActionType =
             }
 
         } catch (error) {
-
             // @ts-ignore
-            if (error.response) console.log(error.response.data.message)
+            if (error.response) {
+                // @ts-ignore
+                console.log(error.response.data.failed)
+            } else {
+                alert(error)
+            }
         }
     }
