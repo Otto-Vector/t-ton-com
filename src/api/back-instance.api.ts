@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const { REACT_APP_DEPLOY_MODE } = process.env
 
-// http://185.46.11.30:8000/admin/
+// https://server.t-ton.com/admin/
 // 89876543210
 // Aa123456
 
