@@ -21,6 +21,7 @@ export const MapSection: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     useLayoutEffect(() => {
+        console.log(drivers)
         dispatch<any>(setDriversToMap())
     }, [ dispatch ])
 

@@ -186,8 +186,9 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.modifyOneEmployee({
                 ...values, idUser,
+                // поставил, потому что на localhost:3000 ругается о пустых полях,
+                // а на деплое через https - нет
                 rating: '5',
-                coordinates: '48.671049, 40.660313',
                 status: 'free'
             }, image)
             if (response.success) console.log(response.success)
