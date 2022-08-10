@@ -20,6 +20,7 @@ import {CancelButton} from '../../common/cancel-button/cancel-button';
 import {useNavigate} from 'react-router-dom';
 import {InfoText} from '../../common/info-text/into-text';
 import {setOrganizationRequisites} from '../../../redux/options/requisites-store-reducer';
+import {parseAllNumbers} from '../../../utils/parsers';
 
 
 type OwnProps = {}
@@ -38,7 +39,8 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
     const parsers = useSelector(getParsersRequisitesStore)
 
     const onSubmit = async ( requisites: CompanyRequisitesType<string> ) => {
-        await dispatch<any>(setOrganizationRequisites(requisites))
+        const unmaskedValues = { ...requisites, innNumber: parseAllNumbers(requisites.innNumber) }
+        await dispatch<any>(setOrganizationRequisites(unmaskedValues))
         navigate(-1)
     }
 
@@ -57,7 +59,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { handleSubmit, form, submitting, hasValidationErrors } ) => (
+                                ( { pristine, handleSubmit, form, submitting, hasValidationErrors } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.requisitesForm__form }>
                                         <div className={ styles.requisitesForm__inputsPanel }>
                                             <Field name={ 'innNumber' }
@@ -202,11 +204,11 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                             />
                                             <div className={ styles.requisitesForm__buttonsPanel }>
                                                 <Button type={ 'submit' }
-                                                        disabled={ submitting || hasValidationErrors }
+                                                        disabled={ submitting || hasValidationErrors || pristine }
                                                         colorMode={ 'green' }
                                                         title={ 'Cохранить' }
                                                         rounded
-                                                >{ submitting && <Preloader/>}</Button>
+                                                >{ submitting && <Preloader/> }</Button>
                                             </div>
                                         </div>
                                     </form>

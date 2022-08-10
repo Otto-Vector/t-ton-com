@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import styles from './request-form-left.module.scss'
 import {
     getAllShippersSelectFromLocal,
@@ -19,7 +19,7 @@ import {
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
-import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
+import {FormSelector, SelectOptions, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
 import {RequestModesType} from '../request-section'
 import {Field, Form} from 'react-final-form'
 import {
@@ -37,8 +37,8 @@ import {
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
 import {Preloader} from '../../common/preloader/preloader';
-import {FormSpySimpleRequest} from '../../common/form-spy-simple/form-spy-simple';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
+import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect';
 
 
 type OwnProps = {
@@ -65,6 +65,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const fieldInformation = useSelector(getInfoTextModalsRequestValuesStore)
     const currentDistance = useSelector(getCurrentDistanceRequestStore)
     const currentDistanceIfFetching = useSelector(getCurrentDistanceIsFetchingRequestStore)
+    const { innNumber: requisitesInn } = useSelector(getStoredValuesRequisitesStore)
 
     const allShippers = useSelector(getAllShippersStore)
     const oneShipper = useSelector(getOneShipperFromLocal)
@@ -81,8 +82,12 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const oneCarrier = allShippers.filter(( { idSender } ) => idSender === initialValues.idCarrier)[0]
 
 
+    const custumersByUserInn = useMemo(
+        () => allShippers.filter(( { innNumber } ) => innNumber === requisitesInn)
+            .map(( { title } ) => ( { value: title, label: title, key: title } )), [ requisitesInn ])
+
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
-    const customersSelect = shippersSelect// пока присвоил те что есть...
+    const customersSelect: SelectOptions[] = custumersByUserInn
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
 
     const buttonsAction = {
@@ -122,7 +127,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
             }
             setIsFirstRender(false) //первый рендер отработал
         }
-    }, [isFirstRender])
+    }, [ isFirstRender ])
 
 
     useEffect(() => {
@@ -345,13 +350,13 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 }
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
-                            {/*{ ( requestModes.createMode && !isFirstRender ) &&*/}
-                            {/*    <FormSpySimpleRequest*/}
-                            {/*        form={ form }*/}
-                            {/*        onChange={ ( { values, valid } ) => {*/}
-                            {/*            if (exposeValues) exposeValues({ values, valid })*/}
-                            {/*        } }/>*/}
-                            {/*}*/}
+                            {/*{ ( requestModes.createMode && !isFirstRender ) &&*/ }
+                            {/*    <FormSpySimpleRequest*/ }
+                            {/*        form={ form }*/ }
+                            {/*        onChange={ ( { values, valid } ) => {*/ }
+                            {/*            if (exposeValues) exposeValues({ values, valid })*/ }
+                            {/*        } }/>*/ }
+                            {/*}*/ }
                         </form>
                     )
                 }/>

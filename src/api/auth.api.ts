@@ -17,21 +17,25 @@ export type NewUserRequestType = {
 }
 
 export const authApi = {
+
     // отправка запроса на данные пользователя
     autoLogin() {
         return instanceBack.post<{ userid?: string, message?: string }>('/api/me/', )
             .then(response => response.data)
     },
+
     // отправка запроса на код по номеру телефона
     sendCodeToPhone( { phone, inn, kpp }: NewUserRequestType ) {
         return instanceBack.put<InfoResponseType>('/api/codesend/', { phone, innNumber: inn, kpp })
             .then(response => response.data)
     },
+
     // вход по паролю
     login( { phone, password }: AuthValidateRequestType ) {
         return instanceBack.post<InfoResponseType>('/api/login/', { phone, password })
             .then(response => response.data)
     },
+
     // выход
     logout( { phone }: AuthRequestType ) {
         return instanceBack.post<InfoResponseType>('/api/logout/', { phone })

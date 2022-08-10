@@ -34,7 +34,7 @@ export const cargoEditableSelectorApi = {
 
     // удалить ВЕСЬ список DELETE /api/cargo/
     deleteCargoCompositon( ) {
-        return instanceBack.post<InfoResponseType>('/api/cargo/' )
+        return instanceBack.delete<InfoResponseType>('/api/cargo/' )
             .then(response => response.data)
             // 1.	Code 200, {"success": "Список удалён"}
             // 2.	Code 449, {'error':'Неправильно указаны аргументы'}

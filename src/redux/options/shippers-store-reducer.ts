@@ -57,7 +57,7 @@ const initialState = {
         organizationName: undefined,
         kpp: '#########', // 9 цифр
         ogrn: '############# ##', // 13,15 цифр
-        address: undefined, // понятно. просто адрес
+        address: undefined, // просто адрес
         shipperFio: undefined, //
         shipperTel: '+7 (###) ###-##-##', // 11 цифр
         description: undefined, // много букав
@@ -106,7 +106,7 @@ const initialState = {
         city: undefined,
     } as ShippersCardType<ParserType>,
 
-    content: [] as ShippersCardType[],
+    content: [] as ShippersCardType<string>[],
 }
 
 export type ShippersStoreReducerStateType = typeof initialState
@@ -137,7 +137,7 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
                 ],
             }
         }
-        case 'shippers-store-reducer/TOGGLE-SHIPPER-IS-FETSHING': {
+        case 'shippers-store-reducer/TOGGLE-SHIPPER-IS-FETCHING': {
             return {
                 ...state,
                 shipperIsFetching: action.shipperIsFetching,
@@ -185,12 +185,12 @@ export const shippersStoreActions = {
         type: 'shippers-store-reducer/SET-COORDINATES',
         payload,
     } as const ),
-    setShippersContent: ( shippers: ShippersCardType[] ) => ( {
+    setShippersContent: ( shippers: ShippersCardType<string>[] ) => ( {
         type: 'shippers-store-reducer/SET-SHIPPERS-CONTENT',
         shippers,
     } as const ),
     toggleShipperIsFetching: ( shipperIsFetching: boolean ) => ( {
-        type: 'shippers-store-reducer/TOGGLE-SHIPPER-IS-FETSHING',
+        type: 'shippers-store-reducer/TOGGLE-SHIPPER-IS-FETCHING',
         shipperIsFetching,
     } as const ),
 

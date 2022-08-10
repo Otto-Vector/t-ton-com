@@ -146,6 +146,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                       form,
                                       submitting,
                                       values,
+                                      pristine,
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.employeesForm__form }>
                                         <div
@@ -278,7 +279,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.employeesForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting || submitError || hasValidationErrors }
+                                                            disabled={ submitting || submitError || hasValidationErrors || pristine }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

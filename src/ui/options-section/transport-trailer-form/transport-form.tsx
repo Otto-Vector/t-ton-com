@@ -129,6 +129,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                             initialValues={ initialValues }
                             render={
                                 ( {
+                                      pristine,
                                       hasValidationErrors,
                                       handleSubmit,
                                       form,

@@ -114,7 +114,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     }
 
     // автозаполнение полей при выборе селектора
-    const setDataToForm = ( formValue: ShippersCardType ) => ( value: string | undefined ) => {
+    const setDataToForm = ( form: FormApi<ShippersCardType> ) => ( value: string | undefined ) => {
+        const formValue = form.getState().values
         if (value)
             dispatch<any>(setOrganizationByInnKppShippers({ formValue, kppNumber: value }))
     }
@@ -178,7 +179,15 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { submitError, hasValidationErrors, handleSubmit, form, submitting, values } ) => (
+                                ( {
+                                      submitError,
+                                      pristine,
+                                      hasValidationErrors,
+                                      handleSubmit,
+                                      form,
+                                      submitting,
+                                      values,
+                                  } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
                                         <div
                                             className={ styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled }>
@@ -210,7 +219,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                               placeholder={ label.kpp }
                                                               values={ kppSelect }
                                                               validate={ validators.kpp }
-                                                              handleChanger={ setDataToForm(values) }
+                                                              handleChanger={ setDataToForm(form) }
                                                               disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
                                                               errorTop
                                                               isClearable
@@ -300,7 +309,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting || hasValidationErrors }
+                                                            disabled={ submitting || hasValidationErrors || submitError }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded
