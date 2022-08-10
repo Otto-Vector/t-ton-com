@@ -6,6 +6,7 @@ import {parseFamilyToFIO, stringToCoords} from '../../utils/parsers';
 
 export type DriverOnMapType = {
     id: number,
+    idEmployee: string,
     position: number[],
     status: string,
     fio: string
@@ -15,12 +16,13 @@ export type DriverOnMapType = {
 const initialState = {
     isFetching: true,
     center: [ 0, 0 ] as [ number, number ],
-    drivers: [ {
-        id: 2 as number,
-        position: [ 0, 0 ] as number[],
-        status: 'empty' as 'empty' | 'full' | 'unknown',
-        fio: '',
-    },
+    drivers: [
+        {
+            id: 2 as number,
+            position: [ 0, 0 ] as number[],
+            status: 'empty' as 'empty' | 'full' | 'unknown',
+            fio: '',
+        },
     ] as DriverOnMapType[],
     requests: [ {} ] as number[],
 }
@@ -95,6 +97,7 @@ export const setDriversToMap = (): BigMapStoreReducerThunkActionType =>
         const drivers: DriverOnMapType[] = getState().employeesStoreReducer.content.map(
             ( { idEmployee, coordinates, status, employeeFIO }, index ) => ( {
                 id: index + 1,
+                idEmployee,
                 position: stringToCoords(coordinates),
                 status: status as string,
                 fio: parseFamilyToFIO(employeeFIO),

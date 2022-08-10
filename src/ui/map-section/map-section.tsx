@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react'
+import React, {useEffect, useLayoutEffect, useState} from 'react'
 import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -17,12 +17,14 @@ type OwnProps = {}
 export const MapSection: React.FC<OwnProps> = () => {
 
     const drivers = useSelector(getDriversBigMapStore)
-    const [ idToPortal, setIdToPortal ] = useState(0)
+    const [ idToPortal, setIdToPortal ] = useState('')
     const dispatch = useDispatch()
 
     useLayoutEffect(() => {
         dispatch<any>(setDriversToMap())
     }, [ dispatch ])
+
+    // useEffect(()=>{return setIdToPortal('')})
 
     const center = useSelector(getGeoPositionAuthStore)
     const zoom = 7
@@ -30,27 +32,27 @@ export const MapSection: React.FC<OwnProps> = () => {
     return (
         <div className={ styles.yandexMapComponent }>
             <YandexBigMap center={ center } zoom={ zoom }>
-                { drivers.map(( { id, position, status, fio } ) =>
+                { drivers.map(( { id, idEmployee, position, status, fio } ) =>
                     <Placemark geometry={ position }
                         // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
                                options={
                                    {
                                        preset: 'islands#circleIcon',
                                        iconColor: status === 'empty' ? 'red' : 'green',
-                                       // hasBalloon: true,
+                                       hasBalloon: true,
                                    } }
                                properties={
                                    {
                                        iconContent: id,
                                        hintContent: `<b>${ fio }</b>`,
-                                       balloonContent: `<div id="driver-${ id }" class="driver-card"></div>`,
+                                       balloonContent: `<div id="driver-${ idEmployee }" class="driver-card"></div>`,
                                    }
                                }
-                               key={ id }
+                               key={ id+idEmployee }
                                onClick={ () => {
                                    // ставим в очередь промисов, чтобы сработало после отрисовки балуна
                                    setTimeout(() => {
-                                       setIdToPortal(id)
+                                       setIdToPortal(idEmployee)
                                    }, 0)
                                } }
                     />,
@@ -58,7 +60,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                 }
             </YandexBigMap>
             {/*ждём, когда появится балун с нужным ID*/ }
-            <Portal getHTMLElementId={ `driver-${ idToPortal }` }><AddDriversView/></Portal>
+            <Portal getHTMLElementId={ `driver-${ idToPortal }` }><AddDriversView idEmployee={idToPortal}/></Portal>
         </div>
     )
 }

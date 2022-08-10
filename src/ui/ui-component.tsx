@@ -111,7 +111,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.options } element={ <ТoAuthRedirect><OptionsSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.requisites } element={ <RequisitesForm/> }/>
 
-                        <Route path={ routes.test } element={ <AddDriversView/> }/>
+                        <Route path={ routes.test } element={ <AddDriversView idEmployee={'0ce2d16f-582e-4d49-ac35-e0c8f9c53b06'}/> }/>
 
                         <Route path="*" element={ <h2>This site NOT FOUND. Try another address</h2> }/>
                     </Routes>
