@@ -71,8 +71,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
+    const [ fileIsCompressed, setFileIsCompressed ] = useState(false)
 
     const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
+        setFileIsCompressed(true)
         if (event.target.files && event.target.files.length > 0) {
             const imageFile = event.target.files[0];
             const options = {
@@ -88,6 +90,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                 alert(error)
             }
         }
+        setFileIsCompressed(false)
     }
 
     const setLightBoxImage = ( image?: string ) => {
@@ -249,19 +252,24 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                             <div className={ styles.employeesForm__photoWrapper }
                                                  title={ 'Добавить/изменить фото' }>
-                                                <img className={ styles.employeesForm__photo }
-                                                     src={ ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                         || ( values.photoFace && currentURL + values.photoFace )
-                                                         || noImage }
-                                                     alt="facePhoto"
-                                                     onClick={ () => {
-                                                         setLightBoxImage(
-                                                             ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                             || ( values.photoFace && currentURL + values.photoFace )
-                                                             || noImage)
-                                                     } }
-                                                />
-                                                <AttachImageButton onChange={ sendPhotoFile }/>
+                                                { fileIsCompressed
+                                                    ? <Preloader/>
+                                                    : <>
+                                                        <img className={ styles.employeesForm__photo }
+                                                             src={ ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                                 || ( values.photoFace && currentURL + values.photoFace )
+                                                                 || noImage }
+                                                             alt="facePhoto"
+                                                             onClick={ () => {
+                                                                 setLightBoxImage(
+                                                                     ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                                     || ( values.photoFace && currentURL + values.photoFace )
+                                                                     || noImage)
+                                                             } }
+                                                        />
+                                                        <AttachImageButton onChange={ sendPhotoFile }/>
+                                                    </>
+                                                }
 
                                             </div>
 

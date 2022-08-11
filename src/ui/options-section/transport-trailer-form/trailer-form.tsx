@@ -64,11 +64,6 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string ) => {
-        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
-    }
-    // для манипуляции с картинкой
-    const [ selectedImage, setSelectedImage ] = useState<File>();
 
     const onSubmit = ( values: TrailerCardType<string> ) => {
         const demaskedValues = { ...values, cargoWeight: parseAllNumbers(values.cargoWeight) }
@@ -91,7 +86,15 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
+    // для манипуляции с картинкой
+    const [ selectedImage, setSelectedImage ] = useState<File>();
+    const setLightBoxImage = ( image?: string ) => {
+        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
+    }
+    // сжимаем картинку и выводим на предпросмотр
+    const [ fileIsCompressed, setFileIsCompressed ] = useState(false)
     const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
+        setFileIsCompressed(true)
         if (event.target.files && event.target.files.length > 0) {
             const imageFile = event.target.files[0];
             const options = {
@@ -108,8 +111,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                 alert(error)
             }
         }
+        setFileIsCompressed(false)
     }
-
     useEffect(() => {
             if (currentId === currentIdForShow) {
                 setInitialValues(oneTrailer)
@@ -205,20 +208,23 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                         <div>
                                             <div className={ styles.transportTrailerForm__photoWrapper }
                                                  title={ 'Добавить/изменить фото транспорта' }
-                                            >
-                                                <img className={ styles.transportTrailerForm__photo }
-                                                     src={ ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                         || ( values.trailerImage && currentURL + values.trailerImage )
-                                                         || noImage }
-                                                     alt="trailerPhoto"
-                                                     onClick={ () => {
-                                                         setLightBoxImage(
-                                                             ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                             || ( values.trailerImage && currentURL + values.trailerImage )
-                                                             || noImage)
-                                                     } }
+                                            >{ fileIsCompressed
+                                                ? <Preloader/>
+                                                : <><img className={ styles.transportTrailerForm__photo }
+                                                       src={ ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                           || ( values.trailerImage && currentURL + values.trailerImage )
+                                                           || noImage }
+                                                       alt="trailerPhoto"
+                                                       onClick={ () => {
+                                                           setLightBoxImage(
+                                                               ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                               || ( values.trailerImage && currentURL + values.trailerImage )
+                                                               || noImage)
+                                                       } }
                                                 />
                                                 <AttachImageButton onChange={ sendPhotoFile }/>
+                                                </>
+                                            }
                                             </div>
 
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>

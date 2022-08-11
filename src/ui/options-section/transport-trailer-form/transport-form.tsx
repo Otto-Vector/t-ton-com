@@ -90,8 +90,9 @@ export const TransportForm: React.FC<OwnProps> = () => {
         dispatch<any>(oneTransportDeleteToAPI(currentId))
         navigate(options)
     }
-
+    const [ fileIsCompressed, setFileIsCompressed ] = useState(false)
     const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
+        setFileIsCompressed(true)
         if (event.target.files && event.target.files.length > 0) {
             const imageFile = event.target.files[0];
             const options = {
@@ -107,6 +108,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                 alert(error)
             }
         }
+        setFileIsCompressed(false)
     }
 
     useEffect(() => {
@@ -206,19 +208,23 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__photoWrapper }
                                                  title={ 'Добавить/изменить фото транспорта' }
                                             >
-                                                <img className={ styles.transportTrailerForm__photo }
-                                                     src={ ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                         || ( values.transportImage && currentURL + values.transportImage )
-                                                         || noImage }
-                                                     alt="transportPhoto"
-                                                     onClick={ () => {
-                                                         setLightBoxImage(
-                                                             ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                             || ( values.transportImage && currentURL + values.transportImage )
-                                                             || noImage)
-                                                     } }
-                                                />
-                                                <AttachImageButton onChange={ sendPhotoFile }/>
+                                                { fileIsCompressed
+                                                    ? <Preloader/>
+                                                    : <>
+                                                        <img className={ styles.transportTrailerForm__photo }
+                                                             src={ ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                                 || ( values.transportImage && currentURL + values.transportImage )
+                                                                 || noImage }
+                                                             alt="transportPhoto"
+                                                             onClick={ () => {
+                                                                 setLightBoxImage(
+                                                                     ( selectedImage && URL.createObjectURL(selectedImage) )
+                                                                     || ( values.transportImage && currentURL + values.transportImage )
+                                                                     || noImage)
+                                                             } }
+                                                        />
+                                                        <AttachImageButton onChange={ sendPhotoFile }/>
+                                                    </> }
                                             </div>
 
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
