@@ -1,11 +1,10 @@
-import React, {ChangeEvent, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
-import noImage from '../../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
@@ -28,14 +27,13 @@ import {
     newEmployeeSaveToAPI,
     oneEmployeesDeleteToAPI,
 } from '../../../redux/options/employees-store-reducer';
-import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
-import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
+
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllTrailerSelectFromLocal} from '../../../selectors/options/trailer-reselect';
 import {getAllTransportSelectFromLocal} from '../../../selectors/options/transport-reselect';
-import {AppStateType} from '../../../redux/redux-store';
-import imageCompression from 'browser-image-compression'
 import {parseAllNumbers} from '../../../utils/parsers';
+import {ImageViewSet} from '../../common/image-view-set/image-view-set';
+
 
 type OwnProps = {}
 
@@ -43,7 +41,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     const header = 'Сотрудник'
     const isFetching = useSelector(getIsFetchingEmployeesStore)
-    const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
 
     const defaultInitialValues = useSelector(getInitialValuesEmployeesStore)
     //для проброса загруженных данных в форму
@@ -55,7 +52,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const parsers = useSelector(getParsersEmployeesStore)
 
     const trailerSelect = useSelector(getAllTrailerSelectFromLocal)
-    const transtportSelect = useSelector(getAllTransportSelectFromLocal)
+    const transportSelect = useSelector(getAllTransportSelectFromLocal)
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployees = useSelector(getOneEmployeesFromLocal)
@@ -71,31 +68,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
-    const [ fileIsCompressed, setFileIsCompressed ] = useState(false)
-
-    const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
-        setFileIsCompressed(true)
-        if (event.target.files && event.target.files.length > 0) {
-            const imageFile = event.target.files[0];
-            const options = {
-                maxSizeMB: 0.9,
-                maxWidthOrHeight: 1024,
-                useWebWorker: true,
-                fileType: 'image/jpeg',
-            }
-            try { // компресим файл и отправляем
-                const compressedFile = await imageCompression(imageFile, options);
-                setSelectedImage(compressedFile);
-            } catch (error) {
-                alert(error)
-            }
-        }
-        setFileIsCompressed(false)
-    }
-
-    const setLightBoxImage = ( image?: string ) => {
-        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
-    }
 
     const onSubmit = ( values: EmployeesCardType<string> ) => {
         const demaskedValues: EmployeesCardType<string> = {
@@ -217,7 +189,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                             <FormSelector named={ 'idTransport' }
                                                           placeholder={ label.idTransport }
-                                                          values={ transtportSelect }
+                                                          values={ transportSelect }
                                                           validate={ validators.idTransport }
                                                           isClearable
                                             />
@@ -250,29 +222,14 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.passportDate }
                                                    parse={ parsers.passportDate }
                                             />
-                                            <div className={ styles.employeesForm__photoWrapper }
-                                                 title={ 'Добавить/изменить фото' }>
-                                                { fileIsCompressed
-                                                    ? <Preloader/>
-                                                    : <>
-                                                        <img className={ styles.employeesForm__photo }
-                                                             src={ ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                                 || ( values.photoFace && currentURL + values.photoFace )
-                                                                 || noImage }
-                                                             alt="facePhoto"
-                                                             onClick={ () => {
-                                                                 setLightBoxImage(
-                                                                     ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                                     || ( values.photoFace && currentURL + values.photoFace )
-                                                                     || noImage)
-                                                             } }
-                                                        />
-                                                        <AttachImageButton onChange={ sendPhotoFile }/>
-                                                    </>
-                                                }
-
+                                            {/*/////////////---ИЗОБРАЖЕНИЕ---///////////////////////////////*/ }
+                                            <div className={ styles.employeesForm__photoWrapper }>
+                                                <ImageViewSet imageURL={ values.photoFace }
+                                                              onSelectNewImageFileToSend={ ( image ) => {
+                                                                  setSelectedImage(image)
+                                                              } }
+                                                />
                                             </div>
-
                                             <div className={ styles.employeesForm__buttonsPanel }>
                                                 <div className={ styles.employeesForm__button }>
                                                     <Button type={ 'button' }
@@ -298,9 +255,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                     </form>
                                 )
                             }/>
-
                     </> }
-
                 <CancelButton onCancelClick={ onCancelClick }/>
                 <InfoText/>
             </div>
