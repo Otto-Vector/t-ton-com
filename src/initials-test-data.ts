@@ -869,7 +869,7 @@ export const initialEmployeesValues: EmployeesCardType[] = [
 // для обработки документов в заявке
 export const initialDocumentsRequestValues: DocumentsRequestType = {
     proxyWay: {
-        label: undefined,
+        header: undefined,
         proxyFreightLoader: false,
         proxyDriver: false,
         waybillDriver: false,
@@ -881,25 +881,25 @@ export const initialDocumentsRequestValues: DocumentsRequestType = {
     addedPrice: 0,
     finalPrice: 0,
     ttnECP: {
-        label: undefined,
+        header: undefined,
         customer: false,
         carrier: false,
         consignee: false,
     },
     contractECP: {
-        label: undefined,
+        header: undefined,
         customer: false,
         carrier: false,
         uploadDocument: undefined,
     },
     updECP: {
-        label: undefined,
+        header: undefined,
         customer: false,
         carrier: false,
         uploadDocument: undefined,
     },
     customerToConsigneeContractECP: {
-        label: undefined,
+        header: undefined,
         customer: false,
         consignee: false,
         uploadDocument: undefined,

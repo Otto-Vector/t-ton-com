@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {AddDriverCardType, ValidateType} from '../../types/form-types';
+import {ResponseToRequestCardType, ValidateType} from '../../types/form-types';
 import {composeValidators, maxRangeNumber, required} from '../../utils/validators';
 
 const testInitialValues = {
@@ -14,7 +14,7 @@ const testInitialValues = {
     driverPhoto: undefined,
     driverTransportPhoto: undefined,
     driverTrailerPhoto: undefined,
-} as AddDriverCardType
+} as ResponseToRequestCardType
 
 
 const initialState = {
@@ -30,7 +30,7 @@ const initialState = {
         driverPhoto: undefined,
         driverTransportPhoto: undefined,
         driverTrailerPhoto: undefined,
-    } as AddDriverCardType,
+    } as ResponseToRequestCardType,
 
     initialValues: {
         driverFIO: undefined,
@@ -43,7 +43,7 @@ const initialState = {
         driverPhoto: undefined,
         driverTransportPhoto: undefined,
         driverTrailerPhoto: undefined,
-    } as AddDriverCardType,
+    } as ResponseToRequestCardType,
 
     placeholder: {
         driverFIO: 'Поиск водителя...',
@@ -89,7 +89,7 @@ export const addDriverStoreReducer = ( state = initialState, action: ActionsType
 /* ЭКШОНЫ */
 export const addDriverStoreActions = {
     // установка значения в карточку отображения водителя
-    setValues: ( initialValues: AddDriverCardType ) => ( {
+    setValues: ( initialValues: ResponseToRequestCardType ) => ( {
         type: 'add-driver-store-reducer/SET-VALUES',
         initialValues,
     } as const ),

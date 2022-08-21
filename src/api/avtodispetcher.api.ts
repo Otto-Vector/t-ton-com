@@ -21,12 +21,6 @@ export type GetAvtodispetcherRouteType = {
     to: string
 }
 
-//стандартно возвращаемый тип с подстановкой
-// export type ResponseApiType<DataIs = {}> = {
-//     data: DataIs
-//     messages: string[]
-// }
-
 export type AvtodispetcherResponseType = {
     kilometers: string
     polyline: string

@@ -54,7 +54,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*////////Транспортные документы Сторон//////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.proxyWay.label }</label>
+                    { labels.proxyWay.header }</label>
                 <div
                     className={ styles.requestFormDocumentRight__documentsPanel + ' ' + styles.requestFormDocumentRight__documentsPanel_top }>
                     <div
@@ -146,7 +146,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*/////////ТТН или ЭТрН с ЭЦП////////////////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.ttnECP.label }</label>
+                    { labels.ttnECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button colorMode={ !initialValues.ttnECP.customer ? 'grayAlert' : 'blue' }
@@ -169,7 +169,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*/////////Договор оказания транспортных услуг с ЭЦП//////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.contractECP.label }</label>
+                    { labels.contractECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button colorMode={ !initialValues.contractECP.customer ? 'grayAlert' : 'blue' }
@@ -200,7 +200,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*/////////УПД от Перевозчика для Заказчика с ЭЦП//////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.updECP.label }</label>
+                    { labels.updECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button colorMode={ !initialValues.updECP.customer ? 'grayAlert' : 'blue' }
@@ -232,7 +232,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*//////Документы от Заказчика для Получателя с ЭЦП/////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.customerToConsigneeContractECP.label }</label>
+                    { labels.customerToConsigneeContractECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button

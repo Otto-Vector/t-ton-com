@@ -91,21 +91,21 @@ export const AddDriversView: React.FC<OwnProps> = ({idEmployee}) => {
                     className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
                     <div className={ styles.addDriversForm__selector }>
                         <label
-                            className={ styles.addDriversForm__label }>{ label.driverFIO + ':' }</label>
+                            className={ styles.addDriversForm__label }>{ label.idEmployee + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
                             { initialValues.employeeFIO }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__selector }>
                         <label
-                            className={ styles.addDriversForm__label }>{ label.driverTransport + ':' }</label>
+                            className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
                             { oneTransport.transportModel }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__selector }>
                         <label
-                            className={ styles.addDriversForm__label }>{ label.driverTrailer + ':' }</label>
+                            className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
                             { oneTrailer.trailerModel }
                         </div>
@@ -114,7 +114,7 @@ export const AddDriversView: React.FC<OwnProps> = ({idEmployee}) => {
                 <div className={ styles.addDriversForm__infoPanel }>
                     <div className={ styles.addDriversForm__infoItem }>
                         <label className={ styles.addDriversForm__label }>
-                            { label.driverStavka + ':' }</label>
+                            { label.responseStavka + ':' }</label>
 
                         <div className={ styles.addDriversForm__info }>
                             { initialValues.rating }
@@ -123,7 +123,7 @@ export const AddDriversView: React.FC<OwnProps> = ({idEmployee}) => {
                     <div className={ styles.addDriversForm__infoItem }
                          title={ 'Расстояние: ' + distance + 'км.' }>
                         <label className={ styles.addDriversForm__label }>
-                            { label.driverSumm + ':' }</label>
+                            { label.responsePrice + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
                             {
                                 resultDistanceCost(
@@ -146,7 +146,7 @@ export const AddDriversView: React.FC<OwnProps> = ({idEmployee}) => {
                     </div>
                     <div className={ styles.addDriversForm__infoItem }>
                         <label className={ styles.addDriversForm__label }>
-                            { label.driverTax + ':' }</label>
+                            { label.responseTax + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
                             { taxMode }
                         </div>

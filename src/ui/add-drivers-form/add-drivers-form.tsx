@@ -11,7 +11,7 @@ import {
 } from '../../selectors/options/requisites-reselect'
 import {useNavigate} from 'react-router-dom'
 import {CancelButton} from '../common/cancel-button/cancel-button'
-import {AddDriverCardType} from '../../types/form-types'
+import {ResponseToRequestCardType} from '../../types/form-types'
 
 import {
     getInitialValuesAddDriverStore,
@@ -60,7 +60,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     // const { requestInfo: { create } } = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
-    const onSubmit = ( values: AddDriverCardType ) => {
+    const onSubmit = ( values: ResponseToRequestCardType ) => {
         // navigate(create)
     }
 
@@ -118,7 +118,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
-                                                    className={ styles.addDriversForm__label }>{ label.driverFIO + ':' }</label>
+                                                    className={ styles.addDriversForm__label }>{ label.idEmployee + ':' }</label>
                                                 <FormSelector named={ 'driverFIO' }
                                                               placeholder={ placeholder.driverFIO }
                                                               values={ employeesSelect }
@@ -128,7 +128,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
-                                                    className={ styles.addDriversForm__label }>{ label.driverTransport + ':' }</label>
+                                                    className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
                                                 <FormSelector named={ 'driverTransport' }
                                                               placeholder={ placeholder.driverTransport }
                                                               values={ transportSelect }
@@ -138,7 +138,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
-                                                    className={ styles.addDriversForm__label }>{ label.driverTrailer + ':' }</label>
+                                                    className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
                                                 <FormSelector named={ 'driverTrailer' }
                                                               placeholder={ placeholder.driverTrailer }
                                                               values={ trailerSelect }
@@ -150,7 +150,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                         <div className={ styles.addDriversForm__infoPanel }>
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
-                                                    { label.driverStavka + ':' }</label>
+                                                    { label.responseStavka + ':' }</label>
 
                                                 <Field name={ 'driverStavka' }
                                                        placeholder={ placeholder.driverStavka }
@@ -166,12 +166,12 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.addDriversForm__infoItem }
                                                  title={ 'Расстояние: ' + distance + 'км.' }>
                                                 <label className={ styles.addDriversForm__label }>
-                                                    { label.driverSumm + ':' }</label>
+                                                    { label.responsePrice + ':' }</label>
                                                 <div className={ styles.addDriversForm__info + ' ' +
                                                     styles.addDriversForm__info_long }>
                                                     {
-                                                        values.driverSumm = resultDistanceCost(
-                                                                +( values.driverStavka || 0 ),
+                                                        values. responseSumm = resultDistanceCost(
+                                                                +( values.responseStavka || 0 ),
                                                                 (
                                                                     +( trailerOneCargoWeight || 0 )
                                                                     +
@@ -190,9 +190,9 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
-                                                    { label.driverTax + ':' }</label>
+                                                    { label.responseTax + ':' }</label>
                                                 <div className={ styles.addDriversForm__info }>
-                                                    { initialValues.driverTax || taxMode }
+                                                    { initialValues.responseTax || taxMode }
                                                 </div>
                                             </div>
                                         </div>

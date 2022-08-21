@@ -1,6 +1,7 @@
 // на валидаторы для форм
 export type ValidateType = undefined | ( ( val: string ) => string | undefined )
 export type ParserType = undefined | ( ( val: string | undefined ) => string )
+
 // на поля для форм
 type DefaultFormType = string | undefined | null
 
@@ -149,79 +150,104 @@ export type TrailerCardType<T = DefaultFormType> = {
     trailerImage: T // Фото транспорта
 }
 
-// на добавление водителя
-export type AddDriverCardType<T = DefaultFormType> = {
-    requestId: T, // номер заявки, к которой привязана форма
-    driverFIO: T, // id водителя (из карточки водителя)
-    driverTransport: T, // id транспорта (из карточки транспорт)
-    driverTrailer: T, // id прицепа (из карточки прицеп)
-    driverStavka: T, // тариф ставки перевозки 1 тонны на 1 км
-    driverSumm: T, // подсчитанная сумма
-    driverTax: T, // система налогообложения?
-    driverPhoto: T,
-    driverTransportPhoto: T,
-    driverTrailerPhoto: T,
-    driverRating: T,
+// на добавление отклика на заявку
+export type ResponseToRequestCardType<T = DefaultFormType> = {
+    responseId: T, // уникальный id отклика на заявку
+    requestNumber: T, // номер заявки, к которой привязана форма
+    requestCarrierId: T, // привязывается id пользователя при создании отклика
+
+    idEmployee: T, // id водителя (из карточки водителя)
+    idTransport: T, // id транспорта (из карточки транспорт / изначальное значение из карточки водителя)
+    idTrailer: T, // id прицепа (из карточки прицеп / изначальное значение из карточки водителя)
+
+    cargoWeight: T, // Вес груза, в тн. (высчитывается автоматически по тоннажу тягач+прицеп (из карточки отклика)
+
+    responseStavka: T, // тариф ставки перевозки 1 тонны на 1 км
+    responsePrice: T, // подсчитанная сумма (считается на фронте)
+    responseTax: T, // система налогообложения (ОСН, УСН, ЕСХН, ПСН, НПД и т.д.)
 }
 
 // ЗАЯВКА
 export type OneRequestType = {
-    requestId: string | undefined, // уникальный номер в базе
-    requestNumber: number | undefined, // номер заявки (числовой номер/каждая новая заявка созаётся с номером+1 от предыдущей на бэке)
+    // эти два поля создаются автоматически на бэке при запросе на создание, далее заявка ТОЛЬКО редактируется или УДАЛЯЕТСЯ
+    requestNumber: undefined | number, // уникальный номер заявки (числовой номер/каждая новая заявка создаётся с номером+1 от предыдущей на бэке)
     requestDate: undefined | Date, // дата создания заявки
+
     cargoComposition: undefined | string, // вид груза
     shipmentDate: undefined | Date, // дата погрузки
-    cargoType: undefined | CargoTypeType, // тип груза
-    idUserCustomer: undefined | string, // заказчик (совпадает с id пользователя (потому как данные по инн/кпп и счетам будут браться оттуда)
+    cargoType: undefined | CargoTypeType, // тип груза (заведомо известный набор типов)
+
+    idUserCustomer: undefined | string, // заказчик (совпадает с id пользователя (потому как данные по ИНН/КПП и счетам будут браться оттуда)
     idSender: undefined | string, // грузоотправитель
     idRecipient: undefined | string, // грузополучатель
-    idCarrier: undefined | string, // перевозчик
-    idEmployee: undefined | string, // водитель
+
     distance: undefined | number, // расстояние
     note: undefined | string, // примечание
-    answers: number[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками
-    visible: boolean // видимость для таблицы
-    documents: DocumentsRequestType
+    visible?: boolean // видимость для таблицы (используется только на фронте)
+    marked?: boolean // выделение для таблицы (используется только на фронте)
+
+    globalStatus: 'в работе' | 'завершена' | 'отменена' | undefined // глобальный статус заявки
+    localStatus: { // блок статусов заявки
+        paymentHasBeenTransferred: boolean | undefined // Оплату передал
+        cargoHasBeenTransferred: boolean | undefined // Груз передан
+        paymentHasBeenReceived: boolean | string // Оплату получил
+        cargoHasBeenReceived: boolean | undefined // Груз получен
+        requestHasBeenCompleeted: boolean | string // Закрыть заявку | заявка закрыта
+    }
+
+    answers: string[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками
+
+    // поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку
+    // НЕИЗМЕНЯЕМЫЕ
+    requestCarrierId: undefined | string, // привязывается id пользователя при создании отклика
+    idEmployee: undefined | string, // id водителя (из карточки отклика)
+    idTransport: undefined | string, // id транспорта (из карточки отклика)
+    idTrailer: undefined | string, // id прицепа (из карточки отклика)
+    responseStavka: undefined | string, // тариф ставки перевозки 1 тонны на 1 км (из карточки отклика)
+    responseTax: undefined | string, // система налогообложения (ОСН, УСН, ЕСХН, ПСН, НПД и т.д.) (из карточки отклика)
+
+    // поля вкладки ДОКУМЕНТЫ
+    responsePrice: undefined | string, // подсчитанная сумма (считается на фронте) (из карточки отклика)
+    cargoWeight: number | string // Вес груза, в тн. (высчитывается автоматически по тоннажу тягач+прицеп (из карточки отклика)
+
+    // ИЗМЕНЯЕМЫЕ
+    uploadTime: Date | undefined | string // Время погрузки (устанавливается автоматически после нажатия кнопки "Груз у водителя"(сайт) или "Груз получил"(приложение на тел.)
+    addedPrice: number | string // Доп. Услуги в руб. (прибавляется, но не входит в изначальную стоимость перевозки responsePrice)
+
+    documents: DocumentsRequestType // блок с документами
 }
 
 export type DocumentsRequestType = {
     proxyWay: {
-        label: string | undefined // Транспортные документы Сторон
-        proxyFreightLoader: boolean | string // Доверенность Грузовладельцу
-        proxyDriver: boolean | string // Доверенность на Водителя
-        waybillDriver: boolean | string // Путевой Лист Водителя
+        header: string | undefined // Транспортные документы Сторон (Заголовок / ТОЛЬКО ФРОНТ)
+        proxyFreightLoader: undefined | string // Доверенность Грузовладельцу (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
+        proxyDriver: undefined | string // Доверенность на Водителя (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
+        waybillDriver: undefined | string // Путевой Лист Водителя (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
     },
-    uploadTime: Date | undefined | string // Время погрузки
-    cargoWeight: number | string // Вес груза, в тн.
     cargoDocuments: string | undefined // Документы груза
-    cargoPrice: number | string // Цена по Заявке
-    addedPrice: number | string // Доп. Услуги
-    finalPrice: number | string // Итоговая Цена
+
     ttnECP: {
-        label: string | undefined // ТТН или ЭТрН с ЭЦП
+        header: string | undefined // ТТН или ЭТрН с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
         customer: boolean | string // Заказчик
         carrier: boolean | string // Перевозчик
         consignee: boolean | string // Грузополучатель
     },
     contractECP: {
-        label: string | undefined // Договор оказания транспортных услуг с ЭЦП
+        header: string | undefined // Договор оказания транспортных услуг с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
         customer: boolean | string // Заказчик
         carrier: boolean | string // Перевозчик
         uploadDocument: string | undefined // Загрузить
     },
     updECP: {
-        label: string | undefined // УПД от Перевозчика для Заказчика с ЭЦП
+        header: string | undefined // УПД от Перевозчика для Заказчика с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
         customer: boolean | string // Заказчик
         carrier: boolean | string // Перевозчик
         uploadDocument: string | undefined // Загрузить
     },
     customerToConsigneeContractECP: {
-        label: string | undefined // Документы от Заказчика для Получателя с ЭЦП
+        header: string | undefined // Документы от Заказчика для Получателя с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
         customer: boolean | string // Заказчик
         consignee: boolean | string // Грузополучатель
         uploadDocument: string | undefined // Загрузить
     },
-    paymentHasBeenTransferred: string | undefined // Оплату передал
-    paymentHasBeenReceived: boolean | string // Оплату получил
-    completeRequest: boolean | string // Закрыть заявку
 }

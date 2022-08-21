@@ -5,7 +5,7 @@ import {composeValidators, required} from '../../utils/validators'
 import {initialDocumentsRequestValues, makeNTestRequests} from '../../initials-test-data';
 import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
 import {polyline_decode} from '../../utils/polilyne-decode';
-import {cargoEditableSelectorApi, CargoRequestType} from '../../api/cargoEditableSelector.api';
+import {cargoEditableSelectorApi} from '../../api/cargoEditableSelector.api';
 
 
 const defaultInitialStateValues = {
@@ -25,7 +25,7 @@ const defaultInitialStateValues = {
     visible: true,
     documents: {
         proxyWay: {
-            label: undefined,
+            header: undefined,
             proxyFreightLoader: false,
             proxyDriver: false,
             waybillDriver: false,
@@ -37,25 +37,25 @@ const defaultInitialStateValues = {
         addedPrice: 0,
         finalPrice: 0,
         ttnECP: {
-            label: undefined,
+            header: undefined,
             customer: false,
             carrier: false,
             consignee: false,
         },
         contractECP: {
-            label: undefined,
+            header: undefined,
             customer: false,
             carrier: false,
             uploadDocument: undefined,
         },
         updECP: {
-            label: undefined,
+            header: undefined,
             customer: false,
             carrier: false,
             uploadDocument: undefined,
         },
         customerToConsigneeContractECP: {
-            label: undefined,
+            header: undefined,
             customer: false,
             consignee: false,
             uploadDocument: undefined,
@@ -147,7 +147,7 @@ const initialState = {
 
     labelDocumentsRequestValues: {
         proxyWay: {
-            label: 'Транспортные документы Сторон',
+            header: 'Транспортные документы Сторон',
             proxyFreightLoader: 'Доверенность Грузовладельцу',
             proxyDriver: 'Доверенность на Водителя',
             waybillDriver: 'Путевой Лист Водителя',
@@ -159,25 +159,25 @@ const initialState = {
         addedPrice: 'Доп. Услуги',
         finalPrice: 'Итоговая Цена',
         ttnECP: {
-            label: 'ТТН или ЭТрН с ЭЦП',
+            header: 'ТТН или ЭТрН с ЭЦП',
             customer: 'Заказчик',
             carrier: 'Перевозчик',
             consignee: 'Грузополучатель',
         },
         contractECP: {
-            label: 'Договор оказания транспортных услуг с ЭЦП',
+            header: 'Договор оказания транспортных услуг с ЭЦП',
             customer: 'Заказчик',
             carrier: 'Перевозчик',
             uploadDocument: 'Загрузить',
         },
         updECP: {
-            label: 'УПД от Перевозчика для Заказчика с ЭЦП',
+            header: 'УПД от Перевозчика для Заказчика с ЭЦП',
             customer: 'Заказчик',
             carrier: 'Перевозчик',
             uploadDocument: 'Загрузить',
         },
         customerToConsigneeContractECP: {
-            label: 'Документы от Заказчика для ГрузоПолучателя с ЭЦП',
+            header: 'Документы от Заказчика для ГрузоПолучателя с ЭЦП',
             customer: 'Заказчик',
             consignee: 'Грузополучатель',
             uploadDocument: 'Загрузить',
