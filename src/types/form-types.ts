@@ -169,7 +169,8 @@ export type ResponseToRequestCardType<T = DefaultFormType> = {
 
 // ЗАЯВКА
 export type OneRequestType = {
-    // эти два поля создаются автоматически на бэке при запросе на создание, далее заявка ТОЛЬКО редактируется или УДАЛЯЕТСЯ
+    // эти два поля создаются автоматически на бэке при запросе на создание
+    // далее заявка ТОЛЬКО редактируется или УДАЛЯЕТСЯ
     requestNumber: undefined | number, // уникальный номер заявки (числовой номер/каждая новая заявка создаётся с номером+1 от предыдущей на бэке)
     requestDate: undefined | Date, // дата создания заявки
 
@@ -181,21 +182,22 @@ export type OneRequestType = {
     idSender: undefined | string, // грузоотправитель
     idRecipient: undefined | string, // грузополучатель
 
-    distance: undefined | number, // расстояние
+    distance: undefined | number, // расстояние (высчитывается автоматически при выборе грузоотправитель+грузополучатель)
     note: undefined | string, // примечание
     visible?: boolean // видимость для таблицы (используется только на фронте)
     marked?: boolean // выделение для таблицы (используется только на фронте)
 
+    // БЛОК СТАТУСОВ ЗАЯВКИ
     globalStatus: 'в работе' | 'завершена' | 'отменена' | undefined // глобальный статус заявки
-    localStatus: { // блок статусов заявки
+    localStatus: { // локальный статус заявки
         paymentHasBeenTransferred: boolean | undefined // Оплату передал
         cargoHasBeenTransferred: boolean | undefined // Груз передан
-        paymentHasBeenReceived: boolean | string // Оплату получил
+        paymentHasBeenReceived: boolean | undefined // Оплату получил
         cargoHasBeenReceived: boolean | undefined // Груз получен
-        requestHasBeenCompleeted: boolean | string // Закрыть заявку | заявка закрыта
+        requestHasBeenCompleted: boolean | string // Закрыть заявку | заявка закрыта
     }
 
-    answers: string[] | undefined // количество ответов от водителей // что-то вроде массива с айдишками
+    answers: string[] | undefined // количество ответов от водителей // массив с айдишками
 
     // поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку
     // НЕИЗМЕНЯЕМЫЕ
@@ -212,11 +214,11 @@ export type OneRequestType = {
 
     // ИЗМЕНЯЕМЫЕ
     uploadTime: Date | undefined | string // Время погрузки (устанавливается автоматически после нажатия кнопки "Груз у водителя"(сайт) или "Груз получил"(приложение на тел.)
-    addedPrice: number | string // Доп. Услуги в руб. (прибавляется, но не входит в изначальную стоимость перевозки responsePrice)
 
     documents: DocumentsRequestType // блок с документами
 }
 
+// выделенный в отдельный блок РАБОТА С ДОКУМЕНТАМИ
 export type DocumentsRequestType = {
     proxyWay: {
         header: string | undefined // Транспортные документы Сторон (Заголовок / ТОЛЬКО ФРОНТ)
@@ -224,30 +226,53 @@ export type DocumentsRequestType = {
         proxyDriver: undefined | string // Доверенность на Водителя (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
         waybillDriver: undefined | string // Путевой Лист Водителя (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
     },
-    cargoDocuments: string | undefined // Документы груза
+
+    cargoDocuments: string | undefined | File // Документы груза (содержит строку с путём) (File НА ОТГРУЗ)
 
     ttnECP: {
         header: string | undefined // ТТН или ЭТрН с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
-        customer: boolean | string // Заказчик
-        carrier: boolean | string // Перевозчик
-        consignee: boolean | string // Грузополучатель
+
+        documentDownload: string | undefined // строка со ссылкой на сгенерированный БЭКОМ документ
+        // (!!! заменяется на сгенерированный ???)
+        documentUpload: File | undefined // участвует ТОЛЬКО при редактировании формы
+
+        // статусы подписания документа (хранятся на бэке, редактируются фронтом)
+        customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
+        carrierIsSubscribe: boolean | string // Перевозчик загрузил, подписал и выгрузил подписанный док
+        consigneeIsSubscribe: boolean | string // Грузополучатель загрузил, подписал и выгрузил подписанный док
     },
+
     contractECP: {
         header: string | undefined // Договор оказания транспортных услуг с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
-        customer: boolean | string // Заказчик
-        carrier: boolean | string // Перевозчик
-        uploadDocument: string | undefined // Загрузить
+
+        documentDownload: string | undefined // строка со ссылкой на сгенерированный БЭКОМ документ
+        // (!!! заменяется на сгенерированный ???)
+        documentUpload: File | undefined // участвует ТОЛЬКО при редактировании формы
+
+        // статусы подписания документа (хранятся на бэке, редактируются фронтом)
+        customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
+        carrierIsSubscribe: boolean | string // Перевозчик загрузил, подписал и выгрузил подписанный док
     },
+
     updECP: {
         header: string | undefined // УПД от Перевозчика для Заказчика с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
-        customer: boolean | string // Заказчик
-        carrier: boolean | string // Перевозчик
-        uploadDocument: string | undefined // Загрузить
+
+        documentDownload: string | undefined // строка со ссылкой на сгенерированный БЭКОМ документ
+        // (!!! заменяется на сгенерированный ???)
+        documentUpload: File | undefined // участвует ТОЛЬКО при редактировании формы
+
+        customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
+        carrierIsSubscribe: boolean | string // Перевозчик загрузил, подписал и выгрузил подписанный док
     },
+
     customerToConsigneeContractECP: {
         header: string | undefined // Документы от Заказчика для Получателя с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
-        customer: boolean | string // Заказчик
-        consignee: boolean | string // Грузополучатель
-        uploadDocument: string | undefined // Загрузить
+
+        documentDownload: string | undefined // строка со ссылкой на сгенерированный БЭКОМ документ
+        // (!!! заменяется на сгенерированный ???)
+        documentUpload: File | undefined // участвует ТОЛЬКО при редактировании формы
+
+        customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
+        consigneeIsSubscribe: boolean | string // Грузополучатель загрузил, подписал и выгрузил подписанный док
     },
 }

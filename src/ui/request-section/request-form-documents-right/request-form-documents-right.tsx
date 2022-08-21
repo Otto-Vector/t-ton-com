@@ -149,19 +149,19 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     { labels.ttnECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.ttnECP.customer ? 'grayAlert' : 'blue' }
-                                title={ labels.ttnECP.customer.toString() }
+                        <Button colorMode={ !initialValues.ttnECP.customerIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.ttnECP.customerIsSubscribe.toString() }
                                 disabled={ false }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.ttnECP.carrier ? 'grayAlert' : 'blue' }
-                                title={ labels.ttnECP.carrier.toString() }
+                        <Button colorMode={ !initialValues.ttnECP.carrierIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.ttnECP.carrierIsSubscribe.toString() }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.ttnECP.consignee ? 'grayAlert' : 'blue' }
-                                title={ labels.ttnECP.consignee.toString() }
+                        <Button colorMode={ !initialValues.ttnECP.consigneeIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.ttnECP.consigneeIsSubscribe.toString() }
                         />
                     </div>
                 </div>
@@ -172,14 +172,14 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     { labels.contractECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.contractECP.customer ? 'grayAlert' : 'blue' }
-                                title={ labels.contractECP.customer.toString() }
+                        <Button colorMode={ !initialValues.contractECP.customerIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.contractECP.customerIsSubscribe.toString() }
                                 disabled={ false }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.contractECP.carrier ? 'grayAlert' : 'blue' }
-                                title={ labels.contractECP.carrier.toString() }
+                        <Button colorMode={ !initialValues.contractECP.carrierIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.contractECP.carrierIsSubscribe.toString() }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
@@ -203,14 +203,14 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     { labels.updECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.updECP.customer ? 'grayAlert' : 'blue' }
-                                title={ labels.updECP.customer.toString() }
+                        <Button colorMode={ !initialValues.updECP.customerIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.updECP.customerIsSubscribe.toString() }
                                 disabled={ false }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.updECP.carrier ? 'grayAlert' : 'blue' }
-                                title={ labels.updECP.carrier.toString() }
+                        <Button colorMode={ !initialValues.updECP.carrierIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.updECP.carrierIsSubscribe.toString() }
                         />
 
                     </div>
@@ -236,15 +236,15 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button
-                            colorMode={ !initialValues.customerToConsigneeContractECP.customer ? 'grayAlert' : 'blue' }
-                            title={ labels.customerToConsigneeContractECP.customer.toString() }
+                            colorMode={ !initialValues.customerToConsigneeContractECP.customerIsSubscribe ? 'grayAlert' : 'blue' }
+                            title={ labels.customerToConsigneeContractECP.customerIsSubscribe.toString() }
                             disabled={ false }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button
-                            colorMode={ !initialValues.customerToConsigneeContractECP.consignee ? 'grayAlert' : 'blue' }
-                            title={ labels.customerToConsigneeContractECP.consignee.toString() }
+                            colorMode={ !initialValues.customerToConsigneeContractECP.consigneeIsSubscribe ? 'grayAlert' : 'blue' }
+                            title={ labels.customerToConsigneeContractECP.consigneeIsSubscribe.toString() }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
