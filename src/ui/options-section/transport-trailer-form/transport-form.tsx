@@ -1,10 +1,9 @@
-import React, {ChangeEvent, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
-import noImage from '../../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
@@ -29,11 +28,8 @@ import {
     oneTransportDeleteToAPI,
     transportStoreActions,
 } from '../../../redux/options/transport-store-reducer';
-import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
-import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
 import {parseAllNumbers} from '../../../utils/parsers';
-import {AppStateType} from '../../../redux/redux-store';
-import imageCompression from 'browser-image-compression'
+import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 
 type OwnProps = {}
 
@@ -42,7 +38,6 @@ export const TransportForm: React.FC<OwnProps> = () => {
 
     const header = 'Транспорт'
     const isFetching = useSelector(getIsFetchingTransportStore)
-    const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
 
     const defaultInitialValues = useSelector(getInitialValuesTransportStore)
     //для проброса загруженных данных в форму
@@ -64,9 +59,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string ) => {
-        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
-    }
+
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
 
@@ -90,26 +83,6 @@ export const TransportForm: React.FC<OwnProps> = () => {
         dispatch<any>(oneTransportDeleteToAPI(currentId))
         navigate(options)
     }
-    const [ fileIsCompressed, setFileIsCompressed ] = useState(false)
-    const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
-        setFileIsCompressed(true)
-        if (event.target.files && event.target.files.length > 0) {
-            const imageFile = event.target.files[0];
-            const options = {
-                maxSizeMB: 0.9,
-                maxWidthOrHeight: 1024,
-                useWebWorker: true,
-                fileType: 'image/jpeg',
-            }
-            try { // компресим файл и отправляем
-                const compressedFile = await imageCompression(imageFile, options);
-                setSelectedImage(compressedFile);
-            } catch (error) {
-                alert(error)
-            }
-        }
-        setFileIsCompressed(false)
-    }
 
     useEffect(() => {
             if (currentId === currentIdForShow) {
@@ -131,7 +104,6 @@ export const TransportForm: React.FC<OwnProps> = () => {
                             initialValues={ initialValues }
                             render={
                                 ( {
-                                      pristine,
                                       hasValidationErrors,
                                       handleSubmit,
                                       form,
@@ -204,29 +176,15 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                           validate={ validators.propertyRights }
                                             />
                                         </div>
-                                        <div>
-                                            <div className={ styles.transportTrailerForm__photoWrapper }
-                                                 title={ 'Добавить/изменить фото транспорта' }
-                                            >
-                                                { fileIsCompressed
-                                                    ? <Preloader/>
-                                                    : <>
-                                                        <img className={ styles.transportTrailerForm__photo }
-                                                             src={ ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                                 || ( values.transportImage && currentURL + values.transportImage )
-                                                                 || noImage }
-                                                             alt="transportPhoto"
-                                                             onClick={ () => {
-                                                                 setLightBoxImage(
-                                                                     ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                                     || ( values.transportImage && currentURL + values.transportImage )
-                                                                     || noImage)
-                                                             } }
-                                                        />
-                                                        <AttachImageButton onChange={ sendPhotoFile }/>
-                                                    </> }
+                                        <div className={ styles.transportTrailerForm__rightSide }>
+                                            {/*/////////////---ИЗОБРАЖЕНИЕ---///////////////////////////////*/ }
+                                            <div className={ styles.transportTrailerForm__photoWrapper }>
+                                                <ImageViewSet imageURL={ values.transportImage }
+                                                              onSelectNewImageFileToSend={ ( image ) => {
+                                                                  setSelectedImage(image)
+                                                              } }
+                                                />
                                             </div>
-
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'button' }

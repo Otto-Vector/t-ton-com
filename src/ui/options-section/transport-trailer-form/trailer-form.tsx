@@ -1,11 +1,10 @@
-import React, {ChangeEvent, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
 
-import noImage from '../../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
@@ -29,11 +28,8 @@ import {
     oneTrailerDeleteToAPI,
     trailerStoreActions,
 } from '../../../redux/options/trailer-store-reducer';
-import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
-import {AttachImageButton} from '../../common/attach-image-button/attach-image-button';
-import {AppStateType} from '../../../redux/redux-store';
 import {parseAllNumbers} from '../../../utils/parsers';
-import imageCompression from 'browser-image-compression'
+import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 
 type OwnProps = {}
 
@@ -42,7 +38,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
     const header = 'Прицеп'
     const isFetching = useSelector(getIsFetchingTrailerStore)
-    const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
+
 
     const defaultInitialValues = useSelector(getInitialValuesTrailerStore)
     //для проброса загруженных данных в форму
@@ -88,31 +84,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
-    const setLightBoxImage = ( image?: string ) => {
-        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
-    }
-    // сжимаем картинку и выводим на предпросмотр
-    const [ fileIsCompressed, setFileIsCompressed ] = useState(false)
-    const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
-        setFileIsCompressed(true)
-        if (event.target.files && event.target.files.length > 0) {
-            const imageFile = event.target.files[0];
-            const options = {
-                maxSizeMB: 0.9,
-                maxWidthOrHeight: 1024,
-                useWebWorker: true,
-                fileType: 'image/jpeg',
-            }
-            try {
-                // компресим файл и отправляем
-                const compressedFile = await imageCompression(imageFile, options);
-                setSelectedImage(compressedFile);
-            } catch (error) {
-                alert(error)
-            }
-        }
-        setFileIsCompressed(false)
-    }
+
     useEffect(() => {
             if (currentId === currentIdForShow) {
                 setInitialValues(oneTrailer)
@@ -205,28 +177,15 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                           validate={ validators.propertyRights }
                                             />
                                         </div>
-                                        <div>
-                                            <div className={ styles.transportTrailerForm__photoWrapper }
-                                                 title={ 'Добавить/изменить фото транспорта' }
-                                            >{ fileIsCompressed
-                                                ? <Preloader/>
-                                                : <><img className={ styles.transportTrailerForm__photo }
-                                                       src={ ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                           || ( values.trailerImage && currentURL + values.trailerImage )
-                                                           || noImage }
-                                                       alt="trailerPhoto"
-                                                       onClick={ () => {
-                                                           setLightBoxImage(
-                                                               ( selectedImage && URL.createObjectURL(selectedImage) )
-                                                               || ( values.trailerImage && currentURL + values.trailerImage )
-                                                               || noImage)
-                                                       } }
+                                        <div className={ styles.transportTrailerForm__rightSide }>
+                                            {/*/////////////---ИЗОБРАЖЕНИЕ---///////////////////////////////*/ }
+                                            <div className={ styles.transportTrailerForm__photoWrapper }>
+                                                <ImageViewSet imageURL={ values.trailerImage }
+                                                              onSelectNewImageFileToSend={ ( image ) => {
+                                                                  setSelectedImage(image)
+                                                              } }
                                                 />
-                                                <AttachImageButton onChange={ sendPhotoFile }/>
-                                                </>
-                                            }
                                             </div>
-
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'button' }
