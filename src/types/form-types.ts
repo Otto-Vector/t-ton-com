@@ -188,13 +188,12 @@ export type OneRequestType = {
     marked?: boolean // выделение для таблицы (используется только на фронте)
 
     // БЛОК СТАТУСОВ ЗАЯВКИ
-    globalStatus: 'в работе' | 'завершена' | 'отменена' | undefined // глобальный статус заявки
+    globalStatus: 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | undefined // глобальный статус заявки
     localStatus: { // локальный статус заявки
         paymentHasBeenTransferred: boolean | undefined // Оплату передал
         cargoHasBeenTransferred: boolean | undefined // Груз передан
         paymentHasBeenReceived: boolean | undefined // Оплату получил
         cargoHasBeenReceived: boolean | undefined // Груз получен
-        requestHasBeenCompleted: boolean | string // Закрыть заявку | заявка закрыта
     }
 
     answers: string[] | undefined // количество ответов от водителей // массив с айдишками
