@@ -152,29 +152,6 @@ const initialState = {
     initialValues: { ...initialValues },
 
     storedValues: {
-        // innNumber: '4265631947',
-        // organizationName: 'Тестовое наименование',
-        // taxMode: 'УСН',
-        // kpp: '839646136',
-        // ogrn: '5179220547402',
-        // okpo: '7512278594',
-        // legalAddress: 'Россия, г. Нижний Тагил, Пушкина ул., д. 23 кв.173',
-        // description: undefined,
-        //
-        // postAddress: 'Россия, г. Магнитогорск, Колхозная ул., д. 19 кв.40',
-        // phoneDirector: '+7 (965) 461-43-67',
-        // phoneAccountant: '+7 (993) 383-63-63',
-        // email: 'valentina19@outlook.com',
-        // bikBank: '648417961',
-        // nameBank: 'СБЕРБАНК СБЕР СБЕРБАНК',
-        // checkingAccount: '40560033000000009122',
-        // korrAccount: '50934220600000004673',
-        // tarifs: {
-        //     create: '100',
-        //     acceptShortRoute: '100',
-        //     acceptLongRoute: '100',
-        //     paySafeTax: '3',
-        // },
     } as CompanyRequisitesType,
 
 }
@@ -294,7 +271,7 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
             console.log('setPersonal: ', setPersonal)
 
             if (setPersonal.success) {
-                await dispatch(getPersonalOrganizationReqisites())
+                await dispatch(getPersonalOrganizationRequisites())
             }
         } catch (e) {
             alert(e)
@@ -302,7 +279,7 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
     }
 
 // запрос данных активного пользователя
-export const getPersonalOrganizationReqisites = (): RequisitesStoreReducerThunkActionType =>
+export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
             const idUser = getState().authStoreReducer.authID
@@ -330,7 +307,7 @@ export const getPersonalOrganizationReqisites = (): RequisitesStoreReducerThunkA
                     nameBank: user[0].nameBank,
                     checkingAccount: user[0].checkingAccount,
                     korrAccount: user[0].korrAccount,
-                    tarifs: {
+                    tariffs: {
                         create: user[0].tarifCreate,
                         acceptShortRoute: user[0].tarifAcceptShortRoute,
                         acceptLongRoute: user[0].tarifAcceptLongRoute,

@@ -3,8 +3,10 @@ import styles from './request-form-documents-right.module.scss'
 import {useSelector} from 'react-redux';
 import {
     getInfoTextModalsRequestValuesStore,
-    getInitialDocumentsRequestValuesStore, getInitialValuesRequestStore,
-    getLabelDocumentsRequestValuesStore, getLabelRequestStore,
+    getInitialDocumentsRequestValuesStore,
+    getInitialValuesRequestStore,
+    getLabelDocumentsRequestValuesStore,
+    getLabelRequestStore,
 } from '../../../selectors/forms/request-form-reselect';
 import {RequestModesType} from '../request-section';
 
@@ -33,6 +35,10 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const buttonsAction = {
         acceptRequest: () => {
         },
+        sendTtnECPFile: ( event: ChangeEvent<HTMLInputElement> ) => {
+            // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
+            // initialValues.contractECP.uploadDocument = event
+        },
         sendContractECPFile: ( event: ChangeEvent<HTMLInputElement> ) => {
             // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
             // initialValues.contractECP.uploadDocument = event
@@ -41,7 +47,11 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
             // initialValues.contractECP.uploadDocument = event
         },
-        sendPaymentHasBeenTransferred: ( event: ChangeEvent<HTMLInputElement> ) => {
+        sendUpdECPFile: ( event: ChangeEvent<HTMLInputElement> ) => {
+            // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
+            // initialValues.contractECP.uploadDocument = event
+        },
+        sendCustomerToConsigneeECPFile: ( event: ChangeEvent<HTMLInputElement> ) => {
             // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
             // initialValues.contractECP.uploadDocument = event
         },
@@ -119,30 +129,16 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             </div>
             {/*/////////ПАНЕЛЬ РАСЧЁТА///2/////////////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
-                + styles.requestFormDocumentRight__inputsPanel_trio }>
+                + styles.requestFormDocumentRight__inputsPanel_duo }>
                 <div className={ styles.requestFormDocumentRight__inputsItem }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labelsR.responsePrice }</label>
+                        { labelsR.responsePrice }</label></div>
+                <div className={ styles.requestFormDocumentRight__inputsItem }>
                     <div className={ styles.requestFormDocumentRight__info }>
                         { initialValuesR.responsePrice }
                     </div>
                 </div>
-                {/*<span className={ styles.requestFormDocumentRight__infoSpan }>{ '+' }</span>*/}
-                {/*<div className={ styles.requestFormDocumentRight__inputsItem }>*/}
-                {/*    <label className={ styles.requestFormDocumentRight__label }>*/}
-                {/*        { labels.addedPrice }</label>*/}
-                {/*    <div className={ styles.requestFormDocumentRight__info }>*/}
-                {/*        { initialValues.addedPrice }*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-                {/*<span className={ styles.requestFormDocumentRight__infoSpan }>{ '=' }</span>*/}
-                {/*<div className={ styles.requestFormDocumentRight__inputsItem }>*/}
-                {/*    <label className={ styles.requestFormDocumentRight__label }>*/}
-                {/*        { labels.finalPrice }</label>*/}
-                {/*    <div className={ styles.requestFormDocumentRight__info }>*/}
-                {/*        { initialValues.finalPrice }*/}
-                {/*    </div>*/}
-                {/*</div>*/}
+
             </div>
             <div className={ styles.requestFormDocumentRight__line }></div>
             {/*/////////ТТН или ЭТрН с ЭЦП////////////////////////////////*/ }
@@ -166,6 +162,22 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                 title={ labels.ttnECP.consigneeIsSubscribe.toString() }
                         />
                     </div>
+                </div>
+
+            </div>
+            <div className={ styles.requestFormDocumentRight__documentsPanel }>
+                <div className={ styles.requestFormDocumentRight__buttonItem }>
+                    <Button colorMode={ 'whiteBlueDoc' }>
+                                <span className={ styles.requestFormDocumentRight__inAttachText }>
+                                    { labels.ttnECP.documentDownload }</span>
+                        <MaterialIcon icon_name={ 'attach_file' }/>
+                        <input type={ 'file' }
+                               className={ styles.requestFormDocumentRight__hiddenAttachFile }
+                               accept={ '.png, .jpeg, .pdf, .jpg' }
+                               onChange={ buttonsAction.sendTtnECPFile }
+                        />
+                    </Button>
+                    <InfoButtonToModal textToModal={ modalsText.ttnECP }/>
                 </div>
             </div>
             {/*/////////Договор оказания транспортных услуг с ЭЦП//////////////////*/ }
@@ -224,7 +236,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                             <input type={ 'file' }
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
                                    accept={ '.png, .jpeg, .pdf, .jpg' }
-                                   onChange={ buttonsAction.sendContractECPFile }
+                                   onChange={ buttonsAction.sendUpdECPFile }
                             />
                         </Button>
                         <InfoButtonToModal textToModal={ modalsText.updECP }/>
@@ -257,7 +269,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                             <input type={ 'file' }
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
                                    accept={ '.png, .jpeg, .pdf, .jpg' }
-                                   onChange={ buttonsAction.sendContractECPFile }
+                                   onChange={ buttonsAction.sendCustomerToConsigneeECPFile }
                             />
                         </Button>
                         <InfoButtonToModal textToModal={ modalsText.customerToConsigneeContractECP }/>
@@ -267,19 +279,6 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__line }></div>
             {/*///////////////////ПАНЕЛЬ КНОПОК/////////////////*/ }
             <div className={ styles.requestFormDocumentRight__buttonsPanel }>
-
-                {/*<div className={ styles.requestFormDocumentRight__panelButton }>*/}
-                {/*    <Button colorMode={ 'gray' } wordWrap rounded>*/}
-                {/*        { labelsR.localStatus.paymentHasBeenTransferred }*/}
-                {/*        <MaterialIcon icon_name={ 'attach_file' }/>*/}
-                {/*        <input type={ 'file' }*/}
-                {/*               className={ styles.requestFormDocumentRight__hiddenAttachFile }*/}
-                {/*               accept={ '.png, .jpeg, .pdf, .jpg' }*/}
-                {/*               onChange={ buttonsAction.sendPaymentHasBeenTransferred }*/}
-                {/*        />*/}
-                {/*    </Button>*/}
-                {/*    <InfoButtonToModal textToModal={ modalsText.paymentHasBeenTransferred }/>*/}
-                {/*</div>*/}
                 <div className={ styles.requestFormDocumentRight__panelButton }>
                     <Button colorMode={ 'gray' }
                             wordWrap rounded

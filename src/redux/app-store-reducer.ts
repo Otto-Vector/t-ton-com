@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk';
 import {AppStateType, GetActionsTypes} from './redux-store';
-import {getPersonalOrganizationReqisites} from './options/requisites-store-reducer';
+import {getPersonalOrganizationRequisites} from './options/requisites-store-reducer';
 import {getAllEmployeesAPI} from './options/employees-store-reducer';
 import {getAllConsigneesAPI} from './options/consignees-store-reducer';
 import {getAllRequestsAPI, getCargoCompositionSelector} from './forms/request-store-reducer';
@@ -51,7 +51,7 @@ export type InitializedThunkActionType = ThunkAction<void, AppStateType, unknown
 // запускаем комбайн загрузок/обращений к API
 export const initializedAll = (): InitializedThunkActionType =>
     ( dispatch ) => {
-        const getPersonal = dispatch(getPersonalOrganizationReqisites())
+        const getPersonal = dispatch(getPersonalOrganizationRequisites())
         const getGeoPosition = dispatch(geoPositionTake())
         const getAllShippers = dispatch(getAllShippersAPI())
         const getAllConsignees = dispatch(getAllConsigneesAPI())
