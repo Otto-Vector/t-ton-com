@@ -1,12 +1,12 @@
 import {InfoResponseType, instanceBack} from './back-instance.api';
 
 export type LogInfoRequestType = {
-    'idLog': 'string',
-    'idUser': 'string',
-    'idObject': 'string',
-    'typeObject': 'string',
-    'Message': 'string',
-    'Time': 'string'
+    idLog: string,
+    idUser: string,
+    idObject: string,
+    typeObject: string,
+    Message: string,
+    Time: string
 }
 
 
@@ -23,7 +23,7 @@ export const logInfoApi = {
     // запрос логов пользователя PATCH /api/logs/
     getLogInfoByIdUser( idUser: { idUser: string } ) {
         // список отправляется сплошным текстом, разделённый знаком '|'
-        return instanceBack.patch<InfoResponseType & LogInfoRequestType>('/api/logs/', { ...idUser })
+        return instanceBack.patch<LogInfoRequestType[]>('/api/logs/', { ...idUser })
             .then(response => response.data)
         // 1.	Code 200, Models: LogInfoRequestType[]
         // 2.	Code 520, {"message":"Error"}

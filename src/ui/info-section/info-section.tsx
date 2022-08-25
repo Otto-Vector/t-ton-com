@@ -31,9 +31,9 @@ export const InfoSection: React.FC<OwnProps> = () => {
                 <span className={ styles.messagesContainer__label }>{ 'Заявка' }</span>
                 { [ ...messages ].reverse().map(( item ) =>
                     <div className={ styles.messagesContainer__item }
-                         key={ item.requestNumber + item.infoText }>
-                        { item.requestNumber ?
-                            <NavLink to={ requestInfo.driver + item.requestNumber }>
+                         key={ item.idLog }>
+                        { item.mode !== 'gray' ?
+                            <NavLink to={ requestInfo.driver + item.Message }>
                                 <MessageItem oneInfoItem={ item }/>
                             </NavLink>
                             : <MessageItem oneInfoItem={ item }/>

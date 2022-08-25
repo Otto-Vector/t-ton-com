@@ -10,15 +10,21 @@ type OwnProps = {
 
 export const MessageItem: React.FC<OwnProps> = (
     {
-        oneInfoItem: { requestNumber, mode, infoText, timeDate },
+        oneInfoItem: { idLog, mode, Message, Time },
     },
-) =>
-    <div className={ styles.messageItem + ' ' + ( requestNumber ?? styles.messageItem_gray ) }>
-        <div className={ styles.messageItem__number }>{ ( requestNumber || '---' ) }</div>
+    ) =>{
+
+    const date = new Date(Time)
+
+    return (
+    <div className={ styles.messageItem + ' ' + styles['messageItem_'+mode] }>
+        <div className={ styles.messageItem__number }>{ ( idLog || '---' ) }</div>
         <div className={ styles.messageItem__text + ' ' + styles['messageItem__text_' + mode] }>
-            { infoText }
+            { Message }
         </div>
         <div className={ styles.messageItem__date }>
-            { isToday(timeDate) ? hhMmFormat(timeDate) : ddDotMmFormat(timeDate) }
+            { isToday(date) ? hhMmFormat(date) : ddDotMmFormat(date) }
         </div>
     </div>
+        )
+}

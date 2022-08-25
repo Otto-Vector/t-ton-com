@@ -1,12 +1,15 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
-import {infoMessagesTest} from '../initials-test-data';
+import {logInfoApi} from '../api/logInfo.api';
 
 
 export type OneInfoItem = {
-    requestNumber: number | undefined,
-    infoText: string,
-    timeDate: Date,
+    idLog: string,
+    idUser: string,
+    idObject: string,
+    typeObject: string,
+    Message: string,
+    Time: string
     mode: 'gray' | 'blue' | 'red' | 'green'
     viewed: boolean
 }
@@ -89,12 +92,24 @@ export const infoStoreActions = {
 
 export type InfoStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-export const getInfoMessages = ( { authID }: { authID: number } ): InfoStoreReducerThunkActionType =>
+export const getInfoMessages = (): InfoStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(infoStoreActions.setIsFetching(true))
-
-        const request = infoMessagesTest
-        dispatch(infoStoreActions.setValuesContent(request))
+        try {
+            const idUser = getState().authStoreReducer.authID
+            // const request = infoMessagesTest
+            const request = await logInfoApi.getLogInfoByIdUser({ idUser })
+            if (request.length > 0) {
+                dispatch(infoStoreActions.setValuesContent(
+                    request.map(( values ) => ( {
+                    ...values,
+                    mode: 'gray',
+                    viewed: false,
+                } ))))
+            }
+        } catch (e) {
+            console.log(e)
+        }
 
         dispatch(infoStoreActions.setIsFetching(false))
     }

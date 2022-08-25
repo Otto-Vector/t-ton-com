@@ -61,7 +61,7 @@ export const initializedAll = (): InitializedThunkActionType =>
         const getCargoComposition = dispatch(getCargoCompositionSelector())
 
         const getAllRequests = dispatch(getAllRequestsAPI({innID: 0}))
-        const getAllInfoMessages = dispatch(getInfoMessages({ authID: 0 }))
+        const getAllInfoMessages = dispatch(getInfoMessages())
 
         Promise.all([
             getPersonal,
