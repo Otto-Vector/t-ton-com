@@ -868,50 +868,52 @@ export const initialEmployeesValues: EmployeesCardType[] = [
 
 // для обработки документов в заявке
 export const initialDocumentsRequestValues: DocumentsRequestType = {
+
     proxyWay: {
         header: undefined,
-        proxyFreightLoader: false,
-        proxyDriver: false,
-        waybillDriver: false,
+        proxyFreightLoader: undefined,
+        proxyDriver: undefined,
+        waybillDriver: undefined,
     },
-    uploadTime: undefined,
-    cargoWeight: 0,
+
     cargoDocuments: undefined,
-    cargoPrice: 0,
-    addedPrice: 0,
-    finalPrice: 0,
+
     ttnECP: {
         header: undefined,
+        documentDownload: undefined,
+        documentUpload: undefined,
         customerIsSubscribe: false,
         carrierIsSubscribe: false,
         consigneeIsSubscribe: false,
     },
+
     contractECP: {
         header: undefined,
+        documentDownload: undefined,
+        documentUpload: undefined,
         customerIsSubscribe: false,
         carrierIsSubscribe: false,
-        uploadDocument: undefined,
     },
+
     updECP: {
         header: undefined,
+        documentDownload: undefined,
+        documentUpload: undefined,
         customerIsSubscribe: false,
         carrierIsSubscribe: false,
-        uploadDocument: undefined,
     },
+
     customerToConsigneeContractECP: {
         header: undefined,
+        documentDownload: undefined,
+        documentUpload: undefined,
         customerIsSubscribe: false,
         consigneeIsSubscribe: false,
-        uploadDocument: undefined,
     },
-    paymentHasBeenTransferred: undefined,
-    paymentHasBeenReceived: false,
-    completeRequest: false,
 }
 
 // создание рандомной заявки
 const makeOneTestRequest = ( id: number ): OneRequestType => ( {
-    requestId: id.toString(),
     requestNumber: id,
     requestDate: new Date(2022, 4, randFloorMax(30)),
     cargoComposition: randArrayValue(cargoComposition),
@@ -920,12 +922,31 @@ const makeOneTestRequest = ( id: number ): OneRequestType => ( {
     idUserCustomer: randFloorMax(10).toString(),
     idSender: randFloorMax(11).toString(),
     idRecipient: randMinMax(12, 23).toString(),
-    idCarrier: randFloorMax(9).toString(),
+    requestCarrierId: randFloorMax(9).toString(),
     idEmployee: randFloorMax(9).toString(),
     distance: randMinMax(20, 400),
     note: 'Насос на 120, рукава, ДОПОГ.',
-    answers: randomDifferentIntegersArrayCreator(randFloorMax(9))(),
+    answers: randomDifferentIntegersArrayCreator(randFloorMax(9))().map(toString),
+
+    localStatus: {
+        cargoHasBeenReceived: false,
+        cargoHasBeenTransferred: false,
+        paymentHasBeenReceived: false,
+        paymentHasBeenTransferred: false
+    } ,
+    globalStatus: 'новая заявка',
+
+    cargoWeight: 0,
+    uploadTime: undefined,
+    idTrailer: undefined,
+    idTransport: undefined,
+    responsePrice: undefined,
+    responseStavka: undefined,
+    responseTax: undefined,
+
     visible: true,
+    marked: undefined,
+
     documents: initialDocumentsRequestValues,
 } )
 

@@ -3,8 +3,8 @@ import styles from './request-form-documents-right.module.scss'
 import {useSelector} from 'react-redux';
 import {
     getInfoTextModalsRequestValuesStore,
-    getInitialDocumentsRequestValuesStore,
-    getLabelDocumentsRequestValuesStore,
+    getInitialDocumentsRequestValuesStore, getInitialValuesRequestStore,
+    getLabelDocumentsRequestValuesStore, getLabelRequestStore,
 } from '../../../selectors/forms/request-form-reselect';
 import {RequestModesType} from '../request-section';
 
@@ -25,7 +25,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     } ) => {
 
     const labels = useSelector(getLabelDocumentsRequestValuesStore)
+    const labelsR = useSelector(getLabelRequestStore)
     const initialValues = useSelector(getInitialDocumentsRequestValuesStore)
+    const initialValuesR = useSelector(getInitialValuesRequestStore)
     const modalsText = useSelector(getInfoTextModalsRequestValuesStore)
 
     const buttonsAction = {
@@ -60,7 +62,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <Button colorMode={ !initialValues.proxyWay.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay.proxyFreightLoader.toString() }
+                                title={ labels.proxyWay.proxyFreightLoader?.toString() }
                                 disabled={ false }
                                 wordWrap
                         />
@@ -68,14 +70,14 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <Button colorMode={ !initialValues.proxyWay.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay.proxyDriver.toString() }
+                                title={ labels.proxyWay.proxyDriver?.toString() }
                                 wordWrap
                         />
                     </div>
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <Button colorMode={ !initialValues.proxyWay.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay.waybillDriver.toString() }
+                                title={ labels.proxyWay.waybillDriver?.toString() }
                                 wordWrap
                         />
                     </div>
@@ -86,7 +88,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 + styles.requestFormDocumentRight__inputsPanel_trio }>
                 <div className={ styles.requestFormDocumentRight__inputsItem }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labels.uploadTime }</label>
+                        { labelsR.uploadTime }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
                         { hhMmDdMmFormat(new Date()) }
                     </div>
@@ -94,9 +96,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div className={ styles.requestFormDocumentRight__infoBreaker }></div>
                 <div className={ styles.requestFormDocumentRight__inputsItem }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labels.cargoWeight }</label>
+                        { labelsR.cargoWeight }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
-                        { initialValues.cargoWeight }
+                        { initialValuesR.cargoWeight }
                     </div>
                 </div>
                 <div className={ styles.requestFormDocumentRight__infoBreaker }></div>
@@ -120,27 +122,27 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 + styles.requestFormDocumentRight__inputsPanel_trio }>
                 <div className={ styles.requestFormDocumentRight__inputsItem }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labels.cargoPrice }</label>
+                        { labelsR.responsePrice }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
-                        { initialValues.cargoPrice }
+                        { initialValuesR.responsePrice }
                     </div>
                 </div>
-                <span className={ styles.requestFormDocumentRight__infoSpan }>{ '+' }</span>
-                <div className={ styles.requestFormDocumentRight__inputsItem }>
-                    <label className={ styles.requestFormDocumentRight__label }>
-                        { labels.addedPrice }</label>
-                    <div className={ styles.requestFormDocumentRight__info }>
-                        { initialValues.addedPrice }
-                    </div>
-                </div>
-                <span className={ styles.requestFormDocumentRight__infoSpan }>{ '=' }</span>
-                <div className={ styles.requestFormDocumentRight__inputsItem }>
-                    <label className={ styles.requestFormDocumentRight__label }>
-                        { labels.finalPrice }</label>
-                    <div className={ styles.requestFormDocumentRight__info }>
-                        { initialValues.finalPrice }
-                    </div>
-                </div>
+                {/*<span className={ styles.requestFormDocumentRight__infoSpan }>{ '+' }</span>*/}
+                {/*<div className={ styles.requestFormDocumentRight__inputsItem }>*/}
+                {/*    <label className={ styles.requestFormDocumentRight__label }>*/}
+                {/*        { labels.addedPrice }</label>*/}
+                {/*    <div className={ styles.requestFormDocumentRight__info }>*/}
+                {/*        { initialValues.addedPrice }*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+                {/*<span className={ styles.requestFormDocumentRight__infoSpan }>{ '=' }</span>*/}
+                {/*<div className={ styles.requestFormDocumentRight__inputsItem }>*/}
+                {/*    <label className={ styles.requestFormDocumentRight__label }>*/}
+                {/*        { labels.finalPrice }</label>*/}
+                {/*    <div className={ styles.requestFormDocumentRight__info }>*/}
+                {/*        { initialValues.finalPrice }*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </div>
             <div className={ styles.requestFormDocumentRight__line }></div>
             {/*/////////ТТН или ЭТрН с ЭЦП////////////////////////////////*/ }
@@ -185,7 +187,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button colorMode={ 'whiteBlueDoc' }>
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
-                                    { labels.contractECP.uploadDocument }</span>
+                                    { labels.contractECP.documentDownload }</span>
                             <MaterialIcon icon_name={ 'attach_file' }/>
                             <input type={ 'file' }
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
@@ -217,7 +219,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button colorMode={ 'whiteBlueDoc' }>
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
-                                    { labels.updECP.uploadDocument }</span>
+                                    { labels.updECP.documentDownload }</span>
                             <MaterialIcon icon_name={ 'attach_file' }/>
                             <input type={ 'file' }
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
@@ -250,7 +252,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button colorMode={ 'whiteBlueDoc' }>
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
-                                    { labels.customerToConsigneeContractECP.uploadDocument }</span>
+                                    { labels.customerToConsigneeContractECP.documentDownload }</span>
                             <MaterialIcon icon_name={ 'attach_file' }/>
                             <input type={ 'file' }
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
@@ -266,22 +268,22 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*///////////////////ПАНЕЛЬ КНОПОК/////////////////*/ }
             <div className={ styles.requestFormDocumentRight__buttonsPanel }>
 
-                <div className={ styles.requestFormDocumentRight__panelButton }>
-                    <Button colorMode={ 'gray' } wordWrap rounded>
-                        { labels.paymentHasBeenTransferred }
-                        <MaterialIcon icon_name={ 'attach_file' }/>
-                        <input type={ 'file' }
-                               className={ styles.requestFormDocumentRight__hiddenAttachFile }
-                               accept={ '.png, .jpeg, .pdf, .jpg' }
-                               onChange={ buttonsAction.sendPaymentHasBeenTransferred }
-                        />
-                    </Button>
-                    <InfoButtonToModal textToModal={ modalsText.paymentHasBeenTransferred }/>
-                </div>
+                {/*<div className={ styles.requestFormDocumentRight__panelButton }>*/}
+                {/*    <Button colorMode={ 'gray' } wordWrap rounded>*/}
+                {/*        { labelsR.localStatus.paymentHasBeenTransferred }*/}
+                {/*        <MaterialIcon icon_name={ 'attach_file' }/>*/}
+                {/*        <input type={ 'file' }*/}
+                {/*               className={ styles.requestFormDocumentRight__hiddenAttachFile }*/}
+                {/*               accept={ '.png, .jpeg, .pdf, .jpg' }*/}
+                {/*               onChange={ buttonsAction.sendPaymentHasBeenTransferred }*/}
+                {/*        />*/}
+                {/*    </Button>*/}
+                {/*    <InfoButtonToModal textToModal={ modalsText.paymentHasBeenTransferred }/>*/}
+                {/*</div>*/}
                 <div className={ styles.requestFormDocumentRight__panelButton }>
                     <Button colorMode={ 'gray' }
                             wordWrap rounded
-                            title={ labels.paymentHasBeenReceived as string }
+                            title={ labelsR.localStatus.paymentHasBeenReceived }
                             onClick={ () => {
                             } }
                     />
@@ -290,7 +292,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <Button colorMode={ 'gray' }
                             wordWrap
                             rounded
-                            title={ labels.completeRequest as string }
+                            title={ labelsR.localStatus.cargoHasBeenReceived }
                             onClick={ () => {
                             } }
                     />
@@ -298,7 +300,6 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             </div>
             <InfoText/>
         </div>
-
 
     )
 }

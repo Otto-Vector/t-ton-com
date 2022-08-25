@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import styles from './add-drivers-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../common/button/button'
@@ -31,10 +31,14 @@ import {employeesStoreActions} from '../../redux/options/employees-store-reducer
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/lightbox-store-reducer'
+import {AppStateType} from '../../redux/redux-store';
 
 type OwnProps = {}
 
 export const AddDriversForm: React.FC<OwnProps> = () => {
+    const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
+
+    const setImage = ( urlImage: string ): string => urlImage ? currentURL + urlImage : noImage
 
     const header = ( requestNumber: number, shipmentDate: Date ): string =>
         `Заявка ${ requestNumber } от ${ ddMmYearFormat(shipmentDate) }`
@@ -64,18 +68,12 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         // navigate(create)
     }
 
-    const resultDistanceCost = ( ...args: number[] ): number =>
-        args.reduce(( a, b ) => a * b) * ( distance || 1 )
-
-    const onCancelClick = () => {
-        navigate(-1)
-    }
-
     const oneEmployee = useSelector(getOneEmployeesFromLocal)
     const setOneEmployee = ( searchId: string | undefined ) => {
         dispatch(employeesStoreActions.setCurrentId(searchId || ''))
     }
     const employeeOneImage = oneEmployee.photoFace
+    const employeeOneRating = oneEmployee.rating
     // const employeeOnePhone = oneEmployee.employeePhoneNumber
 
     const oneTransport = useSelector(getOneTransportFromLocal)
@@ -92,6 +90,18 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const trailerOneImage = oneTrailer.trailerImage
     const trailerOneCargoWeight = oneTrailer.cargoWeight
 
+    // подсчёт стоимости в зависимости от расстояния, ставки и веса груза
+    const resultDistanceCost = useCallback(() => ( stavka: string ): string => {
+        const [ stavkaNum, trailerNum, transportNum, distanceNum ] = [ stavka, trailerOneCargoWeight, transportOneCargoWeight, distance ]
+            .map(Number)
+        return ( stavkaNum * ( trailerNum + transportNum ) * distanceNum )
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    }, [ trailerOneCargoWeight, transportOneCargoWeight, distance ])
+
+    const onCancelClick = () => {
+        navigate(-1)
+    }
 
     return (
         <div className={ styles.addDriversForm }>
@@ -104,45 +114,45 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                             initialValues={ initialValues }
                             render={
                                 ( {
-                                      submitError,
                                       hasValidationErrors,
                                       handleSubmit,
-                                      pristine,
                                       form,
                                       submitting,
                                       values,
-
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }>
                                         <div
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
-                                                    className={ styles.addDriversForm__label }>{ label.idEmployee + ':' }</label>
+                                                    className={ styles.addDriversForm__label }>
+                                                    { label.idEmployee + ':' }</label>
                                                 <FormSelector named={ 'driverFIO' }
-                                                              placeholder={ placeholder.driverFIO }
+                                                              placeholder={ placeholder.idEmployee }
                                                               values={ employeesSelect }
-                                                              validate={ validators.driverFIO }
+                                                              validate={ validators.idEmployee }
                                                               handleChanger={ setOneEmployee }
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
-                                                    className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
+                                                    className={ styles.addDriversForm__label }>
+                                                    { label.idTransport + ':' }</label>
                                                 <FormSelector named={ 'driverTransport' }
-                                                              placeholder={ placeholder.driverTransport }
+                                                              placeholder={ placeholder.idTransport }
                                                               values={ transportSelect }
-                                                              validate={ validators.driverTransport }
+                                                              validate={ validators.idTransport }
                                                               handleChanger={ setOneTransport }
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
-                                                    className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
+                                                    className={ styles.addDriversForm__label }>
+                                                    { label.idTrailer + ':' }</label>
                                                 <FormSelector named={ 'driverTrailer' }
-                                                              placeholder={ placeholder.driverTrailer }
+                                                              placeholder={ placeholder.idTrailer }
                                                               values={ trailerSelect }
-                                                              validate={ validators.driverTrailer }
+                                                              validate={ validators.idTrailer }
                                                               handleChanger={ setOneTrailer }
                                                 />
                                             </div>
@@ -151,14 +161,13 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.responseStavka + ':' }</label>
-
                                                 <Field name={ 'driverStavka' }
-                                                       placeholder={ placeholder.driverStavka }
+                                                       placeholder={ placeholder.responseStavka }
                                                        component={ FormInputType }
                                                        inputType={ 'money' }
                                                        pattern={ '/d*.' }
                                                        resetFieldBy={ form }
-                                                       validate={ validators.driverStavka }
+                                                       validate={ validators.responseStavka }
                                                        noLabel
                                                        errorBottom
                                                 />
@@ -170,22 +179,17 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <div className={ styles.addDriversForm__info + ' ' +
                                                     styles.addDriversForm__info_long }>
                                                     {
-                                                        values. responseSumm = resultDistanceCost(
-                                                                +( values.responseStavka || 0 ),
-                                                                (
-                                                                    +( trailerOneCargoWeight || 0 )
-                                                                    +
-                                                                    +( transportOneCargoWeight || 0 )
-                                                                ),
-                                                            ).toString()
-                                                            || 'за весь рейс' }
+                                                        values.responsePrice =
+                                                            resultDistanceCost()(values.responseStavka as string)
+                                                            || 'за весь рейс'
+                                                    }
                                                 </div>
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
-                                                    { label.driverRating + ':' }</label>
+                                                    { 'Выполнено заказов:' }</label>
                                                 <div className={ styles.addDriversForm__info }>
-                                                    { initialValues.driverRating || '-' }
+                                                    { employeeOneRating || '-' }
                                                 </div>
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>
@@ -200,37 +204,24 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                         <div className={ styles.addDriversForm__photoPanel }>
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
-                                                    src={
-                                                        values.driverFIO
-                                                            ? employeeOneImage + ''
-                                                            : noImage
-                                                    }
+                                                    src={ setImage(employeeOneImage as string) }
                                                     alt="driverPhoto"
                                                     onClick={ () => setLightBoxImage(employeeOneImage) }
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
-                                                    src={
-                                                        values.driverTransport
-                                                            ? transportOneImage + ''
-                                                            : noImage
-                                                    }
-                                                    alt="driverTransportPhoto"
+                                                    src={ setImage(transportOneImage as string) }
+                                                    alt="transportPhoto"
                                                     onClick={ () => setLightBoxImage(transportOneImage) }
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__photo }>
                                                 <img
-                                                    src={
-                                                        values.driverTrailer
-                                                            ? trailerOneImage + ''
-                                                            : noImage
-                                                    }
+                                                    src={ setImage(trailerOneImage as string) }
                                                     alt="driverTrailerPhoto"
                                                     onClick={ () => setLightBoxImage(trailerOneImage) }
                                                 />
-
                                             </div>
                                         </div>
 
@@ -254,17 +245,11 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 />
                                             </div>
                                         </div>
-                                        {/*{submitError && <span className={styles.onError}>{submitError}</span>}*/ }
                                     </form>
-                                )
-                            }/>
-
+                                ) }/>
                     </> }
-
                 <CancelButton onCancelClick={ onCancelClick }/>
-
             </div>
-
         </div>
     )
 }

@@ -8,63 +8,7 @@ import {polyline_decode} from '../../utils/polilyne-decode';
 import {cargoEditableSelectorApi} from '../../api/cargoEditableSelector.api';
 
 
-const defaultInitialStateValues = {
-    requestId: undefined,
-    requestNumber: 0,
-    requestDate: undefined,
-    cargoComposition: undefined,
-    shipmentDate: undefined,
-    cargoType: undefined,
-    idUserCustomer: undefined,
-    idSender: undefined,
-    idRecipient: undefined,
-    idCarrier: undefined,
-    idEmployee: undefined,
-    distance: undefined,
-    note: undefined,
-    visible: true,
-    documents: {
-        proxyWay: {
-            header: undefined,
-            proxyFreightLoader: false,
-            proxyDriver: false,
-            waybillDriver: false,
-        },
-        uploadTime: undefined,
-        cargoWeight: 0,
-        cargoDocuments: undefined,
-        cargoPrice: 0,
-        addedPrice: 0,
-        finalPrice: 0,
-        ttnECP: {
-            header: undefined,
-            customerIsSubscribe: false,
-            carrierIsSubscribe: false,
-            consigneeIsSubscribe: false,
-        },
-        contractECP: {
-            header: undefined,
-            customerIsSubscribe: false,
-            carrierIsSubscribe: false,
-            uploadDocument: undefined,
-        },
-        updECP: {
-            header: undefined,
-            customerIsSubscribe: false,
-            carrierIsSubscribe: false,
-            uploadDocument: undefined,
-        },
-        customerToConsigneeContractECP: {
-            header: undefined,
-            customerIsSubscribe: false,
-            consigneeIsSubscribe: false,
-            uploadDocument: undefined,
-        },
-        paymentHasBeenTransferred: undefined,
-        paymentHasBeenReceived: false,
-        completeRequest: false,
-    },
-} as OneRequestType
+const defaultInitialStateValues = {} as OneRequestType
 
 const initialState = {
 
@@ -76,7 +20,6 @@ const initialState = {
     isNewRequest: true,
 
     label: {
-        requestId: undefined,
         requestNumber: 'Номер заявки',
         requestDate: 'Дата создания заявки',
         cargoComposition: 'Вид груза',
@@ -86,13 +29,22 @@ const initialState = {
         idUserCustomer: 'Заказчик',
         idSender: 'Грузоотправитель',
         idRecipient: 'Грузополучатель',
-        idCarrier: 'Перевозчик',
+        requestCarrierId: 'Перевозчик',
         idEmployee: 'Водитель',
         note: 'Примечание',
-    } as Record<keyof OneRequestType, string | undefined>,
+        // поля на вкладку ДОКУМЕНТЫ
+        uploadTime: 'Время погрузки',
+        cargoWeight: 'Вес груза, в тн.',
+        responsePrice: 'Цена по Заявке',
+        localStatus: {
+            paymentHasBeenTransferred: 'Оплату передал',
+            paymentHasBeenReceived: 'Оплату получил',
+            cargoHasBeenTransferred: 'Груз передан',
+            cargoHasBeenReceived: 'Закрыть заявку',
+        },
+    } as Record<keyof OneRequestType, string | undefined> & { localStatus: Record<keyof OneRequestType['localStatus'], string | undefined> },
 
     placeholder: {
-        requestId: undefined,
         requestNumber: '№',
         requestDate: 'ДД-ММ-ГГГГ',
         cargoComposition: 'Полное наименование груза',
@@ -102,13 +54,12 @@ const initialState = {
         idUserCustomer: 'Наименование организации заказчика',
         idSender: 'Наименование организации Владельца груза',
         idRecipient: 'Наименование организации Грузополучателя',
-        idCarrier: 'Наименование организации Перевозчика',
+        requestCarrierId: 'Наименование организации Перевозчика',
         idEmployee: 'ФИО, Марка авто, Марка прицепа, тн',
         note: 'дополнительные данные',
     } as Record<keyof OneRequestType, string | undefined>,
 
     validators: {
-        requestId: undefined,
         requestNumber: undefined,
         requestDate: composeValidators(required),
         cargoComposition: composeValidators(required),
@@ -118,7 +69,7 @@ const initialState = {
         idUserCustomer: composeValidators(required),
         idSender: composeValidators(required),
         idRecipient: composeValidators(required),
-        idCarrier: undefined,
+        requestCarrierId: undefined,
         idEmployee: undefined,
         note: undefined,
     } as Record<keyof OneRequestType, ValidateType>,
@@ -126,7 +77,6 @@ const initialState = {
     defaultInitialStateValues,
 
     initialValues: {
-        requestId: '',
         requestNumber: 0,
         requestDate: undefined,
         cargoComposition: undefined,
@@ -136,7 +86,7 @@ const initialState = {
         distance: undefined,
         idSender: undefined,
         idRecipient: undefined,
-        idCarrier: undefined,
+        requestCarrierId: undefined,
         idEmployee: undefined,
         note: undefined,
         visible: true,
@@ -152,59 +102,54 @@ const initialState = {
             proxyDriver: 'Доверенность на Водителя',
             waybillDriver: 'Путевой Лист Водителя',
         },
-        uploadTime: 'Время погрузки',
-        cargoWeight: 'Вес груза, в тн.',
+
         cargoDocuments: 'Документы груза',
-        cargoPrice: 'Цена по Заявке',
-        addedPrice: 'Доп. Услуги',
-        finalPrice: 'Итоговая Цена',
+
         ttnECP: {
             header: 'ТТН или ЭТрН с ЭЦП',
             customerIsSubscribe: 'Заказчик',
             carrierIsSubscribe: 'Перевозчик',
             consigneeIsSubscribe: 'Грузополучатель',
+            documentDownload: 'Загрузить',
         },
         contractECP: {
             header: 'Договор оказания транспортных услуг с ЭЦП',
             customerIsSubscribe: 'Заказчик',
             carrierIsSubscribe: 'Перевозчик',
-            uploadDocument: 'Загрузить',
+            documentDownload: 'Загрузить',
         },
         updECP: {
             header: 'УПД от Перевозчика для Заказчика с ЭЦП',
             customerIsSubscribe: 'Заказчик',
             carrierIsSubscribe: 'Перевозчик',
-            uploadDocument: 'Загрузить',
+            documentDownload: 'Загрузить',
         },
         customerToConsigneeContractECP: {
             header: 'Документы от Заказчика для ГрузоПолучателя с ЭЦП',
             customerIsSubscribe: 'Заказчик',
             consigneeIsSubscribe: 'Грузополучатель',
-            uploadDocument: 'Загрузить',
+            documentDownload: 'Загрузить',
         },
-        paymentHasBeenTransferred: 'Оплату передал',
-        paymentHasBeenReceived: 'Оплату получил',
-        completeRequest: 'Закрыть заявку',
     } as DocumentsRequestType,
 
     // инфо для модальных окон после нажатия на кнопку
     infoTextModals: {
-        contractECP: 'Используется стандартный шаблон транспортного договора, подпишите по ЭЦП или Загрузите свой экземпляр для пописания.',
-        updECP: 'Используется стандартный шаблон УПД, проверьте и подпишите по ЭЦП или Загрузите свой экземпляр для пописания.',
+        contractECP: 'Используется стандартный шаблон транспортного договора, подпишите по ЭЦП или Загрузите свой экземпляр для подписания.',
+        updECP: 'Используется стандартный шаблон УПД, проверьте и подпишите по ЭЦП или Загрузите свой экземпляр для подписания.',
         customerToConsigneeContractECP: 'Загрузите документы для подписания по ЭЦП, данный документ  доступен только для Заказчика и Грузополучателя.',
         paymentHasBeenTransferred: 'Загрузите платежное поручение из банка с синей отметкой, для подтверждения оплаты.',
 
         cargoComposition: 'Номенклатура груза по документации.',
         shipmentDate: 'Дата погрузки по доверенности',
-        distance: 'Расчет производится автоматически на основании координатов мест Погрузки и Разгрузки. Корректировка местоположения изменяет параметры',
+        distance: 'Расчет производится автоматически на основании координат мест Погрузки и Разгрузки. Корректировка местоположения изменяет параметры',
         cargoType: 'Укажите тип прицепа или сцепки, для осуществления верного поиска транспорта.',
-        customer: 'Ваша организация или стороняя организация использующая Агентов для оказания собственных услуг перевозки. Получает права владельца Заявки после создания Заявки.',
+        customer: 'Ваша организация или сторонняя организация использующая Агентов для оказания собственных услуг перевозки. Получает права владельца Заявки после создания Заявки.',
         shipper: 'Юридические владельцы груза. НЕ получает права на просмотр данной Заявки, предоставляет местоположение и контактный телефон представителя для сбора груза.',
         consignee: 'Юридические получатели груза. Получает права на просмотр созданной Заявки, отслеживание транспорта, просмотр контактных и прочих данных указанных в Заявке.',
         carrier: 'Перевозчики Вашего груза от Отправителя до Получателя. НЕ видит информацию о Заказчике, Грузоотправителе и Грузополучателе, до окончательного принятия Заявки. Требуется проверка Перевозчика до момента передачи груза!',
-        driver: 'Сотрудник Перевозчика и данные транспорта. При использовани мобильного приложения, отображается маршрут на карте, может звонить всем сторонам Заявки и предоставлять сканы документов.',
+        driver: 'Сотрудник Перевозчика и данные транспорта. При использовании мобильного приложения, отображается маршрут на карте, может звонить всем сторонам Заявки и предоставлять сканы документов.',
         note: 'Дополнительная информация доступная До принятия Заявки, для указания особенностей транспортировки или погрузочно-разгрузочных работ.',
-        selfDeliveryButton: 'Использование собстввенных сотрудников и транспорта, для оказания услуг транспортировки. Услуга оплачивается со счета Перевозчика-Заказчика.',
+        selfDeliveryButton: 'Использование собственных сотрудников и транспорта, для оказания услуг транспортировки. Услуга оплачивается со счета Перевозчика-Заказчика.',
     },
 
     initialDocumentsRequestValues: initialDocumentsRequestValues,
@@ -345,7 +290,7 @@ export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionTyp
     async ( dispatch ) => {
         try {
             const response = await cargoEditableSelectorApi.getCargoComposition()
-            const reparsedResponse = response.map(({text})=>text).reverse()
+            const reparsedResponse = response.map(( { text } ) => text).reverse()
             dispatch(requestStoreActions.setCargoCompositionSelector(reparsedResponse))
         } catch (e) {
             alert(e)

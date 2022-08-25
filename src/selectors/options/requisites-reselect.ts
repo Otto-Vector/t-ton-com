@@ -17,6 +17,6 @@ export const getParsersRequisitesStore: RequisitesStoreSelectors<'parsers'> = ( 
 
 // выгрузка тарифов из локальных данных пользователя
 export const getTarifsRequisitesStore = createSelector(getStoredValuesRequisitesStore,
-    ( requisites ): CompanyRequisitesType['tarifs'] => {
-        return requisites.tarifs
+    ( requisites ): CompanyRequisitesType['tariffs'] => {
+        return requisites.tariffs
     })

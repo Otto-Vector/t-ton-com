@@ -42,7 +42,7 @@ const initialValues: CompanyRequisitesType = {
     nameBank: undefined,
     checkingAccount: undefined,
     korrAccount: undefined,
-    tarifs: {
+    tariffs: {
         create: undefined,
         acceptShortRoute: undefined,
         acceptLongRoute: undefined,
@@ -140,7 +140,7 @@ const initialState = {
         nameBank: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
         checkingAccount: undefined,
         korrAccount: undefined,
-        tarifs: {
+        tariffs: {
             create: undefined,
             acceptShortRoute: undefined,
             acceptLongRoute: undefined,

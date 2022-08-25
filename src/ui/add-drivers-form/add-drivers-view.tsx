@@ -7,7 +7,7 @@ import {
     getStoredValuesRequisitesStore,
 } from '../../selectors/options/requisites-reselect'
 
-import {getInitialValuesAddDriverStore, getLabelAddDriverStore} from '../../selectors/forms/add-driver-reselect'
+import {getLabelAddDriverStore} from '../../selectors/forms/add-driver-reselect'
 import {getOneRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {getOneEmployeesFromLocal} from '../../selectors/options/employees-reselect'
@@ -28,9 +28,10 @@ type OwnProps = {
     idEmployee: string,
 }
 
-export const AddDriversView: React.FC<OwnProps> = ({idEmployee}) => {
+export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
 
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
+    const setImage = ( urlImage?: string | null ): string => urlImage ? currentURL + urlImage : noImage
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
@@ -44,9 +45,6 @@ export const AddDriversView: React.FC<OwnProps> = ({idEmployee}) => {
     const setLightBoxImage = ( image?: string | null ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
-
-    const resultDistanceCost = ( ...args: number[] ): number =>
-        args.reduce(( a, b ) => a * b) * ( distance || 1 )
 
     // const oneEmployee = useSelector(getOneEmployeesFromLocal)
     // const employeeOneImage = oneEmployee.photoFace
@@ -115,7 +113,6 @@ export const AddDriversView: React.FC<OwnProps> = ({idEmployee}) => {
                     <div className={ styles.addDriversForm__infoItem }>
                         <label className={ styles.addDriversForm__label }>
                             { label.responseStavka + ':' }</label>
-
                         <div className={ styles.addDriversForm__info }>
                             { initialValues.rating }
                         </div>
@@ -125,21 +122,12 @@ export const AddDriversView: React.FC<OwnProps> = ({idEmployee}) => {
                         <label className={ styles.addDriversForm__label }>
                             { label.responsePrice + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            {
-                                resultDistanceCost(
-                                    +( initialValues.rating || 0 ),
-                                    (
-                                        +( trailerOneCargoWeight || 0 )
-                                        +
-                                        +( transportOneCargoWeight || 0 )
-                                    ),
-                                ).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-                            }
+                            { oneRequest.responsePrice }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoItem }>
                         <label className={ styles.addDriversForm__label }>
-                            { label.driverRating + ':' }</label>
+                            { 'Рейсы шт.:' }</label>
                         <div className={ styles.addDriversForm__info }>
                             { initialValues.rating || '-' }
                         </div>
@@ -156,29 +144,29 @@ export const AddDriversView: React.FC<OwnProps> = ({idEmployee}) => {
                 <div className={ styles.addDriversForm__photoPanel }>
                     <div className={ styles.addDriversForm__photo }>
                         <img
-                            src={ initialValues.photoFace ? currentURL+initialValues.photoFace : noImage }
+                            src={ setImage(initialValues.photoFace) }
                             alt="driverPhoto"
-                            onClick={ () => setLightBoxImage(initialValues.photoFace ? currentURL+initialValues.photoFace : noImage) }
+                            onClick={ () => setLightBoxImage(setImage(initialValues.photoFace)) }
                         />
                     </div>
                     <div className={ styles.addDriversForm__photo }>
                         <img
-                            src={ transportOneImage ? currentURL+transportOneImage : noImage }
+                            src={ setImage(transportOneImage) }
                             alt="driverTransportPhoto"
-                            onClick={ () => setLightBoxImage(transportOneImage ? currentURL+transportOneImage : noImage) }
+                            onClick={ () => setLightBoxImage(setImage(transportOneImage)) }
                         />
                     </div>
                     <div className={ styles.addDriversForm__photo }>
                         <img
-                            src={ trailerOneImage ? currentURL+trailerOneImage : noImage }
+                            src={ setImage(trailerOneImage) }
                             alt="driverTrailerPhoto"
-                            onClick={ () => setLightBoxImage(trailerOneImage ? currentURL+trailerOneImage : noImage) }
+                            onClick={ () => setLightBoxImage(setImage(trailerOneImage)) }
                         />
                     </div>
                 </div>
                 <div className={ styles.addDriversForm__buttonsPanel }>
                     <a role="button"
-                        href={ `tel:${ employeeOnePhone }` }
+                       href={ `tel:${ employeeOnePhone }` }
                        className={ styles.addDriversForm__buttonHrefWrapper }>
                         <Button type={ 'button' }
                                 disabled={ !employeeOnePhone }

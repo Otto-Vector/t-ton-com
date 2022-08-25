@@ -79,7 +79,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     }
 
     const oneCustomer = allShippers.filter(( { idSender } ) => idSender === initialValues.idUserCustomer)[0]
-    const oneCarrier = allShippers.filter(( { idSender } ) => idSender === initialValues.idCarrier)[0]
+    const oneCarrier = allShippers.filter(( { idSender } ) => idSender === initialValues.requestCarrierId)[0]
 
 
     const custumersByUserInn = useMemo(
@@ -284,10 +284,10 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
-                                    { labels.idCarrier }</label>
+                                    { labels.requestCarrierId }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { oneCarrier ? ( oneCarrier.title + ', ' + oneCarrier.city ) : placehoders.idCarrier }
+                                    { oneCarrier ? ( oneCarrier.title + ', ' + oneCarrier.city ) : placehoders.requestCarrierId }
                                 </div>
                                 <InfoButtonToModal textToModal={ fieldInformation.carrier } mode={ 'inForm' }/>
                             </div>

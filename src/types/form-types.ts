@@ -40,10 +40,10 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
     requestActiveCount: T // количество активных заявок
     maxRequests: T // максимальное количество заявок (редактируется админом)
 
-    tarifs: { //тарифы на оплату (отображаются в инфо-секции, используются везде, редактируются админом)
+    tariffs: { //тарифы на оплату (отображаются в инфо-секции, используются везде, редактируются админом)
         create: T, // тариф на создание заявки (по умолчанию 100)
         acceptShortRoute: T, // тариф на принятие заявки на короткие расстояния (по умолчанию 100)
-        acceptLongRoute: T, // тариф на принятие заявки на Дальние расстояиня (по умолчанию 100)
+        acceptLongRoute: T, // тариф на принятие заявки на Дальние расстояния (по умолчанию 100)
         paySafeTax: T, // процент на безопасную сделку (по умолчанию 3) (будем прикручивать в будущем)
     },
 }
@@ -61,7 +61,7 @@ export type EmployeesCardType<T = DefaultFormType> = {
     personnelNumber: T // Табельный номер
     garageNumber: T // Гаражный номер
     photoFace: T // Добавить фотографию сотрудника
-    rating: T // количество успешно завершённых заказов (считатется автоматически) // как считать, пока хз на бэке или чз фронт...
+    rating: T // количество успешно завершённых заказов (считается автоматически) // как считать, пока хз на бэке или чз фронт...
     coordinates: T // координаты местоположения водителя
     status: T // статус водителя
     idTransport: T // прикреплённый транспорт
@@ -191,8 +191,8 @@ export type OneRequestType = {
     globalStatus: 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | undefined // глобальный статус заявки
     localStatus: { // локальный статус заявки
         paymentHasBeenTransferred: boolean | undefined // Оплату передал
-        cargoHasBeenTransferred: boolean | undefined // Груз передан
         paymentHasBeenReceived: boolean | undefined // Оплату получил
+        cargoHasBeenTransferred: boolean | undefined // Груз передан
         cargoHasBeenReceived: boolean | undefined // Груз получен
     }
 
@@ -209,7 +209,7 @@ export type OneRequestType = {
 
     // поля вкладки ДОКУМЕНТЫ
     responsePrice: undefined | string, // подсчитанная сумма (считается на фронте) (из карточки отклика)
-    cargoWeight: number | string // Вес груза, в тн. (высчитывается автоматически по тоннажу тягач+прицеп (из карточки отклика)
+    cargoWeight?: number | string // Вес груза, в тн. (высчитывается автоматически по тоннажу тягач+прицеп (из карточки отклика)
 
     // ИЗМЕНЯЕМЫЕ
     uploadTime: Date | undefined | string // Время погрузки (устанавливается автоматически после нажатия кнопки "Груз у водителя"(сайт) или "Груз получил"(приложение на тел.)

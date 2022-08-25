@@ -3,64 +3,45 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ResponseToRequestCardType, ValidateType} from '../../types/form-types';
 import {composeValidators, maxRangeNumber, required} from '../../utils/validators';
 
-const testInitialValues = {
-    driverFIO: '1',
-    driverTransport: '2',
-    driverTrailer: '11',
-    driverStavka: '4',
-    driverSumm: undefined,
-    driverRating: '5',
-    driverTax: 'СВО',
-    driverPhoto: undefined,
-    driverTransportPhoto: undefined,
-    driverTrailerPhoto: undefined,
-} as ResponseToRequestCardType
+const testInitialValues = {} as ResponseToRequestCardType
 
 
 const initialState = {
     isFetching: false,
     label: {
-        driverFIO: 'Сотрудник',
-        driverTransport: 'Транспорт',
-        driverTrailer: 'Прицеп',
-        driverStavka: 'Ставка, тн.км.',
-        driverSumm: 'Сумма, руб.',
-        driverRating: 'Рейсы, шт.',
-        driverTax: 'Налог',
-        driverPhoto: undefined,
-        driverTransportPhoto: undefined,
-        driverTrailerPhoto: undefined,
+        idEmployee: 'Сотрудник',
+        idTransport: 'Транспорт',
+        idTrailer: 'Прицеп',
+        responseStavka: 'Ставка, тн.км.',
+        responsePrice: 'Сумма, руб.',
+        responseTax: 'Налог',
     } as ResponseToRequestCardType,
 
     initialValues: {
-        driverFIO: undefined,
-        driverTransport: undefined,
-        driverTrailer: undefined,
-        driverStavka: undefined,
-        driverSumm: undefined,
-        driverRating: undefined,
-        driverTax: undefined,
-        driverPhoto: undefined,
-        driverTransportPhoto: undefined,
-        driverTrailerPhoto: undefined,
+        idEmployee: undefined,
+        idTransport: undefined,
+        idTrailer: undefined,
+        responseStavka: undefined,
+        responsePrice: undefined,
+        responseTax: undefined,
     } as ResponseToRequestCardType,
 
     placeholder: {
-        driverFIO: 'Поиск водителя...',
-        driverTransport: 'Поиск транспорта...',
-        driverTrailer: 'Поиск прицепа...',
-        driverStavka: '0.00 руб',
+        idEmployee: 'Поиск водителя...',
+        idTransport: 'Поиск транспорта...',
+        idTrailer: 'Поиск прицепа...',
+        responseStavka: '0.00 руб',
     },
 
     maskOn: {
-        driverStavka: undefined,
+        responseStavka: undefined,
     },
 
     validators: {
-        driverFIO: composeValidators(required),
-        driverTransport: composeValidators(required),
-        driverTrailer: composeValidators(required),
-        driverStavka: composeValidators(required, maxRangeNumber(3000)) as ValidateType,
+        idEmployee: composeValidators(required),
+        idTransport: composeValidators(required),
+        idTrailer: undefined,
+        responseStavka: composeValidators(required, maxRangeNumber(3000)) as ValidateType,
     },
 
 }
