@@ -275,3 +275,53 @@ export type DocumentsRequestType = {
         consigneeIsSubscribe: boolean | string // Грузополучатель загрузил, подписал и выгрузил подписанный док
     },
 }
+export type OneRequestApiType = {
+        requestNumber: string;
+        requestDate: string;
+        cargoComposition: string;
+        shipmentDate: string;
+        cargoType: string;
+        idUserCustomer: string;
+        idSender: string;
+        idRecipient: string;
+        distance: string;
+        note: string;
+        visible: string;
+        marked: string;
+        globalStatus: string;
+        localStatuspaymentHasBeenTransferred: string;
+        localStatuscargoHasBeenTransferred: string;
+        localStatuspaymentHasBeenReceived: string;
+        localStatuscargoHasBeenReceived: string;
+        answers: string;
+        requestCarrierId: string;
+        idEmployee: string;
+        idTransport: string;
+        idTrailer: string;
+        responseStavka: string;
+        responseTax: string;
+        responsePrice: string;
+        cargoWeight: string;
+        uploadTime: string;
+        proxyFreightLoader: string;
+        proxyDriver: string;
+        proxyWaybillDriver: string;
+        cargoDocuments: string;
+        ttnECPdocumentDownload: string;
+        ttnECPdocumentUpload: string;
+        ttnECPcustomerIsSubscribe: string;
+        ttnECPcarrierIsSubscribe: string;
+        ttnECPconsigneeIsSubscribe: string;
+        contractECPdocumentDownload: string;
+        contractECPdocumentUpload: string;
+        contractECPcustomerIsSubscribe: string;
+        contractECPcarrierIsSubscribe: string;
+        updECPdocumentDownload: string;
+        updECPdocumentUpload: string;
+        updECPcustomerIsSubscribe: string;
+        updECPcarrierIsSubscribe: string;
+        customerToConsigneeContractECPdocumentDownload: string;
+        customerToConsigneeContractECPdocumentUpload: string;
+        customerToConsigneeContractECPcustomerIsSubscribe: string;
+        customerToConsigneeContractECPconsigneeIsSubscribe: string;
+    }

@@ -25,7 +25,6 @@ export const responseToRequestApi = {
         // 1.	Code 200, {"success": "ResponseToRequestCardType '{}' created successfully".format(new_Response.responseId)}
         // 2.	Code 520, {"message":"Error"}
     },
-
     // ИЗМЕНИТЬ один Ответ на Заявку PUT /api/responsetorequestcardtype/
     modifyOneResponseToRequest( responseToRequest: ResponseToRequestCardType ) {
         return instanceBack.put<InfoResponseType>('/api/responsetorequestcardtype/', responseToRequest)
@@ -39,7 +38,6 @@ export const responseToRequestApi = {
             .then(response => response.data)
         // 1.	Code 200, {"message": "ResponseToRequestCardType with id `{}` has been deleted.".format(request.data['responseId'])}
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
-
     },
 }
 
