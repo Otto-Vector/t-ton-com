@@ -13,6 +13,10 @@ export const yearMmDdFormat = ( date: Date | undefined ): string | undefined => 
 // output string HH:mm DD-MM
 export const hhMmDdMmFormat = ( date: Date | undefined ): string | undefined => date ? format(date, 'HH:mm DD-MM') : undefined;
 
+// from API to ISO parser 'YYYY-MM-DD-HH-mm' to 'YYYY-MM-DDTHH:mm'
+export const apiToISODateFormat = ( dateStringFromAPI: string ) => dateStringFromAPI.split('')
+    .map(( e, i ) => i === 10 ? 'T' : i === 13 ? ':' : e).join('')
+
 // add a day
 export const addOneDay = ( date: Date ): Date => new Date(date.getTime() + 86400000);
 // add N days

@@ -60,7 +60,7 @@ export const initializedAll = (): InitializedThunkActionType =>
         const getAllEmployees = dispatch(getAllEmployeesAPI())
         const getCargoComposition = dispatch(getCargoCompositionSelector())
 
-        const getAllRequests = dispatch(getAllRequestsAPI({innID: 0}))
+        const getAllRequests = dispatch(getAllRequestsAPI())
         const getAllInfoMessages = dispatch(getInfoMessages())
 
         Promise.all([

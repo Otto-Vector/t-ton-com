@@ -1,11 +1,13 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
+import {CargoTypeType, DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
 import {initialDocumentsRequestValues, makeNTestRequests} from '../../initials-test-data';
 import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
 import {polyline_decode} from '../../utils/polilyne-decode';
 import {cargoEditableSelectorApi} from '../../api/cargoEditableSelector.api';
+import {oneRequestApi} from '../../api/request-response/request.api';
+import {apiToISODateFormat} from '../../utils/date-formats';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -274,15 +276,98 @@ export const requestStoreActions = {
 export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-export const getAllRequestsAPI = ( { innID }: { innID: number } ): RequestStoreReducerThunkActionType =>
+export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
-        // dispatch( requestFormActions.setIcons( null ) )
+
         try {
-            const response = makeNTestRequests(50)
-            dispatch(requestStoreActions.setContent(response))
+            const response = await oneRequestApi.getAllRequests()
+            if (response.length > 0) {
+
+                dispatch(requestStoreActions.setContent(response.map(( elem ) => ( {
+                        requestNumber: +elem.requestNumber,
+                        requestDate: elem.requestDate ? new Date(apiToISODateFormat(elem.requestDate)) : undefined,
+                        cargoComposition: elem.cargoComposition,
+                        shipmentDate: elem.shipmentDate ? new Date(apiToISODateFormat(elem.shipmentDate)) : undefined,
+                        cargoType: elem.cargoType as CargoTypeType,
+
+                        idUserCustomer: elem.idUserCustomer,
+                        idSender: elem.idSender,
+                        idRecipient: elem.idRecipient,
+
+                        distance: +elem.distance,
+                        note: elem.note,
+                        visible: true,
+                        marked: false,
+
+                        globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
+                        localStatus: {
+                            paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred === 'True',
+                            paymentHasBeenReceived: elem.localStatuscargoHasBeenReceived === 'True',
+                            cargoHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred === 'True',
+                            cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived === 'True',
+                        },
+                        answers: elem.answers.split(','),
+
+                        // поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку
+                        // НЕИЗМЕНЯЕМЫЕ
+                        requestCarrierId: elem.requestCarrierId,
+                        idEmployee: elem.idEmployee,
+                        idTransport: elem.idTransport,
+                        idTrailer: elem.idTrailer,
+                        responseStavka: elem.responseStavka,
+                        responseTax: elem.responseTax,
+
+                        // поля вкладки ДОКУМЕНТЫ
+                        responsePrice: elem.responsePrice,
+                        cargoWeight: elem.cargoWeight,
+
+                        // ИЗМЕНЯЕМЫЕ
+                        uploadTime: elem.uploadTime && new Date(apiToISODateFormat(elem.uploadTime)),
+
+                        documents: {
+                            proxyWay: {
+                                header: undefined,
+
+                                proxyFreightLoader: elem.proxyFreightLoader,
+                                proxyDriver: elem.proxyDriver,
+                                waybillDriver: elem.proxyWaybillDriver,
+                            },
+                            cargoDocuments: elem.cargoDocuments,
+                            ttnECP: {
+                                header: undefined,
+                                documentUpload: undefined,
+                                documentDownload: elem.ttnECPdocumentDownload,
+                                customerIsSubscribe: elem.ttnECPcustomerIsSubscribe === 'True',
+                                carrierIsSubscribe: elem.ttnECPcarrierIsSubscribe === 'True',
+                                consigneeIsSubscribe: elem.ttnECPconsigneeIsSubscribe === 'True',
+                            },
+                            contractECP: {
+                                header: undefined,
+                                documentUpload: undefined,
+                                documentDownload: elem.contractECPdocumentDownload,
+                                customerIsSubscribe: elem.contractECPcustomerIsSubscribe === 'True',
+                                carrierIsSubscribe: elem.contractECPcarrierIsSubscribe === 'True',
+                            },
+                            updECP: {
+                                header: undefined,
+                                documentUpload: undefined,
+                                documentDownload: elem.updECPdocumentDownload,
+                                customerIsSubscribe: elem.updECPcustomerIsSubscribe === 'True',
+                                carrierIsSubscribe: elem.updECPcarrierIsSubscribe === 'True',
+                            },
+                            customerToConsigneeContractECP: {
+                                header: undefined,
+                                documentUpload: undefined,
+                                documentDownload: elem.customerToConsigneeContractECPdocumentDownload,
+                                customerIsSubscribe: elem.customerToConsigneeContractECPcustomerIsSubscribe === 'True',
+                                consigneeIsSubscribe: elem.customerToConsigneeContractECPconsigneeIsSubscribe === 'True',
+                            },
+                        },
+                    } ),
+                )))
+            }
         } catch (e) {
             alert(e)
-            // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
         }
     }
 
