@@ -19,10 +19,12 @@ export const oneRequestApi = {
         // 2.	Code 520, {"message":"Error"}
     },
     // создать одну Заявку POST /api/onerequesttype/
-    createOneRequest( { requestNumber, ...responseToRequest }: OneRequestApiType ) {
-        return instanceBack.post<InfoResponseType>('/api/onerequesttype/', responseToRequest)
+    createOneRequest( { idUserCustomer }: { idUserCustomer: string } ) {
+        return instanceBack.post<{ success: string, Number: string, Date: string, message?: string }>('/api/onerequesttype/', { idUserCustomer })
             .then(response => response.data)
-        // 1.	Code 200, {"success": "OneRequestType '{}' created successfully".format(new_Request. requestNumber), 'Date': new_Request.requestDate}
+        // 1.	Code 200, {"success": "OneRequestType '{}' created successfully".format(new_Request. requestNumber),
+        // "Number": new_Request.requestNumber,
+        // "Date": new_Request.requestDate }
         // 2.	Code 520, {"message":"Error"}
     },
     // ИЗМЕНИТЬ одну Заявку PUT /api/onerequesttype/

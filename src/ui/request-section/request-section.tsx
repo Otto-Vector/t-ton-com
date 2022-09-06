@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {To, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {requestStoreActions} from '../../redux/forms/request-store-reducer';
+import {requestStoreActions, setNewRequestAPI} from '../../redux/forms/request-store-reducer';
 import {
     getDefaultInitialValuesRequestStore,
     getInitialValuesRequestStore,
@@ -76,7 +76,7 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
 
     const onCancelButton = () => {
         navigate(cancelNavigate())
-        dispatch(requestStoreActions.setRequestNumber(0))
+        dispatch(requestStoreActions.setCurrentRequestNumber(0))
         dispatch(requestStoreActions.setIsNewRequest(true))
         dispatch(requestStoreActions.setCurrentDistance(null))
     }
@@ -86,6 +86,7 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
         setTabModes({ ...tabModesInitial, left: true })
 
         if (isNewRequest) {//обнуляем данные маршрута
+            dispatch<any>(setNewRequestAPI())
             dispatch(requestStoreActions.setCurrentRoute(null))
             dispatch(requestStoreActions.setIsNewRequest(false))
         }
@@ -93,7 +94,7 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
 
     useEffect(() => {
         if (isFirstRender) {
-            dispatch(requestStoreActions.setRequestNumber(+( reqNumber || 0 ) || undefined))
+            dispatch(requestStoreActions.setCurrentRequestNumber(+( reqNumber || 0 ) || undefined))
             setIsFirstRender(false)
         }
 
@@ -101,7 +102,9 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
 
 
     if (!oneRequest && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
-    const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate || new Date()) }`
+
+    const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate) }`
+
     return (
         <section className={ styles.requestSection }>
             <div className={ styles.requestSection__subWrapper }>

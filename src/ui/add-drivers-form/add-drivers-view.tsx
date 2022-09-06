@@ -67,7 +67,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     useLayoutEffect(() => {
         // dispatch<any>(getTestAddDriverValues())
         dispatch(employeesStoreActions.setCurrentId(idEmployee))
-        dispatch(requestStoreActions.setRequestNumber(375))
+        dispatch(requestStoreActions.setCurrentRequestNumber(375))
     })
 
     useEffect(() => {

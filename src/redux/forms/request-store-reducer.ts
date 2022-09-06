@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {CargoTypeType, DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
-import {initialDocumentsRequestValues, makeNTestRequests} from '../../initials-test-data';
+import {initialDocumentsRequestValues} from '../../initials-test-data';
 import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
 import {polyline_decode} from '../../utils/polilyne-decode';
 import {cargoEditableSelectorApi} from '../../api/cargoEditableSelector.api';
@@ -13,7 +13,7 @@ import {apiToISODateFormat} from '../../utils/date-formats';
 const defaultInitialStateValues = {} as OneRequestType
 
 const initialState = {
-
+    requestIsFetching: false,
     cargoComposition: [] as string[],
     currentRequestNumber: undefined as undefined | number,
     currentDistance: 0 as number | null,
@@ -165,7 +165,12 @@ type ActionsType = GetActionsTypes<typeof requestStoreActions>
 export const requestStoreReducer = ( state = initialState, action: ActionsType ): RequestStoreReducerStateType => {
 
     switch (action.type) {
-
+        case 'request-store-reducer/SET-REQUEST-IS-FETCHING': {
+            return {
+                ...state,
+                requestIsFetching: action.requestIsFetching,
+            }
+        }
         case 'request-store-reducer/SET-INITIAL-VALUES': {
             return {
                 ...state,
@@ -231,6 +236,11 @@ export const requestStoreReducer = ( state = initialState, action: ActionsType )
 
 /* ЭКШОНЫ */
 export const requestStoreActions = {
+
+    setIsFetching: ( requestIsFetching: boolean ) => ( {
+        type: 'request-store-reducer/SET-REQUEST-IS-FETCHING',
+        requestIsFetching,
+    } as const ),
     setInitialValues: ( initialValues: RequestStoreReducerStateType['initialValues'] ) => ( {
         type: 'request-store-reducer/SET-INITIAL-VALUES',
         initialValues,
@@ -243,7 +253,7 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-IS-NEW-REQUEST',
         isNewRequest,
     } as const ),
-    setRequestNumber: ( currentRequestNumber: number | undefined ) => ( {
+    setCurrentRequestNumber: ( currentRequestNumber: number | undefined ) => ( {
         type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
         currentRequestNumber,
     } as const ),
@@ -278,7 +288,6 @@ export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 
 export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
-
         try {
             const response = await oneRequestApi.getAllRequests()
             if (response.length > 0) {
@@ -287,7 +296,7 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
                         requestNumber: +elem.requestNumber,
                         requestDate: elem.requestDate ? new Date(apiToISODateFormat(elem.requestDate)) : undefined,
                         cargoComposition: elem.cargoComposition,
-                        shipmentDate: elem.shipmentDate ? new Date(apiToISODateFormat(elem.shipmentDate)) : undefined,
+                        shipmentDate: elem.shipmentDate ? new Date(elem.shipmentDate) : undefined,
                         cargoType: elem.cargoType as CargoTypeType,
 
                         idUserCustomer: elem.idUserCustomer,
@@ -308,8 +317,6 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
                         },
                         answers: elem.answers.split(','),
 
-                        // поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку
-                        // НЕИЗМЕНЯЕМЫЕ
                         requestCarrierId: elem.requestCarrierId,
                         idEmployee: elem.idEmployee,
                         idTransport: elem.idTransport,
@@ -317,12 +324,10 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
                         responseStavka: elem.responseStavka,
                         responseTax: elem.responseTax,
 
-                        // поля вкладки ДОКУМЕНТЫ
                         responsePrice: elem.responsePrice,
                         cargoWeight: elem.cargoWeight,
 
-                        // ИЗМЕНЯЕМЫЕ
-                        uploadTime: elem.uploadTime && new Date(apiToISODateFormat(elem.uploadTime)),
+                        uploadTime: elem.uploadTime && new Date(elem.uploadTime),
 
                         documents: {
                             proxyWay: {
@@ -370,6 +375,28 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             alert(e)
         }
     }
+
+export const setNewRequestAPI = ( ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ,getState) => {
+        dispatch(requestStoreActions.setIsFetching(true))
+
+        try {
+            const idUserCustomer = getState().authStoreReducer.authID
+            const response = await oneRequestApi.createOneRequest({ idUserCustomer })
+            debugger
+            if (response.success) {
+                dispatch(requestStoreActions.setInitialValues({
+                    ...getState().requestStoreReducer.initialValues,
+                    requestNumber: +response.Number,
+                    requestDate: new Date(apiToISODateFormat(response.Date))
+                }))
+            }
+        } catch (e) {
+            alert(e)
+        }
+        dispatch(requestStoreActions.setIsFetching(false))
+    }
+
 
 // забираем данные селектора из API и выставляем его значение в Initial
 export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionType =>
