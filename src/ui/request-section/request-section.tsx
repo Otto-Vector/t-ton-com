@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react'
 import styles from './request-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {To, useNavigate, useParams} from 'react-router-dom';
+import {To, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {requestStoreActions, setNewRequestAPI} from '../../redux/forms/request-store-reducer';
+import {changeCurrentRequestAPI, requestStoreActions, setNewRequestAPI} from '../../redux/forms/request-store-reducer';
 import {
     getDefaultInitialValuesRequestStore,
     getInitialValuesRequestStore,
@@ -18,42 +18,47 @@ import {RequestFormLeft} from './request-form-left/request-form-left';
 import {OneRequestType} from '../../types/form-types';
 import {ddMmYearFormat} from '../../utils/date-formats';
 
-type OwnProps = {
-    mode: 'create' | 'status' | 'history'
-}
+// type OwnProps = {
+//     mode: 'create' | 'status' | 'history'
+// }
 
-export type RequestModesType = { createMode: boolean, statusMode: boolean, historyMode: boolean }
+export type RequestModesType = { createMode: boolean, statusMode: boolean, historyMode: boolean, acceptDriverMode: boolean }
 
-export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
+export const RequestSection: React.FC = React.memo(() => {
 
-    const requestModes: RequestModesType = {
-        createMode: mode === 'create',
-        statusMode: mode === 'status',
-        historyMode: mode === 'history',
-    }
 
     const tabModesInitial = { left: false, center: false, right: false }
 
     const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
+    const routes = useSelector(getRoutesStore)
+    const navigate = useNavigate()
+    const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
+    const { pathname } = useLocation()
+    const requestModes: RequestModesType = {
+        createMode: pathname.includes(routes.requestInfo.create),
+        statusMode: pathname.includes(routes.requestInfo.status),
+        historyMode: pathname.includes(routes.requestInfo.history),
+        acceptDriverMode: pathname.includes(routes.requestInfo.driver),
+    }
+
     const defaultInitialValues = useSelector(getDefaultInitialValuesRequestStore)
-    const isNewRequest = useSelector(getIsNewRequestRequestStore)
+    const isNewRequest = useSelector(getIsNewRequestRequestStore) && reqNumber === 'new'
     const initialValues = useSelector(getInitialValuesRequestStore)
+    const dispatch = useDispatch()
+    debugger
 
     const oneRequest = useSelector(getOneRequestStore)
     const currentRequest = requestModes.createMode
         ? ( isNewRequest ? defaultInitialValues : initialValues )
         : oneRequest
 
-    const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
-    const routes = useSelector(getRoutesStore)
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
 
     const onSubmit = ( values: OneRequestType ) => {
         console.log('данные из заявки: ', values);
-        dispatch(requestStoreActions.setIsNewRequest(true))
+        dispatch<any>(changeCurrentRequestAPI({requestNumber: currentRequest.requestNumber }))
+        dispatch(requestStoreActions.setIsNewRequest(false))
     }
 
     const exposeValuesToInitialBuffer = ( { values, valid }: { values: OneRequestType, valid: boolean } ) => {
@@ -81,16 +86,19 @@ export const RequestSection: React.FC<OwnProps> = React.memo(( { mode } ) => {
         dispatch(requestStoreActions.setCurrentDistance(null))
     }
 
-    useEffect(() => {
+    useEffect(() => { // должен сработать ТОЛЬКО один раз
 
         setTabModes({ ...tabModesInitial, left: true })
 
-        if (isNewRequest) {//обнуляем данные маршрута
+        if (requestModes.createMode && isNewRequest) {
+            // запрашиваем (и создаём пустую) номер заявки
             dispatch<any>(setNewRequestAPI())
+            // обнуляем данные маршрута
             dispatch(requestStoreActions.setCurrentRoute(null))
+            // отменяем запрос на новую заявку
             dispatch(requestStoreActions.setIsNewRequest(false))
         }
-    }, [ ])
+    }, [])
 
     useEffect(() => {
         if (isFirstRender) {

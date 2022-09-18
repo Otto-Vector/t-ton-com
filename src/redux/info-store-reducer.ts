@@ -103,7 +103,7 @@ export const getInfoMessages = (): InfoStoreReducerThunkActionType =>
                 dispatch(infoStoreActions.setValuesContent(
                     request.map(( values ) => ( {
                     ...values,
-                    mode: 'gray',
+                    mode: values.Message.includes('Заявка') ? 'blue' : 'gray',
                     viewed: false,
                 } ))))
             }

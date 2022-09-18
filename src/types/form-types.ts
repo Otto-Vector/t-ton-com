@@ -171,48 +171,76 @@ export type ResponseToRequestCardType<T = DefaultFormType> = {
 export type OneRequestType = {
     // эти два поля создаются автоматически на бэке при запросе на создание
     // далее заявка ТОЛЬКО редактируется или УДАЛЯЕТСЯ
-    requestNumber: undefined | number, // уникальный номер заявки (числовой номер/каждая новая заявка создаётся с номером+1 от предыдущей на бэке)
-    requestDate: undefined | Date, // дата создания заявки
 
-    cargoComposition: undefined | string, // вид груза
-    shipmentDate: undefined | Date, // дата погрузки
-    cargoType: undefined | CargoTypeType, // тип груза (заведомо известный набор типов)
+    // уникальный номер заявки (числовой номер/каждая новая заявка создаётся с номером+1 от предыдущей на бэке)
+    requestNumber: undefined | number
+    // дата создания заявки
+    requestDate: undefined | Date
 
-    idUserCustomer: undefined | string, // заказчик (совпадает с id пользователя (потому как данные по ИНН/КПП и счетам будут браться оттуда)
-    idSender: undefined | string, // грузоотправитель
-    idRecipient: undefined | string, // грузополучатель
+    // вид груза
+    cargoComposition: undefined | string
+    // дата погрузки
+    shipmentDate: undefined | Date
+    // тип груза (заведомо известный набор типов)
+    cargoType: undefined | CargoTypeType
 
-    distance: undefined | number, // расстояние (высчитывается автоматически при выборе грузоотправитель+грузополучатель)
-    note: undefined | string, // примечание
-    visible?: boolean // видимость для таблицы (используется только на фронте)
-    marked?: boolean // выделение для таблицы (используется только на фронте)
+    // заказчик (совпадает с id пользователя (потому как данные по ИНН/КПП и счетам будут браться оттуда)
+    idUserCustomer: undefined | string
+    // грузоотправитель
+    idSender: undefined | string
+    // грузополучатель
+    idRecipient: undefined | string
+
+    // расстояние (высчитывается автоматически при выборе грузоотправитель+грузополучатель)
+    distance: undefined | number
+    // примечание
+    note: undefined | string
+    // видимость для таблицы (используется только на фронте)
+    visible?: boolean
+    // выделение для таблицы (используется только на фронте)
+    marked?: boolean
 
     // БЛОК СТАТУСОВ ЗАЯВКИ
-    globalStatus: 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | undefined // глобальный статус заявки
-    localStatus: { // локальный статус заявки
-        paymentHasBeenTransferred: boolean | undefined // Оплату передал
-        paymentHasBeenReceived: boolean | undefined // Оплату получил
-        cargoHasBeenTransferred: boolean | undefined // Груз передан
-        cargoHasBeenReceived: boolean | undefined // Груз получен
+    // глобальный статус заявки
+    globalStatus: 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | undefined
+    // локальный статус заявки
+    localStatus: {
+        // Оплату передал
+        paymentHasBeenTransferred: boolean | undefined
+        // Оплату получил
+        paymentHasBeenReceived: boolean | undefined
+        // Груз передан
+        cargoHasBeenTransferred: boolean | undefined
+        // Груз получен
+        cargoHasBeenReceived: boolean | undefined
     }
 
     answers: string[] | undefined // количество ответов от водителей // массив с айдишками
 
     // поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку
     // НЕИЗМЕНЯЕМЫЕ
-    requestCarrierId: undefined | string, // привязывается id пользователя при создании отклика
-    idEmployee: undefined | string, // id водителя (из карточки отклика)
-    idTransport: undefined | string, // id транспорта (из карточки отклика)
-    idTrailer: undefined | string, // id прицепа (из карточки отклика)
-    responseStavka: undefined | string, // тариф ставки перевозки 1 тонны на 1 км (из карточки отклика)
-    responseTax: undefined | string, // система налогообложения (ОСН, УСН, ЕСХН, ПСН, НПД и т.д.) (из карточки отклика)
+    // привязывается id пользователя при создании отклика
+    requestCarrierId: undefined | string
+    // id водителя (из карточки отклика)
+    idEmployee: undefined | string
+    // id транспорта (из карточки отклика)
+    idTransport: undefined | string
+    // id прицепа (из карточки отклика)
+    idTrailer: undefined | string
+    // тариф ставки перевозки 1 тонны на 1 км (из карточки отклика)
+    responseStavka: undefined | string
+    // система налогообложения (ОСН, УСН, ЕСХН, ПСН, НПД и т.д.) (из карточки отклика)
+    responseTax: undefined | string
 
     // поля вкладки ДОКУМЕНТЫ
-    responsePrice: undefined | string, // подсчитанная сумма (считается на фронте) (из карточки отклика)
-    cargoWeight?: number | string // Вес груза, в тн. (высчитывается автоматически по тоннажу тягач+прицеп (из карточки отклика)
+    // подсчитанная сумма (считается на фронте) (из карточки отклика)
+    responsePrice: undefined | string
+    // Вес груза, в тн. (высчитывается автоматически по тоннажу тягач+прицеп (из карточки отклика)
+    cargoWeight?: number | string
 
     // ИЗМЕНЯЕМЫЕ
-    uploadTime: Date | undefined | string // Время погрузки (устанавливается автоматически после нажатия кнопки "Груз у водителя"(сайт) или "Груз получил"(приложение на тел.)
+    // Время погрузки (устанавливается автоматически после нажатия кнопки "Груз у водителя"(сайт) или "Груз получил"(приложение на тел.)
+    uploadTime: Date | undefined | string
 
     documents: DocumentsRequestType // блок с документами
 }
@@ -276,52 +304,52 @@ export type DocumentsRequestType = {
     },
 }
 export type OneRequestApiType = {
-        requestNumber: string;
-        requestDate: string;
-        cargoComposition: string;
-        shipmentDate: string;
-        cargoType: string;
-        idUserCustomer: string;
-        idSender: string;
-        idRecipient: string;
-        distance: string;
-        note: string;
-        visible: string;
-        marked: string;
-        globalStatus: string;
-        localStatuspaymentHasBeenTransferred: string;
-        localStatuscargoHasBeenTransferred: string;
-        localStatuspaymentHasBeenReceived: string;
-        localStatuscargoHasBeenReceived: string;
-        answers: string;
-        requestCarrierId: string;
-        idEmployee: string;
-        idTransport: string;
-        idTrailer: string;
-        responseStavka: string;
-        responseTax: string;
-        responsePrice: string;
-        cargoWeight: string;
-        uploadTime: string;
-        proxyFreightLoader: string;
-        proxyDriver: string;
-        proxyWaybillDriver: string;
-        cargoDocuments: string;
-        ttnECPdocumentDownload: string;
-        ttnECPdocumentUpload: string;
-        ttnECPcustomerIsSubscribe: string;
-        ttnECPcarrierIsSubscribe: string;
-        ttnECPconsigneeIsSubscribe: string;
-        contractECPdocumentDownload: string;
-        contractECPdocumentUpload: string;
-        contractECPcustomerIsSubscribe: string;
-        contractECPcarrierIsSubscribe: string;
-        updECPdocumentDownload: string;
-        updECPdocumentUpload: string;
-        updECPcustomerIsSubscribe: string;
-        updECPcarrierIsSubscribe: string;
-        customerToConsigneeContractECPdocumentDownload: string;
-        customerToConsigneeContractECPdocumentUpload: string;
-        customerToConsigneeContractECPcustomerIsSubscribe: string;
-        customerToConsigneeContractECPconsigneeIsSubscribe: string;
+        requestNumber: string
+        requestDate: string
+        idUserCustomer: string
+        cargoComposition?: string
+        shipmentDate?: string
+        cargoType?: string
+        idSender?: string
+        idRecipient?: string
+        distance?: string
+        note?: string
+        visible?: string
+        marked?: string
+        globalStatus?: string
+        localStatuspaymentHasBeenTransferred?: string
+        localStatuscargoHasBeenTransferred?: string
+        localStatuspaymentHasBeenReceived?: string
+        localStatuscargoHasBeenReceived?: string
+        answers?: string
+        requestCarrierId?: string
+        idEmployee?: string
+        idTransport?: string
+        idTrailer?: string
+        responseStavka?: string
+        responseTax?: string
+        responsePrice?: string
+        cargoWeight?: string
+        uploadTime?: string
+        proxyFreightLoader?: string
+        proxyDriver?: string
+        proxyWaybillDriver?: string
+        cargoDocuments?: string
+        ttnECPdocumentDownload?: string
+        ttnECPdocumentUpload?: string
+        ttnECPcustomerIsSubscribe?: string
+        ttnECPcarrierIsSubscribe?: string
+        ttnECPconsigneeIsSubscribe?: string
+        contractECPdocumentDownload?: string
+        contractECPdocumentUpload?: string
+        contractECPcustomerIsSubscribe?: string
+        contractECPcarrierIsSubscribe?: string
+        updECPdocumentDownload?: string
+        updECPdocumentUpload?: string
+        updECPcustomerIsSubscribe?: string
+        updECPcarrierIsSubscribe?: string
+        customerToConsigneeContractECPdocumentDownload?: string
+        customerToConsigneeContractECPdocumentUpload?: string
+        customerToConsigneeContractECPcustomerIsSubscribe?: string
+        customerToConsigneeContractECPconsigneeIsSubscribe?: string
     }

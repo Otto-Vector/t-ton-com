@@ -65,24 +65,21 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.hello } element={ <HelloSection/> }/> {/*ОКНО ПРИВЕТСТВИЯ*/ }
                         <Route path={ routes.login } element={
                             <WithAuthRedirect><LoginSection/></WithAuthRedirect> }/> {/*ОКНО АВТОРИЗАЦИИ*/ }
-                        <Route path={ routes.requestInfo.create }
-                               element={ <ТoAuthRedirect><RequestSection
-                                   mode={ 'create' }/></ТoAuthRedirect> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
-                        <Route path={ routes.requestInfo.history + ':reqNumber' }
-                               element={ <ТoAuthRedirect><RequestSection
-                                   mode={ 'history' }/></ТoAuthRedirect> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
-                        <Route path={ routes.searchList }
-                               element={ <ТoAuthRedirect><SearchSection
-                                   mode={ 'search' }/></ТoAuthRedirect> }/> {/*ПОИСК активных заявок*/ }
-                        <Route path={ routes.requestInfo.driver + ':reqNumber' }
-                               element={ <ТoAuthRedirect> <RequestSection
-                                   mode={ 'status' }/></ТoAuthRedirect> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
-                        <Route path={ routes.requestsList } element={ <ТoAuthRedirect><SearchSection
-                            mode={ 'status' }/></ТoAuthRedirect> }/> {/*таблица статусов по активным заявкам*/ }
+                        <Route path={ routes.requestInfo.create + ':reqNumber'}
+                               element={ <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
                         <Route path={ routes.requestInfo.status + ':reqNumber' }
+                               element={ <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
+                        <Route path={ routes.requestInfo.history + ':reqNumber' }
+                               element={ <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/>{/*ПРОСМОТР ЗАЯВКИ без возможности изменения*/ }
+                        <Route path={ routes.requestInfo.driver + ':reqNumber' }
                                element={ <ТoAuthRedirect>
                                    <div className={ styles.ui__fake }><h2>СТАТУС ЗАЯВКИ</h2></div>
                                </ТoAuthRedirect> }/> {/*статус заявки*/ }
+
+                        <Route path={ routes.requestsList } element={ <ТoAuthRedirect><SearchSection
+                            mode={ 'status' }/></ТoAuthRedirect> }/> {/*таблица статусов по активным заявкам*/ }
+                        <Route path={ routes.searchList } element={ <ТoAuthRedirect><SearchSection
+                                   mode={ 'search' }/></ТoAuthRedirect> }/> {/*ПОИСК активных заявок*/ }
                         <Route path={ routes.historyList }
                                element={ <ТoAuthRedirect><SearchSection
                                    mode={ 'history' }/></ТoAuthRedirect> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }

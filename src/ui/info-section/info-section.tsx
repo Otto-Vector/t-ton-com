@@ -33,7 +33,7 @@ export const InfoSection: React.FC<OwnProps> = () => {
                     <div className={ styles.messagesContainer__item }
                          key={ item.idLog }>
                         { item.mode !== 'gray' ?
-                            <NavLink to={ requestInfo.driver + item.Message }>
+                            <NavLink to={ requestInfo.status + item.idObject }>
                                 <MessageItem oneInfoItem={ item }/>
                             </NavLink>
                             : <MessageItem oneInfoItem={ item }/>
