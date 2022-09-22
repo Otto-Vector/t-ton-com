@@ -4,8 +4,14 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {To, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {changeCurrentRequestAPI, requestStoreActions, setNewRequestAPI} from '../../redux/forms/request-store-reducer';
 import {
+    changeCurrentRequestAPI,
+    getOneRequestsAPI,
+    requestStoreActions,
+    setNewRequestAPI,
+} from '../../redux/forms/request-store-reducer';
+import {
+    getCurrentRequestNumberStore,
     getDefaultInitialValuesRequestStore,
     getInitialValuesRequestStore,
     getIsNewRequestRequestStore,
@@ -28,7 +34,6 @@ export const RequestSection: React.FC = React.memo(() => {
 
 
     const tabModesInitial = { left: false, center: false, right: false }
-
     const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
@@ -47,12 +52,12 @@ export const RequestSection: React.FC = React.memo(() => {
     const isNewRequest = useSelector(getIsNewRequestRequestStore) && reqNumber === 'new'
     const initialValues = useSelector(getInitialValuesRequestStore)
     const dispatch = useDispatch()
-    debugger
+    // debugger
 
-    const oneRequest = useSelector(getOneRequestStore)
-    const currentRequest = requestModes.createMode
-        ? ( isNewRequest ? defaultInitialValues : initialValues )
-        : oneRequest
+    // const oneRequest = useSelector(getOneRequestStore)
+    const currentRequestNumber = useSelector(getCurrentRequestNumberStore)
+    const currentRequest = (requestModes.createMode && isNewRequest) ? defaultInitialValues : initialValues
+        // : oneRequest
 
 
     const onSubmit = ( values: OneRequestType ) => {
@@ -98,6 +103,9 @@ export const RequestSection: React.FC = React.memo(() => {
             // отменяем запрос на новую заявку
             dispatch(requestStoreActions.setIsNewRequest(false))
         }
+        if (requestModes.statusMode) {
+            dispatch<any>(getOneRequestsAPI(+(reqNumber||0)))
+        }
     }, [])
 
     useEffect(() => {
@@ -105,11 +113,11 @@ export const RequestSection: React.FC = React.memo(() => {
             dispatch(requestStoreActions.setCurrentRequestNumber(+( reqNumber || 0 ) || undefined))
             setIsFirstRender(false)
         }
-
     }, [ isFirstRender, dispatch, reqNumber, setIsFirstRender ])
 
 
-    if (!oneRequest && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
+    // if (!oneRequest && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
+    if (currentRequestNumber===0 && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
 
     const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate) }`
 

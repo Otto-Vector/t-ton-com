@@ -32,6 +32,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     const logout = () => {
         dispatch<any>(logoutAuth())
     }
+
     // вынес за пределы NavLink назначение классов
     const activeClass = ( { isActive }: { isActive: boolean } ): string =>
         `${ styles.menuPanel__item } ${ isActive

@@ -375,7 +375,99 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             alert(e)
         }
     }
+// забрать данные одной СОЗДАННОЙ заявки от сервера
+export const getOneRequestsAPI = (requestNumber: number): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await oneRequestApi.getOneRequestById({requestNumber})
+            if (response.length > 0) {
+                let element = response[0]
+                debugger
+                dispatch(requestStoreActions.setInitialValues( {
+                        requestNumber: +element.requestNumber,
+                        requestDate: element.requestDate ? new Date(apiToISODateFormat(element.requestDate)) : undefined,
+                        cargoComposition: element.cargoComposition,
+                        shipmentDate: element.shipmentDate ? new Date(element.shipmentDate) : undefined,
+                        cargoType: element.cargoType as CargoTypeType,
 
+                        idUserCustomer: element.idUserCustomer,
+                        idSender: element.idSender,
+                        idRecipient: element.idRecipient,
+
+                        distance: Number(element.distance),
+                        note: element.note,
+                        visible: true,
+                        marked: false,
+
+                        globalStatus: element.globalStatus as OneRequestType['globalStatus'],
+                        localStatus: {
+                            paymentHasBeenTransferred: element.localStatuspaymentHasBeenTransferred === 'true',
+                            paymentHasBeenReceived: element.localStatuscargoHasBeenReceived === 'true',
+                            cargoHasBeenTransferred: element.localStatuspaymentHasBeenTransferred === 'true',
+                            cargoHasBeenReceived: element.localStatuscargoHasBeenReceived === 'true',
+                        },
+                        answers: element.answers?.split(','),
+
+                        requestCarrierId: element.requestCarrierId,
+                        idEmployee: element.idEmployee,
+                        idTransport: element.idTransport,
+                        idTrailer: element.idTrailer,
+                        responseStavka: element.responseStavka,
+                        responseTax: element.responseTax,
+
+                        responsePrice: element.responsePrice,
+                        cargoWeight: element.cargoWeight,
+
+                        uploadTime: element.uploadTime && new Date(element.uploadTime),
+
+                        documents: {
+                            proxyWay: {
+                                header: undefined,
+
+                                proxyFreightLoader: element.proxyFreightLoader,
+                                proxyDriver: element.proxyDriver,
+                                waybillDriver: element.proxyWaybillDriver,
+                            },
+                            cargoDocuments: element.cargoDocuments,
+                            ttnECP: {
+                                header: undefined,
+                                documentUpload: undefined,
+                                documentDownload: element.ttnECPdocumentDownload,
+                                customerIsSubscribe: element.ttnECPcustomerIsSubscribe === 'true',
+                                carrierIsSubscribe: element.ttnECPcarrierIsSubscribe === 'true',
+                                consigneeIsSubscribe: element.ttnECPconsigneeIsSubscribe === 'true',
+                            },
+                            contractECP: {
+                                header: undefined,
+                                documentUpload: undefined,
+                                documentDownload: element.contractECPdocumentDownload,
+                                customerIsSubscribe: element.contractECPcustomerIsSubscribe === 'true',
+                                carrierIsSubscribe: element.contractECPcarrierIsSubscribe === 'true',
+                            },
+                            updECP: {
+                                header: undefined,
+                                documentUpload: undefined,
+                                documentDownload: element.updECPdocumentDownload,
+                                customerIsSubscribe: element.updECPcustomerIsSubscribe === 'true',
+                                carrierIsSubscribe: element.updECPcarrierIsSubscribe === 'true',
+                            },
+                            customerToConsigneeContractECP: {
+                                header: undefined,
+                                documentUpload: undefined,
+                                documentDownload: element.customerToConsigneeContractECPdocumentDownload,
+                                customerIsSubscribe: element.customerToConsigneeContractECPcustomerIsSubscribe === 'true',
+                                consigneeIsSubscribe: element.customerToConsigneeContractECPconsigneeIsSubscribe === 'true',
+                            },
+                        },
+                    } ),
+                )
+            } else {requestStoreActions.setCurrentRequestNumber(0)}
+        } catch (e) {
+            alert(e)
+        }
+    }
+
+// создать одну пустую заявку и вернуть дату и номер создания
 export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
@@ -383,7 +475,7 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
         try {
             const idUserCustomer = getState().authStoreReducer.authID
             const response = await oneRequestApi.createOneRequest({ idUserCustomer })
-            debugger
+            // debugger
             if (response.success) {
                 dispatch(requestStoreActions.setInitialValues({
                     ...getState().requestStoreReducer.initialValues,
@@ -397,6 +489,7 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
         dispatch(requestStoreActions.setIsFetching(false))
     }
 
+// изменить текущую заявку
 export const changeCurrentRequestAPI = ( { requestNumber }: { requestNumber: number | undefined } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         // dispatch(requestStoreActions.setIsFetching(true))

@@ -5,7 +5,7 @@ import {getContentInfoStore, getUnreadMessagesCountInfoStore} from '../../select
 import {NavLink} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {MessageItem} from './message-item/message-item';
-import {infoStoreActions} from '../../redux/info-store-reducer';
+import {getInfoMessages, infoStoreActions} from '../../redux/info-store-reducer';
 import {InfoPayContainer} from './info-pay-container/info-pay-container';
 
 type OwnProps = {}
@@ -16,12 +16,15 @@ export const InfoSection: React.FC<OwnProps> = () => {
     const unreadCount = useSelector(getUnreadMessagesCountInfoStore)
     const dispatch = useDispatch()
 
-
     useEffect(() => {
         if (unreadCount !== 0) {
             dispatch(infoStoreActions.setAllMessagesViewed())
         }
     }, [ unreadCount ])
+
+    useEffect(()=>{
+        dispatch<any>(getInfoMessages())
+    },[])
 
     return (
         <div className={ styles.infoSection }>

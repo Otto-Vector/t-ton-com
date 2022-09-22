@@ -12,8 +12,8 @@ export const oneRequestApi = {
         // 2.	Code 520, {"message":"Error"}
     },
     // запрос на одну Заявку PATCH /api/onerequesttype/
-    getOneRequestById( { requestNumber }: { requestNumber: string } ) {
-        return instanceBack.patch<InfoResponseType | OneRequestApiType[]>('/api/onerequesttype/', { requestNumber })
+    getOneRequestById( { requestNumber }: { requestNumber: number } ) {
+        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttype/', { requestNumber })
             .then(response => response.data)
         // 1.	Code 200, Models: OneRequestApiType[]
         // 2.	Code 520, {"message":"Error"}

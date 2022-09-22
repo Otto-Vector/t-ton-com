@@ -21,7 +21,7 @@ export const getCurrentDistanceRequestStore: RequestStoreSelectors<'currentDista
 export const getCurrentDistanceIsFetchingRequestStore: RequestStoreSelectors<'currentDistanceIsFetching'> = ( state ) => state.requestStoreReducer.currentDistanceIsFetching
 export const getRouteRequestStore: RequestStoreSelectors<'currentRoute'> = ( state ) => state.requestStoreReducer.currentRoute
 export const getIsNewRequestRequestStore: RequestStoreSelectors<'isNewRequest'> = ( state ) => state.requestStoreReducer.isNewRequest
-const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state ) => state.requestStoreReducer.currentRequestNumber
+export const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state ) => state.requestStoreReducer.currentRequestNumber
 
 export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
 
