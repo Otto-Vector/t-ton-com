@@ -39,6 +39,7 @@ import {consigneesStoreActions} from '../../../redux/options/consignees-store-re
 import {Preloader} from '../../common/preloader/preloader';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect';
+import {FormSpySimpleRequest} from '../../common/form-spy-simple/form-spy-simple';
 
 
 type OwnProps = {
@@ -99,7 +100,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         },
         submitRequestAndSearch: async ( values: OneRequestType ) => {
             await onSubmit(values)
-            navigate(routes.searchList)
+            // navigate(routes.searchList)
         },
         submitRequestAndDrive: async ( values: OneRequestType ) => {
             await onSubmit(values)
@@ -252,7 +253,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idSender }</label>
                                 { requestModes.createMode
-                                    ? <FormSelector named={ 'shipper' }
+                                    ? <FormSelector named={ 'idSender' }
                                                     placeholder={ placehoders.idSender }
                                                     values={ shippersSelect }
                                                     validate={ validators.idSender }
@@ -269,7 +270,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idRecipient }</label>
                                 { requestModes.createMode
-                                    ? <FormSelector named={ 'consignee' }
+                                    ? <FormSelector named={ 'idRecipient' }
                                                     placeholder={ placehoders.idRecipient }
                                                     values={ consigneesSelect }
                                                     validate={ validators.idRecipient }
@@ -350,13 +351,13 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 }
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
-                            {/*{ ( requestModes.createMode && !isFirstRender ) &&*/ }
-                            {/*    <FormSpySimpleRequest*/ }
-                            {/*        form={ form }*/ }
-                            {/*        onChange={ ( { values, valid } ) => {*/ }
-                            {/*            if (exposeValues) exposeValues({ values, valid })*/ }
-                            {/*        } }/>*/ }
-                            {/*}*/ }
+                            {/*{ ( requestModes.createMode && !isFirstRender ) &&*/}
+                            {/*    <FormSpySimpleRequest*/}
+                            {/*        form={ form }*/}
+                            {/*        onChange={ ( { values, valid } ) => {*/}
+                            {/*            if (exposeValues) exposeValues({ values, valid })*/}
+                            {/*        } }/>*/}
+                            {/*}*/}
                         </form>
                     )
                 }/>

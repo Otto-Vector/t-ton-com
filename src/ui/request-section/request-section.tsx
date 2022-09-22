@@ -61,8 +61,8 @@ export const RequestSection: React.FC = React.memo(() => {
 
 
     const onSubmit = ( values: OneRequestType ) => {
-        console.log('данные из заявки: ', values);
-        dispatch<any>(changeCurrentRequestAPI({requestNumber: currentRequest.requestNumber }))
+
+        dispatch<any>(changeCurrentRequestAPI({ values }))
         dispatch(requestStoreActions.setIsNewRequest(false))
     }
 

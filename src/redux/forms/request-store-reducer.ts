@@ -7,7 +7,7 @@ import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../a
 import {polyline_decode} from '../../utils/polilyne-decode';
 import {cargoEditableSelectorApi} from '../../api/cargoEditableSelector.api';
 import {oneRequestApi} from '../../api/request-response/request.api';
-import {apiToISODateFormat} from '../../utils/date-formats';
+import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -310,10 +310,10 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
 
                         globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
                         localStatus: {
-                            paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred === 'true',
-                            paymentHasBeenReceived: elem.localStatuscargoHasBeenReceived === 'true',
-                            cargoHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred === 'true',
-                            cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived === 'true',
+                            paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
+                            paymentHasBeenReceived: elem.localStatuscargoHasBeenReceived,
+                            cargoHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
+                            cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
                         },
                         answers: elem.answers?.split(','),
 
@@ -401,10 +401,10 @@ export const getOneRequestsAPI = (requestNumber: number): RequestStoreReducerThu
 
                         globalStatus: element.globalStatus as OneRequestType['globalStatus'],
                         localStatus: {
-                            paymentHasBeenTransferred: element.localStatuspaymentHasBeenTransferred === 'true',
-                            paymentHasBeenReceived: element.localStatuscargoHasBeenReceived === 'true',
-                            cargoHasBeenTransferred: element.localStatuspaymentHasBeenTransferred === 'true',
-                            cargoHasBeenReceived: element.localStatuscargoHasBeenReceived === 'true',
+                            paymentHasBeenTransferred: element.localStatuspaymentHasBeenTransferred,
+                            paymentHasBeenReceived: element.localStatuscargoHasBeenReceived,
+                            cargoHasBeenTransferred: element.localStatuspaymentHasBeenTransferred,
+                            cargoHasBeenReceived: element.localStatuscargoHasBeenReceived,
                         },
                         answers: element.answers?.split(','),
 
@@ -490,21 +490,22 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
     }
 
 // изменить текущую заявку
-export const changeCurrentRequestAPI = ( { requestNumber }: { requestNumber: number | undefined } ): RequestStoreReducerThunkActionType =>
+export const changeCurrentRequestAPI = ( { values }: { values: OneRequestType } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         // dispatch(requestStoreActions.setIsFetching(true))
 
         try {
             const idUserCustomer = getState().authStoreReducer.authID
-            const initialValues = getState().requestStoreReducer.initialValues
-            const requestNumberCorrector = requestNumber?.toString() || '0'
+            // const initialValues = getState().requestStoreReducer.initialValues
+            const initialValues = values
+            const requestNumberCorrector = values.requestNumber?.toString() || '0'
             const response = await oneRequestApi.modifyOneRequest({
                     requestNumber: requestNumberCorrector,
-                    requestDate: initialValues.requestDate?.toString() || '',
+                    requestDate: undefined,
                     idUserCustomer: idUserCustomer,
 
                     cargoComposition: initialValues.cargoComposition,
-                    shipmentDate: initialValues.shipmentDate?.toString(),
+                    shipmentDate: yearMmDdFormatISO(initialValues.shipmentDate),
                     cargoType: initialValues.cargoType,
                     idSender: initialValues.idSender,
                     idRecipient: initialValues.idRecipient,
@@ -512,10 +513,10 @@ export const changeCurrentRequestAPI = ( { requestNumber }: { requestNumber: num
                     note: initialValues.note,
 
                     globalStatus: initialValues.globalStatus,
-                    localStatuspaymentHasBeenTransferred: initialValues.localStatus.paymentHasBeenTransferred?.toString(),
-                    localStatuscargoHasBeenTransferred: initialValues.localStatus.cargoHasBeenTransferred?.toString(),
-                    localStatuspaymentHasBeenReceived: initialValues.localStatus.paymentHasBeenReceived?.toString(),
-                    localStatuscargoHasBeenReceived: initialValues.localStatus.cargoHasBeenReceived?.toString(),
+                    localStatuspaymentHasBeenTransferred: initialValues.localStatus?.paymentHasBeenTransferred,
+                    localStatuscargoHasBeenTransferred: initialValues.localStatus?.cargoHasBeenTransferred,
+                    localStatuspaymentHasBeenReceived: initialValues.localStatus?.paymentHasBeenReceived,
+                    localStatuscargoHasBeenReceived: initialValues.localStatus?.cargoHasBeenReceived,
 
                     requestCarrierId: initialValues.requestCarrierId,
                     idEmployee: initialValues.idEmployee,

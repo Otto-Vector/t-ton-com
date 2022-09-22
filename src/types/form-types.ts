@@ -305,7 +305,7 @@ export type DocumentsRequestType = {
 }
 export type OneRequestApiType = {
         requestNumber: string
-        requestDate: string
+        requestDate?: string
         idUserCustomer: string
         cargoComposition?: string
         shipmentDate?: string
@@ -317,10 +317,10 @@ export type OneRequestApiType = {
         visible?: string
         marked?: string
         globalStatus?: string
-        localStatuspaymentHasBeenTransferred?: string
-        localStatuscargoHasBeenTransferred?: string
-        localStatuspaymentHasBeenReceived?: string
-        localStatuscargoHasBeenReceived?: string
+        localStatuspaymentHasBeenTransferred?: boolean
+        localStatuscargoHasBeenTransferred?: boolean
+        localStatuspaymentHasBeenReceived?: boolean
+        localStatuscargoHasBeenReceived?: boolean
         answers?: string
         requestCarrierId?: string
         idEmployee?: string
