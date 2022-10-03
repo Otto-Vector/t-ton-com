@@ -600,13 +600,13 @@ export const setCargoCompositionSelector = ( newCargoCompositionItem: string ): 
     }
 
 export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): RequestStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+    async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(true))
         try {
             const response = await getRouteFromAvtodispetcherApi({ from, to })
 
             dispatch(requestStoreActions.setCurrentDistance(
-                +( +response.kilometers * 1.05 ).toFixed(0)))
+                +( +response.kilometers * getState().appStoreReducer.distanceCoefficient ).toFixed(0)))
 
             // переводим зашифрованную строку polyline в массив координат и записываем в стэйт
             dispatch(requestStoreActions.setCurrentRoute(

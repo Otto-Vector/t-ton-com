@@ -241,7 +241,7 @@ export const loginAuthorization = ( {
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
 
                 // для случаев с перелогиниванием
-                dispatch<any>(appActions.setInitialazed(false))
+                dispatch<any>(appActions.setInitialized(false))
 
                 // сама авторизация
                 dispatch(authStoreActions.setIsAuth(true))

@@ -85,6 +85,10 @@ export const RequestSection: React.FC = React.memo(() => {
     }
 
     const onCancelButton = () => {
+        if (requestModes.createMode && isNewRequest) {
+        //toDo: добавить запрос на удаление заявки, если нажали на крест при создании новой
+
+        }
         navigate(cancelNavigate())
         dispatch(requestStoreActions.setCurrentRequestNumber(0))
         dispatch(requestStoreActions.setIsNewRequest(true))

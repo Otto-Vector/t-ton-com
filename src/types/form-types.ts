@@ -201,6 +201,7 @@ export type OneRequestType = {
     marked?: boolean
 
     // БЛОК СТАТУСОВ ЗАЯВКИ
+
     // глобальный статус заявки
     globalStatus: 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | undefined
     // локальный статус заявки
@@ -219,6 +220,7 @@ export type OneRequestType = {
 
     // поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку
     // НЕИЗМЕНЯЕМЫЕ
+
     // привязывается id пользователя при создании отклика
     requestCarrierId: undefined | string
     // id водителя (из карточки отклика)
@@ -304,52 +306,52 @@ export type DocumentsRequestType = {
     },
 }
 export type OneRequestApiType = {
-        requestNumber: string
-        requestDate?: string
-        idUserCustomer: string
-        cargoComposition?: string
-        shipmentDate?: string
-        cargoType?: string
-        idSender?: string
-        idRecipient?: string
-        distance?: string
-        note?: string
-        visible?: string
-        marked?: string
-        globalStatus?: string
-        localStatuspaymentHasBeenTransferred?: boolean
-        localStatuscargoHasBeenTransferred?: boolean
-        localStatuspaymentHasBeenReceived?: boolean
-        localStatuscargoHasBeenReceived?: boolean
-        answers?: string
-        requestCarrierId?: string
-        idEmployee?: string
-        idTransport?: string
-        idTrailer?: string
-        responseStavka?: string
-        responseTax?: string
-        responsePrice?: string
-        cargoWeight?: string
-        uploadTime?: string
-        proxyFreightLoader?: string
-        proxyDriver?: string
-        proxyWaybillDriver?: string
-        cargoDocuments?: string
-        ttnECPdocumentDownload?: string
-        ttnECPdocumentUpload?: string
-        ttnECPcustomerIsSubscribe?: string
-        ttnECPcarrierIsSubscribe?: string
-        ttnECPconsigneeIsSubscribe?: string
-        contractECPdocumentDownload?: string
-        contractECPdocumentUpload?: string
-        contractECPcustomerIsSubscribe?: string
-        contractECPcarrierIsSubscribe?: string
-        updECPdocumentDownload?: string
-        updECPdocumentUpload?: string
-        updECPcustomerIsSubscribe?: string
-        updECPcarrierIsSubscribe?: string
-        customerToConsigneeContractECPdocumentDownload?: string
-        customerToConsigneeContractECPdocumentUpload?: string
-        customerToConsigneeContractECPcustomerIsSubscribe?: string
-        customerToConsigneeContractECPconsigneeIsSubscribe?: string
-    }
+    requestNumber: string
+    requestDate?: string
+    idUserCustomer: string
+    cargoComposition?: string
+    shipmentDate?: string
+    cargoType?: string
+    idSender?: string
+    idRecipient?: string
+    distance?: string
+    note?: string
+    visible?: string
+    marked?: string
+    globalStatus?: string
+    localStatuspaymentHasBeenTransferred?: boolean
+    localStatuscargoHasBeenTransferred?: boolean
+    localStatuspaymentHasBeenReceived?: boolean
+    localStatuscargoHasBeenReceived?: boolean
+    answers?: string
+    requestCarrierId?: string
+    idEmployee?: string
+    idTransport?: string
+    idTrailer?: string
+    responseStavka?: string
+    responseTax?: string
+    responsePrice?: string
+    cargoWeight?: string
+    uploadTime?: string
+    proxyFreightLoader?: string
+    proxyDriver?: string
+    proxyWaybillDriver?: string
+    cargoDocuments?: string
+    ttnECPdocumentDownload?: string
+    ttnECPdocumentUpload?: string
+    ttnECPcustomerIsSubscribe?: string
+    ttnECPcarrierIsSubscribe?: string
+    ttnECPconsigneeIsSubscribe?: string
+    contractECPdocumentDownload?: string
+    contractECPdocumentUpload?: string
+    contractECPcustomerIsSubscribe?: string
+    contractECPcarrierIsSubscribe?: string
+    updECPdocumentDownload?: string
+    updECPdocumentUpload?: string
+    updECPcustomerIsSubscribe?: string
+    updECPcarrierIsSubscribe?: string
+    customerToConsigneeContractECPdocumentDownload?: string
+    customerToConsigneeContractECPdocumentUpload?: string
+    customerToConsigneeContractECPcustomerIsSubscribe?: string
+    customerToConsigneeContractECPconsigneeIsSubscribe?: string
+}

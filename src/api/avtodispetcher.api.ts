@@ -21,10 +21,31 @@ export type GetAvtodispetcherRouteType = {
     to: string
 }
 
-export type AvtodispetcherResponseType = {
-    kilometers: string
-    polyline: string
+type AvtodispetcherSegmentStartFinish = {
+    name: string;
+    type: string;
+    latitude: number;
+    longitude: number;
+    region: string;
+    country: string;
 }
+
+type AvtodispetcherSegment = {
+    start: AvtodispetcherSegmentStartFinish;
+    finish: AvtodispetcherSegmentStartFinish;
+    kilometers: number;
+    minutes: number;
+    road: string;
+}
+
+export type AvtodispetcherResponseType = {
+    kilometers: number
+    polyline: string
+    minutes: number;
+    segments: AvtodispetcherSegment[];
+}
+
+
 
 // запрос на сервер
 export const getRouteFromAvtodispetcherApi = ( { from, to }: GetAvtodispetcherRouteType ) => {

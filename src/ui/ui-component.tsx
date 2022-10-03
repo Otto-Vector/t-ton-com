@@ -37,7 +37,7 @@ type OwnProps = {}
 export const UiComponent: React.FC<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
-    const initialazed = useSelector(( state: AppStateType ) => state.appStoreReducer.initialazed)
+    const initialazed = useSelector(( state: AppStateType ) => state.appStoreReducer.initialized)
     const authTry = useSelector(getAutologinAuthStore)
     const isAuth = useSelector(getIsAuthAuthStore)
 

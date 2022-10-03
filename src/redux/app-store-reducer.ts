@@ -11,7 +11,11 @@ import {geoPositionTake} from './auth-store-reducer';
 import {getInfoMessages} from './info-store-reducer';
 
 const initialState = {
-    initialazed: false,
+    initialized: false,
+    // КОНСТАНТЫ ИЗ БЭКА
+    // КЛЮЧИ
+    // процент, на который надо помножить
+    distanceCoefficient: 1.05
 }
 
 export type AppReducerStateType = typeof initialState
@@ -23,7 +27,7 @@ export const appStoreReducer = ( state = initialState,
         case 'app-reducer/SET-INITIALIZED' : {
             return {
                 ...state,
-                initialazed: action.initialazed,
+                initialized: action.initialized,
             }
         }
         default : {
@@ -36,10 +40,10 @@ export const appStoreReducer = ( state = initialState,
 
 /* ЭКШОНЫ */
 export const appActions = {
-    // при обращении, изменяет стейт initialazed
-    setInitialazed: ( initialazed: boolean ) => ( {
+    // при обращении, изменяет стейт initialized
+    setInitialized: ( initialized: boolean ) => ( {
         type: 'app-reducer/SET-INITIALIZED',
-        initialazed,
+        initialized,
     } as const ),
 }
 
@@ -75,7 +79,7 @@ export const initializedAll = (): InitializedThunkActionType =>
             getAllEmployees,
             getAllInfoMessages,
         ]).then(() => {
-            dispatch(appActions.setInitialazed(true))
+            dispatch(appActions.setInitialized(true))
         })
     }
 
