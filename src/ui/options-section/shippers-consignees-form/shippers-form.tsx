@@ -23,6 +23,7 @@ import {
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
 import {
+    getCityFromDispetcherAPI,
     getOrganizationByInnShipper,
     modifyOneShipperToAPI,
     newShipperSaveToAPI,
@@ -58,6 +59,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const consigneesListToValidate = useSelector(getShippersNamesListOptionsStore)
     const consigneesAllListToValidate = useSelector(getShippersAllNamesListOptionsStore)
     const [ isFirstRender, setIsFirstRender ] = useState(true)
+    const [ initialCoords, setInitialCoords ] = useState(initialValues.coordinates)
 
     const label = useSelector(getLabelShippersStore)
     const maskOn = useSelector(getMaskOnShippersStore)
@@ -83,8 +85,19 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const onSubmit = ( values: ShippersCardType ) => {
+    const onSubmit = async ( values: ShippersCardType ) => {
         const demaskedValues = fromFormDemaskedValues(values)
+
+        // находим название города и сохраняем в форме
+        let currentCity = demaskedValues.city
+        if (demaskedValues.coordinates !== initialCoords) {
+            currentCity = await dispatch<any>(getCityFromDispetcherAPI({
+                from: demaskedValues.coordinates as string,
+                to: '55.032328, 82.819442',
+            }))
+            demaskedValues.city = currentCity
+        }
+
         if (isNew) {
             // создаём нового
             dispatch<any>(newShipperSaveToAPI(demaskedValues as ShippersCardType<string>))
@@ -109,8 +122,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     }
 
     const getCoordinatesToInitial = ( form: FormApi<ShippersCardType> ) => ( coordinates: [ number, number ] ) => {
-        const formValue = form.getState().values
-        dispatch(shippersStoreActions.setCoordinates({ formValue, coordinates }))
+        // перезапись всех значений с новыми координатами, взятыми из API яндекса
+        dispatch(shippersStoreActions.setCoordinates({ formValue: form.getState().values, coordinates }))
     }
 
     // автозаполнение полей при выборе селектора
@@ -166,6 +179,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                     dispatch(shippersStoreActions.setCurrentId(currentIdFromNavigate + ''))
                 }
             }
+            // запоминаем первое адекватное значение координат и заполняем их
+            if (initialValues.coordinates && !initialCoords) setInitialCoords(initialValues.coordinates)
         }, [ currentId, initialValues ],
     )
 
@@ -313,7 +328,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded
-                                                    />
+                                                    >{ submitting ? <Preloader/> : 'Сохранить' }</Button>
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }

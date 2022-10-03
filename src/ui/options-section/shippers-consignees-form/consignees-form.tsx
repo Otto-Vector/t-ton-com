@@ -41,6 +41,7 @@ import {
     getConsigneesNamesListOptionsStore,
 } from '../../../selectors/options/options-reselect';
 import {includesTitleValidator} from '../../../utils/validators';
+import {getCityFromDispetcherAPI} from '../../../redux/options/shippers-store-reducer';
 
 type OwnProps = {}
 
@@ -56,6 +57,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const consigneesAllListToValidate = useSelector(getConsigneesAllNamesListOptionsStore)
 
     const [ isFirstRender, setIsFirstRender ] = useState(true)
+    const [ initialCoords, setInitialCoords ] = useState(initialValues.coordinates)
 
     const label = useSelector(getLabelConsigneesStore)
     const maskOn = useSelector(getMaskOnConsigneesStore)
@@ -81,8 +83,19 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const onSubmit = ( values: ConsigneesCardType ) => {
+    const onSubmit = async ( values: ConsigneesCardType ) => {
         const demaskedValues = fromFormDemaskedValues(values)
+
+        // находим название города и сохраняем в форме
+        let currentCity = demaskedValues.city
+        if (demaskedValues.coordinates !== initialCoords) {
+            currentCity = await dispatch<any>(getCityFromDispetcherAPI({
+                from: demaskedValues.coordinates as string,
+                to: '55.032328, 82.819442',
+            }))
+            demaskedValues.city = currentCity
+        }
+
         if (isNew) {
             // создаём нового
             dispatch<any>(newConsigneeSaveToAPI(demaskedValues as ConsigneesCardType<string>))
@@ -107,8 +120,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     }
 
     const getCoordinatesToInitial = ( form: FormApi<ConsigneesCardType> ) => ( coordinates: [ number, number ] ) => {
-        const formValue = form.getState().values
-        dispatch(consigneesStoreActions.setCoordinates({ formValue, coordinates }))
+        // перезапись всех значений с новыми координатами, взятыми из API яндекса
+        dispatch(consigneesStoreActions.setCoordinates({ formValue: form.getState().values, coordinates }))
     }
 
     // автозаполнение полей при выборе селектора
@@ -164,6 +177,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                     dispatch(consigneesStoreActions.setCurrentId(currentIdFromNavigate + ''))
                 }
             }
+            // запоминаем первое адекватное значение координат и заполняем их
+            if (initialValues.coordinates && !initialCoords) setInitialCoords(initialValues.coordinates)
         }, [ currentId, initialValues ],
     )
 
@@ -311,7 +326,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded
-                                                    />
+                                                    >{ submitting ? <Preloader/> : 'Сохранить' }</Button>
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }

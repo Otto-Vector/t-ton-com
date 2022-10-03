@@ -2,6 +2,7 @@ import axios from 'axios'
 import {qsNormalize} from '../utils/norm-query'
 import {parseNoSpace} from '../utils/parsers'
 import base64 from 'base-64'
+import {AvtodispetcherResponseType} from '../types/api-types';
 
 
 const { REACT_APP_AVTODISPETCHER_KEY, REACT_APP_DEPLOY_MODE } = process.env
@@ -20,31 +21,6 @@ export type GetAvtodispetcherRouteType = {
     from: string,
     to: string
 }
-
-type AvtodispetcherSegmentStartFinish = {
-    name: string;
-    type: string;
-    latitude: number;
-    longitude: number;
-    region: string;
-    country: string;
-}
-
-type AvtodispetcherSegment = {
-    start: AvtodispetcherSegmentStartFinish;
-    finish: AvtodispetcherSegmentStartFinish;
-    kilometers: number;
-    minutes: number;
-    road: string;
-}
-
-export type AvtodispetcherResponseType = {
-    kilometers: number
-    polyline: string
-    minutes: number;
-    segments: AvtodispetcherSegment[];
-}
-
 
 
 // запрос на сервер

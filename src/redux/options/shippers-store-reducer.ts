@@ -16,6 +16,7 @@ import {
 import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
 import {getOrganizationsByInn} from '../dadata-response-reducer';
 import {shippersApi} from '../../api/options/shippers.api';
+import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
 
 
 const defaultInitialValues = {
@@ -34,7 +35,7 @@ const defaultInitialValues = {
 } as ShippersCardType
 
 const initialState = {
-    shipperIsFetching: false,
+    shippersIsFetching: false,
     currentId: '',
 
     label: {
@@ -140,7 +141,7 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
         case 'shippers-store-reducer/TOGGLE-SHIPPER-IS-FETCHING': {
             return {
                 ...state,
-                shipperIsFetching: action.shipperIsFetching,
+                shippersIsFetching: action.shippersIsFetching,
             }
 
         }
@@ -189,9 +190,9 @@ export const shippersStoreActions = {
         type: 'shippers-store-reducer/SET-SHIPPERS-CONTENT',
         shippers,
     } as const ),
-    toggleShipperIsFetching: ( shipperIsFetching: boolean ) => ( {
+    toggleShipperIsFetching: ( shippersIsFetching: boolean ) => ( {
         type: 'shippers-store-reducer/TOGGLE-SHIPPER-IS-FETCHING',
-        shipperIsFetching,
+        shippersIsFetching,
     } as const ),
 
 }
@@ -200,7 +201,7 @@ export const shippersStoreActions = {
 
 export type ShippersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-
+// запрос на всех Грузоотправителей данного пользователя
 export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(shippersStoreActions.toggleShipperIsFetching(true))
@@ -294,7 +295,7 @@ export const modifyOneShipperToAPI = ( values: ShippersCardType<string> ): Shipp
         await dispatch(getAllShippersAPI())
     }
 
-
+// удалить одну запись ГРУЗООТПРАВИТЕЛЯ через АПИ
 export const oneShipperDeleteToAPI = ( idSender: string ): ShippersStoreReducerThunkActionType =>
     async ( dispatch ) => {
 
@@ -307,4 +308,20 @@ export const oneShipperDeleteToAPI = ( idSender: string ): ShippersStoreReducerT
             alert(JSON.stringify(e.response.data))
         }
         await dispatch(getAllShippersAPI())
+    }
+
+// геолокируем (вытаскиваем) название города из запроса автодиспетчера
+export const getCityFromDispetcherAPI = ( { from, to }: GetAvtodispetcherRouteType ): ShippersStoreReducerThunkActionType<string|undefined> =>
+    async ( ) => {
+        try {
+            const response = await getRouteFromAvtodispetcherApi({ from, to })
+
+            if (response.segments.length > 0) {
+                return response.segments[0].start.name
+            }
+
+        } catch (e) {
+            alert('Ошибка запроса на название города\n'+e)
+        }
+
     }
