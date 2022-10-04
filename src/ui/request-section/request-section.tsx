@@ -6,6 +6,7 @@ import {To, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {
     changeCurrentRequestAPI,
+    deleteCurrentRequestAPI,
     getOneRequestsAPI,
     requestStoreActions,
     setNewRequestAPI,
@@ -15,7 +16,6 @@ import {
     getDefaultInitialValuesRequestStore,
     getInitialValuesRequestStore,
     getIsNewRequestRequestStore,
-    getOneRequestStore,
 } from '../../selectors/forms/request-form-reselect';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
@@ -56,8 +56,8 @@ export const RequestSection: React.FC = React.memo(() => {
 
     // const oneRequest = useSelector(getOneRequestStore)
     const currentRequestNumber = useSelector(getCurrentRequestNumberStore)
-    const currentRequest = (requestModes.createMode && isNewRequest) ? defaultInitialValues : initialValues
-        // : oneRequest
+    const currentRequest = ( requestModes.createMode && isNewRequest ) ? defaultInitialValues : initialValues
+    // : oneRequest
 
 
     const onSubmit = ( values: OneRequestType ) => {
@@ -85,9 +85,8 @@ export const RequestSection: React.FC = React.memo(() => {
     }
 
     const onCancelButton = () => {
-        if (requestModes.createMode && isNewRequest) {
-        //toDo: добавить запрос на удаление заявки, если нажали на крест при создании новой
-
+        if (requestModes.createMode) {
+            dispatch<any>(deleteCurrentRequestAPI({ requestNumber: +( currentRequest.requestNumber || 0 ) }))
         }
         navigate(cancelNavigate())
         dispatch(requestStoreActions.setCurrentRequestNumber(0))
@@ -108,7 +107,7 @@ export const RequestSection: React.FC = React.memo(() => {
             dispatch(requestStoreActions.setIsNewRequest(false))
         }
         if (requestModes.statusMode) {
-            dispatch<any>(getOneRequestsAPI(+(reqNumber||0)))
+            dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
         }
     }, [])
 
@@ -121,7 +120,7 @@ export const RequestSection: React.FC = React.memo(() => {
 
 
     // if (!oneRequest && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
-    if (currentRequestNumber===0 && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
+    if (currentRequestNumber === 0 && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
 
     const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate) }`
 

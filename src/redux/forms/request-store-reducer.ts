@@ -376,14 +376,14 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
         }
     }
 // забрать данные одной СОЗДАННОЙ заявки от сервера
-export const getOneRequestsAPI = (requestNumber: number): RequestStoreReducerThunkActionType =>
+export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await oneRequestApi.getOneRequestById({requestNumber})
+            const response = await oneRequestApi.getOneRequestById({ requestNumber })
             if (response.length > 0) {
                 let element = response[0]
                 debugger
-                dispatch(requestStoreActions.setInitialValues( {
+                dispatch(requestStoreActions.setInitialValues({
                         requestNumber: +element.requestNumber,
                         requestDate: element.requestDate ? new Date(apiToISODateFormat(element.requestDate)) : undefined,
                         cargoComposition: element.cargoComposition,
@@ -459,9 +459,11 @@ export const getOneRequestsAPI = (requestNumber: number): RequestStoreReducerThu
                                 consigneeIsSubscribe: element.customerToConsigneeContractECPconsigneeIsSubscribe === 'true',
                             },
                         },
-                    } ),
+                    }),
                 )
-            } else {requestStoreActions.setCurrentRequestNumber(0)}
+            } else {
+                requestStoreActions.setCurrentRequestNumber(0)
+            }
         } catch (e) {
             alert(e)
         }
@@ -493,7 +495,6 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
 export const changeCurrentRequestAPI = ( { values }: { values: OneRequestType } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         // dispatch(requestStoreActions.setIsFetching(true))
-
         try {
             const idUserCustomer = getState().authStoreReducer.authID
             // const initialValues = getState().requestStoreReducer.initialValues
@@ -570,6 +571,17 @@ export const changeCurrentRequestAPI = ( { values }: { values: OneRequestType } 
         // dispatch(requestStoreActions.setIsFetching(false))
     }
 
+export const deleteCurrentRequestAPI = ( { requestNumber }: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await oneRequestApi.deleteOneRequest({ requestNumber })
+            console.log(response.message)
+        } catch (e) {
+            // @ts-ignore
+            alert(JSON.stringify(e.response.data))
+        }
+    }
+
 
 // забираем данные селектора из API и выставляем его значение в Initial
 export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionType =>
@@ -587,7 +599,7 @@ export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionTyp
 export const setCargoCompositionSelector = ( newCargoCompositionItem: string ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-
+            // убираем палки в названии
             const text = newCargoCompositionItem.replaceAll('|', '')
             const response = await cargoEditableSelectorApi.addOneCargoComposition(text)
             if (response.success) {

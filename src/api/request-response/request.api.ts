@@ -35,7 +35,7 @@ export const oneRequestApi = {
         // 2.	Code 200, {"success": "OneRequestType '{}' updated successfully".format(OneRequestApiType_saved.responseId)}
     },
     // УДАЛИТЬ одну Заявку DELETE /api/onerequesttype/
-    deleteOneRequest( requestNumber: string ) {
+    deleteOneRequest( { requestNumber }: { requestNumber: number } ) {
         return instanceBack.delete<InfoResponseType>('/api/onerequesttype/', { data: { requestNumber } })
             .then(response => response.data)
         // 1.	Code 200, {"message": "OneRequestType with id `{}` has been deleted.".format(request.data['requestNumber'])}
