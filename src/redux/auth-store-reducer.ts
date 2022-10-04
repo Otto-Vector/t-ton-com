@@ -6,6 +6,7 @@ import {geoPosition} from '../api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
 import {daDataStoreActions, DaDataStoreActionsType} from './dadata-response-reducer';
 import {appActions} from './app-store-reducer';
+import {setOrganizationByInnKpp} from './options/requisites-store-reducer';
 
 
 const initialValues: phoneSubmitType = {
@@ -203,6 +204,7 @@ export const sendCodeToPhone = ( {
             }
             if (response.success) {
                 dispatch(authStoreActions.setModalMessage(response.success + 'ПАРОЛЬ: ' + response.password))
+                dispatch(setOrganizationByInnKpp({inn,kpp}))
             }
         } catch (error) {
             // @ts-ignore

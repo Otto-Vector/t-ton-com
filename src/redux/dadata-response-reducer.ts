@@ -69,8 +69,8 @@ export const getOrganizationsByInnKPP = ( {
 
         const response = await getOrganizationByInnKPPDaDataAPI({ inn, kpp })
         console.log(response)
-        if (response.length < 1) {
 
+        if (response.length < 1) {
             return ( { innNumber: 'Неверный ИНН/КПП!' } )
         }
 

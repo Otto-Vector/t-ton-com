@@ -1,6 +1,9 @@
 import {InfoResponseType, instanceBack} from './back-instance.api';
-// 0905
+// 0905 - 9386930727
 // '+7 (950) 051-05-20' password: '7701'
+// +79386907278 - 4341
+// На номер '+7 (745) 678-22-42' был отправлен пароль.ПАРОЛЬ: 8663
+// +7 (745) 678-22-44' был отправлен пароль.ПАРОЛЬ: 1141
 export type AuthRequestType = {
     phone: string,
 }

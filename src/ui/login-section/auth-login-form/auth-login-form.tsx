@@ -197,7 +197,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                     newCode(values.phoneNumber as string)
                                                 } }
                                                 rounded
-                                        >Новый пароль</Button>
+                                        >{'Новый пароль'}</Button>
                                     </div> }
                                 </Field>
                                 { modalMessage &&
@@ -212,7 +212,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                 <Button type={ 'submit' }
                                         disabled={ submitting || hasValidationErrors || isFetching }
                                         colorMode={ 'green' }
-                                        title={ 'Далее' }
+                                        title={ 'Далее +'+hasValidationErrors }
                                         rounded
                                 >
                                     { isFetching && <Preloader/> }

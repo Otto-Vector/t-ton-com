@@ -328,7 +328,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded
-                                                    >{ submitting ? <Preloader/> : 'Сохранить' }</Button>
+                                                    >{ submitting && <Preloader/> }</Button>
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
                                                     <Button type={ 'button' }

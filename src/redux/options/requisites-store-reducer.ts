@@ -223,9 +223,9 @@ export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDa
             const setPersonal = await requisitesApi.setPersonalData({
                 idUser,
                 nnNumber: data.inn,
+                kpp: data.kpp,
                 organizationName: response[0].value,
                 taxMode: data.finance?.tax_system || '',
-                kpp: data.kpp,
                 ogrn: data.ogrn,
                 okpo: data.okpo,
                 legalAddress: data.address.value,

@@ -70,18 +70,30 @@ export type EmployeesCardType<T = DefaultFormType> = {
 
 // на грузоПОЛУЧАТЕЛЯ
 export type ConsigneesCardType<T = DefaultFormType> = {
-    idRecipient: string // идентификатор
-    title: T // укороченное название
-    innNumber: T // ИНН
-    organizationName: T // Наименование организации
-    kpp: T // КПП
-    ogrn: T // ОГРН
-    address: T // Юридический адрес
-    consigneesFio: T // ФИО получателя
-    consigneesTel: T // Телефон получателя
-    description: T // Доп. данные для ТТН
-    coordinates: T // Местоположение в координатах
-    city: T // присваивается автоматически
+    // идентификатор
+    idRecipient: string
+    // укороченное название
+    title: T
+    // ИНН
+    innNumber: T
+    // Наименование организации
+    organizationName: T
+    // КПП
+    kpp: T
+    // ОГРН
+    ogrn: T
+    // Юридический адрес
+    address: T
+    // ФИО получателя
+    consigneesFio: T
+    // Телефон получателя
+    consigneesTel: T
+    // Доп. данные для ТТН
+    description: T
+    // Местоположение в координатах
+    coordinates: T
+    // присваивается автоматически
+    city: T
 }
 
 // на грузоотправителя
