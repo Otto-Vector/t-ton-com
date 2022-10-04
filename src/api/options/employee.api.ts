@@ -24,17 +24,16 @@ export type EmployeesApiType = {
 
 export const employeesApi = {
 
-    // запрос списка всех водителей GET /api/employee/
+    // запрос списка ВСЕХ водителей сервера GET /api/employee/
     getAllEmployees() {
         return instanceBack.get<EmployeesApiType[]>('/api/employee/')
             .then(response => response.data)
         // 1.	Code 200, Models: EmployeesApiType[]
         // 2.	Code 520, {"message":"Error"}
-
     },
 
     // запрос списка всех водителей созданных данным пользователем PATCH /api/emploeeuser/
-    getAllEmployeesByUserId( {idUser}: { idUser: string } ) {
+    getAllEmployeesByUserId( { idUser }: { idUser: string } ) {
         return instanceBack.patch<EmployeesApiType[]>('/api/emploeeuser/', { idUser })
             .then(response => response.data)
         // 1.	Code 200, Models: EmployeesApiType[]
