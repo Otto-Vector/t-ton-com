@@ -49,8 +49,7 @@ export const requisitesApi = {
 
     // добавление персональных данных • POST/api/personality/
     setPersonalData( requisites: PersonalResponseType ) {
-        return instanceBack.post<InfoResponseType>
-        ('/api/personality/', requisites)
+        return instanceBack.post<InfoResponseType>('/api/personality/', requisites)
             .then(response => response.data)
         // 1.	code 200, {"success": "Personals '{}' created successfully".format(new_user.phone)}
         // 2.	code 422, {'failed':'Пользователь уже создан'}
@@ -58,8 +57,8 @@ export const requisitesApi = {
     },
 
     // запрос данных по Id пользователя • PATCH /api/personality/
-    getPersonalDataFromId( { idUser }: { idUser: string } ) {
-        return instanceBack.patch<PersonalResponseType[]>('/api/personality/', { idUser })
+    getPersonalDataFromId( idUser: { idUser: string } ) {
+        return instanceBack.patch<PersonalResponseType[]>('/api/personality/', idUser)
             .then(response => response.data)
         // 1.	code 200, models: PersonalResponseType
         // 2.	code 520, "Error"
@@ -74,10 +73,10 @@ export const requisitesApi = {
     },
 
     // удаление пользователя • DELETE /api/personality/
-    removePersonalData( { idUser }: { idUser: string } ) {
-        return instanceBack.delete<InfoResponseType>('/api/personality/', { data: { idUser } })
+    removePersonalData( idUser: { idUser: string } ) { // пока не нужно и думаю не пригодится
+        return instanceBack.delete<InfoResponseType>('/api/personality/', { data: idUser })
             .then(response => response.data)
         // 1.	code 200, {"message": "Personals with id `{}` has been deleted.".format(request.data['idUser'])}
         // 2.	code 449, {'error':'Неправильно указаны аргументы'}
-    }
+    },
 }
