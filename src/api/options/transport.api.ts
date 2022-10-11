@@ -18,7 +18,7 @@ export type TransportApiType = {
 
 export const transportApi = {
 
-    // запрос списка ТРАНСПОРТА • GET /api/transport/
+    // запрос ВСЕГО списка ТРАНСПОРТА • GET /api/transport/
     getAllTransport() {
         return instanceBack.get<TransportApiType[]>('/api/transport/')
             .then(response => response.data)
