@@ -74,4 +74,3 @@ export const shippersApi = {
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
     },
 }
-
