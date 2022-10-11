@@ -2,7 +2,7 @@ import {InfoResponseType, instanceBack} from '../back-instance.api';
 
 export type PersonalResponseType = {
     idUser: string,
-    // innNumber: string,
+    innNumber: string,
     nnNumber: string,
     organizationName: string,
     taxMode: string,
@@ -39,7 +39,7 @@ export type PersonalResponseType = {
 
 export const requisitesApi = {
 
-    // отправка запроса на данные пользователя • GET /api/personality/
+    // отправка запроса на данные ВСЕХ пользователей • GET /api/personality/
     getPersonalDataList() {
         return instanceBack.get<PersonalResponseType>('/api/personality/')
             .then(response => response.data)

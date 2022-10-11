@@ -6,7 +6,6 @@ import {geoPosition} from '../api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
 import {daDataStoreActions, DaDataStoreActionsType} from './dadata-response-reducer';
 import {appActions} from './app-store-reducer';
-import {setOrganizationByInnKpp} from './options/requisites-store-reducer';
 
 
 const initialValues: phoneSubmitType = {
@@ -188,13 +187,23 @@ export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
 // отправляем запрос на код авторизации в телефон
 export const sendCodeToPhone = ( {
                                      phone,
-                                     inn,
+                                     innNumber,
                                      kpp,
                                  }: NewUserRequestType ): AuthStoreReducerThunkActionType<{} | null> =>
-    async ( dispatch ) => {
+    async ( dispatch , getState) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
-            const response = await authApi.sendCodeToPhone({ phone, inn, kpp })
+            const dadataLocalParams = getState().daDataStoreReducer.suggestions.filter(({data})=>data.kpp===kpp)
+            const {value, data} = dadataLocalParams[0]
+            const response = await authApi.sendCodeToPhone({ phone, innNumber, kpp,
+                organizationName: value,
+                taxMode: data.finance?.tax_system || '',
+                ogrn: data.ogrn,
+                okpo: data.okpo || '',
+                legalAddress: data.address.value,
+                postAddress: data.address.value,
+                email: data.emails ? data.emails[0]?.value : '',
+            })
             console.log(response)
             dispatch(authStoreActions.setIsFetching(false))
             // обрабатываем ошибку
@@ -204,13 +213,13 @@ export const sendCodeToPhone = ( {
             }
             if (response.success) {
                 dispatch(authStoreActions.setModalMessage(response.success + 'ПАРОЛЬ: ' + response.password))
-                dispatch(setOrganizationByInnKpp({inn,kpp}))
+                // dispatch(setOrganizationByInnKpp({inn,kpp}))
             }
         } catch (error) {
+            dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
             return { phoneNumber: error.response.data.message }
         }
-
         dispatch(authStoreActions.setIsAvailableSMSRequest(true))
         dispatch(authStoreActions.setIsFetching(false))
         return null

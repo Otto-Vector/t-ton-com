@@ -68,7 +68,11 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                     dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                     return innError
                 } else { // потом отправляем sms на регистрацию
-                    phoneError = await dispatch<any>(sendCodeToPhone({ phone: phoneNumber as string, kpp, inn }))
+                    phoneError = await dispatch<any>(sendCodeToPhone({
+                        phone: phoneNumber as string,
+                        kpp,
+                        innNumber: inn,
+                    }))
                     if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
                         dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                         return phoneError
@@ -197,7 +201,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                     newCode(values.phoneNumber as string)
                                                 } }
                                                 rounded
-                                        >{'Новый пароль'}</Button>
+                                        >{ 'Новый пароль' }</Button>
                                     </div> }
                                 </Field>
                                 { modalMessage &&
@@ -212,7 +216,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                 <Button type={ 'submit' }
                                         disabled={ submitting || hasValidationErrors || isFetching }
                                         colorMode={ 'green' }
-                                        title={ 'Далее +'+hasValidationErrors }
+                                        title={ 'Далее' }
                                         rounded
                                 >
                                     { isFetching && <Preloader/> }
