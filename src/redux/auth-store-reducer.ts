@@ -248,10 +248,10 @@ export const loginAuthorization = ( {
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
                 // чистим форму ввода для следующих авторизаций
                 dispatch(authStoreActions.setInitialValues({ ...initialValues }))
-                // надо для двойно логики рег/авт
+                // надо для двойной логики рег/авт
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
 
-                // для случаев с перелогиниванием
+                // для случаев с пере-логиниванием
                 dispatch<any>(appActions.setInitialized(false))
 
                 // сама авторизация
