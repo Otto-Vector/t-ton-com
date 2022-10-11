@@ -1,5 +1,9 @@
 import React, {useEffect} from 'react'
 import styles from './ui-component.module.scss';
+import 'antd/lib/style/index.css' // используем core стили antd
+import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфоокон
+import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
+
 
 import {Header} from './header/header';
 import {Navigate, Route, Routes} from 'react-router-dom';

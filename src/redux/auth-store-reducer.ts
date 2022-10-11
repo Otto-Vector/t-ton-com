@@ -276,11 +276,13 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
             const response = await authApi.logout({ phone })
             dispatch(authStoreActions.setIsAuth(false))
             dispatch(authStoreActions.setAuthId(''))
-
-            if (response.status) console.log(response)
+            console.log(response)
+            if (response.status) {
+                await dispatch<any>(appActions.setModalGlobalTextMessage(JSON.stringify(response)))
+            }
 
         } catch (error) {
-            alert(error)
+            await dispatch<any>(appActions.setModalGlobalTextMessage(JSON.stringify(error)))
         }
     }
 
@@ -310,14 +312,21 @@ export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
         try {
             const response = await authApi.autoLogin()
             console.log('ответ от api/me/', response)
+
             if (response.userid) {
                 dispatch(authStoreActions.setAuthId(response.userid))
                 dispatch(authStoreActions.setIsAuth(true))
             }
-            if (response.message) console.log(response.message)
+            if (response.message) {
+                console.log(response.message)
+                dispatch<any>(appActions.setModalGlobalTextMessage(response.message as string))
+            }
         } catch (error) {
             // @ts-ignore
-            if (error.response.data.message) console.log(error.response.data.message)
+            if (error.response.data.message) {
+                // @ts-ignore
+                console.log(error.response.data.message)
+            }
             else alert(error)
         }
 

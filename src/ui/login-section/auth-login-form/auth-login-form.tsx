@@ -115,11 +115,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
         dispatch<any>(newPassword({ phone }))
     }
 
-    // зачистка данных всплывающего модульного окна
-    const clearMessage = () => {
-        dispatch(authStoreActions.setModalMessage(null))
-    }
-
     // асинхронный валидатор ИНН через АПИ
     const innValidate = async ( value: string ) => {
         const parsedValue = parseAllNumbers(value)
@@ -204,13 +199,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                         >{ 'Новый пароль' }</Button>
                                     </div> }
                                 </Field>
-                                { modalMessage &&
-                                    <InfoButtonToModal textToModal={ modalMessage }
-                                                       mode={ 'invisible' }
-                                                       onCloseModal={ () => {
-                                                           clearMessage()
-                                                       } }
-                                    /> }
                             </div>
                             <div className={ styles.loginForm__buttonsPanel }>
                                 <Button type={ 'submit' }
