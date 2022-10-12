@@ -41,7 +41,8 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     }
 
     const newRequest = async () => {
-        await dispatch(requestStoreActions.setIsNewRequest(true))
+        dispatch(requestStoreActions.setIsNewRequest(true))
+        dispatch(requestStoreActions.setCurrentDistance(null))
         await dispatch<any>(textAndActionGlobalModal({
             text: 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?',
             navigateOnOk: newRequestRoute,
