@@ -107,8 +107,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
                                          key={ route + src }
                                          onClick={ async () => {
                                              if (action) await action()
-                                         } }
-                            >
+                                         } }>
                                 <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>
                                 <div className={ styles.menuPanel__text }>{ buttonText }</div>
                                 { ( buttonText === 'Инфо' && unreadMessagesCount !== 0 ) &&
