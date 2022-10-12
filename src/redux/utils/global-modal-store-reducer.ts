@@ -1,8 +1,11 @@
-import {GetActionsTypes} from '../redux-store'
+import {AppStateType, GetActionsTypes} from '../redux-store'
+import {ThunkAction} from 'redux-thunk';
 
 const initialState = {
     modalGlobalTextMessage: '',
-    navigateToOk: ''
+    navigateToOk: '',
+    isOkHandle: false,
+    action: null as null | (()=>void),
 }
 
 export type GlobalModalStoreReducerStateType = typeof initialState
@@ -22,7 +25,19 @@ export const globalModalStoreReducer = ( state = initialState, action: ActionsTy
         case 'global-modal-reducer/SET-NAVIGATE-TO-OK': {
             return {
                 ...state,
-                navigateToOk: action.navigateToOk
+                navigateToOk: action.navigateToOk,
+            }
+        }
+        case 'global-modal-reducer/SET-IS-OK-HANDLE': {
+            return {
+                ...state,
+                isOkHandle: action.isOkHandle,
+            }
+        }
+        case 'global-modal-reducer/SET-ACTION': {
+            return {
+                ...state,
+                action: action.action
             }
         }
         default: {
@@ -41,4 +56,23 @@ export const globalModalStoreActions = {
         type: 'global-modal-reducer/SET-NAVIGATE-TO-OK',
         navigateToOk,
     } as const ),
+    setIsOkHandle: ( isOkHandle: boolean ) => ( {
+        type: 'global-modal-reducer/SET-IS-OK-HANDLE',
+        isOkHandle,
+    } as const ),
+    setAction: ( action: null | (() => void) ) => ( {
+        type: 'global-modal-reducer/SET-ACTION',
+        action,
+    } as const ),
 }
+
+
+/* САНКИ */
+export type GlobalModalStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+
+// для блокировки нажатия НОВЫЙ ПАРОЛЬ на одну минуту
+export const textAndActionGlobalModal = ( text: string, action: () => void ): GlobalModalStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        dispatch(globalModalStoreActions.setAction(action))
+        dispatch(globalModalStoreActions.setTextMessage(text))
+    }

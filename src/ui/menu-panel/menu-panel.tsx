@@ -18,6 +18,7 @@ import testPNG from './buttonsSVG/test.png'
 import {getIsAuthAuthStore} from '../../selectors/auth-reselect';
 import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect';
 import {logoutAuth} from '../../redux/auth-store-reducer';
+import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
 
 
 type OwnProps = {}
@@ -27,11 +28,11 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     const routes = useSelector(getRoutesStore)
     const isAuth = useSelector(getIsAuthAuthStore)
     const unreadMessagesCount = useSelector(getUnreadMessagesCountInfoStore)
+
     const dispatch = useDispatch()
 
     const logout = () => {
-
-        dispatch<any>(logoutAuth())
+        dispatch<any>(textAndActionGlobalModal('ВЫ ДЕЙСТВИТЕЛЬНО ХОТИТЕ ВЫЙТИ?',logoutAuth))
     }
 
     // вынес за пределы NavLink назначение классов
@@ -43,10 +44,12 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     const menuItems = [
         {
             route: routes.login, src: loginSVG, title: `${ !isAuth ? 'Авторизация' : 'Выход' }`,
-            buttonText: `${ !isAuth ? 'Вход' : 'Выход' }`, active: true, action: !isAuth ? null : logout,
+            buttonText: `${ !isAuth ? 'Вход' : 'Выход' }`, active: true,
+            action: !isAuth ? null : logout,
+            // action: logout,
         },
         {
-            route: routes.requestInfo.create+'new', src: createSVG, title: 'Создать заявку',
+            route: routes.requestInfo.create + 'new', src: createSVG, title: 'Создать заявку',
             buttonText: 'Создать', active: isAuth, action: null,
         },
         {
@@ -83,9 +86,9 @@ export const MenuPanel: React.FC<OwnProps> = () => {
         <nav className={ styles.menuPanel }>
             { menuItems.map(( { route, src, title, buttonText, active, action } ) =>
                 active &&
-                <NavLink to={ route } className={ activeClass } role={ 'button' } title={ title } key={ route + src }
-                         onClick={ () => {
-                             if (action) action()
+                <NavLink to={ route || '' } className={ activeClass } role={ 'button' } title={ title } key={ route + src }
+                         onClick={ async () => {
+                             if (action) await action()
                          } }
                 >
                     <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>

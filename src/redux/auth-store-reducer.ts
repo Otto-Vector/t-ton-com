@@ -161,7 +161,6 @@ export const authStoreActions = {
 }
 
 /* САНКИ */
-
 export type AuthStoreReducerThunkActionType<R = void> =
     ThunkAction<Promise<R>, AppStateType, unknown, AuthStoreActionsType | DaDataStoreActionsType>
 
@@ -277,6 +276,7 @@ export const loginAuthorization = ( {
 export const logoutAuth = (): AuthStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
+            debugger
             const phone = getState().authStoreReducer.authPhone
             const response = await authApi.logout({ phone })
             dispatch(authStoreActions.setIsAuth(false))
