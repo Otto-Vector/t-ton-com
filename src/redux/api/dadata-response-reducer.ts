@@ -1,11 +1,11 @@
-import {AppStateType, GetActionsTypes} from './redux-store'
-import {DaDataResponseAPIType} from '../types/api-types'
+import {AppStateType, GetActionsTypes} from '../redux-store'
+import {DaDataResponseAPIType} from '../../types/api-types'
 import {
     getOrganizationByInnDaDataAPI,
     GetOrganizationByInnDaDataType,
     getOrganizationByInnKPPDaDataAPI,
     GetOrganizationByInnKPPDaDataType,
-} from '../api/dadata.api'
+} from '../../api/dadata.api'
 import {ThunkAction} from 'redux-thunk'
 
 const initialState = {

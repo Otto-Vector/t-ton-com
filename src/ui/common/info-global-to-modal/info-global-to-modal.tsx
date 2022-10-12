@@ -1,38 +1,52 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux';
-import {AppStateType} from '../../../redux/redux-store';
-import {appActions} from '../../../redux/app-store-reducer';
+import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 // import 'antd/lib/style/index.css' // используем core стили antd
-// import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфоокон
+// import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфо-окон
 // import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
 import {Modal} from 'antd';
+import {useNavigate} from 'react-router-dom';
+import {getNavigateToOkGlobalModalStore, getTextGlobalModalStore} from '../../../selectors/utils/global-modal-reselect';
 
 
-export const InfoGlobalToModal: React.FC = ( ) => {
-  const textToGlobalModal = useSelector((state:AppStateType)=> state.appStoreReducer.modalGlobalTextMessage)
+export const InfoGlobalToModal: React.FC = () => {
+
+    const textToGlobalModal = useSelector(getTextGlobalModalStore)
+    const navToOk = useSelector(getNavigateToOkGlobalModalStore)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const [ visible, setVisible ] = useState(false)
 
     const onCloseLocal = () => {
         setVisible(false)
-        dispatch(appActions.setModalGlobalTextMessage(''))
+        dispatch(globalModalStoreActions.setTextMessage(''))
     }
 
-    useEffect(()=>{
+    const onOkHandle = () => {
+        onCloseLocal()
+        dispatch(globalModalStoreActions.setNavigateToOk(''))
+        navToOk && navigate(navToOk)
+    }
+
+    const onCancelHandle = ()=>{
+        onCloseLocal()
+    }
+
+    useEffect(() => {
         setVisible(!!textToGlobalModal)
-    },[textToGlobalModal])
+    }, [ textToGlobalModal ])
 
 
     return (
-            <Modal title={ 'Информация' }
-                   visible={ visible }
-                   onOk={ onCloseLocal }
-                   onCancel={ onCloseLocal }
-                   // closeIcon={<Preloader/>}
-            >
-                <p>{ textToGlobalModal}</p>
-            </Modal>
+        <Modal title={ 'Информация' }
+               visible={ visible }
+               onOk={ onOkHandle }
+               onCancel={ onCancelHandle }
+            // closeIcon={<Preloader/>}
+        >
+            <p>{ textToGlobalModal }</p>
+        </Modal>
 
     )
 }

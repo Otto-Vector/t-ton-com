@@ -30,7 +30,7 @@ import {getAllTrailerSelectFromLocal, getOneTrailerFromLocal} from '../../select
 import {employeesStoreActions} from '../../redux/options/employees-store-reducer'
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
-import {lightBoxStoreActions} from '../../redux/lightbox-store-reducer'
+import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
 import {AppStateType} from '../../redux/redux-store';
 
 type OwnProps = {}

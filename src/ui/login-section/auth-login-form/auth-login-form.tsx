@@ -29,8 +29,8 @@ import {phoneSubmitType} from '../../../types/form-types'
 import {useNavigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {FormSelector} from '../../common/form-selector/form-selector';
-import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
-import {getOrganizationsByInn, getOrganizationsByInnKPP} from '../../../redux/dadata-response-reducer';
+import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
+import {getOrganizationsByInn, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer';
 
 
 type OwnProps = {}

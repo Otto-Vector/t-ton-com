@@ -1,5 +1,5 @@
-import {AppStateType} from '../redux/redux-store'
-import {LightboxStoreReducerStateType} from '../redux/lightbox-store-reducer'
+import {AppStateType} from '../../redux/redux-store'
+import {LightboxStoreReducerStateType} from '../../redux/utils/lightbox-store-reducer'
 
 type LightboxStoreSelectors<T extends keyof Y, Y = LightboxStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 

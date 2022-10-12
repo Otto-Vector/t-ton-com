@@ -1,6 +1,6 @@
-import {AppStateType} from '../redux/redux-store'
-import {DaDataStoreReducerStateType} from '../redux/dadata-response-reducer';
-import {SelectOptions} from '../ui/common/form-selector/form-selector';
+import {AppStateType} from '../../redux/redux-store'
+import {DaDataStoreReducerStateType} from '../../redux/api/dadata-response-reducer';
+import {SelectOptions} from '../../ui/common/form-selector/form-selector';
 import {createSelector} from 'reselect';
 
 

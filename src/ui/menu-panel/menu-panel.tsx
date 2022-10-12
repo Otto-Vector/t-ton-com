@@ -30,6 +30,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     const logout = () => {
+
         dispatch<any>(logoutAuth())
     }
 

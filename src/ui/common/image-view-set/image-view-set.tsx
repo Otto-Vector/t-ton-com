@@ -5,7 +5,7 @@ import {AppStateType} from '../../../redux/redux-store';
 import {useDispatch, useSelector} from 'react-redux';
 import {AttachImageButton} from '../attach-image-button/attach-image-button';
 import imageCompression from 'browser-image-compression'
-import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer';
+import {lightBoxStoreActions} from '../../../redux/utils/lightbox-store-reducer';
 import noImage from '../../../media/logo192.png'
 
 type OwnProps = {

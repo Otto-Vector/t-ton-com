@@ -3,9 +3,9 @@ import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 
 import noImage from '../../../media/logo192.png'
-import {getImageLightboxStore, getIsLightBoxOpenLightboxStore} from '../../../selectors/lightbox-reselect'
+import {getImageLightboxStore, getIsLightBoxOpenLightboxStore} from '../../../selectors/utils/lightbox-reselect'
 import {useDispatch, useSelector} from 'react-redux'
-import {lightBoxStoreActions} from '../../../redux/lightbox-store-reducer'
+import {lightBoxStoreActions} from '../../../redux/utils/lightbox-store-reducer'
 
 type LightboxType = {
     // image: string

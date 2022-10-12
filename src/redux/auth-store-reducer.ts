@@ -4,8 +4,9 @@ import {phoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
-import {daDataStoreActions, DaDataStoreActionsType} from './dadata-response-reducer';
+import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-reducer';
 import {appActions} from './app-store-reducer';
+import {globalModalStoreActions} from './utils/global-modal-store-reducer';
 
 
 const initialValues: phoneSubmitType = {
@@ -213,12 +214,12 @@ export const sendCodeToPhone = ( {
             }
             if (response.success) {
                 // dispatch(authStoreActions.setModalMessage(response.success + 'ПАРОЛЬ: ' + response.password))
-                dispatch<any>(appActions.setModalGlobalTextMessage(response.success + 'ПАРОЛЬ: ' + response.password))
+                dispatch<any>(globalModalStoreActions.setTextMessage(response.success + 'ПАРОЛЬ: ' + response.password))
             }
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            dispatch<any>(appActions.setModalGlobalTextMessage(error.response.data.message))
+            dispatch<any>(globalModalStoreActions.setTextMessage(error.response.data.message))
             // @ts-ignore
             return { phoneNumber: error.response.data.message }
         }
@@ -263,7 +264,7 @@ export const loginAuthorization = ( {
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            dispatch<any>(appActions.setModalGlobalTextMessage(JSON.stringify(error.response.data.message)))
+            dispatch<any>(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data.message)))
             // @ts-ignore
             return { sms: error.response.data.message }
         }
@@ -280,13 +281,12 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
             const response = await authApi.logout({ phone })
             dispatch(authStoreActions.setIsAuth(false))
             dispatch(authStoreActions.setAuthId(''))
-            console.log(response)
             if (response.status) {
-                await dispatch<any>(appActions.setModalGlobalTextMessage(JSON.stringify(response)))
+                // await dispatch<any>(globalModalStoreActions.setTextMessage(JSON.stringify(response)))
+                console.log(response)
             }
-
         } catch (error) {
-            await dispatch<any>(appActions.setModalGlobalTextMessage(JSON.stringify(error)))
+            await dispatch<any>(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
         }
     }
 
@@ -304,9 +304,8 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            if (error.response.data.message) dispatch<any>(appActions.setModalGlobalTextMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
-                // dispatch(authStoreActions.setModalMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
-            else alert(error)
+            if (error.response.data.message) dispatch<any>(globalModalStoreActions.setTextMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
+            else dispatch<any>(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
         }
         dispatch(authStoreActions.setIsFetching(false))
     }
@@ -324,7 +323,7 @@ export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
             }
             if (response.message) {
                 console.log(response.message)
-                dispatch<any>(appActions.setModalGlobalTextMessage(response.message as string))
+                dispatch<any>(globalModalStoreActions.setTextMessage(response.message))
             }
         } catch (error) {
             // @ts-ignore
@@ -332,7 +331,7 @@ export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
                 // @ts-ignore
                 console.log(error.response.data.message)
             }
-            else alert(error)
+            else dispatch<any>(globalModalStoreActions.setTextMessage("Ошибка при автоматической авторизации: "+JSON.stringify(error)))
         }
 
         dispatch(authStoreActions.setAutologinDone())

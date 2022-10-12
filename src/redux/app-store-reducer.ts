@@ -16,7 +16,6 @@ const initialState = {
     // КЛЮЧИ
     // процент, на который надо помножить
     distanceCoefficient: 1.05,
-    modalGlobalTextMessage: '',
 }
 
 export type AppReducerStateType = typeof initialState
@@ -31,13 +30,6 @@ export const appStoreReducer = ( state = initialState,
                 initialized: action.initialized,
             }
         }
-        case 'app-reducer/SET-MODAL-GLOBAL-TEXT-MESSAGE': {
-            return {
-                ...state,
-                modalGlobalTextMessage: action.modalGlobalTextMessage
-            }
-        }
-
         default : {
             return state
         }
@@ -51,11 +43,6 @@ export const appActions = {
     setInitialized: ( initialized: boolean ) => ( {
         type: 'app-reducer/SET-INITIALIZED',
         initialized,
-    } as const ),
-    // для глобальной модалки
-    setModalGlobalTextMessage: ( modalGlobalTextMessage: string ) => ( {
-        type: 'app-reducer/SET-MODAL-GLOBAL-TEXT-MESSAGE',
-        modalGlobalTextMessage,
     } as const ),
 }
 

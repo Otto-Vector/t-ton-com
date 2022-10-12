@@ -31,9 +31,9 @@ import {
 } from '../../../redux/options/consignees-store-reducer';
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers';
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
-import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
+import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
 import {FormSelector} from '../../common/form-selector/form-selector';
-import {daDataStoreActions} from '../../../redux/dadata-response-reducer';
+import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer';
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
 import {FormApi} from 'final-form';
 import {

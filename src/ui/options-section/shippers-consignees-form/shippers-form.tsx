@@ -34,8 +34,8 @@ import {
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
 import {FormSelector} from '../../common/form-selector/form-selector';
-import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
-import {daDataStoreActions} from '../../../redux/dadata-response-reducer';
+import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
+import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer';
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
 import {FormApi} from 'final-form';
 import {

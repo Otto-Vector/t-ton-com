@@ -14,7 +14,7 @@ import {
     parseOnlyOneSpace,
 } from '../../utils/parsers';
 import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
-import {getOrganizationsByInn} from '../dadata-response-reducer';
+import {getOrganizationsByInn} from '../api/dadata-response-reducer';
 import {shippersApi} from '../../api/options/shippers.api';
 import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
 

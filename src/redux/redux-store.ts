@@ -15,10 +15,11 @@ import {tableStoreReducer} from './table/table-store-reducer';
 import {addDriverStoreReducer} from './forms/add-driver-store-reducer';
 import {requestStoreReducer} from './forms/request-store-reducer';
 import {infoStoreReducer} from './info-store-reducer';
-import {lightBoxStoreReducer} from './lightbox-store-reducer'
+import {lightBoxStoreReducer} from './utils/lightbox-store-reducer'
 import {bigMapStoreReducer} from './maps/big-map-store-reducer';
 import {appStoreReducer} from './app-store-reducer';
-import {daDataStoreReducer} from './dadata-response-reducer';
+import {daDataStoreReducer} from './api/dadata-response-reducer';
+import {globalModalStoreReducer} from './utils/global-modal-store-reducer';
 
 
 const reducersObject = {
@@ -41,6 +42,7 @@ const reducersObject = {
     lightBoxStoreReducer,
     bigMapStoreReducer,
     daDataStoreReducer,
+    globalModalStoreReducer,
 }
 
 const rootReducer = combineReducers(reducersObject)
