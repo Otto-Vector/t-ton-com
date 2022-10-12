@@ -3,7 +3,7 @@ import styles from './menu-panel.module.scss'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {getRoutesStore} from '../../selectors/routes-reselect'
-import {NavLink} from 'react-router-dom';
+import {NavLink, useLocation} from 'react-router-dom';
 import loginSVG from './buttonsSVG/login.svg'
 import createSVG from './buttonsSVG/create.svg'
 import searchSVG from './buttonsSVG/search.svg'
@@ -19,6 +19,7 @@ import {getIsAuthAuthStore} from '../../selectors/auth-reselect';
 import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect';
 import {logoutAuth} from '../../redux/auth-store-reducer';
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
+import {requestStoreActions} from '../../redux/forms/request-store-reducer';
 
 
 type OwnProps = {}
@@ -26,13 +27,25 @@ type OwnProps = {}
 export const MenuPanel: React.FC<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
+    const newRequestRoute = routes.requestInfo.create + 'new'
     const isAuth = useSelector(getIsAuthAuthStore)
     const unreadMessagesCount = useSelector(getUnreadMessagesCountInfoStore)
-
     const dispatch = useDispatch()
+    const { pathname } = useLocation()
 
-    const logout = () => {
-        dispatch<any>(textAndActionGlobalModal('ВЫ ДЕЙСТВИТЕЛЬНО ХОТИТЕ ВЫЙТИ?',logoutAuth))
+    const logout = async () => {
+        await dispatch<any>(textAndActionGlobalModal({
+            text: 'ВЫ ДЕЙСТВИТЕЛЬНО ХОТИТЕ ВЫЙТИ?',
+            action: logoutAuth,
+        }))
+    }
+
+    const newRequest = async () => {
+        await dispatch(requestStoreActions.setIsNewRequest(true))
+        await dispatch<any>(textAndActionGlobalModal({
+            text: 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?',
+            navigateOnOk: newRequestRoute,
+        }))
     }
 
     // вынес за пределы NavLink назначение классов
@@ -43,14 +56,14 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     // легче редактировать и меньше кода на перебор
     const menuItems = [
         {
-            route: routes.login, src: loginSVG, title: `${ !isAuth ? 'Авторизация' : 'Выход' }`,
+            route: isAuth ? null : routes.login, src: loginSVG, title: `${ !isAuth ? 'Авторизация' : 'Выход' }`,
             buttonText: `${ !isAuth ? 'Вход' : 'Выход' }`, active: true,
             action: !isAuth ? null : logout,
-            // action: logout,
         },
         {
-            route: routes.requestInfo.create + 'new', src: createSVG, title: 'Создать заявку',
-            buttonText: 'Создать', active: isAuth, action: null,
+            route: pathname === newRequestRoute ? newRequestRoute : null, src: createSVG, title: 'Создать заявку',
+            buttonText: 'Создать', active: isAuth,
+            action: newRequest,
         },
         {
             route: routes.searchList, src: searchSVG, title: 'Поиск неактивных заявок',
@@ -85,17 +98,30 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     return (
         <nav className={ styles.menuPanel }>
             { menuItems.map(( { route, src, title, buttonText, active, action } ) =>
-                active &&
-                <NavLink to={ route || '' } className={ activeClass } role={ 'button' } title={ title } key={ route + src }
-                         onClick={ async () => {
-                             if (action) await action()
-                         } }
-                >
-                    <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>
-                    <div className={ styles.menuPanel__text }>{ buttonText }</div>
-                    { ( buttonText === 'Инфо' && unreadMessagesCount !== 0 ) &&
-                        <div className={ styles.attentionIcon }><img src={ attentionSVG } alt={ '!' }/></div> }
-                </NavLink>,
+                    active && (
+                        route ? <NavLink to={ route }
+                                         className={ activeClass }
+                                         role={ 'button' }
+                                         title={ title }
+                                         key={ route + src }
+                                         onClick={ async () => {
+                                             if (action) await action()
+                                         } }
+                            >
+                                <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>
+                                <div className={ styles.menuPanel__text }>{ buttonText }</div>
+                                { ( buttonText === 'Инфо' && unreadMessagesCount !== 0 ) &&
+                                    <div className={ styles.attentionIcon }><img src={ attentionSVG } alt={ '!' }/></div> }
+                            </NavLink>
+                            : <div className={ styles.menuPanel__item + ' ' + styles.menuPanel__item_unactive }
+                                   key={ route + src }
+                                   onClick={ async () => {
+                                       if (action) await action()
+                                   } }>
+                                <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>
+                                <div className={ styles.menuPanel__text }>{ buttonText }</div>
+                            </div>
+                    ),
             ) }
         </nav>
     )

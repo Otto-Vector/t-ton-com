@@ -1,11 +1,12 @@
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ThunkAction} from 'redux-thunk';
+import {To} from 'react-router-dom';
 
 const initialState = {
     modalGlobalTextMessage: '',
-    navigateToOk: '',
+    navigateToOk: undefined as undefined | To,
     isOkHandle: false,
-    action: null as null | (()=>void),
+    action: null as null | ( () => void ),
 }
 
 export type GlobalModalStoreReducerStateType = typeof initialState
@@ -37,7 +38,7 @@ export const globalModalStoreReducer = ( state = initialState, action: ActionsTy
         case 'global-modal-reducer/SET-ACTION': {
             return {
                 ...state,
-                action: action.action
+                action: action.action,
             }
         }
         default: {
@@ -52,7 +53,7 @@ export const globalModalStoreActions = {
         type: 'global-modal-reducer/SET-TEXT-MESSAGE',
         modalGlobalTextMessage,
     } as const ),
-    setNavigateToOk: ( navigateToOk: string ) => ( {
+    setNavigateToOk: ( navigateToOk?: To ) => ( {
         type: 'global-modal-reducer/SET-NAVIGATE-TO-OK',
         navigateToOk,
     } as const ),
@@ -60,7 +61,7 @@ export const globalModalStoreActions = {
         type: 'global-modal-reducer/SET-IS-OK-HANDLE',
         isOkHandle,
     } as const ),
-    setAction: ( action: null | (() => void) ) => ( {
+    setAction: ( action: null | ( () => void ) ) => ( {
         type: 'global-modal-reducer/SET-ACTION',
         action,
     } as const ),
@@ -70,9 +71,14 @@ export const globalModalStoreActions = {
 /* САНКИ */
 export type GlobalModalStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-// для блокировки нажатия НОВЫЙ ПАРОЛЬ на одну минуту
-export const textAndActionGlobalModal = ( text: string, action: () => void ): GlobalModalStoreReducerThunkActionType =>
+// для создания диалогового окна с переданной функцией
+export const textAndActionGlobalModal = ( {
+                                              text,
+                                              action,
+                                              navigateOnOk,
+                                          }: { text: string, action?: () => void, navigateOnOk?: To } ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
-        dispatch(globalModalStoreActions.setAction(action))
+        dispatch(globalModalStoreActions.setAction(action || null))
+        dispatch(globalModalStoreActions.setNavigateToOk(navigateOnOk))
         dispatch(globalModalStoreActions.setTextMessage(text))
     }

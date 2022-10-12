@@ -41,6 +41,7 @@ export const RequestSection: React.FC = React.memo(() => {
     const navigate = useNavigate()
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const { pathname } = useLocation()
+
     const requestModes: RequestModesType = {
         createMode: pathname.includes(routes.requestInfo.create),
         statusMode: pathname.includes(routes.requestInfo.status),
@@ -52,7 +53,7 @@ export const RequestSection: React.FC = React.memo(() => {
     const isNewRequest = useSelector(getIsNewRequestRequestStore) && reqNumber === 'new'
     const initialValues = useSelector(getInitialValuesRequestStore)
     const dispatch = useDispatch()
-    // debugger
+
 
     // const oneRequest = useSelector(getOneRequestStore)
     const currentRequestNumber = useSelector(getCurrentRequestNumberStore)

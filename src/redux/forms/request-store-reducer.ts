@@ -160,9 +160,9 @@ const initialState = {
 
 export type RequestStoreReducerStateType = typeof initialState
 
-type ActionsType = GetActionsTypes<typeof requestStoreActions>
+export type RequestStoreActionsType = GetActionsTypes<typeof requestStoreActions>
 
-export const requestStoreReducer = ( state = initialState, action: ActionsType ): RequestStoreReducerStateType => {
+export const requestStoreReducer = ( state = initialState, action: RequestStoreActionsType ): RequestStoreReducerStateType => {
 
     switch (action.type) {
         case 'request-store-reducer/SET-REQUEST-IS-FETCHING': {
@@ -283,7 +283,7 @@ export const requestStoreActions = {
 
 /* САНКИ */
 
-export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, RequestStoreActionsType>
 
 
 export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
