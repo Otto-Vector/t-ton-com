@@ -13,7 +13,6 @@ import {
     getIsFetchingAuth,
     getLabelAuthStore,
     getMaskOnAuthStore,
-    getModalMessageAuthStore,
     getValidatorsAuthStore,
 } from '../../../selectors/auth-reselect'
 import {Preloader} from '../../common/preloader/preloader'
@@ -32,7 +31,6 @@ import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/dadata-reselect';
 import {getOrganizationsByInn, getOrganizationsByInnKPP} from '../../../redux/dadata-response-reducer';
-import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 
 
 type OwnProps = {}
@@ -45,7 +43,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const [ isRegisterMode, setIsRegisterMode ] = useState(false)
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
     const isAuth = useSelector(getIsAuthAuthStore)
-    const modalMessage = useSelector(getModalMessageAuthStore)
 
     const label = useSelector(getLabelAuthStore)
     const initialValues = useSelector(getInitialValuesAuthStore)
@@ -101,7 +98,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                 }
             }
         }
-
         return { [FORM_ERROR]: null }
     }
 
@@ -110,14 +106,9 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     }
 
     const newCode = ( phone: string ) => {
-        // сразу блокируем повторное нажание на минуту
+        // сразу блокируем повторное нажание на 1 минуту
         dispatch<any>(fakeAuthFetching())
         dispatch<any>(newPassword({ phone }))
-    }
-
-    // зачистка данных всплывающего модульного окна
-    const clearMessage = () => {
-        dispatch(authStoreActions.setModalMessage(null))
     }
 
     // асинхронный валидатор ИНН через АПИ
@@ -204,13 +195,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                         >{ 'Новый пароль' }</Button>
                                     </div> }
                                 </Field>
-                                { modalMessage &&
-                                    <InfoButtonToModal textToModal={ modalMessage }
-                                                       mode={ 'invisible' }
-                                                       onCloseModal={ () => {
-                                                           clearMessage()
-                                                       } }
-                                    /> }
                             </div>
                             <div className={ styles.loginForm__buttonsPanel }>
                                 <Button type={ 'submit' }
@@ -234,7 +218,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                         rounded
                 />
             </div>
-
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux';
 import {AppStateType} from '../../../redux/redux-store';
 import {appActions} from '../../../redux/app-store-reducer';
@@ -12,19 +12,24 @@ export const InfoGlobalToModal: React.FC = ( ) => {
   const textToGlobalModal = useSelector((state:AppStateType)=> state.appStoreReducer.modalGlobalTextMessage)
     const dispatch = useDispatch()
 
-    const isGlobal = !!textToGlobalModal
-    const [ visible, setVisible ] = useState(isGlobal)
+    const [ visible, setVisible ] = useState(false)
 
     const onCloseLocal = () => {
         setVisible(false)
         dispatch(appActions.setModalGlobalTextMessage(''))
     }
 
+    useEffect(()=>{
+        setVisible(!!textToGlobalModal)
+    },[textToGlobalModal])
+
+
     return (
             <Modal title={ 'Информация' }
                    visible={ visible }
                    onOk={ onCloseLocal }
                    onCancel={ onCloseLocal }
+                   // closeIcon={<Preloader/>}
             >
                 <p>{ textToGlobalModal}</p>
             </Modal>

@@ -8,7 +8,8 @@ import {InfoResponseType, instanceBack} from './back-instance.api';
 //     "password": "7406"
 // "success": "На номер '+7 (938) 693-87-27' был отправлен пароль.",
 // "password": "4262"
-// 3273c1f0-8f2d-4404-967c-045f35dc63e7123321222
+//     "success": "На номер '+7 (404) 888-69-94' был отправлен пароль.",
+//     "password": "5198"
 
 export type AuthRequestType = {
     phone: string,

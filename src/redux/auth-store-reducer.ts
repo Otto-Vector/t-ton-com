@@ -212,11 +212,13 @@ export const sendCodeToPhone = ( {
                 return { innNumber: response.message }
             }
             if (response.success) {
-                dispatch(authStoreActions.setModalMessage(response.success + 'ПАРОЛЬ: ' + response.password))
-                // dispatch(setOrganizationByInnKpp({inn,kpp}))
+                // dispatch(authStoreActions.setModalMessage(response.success + 'ПАРОЛЬ: ' + response.password))
+                dispatch<any>(appActions.setModalGlobalTextMessage(response.success + 'ПАРОЛЬ: ' + response.password))
             }
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
+            // @ts-ignore
+            dispatch<any>(appActions.setModalGlobalTextMessage(error.response.data.message))
             // @ts-ignore
             return { phoneNumber: error.response.data.message }
         }
@@ -261,6 +263,8 @@ export const loginAuthorization = ( {
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
+            dispatch<any>(appActions.setModalGlobalTextMessage(JSON.stringify(error.response.data.message)))
+            // @ts-ignore
             return { sms: error.response.data.message }
         }
 
@@ -300,7 +304,8 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            if (error.response.data.message) dispatch(authStoreActions.setModalMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
+            if (error.response.data.message) dispatch<any>(appActions.setModalGlobalTextMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
+                // dispatch(authStoreActions.setModalMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
             else alert(error)
         }
         dispatch(authStoreActions.setIsFetching(false))
