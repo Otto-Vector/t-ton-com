@@ -16,11 +16,11 @@ import {getIsFetchingConsigneesStore} from '../../selectors/options/consignees-r
 
 import {Button} from '../common/button/button';
 import {ColumnDataList} from './column-data-list/column-data-list';
-import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
 import {Preloader} from '../common/preloader/preloader';
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect';
 import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect';
 import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect';
+import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
 
 
 type OwnProps = {}
@@ -28,6 +28,8 @@ type OwnProps = {}
 const ColumnPreloader: React.FC = () => <div style={ { height: '260px', width: '260px' } }><Preloader/></div>
 
 export const OptionsSection: React.FC<OwnProps> = () => {
+
+    const titleHeader = 'Настройки'
 
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -52,8 +54,9 @@ export const OptionsSection: React.FC<OwnProps> = () => {
 
     return (
         <section className={ styles.optionsSection }>
+            {/*ГОЛОВА С КНОПКОЙ РЕКВИЗИТЫ*/ }
             <header className={ styles.optionsSection__header }>
-                <h3>Настройки</h3>
+                <h3>{titleHeader}</h3>
                 <div className={ styles.optionsSection__buttonRequisites }>
                     <Button type={ 'button' }
                             title={ 'Реквизиты' }
@@ -64,6 +67,7 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                     <InfoButtonToModal textToModal={ requisitesInfoText }/>
                 </div>
             </header>
+            {/*СПИСКИ*/ }
             <div className={ styles.optionsSection__table }>
                 { shipperIsFetching ? <ColumnPreloader/> :
                     <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/> }

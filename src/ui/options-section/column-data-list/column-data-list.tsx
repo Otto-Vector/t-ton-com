@@ -74,10 +74,10 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
                         <div className={ styles.rowItem__label } title={ title }>
                             { title || 'null' }
                         </div>
-
                     </div>)
                 }
             </div>
+            {/*КНОПКА "+" СОЗДАТЬ */ }
             <div className={ styles.columnDataList__button + ' ' + styles.columnDataList__button_left }>
                 <Button onClick={ () => {
                     navigate(route + 'new')
@@ -86,6 +86,7 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
                         rounded colorMode={ 'lightBlue' }>
                     <MaterialIcon icon_name={ 'add' }/></Button>
             </div>
+            {/*КНОПКА "?" ИНФО */ }
             <InfoButtonToModal textToModal={ item.info } mode={ 'in' }/>
         </div>
     )
