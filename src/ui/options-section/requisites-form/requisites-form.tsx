@@ -69,6 +69,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.innNumber }
                                                    parse={ parsers.innNumber }
+                                                   disabled={ true }
                                             />
                                             <Field name={ 'organizationName' }
                                                    placeholder={ label.organizationName }
@@ -93,6 +94,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.kpp }
                                                    parse={ parsers.kpp }
+                                                   disabled={ true }
                                             />
                                             <Field name={ 'ogrn' }
                                                    placeholder={ label.ogrn }

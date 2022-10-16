@@ -193,16 +193,21 @@ export const sendCodeToPhone = ( {
     async ( dispatch , getState) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
-            const dadataLocalParams = getState().daDataStoreReducer.suggestions.filter(({data})=>data.kpp===kpp)
-            const {value, data} = dadataLocalParams[0]
-            const response = await authApi.sendCodeToPhone({ phone, innNumber, kpp,
+            debugger
+            const dadataLocalParams = (kpp !== '' && kpp !== '-')
+                ? getState().daDataStoreReducer.suggestions.filter(({data})=>data.kpp===kpp)[0]
+                : getState().daDataStoreReducer.suggestions[0]
+
+            const {value, data} = dadataLocalParams
+            const response = await authApi.sendCodeToPhone({ phone, innNumber,
+                kpp: kpp || '-',
                 organizationName: value,
-                taxMode: data.finance?.tax_system || '',
+                taxMode: data.finance?.tax_system || undefined,
                 ogrn: data.ogrn,
-                okpo: data.okpo || '',
+                okpo: data.okpo || undefined,
                 legalAddress: data.address.value,
                 postAddress: data.address.value,
-                email: data.emails ? data.emails[0]?.value : '',
+                email: data.emails ? data.emails[0]?.value : undefined,
             })
             console.log(response)
             dispatch(authStoreActions.setIsFetching(false))
@@ -217,7 +222,7 @@ export const sendCodeToPhone = ( {
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(error.response.data.message))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
             // @ts-ignore
             return { phoneNumber: error.response.data.message }
         }
@@ -295,13 +300,13 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             const response = await authApi.passwordRecovery({ phone })
 
             console.log(response)
-            if (response.success) dispatch(authStoreActions.setModalMessage(response.success+ '\n ПАРОЛЬ: ' + response.password))
-            if (response.message) dispatch(authStoreActions.setModalMessage(response.message))
+            if (response.success) dispatch(globalModalStoreActions.setTextMessage(response.success+ '\n ПАРОЛЬ: ' + response.password))
+            if (response.message) dispatch(globalModalStoreActions.setTextMessage(response.message))
 
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            if (error.response.data.message) dispatch<any>(globalModalStoreActions.setTextMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
+            if (error.response.data.message) dispatch(globalModalStoreActions.setTextMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
             else dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
         }
         dispatch(authStoreActions.setIsFetching(false))
@@ -320,7 +325,7 @@ export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
             }
             if (response.message) {
                 console.log(response.message)
-                dispatch<any>(globalModalStoreActions.setTextMessage(response.message))
+                dispatch(globalModalStoreActions.setTextMessage(response.message))
             }
         } catch (error) {
             // @ts-ignore

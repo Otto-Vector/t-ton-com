@@ -104,7 +104,7 @@ const initialState = {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(50)),
         taxMode: composeValidators(required),
-        kpp: composeValidators(required, mustBe00Numbers(9)),
+        kpp: composeValidators(mustBe00Numbers(9)),
         ogrn: composeValidators(required, mustBe00Numbers(13)),
         okpo: composeValidators(required, mustBe0_0Numbers(8)(10)),
         legalAddress: composeValidators(required),
