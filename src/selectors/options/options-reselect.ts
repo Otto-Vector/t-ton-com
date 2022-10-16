@@ -28,7 +28,7 @@ export const getRequisitesInfoOptionsStore: OptionsStoreSelectors<'requisitesInf
 // выборка из списка загруженных грузоотправителей
 export const getShippersOptionsStore = createSelector(getAllShippersStore, getShippersTitleOptionsStore,
     ( shippers: ShippersCardType[], titles ): OptionsStoreReducerStateType['shippers'] => {
-        return { ...titles, content: shippers.map(( { idSender: id, title } ) => ( { id, title: title + '' } )) }
+        return { ...titles, content: shippers.map(( { idSender: id, title , city} ) => ( { id, title: title + '', city: `[${city||''}]` } )) }
     })
 // выборка из названий грузополучателей
 export const getShippersAllNamesListOptionsStore = createSelector(getShippersOptionsStore,
@@ -40,7 +40,7 @@ export const getShippersNamesListOptionsStore = createSelector(getShippersOption
 // выборка из списка загруженных грузополучателей
 export const getConsigneesOptionsStore = createSelector(getAllConsigneesStore, getConsigneesTitleOptionsStore,
     ( consignee: ConsigneesCardType[], titles ): OptionsStoreReducerStateType['consignees'] => {
-        return { ...titles, content: consignee.map(( { idRecipient: id, title } ) => ( { id, title: title + '' } )) }
+return { ...titles, content: consignee.map(( { idRecipient: id, title , city} ) => ( { id, title: title + '', city: `[${city||''}]` } )) }
     })
 // выборка из названий грузополучателей
 export const getConsigneesAllNamesListOptionsStore = createSelector(getConsigneesOptionsStore,

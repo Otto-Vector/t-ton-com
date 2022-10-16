@@ -17,6 +17,7 @@ import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
 import {getOrganizationsByInn} from '../api/dadata-response-reducer';
 import {shippersApi} from '../../api/options/shippers.api';
 import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
+import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
 
 const defaultInitialValues = {
@@ -36,7 +37,7 @@ const defaultInitialValues = {
 
 const initialState = {
     shippersIsFetching: false,
-    currentId: '',
+    currentId: '' as string | null,
 
     label: {
         title: 'Название грузоотправителя',
@@ -157,7 +158,8 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
         case 'shippers-store-reducer/SET-DEFAULT-INITIAL-VALUES': {
             return {
                 ...state,
-                initialValues: defaultInitialValues,
+                currentId: null,
+                initialValues: {} as ShippersCardType,
             }
         }
         default: {
@@ -199,7 +201,7 @@ export const shippersStoreActions = {
 
 /* САНКИ */
 
-export type ShippersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type ShippersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
 
 // запрос на всех Грузоотправителей данного пользователя
 export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
@@ -256,7 +258,10 @@ export const setOrganizationByInnKppShippers = ( {
                 ogrn: data.ogrn,
                 address: data.address.value,
             }))
-        } else alert('Фильтр КПП локально не сработал!')
+        } else {
+            // alert('Фильтр КПП локально не сработал!')
+            dispatch(globalModalStoreActions.setTextMessage('Фильтр КПП локально не сработал!'))
+        }
 
     }
 
@@ -270,7 +275,7 @@ export const newShipperSaveToAPI = ( values: ShippersCardType<string> ): Shipper
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(e.response.data.failed)
+            dispatch(globalModalStoreActions.setTextMessage('Ошибка запроса на название города\n' + JSON.stringify(e.response.data.failed)))
         }
         await dispatch(getAllShippersAPI())
     }
@@ -290,38 +295,44 @@ export const modifyOneShipperToAPI = ( values: ShippersCardType<string> ): Shipp
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
         }
         await dispatch(getAllShippersAPI())
     }
 
 // удалить одну запись ГРУЗООТПРАВИТЕЛЯ через АПИ
-export const oneShipperDeleteToAPI = ( idSender: string ): ShippersStoreReducerThunkActionType =>
+export const oneShipperDeleteToAPI = ( idSender: string | null ): ShippersStoreReducerThunkActionType =>
     async ( dispatch ) => {
 
         try {
-            const response = await shippersApi.deleteOneShipper({ idSender })
-            if (response.message) console.log(response.message)
+            if (idSender) {
+                const response = await shippersApi.deleteOneShipper({ idSender })
+                if (response.message) console.log(response.message)
+            }
         } catch (e) {
-            // alert(e.response.data.error)
             // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
         }
         await dispatch(getAllShippersAPI())
     }
 
 // геолокируем (вытаскиваем) название города из запроса автодиспетчера
-export const getCityFromDispetcherAPI = ( { from, to }: GetAvtodispetcherRouteType ): ShippersStoreReducerThunkActionType<string|undefined> =>
+export const getCityFromDispetcherAPI = ( {
+                                              from,
+                                              to,
+                                          }: GetAvtodispetcherRouteType ): ShippersStoreReducerThunkActionType<{ coordinates?: string, city?: string }|null> =>
     async ( ) => {
         try {
             const response = await getRouteFromAvtodispetcherApi({ from, to })
 
             if (response.segments.length > 0) {
-                return response.segments[0].start.name
+                return ({ city: response.segments[0].start.name })
             }
 
         } catch (e) {
-            alert('Ошибка запроса на название города\n'+e)
+            // dispatch(globalModalStoreActions.setTextMessage('Ошибка запроса на название города'))
+            return ({ coordinates: 'Ошибка запроса на название города, измените координаты' })
         }
 
+        return null
     }

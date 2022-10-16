@@ -6,7 +6,7 @@ import {geoPosition} from '../api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
 import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-reducer';
 import {appActions} from './app-store-reducer';
-import {globalModalStoreActions} from './utils/global-modal-store-reducer';
+import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
 
 
 const initialValues: phoneSubmitType = {
@@ -162,7 +162,7 @@ export const authStoreActions = {
 
 /* САНКИ */
 export type AuthStoreReducerThunkActionType<R = void> =
-    ThunkAction<Promise<R>, AppStateType, unknown, AuthStoreActionsType | DaDataStoreActionsType>
+    ThunkAction<Promise<R>, AppStateType, unknown, AuthStoreActionsType | DaDataStoreActionsType | GlobalModalActionsType>
 
 // для блокировки нажатия НОВЫЙ ПАРОЛЬ на одну минуту
 export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
@@ -173,7 +173,7 @@ export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
         }, 1000)
     }
 
-    // прописываем актуальную геопозицию в стэйт
+// прописываем актуальную геопозицию в стэйт
 export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
     async ( dispatch ) => {
         const reparserLonLat: PositionCallback = ( el ) =>
@@ -212,13 +212,12 @@ export const sendCodeToPhone = ( {
                 return { innNumber: response.message }
             }
             if (response.success) {
-                // dispatch(authStoreActions.setModalMessage(response.success + 'ПАРОЛЬ: ' + response.password))
-                dispatch<any>(globalModalStoreActions.setTextMessage(response.success + 'ПАРОЛЬ: ' + response.password))
+                dispatch(globalModalStoreActions.setTextMessage(response.success + 'ПАРОЛЬ: ' + response.password))
             }
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            dispatch<any>(globalModalStoreActions.setTextMessage(error.response.data.message))
+            dispatch(globalModalStoreActions.setTextMessage(error.response.data.message))
             // @ts-ignore
             return { phoneNumber: error.response.data.message }
         }
@@ -284,7 +283,7 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
                 console.log(response)
             }
         } catch (error) {
-            await dispatch<any>(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
         }
     }
 
@@ -303,7 +302,7 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
             if (error.response.data.message) dispatch<any>(globalModalStoreActions.setTextMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
-            else dispatch<any>(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+            else dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
         }
         dispatch(authStoreActions.setIsFetching(false))
     }
@@ -329,7 +328,7 @@ export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
                 // @ts-ignore
                 console.log(error.response.data.message)
             }
-            else dispatch<any>(globalModalStoreActions.setTextMessage("Ошибка при автоматической авторизации: "+JSON.stringify(error)))
+            else dispatch(globalModalStoreActions.setTextMessage("Ошибка при автоматической авторизации: "+JSON.stringify(error)))
         }
 
         dispatch(authStoreActions.setAutologinDone())

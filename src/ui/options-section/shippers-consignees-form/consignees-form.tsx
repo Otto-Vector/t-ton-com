@@ -87,13 +87,16 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         const demaskedValues = fromFormDemaskedValues(values)
 
         // находим название города и сохраняем в форме
-        let currentCity = demaskedValues.city
         if (demaskedValues.coordinates !== initialCoords) {
-            currentCity = await dispatch<any>(getCityFromDispetcherAPI({
+            const currentCitySearch = await dispatch<any>(getCityFromDispetcherAPI({
                 from: demaskedValues.coordinates as string,
                 to: '55.032328, 82.819442',
             }))
-            demaskedValues.city = currentCity
+            if (currentCitySearch.city) {
+                demaskedValues.city = currentCitySearch.city
+            } else {
+                return currentCitySearch
+            }
         }
 
         if (isNew) {

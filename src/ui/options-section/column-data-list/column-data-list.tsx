@@ -64,14 +64,14 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
             </header>
             {/*ГЕНЕРИРУЕМЫЙ СПИСОК*/ }
             <div className={ styles.columnDataList__list }>
-                { content.map(( { id, title } ) =>
+                { content.map(( { id, title, city } ) =>
                     <div className={ styles.columnDataList__item + ' ' + styles.rowItem }
                          onClick={ () => {
                              navigate(route + id)
                          } }
                          key={ item.label + id + title }
                     >
-                        <div className={ styles.rowItem__label } title={ title }>
+                        <div className={ styles.rowItem__label } title={ title + ( city ? ' ' + city : '' ) }>
                             { title || 'null' }
                         </div>
                     </div>)

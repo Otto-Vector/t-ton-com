@@ -11,9 +11,9 @@ const initialState = {
 
 export type GlobalModalStoreReducerStateType = typeof initialState
 
-type ActionsType = GetActionsTypes<typeof globalModalStoreActions>
+export type GlobalModalActionsType = GetActionsTypes<typeof globalModalStoreActions>
 
-export const globalModalStoreReducer = ( state = initialState, action: ActionsType ): GlobalModalStoreReducerStateType => {
+export const globalModalStoreReducer = ( state = initialState, action: GlobalModalActionsType ): GlobalModalStoreReducerStateType => {
 
     switch (action.type) {
 
@@ -69,7 +69,7 @@ export const globalModalStoreActions = {
 
 
 /* САНКИ */
-export type GlobalModalStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type GlobalModalStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, GlobalModalActionsType>
 
 // для создания диалогового окна с переданной функцией
 export const textAndActionGlobalModal = ( {

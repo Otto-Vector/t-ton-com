@@ -34,7 +34,7 @@ const defaultInitialValues = {
 
 const initialState = {
     consigneeIsFetching: false,
-    currentId: '',
+    currentId: '' as string | null,
 
     label: {
         title: 'Название грузополучателя',
@@ -152,7 +152,8 @@ export const consigneesStoreReducer = ( state = initialState, action: ActionsTyp
         case 'consignees-store-reducer/SET-DEFAULT-INITIAL-VALUES': {
             return {
                 ...state,
-                initialValues: defaultInitialValues,
+                currentId: null,
+                initialValues: {} as ConsigneesCardType,
             }
         }
         default: {
@@ -232,9 +233,9 @@ export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDa
 
 // сохранение параметров организации из ранее загруженного списка DaData
 export const setOrganizationByInnKppConsignees = ( {
-                                                     kppNumber,
-                                                     formValue,
-                                                 }: { kppNumber: string, formValue: ConsigneesCardType } ):
+                                                       kppNumber,
+                                                       formValue,
+                                                   }: { kppNumber: string, formValue: ConsigneesCardType } ):
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
@@ -291,11 +292,13 @@ export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): C
     }
 
 
-export const oneConsigneeDeleteToAPI = ( idRecipient: string ): ConsigneesStoreReducerThunkActionType =>
+export const oneConsigneeDeleteToAPI = ( idRecipient: string | null ): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await consigneesApi.deleteOneConsignee({ idRecipient })
-            if (response.message) console.log(response.message)
+            if (idRecipient) {
+                const response = await consigneesApi.deleteOneConsignee({ idRecipient })
+                if (response.message) console.log(response.message)
+            }
         } catch (e) {
             // @ts-ignore
             alert(JSON.stringify(e.response.data))

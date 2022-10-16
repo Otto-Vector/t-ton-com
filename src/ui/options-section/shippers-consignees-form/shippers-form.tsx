@@ -56,8 +56,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesShippersStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
-    const consigneesListToValidate = useSelector(getShippersNamesListOptionsStore)
-    const consigneesAllListToValidate = useSelector(getShippersAllNamesListOptionsStore)
+    const shippersListExcludeCurrentToValidate = useSelector(getShippersNamesListOptionsStore)
+    const shippersAllListToValidate = useSelector(getShippersAllNamesListOptionsStore)
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     const [ initialCoords, setInitialCoords ] = useState(initialValues.coordinates)
 
@@ -89,13 +89,16 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         const demaskedValues = fromFormDemaskedValues(values)
 
         // находим название города и сохраняем в форме
-        let currentCity = demaskedValues.city
         if (demaskedValues.coordinates !== initialCoords) {
-            currentCity = await dispatch<any>(getCityFromDispetcherAPI({
+            const currentCitySearch = await dispatch<any>(getCityFromDispetcherAPI({
                 from: demaskedValues.coordinates as string,
                 to: '55.032328, 82.819442',
             }))
-            demaskedValues.city = currentCity
+            if (currentCitySearch.city){
+                demaskedValues.city = currentCitySearch.city
+            } else {
+                return currentCitySearch
+            }
         }
 
         if (isNew) {
@@ -151,7 +154,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const titleValidator = ( preValue: string ) => ( currentValue: string ) => {
         if (currentValue && ( preValue !== currentValue ))
             return ( validators.title && validators.title(currentValue) ) ||
-                includesTitleValidator(isNew ? consigneesAllListToValidate : consigneesListToValidate, currentValue)
+                includesTitleValidator(isNew ? shippersAllListToValidate : shippersListExcludeCurrentToValidate, currentValue)
     }
 
     useEffect(() => {
@@ -313,7 +316,6 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.coordinates }
                                                    parse={ parsers.coordinates }
                                             />
-
                                             <div className={ styles.shippersConsigneesForm__map + ' ' +
                                                 styles.shippersConsigneesForm__mapImage }>
                                                 <YandexMapToForm
