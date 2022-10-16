@@ -40,9 +40,9 @@ export const FormInputType: React.FC<OwnProps> = (
             а также при введенных данных*/ }
             { resetFieldBy && input.value && !disabled && <div
                 className={ styles.clearSearch + ' ' + ( !meta.dirty && styles.clearSearch_unfocused ) }
-                onClick={ () => {
-                    resetFieldBy.change(input.name, '')
-                    resetFieldBy.resetFieldState(input.name)
+                onClick={ async () => {
+                    await resetFieldBy.change(input.name, '')
+                    await resetFieldBy.resetFieldState(input.name)
                 } }
             ></div>
             }

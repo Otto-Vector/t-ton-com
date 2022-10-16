@@ -144,17 +144,19 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     // синхронно/асинхронный валидатор на поле ИНН
     const innPlusApiValidator = ( preValue: string ) => ( currentValue: string ) => {
         const [ prev, current ] = [ preValue, currentValue ].map(parseAllNumbers)
-        // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-        if (current && ( prev !== current ))
-            // запускаем асинхронную валидацию только после синхронной
-            return ( validators.innNumber && validators.innNumber(current) ) || innValidate(current)
+        // запускаем асинхронную валидацию только после синхронной
+        return ( validators.innNumber && validators.innNumber(currentValue) )
+            // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+            || ( currentValue && ( preValue !== currentValue ) ? innValidate(currentValue) : undefined )
     }
 
     // валидатор на одинаковые названия заголовков
     const titleValidator = ( preValue: string ) => ( currentValue: string ) => {
-        if (currentValue && ( preValue !== currentValue ))
-            return ( validators.title && validators.title(currentValue) ) ||
-                includesTitleValidator(isNew ? shippersAllListToValidate : shippersListExcludeCurrentToValidate, currentValue)
+        return ( validators.title && validators.title(currentValue) )
+            || ( currentValue && ( preValue !== currentValue )
+                    ? includesTitleValidator(isNew ? shippersAllListToValidate : shippersListExcludeCurrentToValidate, currentValue)
+                    : undefined
+            )
     }
 
     useEffect(() => {

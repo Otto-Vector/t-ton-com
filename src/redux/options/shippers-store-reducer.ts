@@ -85,7 +85,7 @@ const initialState = {
         title: composeValidators(required, maxLength(50)),
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(100)),
-        kpp: composeValidators(required, mustBe00Numbers(9)),
+        kpp: composeValidators(required),
         ogrn: composeValidators(required, mustBe0_0Numbers(13)(15)),
         address: composeValidators(required, maxLength(150)),
         shipperFio: composeValidators(required),
@@ -246,7 +246,9 @@ export const setOrganizationByInnKppShippers = ( {
     ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
-        const response = getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
+        const response = ( kppNumber !== '-' )
+            ? getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
+            : getState().daDataStoreReducer.suggestions[0]
 
         if (response !== undefined) {
             const { data } = response
@@ -262,7 +264,6 @@ export const setOrganizationByInnKppShippers = ( {
             // alert('Фильтр КПП локально не сработал!')
             dispatch(globalModalStoreActions.setTextMessage('Фильтр КПП локально не сработал!'))
         }
-
     }
 
 // добавить одну запись ГРУЗООТПРАВИТЕЛЯ через АПИ
@@ -320,18 +321,18 @@ export const oneShipperDeleteToAPI = ( idSender: string | null ): ShippersStoreR
 export const getCityFromDispetcherAPI = ( {
                                               from,
                                               to,
-                                          }: GetAvtodispetcherRouteType ): ShippersStoreReducerThunkActionType<{ coordinates?: string, city?: string }|null> =>
-    async ( ) => {
+                                          }: GetAvtodispetcherRouteType ): ShippersStoreReducerThunkActionType<{ coordinates?: string, city?: string } | null> =>
+    async () => {
         try {
             const response = await getRouteFromAvtodispetcherApi({ from, to })
 
             if (response.segments.length > 0) {
-                return ({ city: response.segments[0].start.name })
+                return ( { city: response.segments[0].start.name } )
             }
 
         } catch (e) {
             // dispatch(globalModalStoreActions.setTextMessage('Ошибка запроса на название города'))
-            return ({ coordinates: 'Ошибка запроса на название города, измените координаты' })
+            return ( { coordinates: 'Ошибка запроса на название города, измените координаты' } )
         }
 
         return null

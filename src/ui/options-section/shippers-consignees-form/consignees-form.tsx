@@ -53,7 +53,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesConsigneesStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
-    const consigneesListToValidate = useSelector(getConsigneesNamesListOptionsStore)
+    const consigneesListExcludeCurrentToValidate = useSelector(getConsigneesNamesListOptionsStore)
     const consigneesAllListToValidate = useSelector(getConsigneesAllNamesListOptionsStore)
 
     const [ isFirstRender, setIsFirstRender ] = useState(true)
@@ -142,17 +142,19 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     // расчищаем значения от лишних символов и пробелов после маски
     const innPlusApiValidator = ( preValue: string ) => ( currentValue: string ) => {
         [ preValue, currentValue ] = [ preValue, currentValue ].map(parseAllNumbers)
-        // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-        if (currentValue && ( preValue !== currentValue ))
-            // запускаем асинхронную валидацию только после синхронной
-            return ( validators.innNumber && validators.innNumber(currentValue) ) || innValidate(currentValue)
+        // запускаем асинхронную валидацию только после синхронной
+        return ( validators.innNumber && validators.innNumber(currentValue) )
+            // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+            || ( currentValue && ( preValue !== currentValue ) ? innValidate(currentValue) : undefined )
     }
 
     // валидатор на одинаковые названия заголовков
     const titleValidator = ( preValue: string ) => ( currentValue: string ) => {
-        if (currentValue && ( preValue !== currentValue ))
-            return ( validators.title && validators.title(currentValue) ) ||
-                includesTitleValidator(isNew ? consigneesAllListToValidate : consigneesListToValidate, currentValue)
+        return ( validators.title && validators.title(currentValue) )
+            || ( currentValue && ( preValue !== currentValue )
+                    ? includesTitleValidator(isNew ? consigneesAllListToValidate : consigneesListExcludeCurrentToValidate, currentValue)
+                    : undefined
+            )
     }
 
     useEffect(() => {

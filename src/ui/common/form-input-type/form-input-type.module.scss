@@ -44,6 +44,7 @@ $input--disabled-font-color: $mainFontColor;
     transition-duration: .3s;
     font-size: 70%; // было 12px при основном размере в 17
     white-space: nowrap;
+    user-select: none;
   }
 }
 

@@ -79,7 +79,7 @@ const initialState = {
         title: composeValidators(required, maxLength(50)),
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         organizationName: composeValidators(required, maxLength(100)),
-        kpp: composeValidators(required, mustBe00Numbers(9)),
+        kpp: composeValidators(required),
         ogrn: composeValidators(required, mustBe0_0Numbers(13)(15)),
         address: composeValidators(required, maxLength(150)),
         consigneesFio: composeValidators(required),
@@ -239,7 +239,9 @@ export const setOrganizationByInnKppConsignees = ( {
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
-        const response = getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
+            const response = (kppNumber !== '-')
+                ? getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
+                : getState().daDataStoreReducer.suggestions[0]
 
         if (response !== undefined) {
             const { data } = response
