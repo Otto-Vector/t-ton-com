@@ -40,7 +40,8 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
 
     const onSubmit = async ( requisites: CompanyRequisitesType<string> ) => {
         const unmaskedValues = { ...requisites, innNumber: parseAllNumbers(requisites.innNumber) }
-        await dispatch<any>(setOrganizationRequisites(unmaskedValues))
+        const error = await dispatch<any>(setOrganizationRequisites(unmaskedValues))
+        if (error) return error
         navigate(-1)
     }
 

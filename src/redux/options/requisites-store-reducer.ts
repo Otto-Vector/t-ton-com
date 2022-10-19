@@ -21,6 +21,7 @@ import {
     parseOnlyOneSpace,
 } from '../../utils/parsers';
 import {authStoreActions} from '../auth-store-reducer';
+import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
 
 const initialValues: CompanyRequisitesType = {
@@ -151,8 +152,7 @@ const initialState = {
 
     initialValues: { ...initialValues },
 
-    storedValues: {
-    } as CompanyRequisitesType,
+    storedValues: {} as CompanyRequisitesType,
 
 }
 
@@ -209,7 +209,7 @@ export const requisitesStoreActions = {
 
 /* САНКИ */
 
-export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
 
 // запрос параметров организации из DaData и установка этих данных в бэк
 export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDaDataType ):
@@ -243,7 +243,7 @@ export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDa
 
 // сохранение данных реквизитов в БЭК
 export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
-    RequisitesStoreReducerThunkActionType =>
+    RequisitesStoreReducerThunkActionType<string | undefined> =>
     async ( dispatch, getState ) => {
         const idUser = getState().authStoreReducer.authID
         try {
@@ -252,12 +252,13 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
                 nnNumber: values.innNumber,
                 organizationName: values.organizationName,
                 taxMode: values.taxMode,
-                kpp: values.kpp,
+                kpp: values.kpp || '-',
                 ogrn: values.ogrn,
                 okpo: values.okpo,
                 legalAddress: values.legalAddress,
-                dispatcherFIO: values.dispatcherFIO,
-                mechanicFIO: values.mechanicFIO,
+                dispatcherFIO: values.dispatcherFIO || '-',
+                mechanicFIO: values.mechanicFIO || '-',
+
                 postAddress: values.postAddress,
                 phoneDirector: values.phoneDirector,
                 phoneAccountant: values.phoneAccountant,
@@ -273,8 +274,9 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
             if (setPersonal.success) {
                 await dispatch(getPersonalOrganizationRequisites())
             }
-        } catch (e) {
-            alert(e)
+        } catch (error) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+            return 'Ошибка сохранения данных, попробуйте ещё раз'
         }
     }
 

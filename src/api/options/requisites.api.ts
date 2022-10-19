@@ -6,7 +6,7 @@ export type PersonalResponseType = {
     nnNumber: string,
     organizationName: string,
     taxMode: string,
-    kpp: string,
+    kpp?: string,
     ogrn: string,
     okpo: string,
     legalAddress: string,
@@ -33,8 +33,8 @@ export type PersonalResponseType = {
     tarifAcceptShortRoute: string,
     tarifAcceptLongRoute: string,
     tarifPaySafeTax: string,
-    mechanicFIO: string,
-    dispatcherFIO: string,
+    mechanicFIO?: string,
+    dispatcherFIO?: string,
 }
 
 export const requisitesApi = {
