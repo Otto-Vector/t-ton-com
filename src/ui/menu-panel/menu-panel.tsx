@@ -71,11 +71,11 @@ export const MenuPanel: React.FC<OwnProps> = () => {
             buttonText: 'Поиск', active: isAuth, action: null,
         },
         {
-            route: routes.requestsList, src: statusSVG, title: 'Активные заявки',
+            route: routes.requestsList, src: statusSVG, title: 'Мои активные заявки',
             buttonText: 'Заявки', active: isAuth, action: null,
         },
         {
-            route: routes.historyList, src: historySVG, title: 'Выполненные заявки',
+            route: routes.historyList, src: historySVG, title: 'Мои выполненные заявки',
             buttonText: 'История заявок', active: isAuth, action: null,
         },
         {
@@ -99,29 +99,22 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     return (
         <nav className={ styles.menuPanel }>
             { menuItems.map(( { route, src, title, buttonText, active, action } ) =>
-                    active && (
-                        route ? <NavLink to={ route }
-                                         className={ activeClass }
-                                         role={ 'button' }
-                                         title={ title }
-                                         key={ route + src }
-                                         onClick={ async () => {
-                                             if (action) await action()
-                                         } }>
-                                <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>
-                                <div className={ styles.menuPanel__text }>{ buttonText }</div>
-                                { ( buttonText === 'Инфо' && unreadMessagesCount !== 0 ) &&
-                                    <div className={ styles.attentionIcon }><img src={ attentionSVG } alt={ '!' }/></div> }
-                            </NavLink>
-                            : <div className={ styles.menuPanel__item + ' ' + styles.menuPanel__item_unactive }
-                                   key={ route + src }
-                                   onClick={ async () => {
-                                       if (action) await action()
-                                   } }>
-                                <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>
-                                <div className={ styles.menuPanel__text }>{ buttonText }</div>
-                            </div>
-                    ),
+                active &&
+                <NavLink to={ route || '' }
+                         className={ activeClass }
+                         role={ 'button' }
+                         title={ title }
+                         key={ route + src }
+                         onClick={ async (e) => {
+                             // при отсутствии пути (когда элемент просто кнопка) отключаем переход
+                             if (!route) e.preventDefault()
+                             if (action) await action()
+                         } }>
+                    <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>
+                    <div className={ styles.menuPanel__text }>{ buttonText }</div>
+                    { ( buttonText === 'Инфо' && unreadMessagesCount !== 0 ) &&
+                        <div className={ styles.attentionIcon }><img src={ attentionSVG } alt={ '!' }/></div> }
+                </NavLink>,
             ) }
         </nav>
     )
