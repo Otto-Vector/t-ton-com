@@ -68,12 +68,12 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     // легче редактировать и меньше кода на перебор
     const menuItems = [
         {
-            route: isAuth ? null : routes.login, src: loginSVG, title: `${ !isAuth ? 'Авторизация' : 'Выход' }`,
+            route: routes.login, src: loginSVG, title: `${ !isAuth ? 'Авторизация' : 'Выход' }`,
             buttonText: `${ !isAuth ? 'Вход' : 'Выход' }`, active: !isNewRegistrationRoute,
             action: !isAuth ? null : logout,
         },
         {
-            route: pathname === newRequestRoute ? newRequestRoute : null, src: createSVG, title: 'Создать заявку',
+            route: newRequestRoute, src: createSVG, title: 'Создать заявку',
             buttonText: 'Создать', active: !isNewRegistrationRoute && isAuth,
             action: newRequest,
         },
@@ -118,19 +118,19 @@ export const MenuPanel: React.FC<OwnProps> = () => {
         <nav className={ styles.menuPanel }>
             { menuItems.map(( { route, src, title, buttonText, active, action } ) =>
                 active &&
-                <NavLink to={ route || '' }
+                <NavLink to={ route }
                          className={ activeClass }
                          role={ 'button' }
                          title={ title }
                          key={ route + src }
                          onClick={ async ( e ) => {
-                             if (!isRequisitesError) {
-                                 // при отсутствии пути (когда элемент просто кнопка) отключаем переход
-                                 if (!route) e.preventDefault()
-                                 if (action) await action()
-                             } else {
+                             if (isRequisitesError) {
+                                 // отключаем переход до выполнения экшона
                                  e.preventDefault()
                                  await requisitesMustBeFilled()
+                             } else if (action) {
+                                 e.preventDefault()
+                                 await action()
                              }
                          } }>
                     <img className={ styles.menuPanel__image } src={ src } alt={ buttonText }/>
