@@ -250,6 +250,7 @@ export const loginAuthorization = ( {
 
                 // для случаев с пере-логиниванием
                 dispatch<any>(appActions.setInitialized(false))
+
                 // сама авторизация
                 dispatch(authStoreActions.setIsAuth(true))
             }

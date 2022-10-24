@@ -206,6 +206,7 @@ export type ConsigneesStoreReducerThunkActionType<R = void> = ThunkAction<Promis
 export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(consigneesStoreActions.toggleConsigneeIsFetching(true))
+        dispatch(consigneesStoreActions.setConsigneesContent([]))
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await consigneesApi.getAllConsigneesByUserId({ idUser })

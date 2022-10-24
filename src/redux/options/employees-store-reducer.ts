@@ -147,6 +147,7 @@ export type EmployeesStoreReducerThunkActionType<R = void> = ThunkAction<Promise
 export const getAllEmployeesAPI = (): EmployeesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(employeesStoreActions.toggleEmployeeIsFetching(true))
+        dispatch(employeesStoreActions.setEmployeesContent([]))
         try {
             const idUser = getState().authStoreReducer.authID
 

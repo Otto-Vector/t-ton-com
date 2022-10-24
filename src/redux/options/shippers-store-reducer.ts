@@ -5,7 +5,7 @@ import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, require
 import {
     composeParsers,
     coordsToString,
-    parseAllCoords, parseAllNumbers,
+    parseAllCoords,
     parseFIO,
     parseNoFirstSpaces,
     parseOnlyOneComma,
@@ -196,6 +196,7 @@ export type ShippersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<
 export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(shippersStoreActions.toggleShipperIsFetching(true))
+        dispatch(shippersStoreActions.setShippersContent([]))
         try {
 
             const idUser = getState().authStoreReducer.authID

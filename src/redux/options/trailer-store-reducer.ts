@@ -130,6 +130,7 @@ export type TrailerStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 export const getAllTrailerAPI = (): TrailerStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(trailerStoreActions.toggleTrailerIsFetching(true))
+        dispatch(trailerStoreActions.setTrailerContent([]))
         try {
             const idUser = getState().authStoreReducer.authID
 

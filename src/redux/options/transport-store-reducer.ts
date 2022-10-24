@@ -130,6 +130,7 @@ export type TransportStoreReducerThunkActionType<R = void> = ThunkAction<Promise
 export const getAllTransportAPI = (): TransportStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(transportStoreActions.toggleTransportIsFetching(true))
+        dispatch(transportStoreActions.setTransportContent([]))
         try {
             const idUser = getState().authStoreReducer.authID
 
