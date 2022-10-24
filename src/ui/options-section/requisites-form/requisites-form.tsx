@@ -17,10 +17,18 @@ import {
 } from '../../../selectors/options/requisites-reselect';
 import {CompanyRequisitesType} from '../../../types/form-types';
 import {CancelButton} from '../../common/cancel-button/cancel-button';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {InfoText} from '../../common/info-text/into-text';
-import {setOrganizationRequisites} from '../../../redux/options/requisites-store-reducer';
+import {
+    deletePersonalOrganizationRequisites,
+    requisitesStoreActions,
+    setOrganizationRequisites,
+} from '../../../redux/options/requisites-store-reducer';
 import {parseAllNumbers} from '../../../utils/parsers';
+import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector';
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
+import {getRoutesStore} from '../../../selectors/routes-reselect';
+import {FORM_ERROR} from 'final-form';
 
 
 type OwnProps = {}
@@ -29,6 +37,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const navigate = useNavigate()
+    const { login, options } = useSelector(getRoutesStore)
     const dispatch = useDispatch()
 
     const initialValues = useSelector(getStoredValuesRequisitesStore)
@@ -38,15 +47,36 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsRequisitesStore)
     const parsers = useSelector(getParsersRequisitesStore)
 
+    // вытаскиваем значение роутера
+    const { newFlag } = useParams<{ newFlag: string | undefined }>()
+    const isNew = newFlag === 'new'
+    const disableCompanyReqChange = true
+
+
     const onSubmit = async ( requisites: CompanyRequisitesType<string> ) => {
         const unmaskedValues = { ...requisites, innNumber: parseAllNumbers(requisites.innNumber) }
         const error = await dispatch<any>(setOrganizationRequisites(unmaskedValues))
-        if (error) return error
-        navigate(-1)
+        if (error) return { [FORM_ERROR]: error }
+        dispatch(requisitesStoreActions.setIsRequisitesError(false))
+
+        if (isNew) {
+            navigate(options)
+        } else {
+            navigate(-1)
+        }
     }
 
-    const onCancelClick = () => {
-        navigate(-1)
+    const onCancelClick = async () => {
+        if (isNew) {
+            await dispatch<any>(textAndActionGlobalModal({
+                title: 'Внимание!',
+                text: 'ДАННОЕ ДЕЙСТВИЕ УДАЛИТ ВСЕ ДАННЫЕ ПОЛЬЗОВАТЕЛЯ ПРИ РЕГИСТРАЦИИ',
+                action: deletePersonalOrganizationRequisites,
+                navigateOnOk: login,
+            }))
+        } else {
+            navigate(-1)
+        }
     }
 
 
@@ -60,7 +90,14 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
                             render={
-                                ( { pristine, handleSubmit, form, submitting, hasValidationErrors } ) => (
+                                ( {
+                                      pristine,
+                                      handleSubmit,
+                                      form,
+                                      submitting,
+                                      hasValidationErrors,
+                                      submitError,
+                                  } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.requisitesForm__form }>
                                         <div className={ styles.requisitesForm__inputsPanel }>
                                             <Field name={ 'innNumber' }
@@ -68,58 +105,72 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ maskOn.innNumber }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.innNumber }
+                                                   validate={ disableCompanyReqChange ? undefined : validators.innNumber }
                                                    parse={ parsers.innNumber }
-                                                   disabled={ true }
+                                                   disabled={ disableCompanyReqChange }
                                             />
                                             <Field name={ 'organizationName' }
                                                    placeholder={ label.organizationName }
                                                    maskFormat={ maskOn.organizationName }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.organizationName }
+                                                   validate={ disableCompanyReqChange ? undefined : validators.organizationName }
                                                    parse={ parsers.organizationName }
+                                                   disabled={ disableCompanyReqChange }
                                             />
-                                            <Field name={ 'taxMode' }
-                                                   placeholder={ label.taxMode }
-                                                   maskFormat={ maskOn.taxMode }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.taxMode }
-                                                   parse={ parsers.taxMode }
-                                            />
+                                            { isNew ?
+                                                <FormSelector named={ 'taxMode' }
+                                                              placeholder={ label.taxMode }
+                                                              values={ stringArrayToSelectValue([ 'Без НДС', 'НДС 20%' ]) }
+                                                              validate={ validators.taxMode }
+                                                              errorTop
+                                                              isClearable
+                                                />
+                                                : <Field name={ 'taxMode' }
+                                                         placeholder={ label.taxMode }
+                                                         maskFormat={ maskOn.taxMode }
+                                                         component={ FormInputType }
+                                                         resetFieldBy={ form }
+                                                         validate={ disableCompanyReqChange ? undefined : validators.taxMode }
+                                                         parse={ parsers.taxMode }
+                                                         disabled={ disableCompanyReqChange }
+                                                />
+                                            }
                                             <Field name={ 'kpp' }
                                                    placeholder={ label.kpp }
                                                    maskFormat={ maskOn.kpp }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.kpp }
+                                                   validate={ disableCompanyReqChange ? undefined : validators.kpp }
                                                    parse={ parsers.kpp }
-                                                   disabled={ true }
+                                                   disabled={ disableCompanyReqChange }
                                             />
                                             <Field name={ 'ogrn' }
                                                    placeholder={ label.ogrn }
                                                    maskFormat={ maskOn.ogrn }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.ogrn }
+                                                   validate={ disableCompanyReqChange ? undefined : validators.ogrn }
                                                    parse={ parsers.ogrn }
+                                                   disabled={ disableCompanyReqChange }
                                             />
                                             <Field name={ 'okpo' }
                                                    placeholder={ label.okpo }
                                                    maskFormat={ maskOn.okpo }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.okpo }
+                                                   validate={ disableCompanyReqChange ? undefined : validators.okpo }
                                                    parse={ parsers.okpo }
+                                                   disabled={ disableCompanyReqChange }
                                             />
                                             <Field name={ 'legalAddress' }
                                                    placeholder={ label.legalAddress }
                                                    maskFormat={ maskOn.legalAddress }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ validators.legalAddress }
+                                                   validate={ disableCompanyReqChange ? undefined : validators.legalAddress }
                                                    parse={ parsers.legalAddress }
+                                                   disabled={ disableCompanyReqChange }
                                             />
                                             <Field name={ 'mechanicFIO' }
                                                    placeholder={ label.mechanicFIO }
@@ -214,6 +265,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                                 >{ submitting && <Preloader/> }</Button>
                                             </div>
                                         </div>
+                                        { submitError && <span className={ styles.onError }>{ submitError }</span> }
                                     </form>
                                 )
                             }/>

@@ -1,10 +1,8 @@
 import React, {useEffect} from 'react'
 import styles from './ui-component.module.scss';
-import 'antd/lib/style/index.css' // используем core стили antd
-import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфоокон
-import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
-
-
+// import 'antd/lib/style/index.css' // используем core стили antd
+// import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфоокон
+// import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
 import {Header} from './header/header';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Footer} from './footer/footer';
@@ -69,12 +67,14 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.hello } element={ <HelloSection/> }/> {/*ОКНО ПРИВЕТСТВИЯ*/ }
                         <Route path={ routes.login } element={
                             <WithAuthRedirect><LoginSection/></WithAuthRedirect> }/> {/*ОКНО АВТОРИЗАЦИИ*/ }
-                        <Route path={ routes.requestInfo.create + ':reqNumber'}
+                        <Route path={ routes.requestInfo.create + ':reqNumber' }
                                element={ <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
                         <Route path={ routes.requestInfo.status + ':reqNumber' }
-                               element={ <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
+                               element={
+                                   <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
                         <Route path={ routes.requestInfo.history + ':reqNumber' }
-                               element={ <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/>{/*ПРОСМОТР ЗАЯВКИ без возможности изменения*/ }
+                               element={
+                                   <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/>{/*ПРОСМОТР ЗАЯВКИ без возможности изменения*/ }
                         <Route path={ routes.requestInfo.driver + ':reqNumber' }
                                element={ <ТoAuthRedirect>
                                    <div className={ styles.ui__fake }><h2>СТАТУС ЗАЯВКИ</h2></div>
@@ -83,7 +83,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.requestsList } element={ <ТoAuthRedirect><SearchSection
                             mode={ 'status' }/></ТoAuthRedirect> }/> {/*таблица статусов по активным заявкам*/ }
                         <Route path={ routes.searchList } element={ <ТoAuthRedirect><SearchSection
-                                   mode={ 'search' }/></ТoAuthRedirect> }/> {/*ПОИСК активных заявок*/ }
+                            mode={ 'search' }/></ТoAuthRedirect> }/> {/*ПОИСК активных заявок*/ }
                         <Route path={ routes.historyList }
                                element={ <ТoAuthRedirect><SearchSection
                                    mode={ 'history' }/></ТoAuthRedirect> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
@@ -110,9 +110,10 @@ export const UiComponent: React.FC<OwnProps> = () => {
                                element={ <ТoAuthRedirect><ConsigneesForm/></ТoAuthRedirect> }/>
 
                         <Route path={ routes.options } element={ <ТoAuthRedirect><OptionsSection/></ТoAuthRedirect> }/>
-                        <Route path={ routes.requisites } element={ <RequisitesForm/> }/>
+                        <Route path={ routes.requisites + ':newFlag' } element={ <RequisitesForm/> }/>
 
-                        <Route path={ routes.test } element={ <AddDriversView idEmployee={'0ce2d16f-582e-4d49-ac35-e0c8f9c53b06'}/> }/>
+                        <Route path={ routes.test }
+                               element={ <AddDriversView idEmployee={ '0ce2d16f-582e-4d49-ac35-e0c8f9c53b06' }/> }/>
 
                         <Route path="*" element={ <h2>This site NOT FOUND. Try another address</h2> }/>
                     </Routes>

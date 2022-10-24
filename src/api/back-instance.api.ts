@@ -19,4 +19,5 @@ export type InfoResponseType = {
     status?: string
     userid?: string
     password?: string
+    error?: string
 }

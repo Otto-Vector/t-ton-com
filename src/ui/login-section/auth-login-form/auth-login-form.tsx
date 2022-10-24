@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import styles from './auth-login-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {FORM_ERROR} from 'final-form'
+import {FORM_ERROR, FormApi} from 'final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 
@@ -24,7 +24,7 @@ import {
     sendCodeToPhone,
 } from '../../../redux/auth-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
-import {phoneSubmitType} from '../../../types/form-types'
+import {PhoneSubmitType} from '../../../types/form-types'
 
 import {useNavigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
@@ -54,7 +54,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     // при нажатии кнопки ДАЛЕЕ
-    const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: phoneSubmitType ) => {
+    const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: PhoneSubmitType ) => {
         const [ inn, kpp ] = [ innNumber, kppNumber ].map(parseAllNumbers)
         let innError, phoneError, loginError
 
@@ -82,7 +82,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                 if (loginError) {
                     return loginError
                 } else {
-                    navigate(requisites)
+                    navigate(requisites + 'new')
                 }
             }
         }
@@ -101,8 +101,10 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
         return { [FORM_ERROR]: null }
     }
 
-    const registerHandleClick = () => {
+    const registerHandleClick = async ( form: FormApi<PhoneSubmitType> ) => {
         setIsRegisterMode(!isRegisterMode)
+        await form.resetFieldState('sms')
+        await form.change('sms', '')
     }
 
     const newCode = ( phone: string ) => {
@@ -207,17 +209,19 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                 </Button>
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
+                            <div className={ styles.loginForm__smallButton }>
+                                <Button type={ 'button' }
+                                        title={ !isRegisterMode ? 'Регистрация' : 'Назад' }
+                                        colorMode={ 'blue' }
+                                        onClick={ async () => {
+                                            await registerHandleClick(form)
+                                        } }
+                                        rounded
+                                />
+                            </div>
                         </form>
                     )
                 }/>
-            <div className={ styles.loginForm__smallButton }>
-                <Button type={ 'button' }
-                        title={ !isRegisterMode ? 'Регистрация' : 'Назад' }
-                        colorMode={ 'blue' }
-                        onClick={ registerHandleClick }
-                        rounded
-                />
-            </div>
         </div>
     )
 }

@@ -6,7 +6,7 @@ export type ParserType = undefined | ( ( val: string | undefined ) => string )
 type DefaultFormType = string | undefined | null
 
 // на форму авторизации
-export type phoneSubmitType<T = DefaultFormType> = {
+export type PhoneSubmitType<T = DefaultFormType> = {
     innNumber: T
     phoneNumber: T
     kppNumber: T

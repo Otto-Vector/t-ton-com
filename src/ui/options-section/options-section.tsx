@@ -62,7 +62,7 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                             title={ 'Реквизиты' }
                             colorMode={ 'blue' }
                             rounded onClick={ () => {
-                        navigate(requisites)
+                        navigate(requisites+'old')
                     } }> Реквизиты </Button>
                     <InfoButtonToModal textToModal={ requisitesInfoText }/>
                 </div>

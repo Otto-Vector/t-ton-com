@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
-import {phoneSubmitType, ValidateType} from '../types/form-types'
+import {PhoneSubmitType, ValidateType} from '../types/form-types'
 import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
 import {geoPosition} from '../api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
@@ -9,7 +9,7 @@ import {appActions} from './app-store-reducer';
 import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
 
 
-const initialValues: phoneSubmitType = {
+const initialValues: PhoneSubmitType = {
     innNumber: undefined,
     kppNumber: undefined,
     phoneNumber: undefined,
@@ -33,7 +33,7 @@ const initialState = {
         kppNumber: 'КПП Организации',
         phoneNumber: 'Контактный номер',
         sms: 'Пароль из sms',
-    } as phoneSubmitType<string | undefined>,
+    } as PhoneSubmitType<string | undefined>,
 
     initialValues: { ...initialValues },
 
@@ -42,14 +42,14 @@ const initialState = {
         kppNumber: undefined,
         phoneNumber: '+7 (###) ###-##-##',
         sms: '####',
-    } as phoneSubmitType,
+    } as PhoneSubmitType,
 
     validators: {
         innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
         kppNumber: composeValidators(required),
         phoneNumber: composeValidators(required, mustBe00Numbers(11)),
         sms: composeValidators(required, mustBe00Numbers(4)),
-    } as phoneSubmitType<ValidateType>,
+    } as PhoneSubmitType<ValidateType>,
 }
 
 export type AuthStoreReducerStateType = typeof initialState
@@ -102,12 +102,6 @@ export const authStoreReducer = ( state = initialState, action: AuthStoreActions
                 authPhone: action.authPhone,
             }
         }
-        case 'auth-store-reducer/SET-MODAL-MESSAGE': {
-            return {
-                ...state,
-                modalMessage: action.message,
-            }
-        }
         case 'auth-store-reducer/SET-AUTOLOGIN-DONE': {
             return {
                 ...state,
@@ -138,7 +132,7 @@ export const authStoreActions = {
         type: 'auth-store-reducer/SET-IS-FETCHING',
         isFetching,
     } as const ),
-    setInitialValues: ( initialValues: phoneSubmitType ) => ( {
+    setInitialValues: ( initialValues: PhoneSubmitType ) => ( {
         type: 'auth-store-reducer/SET-VALUES',
         initialValues,
     } as const ),
@@ -153,10 +147,6 @@ export const authStoreActions = {
     setGeoPosition: ( { latitude, longitude }: { latitude: number, longitude: number } ) => ( {
         type: 'auth-store-reducer/SET-GEO-POSITION',
         latitude, longitude,
-    } as const ),
-    setModalMessage: ( message: string | null ) => ( {
-        type: 'auth-store-reducer/SET-MODAL-MESSAGE',
-        message,
     } as const ),
 }
 
@@ -190,16 +180,17 @@ export const sendCodeToPhone = ( {
                                      innNumber,
                                      kpp,
                                  }: NewUserRequestType ): AuthStoreReducerThunkActionType<{} | null> =>
-    async ( dispatch , getState) => {
+    async ( dispatch, getState ) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
-            debugger
-            const dadataLocalParams = (kpp !== '' && kpp !== '-')
-                ? getState().daDataStoreReducer.suggestions.filter(({data})=>data.kpp===kpp)[0]
+
+            const dadataLocalParams = ( kpp !== '' && kpp !== '-' )
+                ? getState().daDataStoreReducer.suggestions.filter(( { data } ) => data.kpp === kpp)[0]
                 : getState().daDataStoreReducer.suggestions[0]
 
-            const {value, data} = dadataLocalParams
-            const response = await authApi.sendCodeToPhone({ phone, innNumber,
+            const { value, data } = dadataLocalParams
+            const response = await authApi.sendCodeToPhone({
+                phone, innNumber,
                 kpp: kpp || '-',
                 organizationName: value,
                 taxMode: data.finance?.tax_system || undefined,
@@ -214,7 +205,8 @@ export const sendCodeToPhone = ( {
             // обрабатываем ошибку
             if (response.message) {
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
-                return { innNumber: response.message }
+                dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(`Аккаунт c этим номером [ ${ phone } ] уже создан`)))
+                return { phoneNumber: response.message }
             }
             if (response.success) {
                 dispatch(globalModalStoreActions.setTextMessage(response.success + 'ПАРОЛЬ: ' + response.password))
@@ -222,9 +214,9 @@ export const sendCodeToPhone = ( {
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data.message)))
             // @ts-ignore
-            return { phoneNumber: error.response.data.message }
+            return { innNumber: error.response.data.message }
         }
         dispatch(authStoreActions.setIsAvailableSMSRequest(true))
         dispatch(authStoreActions.setIsFetching(false))
@@ -244,22 +236,20 @@ export const loginAuthorization = ( {
             dispatch(authStoreActions.setIsFetching(false))
 
             if (response.success) {
-                console.log(response.success)
+
                 // вносим данные об активном пользователе
                 dispatch(authStoreActions.setAuthId(response.userid || ''))
                 dispatch(authStoreActions.setAuthPhone(phone))
-
                 // ЗАЧИЩАЕМ ФОРМУ АВТОРИЗАЦИИ
                 // зачищаем список КПП
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
                 // чистим форму ввода для следующих авторизаций
-                dispatch(authStoreActions.setInitialValues({ ...initialValues }))
+                dispatch(authStoreActions.setInitialValues({} as PhoneSubmitType))
                 // надо для двойной логики рег/авт
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
 
                 // для случаев с пере-логиниванием
                 dispatch<any>(appActions.setInitialized(false))
-
                 // сама авторизация
                 dispatch(authStoreActions.setIsAuth(true))
             }
@@ -285,7 +275,8 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
             dispatch(authStoreActions.setIsAuth(false))
             dispatch(authStoreActions.setAuthId(''))
             if (response.status) {
-                console.log(response)
+                // dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(response.status)))
+                console.log(response.status)
             }
         } catch (error) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
@@ -300,13 +291,13 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             const response = await authApi.passwordRecovery({ phone })
 
             console.log(response)
-            if (response.success) dispatch(globalModalStoreActions.setTextMessage(response.success+ '\n ПАРОЛЬ: ' + response.password))
+            if (response.success) dispatch(globalModalStoreActions.setTextMessage(response.success + '\n ПАРОЛЬ: ' + response.password))
             if (response.message) dispatch(globalModalStoreActions.setTextMessage(response.message))
 
         } catch (error) {
             dispatch(authStoreActions.setIsFetching(false))
             // @ts-ignore
-            if (error.response.data.message) dispatch(globalModalStoreActions.setTextMessage(error.response.data.message+ '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
+            if (error.response.data.message) dispatch(globalModalStoreActions.setTextMessage(error.response.data.message + '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
             else dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
         }
         dispatch(authStoreActions.setIsFetching(false))
@@ -332,8 +323,7 @@ export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
             if (error.response.data.message) {
                 // @ts-ignore
                 console.log(error.response.data.message)
-            }
-            else dispatch(globalModalStoreActions.setTextMessage("Ошибка при автоматической авторизации: "+JSON.stringify(error)))
+            } else dispatch(globalModalStoreActions.setTextMessage('Ошибка при автоматической авторизации: ' + JSON.stringify(error)))
         }
 
         dispatch(authStoreActions.setAutologinDone())

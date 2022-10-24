@@ -31,7 +31,8 @@ export const FormInputType: React.FC<OwnProps> = (
 
     const InInput = textArea ? 'textarea' : 'input' // если нужен просто текстовое поле
 
-    const isError = ( meta.error || meta.submitError ) && meta.touched
+    // const isError = ( meta.error || meta.submitError ) && meta.touched
+    const isError = ( meta.error || meta.submitError ) && (meta.active || meta.touched)
     const labelToView = ( input.value || allowEmptyFormatting || ( inputType !== 'text' ) ) && !noLabel
 
     return ( <div className={ styles.inputWrapper + ' ' + styles.search }>

@@ -20,45 +20,52 @@ import {
     parseOnlyOneDot,
     parseOnlyOneSpace,
 } from '../../utils/parsers';
-import {authStoreActions} from '../auth-store-reducer';
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
+import {authStoreActions, logoutAuth} from '../auth-store-reducer';
+import {
+    GlobalModalActionsType,
+    globalModalStoreActions,
+    textAndActionGlobalModal,
+} from '../utils/global-modal-store-reducer';
 
 
-const initialValues: CompanyRequisitesType = {
-    innNumber: undefined,
-    organizationName: undefined,
-    taxMode: undefined,
-    kpp: undefined,
-    ogrn: undefined,
-    okpo: undefined,
-    legalAddress: undefined,
-    mechanicFIO: undefined,
-    dispatcherFIO: undefined,
+// const initialValues: CompanyRequisitesType = {
+//     innNumber: undefined,
+//     organizationName: undefined,
+//     taxMode: undefined,
+//     kpp: undefined,
+//     ogrn: undefined,
+//     okpo: undefined,
+//     legalAddress: undefined,
+//     mechanicFIO: undefined,
+//     dispatcherFIO: undefined,
+//
+//     postAddress: undefined,
+//     phoneDirector: undefined,
+//     phoneAccountant: undefined,
+//     email: undefined,
+//     bikBank: undefined,
+//     nameBank: undefined,
+//     checkingAccount: undefined,
+//     korrAccount: undefined,
+//     tariffs: {
+//         create: undefined,
+//         acceptShortRoute: undefined,
+//         acceptLongRoute: undefined,
+//         paySafeTax: undefined,
+//     },
+//     cash: undefined,
+//     description: undefined,
+//     maxRequests: undefined,
+//     requestActiveCount: undefined,
+// }
 
-    postAddress: undefined,
-    phoneDirector: undefined,
-    phoneAccountant: undefined,
-    email: undefined,
-    bikBank: undefined,
-    nameBank: undefined,
-    checkingAccount: undefined,
-    korrAccount: undefined,
-    tariffs: {
-        create: undefined,
-        acceptShortRoute: undefined,
-        acceptLongRoute: undefined,
-        paySafeTax: undefined,
-    },
-    cash: undefined,
-    description: undefined,
-    maxRequests: undefined,
-    requestActiveCount: undefined,
-}
+const initialValues = {} as CompanyRequisitesType
 
 const initialState = {
     isFetching: false,
     storedMode: false, // подгружать данные или вводить новые м.б удалю
     innError: null as null | string,
+    isRequisitesError: false,
 
     label: {
         innNumber: 'ИНН Организации',
@@ -170,6 +177,12 @@ export const requisitesStoreReducer = ( state = initialState, action: ActionsTyp
                 isFetching: action.isFetching,
             }
         }
+        case 'requisites-store-reducer/SET-IS-REQUISITES-ERROR': {
+            return {
+                ...state,
+                isRequisitesError: action.isRequisitesError,
+            }
+        }
         case 'requisites-store-reducer/SET-INITIAL-VALUES' : {
             return {
                 ...state,
@@ -195,6 +208,10 @@ export const requisitesStoreActions = {
     setIsFetching: ( isFetching: boolean ) => ( {
         type: 'requisites-store-reducer/CHANGE-IS-FETCHING',
         isFetching,
+    } as const ),
+    setIsRequisitesError: ( isRequisitesError: boolean ) => ( {
+        type: 'requisites-store-reducer/SET-IS-REQUISITES-ERROR',
+        isRequisitesError,
     } as const ),
     setInitialValues: ( initialValues: CompanyRequisitesType ) => ( {
         type: 'requisites-store-reducer/SET-INITIAL-VALUES',
@@ -254,7 +271,7 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
                 taxMode: values.taxMode,
                 kpp: values.kpp || '-',
                 ogrn: values.ogrn,
-                okpo: values.okpo,
+                okpo: values.okpo || '-',
                 legalAddress: values.legalAddress,
                 dispatcherFIO: values.dispatcherFIO || '-',
                 mechanicFIO: values.mechanicFIO || '-',
@@ -275,7 +292,9 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
                 await dispatch(getPersonalOrganizationRequisites())
             }
         } catch (error) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+
+            // @ts-ignore
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data)))
             return 'Ошибка сохранения данных, попробуйте ещё раз'
         }
     }
@@ -316,8 +335,22 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
                         paySafeTax: user[0].tarifPaySafeTax,
                     },
                 } as CompanyRequisitesType))
+                // проверяем, было ли ошибочно забыто про реквизиты
+                if (!( user[0].postAddress &&
+                    user[0].phoneDirector &&
+                    user[0].phoneAccountant &&
+                    user[0].email &&
+                    user[0].bikBank &&
+                    user[0].nameBank &&
+                    user[0].checkingAccount &&
+                    user[0].korrAccount )) {
+                    dispatch(requisitesStoreActions.setIsRequisitesError(true))
+                    await dispatch(textAndActionGlobalModal({
+                        text: 'НЕОБХОДИМО ЗАПОЛНИТЬ ДАННЫЕ РЕКВИЗИТОВ!',
+                        navigateOnOk: getState().routesStoreReducer.routes.requisites + 'new',
+                    }))
+                }
             }
-
         } catch (error) {
             // @ts-ignore
             if (error.response) {
@@ -326,5 +359,19 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
             } else {
                 alert(error)
             }
+        }
+    }
+
+export const deletePersonalOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        try {
+            const idUser = getState().authStoreReducer.authID
+            const response = await requisitesApi.removePersonalData({ idUser })
+            console.log(response.message)
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(response.message)))
+            dispatch(logoutAuth())
+        } catch (error) {
+            // @ts-ignore
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response?.error)))
         }
     }

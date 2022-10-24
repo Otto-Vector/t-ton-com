@@ -4,6 +4,7 @@ import {To} from 'react-router-dom';
 
 const initialState = {
     modalGlobalTextMessage: '',
+    titleText: undefined as string | undefined,
     navigateToOk: undefined as undefined | To,
     isOkHandle: false,
     action: null as null | ( () => void ),
@@ -41,6 +42,12 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 action: action.action,
             }
         }
+        case 'global-modal-reducer/SET-TITLE': {
+            return {
+                ...state,
+                titleText: action.titleText,
+            }
+        }
         default: {
             return state
         }
@@ -52,6 +59,10 @@ export const globalModalStoreActions = {
     setTextMessage: ( modalGlobalTextMessage: string ) => ( {
         type: 'global-modal-reducer/SET-TEXT-MESSAGE',
         modalGlobalTextMessage,
+    } as const ),
+    setTitle: ( titleText?: string ) => ( {
+        type: 'global-modal-reducer/SET-TITLE',
+        titleText,
     } as const ),
     setNavigateToOk: ( navigateToOk?: To ) => ( {
         type: 'global-modal-reducer/SET-NAVIGATE-TO-OK',
@@ -76,9 +87,11 @@ export const textAndActionGlobalModal = ( {
                                               text,
                                               action,
                                               navigateOnOk,
-                                          }: { text: string, action?: () => void, navigateOnOk?: To } ): GlobalModalStoreReducerThunkActionType =>
+                                              title,
+                                          }: { text: string, action?: () => void, navigateOnOk?: To, title?: 'Вопрос' | 'Сообщение' | 'Внимание!' | 'Информация' } ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(globalModalStoreActions.setAction(action || null))
         dispatch(globalModalStoreActions.setNavigateToOk(navigateOnOk))
+        dispatch(globalModalStoreActions.setTitle(title))
         dispatch(globalModalStoreActions.setTextMessage(text))
     }
