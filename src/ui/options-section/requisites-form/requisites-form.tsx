@@ -15,7 +15,7 @@ import {
     getStoredValuesRequisitesStore,
     getValidatorsRequisitesStore,
 } from '../../../selectors/options/requisites-reselect';
-import {CompanyRequisitesType} from '../../../types/form-types';
+import {CompanyRequisitesType, ShippersCardType} from '../../../types/form-types';
 import {CancelButton} from '../../common/cancel-button/cancel-button';
 import {useNavigate, useParams} from 'react-router-dom';
 import {InfoText} from '../../common/info-text/into-text';
@@ -24,11 +24,13 @@ import {
     requisitesStoreActions,
     setOrganizationRequisites,
 } from '../../../redux/options/requisites-store-reducer';
-import {parseAllNumbers} from '../../../utils/parsers';
+import {coordsToString, parseAllNumbers} from '../../../utils/parsers';
 import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector';
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {FORM_ERROR} from 'final-form';
+import {newShipperSaveToAPI} from '../../../redux/options/shippers-store-reducer';
+import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
 
 
 type OwnProps = {}
@@ -36,6 +38,7 @@ type OwnProps = {}
 export const RequisitesForm: React.FC<OwnProps> = () => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const localCoords = useSelector(getGeoPositionAuthStore)
     const navigate = useNavigate()
     const { login, options } = useSelector(getRoutesStore)
     const dispatch = useDispatch()
@@ -54,12 +57,29 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
 
 
     const onSubmit = async ( requisites: CompanyRequisitesType<string> ) => {
-        const unmaskedValues = { ...requisites, innNumber: parseAllNumbers(requisites.innNumber) }
+        const unmaskedValues: CompanyRequisitesType = { ...requisites,
+            innNumber: parseAllNumbers(requisites.innNumber),
+            kpp: parseAllNumbers(requisites.innNumber),
+            ogrn: parseAllNumbers(requisites.ogrn)
+        }
         const error = await dispatch<any>(setOrganizationRequisites(unmaskedValues))
         if (error) return { [FORM_ERROR]: error }
         dispatch(requisitesStoreActions.setIsRequisitesError(false))
 
         if (isNew) {
+            dispatch<any>(newShipperSaveToAPI({
+                innNumber: unmaskedValues.innNumber,
+                title: unmaskedValues.organizationName,
+                kpp: unmaskedValues.kpp,
+                ogrn: unmaskedValues.ogrn,
+                coordinates: coordsToString(localCoords as [number,number]),
+                city: '-',
+                address: unmaskedValues.legalAddress,
+                organizationName: unmaskedValues.organizationName,
+                shipperTel: unmaskedValues.phoneDirector,
+                shipperFio: '-',
+                description: '-'
+            } as ShippersCardType<string>))
             navigate(options)
         } else {
             navigate(-1)

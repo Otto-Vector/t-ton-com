@@ -267,7 +267,7 @@ export const newShipperSaveToAPI = ( values: ShippersCardType<string> ): Shipper
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage('Ошибка запроса на название города\n' + JSON.stringify(e.response.data.failed)))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data.failed)))
         }
         await dispatch(getAllShippersAPI())
     }

@@ -144,7 +144,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     // синхронно/асинхронный валидатор на поле ИНН
     const innPlusApiValidator = ( preValue: string ) => ( currentValue: string ) => {
-        const [ prev, current ] = [ preValue, currentValue ].map(parseAllNumbers)
+        [ preValue, currentValue ] = [ preValue, currentValue ].map(parseAllNumbers)
         // запускаем асинхронную валидацию только после синхронной
         return ( validators.innNumber && validators.innNumber(currentValue) )
             // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
