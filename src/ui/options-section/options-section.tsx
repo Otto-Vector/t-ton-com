@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './options-section.module.scss'
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {
     getConsigneesOptionsStore,
@@ -16,16 +16,16 @@ import {getIsFetchingConsigneesStore} from '../../selectors/options/consignees-r
 
 import {Button} from '../common/button/button';
 import {ColumnDataList} from './column-data-list/column-data-list';
-import {Preloader} from '../common/preloader/preloader';
+import {SizedPreloader} from '../common/preloader/preloader';
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect';
 import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect';
 import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect';
 import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
+import {getPersonalOrganizationRequisites} from '../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {}
 
-const ColumnPreloader: React.FC = () => <div style={ { height: '260px', width: '260px' } }><Preloader/></div>
 
 export const OptionsSection: React.FC<OwnProps> = () => {
 
@@ -33,6 +33,7 @@ export const OptionsSection: React.FC<OwnProps> = () => {
 
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const shippersList = useSelector(getShippersOptionsStore)
     const shipperIsFetching = useSelector(getIsFetchingShippersStore)
@@ -51,33 +52,36 @@ export const OptionsSection: React.FC<OwnProps> = () => {
 
     const requisitesInfoText = useSelector(getRequisitesInfoOptionsStore)
 
+    const showRequisitesOnClick = () => {
+        navigate(requisites + 'old')
+    }
+
 
     return (
         <section className={ styles.optionsSection }>
             {/*ГОЛОВА С КНОПКОЙ РЕКВИЗИТЫ*/ }
             <header className={ styles.optionsSection__header }>
-                <h3>{titleHeader}</h3>
+                <h3>{ titleHeader }</h3>
                 <div className={ styles.optionsSection__buttonRequisites }>
                     <Button type={ 'button' }
                             title={ 'Реквизиты' }
                             colorMode={ 'blue' }
-                            rounded onClick={ () => {
-                        navigate(requisites+'old')
-                    } }> Реквизиты </Button>
+                            rounded
+                            onClick={ showRequisitesOnClick }> Реквизиты </Button>
                     <InfoButtonToModal textToModal={ requisitesInfoText }/>
                 </div>
             </header>
             {/*СПИСКИ*/ }
             <div className={ styles.optionsSection__table }>
-                { shipperIsFetching ? <ColumnPreloader/> :
+                { shipperIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
                     <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/> }
-                { employeeIsFetching ? <ColumnPreloader/> :
+                { employeeIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
                     <ColumnDataList item={ employeesList } route={ optionsEdit.employees }/> }
-                { transportIsFetching ? <ColumnPreloader/> :
+                { transportIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
                     <ColumnDataList item={ transportList } route={ optionsEdit.transport }/> }
-                { trailerIsFetching ? <ColumnPreloader/> :
+                { trailerIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
                     <ColumnDataList item={ trailerList } route={ optionsEdit.trailer }/> }
-                { consigneeIsFetching ? <ColumnPreloader/> :
+                { consigneeIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
                     <ColumnDataList item={ consigneesList } route={ optionsEdit.consignees }/> }
             </div>
         </section>

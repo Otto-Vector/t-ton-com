@@ -28,7 +28,7 @@ export const transportApi = {
 
     // запрос списка всего ТРАНСПОРТА созданного ДАННЫМ пользователем • PATCH /api/transportuser/
     getAllTransportByUserId( idUser: { idUser: string } ) {
-        return instanceBack.patch<TransportApiType[]>('/api/transportuser/', idUser)
+        return instanceBack.patch<InfoResponseType & TransportApiType[]>('/api/transportuser/', idUser)
             .then(response => response.data)
         // 1.	Code 200, Models: TransportApiType[]
         // 2.	Code 520, {"message":"Error"}

@@ -33,7 +33,7 @@ export const shippersApi = {
 
     // запрос списка ВСЕХ грузополучателей, созданных ДАННЫМ пользователем • PATCH /api/senderuser/
     getAllShippersByUserId( idUser: { idUser: string } ) {
-        return instanceBack.patch<ShippersApiType[]>('/api/senderuser/', idUser)
+        return instanceBack.patch<InfoResponseType & ShippersApiType[]>('/api/senderuser/', idUser)
             .then(response => response.data)
         // 1. code 200, Models: ShippersApiType[]
         // 2. code 200, {"message": "Error, login please"}
@@ -42,7 +42,7 @@ export const shippersApi = {
 
     // запрос на ОДНОГО выбранного грузоотправителя • PATCH /api/sender/
     getOneShipperById( idSender: { idSender: string } ) {
-        return instanceBack.patch<InfoResponseType | ShippersApiType[]>('/api/sender/', idSender)
+        return instanceBack.patch<InfoResponseType & ShippersApiType[]>('/api/sender/', idSender)
             .then(response => response.data)
         // 1. code 200, Models: ShippersApiType[]
         // 2. code 200, {"message": "Error, login please"}

@@ -6,9 +6,11 @@ import {
     composeParsers,
     parseNoFirstSpaces,
     parseOnlyOneSpace,
-    parsePseudoLatinCharsAndNumbers, parseToUpperCase,
+    parsePseudoLatinCharsAndNumbers,
+    parseToUpperCase,
 } from '../../utils/parsers';
 import {transportApi} from '../../api/options/transport.api';
+import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
 
 const initialState = {
@@ -38,17 +40,7 @@ const initialState = {
         transportImage: undefined, // просто текст
     } as TransportCardType,
 
-    initialValues: {
-        transportNumber: undefined,
-        transportTrademark: undefined,
-        transportModel: undefined,
-        pts: undefined,
-        dopog: undefined,
-        cargoType: undefined,
-        cargoWeight: undefined,
-        propertyRights: undefined,
-        transportImage: undefined,
-    } as TransportCardType,
+    initialValues: {} as TransportCardType,
 
     validators: {
         transportNumber: composeValidators(required, maxLength(20)),
@@ -132,21 +124,23 @@ export const transportStoreActions = {
 
 /* САНКИ */
 
-export type TransportStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type TransportStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
 
 // запрос всего транспорта пользователя от сервера
 export const getAllTransportAPI = (): TransportStoreReducerThunkActionType =>
-    async ( dispatch,getState ) => {
+    async ( dispatch, getState ) => {
         dispatch(transportStoreActions.toggleTransportIsFetching(true))
         try {
             const idUser = getState().authStoreReducer.authID
 
             const response = await transportApi.getAllTransportByUserId({ idUser })
-            dispatch(transportStoreActions.setTransportContent(response.map(( { idUser, ...values } ) => values)))
-
-            if (!response.length) console.log('Пока ни одного ТРАНСПОРТА')
+            if (response.message || !response.length) {
+                throw new Error(response.message || `Транспорт не найден или пока не внесен`)
+            } else {
+                dispatch(transportStoreActions.setTransportContent(response.map(( { idUser, ...values } ) => values)))
+            }
         } catch (e) {
-            alert(e)
+            console.error('Ошибка в запросе списка транспорта: ', e)
         }
         dispatch(transportStoreActions.toggleTransportIsFetching(false))
     }
@@ -157,11 +151,14 @@ export const newTransportSaveToAPI = ( values: TransportCardType<string>, image:
 
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await transportApi.createOneTransport({ idUser, ...values, cargoWeight: values.cargoWeight || '0' }, image)
+            const response = await transportApi.createOneTransport({
+                idUser, ...values,
+                cargoWeight: values.cargoWeight || '0',
+            }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(e.response.data.failed)
+            console.error(e.response.data.failed)
         }
         await dispatch(getAllTransportAPI())
     }
@@ -180,7 +177,7 @@ export const modifyOneTransportToAPI = ( values: TransportCardType<string>, imag
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            console.error(JSON.stringify(e.response.data))
         }
         await dispatch(getAllTransportAPI())
     }
@@ -191,9 +188,9 @@ export const oneTransportDeleteToAPI = ( idTransport: string ): TransportStoreRe
         try {
             const response = await transportApi.deleteOneTransport({ idTransport })
             if (response.message) console.log(response.message)
-        } catch (e) {
+        } catch (e ) {
             // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
         }
         await dispatch(getAllTransportAPI())
     }

@@ -9,6 +9,8 @@ import {getAllTrailerAPI} from './options/trailer-store-reducer';
 import {getAllTransportAPI} from './options/transport-store-reducer';
 import {geoPositionTake} from './auth-store-reducer';
 import {getInfoMessages} from './info-store-reducer';
+import {textAndActionGlobalModal} from './utils/global-modal-store-reducer';
+import {rejects} from 'assert';
 
 const initialState = {
     initialized: false,
@@ -53,7 +55,8 @@ export type InitializedThunkActionType = ThunkAction<void, AppStateType, unknown
 
 // запускаем комбайн загрузок/обращений к API
 export const initializedAll = (): InitializedThunkActionType =>
-    ( dispatch ) => {
+    async ( dispatch ) => {
+    try { // https://qna.habr.com/q/1060904
         const getPersonal = dispatch(getPersonalOrganizationRequisites())
         const getGeoPosition = dispatch(geoPositionTake())
         const getAllShippers = dispatch(getAllShippersAPI())
@@ -66,7 +69,7 @@ export const initializedAll = (): InitializedThunkActionType =>
         const getAllRequests = dispatch(getAllRequestsAPI())
         const getAllInfoMessages = dispatch(getInfoMessages())
 
-        Promise.all([
+        const promiseAll = Promise.all([
             getPersonal,
             getGeoPosition,
             getCargoComposition,
@@ -77,9 +80,13 @@ export const initializedAll = (): InitializedThunkActionType =>
             getAllTrailer,
             getAllEmployees,
             getAllInfoMessages,
-        ]).then(() => {
-            dispatch(appActions.setInitialized(true))
-        })
+        ])
+            .then(() => {
+                dispatch(appActions.setInitialized(true))
+            })
+    } catch (e) {
+        console.log(e)
+    }
     }
 
 

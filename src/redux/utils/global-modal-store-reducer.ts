@@ -6,6 +6,7 @@ const initialState = {
     modalGlobalTextMessage: '',
     titleText: undefined as string | undefined,
     navigateToOk: undefined as undefined | To,
+    navigateToCancel: undefined as undefined | To,
     isOkHandle: false,
     action: null as null | ( () => void ),
 }
@@ -30,6 +31,12 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 navigateToOk: action.navigateToOk,
             }
         }
+        case 'global-modal-reducer/SET-NAVIGATE-TO-CANCEL': {
+            return {
+                ...state,
+                navigateToCancel: action.navigateToCancel,
+            }
+        }
         case 'global-modal-reducer/SET-IS-OK-HANDLE': {
             return {
                 ...state,
@@ -46,6 +53,17 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
             return {
                 ...state,
                 titleText: action.titleText,
+            }
+        }
+        case 'global-modal-reducer/RESET-ALL-VALUES': {
+            return {
+                ...state,
+                modalGlobalTextMessage: '',
+                titleText: undefined,
+                navigateToOk: undefined,
+                navigateToCancel: undefined,
+                isOkHandle: false,
+                action: null,
             }
         }
         default: {
@@ -68,6 +86,13 @@ export const globalModalStoreActions = {
         type: 'global-modal-reducer/SET-NAVIGATE-TO-OK',
         navigateToOk,
     } as const ),
+    setNavigateToCancel: ( navigateToCancel?: To ) => ( {
+        type: 'global-modal-reducer/SET-NAVIGATE-TO-CANCEL',
+        navigateToCancel,
+    } as const ),
+    resetAllValues: () => ( {
+        type: 'global-modal-reducer/RESET-ALL-VALUES',
+    } as const ),
     setIsOkHandle: ( isOkHandle: boolean ) => ( {
         type: 'global-modal-reducer/SET-IS-OK-HANDLE',
         isOkHandle,
@@ -82,13 +107,23 @@ export const globalModalStoreActions = {
 /* САНКИ */
 export type GlobalModalStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, GlobalModalActionsType>
 
+
+type GlobalModalType = {
+    text: string
+    action?: () => void
+    navigateOnOk?: To
+    navigateOnCancel?: To
+    title?: 'Вопрос' | 'Сообщение' | 'Внимание!' | 'Информация'
+}
+
 // для создания диалогового окна с переданной функцией
 export const textAndActionGlobalModal = ( {
                                               text,
                                               action,
                                               navigateOnOk,
+                                              navigateOnCancel,
                                               title,
-                                          }: { text: string, action?: () => void, navigateOnOk?: To, title?: 'Вопрос' | 'Сообщение' | 'Внимание!' | 'Информация' } ): GlobalModalStoreReducerThunkActionType =>
+                                          }: GlobalModalType ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(globalModalStoreActions.setAction(action || null))
         dispatch(globalModalStoreActions.setNavigateToOk(navigateOnOk))

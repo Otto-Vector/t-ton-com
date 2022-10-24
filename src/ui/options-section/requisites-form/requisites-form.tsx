@@ -6,7 +6,7 @@ import {Button} from '../../common/button/button';
 import {FormInputType} from '../../common/form-input-type/form-input-type';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {Preloader} from '../../common/preloader/preloader';
+import {Preloader, SizedPreloader} from '../../common/preloader/preloader';
 import {
     getIsFetchingRequisitesStore,
     getLabelRequisitesStore,
@@ -84,7 +84,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
         <div className={ styles.requisitesForm }>
             <div className={ styles.requisitesForm__wrapper }>
                 { // установил прелоадер
-                    isFetching ? <Preloader/> : <>
+                    isFetching ? <SizedPreloader sizeHW={ '560px' }/> : <>
                         <h4 className={ styles.requisitesForm__header }>{ 'Реквизиты' }</h4>
                         <Form
                             onSubmit={ onSubmit }
@@ -269,9 +269,9 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                     </form>
                                 )
                             }/>
+                        <InfoText/>
                     </> }
                 <CancelButton onCancelClick={ onCancelClick }/>
-                <InfoText/>
             </div>
         </div>
     )

@@ -138,7 +138,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     // онлайн валидация ИНН с подгрузкой КПП в селектор
     const innValidate = async ( value: string ) => {
-        return await dispatch<any>(getOrganizationByInnShipper({ inn: +value }))
+        const inn = +parseAllNumbers(value)
+        return await dispatch<any>(getOrganizationByInnShipper({ inn }))
     }
 
     // синхронно/асинхронный валидатор на поле ИНН

@@ -5,7 +5,7 @@ import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, require
 import {
     composeParsers,
     coordsToString,
-    parseAllCoords,
+    parseAllCoords, parseAllNumbers,
     parseFIO,
     parseNoFirstSpaces,
     parseOnlyOneComma,
@@ -20,20 +20,7 @@ import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../a
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
 
-const defaultInitialValues = {
-    idSender: '',
-    title: undefined,
-    innNumber: undefined,
-    organizationName: undefined,
-    kpp: undefined,
-    ogrn: undefined,
-    address: undefined,
-    shipperFio: undefined,
-    shipperTel: undefined,
-    description: undefined,
-    coordinates: undefined,
-    city: undefined,
-} as ShippersCardType
+const defaultInitialValues = {} as ShippersCardType
 
 const initialState = {
     shippersIsFetching: false,
@@ -201,7 +188,9 @@ export const shippersStoreActions = {
 
 /* САНКИ */
 
-export type ShippersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
+export type ShippersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType
+    |
+    GlobalModalActionsType>
 
 // запрос на всех Грузоотправителей данного пользователя
 export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
@@ -211,12 +200,14 @@ export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
 
             const idUser = getState().authStoreReducer.authID
             const response = await shippersApi.getAllShippersByUserId({ idUser })
-            dispatch(shippersStoreActions.setShippersContent(response.map(( { idUser, ...values } ) => values)))
-
-            if (!response.length) console.log('Пока ни одного Грузоотправителя')
+            if (response.message || !response.length) {
+                throw new Error(response.message || `Грузоотправители не найдены или пока не внесены`)
+            } else {
+                dispatch(shippersStoreActions.setShippersContent(response.map(( { idUser, ...values } ) => values)))
+            }
 
         } catch (e) {
-            alert(e)
+            console.error('Ошибка в запросе грузоотправителей', e)
         }
         dispatch(shippersStoreActions.toggleShipperIsFetching(false))
     }
@@ -228,6 +219,7 @@ export const getOrganizationByInnShipper = ( { inn }: GetOrganizationByInnDaData
 
         const { innNumber } = getState().shippersStoreReducer.initialValues
         const booleanMemo = ( +( innNumber || 0 ) !== inn )
+
         const response = booleanMemo
             ? await dispatch<any>(getOrganizationsByInn({ inn }))
             : null
@@ -261,7 +253,6 @@ export const setOrganizationByInnKppShippers = ( {
                 address: data.address.value,
             }))
         } else {
-            // alert('Фильтр КПП локально не сработал!')
             dispatch(globalModalStoreActions.setTextMessage('Фильтр КПП локально не сработал!'))
         }
     }
@@ -289,7 +280,6 @@ export const modifyOneShipperToAPI = ( values: ShippersCardType<string> ): Shipp
             const idUser = getState().authStoreReducer.authID
             const response = await shippersApi.modifyOneShipper({
                 idUser, ...values,
-                // toDo: убрать заглушку после того как настрою https
                 description: values.description || '-',
                 city: values.city || '-',
             })
@@ -322,7 +312,7 @@ export const getCityFromDispetcherAPI = ( {
                                               from,
                                               to,
                                           }: GetAvtodispetcherRouteType ): ShippersStoreReducerThunkActionType<{ coordinates?: string, city?: string } | null> =>
-    async () => {
+    async ( dispatch ) => {
         try {
             const response = await getRouteFromAvtodispetcherApi({ from, to })
 
@@ -331,7 +321,7 @@ export const getCityFromDispetcherAPI = ( {
             }
 
         } catch (e) {
-            // dispatch(globalModalStoreActions.setTextMessage('Ошибка запроса на название города'))
+            dispatch(globalModalStoreActions.setTextMessage('Ошибка запроса на название города'))
             return ( { coordinates: 'Ошибка запроса на название города, измените координаты' } )
         }
 

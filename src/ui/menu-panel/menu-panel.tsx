@@ -57,6 +57,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
             title: 'Внимание!',
             text: 'НЕОБХОДИМО ЗАПОЛНИТЬ ДАННЫЕ РЕКВИЗИТОВ!',
             navigateOnOk: routes.requisites + 'new',
+            navigateOnCancel: routes.requisites + 'new',
         }))
     }
     // вынес за пределы NavLink назначение классов

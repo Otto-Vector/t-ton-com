@@ -6,7 +6,8 @@ import {
     composeParsers,
     parseNoFirstSpaces,
     parseOnlyOneSpace,
-    parsePseudoLatinCharsAndNumbers, parseToUpperCase,
+    parsePseudoLatinCharsAndNumbers,
+    parseToUpperCase,
 } from '../../utils/parsers';
 import {trailerApi} from '../../api/options/trailer.api';
 
@@ -39,17 +40,7 @@ const initialState = {
         trailerImage: undefined, // просто текст
     } as TrailerCardType,
 
-    initialValues: {
-        trailerNumber: undefined,
-        trailerTrademark: undefined,
-        trailerModel: undefined,
-        pts: undefined,
-        dopog: undefined,
-        cargoType: undefined,
-        cargoWeight: undefined,
-        propertyRights: undefined,
-        trailerImage: undefined,
-    } as TrailerCardType,
+    initialValues: {} as TrailerCardType,
 
     validators: {
         trailerNumber: composeValidators(required, maxLength(20)),
@@ -104,7 +95,7 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
         case 'trailer-store-reducer/SET-IS-FETCHING': {
             return {
                 ...state,
-                trailerIsFetching: action.trailerIsFetching
+                trailerIsFetching: action.trailerIsFetching,
             }
         }
         default: {
@@ -137,17 +128,20 @@ export type TrailerStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 
 // запрос всего транспорта пользователя от сервера
 export const getAllTrailerAPI = (): TrailerStoreReducerThunkActionType =>
-    async ( dispatch,getState ) => {
+    async ( dispatch, getState ) => {
         dispatch(trailerStoreActions.toggleTrailerIsFetching(true))
         try {
             const idUser = getState().authStoreReducer.authID
 
             const response = await trailerApi.getAllTrailerByUserId({ idUser })
-            dispatch(trailerStoreActions.setTrailerContent(response.map(( { idUser, ...values } ) => values)))
+            if (response.message || !response.length) {
+                throw new Error(response.message || `Прицепы не найдены или пока не внесены`)
+            } else {
+                dispatch(trailerStoreActions.setTrailerContent(response.map(( { idUser, ...values } ) => values)))
+            }
 
-            if (!response.length) console.log('Пока ни одного ПРИЦЕПА')
         } catch (e) {
-            alert(e)
+            console.error('Ошибка в запросе списка прицепов: ', e)
         }
         dispatch(trailerStoreActions.toggleTrailerIsFetching(false))
     }
@@ -158,11 +152,14 @@ export const newTrailerSaveToAPI = ( values: TrailerCardType<string>, image: Fil
 
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await trailerApi.createOneTrailer({ idUser, ...values, cargoWeight: values.cargoWeight || '0' }, image)
+            const response = await trailerApi.createOneTrailer({
+                idUser, ...values,
+                cargoWeight: values.cargoWeight || '0',
+            }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(e.response.data.failed)
+            dispatch(globalModalStoreActions.setTextMessage(e.response.data.failed))
         }
         await dispatch(getAllTrailerAPI())
     }

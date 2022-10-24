@@ -136,7 +136,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     // онлайн валидация ИНН с подгрузкой КПП в селектор
     const innValidate = async ( value: string ) => {
-        return await dispatch<any>(getOrganizationByInnConsignee({ inn: +value }))
+        const inn = +parseAllNumbers(value)
+        return await dispatch<any>(getOrganizationByInnConsignee({ inn }))
     }
 
     // расчищаем значения от лишних символов и пробелов после маски

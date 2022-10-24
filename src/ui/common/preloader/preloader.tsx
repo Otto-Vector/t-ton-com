@@ -10,3 +10,9 @@ export const Preloader: React.FC = () => {
         </div>
     )
 }
+
+type OwnProps = { sizeHW: string }
+export const SizedPreloader: React.FC<OwnProps> = ( { sizeHW } ) =>
+    <div style={ { height: `${ sizeHW }`, width: `${ sizeHW }` } }>
+        <Preloader/>
+    </div>

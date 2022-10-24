@@ -9,7 +9,6 @@ import {
     mustBeMail,
     required,
 } from '../../utils/validators';
-import {getOrganizationByInnKPPDaDataAPI, GetOrganizationByInnKPPDaDataType} from '../../api/dadata.api';
 import {PersonalResponseType, requisitesApi} from '../../api/options/requisites.api';
 import {
     composeParsers,
@@ -27,37 +26,6 @@ import {
     textAndActionGlobalModal,
 } from '../utils/global-modal-store-reducer';
 
-
-// const initialValues: CompanyRequisitesType = {
-//     innNumber: undefined,
-//     organizationName: undefined,
-//     taxMode: undefined,
-//     kpp: undefined,
-//     ogrn: undefined,
-//     okpo: undefined,
-//     legalAddress: undefined,
-//     mechanicFIO: undefined,
-//     dispatcherFIO: undefined,
-//
-//     postAddress: undefined,
-//     phoneDirector: undefined,
-//     phoneAccountant: undefined,
-//     email: undefined,
-//     bikBank: undefined,
-//     nameBank: undefined,
-//     checkingAccount: undefined,
-//     korrAccount: undefined,
-//     tariffs: {
-//         create: undefined,
-//         acceptShortRoute: undefined,
-//         acceptLongRoute: undefined,
-//         paySafeTax: undefined,
-//     },
-//     cash: undefined,
-//     description: undefined,
-//     maxRequests: undefined,
-//     requestActiveCount: undefined,
-// }
 
 const initialValues = {} as CompanyRequisitesType
 
@@ -225,38 +193,7 @@ export const requisitesStoreActions = {
 }
 
 /* САНКИ */
-
 export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
-
-// запрос параметров организации из DaData и установка этих данных в бэк
-export const setOrganizationByInnKpp = ( { inn, kpp }: GetOrganizationByInnKPPDaDataType ):
-    RequisitesStoreReducerThunkActionType<{ innNumber: string } | null> =>
-    async ( dispatch, getState ) => {
-
-        const response = await getOrganizationByInnKPPDaDataAPI({ inn, kpp })
-        const idUser = getState().authStoreReducer.authID
-        if (response.length > 0) {
-            const { data } = response[0]
-            const setPersonal = await requisitesApi.setPersonalData({
-                idUser,
-                nnNumber: data.inn,
-                kpp: data.kpp,
-                organizationName: response[0].value,
-                taxMode: data.finance?.tax_system || '',
-                ogrn: data.ogrn,
-                okpo: data.okpo,
-                legalAddress: data.address.value,
-                postAddress: data.address.value,
-                email: data.emails && data.emails[0]?.value,
-            } as PersonalResponseType)
-            console.log('setPersonal: ', setPersonal)
-
-            return null
-
-        } else {
-            return { innNumber: 'Неверный ИНН!' }
-        }
-    }
 
 // сохранение данных реквизитов в БЭК
 export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
@@ -302,9 +239,15 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
 // запрос данных активного пользователя
 export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
+        dispatch(requisitesStoreActions.setIsFetching(true))
         try {
             const idUser = getState().authStoreReducer.authID
             const user = await requisitesApi.getPersonalDataFromId({ idUser })
+
+            if (user.message || !user.length) {
+                throw new Error(user.message || `Реквизиты [ ${idUser} ] не найдены`)
+            }
+
             if (user.length > 0) {
                 dispatch<any>(authStoreActions.setAuthPhone(user[0].phone || ''))
                 dispatch(requisitesStoreActions.setStoredValues({
@@ -336,7 +279,8 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
                     },
                 } as CompanyRequisitesType))
                 // проверяем, было ли ошибочно забыто про реквизиты
-                if (!( user[0].postAddress &&
+                if (!( user[0].taxMode &&
+                    user[0].postAddress &&
                     user[0].phoneDirector &&
                     user[0].phoneAccountant &&
                     user[0].email &&
@@ -348,18 +292,14 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
                     await dispatch(textAndActionGlobalModal({
                         text: 'НЕОБХОДИМО ЗАПОЛНИТЬ ДАННЫЕ РЕКВИЗИТОВ!',
                         navigateOnOk: getState().routesStoreReducer.routes.requisites + 'new',
+                        navigateOnCancel: getState().routesStoreReducer.routes.requisites + 'new',
                     }))
                 }
             }
         } catch (error) {
-            // @ts-ignore
-            if (error.response) {
-                // @ts-ignore
-                console.log(error.response.data.failed)
-            } else {
-                alert(error)
-            }
+            console.error('Ошибка API запроса реквизитов организации: ', error)
         }
+        dispatch(requisitesStoreActions.setIsFetching(false))
     }
 
 export const deletePersonalOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>

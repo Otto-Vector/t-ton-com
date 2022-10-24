@@ -58,7 +58,7 @@ export const requisitesApi = {
 
     // запрос данных по Id пользователя • PATCH /api/personality/
     getPersonalDataFromId( idUser: { idUser: string } ) {
-        return instanceBack.patch<PersonalResponseType[]>('/api/personality/', idUser)
+        return instanceBack.patch<InfoResponseType & PersonalResponseType[]>('/api/personality/', idUser)
             .then(response => response.data)
         // 1.	code 200, models: PersonalResponseType
         // 2.	code 520, "Error"

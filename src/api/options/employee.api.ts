@@ -34,7 +34,7 @@ export const employeesApi = {
 
     // запрос списка всех водителей созданных данным пользователем PATCH /api/emploeeuser/
     getAllEmployeesByUserId( { idUser }: { idUser: string } ) {
-        return instanceBack.patch<EmployeesApiType[]>('/api/emploeeuser/', { idUser })
+        return instanceBack.patch<InfoResponseType & EmployeesApiType[]>('/api/emploeeuser/', { idUser })
             .then(response => response.data)
         // 1.	Code 200, Models: EmployeesApiType[]
         // 2.	Code 520, {"message":"Error"}
@@ -42,7 +42,7 @@ export const employeesApi = {
 
     // запрос на одного выбранного водителя PATCH /api/employee/
     getOneEmployeeById( { idEmployee }: { idEmployee: string } ) {
-        return instanceBack.patch<InfoResponseType | EmployeesApiType[]>('/api/employee/', { idEmployee })
+        return instanceBack.patch<InfoResponseType & EmployeesApiType[]>('/api/employee/', { idEmployee })
             .then(response => response.data)
         // 1.	Code 200, Models: EmployeesApiType[]
         // 2.	Code 520, {"message":"Error"}

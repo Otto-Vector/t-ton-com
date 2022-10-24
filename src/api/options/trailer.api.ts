@@ -28,7 +28,7 @@ export const trailerApi = {
 
     // запрос списка всех ПРИЦЕПОВ созданных данным пользователем • PATCH /api/traileruser/
     getAllTrailerByUserId( idUser: { idUser: string } ) {
-        return instanceBack.patch<TrailerApiType[]>('/api/traileruser/', idUser)
+        return instanceBack.patch<InfoResponseType & TrailerApiType[]>('/api/traileruser/', idUser)
             .then(response => response.data)
         // 1.	Code 200, models: TrailerApiType[]
         // 2.	Code 520, {"message":"Error"}
@@ -36,7 +36,7 @@ export const trailerApi = {
 
     // запрос на один ПРИЦЕП по id • PATCH /api/trailer/
     getOneTrailerById( idTrailer: { idTrailer: string } ) {
-        return instanceBack.patch<InfoResponseType | TrailerApiType[]>('/api/trailer/', idTrailer)
+        return instanceBack.patch<InfoResponseType & TrailerApiType[]>('/api/trailer/', idTrailer)
             .then(response => response.data)
         // 1.	Code 200, models: TrailerApiType[]
         // 2.	Code 520, {"message":"Error"}

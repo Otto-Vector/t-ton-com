@@ -7,7 +7,7 @@ import 'antd/lib/modal/style/index.css' // используем стили antd 
 import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
 import {Modal} from 'antd';
 import {
-    getActionGlobalModalStore,
+    getActionGlobalModalStore, getNavigateToCancelGlobalModalStore,
     getNavigateToOkGlobalModalStore,
     getTextGlobalModalStore, getTitleGlobalModalStore,
 } from '../../../selectors/utils/global-modal-reselect';
@@ -19,6 +19,7 @@ export const InfoGlobalToModal: React.FC = () => {
     const textToGlobalModal = useSelector(getTextGlobalModalStore)
     const action = useSelector(getActionGlobalModalStore)
     const navToOnOk = useSelector(getNavigateToOkGlobalModalStore)
+    const navToOnCancel = useSelector(getNavigateToCancelGlobalModalStore)
     const title = useSelector(getTitleGlobalModalStore)
 
     const dispatch = useDispatch()
@@ -28,10 +29,7 @@ export const InfoGlobalToModal: React.FC = () => {
 
     const onCloseLocal = () => {
         setVisible(false)
-        dispatch(globalModalStoreActions.setTextMessage(''))
-        dispatch(globalModalStoreActions.setAction(null))
-        dispatch(globalModalStoreActions.setNavigateToOk(''))
-        dispatch(globalModalStoreActions.setTitle(undefined))
+        dispatch(globalModalStoreActions.resetAllValues())
     }
 
     const onOkHandle = () => {
@@ -43,6 +41,7 @@ export const InfoGlobalToModal: React.FC = () => {
 
     const onCancelHandle = () => {
         onCloseLocal()
+        navToOnCancel && navigate(navToOnCancel)
     }
 
     const titleHere = title || (( action || navToOnOk ) ? 'Вопрос' : 'Информация')

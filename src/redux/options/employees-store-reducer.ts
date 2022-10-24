@@ -11,7 +11,6 @@ import {
 import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {
     composeParsers,
-    parseAllNumbers,
     parseFIO,
     parseNoFirstSpaces,
     parseOnlyOneDash,
@@ -152,12 +151,16 @@ export const getAllEmployeesAPI = (): EmployeesStoreReducerThunkActionType =>
             const idUser = getState().authStoreReducer.authID
 
             const response = await employeesApi.getAllEmployeesByUserId({ idUser })
-            dispatch(employeesStoreActions.setEmployeesContent(response.map(( { idUser, ...values } ) => values)))
+            if (response.message || !response.length) {
+                throw new Error(response.message || `Сотрудники не найдены или пока не внесены`)
+            } else {
+                dispatch(employeesStoreActions.setEmployeesContent(response.map(( { idUser, ...values } ) => values)))
+            }
 
-            if (!response.length) console.log('Пока ни одного СОТРУДНИКА')
         } catch (e) {
-            alert(e)
+            console.error('Ошибка в запросе списка сотрудников:', e)
         }
+
         dispatch(employeesStoreActions.toggleEmployeeIsFetching(false))
     }
 
@@ -172,8 +175,9 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
+
             // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            console.error(JSON.stringify(e.response.data))
         }
         await dispatch(getAllEmployeesAPI())
     }
@@ -189,12 +193,12 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
                 // поставил, потому что на localhost:3000 ругается о пустых полях,
                 // а на деплое через https - нет
                 rating: '5',
-                status: 'free'
+                status: 'free',
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            console.error(JSON.stringify(e.response.data))
         }
         await dispatch(getAllEmployeesAPI())
     }

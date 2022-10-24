@@ -16,6 +16,10 @@ import {
 import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
 import {getOrganizationsByInn} from '../api/dadata-response-reducer';
 import {consigneesApi} from '../../api/options/consignees.api';
+import {
+    GlobalModalActionsType,
+    globalModalStoreActions,
+} from '../utils/global-modal-store-reducer';
 
 const defaultInitialValues = {
     idRecipient: '',
@@ -196,7 +200,7 @@ export const consigneesStoreActions = {
 
 /* САНКИ */
 
-export type ConsigneesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type ConsigneesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
 
 
 export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
@@ -205,11 +209,17 @@ export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await consigneesApi.getAllConsigneesByUserId({ idUser })
-            dispatch(consigneesStoreActions.setConsigneesContent(response.map(( { idUser, ...values } ) => values)))
-
-            if (!response.length) console.log('Пока ни одного ГрузоПОЛУЧАТЕЛЯ')
+            if (response.message || !response.length) {
+                throw new Error(response.message || `Грузополучатели не найдены или пока не внесены`)
+            } else {
+                dispatch(
+                    consigneesStoreActions.setConsigneesContent(response.map(( {
+                                                                                   idUser,
+                                                                                   ...values
+                                                                               } ) => values)))
+            }
         } catch (e) {
-            alert(e)
+            console.error('Ошибка в запросе грузополучателей: ', e)
         }
         dispatch(consigneesStoreActions.toggleConsigneeIsFetching(false))
     }
@@ -239,9 +249,9 @@ export const setOrganizationByInnKppConsignees = ( {
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
-            const response = (kppNumber !== '-')
-                ? getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
-                : getState().daDataStoreReducer.suggestions[0]
+        const response = ( kppNumber !== '-' )
+            ? getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
+            : getState().daDataStoreReducer.suggestions[0]
 
         if (response !== undefined) {
             const { data } = response
@@ -253,7 +263,7 @@ export const setOrganizationByInnKppConsignees = ( {
                 ogrn: data.ogrn,
                 address: data.address.value,
             }))
-        } else alert('Фильтр КПП локально не сработал!')
+        } else dispatch(globalModalStoreActions.setTextMessage('Фильтр КПП локально не сработал!'))
 
     }
 
@@ -281,14 +291,13 @@ export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): C
             const response = await consigneesApi.modifyOneConsignee({
                 ...values,
                 idUser,
-                // toDo: убрать заглушку после того как настрою https
                 description: values.description || '-',
                 city: values.city || '-',
             })
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            console.error(JSON.stringify(e.response.data))
         }
         await dispatch(getAllConsigneesAPI())
     }

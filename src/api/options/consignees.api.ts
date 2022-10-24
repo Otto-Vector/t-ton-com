@@ -31,7 +31,7 @@ export const consigneesApi = {
 
     // запрос списка всех грузополучателей созданных данным пользователем PATCH /api/recipientuser/
     getAllConsigneesByUserId( { idUser }: { idUser: string } ) {
-        return instanceBack.patch<ConsigneesApiType[]>('/api/recipientuser/', { idUser })
+        return instanceBack.patch<InfoResponseType & ConsigneesApiType[]>('/api/recipientuser/', { idUser })
             .then(response => response.data)
         // 1.	Code 200, models: ConsigneesApiType[]
         // 2.	Code 520, {"message":"Error"}
@@ -39,7 +39,7 @@ export const consigneesApi = {
 
     // запрос на одного выбранного грузополучателя PATCH /api/recipient/
     getOneConsigneeById( { idRecipient }: { idRecipient: string } ) {
-        return instanceBack.patch<InfoResponseType | ConsigneesApiType[]>('/api/recipient/', { idRecipient })
+        return instanceBack.patch<InfoResponseType & ConsigneesApiType[]>('/api/recipient/', { idRecipient })
             .then(response => response.data)
         // 1.	Code 200, models: ConsigneesApiType[]
         // 2.	Code 520, {"message":"Error"}
