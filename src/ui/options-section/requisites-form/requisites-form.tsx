@@ -102,7 +102,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                         <div className={ styles.requisitesForm__inputsPanel }>
                                             <Field name={ 'innNumber' }
                                                    placeholder={ label.innNumber }
-                                                   maskFormat={ maskOn.innNumber }
+                                                   maskFormat={ disableCompanyReqChange ? undefined : maskOn.innNumber }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ disableCompanyReqChange ? undefined : validators.innNumber }
