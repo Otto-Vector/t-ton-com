@@ -143,12 +143,13 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     }
 
     // синхронно/асинхронный валидатор на поле ИНН
-    const innPlusApiValidator = ( preValue: string ) => ( currentValue: string ) => {
-        [ preValue, currentValue ] = [ preValue, currentValue ].map(parseAllNumbers)
+    const innPlusApiValidator = ( preValue?: string ) => ( currentValue?: string ) => {
+        // расчищаем значения от лишних символов и пробелов после маски
+        const [ prev, current ] = [ preValue, currentValue ].map(parseAllNumbers)
         // запускаем асинхронную валидацию только после синхронной
-        return ( validators.innNumber && validators.innNumber(currentValue) )
+        return ( validators.innNumber && validators.innNumber(current) )
             // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-            || ( currentValue && ( preValue !== currentValue ) ? innValidate(currentValue) : undefined )
+            || ( current && ( prev !== current ) ? innValidate(current) : undefined )
     }
 
     // валидатор на одинаковые названия заголовков
@@ -199,6 +200,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
+
                             render={
                                 ( {
                                       submitError,
@@ -227,10 +229,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ isNew ? maskOn.innNumber : undefined }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ ( value ) => {
-                                                       if (isNew)
-                                                           return innPlusApiValidator(values.innNumber || '')(value)
-                                                   } }
+                                                   validate={ isNew ? innPlusApiValidator(values.innNumber) : undefined }
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />

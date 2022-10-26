@@ -156,6 +156,7 @@ const CustomSelect = ( {
                     // isMulti={true}
                     options={ options }
                     isDisabled={ disabled }
+                    // defaultValue={options[0]}
                     value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
                 /> }
             { isError &&
