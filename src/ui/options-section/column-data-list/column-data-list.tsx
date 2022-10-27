@@ -6,6 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import {parseCharsAndNumbers} from '../../../utils/parsers';
 import {OptionsLabelType} from '../../../redux/options/options-store-reducer';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 
 type OwnProps = {
@@ -18,7 +19,7 @@ type OwnProps = {
     route: string
 }
 
-export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
+export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route } ) => {
     const navigate = useNavigate();
 
     const [ content, setContent ] = useState(item.content)
@@ -64,14 +65,15 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
             </header>
             {/*ГЕНЕРИРУЕМЫЙ СПИСОК*/ }
             <div className={ styles.columnDataList__list }>
-                { content.map(( { id, title, city } ) =>
+                { content.map(( { id, title, subTitle } ) =>
                     <div className={ styles.columnDataList__item + ' ' + styles.rowItem }
                          onClick={ () => {
                              navigate(route + id)
                          } }
                          key={ item.label + id + title }
                     >
-                        <div className={ styles.rowItem__label } title={ title + ( city ? ' ' + city : '' ) }>
+                        <div className={ styles.rowItem__label }
+                             title={ title + ( subTitle ? ` [${ subTitle }]` : '' ) }>
                             { title || 'null' }
                         </div>
                     </div>)
@@ -90,4 +92,4 @@ export const ColumnDataList: React.FC<OwnProps> = ( { item, route } ) => {
             <InfoButtonToModal textToModal={ item.info } mode={ 'in' }/>
         </div>
     )
-}
+}, valuesAreEqual)

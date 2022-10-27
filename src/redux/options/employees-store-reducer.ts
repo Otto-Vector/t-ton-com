@@ -143,7 +143,7 @@ export const employeesStoreActions = {
 export type EmployeesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
-// запрос всего транспорта пользователя от сервера
+// запрос всех водителей принадлежащих организации
 export const getAllEmployeesAPI = (): EmployeesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(employeesStoreActions.toggleEmployeeIsFetching(true))
@@ -159,13 +159,13 @@ export const getAllEmployeesAPI = (): EmployeesStoreReducerThunkActionType =>
             }
 
         } catch (e) {
-            console.error('Ошибка в запросе списка сотрудников:', e)
+            console.error('Ошибка в запросе списка сотрудников: ', e)
         }
 
         dispatch(employeesStoreActions.toggleEmployeeIsFetching(false))
     }
 
-// добавить одну запись ТРАНСПОРТА через АПИ
+// добавить одну запись СОТРУДНИКА через АПИ
 export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: File | undefined ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
@@ -183,7 +183,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
         await dispatch(getAllEmployeesAPI())
     }
 
-// изменить одну запись ПРИЦЕПА через АПИ
+// изменить одну запись СОТРУДНИКА через АПИ
 export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image: File | undefined ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
@@ -191,9 +191,10 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.modifyOneEmployee({
                 ...values, idUser,
-                // поставил, потому что на localhost:3000 ругается о пустых полях,
-                // а на деплое через https - нет
-                rating: '5',
+                idTrailer: values.idTrailer || '-',
+                idTransport: values.idTransport || '-',
+                rating: '-',
+                // toDo: что-то сделать со статусами
                 status: 'free',
             }, image)
             if (response.success) console.log(response.success)

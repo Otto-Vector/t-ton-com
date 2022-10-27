@@ -168,7 +168,7 @@ const CustomSelect = ( {
 };
 
 
-export type SelectOptions = { value: string, label: string, key: string }
+export type SelectOptions = { value: string, label: string, key: string, isDisabled?: boolean, subLabel?: string }
 // утилита для переделывания массива строк в значения для Selector
 export const stringArrayToSelectValue = ( value: string[] ): SelectOptions[] =>
     value.map(( el ) => ( { value: el, label: el, key: el } ))

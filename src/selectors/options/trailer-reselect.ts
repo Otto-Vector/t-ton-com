@@ -3,6 +3,8 @@ import {TrailerStoreReducerStateType} from '../../redux/options/trailer-store-re
 import {createSelector} from 'reselect';
 import {TrailerCardType} from '../../types/form-types';
 import {SelectOptions} from '../../ui/common/form-selector/form-selector';
+import {getAllEmployeesStore} from './employees-reselect';
+import {parseFamilyToFIO} from '../../utils/parsers';
 
 type TrailerStoreSelectors<T extends keyof Y, Y = TrailerStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
@@ -22,12 +24,23 @@ export const getOneTrailerFromLocal = createSelector(getCurrentIdTrailerStore, g
         return trailer.filter(( { idTrailer } ) => idTrailer === currentId)[0] || initials
     })
 
-export const getAllTrailerSelectFromLocal = createSelector(getAllTrailerStore, ( trailer ): SelectOptions[] =>
-    trailer
-        .map(( { idTrailer, trailerTrademark, trailerNumber, cargoWeight } ) =>
-            ( {
-                key: idTrailer,
-                value: idTrailer,
-                label: [ trailerTrademark, trailerNumber, cargoWeight ].join(', ') + 'т.',
-            } )),
+export const getAllTrailerSelectFromLocal = createSelector(
+    getAllTrailerStore, getAllEmployeesStore, ( trailers, employees ): SelectOptions[] =>
+        trailers
+            .map(( { idTrailer, trailerTrademark, trailerNumber, cargoWeight } ) => {
+                    const employeesHasTrailer = employees
+                        .filter(( { idTrailer: id } ) => id === idTrailer)
+                        .map(( { employeeFIO } ) => parseFamilyToFIO(employeeFIO))
+                    const isEmployeesHasTrailer = employeesHasTrailer.length > 0
+                    const subLabel = [ ...employeesHasTrailer ].join(',')
+                    const label = [ trailerTrademark, trailerNumber, cargoWeight ].join(', ') + 'т.' + subLabel
+                    return ( {
+                        key: idTrailer,
+                        value: idTrailer,
+                        label,
+                        isDisabled: isEmployeesHasTrailer,
+                        subLabel
+                    } )
+                },
+            ),
 )

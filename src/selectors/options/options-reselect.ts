@@ -10,8 +10,8 @@ import {
     TransportCardType,
 } from '../../types/form-types';
 import {getAllConsigneesStore, getCurrentIdConsigneeStore} from './consignees-reselect';
-import {getAllTransportStore} from './transport-reselect';
-import {getAllTrailerStore} from './trailer-reselect';
+import {getAllTransportSelectFromLocal, getAllTransportStore} from './transport-reselect';
+import {getAllTrailerSelectFromLocal, getAllTrailerStore} from './trailer-reselect';
 import {getAllEmployeesStore} from './employees-reselect';
 
 type OptionsStoreSelectors<T extends keyof Y, Y = OptionsStoreReducerStateType> = ( state: AppStateType ) => Y[T]
@@ -28,7 +28,14 @@ export const getRequisitesInfoOptionsStore: OptionsStoreSelectors<'requisitesInf
 // выборка из списка загруженных грузоотправителей
 export const getShippersOptionsStore = createSelector(getAllShippersStore, getShippersTitleOptionsStore,
     ( shippers: ShippersCardType[], titles ): OptionsStoreReducerStateType['shippers'] => {
-        return { ...titles, content: shippers.map(( { idSender: id, title , city} ) => ( { id, title: title + '', city: `[${city||''}]` } )) }
+        return {
+            ...titles,
+            content: shippers.map(( { idSender: id, title = '', city: subTitle } ) => ( {
+                id,
+                title,
+                subTitle,
+            } )),
+        }
     })
 // выборка из названий грузополучателей
 export const getShippersAllNamesListOptionsStore = createSelector(getShippersOptionsStore,
@@ -40,7 +47,14 @@ export const getShippersNamesListOptionsStore = createSelector(getShippersOption
 // выборка из списка загруженных грузополучателей
 export const getConsigneesOptionsStore = createSelector(getAllConsigneesStore, getConsigneesTitleOptionsStore,
     ( consignee: ConsigneesCardType[], titles ): OptionsStoreReducerStateType['consignees'] => {
-return { ...titles, content: consignee.map(( { idRecipient: id, title , city} ) => ( { id, title: title + '', city: `[${city||''}]` } )) }
+        return {
+            ...titles,
+            content: consignee.map(( { idRecipient: id, title = '', city: subTitle } ) => ( {
+                id,
+                title,
+                subTitle,
+            } )),
+        }
     })
 // выборка из названий грузополучателей
 export const getConsigneesAllNamesListOptionsStore = createSelector(getConsigneesOptionsStore,
@@ -50,20 +64,31 @@ export const getConsigneesNamesListOptionsStore = createSelector(getConsigneesOp
     ( { content }, currentId ): string[] => content.filter(( { id } ) => id !== currentId).map(( { title } ) => title))
 
 // выборка из списка загруженных грузовиков/тягачей
-export const getTransportOptionsStore = createSelector(getAllTransportStore, getTransportTitleOptionsStore,
-    ( transport: TransportCardType[], titles ): OptionsStoreReducerStateType['transport'] => {
+export const getTransportOptionsStore = createSelector(getAllTransportStore, getTransportTitleOptionsStore, getAllTransportSelectFromLocal,
+    ( transport: TransportCardType[], titles, transportHasEmployee ): OptionsStoreReducerStateType['transport'] => {
         return {
-            ...titles, content: transport.map(( { idTransport: id, transportTrademark, transportNumber } ) =>
-                ( { id, title: transportTrademark + ', ' + transportNumber } )),
+            ...titles, content: transport.map(
+                ( { idTransport: id, transportTrademark, transportNumber }, index ) =>
+                    ( {
+                        id,
+                        title: transportTrademark + ', ' + transportNumber,
+                        subTitle: transportHasEmployee[index].subLabel,
+                    } )),
         }
     })
 
 // выборка из списка загруженных прицепов
-export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrailerTitleOptionsStore,
-    ( trailer: TrailerCardType[], titles ): OptionsStoreReducerStateType['trailer'] => {
+export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrailerTitleOptionsStore, getAllTrailerSelectFromLocal,
+    ( trailer: TrailerCardType[], titles, trailersHasEmployee ): OptionsStoreReducerStateType['trailer'] => {
+
         return {
-            ...titles, content: trailer.map(( { idTrailer: id, trailerTrademark, trailerNumber } ) =>
-                ( { id, title: trailerTrademark + ', ' + trailerNumber } )),
+            ...titles, content: trailer.map(
+                ( { idTrailer: id, trailerTrademark, trailerNumber }, index ) =>
+                    ( {
+                        id,
+                        title: trailerTrademark + ', ' + trailerNumber,
+                        subTitle: trailersHasEmployee[index].subLabel,
+                    } )),
         }
     })
 
@@ -71,7 +96,7 @@ export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrai
 export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, getEmployeesTitleOptionsStore,
     ( employees: EmployeesCardType[], titles ): OptionsStoreReducerStateType['employees'] => {
         return {
-            ...titles, content: employees.map(( { idEmployee: id, employeeFIO } ) =>
-                ( { id, title: employeeFIO + '' } )),
+            ...titles, content: employees.map(( { idEmployee: id, employeeFIO: title = '' } ) =>
+                ( { id, title } )),
         }
     })

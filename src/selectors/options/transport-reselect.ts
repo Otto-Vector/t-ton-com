@@ -3,6 +3,8 @@ import {TransportStoreReducerStateType} from '../../redux/options/transport-stor
 import {TransportCardType} from '../../types/form-types';
 import {createSelector} from 'reselect';
 import {SelectOptions} from '../../ui/common/form-selector/form-selector';
+import {parseFamilyToFIO} from '../../utils/parsers';
+import {getAllEmployeesStore} from './employees-reselect';
 
 type TransportStoreSelectors<T extends keyof Y, Y = TransportStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
@@ -22,12 +24,23 @@ export const getOneTransportFromLocal = createSelector(getCurrentIdTransportStor
         return transport.filter(( { idTransport } ) => idTransport === currentId)[0] || initials
     })
 
-export const getAllTransportSelectFromLocal = createSelector(getAllTransportStore, ( transport ): SelectOptions[] =>
-    transport
-        .map(( { idTransport, transportTrademark, transportNumber, cargoWeight } ) =>
-            ( {
-                key: idTransport,
-                value: idTransport,
-                label: [ transportTrademark, transportNumber, cargoWeight ].join(', ') + 'т.',
-            } )),
+export const getAllTransportSelectFromLocal = createSelector(
+    getAllTransportStore, getAllEmployeesStore, ( transports, employees ): SelectOptions[] =>
+        transports
+            .map(( { idTransport, transportTrademark, transportNumber, cargoWeight } ) => {
+                    const employeesHasTransport = employees
+                        .filter(( { idTransport: id } ) => id === idTransport)
+                        .map(( { employeeFIO } ) => parseFamilyToFIO(employeeFIO))
+                    const isEmployeesHasTransport = employeesHasTransport.length > 0
+                    const subLabel = [ ...employeesHasTransport ].join(',')
+                    const label = [ transportTrademark, transportNumber, cargoWeight ].join(', ') + 'т.' + subLabel
+                    return ( {
+                        key: idTransport,
+                        value: idTransport,
+                        label,
+                        isDisabled: isEmployeesHasTransport,
+                        subLabel
+                    } )
+                },
+            ),
 )

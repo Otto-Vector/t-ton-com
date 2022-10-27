@@ -39,10 +39,19 @@
     background-color: $accentColor !important;
     border-bottom: .5px solid #92ABC8 !important;
 
-
     &:hover, &--is-focused {
       background-color: rgba($accentColor, .8) !important;
     }
+
+    &:disabled, &--is-disabled, {
+      background-color: rgba($accentColor, .4) !important;
+      color: red !important;
+    }
+
+    &--is-disabled:hover {
+      color: red !important;
+    }
+
   }
 
 }

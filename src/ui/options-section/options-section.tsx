@@ -33,7 +33,6 @@ export const OptionsSection: React.FC<OwnProps> = () => {
 
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
     const navigate = useNavigate()
-    const dispatch = useDispatch()
 
     const shippersList = useSelector(getShippersOptionsStore)
     const shipperIsFetching = useSelector(getIsFetchingShippersStore)
