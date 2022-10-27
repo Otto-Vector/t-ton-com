@@ -12,6 +12,7 @@ import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoConstType, propertyRights, TransportCardType} from '../../../types/form-types'
 import {
+    getAllTransportSelectFromLocal,
     getCurrentIdTransportStore,
     getInitialValuesTransportStore,
     getIsFetchingTransportStore,
@@ -30,6 +31,7 @@ import {
 } from '../../../redux/options/transport-store-reducer';
 import {parseAllNumbers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
+import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 
 type OwnProps = {}
 
@@ -51,6 +53,16 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const currentId = useSelector(getCurrentIdTransportStore)
     const oneTransport = useSelector(getOneTransportFromLocal)
 
+    const allBusyTransport = useSelector(getAllTransportSelectFromLocal)
+    const isBusyFilter = allBusyTransport.filter(( { key, isDisabled } ) => key === currentId && isDisabled)
+    const isBusy = isBusyFilter.length > 0
+
+    const transportHasPassToDelete = () => {
+        dispatch(globalModalStoreActions.setTextMessage(
+            'Транспорт не может быть удалён, он привязан к сотруднику: '
+            + ( isBusy && isBusyFilter[0].subLabel ),
+        ))
+    }
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
     const isNew = currentIdForShow === 'new'
@@ -190,7 +202,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                     <Button type={ 'button' }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ transportDeleteHandleClick }
+                                                            onClick={ isBusy ? transportHasPassToDelete : transportDeleteHandleClick }
                                                             rounded
                                                             disabled={ isNew }
                                                     />

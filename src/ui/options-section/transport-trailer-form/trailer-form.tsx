@@ -13,6 +13,7 @@ import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoConstType, propertyRights, TrailerCardType} from '../../../types/form-types'
 import {
+    getAllTrailerSelectFromLocal,
     getCurrentIdTrailerStore,
     getInitialValuesTrailerStore,
     getIsFetchingTrailerStore,
@@ -30,6 +31,7 @@ import {
 } from '../../../redux/options/trailer-store-reducer';
 import {parseAllNumbers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
+import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 
 type OwnProps = {}
 
@@ -52,6 +54,16 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const currentId = useSelector(getCurrentIdTrailerStore)
     const oneTrailer = useSelector(getOneTrailerFromLocal)
 
+    const allBusyTrailer = useSelector(getAllTrailerSelectFromLocal)
+    const isBusyFilter = allBusyTrailer.filter(( { key, isDisabled } ) => key === currentId && isDisabled)
+    const isBusy = isBusyFilter.length > 0
+
+    const transportHasPassToDelete = () => {
+        dispatch(globalModalStoreActions.setTextMessage(
+            'Транспорт не может быть удалён, он привязан к сотруднику: '
+            + ( isBusy && isBusyFilter[0].subLabel ),
+        ))
+    }
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
     const isNew = currentIdForShow === 'new'
@@ -191,7 +203,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                     <Button type={ 'button' }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ trailerDeleteHandleClick }
+                                                            onClick={ isBusy ? transportHasPassToDelete : trailerDeleteHandleClick }
                                                             disabled={ isNew }
                                                             rounded
                                                     />
