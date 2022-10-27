@@ -52,7 +52,15 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const parsers = useSelector(getParsersEmployeesStore)
 
     const trailerSelect = useSelector(getAllTrailerSelectFromLocal)
+        .map(( values ) => ( {
+            ...values,
+            isDisabled: values.isDisabled && ( values.key !== initialValues.idTrailer ),
+        } ))
     const transportSelect = useSelector(getAllTransportSelectFromLocal)
+        .map(( values ) => ( {
+            ...values,
+            isDisabled: values.isDisabled && ( values.key !== initialValues.idTransport ),
+        } ))
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployees = useSelector(getOneEmployeesFromLocal)

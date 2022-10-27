@@ -33,13 +33,14 @@ export const getAllTransportSelectFromLocal = createSelector(
                         .map(( { employeeFIO } ) => parseFamilyToFIO(employeeFIO))
                     const isEmployeesHasTransport = employeesHasTransport.length > 0
                     const subLabel = [ ...employeesHasTransport ].join(',')
-                    const label = [ transportTrademark, transportNumber, cargoWeight ].join(', ') + 'т.' + subLabel
+                    const label = [ transportTrademark, transportNumber, cargoWeight ].join(', ') + 'т.'
+                        + ( subLabel ? ' - ' + subLabel : '' )
                     return ( {
                         key: idTransport,
                         value: idTransport,
                         label,
                         isDisabled: isEmployeesHasTransport,
-                        subLabel
+                        subLabel,
                     } )
                 },
             ),
