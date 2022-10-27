@@ -56,6 +56,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             ...values,
             isDisabled: values.isDisabled && ( values.key !== initialValues.idTrailer ),
         } ))
+
     const transportSelect = useSelector(getAllTransportSelectFromLocal)
         .map(( values ) => ( {
             ...values,

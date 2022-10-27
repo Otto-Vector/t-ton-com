@@ -17,13 +17,15 @@ type OwnProps = {
         info?: string
     }
     route: string
+    isPlacemarked?: boolean
 }
 
-export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route } ) => {
+export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, isPlacemarked } ) => {
     const navigate = useNavigate();
 
     const [ content, setContent ] = useState(item.content)
     const [ test, setTest ] = useState<string>('')
+
 
     const onSearch = ( event: ChangeEvent<HTMLInputElement> ) => {
         setTest(parseCharsAndNumbers(event.target?.value))
@@ -72,8 +74,9 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route } )
                          } }
                          key={ item.label + id + title }
                     >
-                        <div className={ styles.rowItem__label }
-                             title={ title + ( subTitle ? ` [${ subTitle }]` : '' ) }>
+                        <div
+                            className={ styles.rowItem__label + ( (isPlacemarked && subTitle) ? ' ' + styles.rowItem__label_marked : '' ) }
+                            title={ title + ( subTitle ? ` [${ subTitle }]` : '' ) }>
                             { title || 'null' }
                         </div>
                     </div>)

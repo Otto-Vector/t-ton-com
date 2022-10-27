@@ -191,8 +191,8 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.modifyOneEmployee({
                 ...values, idUser,
-                idTrailer: values.idTrailer || '-',
                 idTransport: values.idTransport || '-',
+                idTrailer: !values.idTransport ? '-' : values.idTrailer || '-',
                 rating: '-',
                 // toDo: что-то сделать со статусами
                 status: 'free',
