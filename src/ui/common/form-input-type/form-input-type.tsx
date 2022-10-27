@@ -9,6 +9,7 @@ type OwnProps = {
     placeholder?: string // он же и label внутри поля ввода
     meta: FieldState<any> // передаваемые значения из final-form
     input: any
+    readOnly: boolean
     mask?: string // показывает символом сколько осталось ввести данных (по умолчанию равна "_")
     maskFormat?: string // маска форматирования для NumberFormat
     allowEmptyFormatting?: boolean // показывать maskFormat ДО ввода данных
@@ -26,20 +27,21 @@ export const FormInputType: React.FC<OwnProps> = (
     {
         input, meta, resetFieldBy, placeholder,
         children, disabled = false, mask = '_', maskFormat,
-        textArea, allowEmptyFormatting, inputType = 'text', errorBottom, noLabel, min,
+        textArea, allowEmptyFormatting, inputType = 'text',
+        errorBottom, noLabel, min, readOnly,
     } ) => {
 
     const InInput = textArea ? 'textarea' : 'input' // если нужен просто текстовое поле
 
     // const isError = ( meta.error || meta.submitError ) && meta.touched
-    const isError = ( meta.error || meta.submitError ) && (meta.active || meta.touched)
+    const isError = ( meta.error || meta.submitError ) && ( meta.active || meta.touched )
     const labelToView = ( input.value || allowEmptyFormatting || ( inputType !== 'text' ) ) && !noLabel
 
     return ( <div className={ styles.inputWrapper + ' ' + styles.search }>
             {/*кнопка для сброса параметров поля
             (проявляется, если переданы методы resetFieldBy={form} в объявленном объекте Field
             а также при введенных данных*/ }
-            { resetFieldBy && input.value && !disabled && <div
+            { resetFieldBy && input.value && !disabled && !readOnly && <div
                 className={ styles.clearSearch + ' ' + ( !meta.dirty && styles.clearSearch_unfocused ) }
                 onClick={ async () => {
                     await resetFieldBy.change(input.name, '')
@@ -76,7 +78,10 @@ export const FormInputType: React.FC<OwnProps> = (
                          min={ inputType === 'date' ? min : undefined }
                          className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
                          placeholder={ placeholder }
-                         disabled={ disabled || meta.validating }/>
+                         disabled={ disabled || meta.validating }
+                         readOnly={ readOnly }
+                />
+
             }
             { labelToView &&
                 <label className={ styles.label }>{ placeholder }</label>

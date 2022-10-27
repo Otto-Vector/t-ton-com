@@ -10,6 +10,7 @@ $input--padding-top: 6px;
 $input--padding-left: 15px;
 
 $input--error-color: #C70707;
+$input--read-only-color: $accentColor;
 
 $input--border-color: #92ABC8;
 $input--border-color--focused: $accentColor;
@@ -140,6 +141,12 @@ $input--disabled-font-color: $mainFontColor;
     & ~ .label { // цвет для заголовка на заблокированном элементе
       color: rgba($mainFontColor, .5);
       font-weight: 800;
+    }
+  }
+
+  &:read-only {
+    &, &:hover, &:focus {
+      color: $input--read-only-color;
     }
   }
 

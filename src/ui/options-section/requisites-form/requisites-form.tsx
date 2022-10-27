@@ -67,6 +67,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
         dispatch(requisitesStoreActions.setIsRequisitesError(false))
 
         if (isNew) {
+            // при первом входе создаём нового грузоотправителя
             dispatch<any>(newShipperSaveToAPI({
                 innNumber: unmaskedValues.innNumber,
                 title: unmaskedValues.organizationName,
