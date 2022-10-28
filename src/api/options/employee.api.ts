@@ -8,7 +8,7 @@ export type EmployeesApiType = {
     employeePhoneNumber: string
     passportSerial: string
     passportFMS: string
-    passportDate: string | Date
+    passportDate: string
     drivingLicenseNumber: string
     drivingCategory: string
     personnelNumber: string

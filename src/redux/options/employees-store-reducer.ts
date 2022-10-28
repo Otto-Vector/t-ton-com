@@ -172,7 +172,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.createOneEmployee({
-                idUser, ...values,
+                idUser, ...values, passportDate: values.passportDate as string
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
@@ -191,6 +191,7 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.modifyOneEmployee({
                 ...values, idUser,
+                passportDate: values.passportDate as string,
                 idTransport: values.idTransport || '-',
                 idTrailer: !values.idTransport ? '-' : values.idTrailer || '-',
                 rating: '-',
