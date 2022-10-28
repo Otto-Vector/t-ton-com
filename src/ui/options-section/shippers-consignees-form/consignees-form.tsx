@@ -128,10 +128,10 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     }
 
     // автозаполнение полей при выборе селектора
-    const setDataToForm = ( form: FormApi<ConsigneesCardType> ) => ( value: string | undefined ) => {
+    const setDataToForm = ( form: FormApi<ConsigneesCardType> ) => ( kppNumber: string | undefined ) => {
         const formValue = form.getState().values
-        if (value)
-            dispatch<any>(setOrganizationByInnKppConsignees({ formValue, kppNumber: value }))
+        if (kppNumber)
+            dispatch<any>(setOrganizationByInnKppConsignees({ formValue, kppNumber }))
     }
 
     // онлайн валидация ИНН с подгрузкой КПП в селектор
@@ -141,9 +141,24 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     }
 
     // синхронно/асинхронный валидатор на поле ИНН
-    const innPlusApiValidator = ( preValue?: string ) => ( currentValue?: string ) => {
+    const innPlusApiValidator = ( preValues: ConsigneesCardType ) => ( currentValue?: string ) => {
         // расчищаем значения от лишних символов и пробелов после маски
-        const [ prev, current ] = [ preValue, currentValue ].map(parseAllNumbers)
+        const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
+
+        if (validators.innNumber && ( current && ( prev !== current ) ))
+            if (validators.innNumber(current) && !validators.innNumber(prev)) {
+                const formValue = {
+                    ...preValues,
+                    organizationName: '',
+                    ogrn: '',
+                    address: '',
+                    kpp: '',
+                    innNumber: current,
+                } as ConsigneesCardType
+                dispatch(daDataStoreActions.setSuggectionsValues([]))
+                dispatch(consigneesStoreActions.setInitialValues(formValue))
+            }
+
         // запускаем асинхронную валидацию только после синхронной
         return ( validators.innNumber && validators.innNumber(current) )
             // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
@@ -189,6 +204,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         }, [ currentId, initialValues ],
     )
 
+
     return (
         <div className={ styles.shippersConsigneesForm }>
             <div className={ styles.shippersConsigneesForm__wrapper }>
@@ -226,7 +242,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ isNew ? maskOn.innNumber : undefined }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ isNew ? innPlusApiValidator(values.innNumber) : undefined }
+                                                   validate={ isNew ? innPlusApiValidator(values) : undefined }
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />
@@ -236,8 +252,10 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                               placeholder={ label.kpp }
                                                               values={ kppSelect }
                                                               validate={ validators.kpp }
+                                                    // defaultValue={ kppSelect.length === 1 ? kppSelect[0] : undefined }
+                                                              defaultValue={ kppSelect.length > 0 ? kppSelect[0] : undefined }
                                                               handleChanger={ setDataToForm(form) }
-                                                              disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
+                                                              // disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
                                                               errorTop
                                                               isClearable
                                                 />

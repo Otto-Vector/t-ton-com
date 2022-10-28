@@ -1,6 +1,6 @@
 import {AppStateType} from '../../redux/redux-store'
 import {DaDataStoreReducerStateType} from '../../redux/api/dadata-response-reducer';
-import {SelectOptions} from '../../ui/common/form-selector/form-selector';
+import {SelectOptionsType} from '../../ui/common/form-selector/form-selector';
 import {createSelector} from 'reselect';
 
 
@@ -11,7 +11,7 @@ const getSuggestionsDaDataStore: AuthStoreSelectors<'suggestions'> = ( state ) =
 
 export const getAllKPPSelectFromLocal = createSelector(
     getSuggestionsDaDataStore,
-    ( kpp ): SelectOptions[] => kpp.map(( { data: { kpp='-' }, value } ) => ( {
+    ( kpp ): SelectOptionsType[] => kpp.map(( { data: { kpp='-' }, value } ) => ( {
         key: kpp,
         value: kpp,
         label: `${ kpp }  ${ value }`,

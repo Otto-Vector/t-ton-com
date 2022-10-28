@@ -2,7 +2,7 @@ import {AppStateType} from '../../redux/redux-store'
 import {ConsigneesStoreReducerStateType} from '../../redux/options/consignees-store-reducer'
 import {ConsigneesCardType} from '../../types/form-types';
 import {createSelector} from 'reselect';
-import {SelectOptions} from '../../ui/common/form-selector/form-selector';
+import {SelectOptionsType} from '../../ui/common/form-selector/form-selector';
 
 type ConsigneesStoreSelectors<T extends keyof Y, Y = ConsigneesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
@@ -27,6 +27,6 @@ export const getOneConsigneesFromLocal = createSelector(
     })
 
 export const getAllConsigneesSelectFromLocal = createSelector(getAllConsigneesStore,
-    ( consignees ): SelectOptions[] => consignees.map(( { idRecipient, title } ) =>
+    ( consignees ): SelectOptionsType[] => consignees.map(( { idRecipient, title } ) =>
         ( { key: idRecipient + '', value: idRecipient + '', label: title || '' } )),
 )

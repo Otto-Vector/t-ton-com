@@ -2,7 +2,7 @@ import {AppStateType} from '../../redux/redux-store'
 import {TransportStoreReducerStateType} from '../../redux/options/transport-store-reducer'
 import {TransportCardType} from '../../types/form-types';
 import {createSelector} from 'reselect';
-import {SelectOptions} from '../../ui/common/form-selector/form-selector';
+import {SelectOptionsType} from '../../ui/common/form-selector/form-selector';
 import {parseFamilyToFIO} from '../../utils/parsers';
 import {getAllEmployeesStore} from './employees-reselect';
 
@@ -25,7 +25,7 @@ export const getOneTransportFromLocal = createSelector(getCurrentIdTransportStor
     })
 
 export const getAllTransportSelectFromLocal = createSelector(
-    getAllTransportStore, getAllEmployeesStore, ( transports, employees ): SelectOptions[] =>
+    getAllTransportStore, getAllEmployeesStore, ( transports, employees ): SelectOptionsType[] =>
         transports
             .map(( { idTransport, transportTrademark, transportNumber, cargoWeight } ) => {
                     const employeesHasTransport = employees

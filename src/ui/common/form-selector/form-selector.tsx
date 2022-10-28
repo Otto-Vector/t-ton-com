@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import React, {useCallback, useEffect, useMemo} from 'react'
 import styles from './form-selector.module.scss'
 import './react-select-ton.scss'
 import {Field, FieldRenderProps} from 'react-final-form'
@@ -18,6 +18,7 @@ type OwnProps = {
     handleChanger?: Function
     errorTop?: boolean
     disabled?: boolean
+    defaultValue?: SelectOptionsType
 }
 ////////////////////////////////////////
 // ЧТОБЫ СДЕЛАТЬ SELECTOR ИЗМЕНЯЕМЫМ //
@@ -74,6 +75,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                                                       handleChanger,
                                                       errorTop,
                                                       disabled,
+                                                      defaultValue,
                                                   } ) => {
 
     return <div className={ styles.dropdown }>
@@ -92,16 +94,17 @@ export const FormSelector: React.FC<OwnProps> = ( {
                               handleChanger={ handleChanger }
                               errorTop={ errorTop }
                               disabled={ disabled }
+                              defaultValue={defaultValue}
                 />
             ) }
         </Field>
     </div>
 }
 
-type SelectOptionType = {
-    label: string;
-    value: string;
-};
+// type SelectOptionType = {
+//     label: string;
+//     value: string;
+// };
 
 const CustomSelect = ( {
                            input,
@@ -113,16 +116,22 @@ const CustomSelect = ( {
                            handleChanger,
                            errorTop,
                            disabled,
+    defaultValue,
                            ...rest
                        }: FieldRenderProps<string, HTMLElement> ) => {
 
-    const handleChange = useCallback(( option: SelectOptionType | null ) => {
+    const handleChange = useCallback(( option: SelectOptionsType | null ) => {
         input.onChange(option?.value);
         if (handleChanger) handleChanger(option?.value)
     }, [])
 
-    const isError = ( meta.error || meta.submitError ) && meta.touched
+    // useEffect(()=>{
+    //     if (defaultValue) {
+    //         // if (handleChanger) handleChanger(defaultValue)
+    //     }
+    // })
 
+    const isError = ( meta.error || meta.submitError ) && meta.touched
 
     return (
         <>
@@ -144,7 +153,7 @@ const CustomSelect = ( {
                     isDisabled={ disabled }
                     onCreateOption={ handleCreate }
                     options={ options }
-                    value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
+                    value={ options ? options.find(( option: SelectOptionsType ) => option.value === input.value) : '' }
                 />
                 : <Select
                     { ...input }
@@ -156,8 +165,10 @@ const CustomSelect = ( {
                     // isMulti={true}
                     options={ options }
                     isDisabled={ disabled }
-                    // defaultValue={options[0]}
-                    value={ options ? options.find(( option: SelectOptionType ) => option.value === input.value) : '' }
+                    defaultValue={ defaultValue }
+                    // defaultValue={ options.length === 0 ? options[0] : undefined }
+                    // defaultValue={ options[0] }
+                    value={ options ? options.find(( option: SelectOptionsType ) => option.value === input.value) : '' }
                 /> }
             { isError &&
                 <span className={ styles.errorSpan + ' ' + styles[`errorSpan_${ errorTop ? 'top' : 'bottom' }`] }>
@@ -168,7 +179,7 @@ const CustomSelect = ( {
 };
 
 
-export type SelectOptions = { value: string, label: string, key: string, isDisabled?: boolean, subLabel?: string }
+export type SelectOptionsType = { value: string, label: string, key: string, isDisabled?: boolean, subLabel?: string }
 // утилита для переделывания массива строк в значения для Selector
-export const stringArrayToSelectValue = ( value: string[] ): SelectOptions[] =>
+export const stringArrayToSelectValue = ( value: string[] ): SelectOptionsType[] =>
     value.map(( el ) => ( { value: el, label: el, key: el } ))

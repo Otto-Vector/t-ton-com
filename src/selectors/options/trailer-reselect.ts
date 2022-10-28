@@ -2,7 +2,7 @@ import {AppStateType} from '../../redux/redux-store'
 import {TrailerStoreReducerStateType} from '../../redux/options/trailer-store-reducer'
 import {createSelector} from 'reselect';
 import {TrailerCardType} from '../../types/form-types';
-import {SelectOptions} from '../../ui/common/form-selector/form-selector';
+import {SelectOptionsType} from '../../ui/common/form-selector/form-selector';
 import {getAllEmployeesStore} from './employees-reselect';
 import {parseFamilyToFIO} from '../../utils/parsers';
 
@@ -25,7 +25,7 @@ export const getOneTrailerFromLocal = createSelector(getCurrentIdTrailerStore, g
     })
 
 export const getAllTrailerSelectFromLocal = createSelector(
-    getAllTrailerStore, getAllEmployeesStore, ( trailers, employees ): SelectOptions[] =>
+    getAllTrailerStore, getAllEmployeesStore, ( trailers, employees ): SelectOptionsType[] =>
         trailers
             .map(( { idTrailer, trailerTrademark, trailerNumber, cargoWeight } ) => {
                     const employeesHasTrailer = employees

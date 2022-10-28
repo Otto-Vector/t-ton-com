@@ -16,10 +16,7 @@ import {
 import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
 import {getOrganizationsByInn} from '../api/dadata-response-reducer';
 import {consigneesApi} from '../../api/options/consignees.api';
-import {
-    GlobalModalActionsType,
-    globalModalStoreActions,
-} from '../utils/global-modal-store-reducer';
+import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
 const defaultInitialValues = {
     idRecipient: '',
@@ -33,7 +30,7 @@ const defaultInitialValues = {
     consigneesTel: undefined,
     description: undefined,
     coordinates: undefined,
-    city: undefined
+    city: undefined,
 } as ConsigneesCardType
 
 
@@ -233,13 +230,11 @@ export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDa
 
         const { innNumber } = getState().consigneesStoreReducer.initialValues
         const booleanMemo = ( +( innNumber || 0 ) !== inn )
-        const response = booleanMemo
+        const error = booleanMemo
             ? await dispatch<any>(getOrganizationsByInn({ inn }))
             : null
 
-        if (response !== null) {
-            return response
-        } else return null
+        return error
 
     }
 
@@ -250,6 +245,7 @@ export const setOrganizationByInnKppConsignees = ( {
                                                    }: { kppNumber: string, formValue: ConsigneesCardType } ):
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
+
 
         const response = ( kppNumber !== '-' )
             ? getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]

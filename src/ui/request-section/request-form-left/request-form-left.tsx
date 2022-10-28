@@ -19,7 +19,7 @@ import {
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
-import {FormSelector, SelectOptions, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
+import {FormSelector, SelectOptionsType, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
 import {RequestModesType} from '../request-section'
 import {Field, Form} from 'react-final-form'
 import {
@@ -89,7 +89,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     //         .map(( { title } ) => ( { value: title, label: title, key: title } )), [ requisitesInn ])
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
-    const customersSelect: SelectOptions[] = custumersByUserInn
+    const customersSelect: SelectOptionsType[] = custumersByUserInn
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
 
     const buttonsAction = {

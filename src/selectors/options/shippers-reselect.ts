@@ -2,7 +2,7 @@ import {AppStateType} from '../../redux/redux-store'
 import {ShippersStoreReducerStateType} from '../../redux/options/shippers-store-reducer'
 import {createSelector} from 'reselect';
 import {ShippersCardType} from '../../types/form-types';
-import {SelectOptions} from '../../ui/common/form-selector/form-selector';
+import {SelectOptionsType} from '../../ui/common/form-selector/form-selector';
 
 type ShippersStoreSelectors<T extends keyof Y, Y = ShippersStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
@@ -27,6 +27,6 @@ export const getOneShipperFromLocal = createSelector(
     })
 
 export const getAllShippersSelectFromLocal = createSelector(getAllShippersStore,
-    ( shippers ): SelectOptions[] => shippers.map(( { idSender, title } ) =>
+    ( shippers ): SelectOptionsType[] => shippers.map(( { idSender, title } ) =>
         ( { key: idSender + '', value: idSender + '', label: title + '' } )),
 )
