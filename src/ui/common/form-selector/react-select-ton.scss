@@ -45,11 +45,11 @@
 
     &:disabled, &--is-disabled, {
       background-color: rgba($accentColor, .4) !important;
-      color: red !important;
+      color: $accentColor !important;
     }
 
     &--is-disabled:hover {
-      color: red !important;
+      color: $accentColor !important;
     }
 
   }

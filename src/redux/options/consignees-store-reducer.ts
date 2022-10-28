@@ -33,6 +33,7 @@ const defaultInitialValues = {
     consigneesTel: undefined,
     description: undefined,
     coordinates: undefined,
+    city: undefined
 } as ConsigneesCardType
 
 

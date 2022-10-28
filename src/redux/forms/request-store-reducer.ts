@@ -300,8 +300,40 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
                         cargoType: elem.cargoType as CargoTypeType,
 
                         idUserCustomer: elem.idUserCustomer,
+
+                        idUserSender: elem.idUserSender,
                         idSender: elem.idSender,
+                        sender: {
+                            idSender: elem.idSender + '',
+                            title: elem.titleSender,
+                            innNumber: elem.innNumberSender,
+                            organizationName: elem.organizationNameSender,
+                            kpp: elem.kppSender,
+                            ogrn: elem.ogrnSender,
+                            address: elem.addressSender,
+                            shipperFio: elem.shipperFioSender,
+                            shipperTel: elem.shipperTelSender,
+                            description: elem.descriptionSender,
+                            coordinates: elem.coordinatesSender,
+                            city: elem.citySender,
+                        },
+
                         idRecipient: elem.idRecipient,
+                        idUserRecipient: elem.idUserRecipient,
+                        recipient: {
+                            idRecipient: elem.idRecipient as string,
+                            title: elem.titleRecipient,
+                            innNumber: elem.innNumberRecipient,
+                            organizationName: elem.organizationNameRecipient,
+                            kpp: elem.kppRecipient,
+                            ogrn: elem.ogrnRecipient,
+                            address: elem.addressRecipient,
+                            consigneesFio: elem.consigneesFioRecipient,
+                            consigneesTel: elem.consigneesTelRecipient,
+                            description: elem.descriptionRecipient,
+                            coordinates: elem.coordinatesRecipient,
+                            city: elem.cityRecipient
+                        },
 
                         distance: Number(elem.distance),
                         note: elem.note,
@@ -392,8 +424,37 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
 
                         idUserCustomer: element.idUserCustomer,
                         idSender: element.idSender,
+                        idUserSender: element.idUserSender,
+                        sender: {
+                            idSender: element.idSender + '',
+                            title: element.titleSender,
+                            innNumber: element.innNumberSender,
+                            organizationName: element.organizationNameSender,
+                            kpp: element.kppSender,
+                            ogrn: element.ogrnSender,
+                            address: element.addressSender,
+                            shipperFio: element.shipperFioSender,
+                            shipperTel: element.shipperTelSender,
+                            description: element.descriptionSender,
+                            coordinates: element.coordinatesSender,
+                            city: element.citySender,
+                        },
                         idRecipient: element.idRecipient,
-
+                        idUserRecipient: element.idUserRecipient,
+                        recipient: {
+                            idRecipient: element.idRecipient as string,
+                            title: element.titleRecipient,
+                            innNumber: element.innNumberRecipient,
+                            organizationName: element.organizationNameRecipient,
+                            kpp: element.kppRecipient,
+                            ogrn: element.ogrnRecipient,
+                            address: element.addressRecipient,
+                            consigneesFio: element.consigneesFioRecipient,
+                            consigneesTel: element.consigneesTelRecipient,
+                            description: element.descriptionRecipient,
+                            coordinates: element.coordinatesRecipient,
+                            city: element.cityRecipient
+                        },
                         distance: Number(element.distance),
                         note: element.note,
                         visible: true,
@@ -492,18 +553,18 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
     }
 
 // изменить текущую заявку
-export const changeCurrentRequestAPI = ( { values }: { values: OneRequestType } ): RequestStoreReducerThunkActionType =>
+export const changeCurrentRequest = ( { values }: { values: OneRequestType } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         // dispatch(requestStoreActions.setIsFetching(true))
         try {
-            const idUserCustomer = getState().authStoreReducer.authID
+            // const idUserCustomer = getState().authStoreReducer.authID
             // const initialValues = getState().requestStoreReducer.initialValues
             const initialValues = values
-            const requestNumberCorrector = values.requestNumber?.toString() || '0'
+            const requestNumber = values.requestNumber?.toString() || '0'
             const response = await oneRequestApi.modifyOneRequest({
-                    requestNumber: requestNumberCorrector,
-                    requestDate: undefined,
-                    idUserCustomer: idUserCustomer,
+                    requestNumber,
+                    requestDate: undefined, // потому как она уже задана при создании
+                    idUserCustomer: initialValues.idUserCustomer as string,
 
                     cargoComposition: initialValues.cargoComposition,
                     shipmentDate: yearMmDdFormatISO(initialValues.shipmentDate),

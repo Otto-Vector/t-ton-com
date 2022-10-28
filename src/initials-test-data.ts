@@ -1,19 +1,16 @@
 import {
-    CargoTypeType,
     ConsigneesCardType,
     DocumentsRequestType,
     EmployeesCardType,
-    OneRequestType,
     ShippersCardType,
     TrailerCardType,
     TransportCardType,
 } from './types/form-types'
-import {randArrayValue, randFloorMax, randMinMax, randomDifferentIntegersArrayCreator} from './utils/random-utils';
-import {OneInfoItem} from './redux/info-store-reducer';
-import {addNDay, randomDate, randomPassportDate} from './utils/date-formats';
+import {randArrayValue, randFloorMax, randMinMax, } from './utils/random-utils';
+
+import { randomPassportDate} from './utils/date-formats';
 import {randomDriverImage, randomTrailerImage, randomTruckImage} from './api/randomImage.api';
 
-const today = new Date()
 
 export const cargoType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
     'Тягач', 'Фургон, Борт', 'Цементовоз' ]
@@ -911,45 +908,3 @@ export const initialDocumentsRequestValues: DocumentsRequestType = {
         consigneeIsSubscribe: false,
     },
 }
-
-// создание рандомной заявки
-const makeOneTestRequest = ( id: number ): OneRequestType => ( {
-    requestNumber: id,
-    requestDate: new Date(2022, 4, randFloorMax(30)),
-    cargoComposition: randArrayValue(cargoComposition),
-    shipmentDate: id === 999 ? today : randomDate(today, addNDay(today, 4)),
-    cargoType: randArrayValue(cargoType) as CargoTypeType,
-    idUserCustomer: randFloorMax(10).toString(),
-    idSender: randFloorMax(11).toString(),
-    idRecipient: randMinMax(12, 23).toString(),
-    requestCarrierId: randFloorMax(9).toString(),
-    idEmployee: randFloorMax(9).toString(),
-    distance: randMinMax(20, 400),
-    note: 'Насос на 120, рукава, ДОПОГ.',
-    answers: randomDifferentIntegersArrayCreator(randFloorMax(9))().map(toString),
-
-    localStatus: {
-        cargoHasBeenReceived: false,
-        cargoHasBeenTransferred: false,
-        paymentHasBeenReceived: false,
-        paymentHasBeenTransferred: false
-    } ,
-    globalStatus: 'новая заявка',
-
-    cargoWeight: 0,
-    uploadTime: undefined,
-    idTrailer: undefined,
-    idTransport: undefined,
-    responsePrice: undefined,
-    responseStavka: undefined,
-    responseTax: undefined,
-
-    visible: true,
-    marked: undefined,
-
-    documents: initialDocumentsRequestValues,
-} )
-
-export const makeNTestRequests = ( count: number ): OneRequestType[] =>
-    [ 999, 339, 348, 361, 375, 388, ...randomDifferentIntegersArrayCreator(998)(count - 6) ]
-        .map(( id ) => makeOneTestRequest(id))

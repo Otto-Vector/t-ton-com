@@ -83,9 +83,10 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const oneCarrier = allShippers.filter(( { idSender } ) => idSender === initialValues.requestCarrierId)[0]
 
 
-    const custumersByUserInn = useMemo(
-        () => allShippers.filter(( { innNumber } ) => innNumber === requisitesInn)
-            .map(( { title } ) => ( { value: title, label: title, key: title } )), [ requisitesInn ])
+    const custumersByUserInn = allShippers.map(( { title } ) => ( { value: title, label: title, key: title } ))
+    // useMemo(
+    //     () => allShippers.filter(( { innNumber } ) => innNumber === requisitesInn)
+    //         .map(( { title } ) => ( { value: title, label: title, key: title } )), [ requisitesInn ])
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
     const customersSelect: SelectOptions[] = custumersByUserInn

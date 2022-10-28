@@ -198,10 +198,16 @@ export type OneRequestType = {
 
     // заказчик (совпадает с id пользователя (потому как данные по ИНН/КПП и счетам будут браться оттуда)
     idUserCustomer: undefined | string
+
     // грузоотправитель
     idSender: undefined | string
+    idUserSender?: string,
+    sender: ShippersCardType,
+
     // грузополучатель
     idRecipient: undefined | string
+    idUserRecipient?: string,
+    recipient: ConsigneesCardType,
 
     // расстояние (высчитывается автоматически при выборе грузоотправитель+грузополучатель)
     distance: undefined | number
@@ -227,11 +233,11 @@ export type OneRequestType = {
         // Груз получен
         cargoHasBeenReceived: boolean | undefined
     }
+    // количество ответов от водителей // массив с айдишками
+    answers: string[] | undefined
 
-    answers: string[] | undefined // количество ответов от водителей // массив с айдишками
-
-    // поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку
-    // НЕИЗМЕНЯЕМЫЕ
+    /* поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку */
+    /* НЕИЗМЕНЯЕМЫЕ*/
 
     // привязывается id пользователя при создании отклика
     requestCarrierId: undefined | string
@@ -317,6 +323,7 @@ export type DocumentsRequestType = {
         consigneeIsSubscribe: boolean | string // Грузополучатель загрузил, подписал и выгрузил подписанный док
     },
 }
+
 export type OneRequestApiType = {
     requestNumber: string
     requestDate?: string
@@ -324,8 +331,38 @@ export type OneRequestApiType = {
     cargoComposition?: string
     shipmentDate?: string
     cargoType?: string
+
     idSender?: string
-    idRecipient?: string
+    idUserSender?: string,
+    titleSender?: string,
+    innNumberSender?: string,
+    organizationNameSender?: string,
+    kppSender?: string,
+    ogrnSender?: string,
+    addressSender?: string,
+    shipperFioSender?: string,
+    shipperTelSender?: string,
+    descriptionSender?: string,
+    coordinatesSender?: string,
+    citySender?: string,
+
+    idRecipient?: string,
+    idUserRecipient?: string,
+    titleRecipient?: string,
+    innNumberRecipient?: string,
+    organizationNameRecipient?: string,
+    kppRecipient?: string,
+    ogrnRecipient?: string,
+    addressRecipient?: string,
+    consigneesFioRecipient?: string,
+    consigneesTelRecipient?: string,
+    descriptionRecipient?: string,
+    coordinatesRecipient?: string,
+    cityRecipient?: string,
+    route?: string,
+    addedPrice?: number,
+
+
     distance?: string
     note?: string
     visible?: string
@@ -336,6 +373,7 @@ export type OneRequestApiType = {
     localStatuspaymentHasBeenReceived?: boolean
     localStatuscargoHasBeenReceived?: boolean
     answers?: string
+
     requestCarrierId?: string
     idEmployee?: string
     idTransport?: string
@@ -345,6 +383,7 @@ export type OneRequestApiType = {
     responsePrice?: string
     cargoWeight?: string
     uploadTime?: string
+
     proxyFreightLoader?: string
     proxyDriver?: string
     proxyWaybillDriver?: string

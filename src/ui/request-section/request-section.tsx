@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {To, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {
-    changeCurrentRequestAPI,
+    changeCurrentRequest,
     deleteCurrentRequestAPI,
     getOneRequestsAPI,
     requestStoreActions,
@@ -63,7 +63,7 @@ export const RequestSection: React.FC = React.memo(() => {
 
     const onSubmit = ( values: OneRequestType ) => {
 
-        dispatch<any>(changeCurrentRequestAPI({ values }))
+        dispatch<any>(changeCurrentRequest({ values }))
         dispatch(requestStoreActions.setIsNewRequest(false))
     }
 
