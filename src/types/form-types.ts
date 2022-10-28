@@ -198,6 +198,7 @@ export type OneRequestType = {
 
     // заказчик (совпадает с id пользователя (потому как данные по ИНН/КПП и счетам будут браться оттуда)
     idUserCustomer: undefined | string
+    idCustomer?: string
 
     // грузоотправитель
     idSender: undefined | string
@@ -240,6 +241,8 @@ export type OneRequestType = {
     /* НЕИЗМЕНЯЕМЫЕ*/
 
     // привязывается id пользователя при создании отклика
+    requestUserCarrierId?: string
+    // привязывается id карточки
     requestCarrierId: undefined | string
     // id водителя (из карточки отклика)
     idEmployee: undefined | string
@@ -324,10 +327,13 @@ export type DocumentsRequestType = {
     },
 }
 
+// поля, которые возвращаются из бэка
 export type OneRequestApiType = {
     requestNumber: string
     requestDate?: string
     idUserCustomer: string
+    idCustomer?: string
+
     cargoComposition?: string
     shipmentDate?: string
     cargoType?: string
@@ -362,7 +368,6 @@ export type OneRequestApiType = {
     route?: string,
     addedPrice?: number,
 
-
     distance?: string
     note?: string
     visible?: string
@@ -374,6 +379,7 @@ export type OneRequestApiType = {
     localStatuscargoHasBeenReceived?: boolean
     answers?: string
 
+    requestUserCarrierId?: string
     requestCarrierId?: string
     idEmployee?: string
     idTransport?: string

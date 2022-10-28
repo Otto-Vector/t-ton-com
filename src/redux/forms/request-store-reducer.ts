@@ -300,6 +300,7 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
                         cargoType: elem.cargoType as CargoTypeType,
 
                         idUserCustomer: elem.idUserCustomer,
+                        idCustomer: elem.idCustomer,
 
                         idUserSender: elem.idUserSender,
                         idSender: elem.idSender,
@@ -332,7 +333,7 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
                             consigneesTel: elem.consigneesTelRecipient,
                             description: elem.descriptionRecipient,
                             coordinates: elem.coordinatesRecipient,
-                            city: elem.cityRecipient
+                            city: elem.cityRecipient,
                         },
 
                         distance: Number(elem.distance),
@@ -347,8 +348,9 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
                             cargoHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
                             cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
                         },
-                        answers: elem.answers?.split(','),
 
+                        answers: elem.answers?.split(','),
+                        requestUserCarrierId: elem.requestUserCarrierId,
                         requestCarrierId: elem.requestCarrierId,
                         idEmployee: elem.idEmployee,
                         idTransport: elem.idTransport,
@@ -414,7 +416,7 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
             const response = await oneRequestApi.getOneRequestById({ requestNumber })
             if (response.length > 0) {
                 let element = response[0]
-                debugger
+
                 dispatch(requestStoreActions.setInitialValues({
                         requestNumber: +element.requestNumber,
                         requestDate: element.requestDate ? new Date(apiToISODateFormat(element.requestDate)) : undefined,
@@ -423,6 +425,8 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
                         cargoType: element.cargoType as CargoTypeType,
 
                         idUserCustomer: element.idUserCustomer,
+                        idCustomer: element.idCustomer,
+
                         idSender: element.idSender,
                         idUserSender: element.idUserSender,
                         sender: {
@@ -453,7 +457,7 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
                             consigneesTel: element.consigneesTelRecipient,
                             description: element.descriptionRecipient,
                             coordinates: element.coordinatesRecipient,
-                            city: element.cityRecipient
+                            city: element.cityRecipient,
                         },
                         distance: Number(element.distance),
                         note: element.note,
@@ -469,6 +473,7 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
                         },
                         answers: element.answers?.split(','),
 
+                        requestUserCarrierId: element.requestUserCarrierId,
                         requestCarrierId: element.requestCarrierId,
                         idEmployee: element.idEmployee,
                         idTransport: element.idTransport,
