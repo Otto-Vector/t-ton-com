@@ -10,7 +10,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
-import {EmployeesCardType} from '../../../types/form-types'
+import {EmployeesCardType, ParserType, ValidateType} from '../../../types/form-types'
 import {
     getCurrentIdEmployeesStore,
     getInitialValuesEmployeesStore,
@@ -33,6 +33,7 @@ import {getAllTrailerSelectFromLocal} from '../../../selectors/options/trailer-r
 import {getAllTransportSelectFromLocal} from '../../../selectors/options/transport-reselect';
 import {parseAllNumbers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set';
+import {yearMmDdFormat} from '../../../utils/date-formats';
 
 
 type OwnProps = {}
@@ -228,8 +229,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    inputType={ 'date' }
-                                                   validate={ validators.passportDate }
-                                                   parse={ parsers.passportDate }
+                                                   validate={ validators.passportDate as ValidateType }
+                                                   parse={ parsers.passportDate as ParserType }
+                                                   value={ yearMmDdFormat(initialValues.passportDate as Date || new Date()) }
+                                                   max={ yearMmDdFormat(new Date()) } // для ввода от сегодняшнего дня value обязателен
                                             />
                                             {/*/////////////---ИЗОБРАЖЕНИЕ---///////////////////////////////*/ }
                                             <div className={ styles.employeesForm__photoWrapper }>

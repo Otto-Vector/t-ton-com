@@ -55,7 +55,7 @@ export type EmployeesCardType<T = DefaultFormType> = {
     employeePhoneNumber: T // Телефон сотрудника
     passportSerial: T // Серия, № паспорта
     passportFMS: T // Кем выдан паспорт
-    passportDate: T // Когда выдан
+    passportDate: T | Date// Когда выдан
     drivingLicenseNumber: T // Номер водительского удостоверения
     drivingCategory: T // Водительские категории
     personnelNumber: T // Табельный номер
