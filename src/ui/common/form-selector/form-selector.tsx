@@ -5,6 +5,7 @@ import {Field, FieldRenderProps} from 'react-final-form'
 import Select, {components as cs, GroupBase} from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import {SelectComponents} from 'react-select/dist/declarations/src/components';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 type OwnProps = {
     named: string
@@ -63,20 +64,20 @@ const components = {
 
 
 // передача в обработчик react-form
-export const FormSelector: React.FC<OwnProps> = ( {
-                                                      values,
-                                                      named,
-                                                      label,
-                                                      placeholder,
-                                                      validate,
-                                                      isClearable = false,
-                                                      creatableSelect = false,
-                                                      handleCreate,
-                                                      handleChanger,
-                                                      errorTop,
-                                                      disabled,
-                                                      defaultValue,
-                                                  } ) => {
+export const FormSelector: React.FC<OwnProps> = React.memo(( {
+                                                                 values,
+                                                                 named,
+                                                                 label,
+                                                                 placeholder,
+                                                                 validate,
+                                                                 isClearable = false,
+                                                                 creatableSelect = false,
+                                                                 handleCreate,
+                                                                 handleChanger,
+                                                                 errorTop,
+                                                                 disabled,
+                                                                 defaultValue,
+                                                             } ) => {
 
     return <div className={ styles.dropdown }>
         { label && <label className={ styles.label }>{ label }</label> }
@@ -87,24 +88,23 @@ export const FormSelector: React.FC<OwnProps> = ( {
                disabled={ disabled }
         >
             { ( { input, meta, placeholder } ) => (
-                <CustomSelect input={ input } meta={ meta } options={ values } placeholder={ placeholder }
+                <CustomSelect input={ input }
+                              meta={ meta }
+                              options={ values }
+                              placeholder={ placeholder }
                               isClearable={ isClearable }
                               creatableSelect={ creatableSelect }
                               handleCreate={ handleCreate }
                               handleChanger={ handleChanger }
                               errorTop={ errorTop }
                               disabled={ disabled }
-                              defaultValue={defaultValue}
+                              defaultValue={ defaultValue }
                 />
             ) }
         </Field>
     </div>
-}
+}, valuesAreEqual)
 
-// type SelectOptionType = {
-//     label: string;
-//     value: string;
-// };
 
 const CustomSelect = ( {
                            input,
@@ -116,20 +116,15 @@ const CustomSelect = ( {
                            handleChanger,
                            errorTop,
                            disabled,
-    defaultValue,
+                           defaultValue,
                            ...rest
                        }: FieldRenderProps<string, HTMLElement> ) => {
 
     const handleChange = useCallback(( option: SelectOptionsType | null ) => {
-        input.onChange(option?.value);
+        input.onChange(option?.value)
         if (handleChanger) handleChanger(option?.value)
     }, [])
 
-    // useEffect(()=>{
-    //     if (defaultValue) {
-    //         // if (handleChanger) handleChanger(defaultValue)
-    //     }
-    // })
 
     const isError = ( meta.error || meta.submitError ) && meta.touched
 
@@ -139,7 +134,6 @@ const CustomSelect = ( {
                 ?
                 <CreatableSelect
                     { ...input }
-                    { ...rest }
                     // для изменяемого input при вводе нового значения
                     components={ components as Partial<SelectComponents<any, boolean, GroupBase<unknown>>> }
                     isClearable={ isClearable }
@@ -154,10 +148,10 @@ const CustomSelect = ( {
                     onCreateOption={ handleCreate }
                     options={ options }
                     value={ options ? options.find(( option: SelectOptionsType ) => option.value === input.value) : '' }
+                    { ...rest }
                 />
                 : <Select
                     { ...input }
-                    { ...rest }
                     isClearable={ isClearable }
                     aria-invalid={ 'grammar' }
                     classNamePrefix={ 'react-select-ton' }
@@ -165,10 +159,8 @@ const CustomSelect = ( {
                     // isMulti={true}
                     options={ options }
                     isDisabled={ disabled }
-                    defaultValue={ defaultValue }
-                    // defaultValue={ options.length === 0 ? options[0] : undefined }
-                    // defaultValue={ options[0] }
                     value={ options ? options.find(( option: SelectOptionsType ) => option.value === input.value) : '' }
+                    { ...rest }
                 /> }
             { isError &&
                 <span className={ styles.errorSpan + ' ' + styles[`errorSpan_${ errorTop ? 'top' : 'bottom' }`] }>

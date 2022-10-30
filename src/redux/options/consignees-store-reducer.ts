@@ -228,8 +228,8 @@ export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDa
     ConsigneesStoreReducerThunkActionType<string | null> =>
     async ( dispatch, getState ) => {
 
-        const { innNumber } = getState().consigneesStoreReducer.initialValues
-        const booleanMemo = ( +( innNumber || 0 ) !== inn )
+        const initVal = getState().consigneesStoreReducer.initialValues
+        const booleanMemo = ( +( initVal.innNumber || 0 ) !== inn )
         const error = booleanMemo
             ? await dispatch<any>(getOrganizationsByInn({ inn }))
             : null
@@ -256,7 +256,7 @@ export const setOrganizationByInnKppConsignees = ( {
             dispatch(consigneesStoreActions.setInitialValues({
                 ...formValue,
                 innNumber: data.inn,
-                kpp: data.kpp,
+                kpp: kppNumber,
                 organizationName: response.value,
                 ogrn: data.ogrn,
                 address: data.address.value,

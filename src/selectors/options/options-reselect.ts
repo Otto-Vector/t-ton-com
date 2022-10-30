@@ -56,7 +56,8 @@ export const getConsigneesOptionsStore = createSelector(getAllConsigneesStore, g
             } )),
         }
     })
-// выборка из названий грузополучателей
+
+// массив названий грузополучателей
 export const getConsigneesAllNamesListOptionsStore = createSelector(getConsigneesOptionsStore,
     ( { content } ): string[] => content.map(( { title } ) => title))
 // выборка из названий грузополучателей, кроме имени того, который сейчас редактируется

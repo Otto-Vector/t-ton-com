@@ -130,8 +130,18 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     // автозаполнение полей при выборе селектора
     const setDataToForm = ( form: FormApi<ConsigneesCardType> ) => ( kppNumber: string | undefined ) => {
         const formValue = form.getState().values
-        if (kppNumber)
+        if (kppNumber) {
             dispatch<any>(setOrganizationByInnKppConsignees({ formValue, kppNumber }))
+        } else {
+            // при зачистке освобождаются поля
+            dispatch(consigneesStoreActions.setInitialValues({
+                ...formValue,
+                organizationName: '',
+                ogrn: '',
+                address: '',
+                kpp: '',
+            } as ConsigneesCardType))
+        }
     }
 
     // онлайн валидация ИНН с подгрузкой КПП в селектор
@@ -184,6 +194,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                     formValue: initialValues,
                     coordinates: localCoords as [ number, number ],
                 }))
+
             }
             setIsFirstRender(false)
         }
@@ -204,6 +215,9 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         }, [ currentId, initialValues ],
     )
 
+    useEffect(()=>{
+        if (kppSelect.length===1) dispatch<any>(setOrganizationByInnKppConsignees({formValue:initialValues, kppNumber:kppSelect[0].value}))
+    },[kppSelect])
 
     return (
         <div className={ styles.shippersConsigneesForm }>
@@ -253,9 +267,9 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                               values={ kppSelect }
                                                               validate={ validators.kpp }
                                                     // defaultValue={ kppSelect.length === 1 ? kppSelect[0] : undefined }
-                                                              defaultValue={ kppSelect.length > 0 ? kppSelect[0] : undefined }
+                                                    //           defaultValue={ kppSelect.length > 0 ? kppSelect[0] : undefined }
                                                               handleChanger={ setDataToForm(form) }
-                                                              // disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
+                                                    // disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
                                                               errorTop
                                                               isClearable
                                                 />
