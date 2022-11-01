@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState} from 'react'
 import styles from './auth-login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {FORM_ERROR, FormApi} from 'final-form'
@@ -30,7 +30,11 @@ import {useNavigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
-import {getOrganizationsByInn, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer';
+import {
+    daDataStoreActions,
+    getOrganizationsByInn,
+    getOrganizationsByInnKPP,
+} from '../../../redux/api/dadata-response-reducer';
 
 
 type OwnProps = {}
@@ -52,6 +56,22 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
+
+    // расчищаем значения от лишних символов и пробелов после маски
+    // const fromFormDemaskedValues = ( values: PhoneSubmitType ): PhoneSubmitType => ( {
+    //     ...values,
+    //     innNumber: parseAllNumbers(values.innNumber) || undefined,
+    //     phoneNumber: ( parseAllNumbers(values.phoneNumber) === '7' ) ? '' : values.phoneNumber,
+    // } )
+
+    // сохраняем изменения формы в стейт редакса
+    // const formSpyChangeHandlerToLocalInit = ( values: PhoneSubmitType ) => {
+    //     const [ demaskedValues, demaskedInitialValues ] = [ values, initialValues ].map(fromFormDemaskedValues)
+    //     if (!valuesAreEqual(demaskedValues, demaskedInitialValues)) {
+    //         console.log(demaskedValues)
+    //         dispatch(authStoreActions.setInitialValues(demaskedValues))
+    //     }
+    // }
 
     // при нажатии кнопки ДАЛЕЕ
     const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: PhoneSubmitType ) => {
@@ -103,8 +123,10 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     const registerHandleClick = async ( form: FormApi<PhoneSubmitType> ) => {
         setIsRegisterMode(!isRegisterMode)
-        await form.resetFieldState('sms')
-        await form.change('sms', '')
+        dispatch(daDataStoreActions.setSuggectionsValues([]))
+        dispatch(authStoreActions.setInitialValues({...initialValues, innNumber:'', kppNumber:'', sms: ''}))
+        // await form.resetFieldState('sms')
+        // await form.change('sms', '')
     }
 
     const newCode = ( phone: string ) => {
@@ -120,13 +142,25 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
         return response
     }
     // синхронно/асинхронный валидатор на поле ИНН
-    const innPlusApiValidator = ( preValue: string ) => ( currentValue: string ) => {
-        const [ prev, current ] = [ preValue, currentValue ].map(parseAllNumbers)
+    const innPlusApiValidator = ( preValues: PhoneSubmitType ) => ( currentValue: string ) => {
+        const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
+
+
         // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
         if (current && ( prev !== current ))
             // запускаем асинхронную валидацию только после синхронной
             return ( validators.innNumber && validators.innNumber(current) ) || innValidate(current)
     }
+
+    // useEffect(() => {
+    //     // присваивается автоматически значение из первого селектора
+    //     if (kppSelect.length > 0) {
+    //         dispatch(authStoreActions.setInitialValues({
+    //             ...initialValues,
+    //             kppNumber: kppSelect[0].value,
+    //         }))
+    //     }
+    // }, [ kppSelect ])
 
     return (
         <div className={ styles.loginForm }>
@@ -146,6 +180,8 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                           values,
                       } ) => (
                         <form onSubmit={ handleSubmit }>
+                            {/*<FormSpySimpleAnyKey form={ form }*/}
+                            {/*               onChange={ formSpyChangeHandlerToLocalInit }/>*/}
                             <span className={ styles.onError }>{ submitError }</span>
                             <div className={ styles.loginForm__inputsPanel }>
                                 { isRegisterMode &&
@@ -155,7 +191,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                component={ FormInputType }
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
-                                               validate={ innPlusApiValidator(values.innNumber || '') }
+                                               validate={ innPlusApiValidator(values || '') }
                                                disabled={ isAvailableSMS }
                                         />
                                         <FormSelector named={ 'kppNumber' }

@@ -11,11 +11,20 @@ export const FormSpySimple: React.VFC<Props> = ( { onChange, form } ) => {
     const { values, active } = form.getState()
     const [ lastActive, setLastActive ] = useState<typeof active>()
     useEffect(() => {
+        // применяется только при переходе или выходе из актива любого поля
         if (active !== lastActive) {
             onChange(values)
             setLastActive(active)
         }
     }, [ values, active ])
 
+    return null
+}
+
+export const FormSpySimpleAnyKey: React.VFC<Props> = ( { onChange, form } ) => {
+    const { values, active, valid } = form.getState()
+    useEffect(() => {
+        onChange(values)
+    }, [ values, active, valid ])
     return null
 }

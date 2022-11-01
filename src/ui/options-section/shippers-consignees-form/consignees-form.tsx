@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import styles from './shippers-consignees-form.module.scss'
-import {AnyObject, Field, Form} from 'react-final-form'
+import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
@@ -46,10 +46,6 @@ import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 
-// const FormStateToRedux = ({ form, updateFormState }:{form: ConsigneesCardType, updateFormState: ActionsAnyType}) => (
-//   <FormSpy onChange={state => updateFormState(form, state)} />
-// )
-
 type OwnProps = {}
 
 export const ConsigneesForm: React.FC<OwnProps> = () => {
@@ -58,7 +54,6 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector(getIsFetchingConsigneesStore)
 
     const initialValues = useSelector(getInitialValuesConsigneesStore)
-
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
     const consigneesListExcludeCurrentToValidate = useSelector(getConsigneesNamesListOptionsStore)
     const consigneesAllListToValidate = useSelector(getConsigneesAllNamesListOptionsStore)
@@ -79,6 +74,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const { id: currentIdFromNavigate } = useParams<{ id: string | undefined }>()
     const isNew = currentIdFromNavigate === 'new'
 
+    // расчищаем значения от лишних символов и пробелов после маски
     const fromFormDemaskedValues = ( values: ConsigneesCardType ): ConsigneesCardType => ( {
         ...values,
         innNumber: parseAllNumbers(values.innNumber) || undefined,
@@ -86,11 +82,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         consigneesTel: ( parseAllNumbers(values.consigneesTel) === '7' ) ? '' : values.consigneesTel,
     } )
 
+    // сохраняем изменения формы в стейт редакса
     const formSpyChangeHandlerToLocalInit = ( values: ConsigneesCardType ) => {
-        const demaskedValues = fromFormDemaskedValues(values)
-        if (!valuesAreEqual(demaskedValues, initialValues)) {
+        const [ demaskedValues, demaskedInitialValues ] = [ values, initialValues ].map(fromFormDemaskedValues)
+        if (!valuesAreEqual(demaskedValues, demaskedInitialValues))
             dispatch(consigneesStoreActions.setInitialValues(demaskedValues))
-        }
     }
 
     const { options } = useSelector(getRoutesStore)
@@ -169,8 +165,10 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         // расчищаем значения от лишних символов и пробелов после маски
         const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
 
+        // зачистка авто-полей при невалидном поле
         if (validators.innNumber && ( current && ( prev !== current ) ))
             if (validators.innNumber(current) && !validators.innNumber(prev)) {
+
                 const formValue = {
                     ...preValues,
                     organizationName: '',
@@ -179,6 +177,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                     kpp: '',
                     innNumber: current,
                 } as ConsigneesCardType
+
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
                 dispatch(consigneesStoreActions.setInitialValues(formValue))
             }
@@ -208,7 +207,6 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                     formValue: initialValues,
                     coordinates: localCoords as [ number, number ],
                 }))
-
             }
             setIsFirstRender(false)
         }
@@ -261,7 +259,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                     <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
                                         {/*отслеживаем и отправляем данные в локальный инит*/ }
                                         <FormSpySimple form={ form }
-                                                                onChange={ formSpyChangeHandlerToLocalInit }/>
+                                                       onChange={ formSpyChangeHandlerToLocalInit }/>
                                         <div
                                             className={ styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled }>
                                             <Field name={ 'title' }
@@ -290,6 +288,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                               values={ kppSelect }
                                                               validate={ validators.kpp }
                                                               handleChanger={ setDataToForm(form) }
+                                                              disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
                                                               errorTop
                                                               isClearable
                                                 />

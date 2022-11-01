@@ -43,6 +43,8 @@ import {
     getShippersNamesListOptionsStore,
 } from '../../../selectors/options/options-reselect';
 import {includesTitleValidator} from '../../../utils/validators';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 
 type OwnProps = {
     // onSubmit: (requisites: shippersCardType) => void
@@ -73,6 +75,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     // вытаскиваем значение роутера
     const { id: currentIdFromNavigate } = useParams<{ id: string | undefined }>()
     const isNew = currentIdFromNavigate === 'new'
+
     // расчищаем значения от лишних символов и пробелов после маски
     const fromFormDemaskedValues = ( values: ShippersCardType ) => ( {
         ...values,
@@ -80,6 +83,13 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         ogrn: parseAllNumbers(values.ogrn) || undefined,
         shipperTel: ( parseAllNumbers(values.shipperTel) === '7' ) ? '' : values.shipperTel,
     } )
+
+    // сохраняем изменения формы в стейт редакса
+    const formSpyChangeHandlerToLocalInit = ( values: ShippersCardType ) => {
+        const [ demaskedValues, demaskedInitialValues ] = [ values, initialValues ].map(fromFormDemaskedValues)
+        if (!valuesAreEqual(demaskedValues, demaskedInitialValues))
+            dispatch(shippersStoreActions.setInitialValues(demaskedValues))
+    }
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -130,10 +140,20 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     }
 
     // автозаполнение полей при выборе селектора
-    const setDataToForm = ( form: FormApi<ShippersCardType> ) => ( value: string | undefined ) => {
-        const formValue = form.getState().values
-        if (value)
-            dispatch<any>(setOrganizationByInnKppShippers({ formValue, kppNumber: value }))
+    const setDataToForm = ( form: FormApi<ShippersCardType> ) => ( kppNumber: string | undefined ) => {
+        const demaskedValues = fromFormDemaskedValues(form.getState().values)
+        if (kppNumber) {
+            dispatch<any>(setOrganizationByInnKppShippers({ formValue: demaskedValues, kppNumber }))
+        } else {
+            // при зачистке освобождаются поля
+            dispatch(shippersStoreActions.setInitialValues({
+                ...demaskedValues,
+                organizationName: '',
+                ogrn: '',
+                address: '',
+                kpp: '',
+            } as ShippersCardType))
+        }
     }
 
     // онлайн валидация ИНН с подгрузкой КПП в селектор
@@ -143,9 +163,27 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     }
 
     // синхронно/асинхронный валидатор на поле ИНН
-    const innPlusApiValidator = ( preValue?: string ) => ( currentValue?: string ) => {
+    const innPlusApiValidator = ( preValues: ShippersCardType ) => ( currentValue?: string ) => {
         // расчищаем значения от лишних символов и пробелов после маски
-        const [ prev, current ] = [ preValue, currentValue ].map(parseAllNumbers)
+        const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
+
+        // зачистка авто-полей при невалидном поле
+        if (validators.innNumber && ( current && ( prev !== current ) ))
+            if (validators.innNumber(current) && !validators.innNumber(prev)) {
+
+                const formValue = {
+                    ...preValues,
+                    organizationName: '',
+                    ogrn: '',
+                    address: '',
+                    kpp: '',
+                    innNumber: current,
+                } as ShippersCardType
+
+                dispatch(daDataStoreActions.setSuggectionsValues([]))
+                dispatch(shippersStoreActions.setInitialValues(formValue))
+            }
+
         // запускаем асинхронную валидацию только после синхронной
         return ( validators.innNumber && validators.innNumber(current) )
             // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
@@ -191,6 +229,16 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         }, [ currentId, initialValues ],
     )
 
+    useEffect(() => {
+        // присваивается автоматически значение из первого селектора
+        if (!isFirstRender && kppSelect.length > 0) {
+            dispatch<any>(setOrganizationByInnKppShippers({
+                formValue: initialValues,
+                kppNumber: kppSelect[0].value,
+            }))
+        }
+    }, [ kppSelect ])
+
     return (
         <div className={ styles.shippersConsigneesForm }>
             <div className={ styles.shippersConsigneesForm__wrapper }>
@@ -204,14 +252,17 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                             render={
                                 ( {
                                       submitError,
-                                      pristine,
                                       hasValidationErrors,
                                       handleSubmit,
                                       form,
                                       submitting,
                                       values,
+                                      pristine,
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
+                                        {/*отслеживаем и отправляем данные в локальный инит*/ }
+                                        <FormSpySimple form={ form }
+                                                       onChange={ formSpyChangeHandlerToLocalInit }/>
                                         <div
                                             className={ styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled }>
                                             <Field name={ 'title' }
@@ -229,7 +280,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ isNew ? maskOn.innNumber : undefined }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ isNew ? innPlusApiValidator(values.innNumber) : undefined }
+                                                   validate={ isNew ? innPlusApiValidator(values) : undefined }
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />

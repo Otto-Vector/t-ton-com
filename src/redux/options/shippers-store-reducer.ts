@@ -239,16 +239,18 @@ export const setOrganizationByInnKppShippers = ( {
     ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
+        const suggestions = getState().daDataStoreReducer.suggestions
+
         const response = ( kppNumber !== '-' )
-            ? getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
-            : getState().daDataStoreReducer.suggestions[0]
+            ? suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
+            : suggestions[0]
 
         if (response !== undefined) {
             const { data } = response
             dispatch(shippersStoreActions.setInitialValues({
                 ...formValue,
                 innNumber: data.inn,
-                kpp: data.kpp,
+                kpp: kppNumber,
                 organizationName: response.value,
                 ogrn: data.ogrn,
                 address: data.address.value,
