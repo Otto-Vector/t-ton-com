@@ -85,8 +85,9 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     // сохраняем изменения формы в стейт редакса
     const formSpyChangeHandlerToLocalInit = ( values: ConsigneesCardType ) => {
         const [ demaskedValues, demaskedInitialValues ] = [ values, initialValues ].map(fromFormDemaskedValues)
-        if (!valuesAreEqual(demaskedValues, demaskedInitialValues))
+        if (!valuesAreEqual(demaskedValues, demaskedInitialValues)) {
             dispatch(consigneesStoreActions.setInitialValues(demaskedValues))
+        }
     }
 
     const { options } = useSelector(getRoutesStore)
@@ -165,22 +166,23 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         // расчищаем значения от лишних символов и пробелов после маски
         const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
 
-        // зачистка авто-полей при невалидном поле
-        if (validators.innNumber && ( current && ( prev !== current ) ))
-            if (validators.innNumber(current) && !validators.innNumber(prev)) {
+        if (// зачистка авто-полей при невалидном поле, если до этого оно изменилось с валидного
+            ( validators.innNumber && current && prev !== current && validators.innNumber(current) && !validators.innNumber(prev) )
+            // а также при нажатии кнопки зачистки поля
+            || ( !current && prev !== current )
+        ) {
+            const formValue = {
+                ...preValues,
+                organizationName: '',
+                ogrn: '',
+                address: '',
+                kpp: '',
+                innNumber: current,
+            } as ConsigneesCardType
 
-                const formValue = {
-                    ...preValues,
-                    organizationName: '',
-                    ogrn: '',
-                    address: '',
-                    kpp: '',
-                    innNumber: current,
-                } as ConsigneesCardType
-
-                dispatch(daDataStoreActions.setSuggectionsValues([]))
-                dispatch(consigneesStoreActions.setInitialValues(formValue))
-            }
+            dispatch(daDataStoreActions.setSuggectionsValues([]))
+            dispatch(consigneesStoreActions.setInitialValues(formValue))
+        }
 
         // запускаем асинхронную валидацию только после синхронной
         return ( validators.innNumber && validators.innNumber(current) )
@@ -202,9 +204,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
             if (isNew) {
                 // зачищаем селектор при первом рендере
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
+                // зачищаем InitValues при первом рендере
+                dispatch(consigneesStoreActions.setDefaultInitialValues())
                 // выставляем координаты геолокации
                 dispatch(consigneesStoreActions.setCoordinates({
-                    formValue: initialValues,
+                    formValue: {} as ConsigneesCardType,
                     coordinates: localCoords as [ number, number ],
                 }))
             }
@@ -230,10 +234,14 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     useEffect(() => {
         // присваивается автоматически значение из первого селектора
         if (!isFirstRender && kppSelect.length > 0) {
-            dispatch<any>(setOrganizationByInnKppConsignees({
-                formValue: initialValues,
-                kppNumber: kppSelect[0].value,
-            }))
+            const preKey = initialValues.kpp + '' + initialValues.innNumber
+            // если предыдущий список селектора не совпадает с выбраным
+            if (!kppSelect.find(( { key } ) => key === preKey)) {
+                dispatch<any>(setOrganizationByInnKppConsignees({
+                    formValue: initialValues,
+                    kppNumber: kppSelect[0].value,
+                }))
+            }
         }
     }, [ kppSelect ])
 
@@ -277,7 +285,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ isNew ? maskOn.innNumber : undefined }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ isNew ? innPlusApiValidator(values) : undefined }
+                                                   validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values) : undefined }
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />

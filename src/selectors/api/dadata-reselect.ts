@@ -11,8 +11,8 @@ const getSuggestionsDaDataStore: AuthStoreSelectors<'suggestions'> = ( state ) =
 
 export const getAllKPPSelectFromLocal = createSelector(
     getSuggestionsDaDataStore,
-    ( kpp ): SelectOptionsType[] => kpp.map(( { data: { kpp='-' }, value } ) => ( {
-        key: kpp,
+    ( kpp ): SelectOptionsType[] => kpp.map(( { data: { kpp='-',inn }, value } ) => ( {
+        key: kpp+inn,
         value: kpp,
         label: `${ kpp }  ${ value }`,
     } )),

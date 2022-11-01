@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './auth-login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {FORM_ERROR, FormApi} from 'final-form'
@@ -35,6 +35,8 @@ import {
     getOrganizationsByInn,
     getOrganizationsByInnKPP,
 } from '../../../redux/api/dadata-response-reducer';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 
 
 type OwnProps = {}
@@ -58,20 +60,21 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     // расчищаем значения от лишних символов и пробелов после маски
-    // const fromFormDemaskedValues = ( values: PhoneSubmitType ): PhoneSubmitType => ( {
-    //     ...values,
-    //     innNumber: parseAllNumbers(values.innNumber) || undefined,
-    //     phoneNumber: ( parseAllNumbers(values.phoneNumber) === '7' ) ? '' : values.phoneNumber,
-    // } )
+    const fromFormDemaskedValues = ( values: PhoneSubmitType ): PhoneSubmitType => ( {
+        innNumber: parseAllNumbers(values.innNumber) || undefined,
+        kppNumber: values.kppNumber || undefined,
+        phoneNumber: ( parseAllNumbers(values.phoneNumber) === '7' ) ? '' : values.phoneNumber,
+        sms: parseAllNumbers(values.sms) || undefined,
+    } )
 
     // сохраняем изменения формы в стейт редакса
-    // const formSpyChangeHandlerToLocalInit = ( values: PhoneSubmitType ) => {
-    //     const [ demaskedValues, demaskedInitialValues ] = [ values, initialValues ].map(fromFormDemaskedValues)
-    //     if (!valuesAreEqual(demaskedValues, demaskedInitialValues)) {
-    //         console.log(demaskedValues)
-    //         dispatch(authStoreActions.setInitialValues(demaskedValues))
-    //     }
-    // }
+    const formSpyChangeHandlerToLocalInit = ( values: PhoneSubmitType ) => {
+        const [ demaskedValues, demaskedInitialValues ] = [ values, initialValues ].map(fromFormDemaskedValues)
+        if (!valuesAreEqual(demaskedValues, demaskedInitialValues)) {
+            // debugger
+            dispatch(authStoreActions.setInitialValues(demaskedValues))
+        }
+    }
 
     // при нажатии кнопки ДАЛЕЕ
     const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: PhoneSubmitType ) => {
@@ -125,13 +128,11 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
         setIsRegisterMode(!isRegisterMode)
         dispatch(daDataStoreActions.setSuggectionsValues([]))
         dispatch(authStoreActions.setInitialValues({
-            phoneNumber: form.getState().values.phoneNumber,
             innNumber: '',
             kppNumber: '',
+            phoneNumber: form.getState().values.phoneNumber,
             sms: '',
         }))
-        // await form.resetFieldState('sms')
-        // await form.change('sms', '')
     }
 
     const newCode = ( phone: string ) => {
@@ -141,31 +142,42 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     }
 
     // асинхронный валидатор ИНН через АПИ
-    const innValidate = async ( value: string ) => {
-        const parsedValue = parseAllNumbers(value)
-        const response = await dispatch<any>(getOrganizationsByInn({ inn: +parsedValue }))
-        return response
+    const innValidate = async ( inn: string ) => {
+        return await dispatch<any>(getOrganizationsByInn({ inn: +parseAllNumbers(inn) }))
     }
+
     // синхронно/асинхронный валидатор на поле ИНН
-    const innPlusApiValidator = ( preValues: PhoneSubmitType ) => ( currentValue: string ) => {
+    const innPlusApiValidator = ( preValues: PhoneSubmitType ) => ( currentValue?: string ) => {
         const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
 
+        if (// зачистка авто-полей при невалидном поле, если до этого оно изменилось с валидного
+            ( validators.innNumber && current && prev !== current && validators.innNumber(current) && !validators.innNumber(prev) )
+            // а также при нажатии кнопки зачистки поля
+            || ( !current && prev !== current )
+        ) {
+            dispatch(authStoreActions.setInitialValues({ ...preValues, kppNumber: '', innNumber: current }))
+            dispatch(daDataStoreActions.setSuggectionsValues([]))
+        }
 
-        // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-        if (current && ( prev !== current ))
-            // запускаем асинхронную валидацию только после синхронной
-            return ( validators.innNumber && validators.innNumber(current) ) || innValidate(current)
+        // запускаем асинхронную валидацию только после синхронной
+        return ( validators.innNumber && validators.innNumber(current) )
+            // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+            || ( current && ( prev !== current ) ? innValidate(current) : undefined )
     }
 
-    // useEffect(() => {
-    //     // присваивается автоматически значение из первого селектора
-    //     if (kppSelect.length > 0) {
-    //         dispatch(authStoreActions.setInitialValues({
-    //             ...initialValues,
-    //             kppNumber: kppSelect[0].value,
-    //         }))
-    //     }
-    // }, [ kppSelect ])
+    useEffect(() => {
+        // присваивается автоматически значение из первого селектора
+        if (kppSelect.length > 0) {
+            const preKey = initialValues.kppNumber + '' + initialValues.innNumber
+            // если предыдущий список селектора не совпадает с выбраным
+            if (!kppSelect.find(( { key } ) => key === preKey)) {
+                dispatch(authStoreActions.setInitialValues({
+                    ...initialValues,
+                    kppNumber: kppSelect[0].value,
+                }))
+            }
+        }
+    }, [ kppSelect ])
 
     return (
         <div className={ styles.loginForm }>
@@ -185,8 +197,10 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                           values,
                       } ) => (
                         <form onSubmit={ handleSubmit }>
-                            {/*<FormSpySimpleAnyKey form={ form }*/ }
-                            {/*               onChange={ formSpyChangeHandlerToLocalInit }/>*/ }
+                            <FormSpySimple form={ form }
+                                           onChange={ formSpyChangeHandlerToLocalInit }
+                                           onValid
+                            />
                             <span className={ styles.onError }>{ submitError }</span>
                             <div className={ styles.loginForm__inputsPanel }>
                                 { isRegisterMode &&
@@ -196,16 +210,16 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                component={ FormInputType }
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
-                                               validate={ innPlusApiValidator(values || '') }
+                                               validate={ form.getFieldState('innNumber')?.visited ? innPlusApiValidator(values) : undefined }
                                                disabled={ isAvailableSMS }
                                         />
                                         <FormSelector named={ 'kppNumber' }
                                                       placeholder={ label.kppNumber }
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }
-                                                      disabled={ isAvailableSMS || kppSelect.length < 1 }
+                                                      disabled={ isAvailableSMS || kppSelect.length < 1 || !form.getFieldState('innNumber')?.valid }
                                                       errorTop
-                                                      isClearable
+                                            // isClearable
                                         />
                                     </>
                                 }

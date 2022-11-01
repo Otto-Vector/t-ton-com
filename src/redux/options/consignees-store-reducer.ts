@@ -18,19 +18,18 @@ import {getOrganizationsByInn} from '../api/dadata-response-reducer';
 import {consigneesApi} from '../../api/options/consignees.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
-const defaultInitialValues = {
-    idRecipient: '',
-    title: undefined,
-    innNumber: undefined,
-    organizationName: undefined,
-    kpp: undefined,
-    ogrn: undefined,
-    address: undefined,
-    consigneesFio: undefined,
-    consigneesTel: undefined,
-    description: undefined,
-    coordinates: undefined,
-    city: undefined,
+export const defaultInitialConsigneesValues = {
+    title: '',
+    innNumber: '',
+    organizationName: '',
+    kpp: '',
+    ogrn: '',
+    address: '',
+    consigneesFio: '',
+    consigneesTel: '',
+    description: '',
+    coordinates: '',
+    city: '',
 } as ConsigneesCardType
 
 

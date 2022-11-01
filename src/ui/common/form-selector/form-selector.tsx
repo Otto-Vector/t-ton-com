@@ -1,11 +1,10 @@
-import React, {useCallback, useEffect, useMemo} from 'react'
+import React, {useCallback, useMemo} from 'react'
 import styles from './form-selector.module.scss'
 import './react-select-ton.scss'
 import {Field, FieldRenderProps} from 'react-final-form'
 import Select, {components as cs, GroupBase} from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import {SelectComponents} from 'react-select/dist/declarations/src/components';
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 type OwnProps = {
     named: string
@@ -64,20 +63,20 @@ const components = {
 
 
 // передача в обработчик react-form
-export const FormSelector: React.FC<OwnProps> = React.memo(( {
-                                                                 values,
-                                                                 named,
-                                                                 label,
-                                                                 placeholder,
-                                                                 validate,
-                                                                 isClearable = false,
-                                                                 creatableSelect = false,
-                                                                 handleCreate,
-                                                                 handleChanger,
-                                                                 errorTop,
-                                                                 disabled,
-                                                                 defaultValue,
-                                                             } ) => {
+export const FormSelector: React.FC<OwnProps> = ( {
+                                                      values,
+                                                      named,
+                                                      label,
+                                                      placeholder,
+                                                      validate,
+                                                      isClearable = false,
+                                                      creatableSelect = false,
+                                                      handleCreate,
+                                                      handleChanger,
+                                                      errorTop,
+                                                      disabled,
+                                                      defaultValue,
+                                                  } ) => {
 
     return <div className={ styles.dropdown }>
         { label && <label className={ styles.label }>{ label }</label> }
@@ -103,7 +102,7 @@ export const FormSelector: React.FC<OwnProps> = React.memo(( {
             ) }
         </Field>
     </div>
-}, valuesAreEqual)
+}
 
 
 const CustomSelect = ( {
