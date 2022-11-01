@@ -1,4 +1,4 @@
-import React, { useState} from 'react'
+import React, {useState} from 'react'
 import styles from './auth-login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {FORM_ERROR, FormApi} from 'final-form'
@@ -124,7 +124,12 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const registerHandleClick = async ( form: FormApi<PhoneSubmitType> ) => {
         setIsRegisterMode(!isRegisterMode)
         dispatch(daDataStoreActions.setSuggectionsValues([]))
-        dispatch(authStoreActions.setInitialValues({...initialValues, innNumber:'', kppNumber:'', sms: ''}))
+        dispatch(authStoreActions.setInitialValues({
+            phoneNumber: form.getState().values.phoneNumber,
+            innNumber: '',
+            kppNumber: '',
+            sms: '',
+        }))
         // await form.resetFieldState('sms')
         // await form.change('sms', '')
     }
@@ -180,8 +185,8 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                           values,
                       } ) => (
                         <form onSubmit={ handleSubmit }>
-                            {/*<FormSpySimpleAnyKey form={ form }*/}
-                            {/*               onChange={ formSpyChangeHandlerToLocalInit }/>*/}
+                            {/*<FormSpySimpleAnyKey form={ form }*/ }
+                            {/*               onChange={ formSpyChangeHandlerToLocalInit }/>*/ }
                             <span className={ styles.onError }>{ submitError }</span>
                             <div className={ styles.loginForm__inputsPanel }>
                                 { isRegisterMode &&
