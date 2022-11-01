@@ -70,7 +70,7 @@ export const RequestSection: React.FC = React.memo(() => {
     const exposeValuesToInitialBuffer = ( { values, valid }: { values: OneRequestType, valid: boolean } ) => {
         console.log(values, valid)
         dispatch(requestStoreActions.setIsNewRequest(false))
-        dispatch(requestStoreActions.setInitialValues(values as OneRequestType))
+        dispatch(requestStoreActions.setInitialValues(values))
     }
 
     const activeTab = ( tab: string ) => {

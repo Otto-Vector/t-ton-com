@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import styles from './shippers-consignees-form.module.scss'
-import {Field, Form} from 'react-final-form'
+import {AnyObject, Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Preloader} from '../../common/preloader/preloader'
@@ -42,9 +42,15 @@ import {
 } from '../../../selectors/options/options-reselect';
 import {includesTitleValidator} from '../../../utils/validators';
 import {getCityFromDispetcherAPI} from '../../../redux/options/shippers-store-reducer';
+import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+
+
+// const FormStateToRedux = ({ form, updateFormState }:{form: ConsigneesCardType, updateFormState: ActionsAnyType}) => (
+//   <FormSpy onChange={state => updateFormState(form, state)} />
+// )
 
 type OwnProps = {}
-
 
 export const ConsigneesForm: React.FC<OwnProps> = () => {
 
@@ -52,6 +58,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector(getIsFetchingConsigneesStore)
 
     const initialValues = useSelector(getInitialValuesConsigneesStore)
+
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
     const consigneesListExcludeCurrentToValidate = useSelector(getConsigneesNamesListOptionsStore)
     const consigneesAllListToValidate = useSelector(getConsigneesAllNamesListOptionsStore)
@@ -72,12 +79,19 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const { id: currentIdFromNavigate } = useParams<{ id: string | undefined }>()
     const isNew = currentIdFromNavigate === 'new'
 
-    const fromFormDemaskedValues = ( values: ConsigneesCardType ) => ( {
+    const fromFormDemaskedValues = ( values: ConsigneesCardType ): ConsigneesCardType => ( {
         ...values,
         innNumber: parseAllNumbers(values.innNumber) || undefined,
         ogrn: parseAllNumbers(values.ogrn) || undefined,
         consigneesTel: ( parseAllNumbers(values.consigneesTel) === '7' ) ? '' : values.consigneesTel,
     } )
+
+    const formSpyChangeHandlerToLocalInit = ( values: ConsigneesCardType ) => {
+        const demaskedValues = fromFormDemaskedValues(values)
+        if (!valuesAreEqual(demaskedValues, initialValues)) {
+            dispatch(consigneesStoreActions.setInitialValues(demaskedValues))
+        }
+    }
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -129,13 +143,13 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     // автозаполнение полей при выборе селектора
     const setDataToForm = ( form: FormApi<ConsigneesCardType> ) => ( kppNumber: string | undefined ) => {
-        const formValue = form.getState().values
+        const demaskedValues = fromFormDemaskedValues(form.getState().values)
         if (kppNumber) {
-            dispatch<any>(setOrganizationByInnKppConsignees({ formValue, kppNumber }))
+            dispatch<any>(setOrganizationByInnKppConsignees({ formValue: demaskedValues, kppNumber }))
         } else {
             // при зачистке освобождаются поля
             dispatch(consigneesStoreActions.setInitialValues({
-                ...formValue,
+                ...demaskedValues,
                 organizationName: '',
                 ogrn: '',
                 address: '',
@@ -215,9 +229,15 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         }, [ currentId, initialValues ],
     )
 
-    useEffect(()=>{
-        if (kppSelect.length===1) dispatch<any>(setOrganizationByInnKppConsignees({formValue:initialValues, kppNumber:kppSelect[0].value}))
-    },[kppSelect])
+    useEffect(() => {
+        // присваивается автоматически значение из первого селектора
+        if (!isFirstRender && kppSelect.length > 0) {
+            dispatch<any>(setOrganizationByInnKppConsignees({
+                formValue: initialValues,
+                kppNumber: kppSelect[0].value,
+            }))
+        }
+    }, [ kppSelect ])
 
     return (
         <div className={ styles.shippersConsigneesForm }>
@@ -239,6 +259,9 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                       pristine,
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
+                                        {/*отслеживаем и отправляем данные в локальный инит*/ }
+                                        <FormSpySimple form={ form }
+                                                                onChange={ formSpyChangeHandlerToLocalInit }/>
                                         <div
                                             className={ styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled }>
                                             <Field name={ 'title' }
@@ -266,10 +289,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                               placeholder={ label.kpp }
                                                               values={ kppSelect }
                                                               validate={ validators.kpp }
-                                                    // defaultValue={ kppSelect.length === 1 ? kppSelect[0] : undefined }
-                                                    //           defaultValue={ kppSelect.length > 0 ? kppSelect[0] : undefined }
                                                               handleChanger={ setDataToForm(form) }
-                                                    // disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
                                                               errorTop
                                                               isClearable
                                                 />

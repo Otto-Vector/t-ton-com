@@ -246,10 +246,11 @@ export const setOrganizationByInnKppConsignees = ( {
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
+        const suggestions = getState().daDataStoreReducer.suggestions
 
         const response = ( kppNumber !== '-' )
-            ? getState().daDataStoreReducer.suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
-            : getState().daDataStoreReducer.suggestions[0]
+            ? suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
+            : suggestions[0]
 
         if (response !== undefined) {
             const { data } = response
@@ -261,7 +262,9 @@ export const setOrganizationByInnKppConsignees = ( {
                 ogrn: data.ogrn,
                 address: data.address.value,
             }))
-        } else dispatch(globalModalStoreActions.setTextMessage('Фильтр КПП локально не сработал!'))
+        } else {
+            dispatch(globalModalStoreActions.setTextMessage('Фильтр КПП локально не сработал!'))
+        }
 
     }
 

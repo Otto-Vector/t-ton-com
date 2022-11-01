@@ -18,6 +18,7 @@ export const getAllConsigneesStore: ConsigneesStoreSelectors<'content'> = ( stat
 export const getCurrentIdConsigneeStore: ConsigneesStoreSelectors<'currentId'> = ( state ) => state.consigneesStoreReducer.currentId
 
 
+
 export const getOneConsigneesFromLocal = createSelector(
     getCurrentIdConsigneeStore,
     getAllConsigneesStore,

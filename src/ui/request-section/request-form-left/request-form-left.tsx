@@ -39,7 +39,6 @@ import {consigneesStoreActions} from '../../../redux/options/consignees-store-re
 import {Preloader} from '../../common/preloader/preloader';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect';
-import {FormSpySimpleRequest} from '../../common/form-spy-simple/form-spy-simple';
 
 
 type OwnProps = {
