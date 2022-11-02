@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ResponseToRequestCardType, ValidateType} from '../../types/form-types';
-import {composeValidators, maxRangeNumber, required} from '../../utils/validators';
+import {syncValidators} from '../../utils/validators';
 
 const testInitialValues = {} as ResponseToRequestCardType
 
@@ -38,11 +38,11 @@ const initialState = {
     },
 
     validators: {
-        idEmployee: composeValidators(required),
-        idTransport: composeValidators(required),
+        idEmployee: syncValidators.required,
+        idTransport: syncValidators.required,
         idTrailer: undefined,
-        responseStavka: composeValidators(required, maxRangeNumber(3000)) as ValidateType,
-    },
+        responseStavka: syncValidators.responseStavka,
+    } as ResponseToRequestCardType<ValidateType>,
 
 }
 

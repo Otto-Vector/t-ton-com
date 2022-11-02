@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, ShippersCardType, ValidateType} from '../../types/form-types'
-import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
+import {syncValidators} from '../../utils/validators'
 import {
     composeParsers,
     coordsToString,
@@ -19,8 +19,6 @@ import {shippersApi} from '../../api/options/shippers.api';
 import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
-
-const defaultInitialValues = {} as ShippersCardType
 
 const initialState = {
     shippersIsFetching: false,
@@ -69,16 +67,16 @@ const initialState = {
     } as ShippersCardType,
 
     validators: {
-        title: composeValidators(required, maxLength(50)),
-        innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
-        organizationName: composeValidators(required, maxLength(100)),
-        kpp: composeValidators(required),
-        ogrn: composeValidators(required, mustBe0_0Numbers(13)(15)),
-        address: composeValidators(required, maxLength(150)),
-        shipperFio: composeValidators(required),
-        shipperTel: composeValidators(required, mustBe00Numbers(11)),
-        description: composeValidators(maxLength(300)),
-        coordinates: composeValidators(required),
+        title: syncValidators.textReqMin,
+        innNumber: syncValidators.inn,
+        organizationName: syncValidators.textReqMiddle,
+        kpp: syncValidators.required,
+        ogrn: syncValidators.ogrn,
+        address: syncValidators.textReqMiddle,
+        shipperFio: syncValidators.textReqMin,
+        shipperTel: syncValidators.phone,
+        description: syncValidators.textReqMax,
+        coordinates: syncValidators.required,
     } as ShippersCardType<ValidateType>,
 
     parsers: {

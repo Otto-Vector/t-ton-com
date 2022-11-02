@@ -1,7 +1,14 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-types'
-import {composeValidators, maxLength, mustBe00Numbers, mustBe0_0Numbers, required} from '../../utils/validators'
+import {
+    composeValidators,
+    maxLength,
+    mustBe00Numbers,
+    mustBe0_0Numbers,
+    required,
+    syncValidators,
+} from '../../utils/validators'
 import {
     composeParsers,
     coordsToString,
@@ -77,16 +84,16 @@ const initialState = {
     } as ConsigneesCardType,
 
     validators: {
-        title: composeValidators(required, maxLength(50)),
-        innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
-        organizationName: composeValidators(required, maxLength(100)),
-        kpp: composeValidators(required),
-        ogrn: composeValidators(required, mustBe0_0Numbers(13)(15)),
-        address: composeValidators(required, maxLength(150)),
-        consigneesFio: composeValidators(required),
-        consigneesTel: composeValidators(required, mustBe00Numbers(11)),
-        description: composeValidators(maxLength(300)),
-        coordinates: composeValidators(required),
+        title: syncValidators.textReqMin,
+        innNumber: syncValidators.inn,
+        organizationName: syncValidators.textReqMiddle,
+        kpp: syncValidators.required,
+        ogrn: syncValidators.ogrn,
+        address: syncValidators.textReqMiddle,
+        consigneesFio: syncValidators.textReqMin,
+        consigneesTel: syncValidators.phone,
+        description: syncValidators.textReqMax,
+        coordinates: syncValidators.required,
     } as ConsigneesCardType<ValidateType>,
 
     parsers: {

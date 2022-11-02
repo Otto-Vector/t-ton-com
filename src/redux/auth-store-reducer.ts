@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
 import {PhoneSubmitType, ValidateType} from '../types/form-types'
-import {composeValidators, mustBe00Numbers, mustBe0_0Numbers, required} from '../utils/validators'
+import {syncValidators} from '../utils/validators'
 import {geoPosition} from '../api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
 import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-reducer';
@@ -45,10 +45,10 @@ const initialState = {
     } as PhoneSubmitType,
 
     validators: {
-        innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
-        kppNumber: composeValidators(required),
-        phoneNumber: composeValidators(required, mustBe00Numbers(11)),
-        sms: composeValidators(required, mustBe00Numbers(4)),
+        innNumber: syncValidators.inn,
+        kppNumber: syncValidators.required,
+        phoneNumber: syncValidators.phone,
+        sms: syncValidators.sms,
     } as PhoneSubmitType<ValidateType>,
 }
 

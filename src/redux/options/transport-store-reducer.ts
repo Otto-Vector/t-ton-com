@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, TransportCardType, ValidateType} from '../../types/form-types'
-import {composeValidators, maxLength, maxRangeNumber, required} from '../../utils/validators'
+import {syncValidators} from '../../utils/validators'
 import {
     composeParsers,
     parseNoFirstSpaces,
@@ -43,14 +43,14 @@ const initialState = {
     initialValues: {} as TransportCardType,
 
     validators: {
-        transportNumber: composeValidators(required, maxLength(20)),
-        transportTrademark: composeValidators(required, maxLength(20)),
-        transportModel: composeValidators(required, maxLength(20)),
-        pts: composeValidators(required),
-        dopog: composeValidators(required),
-        cargoType: composeValidators(required),
-        cargoWeight: composeValidators(maxRangeNumber(50)),
-        propertyRights: composeValidators(required),
+        transportNumber: syncValidators.trailerTransportNumber,
+        transportTrademark: syncValidators.trailerTransportModel,
+        transportModel: syncValidators.trailerTransportModel,
+        pts: syncValidators.pts,
+        dopog: syncValidators.dopog,
+        cargoType: syncValidators.required,
+        cargoWeight: syncValidators.cargoWeight,
+        propertyRights: syncValidators.required,
         transportImage: undefined,
     } as TransportCardType<ValidateType>,
 
@@ -189,7 +189,7 @@ export const oneTransportDeleteToAPI = ( idTransport: string ): TransportStoreRe
         try {
             const response = await transportApi.deleteOneTransport({ idTransport })
             if (response.message) console.log(response.message)
-        } catch (e ) {
+        } catch (e) {
             // @ts-ignore
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
         }

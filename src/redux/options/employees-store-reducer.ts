@@ -1,13 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {
-    composeValidators,
-    maxLength,
-    maxNumbers,
-    mustBe00Numbers,
-    mustNotBeOnlyNull,
-    required,
-} from '../../utils/validators'
+import {syncValidators} from '../../utils/validators'
 import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {
     composeParsers,
@@ -57,17 +50,17 @@ const initialState = {
     initialValues: {} as EmployeesCardType,
 
     validators: {
-        employeeFIO: composeValidators(required, maxLength(50)),
-        employeePhoneNumber: composeValidators(required, mustBe00Numbers(11)),
-        passportSerial: composeValidators(required, mustBe00Numbers(10), mustNotBeOnlyNull),
-        passportFMS: composeValidators(required),
-        passportDate: composeValidators(required),
-        drivingLicenseNumber: composeValidators(required, maxLength(20)),
-        drivingCategory: composeValidators(required),
-        personnelNumber: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
-        garageNumber: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
+        employeeFIO: syncValidators.textReqMin,
+        employeePhoneNumber: syncValidators.phone,
+        passportSerial: syncValidators.passport,
+        passportFMS: syncValidators.textReqMin,
+        passportDate: syncValidators.required,
+        drivingLicenseNumber: syncValidators.drivingLicence,
+        drivingCategory: syncValidators.drivingCategory,
+        personnelNumber: syncValidators.justTenNumbers,
+        garageNumber: syncValidators.justTenNumbers,
         photoFace: undefined,
-        rating: composeValidators(maxNumbers(2)),
+        rating: undefined,
     } as EmployeesCardType<ValidateType>,
 
     parsers: {
@@ -172,7 +165,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.createOneEmployee({
-                idUser, ...values, passportDate: values.passportDate as string
+                idUser, ...values, passportDate: values.passportDate as string,
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {

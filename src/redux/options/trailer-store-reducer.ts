@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, TrailerCardType, ValidateType} from '../../types/form-types'
-import {composeValidators, maxLength, maxRangeNumber, required} from '../../utils/validators'
+import {syncValidators} from '../../utils/validators'
 import {
     composeParsers,
     parseNoFirstSpaces,
@@ -43,14 +43,14 @@ const initialState = {
     initialValues: {} as TrailerCardType,
 
     validators: {
-        trailerNumber: composeValidators(required, maxLength(20)),
-        trailerTrademark: composeValidators(required, maxLength(30)),
-        trailerModel: composeValidators(required, maxLength(30)),
-        pts: composeValidators(required),
-        dopog: composeValidators(required),
-        cargoType: composeValidators(required),
-        cargoWeight: composeValidators(maxRangeNumber(50)),
-        propertyRights: composeValidators(required),
+        trailerNumber: syncValidators.trailerTransportNumber,
+        trailerTrademark: syncValidators.trailerTransportModel,
+        trailerModel: syncValidators.trailerTransportModel,
+        pts: syncValidators.pts,
+        dopog: syncValidators.dopog,
+        cargoType: syncValidators.required,
+        cargoWeight: syncValidators.cargoWeight,
+        propertyRights: syncValidators.required,
         trailerImage: undefined,
     } as TrailerCardType<ValidateType>,
 

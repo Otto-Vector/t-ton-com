@@ -1,14 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {CompanyRequisitesType, ParserType, ValidateType} from '../../types/form-types';
-import {
-    composeValidators,
-    maxLength,
-    mustBe00Numbers,
-    mustBe0_0Numbers,
-    mustBeMail,
-    required,
-} from '../../utils/validators';
+import {syncValidators} from '../../utils/validators';
 import {PersonalResponseType, requisitesApi} from '../../api/options/requisites.api';
 import {
     composeParsers,
@@ -77,24 +70,24 @@ const initialState = {
     } as CompanyRequisitesType,
 
     validators: {
-        innNumber: composeValidators(required, mustBe0_0Numbers(10)(12)),
-        organizationName: composeValidators(required, maxLength(50)),
-        taxMode: composeValidators(required),
-        kpp: composeValidators(mustBe00Numbers(9)),
-        ogrn: composeValidators(required, mustBe00Numbers(13)),
-        okpo: composeValidators(required, mustBe0_0Numbers(8)(10)),
-        legalAddress: composeValidators(required),
-        mechanicFIO: composeValidators(maxLength(50)),
-        dispatcherFIO: composeValidators(maxLength(50)),
+        innNumber: syncValidators.inn,
+        organizationName: syncValidators.textReqMin,
+        taxMode: syncValidators.required,
+        kpp: syncValidators.required,
+        ogrn: syncValidators.ogrn,
+        okpo: syncValidators.okpo,
+        legalAddress: syncValidators.textReqMiddle,
+        mechanicFIO: syncValidators.textReqMin,
+        dispatcherFIO: syncValidators.textReqMin,
 
-        postAddress: composeValidators(required),
-        phoneDirector: composeValidators(required, mustBe00Numbers(11)),
-        phoneAccountant: composeValidators(required, mustBe00Numbers(11)),
-        email: composeValidators(required, mustBeMail),
-        bikBank: composeValidators(required, mustBe00Numbers(9)),
-        nameBank: composeValidators(required),
-        checkingAccount: composeValidators(required, mustBe00Numbers(20)),
-        korrAccount: composeValidators(required, mustBe00Numbers(20)),
+        postAddress: syncValidators.textReqMiddle,
+        phoneDirector: syncValidators.phone,
+        phoneAccountant: syncValidators.phone,
+        email: syncValidators.email,
+        bikBank: syncValidators.bikBank,
+        nameBank: syncValidators.textReqMin,
+        checkingAccount: syncValidators.account,
+        korrAccount: syncValidators.account,
     } as CompanyRequisitesType<ValidateType>,
 
     parsers: {
@@ -245,7 +238,7 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
             const user = await requisitesApi.getPersonalDataFromId({ idUser })
 
             if (user.message || !user.length) {
-                throw new Error(user.message || `Реквизиты [ ${idUser} ] не найдены`)
+                throw new Error(user.message || `Реквизиты [ ${ idUser } ] не найдены`)
             }
 
             if (user.length > 0) {
