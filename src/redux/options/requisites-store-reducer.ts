@@ -3,15 +3,7 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {CompanyRequisitesType, ParserType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
 import {PersonalResponseType, requisitesApi} from '../../api/options/requisites.api';
-import {
-    composeParsers,
-    parseFIO,
-    parseNoFirstSpaces,
-    parseNoSpace,
-    parseOnlyOneDash,
-    parseOnlyOneDot,
-    parseOnlyOneSpace,
-} from '../../utils/parsers';
+import {syncParsers} from '../../utils/parsers';
 import {authStoreActions, logoutAuth} from '../auth-store-reducer';
 import {
     GlobalModalActionsType,
@@ -92,21 +84,21 @@ const initialState = {
 
     parsers: {
         innNumber: undefined,
-        organizationName: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
-        taxMode: composeParsers(parseNoSpace),
+        organizationName: syncParsers.title,
+        taxMode: undefined,
         kpp: undefined,
         ogrn: undefined,
         okpo: undefined,
-        legalAddress: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
-        mechanicFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
-        dispatcherFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        legalAddress: syncParsers.title,
+        mechanicFIO: syncParsers.fio,
+        dispatcherFIO: syncParsers.fio,
 
-        postAddress: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        postAddress: syncParsers.title,
         phoneDirector: undefined,
         phoneAccountant: undefined,
         email: undefined,
         bikBank: undefined,
-        nameBank: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        nameBank: syncParsers.title,
         checkingAccount: undefined,
         korrAccount: undefined,
         tariffs: {

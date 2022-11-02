@@ -102,10 +102,10 @@ export const getInfoMessages = (): InfoStoreReducerThunkActionType =>
             if (request.length > 0) {
                 dispatch(infoStoreActions.setValuesContent(
                     request.map(( values ) => ( {
-                    ...values,
-                    mode: values.Message.includes('Заявка') ? 'blue' : 'gray',
-                    viewed: false,
-                } ))))
+                        ...values,
+                        mode: values.Message.includes('Заявка') ? 'blue' : 'gray',
+                        viewed: false,
+                    } ))))
             }
         } catch (e) {
             console.log(e)

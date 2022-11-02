@@ -54,37 +54,37 @@ export type InitializedThunkActionType = ThunkAction<void, AppStateType, unknown
 // запускаем комбайн загрузок/обращений к API
 export const initializedAll = (): InitializedThunkActionType =>
     async ( dispatch ) => {
-    try { // реджектить промисы здесь https://qna.habr.com/q/1060904
-        const getPersonal = dispatch(getPersonalOrganizationRequisites())
-        const getGeoPosition = dispatch(geoPositionTake())
-        const getAllShippers = dispatch(getAllShippersAPI())
-        const getAllConsignees = dispatch(getAllConsigneesAPI())
-        const getAllTransport = dispatch(getAllTransportAPI())
-        const getAllTrailer = dispatch(getAllTrailerAPI())
-        const getAllEmployees = dispatch(getAllEmployeesAPI())
-        const getCargoComposition = dispatch(getCargoCompositionSelector())
+        try { // реджектить промисы здесь https://qna.habr.com/q/1060904
+            const getPersonal = dispatch(getPersonalOrganizationRequisites())
+            const getGeoPosition = dispatch(geoPositionTake())
+            const getAllShippers = dispatch(getAllShippersAPI())
+            const getAllConsignees = dispatch(getAllConsigneesAPI())
+            const getAllTransport = dispatch(getAllTransportAPI())
+            const getAllTrailer = dispatch(getAllTrailerAPI())
+            const getAllEmployees = dispatch(getAllEmployeesAPI())
+            const getCargoComposition = dispatch(getCargoCompositionSelector())
 
-        const getAllRequests = dispatch(getAllRequestsAPI())
-        const getAllInfoMessages = dispatch(getInfoMessages())
+            const getAllRequests = dispatch(getAllRequestsAPI())
+            const getAllInfoMessages = dispatch(getInfoMessages())
 
-        Promise.all([
-            getPersonal,
-            getGeoPosition,
-            getCargoComposition,
-            getAllShippers,
-            getAllConsignees,
-            getAllRequests,
-            getAllTransport,
-            getAllTrailer,
-            getAllEmployees,
-            getAllInfoMessages,
-        ])
-            .then(() => {
-                dispatch(appActions.setInitialized(true))
-            })
-    } catch (e) {
-        console.log(e)
-    }
+            Promise.all([
+                getPersonal,
+                getGeoPosition,
+                getCargoComposition,
+                getAllShippers,
+                getAllConsignees,
+                getAllRequests,
+                getAllTransport,
+                getAllTrailer,
+                getAllEmployees,
+                getAllInfoMessages,
+            ])
+                .then(() => {
+                    dispatch(appActions.setInitialized(true))
+                })
+        } catch (e) {
+            console.log(e)
+        }
     }
 
 

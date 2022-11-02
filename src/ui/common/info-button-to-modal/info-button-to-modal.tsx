@@ -13,7 +13,7 @@ type OwnProps = {
 }
 
 
-export const InfoButtonToModal: React.FC<OwnProps> = ( { textToModal='', mode = 'out' } ) => {
+export const InfoButtonToModal: React.FC<OwnProps> = ( { textToModal = '', mode = 'out' } ) => {
 
     const dispatch = useDispatch()
 

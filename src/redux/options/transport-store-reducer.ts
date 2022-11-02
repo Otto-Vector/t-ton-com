@@ -2,13 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, TransportCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
-import {
-    composeParsers,
-    parseNoFirstSpaces,
-    parseOnlyOneSpace,
-    parsePseudoLatinCharsAndNumbers,
-    parseToUpperCase,
-} from '../../utils/parsers';
+import {syncParsers} from '../../utils/parsers';
 import {transportApi} from '../../api/options/transport.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
@@ -55,10 +49,10 @@ const initialState = {
     } as TransportCardType<ValidateType>,
 
     parsers: {
-        transportNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
+        transportNumber: syncParsers.trailerTransportNumber,
         transportTrademark: undefined,
         transportModel: undefined,
-        pts: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
+        pts: syncParsers.pts,
         dopog: undefined,
         cargoType: undefined,
         cargoWeight: undefined,

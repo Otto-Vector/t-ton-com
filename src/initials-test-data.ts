@@ -6,9 +6,9 @@ import {
     TrailerCardType,
     TransportCardType,
 } from './types/form-types'
-import {randArrayValue, randFloorMax, randMinMax, } from './utils/random-utils';
+import {randArrayValue, randFloorMax, randMinMax} from './utils/random-utils';
 
-import { randomPassportDate} from './utils/date-formats';
+import {randomPassportDate} from './utils/date-formats';
 import {randomDriverImage, randomTrailerImage, randomTruckImage} from './api/randomImage.api';
 
 

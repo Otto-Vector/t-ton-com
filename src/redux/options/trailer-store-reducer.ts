@@ -2,13 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, TrailerCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
-import {
-    composeParsers,
-    parseNoFirstSpaces,
-    parseOnlyOneSpace,
-    parsePseudoLatinCharsAndNumbers,
-    parseToUpperCase,
-} from '../../utils/parsers';
+import {syncParsers} from '../../utils/parsers';
 import {trailerApi} from '../../api/options/trailer.api';
 
 
@@ -55,10 +49,10 @@ const initialState = {
     } as TrailerCardType<ValidateType>,
 
     parsers: {
-        trailerNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
+        trailerNumber: syncParsers.trailerTransportNumber,
         trailerTrademark: undefined,
         trailerModel: undefined,
-        pts: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
+        pts: syncParsers.pts,
         dopog: undefined,
         cargoType: undefined,
         cargoWeight: undefined,

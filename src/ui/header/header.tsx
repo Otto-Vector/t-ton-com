@@ -12,7 +12,7 @@ export const Header: React.FC<OwnProps> = () => {
     const { directPhoneNumber, companyName, baseHref } = useSelector(getHeaderStore)
     return (
         <header className={ styles.header }>
-            <InfoGlobalToModal />
+            <InfoGlobalToModal/>
             <Logo companyName={ companyName } baseHref={ baseHref }/>
             <Phone directPhoneNumber={ directPhoneNumber }/>
         </header>

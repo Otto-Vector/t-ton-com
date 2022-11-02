@@ -22,9 +22,9 @@ export const InfoSection: React.FC<OwnProps> = () => {
         }
     }, [ unreadCount ])
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch<any>(getInfoMessages())
-    },[])
+    }, [])
 
     return (
         <div className={ styles.infoSection }>

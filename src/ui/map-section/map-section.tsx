@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react'
+import React, {useLayoutEffect, useState} from 'react'
 import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -49,7 +49,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                        balloonContent: `<div id="driver-${ idEmployee }" class="driver-card"></div>`,
                                    }
                                }
-                               key={ id+idEmployee }
+                               key={ id + idEmployee }
                                onClick={ () => {
                                    // ставим в очередь промисов, чтобы сработало после отрисовки балуна
                                    setTimeout(() => {
@@ -61,7 +61,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                 }
             </YandexBigMap>
             {/*ждём, когда появится балун с нужным ID*/ }
-            <Portal getHTMLElementId={ `driver-${ idToPortal }` }><AddDriversView idEmployee={idToPortal}/></Portal>
+            <Portal getHTMLElementId={ `driver-${ idToPortal }` }><AddDriversView idEmployee={ idToPortal }/></Portal>
         </div>
     )
 }

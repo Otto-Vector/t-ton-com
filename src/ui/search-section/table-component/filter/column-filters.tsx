@@ -7,7 +7,7 @@ export const ColumnInputFilter = ( {
                                    }: { column?: UseFiltersColumnProps<{}>, filterData?: number | string } ) => {
     useEffect(() => {
         column?.setFilter(filterData)
-    }, [column,filterData])
+    }, [ column, filterData ])
     return ( <></> )
 }
 

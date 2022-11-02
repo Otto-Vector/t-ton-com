@@ -75,7 +75,7 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
                          key={ item.label + id + title }
                     >
                         <div
-                            className={ styles.rowItem__label + ( (isPlacemarked && subTitle) ? ' ' + styles.rowItem__label_marked : '' ) }
+                            className={ styles.rowItem__label + ( ( isPlacemarked && subTitle ) ? ' ' + styles.rowItem__label_marked : '' ) }
                             title={ title + ( subTitle ? ` [${ subTitle }]` : '' ) }>
                             { title || 'null' }
                         </div>

@@ -57,10 +57,11 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
 
 
     const onSubmit = async ( requisites: CompanyRequisitesType<string> ) => {
-        const unmaskedValues: CompanyRequisitesType = { ...requisites,
+        const unmaskedValues: CompanyRequisitesType = {
+            ...requisites,
             innNumber: parseAllNumbers(requisites.innNumber),
             kpp: parseAllNumbers(requisites.innNumber),
-            ogrn: parseAllNumbers(requisites.ogrn)
+            ogrn: parseAllNumbers(requisites.ogrn),
         }
         const error = await dispatch<any>(setOrganizationRequisites(unmaskedValues))
         if (error) return { [FORM_ERROR]: error }
@@ -73,15 +74,15 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                 title: unmaskedValues.organizationName,
                 kpp: unmaskedValues.kpp,
                 ogrn: unmaskedValues.ogrn,
-                coordinates: coordsToString(localCoords as [number,number]),
+                coordinates: coordsToString(localCoords as [ number, number ]),
                 city: '-',
                 address: unmaskedValues.legalAddress,
                 organizationName: unmaskedValues.organizationName,
                 shipperTel: unmaskedValues.phoneDirector,
                 shipperFio: '-',
-                description: '-'
+                description: '-',
             } as ShippersCardType<string>))
-            dispatch(globalModalStoreActions.setTextMessage("Создан первый грузоотправитель. Скорректируйте данные"))
+            dispatch(globalModalStoreActions.setTextMessage('Создан первый грузоотправитель. Скорректируйте данные'))
             navigate(options)
         } else {
             navigate(-1)

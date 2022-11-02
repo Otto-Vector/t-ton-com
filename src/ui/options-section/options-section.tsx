@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './options-section.module.scss'
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {
     getConsigneesOptionsStore,
@@ -21,7 +21,6 @@ import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-res
 import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect';
 import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect';
 import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
-import {getPersonalOrganizationRequisites} from '../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {}

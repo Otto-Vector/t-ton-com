@@ -7,9 +7,11 @@ import 'antd/lib/modal/style/index.css' // используем стили antd 
 import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
 import {Modal} from 'antd';
 import {
-    getActionGlobalModalStore, getNavigateToCancelGlobalModalStore,
+    getActionGlobalModalStore,
+    getNavigateToCancelGlobalModalStore,
     getNavigateToOkGlobalModalStore,
-    getTextGlobalModalStore, getTitleGlobalModalStore,
+    getTextGlobalModalStore,
+    getTitleGlobalModalStore,
 } from '../../../selectors/utils/global-modal-reselect';
 import {useNavigate} from 'react-router-dom';
 
@@ -44,7 +46,7 @@ export const InfoGlobalToModal: React.FC = () => {
         navToOnCancel && navigate(navToOnCancel)
     }
 
-    const titleHere = title || (( action || navToOnOk ) ? 'Вопрос' : 'Информация')
+    const titleHere = title || ( ( action || navToOnOk ) ? 'Вопрос' : 'Информация' )
 
     useEffect(() => {
         setVisible(!!textToGlobalModal)

@@ -21,7 +21,7 @@ export const responseToRequestApi = {
     },
 
     // создать один Ответ на Заявку POST /api/responsetorequestcardtype/
-    createOneResponseToRequest( { responseId, ...responseToRequest} : ResponseToRequestCardType) {
+    createOneResponseToRequest( { responseId, ...responseToRequest }: ResponseToRequestCardType ) {
         return instanceBack.post<InfoResponseType>('/api/responsetorequestcardtype/', responseToRequest)
             .then(response => response.data)
         // 1.	Code 200, {"success": "ResponseToRequestCardType '{}' created successfully".format(new_Response.responseId)}

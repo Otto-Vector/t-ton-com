@@ -1,25 +1,8 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-types'
-import {
-    composeValidators,
-    maxLength,
-    mustBe00Numbers,
-    mustBe0_0Numbers,
-    required,
-    syncValidators,
-} from '../../utils/validators'
-import {
-    composeParsers,
-    coordsToString,
-    parseAllCoords,
-    parseFIO,
-    parseNoFirstSpaces,
-    parseOnlyOneComma,
-    parseOnlyOneDash,
-    parseOnlyOneDot,
-    parseOnlyOneSpace,
-} from '../../utils/parsers';
+import {syncValidators} from '../../utils/validators'
+import {coordsToString, syncParsers} from '../../utils/parsers';
 import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
 import {getOrganizationsByInn} from '../api/dadata-response-reducer';
 import {consigneesApi} from '../../api/options/consignees.api';
@@ -97,16 +80,16 @@ const initialState = {
     } as ConsigneesCardType<ValidateType>,
 
     parsers: {
-        title: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
+        title: syncParsers.title,
         innNumber: undefined,
-        organizationName: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        organizationName: syncParsers.title,
         kpp: undefined,
         ogrn: undefined,
-        address: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
-        consigneesFio: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        address: syncParsers.title,
+        consigneesFio: syncParsers.fio,
         consigneesTel: undefined,
         description: undefined,
-        coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
+        coordinates: syncParsers.coordinates,
         city: undefined,
     } as ConsigneesCardType<ParserType>,
 

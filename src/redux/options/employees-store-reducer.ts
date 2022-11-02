@@ -2,16 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {syncValidators} from '../../utils/validators'
 import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-types'
-import {
-    composeParsers,
-    parseFIO,
-    parseNoFirstSpaces,
-    parseOnlyOneDash,
-    parseOnlyOneDot,
-    parseOnlyOneSpace,
-    parsePseudoLatinCharsAndNumbers,
-    parseToUpperCase,
-} from '../../utils/parsers';
+import {syncParsers} from '../../utils/parsers';
 import {employeesApi} from '../../api/options/employee.api';
 
 const initialState = {
@@ -64,13 +55,13 @@ const initialState = {
     } as EmployeesCardType<ValidateType>,
 
     parsers: {
-        employeeFIO: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        employeeFIO: syncParsers.fio,
         employeePhoneNumber: undefined,
         passportSerial: undefined,
-        passportFMS: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        passportFMS: syncParsers.passport,
         passportDate: undefined,
-        drivingLicenseNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseToUpperCase),
-        drivingCategory: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        drivingLicenseNumber: syncParsers.drivingLicence,
+        drivingCategory: syncParsers.drivingCategory,
         personnelNumber: undefined,
         garageNumber: undefined,
         photoFace: undefined,

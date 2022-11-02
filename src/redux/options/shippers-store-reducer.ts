@@ -2,17 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, ShippersCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
-import {
-    composeParsers,
-    coordsToString,
-    parseAllCoords,
-    parseFIO,
-    parseNoFirstSpaces,
-    parseOnlyOneComma,
-    parseOnlyOneDash,
-    parseOnlyOneDot,
-    parseOnlyOneSpace,
-} from '../../utils/parsers';
+import {coordsToString, syncParsers} from '../../utils/parsers';
 import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
 import {getOrganizationsByInn} from '../api/dadata-response-reducer';
 import {shippersApi} from '../../api/options/shippers.api';
@@ -80,16 +70,16 @@ const initialState = {
     } as ShippersCardType<ValidateType>,
 
     parsers: {
-        title: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        title: syncParsers.title,
         innNumber: undefined,
-        organizationName: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        organizationName: syncParsers.title,
         kpp: undefined,
         ogrn: undefined,
-        address: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
-        shipperFio: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+        address: syncParsers.title,
+        shipperFio: syncParsers.fio,
         shipperTel: undefined,
         description: undefined,
-        coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
+        coordinates: syncParsers.coordinates,
         city: undefined,
     } as ShippersCardType<ParserType>,
 

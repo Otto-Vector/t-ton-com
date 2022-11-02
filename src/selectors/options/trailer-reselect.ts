@@ -39,7 +39,7 @@ export const getAllTrailerSelectFromLocal = createSelector(
                         value: idTrailer,
                         label,
                         isDisabled: isEmployeesHasTrailer,
-                        subLabel
+                        subLabel,
                     } )
                 },
             ),
