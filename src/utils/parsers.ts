@@ -1,4 +1,4 @@
-export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] ) => ( value: string ): string =>
+export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] )=> ( value: string ): string =>
     parsers.reduce(( val, validator ) => validator(val), value);
 
 type parsePropType = string | undefined | null
