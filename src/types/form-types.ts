@@ -15,57 +15,99 @@ export type PhoneSubmitType<T = DefaultFormType> = {
 
 // на форму с реквизитами
 export type CompanyRequisitesType<T = DefaultFormType> = {
-    innNumber: T // ИНН
-    organizationName: T // Наименование организации
-    taxMode: T // Вид налогов
-    kpp: T // КПП
-    ogrn: T // ОГРН
-    okpo: T // OKПО
-    legalAddress: T // Юридический адрес
-    description: T // доп. информация
+    // ИНН
+    innNumber: T
+    // Наименование организации
+    organizationName: T
+    // Вид налогов
+    taxMode: T
+    // КПП
+    kpp: T
+    // ОГРН
+    ogrn: T
+    // OKПО
+    okpo: T
+    // Юридический адрес
+    legalAddress: T
+    // доп. информация
+    description: T
 
-    postAddress: T // почтовый адрес
-    phoneDirector: T // телефон директора
-    phoneAccountant: T // телефон бухгалтера
-    email: T // электронная почта
-    bikBank: T // БИК Банка
-    nameBank: T // Наименование Банка
-    checkingAccount: T // Расчётный счёт
-    korrAccount: T // Корреспондентский счёт
+    // почтовый адрес
+    postAddress: T
+    // телефон директора
+    phoneDirector: T
+    // телефон бухгалтера
+    phoneAccountant: T
+    // электронная почта
+    email: T
+    // БИК Банка
+    bikBank: T
+    // Наименование Банка
+    nameBank: T
+    // Расчётный счёт
+    checkingAccount: T
+    // Корреспондентский счёт
+    korrAccount: T
 
-    mechanicFIO: T // ФИО механика
-    dispatcherFIO: T // ФИО диспетчера
+    // ФИО механика
+    mechanicFIO: T
+    // ФИО диспетчера
+    dispatcherFIO: T
 
-    cash: T // количество денег на счету
-    requestActiveCount: T // количество активных заявок
-    maxRequests: T // максимальное количество заявок (редактируется админом)
+    // количество денег на счету
+    cash: T
+    // количество активных заявок
+    requestActiveCount: T
+    // максимальное количество заявок (редактируется админом)
+    maxRequests: T
 
-    tariffs: { //тарифы на оплату (отображаются в инфо-секции, используются везде, редактируются админом)
-        create: T, // тариф на создание заявки (по умолчанию 100)
-        acceptShortRoute: T, // тариф на принятие заявки на короткие расстояния (по умолчанию 100)
-        acceptLongRoute: T, // тариф на принятие заявки на Дальние расстояния (по умолчанию 100)
-        paySafeTax: T, // процент на безопасную сделку (по умолчанию 3) (будем прикручивать в будущем)
+    // тарифы на оплату (отображаются в инфо-секции, используются везде, редактируются админом)
+    tariffs: {
+        // тариф на создание заявки (по умолчанию 100)
+        create: T,
+        // тариф на принятие заявки на короткие расстояния (по умолчанию 100)
+        acceptShortRoute: T,
+        // тариф на принятие заявки на Дальние расстояния (по умолчанию 100)
+        acceptLongRoute: T,
+        // процент на безопасную сделку (по умолчанию 3) (будем прикручивать в будущем)
+        paySafeTax: T,
     },
 }
 
 // на сотрудника
 export type EmployeesCardType<T = DefaultFormType> = {
-    idEmployee: string // идентификатор
-    employeeFIO: T // ФИО сотрудника
-    employeePhoneNumber: T // Телефон сотрудника
-    passportSerial: T // Серия, № паспорта
-    passportFMS: T // Кем выдан паспорт
-    passportDate: T | Date// Когда выдан
-    drivingLicenseNumber: T // Номер водительского удостоверения
-    drivingCategory: T // Водительские категории
-    personnelNumber: T // Табельный номер
-    garageNumber: T // Гаражный номер
-    photoFace: T // Добавить фотографию сотрудника
-    rating: T // количество успешно завершённых заказов (считается автоматически) // как считать, пока хз на бэке или чз фронт...
-    coordinates: T // координаты местоположения водителя
-    status: T // статус водителя
-    idTransport: T // прикреплённый транспорт
-    idTrailer: T // прикреплённый прицеп
+    // идентификатор
+    idEmployee: string
+    // ФИО сотрудника
+    employeeFIO: T
+    // Телефон сотрудника
+    employeePhoneNumber: T
+    // Серия, № паспорта
+    passportSerial: T
+    // Кем выдан паспорт
+    passportFMS: T
+    // Когда выдан
+    passportDate: T | Date
+    // Номер водительского удостоверения
+    drivingLicenseNumber: T
+    // Водительские категории
+    drivingCategory: T
+    // Табельный номер
+    personnelNumber: T
+    // Гаражный номер
+    garageNumber: T
+    // Добавить фотографию сотрудника
+    photoFace: T
+    // количество успешно завершённых заказов (считается автоматически)
+    rating: T
+    // координаты местоположения водителя
+    coordinates: T
+    // статус водителя
+    status: T
+    // прикреплённый транспорт
+    idTransport: T
+    // прикреплённый прицеп
+    idTrailer: T
 }
 
 // на грузоПОЛУЧАТЕЛЯ

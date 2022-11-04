@@ -2,7 +2,8 @@ import {AppStateType} from '../../redux/redux-store'
 import {ConsigneesStoreReducerStateType} from '../../redux/options/consignees-store-reducer'
 import {ConsigneesCardType} from '../../types/form-types';
 import {createSelector} from 'reselect';
-import {SelectOptionsType} from '../../ui/common/form-selector/form-selector';
+import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
+
 
 type ConsigneesStoreSelectors<T extends keyof Y, Y = ConsigneesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 

@@ -8,7 +8,7 @@ import {Preloader} from '../../common/preloader/preloader'
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
+import {FormSelector} from '../../common/form-selector/form-selector'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoConstType, propertyRights, TrailerCardType} from '../../../types/form-types'
@@ -32,6 +32,7 @@ import {
 import {parseAllNumbers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
+import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
 
 type OwnProps = {}
 

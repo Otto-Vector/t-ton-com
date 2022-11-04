@@ -7,6 +7,7 @@ type BaseStoreSelectors<T extends keyof Y, Y = BaseStoreReducerStateType> = ( st
 export const getHeaderStore: BaseStoreSelectors<'header'> = ( state ) => state.baseStoreReducer.header
 export const getFooterStore: BaseStoreSelectors<'footer'> = ( state ) => state.baseStoreReducer.footer
 export const getLinksStore: BaseStoreSelectors<'links'> = ( state ) => state.baseStoreReducer.links
+export const getDrivingCategorySelector: BaseStoreSelectors<'drivingCategorySelector'> = ( state ) => state.baseStoreReducer.drivingCategorySelector
 
 
 // // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API

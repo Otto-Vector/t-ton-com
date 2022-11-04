@@ -25,12 +25,13 @@ import {
     setOrganizationRequisites,
 } from '../../../redux/options/requisites-store-reducer';
 import {coordsToString, parseAllNumbers} from '../../../utils/parsers';
-import {FormSelector, stringArrayToSelectValue} from '../../common/form-selector/form-selector';
+import {FormSelector} from '../../common/form-selector/form-selector';
 import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {FORM_ERROR} from 'final-form';
 import {newShipperSaveToAPI} from '../../../redux/options/shippers-store-reducer';
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
+import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
 
 
 type OwnProps = {}

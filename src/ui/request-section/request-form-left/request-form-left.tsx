@@ -19,7 +19,7 @@ import {
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
-import {FormSelector, SelectOptionsType, stringArrayToSelectValue} from '../../common/form-selector/form-selector'
+import {FormSelector} from '../../common/form-selector/form-selector'
 import {RequestModesType} from '../request-section'
 import {Field, Form} from 'react-final-form'
 import {
@@ -39,6 +39,7 @@ import {consigneesStoreActions} from '../../../redux/options/consignees-store-re
 import {Preloader} from '../../common/preloader/preloader';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect';
+import {SelectOptionsType, stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
 
 
 type OwnProps = {
@@ -163,7 +164,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                         placeholder={ placehoders.cargoComposition }
                                                         values={ stringArrayToSelectValue(cargoComposition) }
                                                         validate={ validators.cargoComposition }
-                                                        creatableSelect
+                                                        isCreatableSelect
                                                         handleCreate={ onCreateCompositionValue }
                                                         isClearable
                                         />

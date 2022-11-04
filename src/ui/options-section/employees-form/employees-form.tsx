@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -34,6 +34,8 @@ import {getAllTransportSelectFromLocal} from '../../../selectors/options/transpo
 import {parseAllNumbers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set';
 import {yearMmDdFormat} from '../../../utils/date-formats';
+import {getDrivingCategorySelector} from '../../../selectors/base-reselect';
+import {SelectOptionsType} from '../../common/form-selector/selector-utils';
 
 
 type OwnProps = {}
@@ -51,6 +53,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnEmployeesStore)
     const validators = useSelector(getValidatorsEmployeesStore)
     const parsers = useSelector(getParsersEmployeesStore)
+
+    const drivingCategorySelector = useSelector(getDrivingCategorySelector)
+
 
     const trailerSelect = useSelector(getAllTrailerSelectFromLocal)
         .map(( values ) => ( {
@@ -87,10 +92,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         }
 
         if (isNew) {
-            //сохраняем НОВОЕ значение
+            // сохраняем НОВОЕ значение
             dispatch<any>(newEmployeeSaveToAPI(demaskedValues, selectedImage))
         } else {
-            //сохраняем измененное значение
+            // сохраняем измененное значение
             dispatch<any>(modifyOneEmployeeToAPI(demaskedValues, selectedImage))
         }
         navigate(options) // и возвращаемся в предыдущее окно
@@ -173,13 +178,12 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.drivingLicenseNumber }
                                                    parse={ parsers.drivingLicenseNumber }
                                             />
-                                            <Field name={ 'drivingCategory' }
-                                                   placeholder={ label.drivingCategory }
-                                                   maskFormat={ maskOn.drivingCategory }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.drivingCategory }
-                                                   parse={ parsers.drivingCategory }
+                                            <FormSelector named={ 'drivingCategory' }
+                                                          placeholder={ label.drivingCategory }
+                                                          values={ drivingCategorySelector }
+                                                          validate={ validators.idTransport }
+                                                          isMulti
+                                                          isClearable
                                             />
                                             <Field name={ 'personnelNumber' }
                                                    placeholder={ label.personnelNumber }
