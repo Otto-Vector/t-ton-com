@@ -3,9 +3,9 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
 import {coordsToString, syncParsers} from '../../utils/parsers';
-import {GetOrganizationByInnDaDataType} from '../../api/dadata.api';
+import {GetOrganizationByInnDaDataType} from '../../api/external-api/dadata.api';
 import {getOrganizationsByInn} from '../api/dadata-response-reducer';
-import {consigneesApi} from '../../api/options/consignees.api';
+import {consigneesApi} from '../../api/local-api/options/consignees.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
 export const defaultInitialConsigneesValues = {

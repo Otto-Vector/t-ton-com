@@ -5,7 +5,7 @@ import {
     GetOrganizationByInnDaDataType,
     getOrganizationByInnKPPDaDataAPI,
     GetOrganizationByInnKPPDaDataType,
-} from '../../api/dadata.api'
+} from '../../api/external-api/dadata.api'
 import {ThunkAction} from 'redux-thunk'
 
 const initialState = {

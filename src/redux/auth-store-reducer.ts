@@ -3,7 +3,7 @@ import {AppStateType, GetActionsTypes} from './redux-store'
 import {PhoneSubmitType, ValidateType} from '../types/form-types'
 import {syncValidators} from '../utils/validators'
 import {geoPosition} from '../api/geolocation.api';
-import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/auth.api';
+import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/local-api/auth.api';
 import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-reducer';
 import {appActions} from './app-store-reducer';
 import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';

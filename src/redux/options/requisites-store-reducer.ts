@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {CompanyRequisitesType, ParserType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
-import {PersonalResponseType, requisitesApi} from '../../api/options/requisites.api';
+import {PersonalResponseType, requisitesApi} from '../../api/local-api/options/requisites.api';
 import {syncParsers} from '../../utils/parsers';
 import {authStoreActions, logoutAuth} from '../auth-store-reducer';
 import {

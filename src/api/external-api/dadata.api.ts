@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {DaDataResponseAPIType} from '../types/api-types';
+import {DaDataResponseAPIType} from '../../types/api-types';
 
 
 const { REACT_APP_DADATA_KEY, REACT_APP_DEPLOY_MODE } = process.env

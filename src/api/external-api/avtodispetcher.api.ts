@@ -1,8 +1,8 @@
 import axios from 'axios'
-import {qsNormalize} from '../utils/norm-query'
-import {parseNoSpace} from '../utils/parsers'
+import {qsNormalize} from '../../utils/norm-query'
+import {parseNoSpace} from '../../utils/parsers'
 import base64 from 'base-64'
-import {AvtodispetcherResponseType} from '../types/api-types';
+import {AvtodispetcherResponseType} from '../../types/api-types';
 
 
 const { REACT_APP_AVTODISPETCHER_KEY, REACT_APP_DEPLOY_MODE } = process.env

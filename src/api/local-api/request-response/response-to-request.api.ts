@@ -1,5 +1,5 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
-import {ResponseToRequestCardType} from '../../types/form-types';
+import {ResponseToRequestCardType} from '../../../types/form-types';
 
 
 export const responseToRequestApi = {

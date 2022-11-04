@@ -3,7 +3,7 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, TrailerCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
 import {syncParsers} from '../../utils/parsers';
-import {trailerApi} from '../../api/options/trailer.api';
+import {trailerApi} from '../../api/local-api/options/trailer.api';
 
 
 const initialState = {

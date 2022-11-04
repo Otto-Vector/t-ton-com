@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from './redux-store'
-import {logInfoApi} from '../api/logInfo.api';
+import {logInfoApi} from '../api/local-api/logInfo.api';
 
 
 export type OneInfoItem = {

@@ -3,10 +3,10 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {CargoTypeType, DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
 import {initialDocumentsRequestValues} from '../../initials-test-data';
-import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/avtodispetcher.api';
+import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
 import {polyline_decode} from '../../utils/polilyne-decode';
-import {cargoEditableSelectorApi} from '../../api/cargoEditableSelector.api';
-import {oneRequestApi} from '../../api/request-response/request.api';
+import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelector.api';
+import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
 
 

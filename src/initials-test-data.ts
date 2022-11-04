@@ -9,7 +9,7 @@ import {
 import {randArrayValue, randFloorMax, randMinMax} from './utils/random-utils';
 
 import {randomPassportDate} from './utils/date-formats';
-import {randomDriverImage, randomTrailerImage, randomTruckImage} from './api/randomImage.api';
+import {randomDriverImage, randomTrailerImage, randomTruckImage} from './api/utils-api/randomImage.api';
 
 
 export const cargoType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',

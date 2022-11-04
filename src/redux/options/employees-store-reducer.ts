@@ -3,7 +3,7 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {syncValidators} from '../../utils/validators'
 import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {syncParsers} from '../../utils/parsers';
-import {employeesApi} from '../../api/options/employee.api';
+import {employeesApi} from '../../api/local-api/options/employee.api';
 
 const initialState = {
     employeeIsFetching: false,

@@ -1,5 +1,5 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
-import {OneRequestApiType} from '../../types/form-types';
+import {OneRequestApiType} from '../../../types/form-types';
 
 
 export const oneRequestApi = {
