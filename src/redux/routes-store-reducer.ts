@@ -60,7 +60,7 @@ export const routesStoreReducer = ( state = initialState, action: ActionsType ):
 
 /* ЭКШОНЫ */
 export const routeStoreActions = {
-    // установка значения в карточки пользователей одной страницы
+    // зачем-то нужно. пока не знаю зачем (пусть будет)
     setRoute: ( routeName: string, routePath: string ) => ( {
         type: 'base-store-reducer/CHANGE-ROUTE',
         routeName, routePath,
