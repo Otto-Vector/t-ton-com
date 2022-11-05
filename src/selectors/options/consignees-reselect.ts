@@ -28,6 +28,6 @@ export const getOneConsigneesFromLocal = createSelector(
     })
 
 export const getAllConsigneesSelectFromLocal = createSelector(getAllConsigneesStore,
-    ( consignees ): SelectOptionsType[] => consignees.map(( { idRecipient, title } ) =>
-        ( { key: idRecipient + '', value: idRecipient + '', label: title || '' } )),
+    ( consignees ): SelectOptionsType[] => consignees.map(( { idRecipient, title, city } ) =>
+        ( { key: idRecipient + '', value: idRecipient + '', label: title || '', subLabel: city } )),
 )

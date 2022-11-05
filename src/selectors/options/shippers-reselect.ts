@@ -28,6 +28,6 @@ export const getOneShipperFromLocal = createSelector(
     })
 
 export const getAllShippersSelectFromLocal = createSelector(getAllShippersStore,
-    ( shippers ): SelectOptionsType[] => shippers.map(( { idSender, title } ) =>
-        ( { key: idSender + '', value: idSender + '', label: title + '' } )),
+    ( shippers ): SelectOptionsType[] => shippers.map(( { idSender, title, city } ) =>
+        ( { key: idSender + '', value: idSender + '', label: title + '' , subLabel: city} )),
 )

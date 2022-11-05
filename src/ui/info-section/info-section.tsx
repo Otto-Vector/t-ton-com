@@ -22,7 +22,7 @@ export const InfoSection: React.FC<OwnProps> = () => {
         }
     }, [ unreadCount ])
 
-    useEffect(() => {
+    useEffect(() => { //при первом рендере подгружает все уведомления
         dispatch<any>(getInfoMessages())
     }, [])
 

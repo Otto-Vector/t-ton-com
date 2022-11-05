@@ -105,6 +105,13 @@
       background-color: rgba(whitesmoke, 1);
       color: $accentColor;
     }
+
+    &_disabled {
+      background-color: #2D2D2D;
+      &:hover {
+        height: 51px;
+      }
+    }
   }
 }
 

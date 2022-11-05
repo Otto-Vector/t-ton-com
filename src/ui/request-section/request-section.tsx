@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import styles from './request-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -32,8 +32,7 @@ export type RequestModesType = { createMode: boolean, statusMode: boolean, histo
 
 export const RequestSection: React.FC = React.memo(() => {
 
-
-    const tabModesInitial = { left: false, center: false, right: false }
+    const tabModesInitial = useMemo(()=>({ left: false, center: false, right: false }),[])
     const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
@@ -61,9 +60,9 @@ export const RequestSection: React.FC = React.memo(() => {
     // : oneRequest
 
 
-    const onSubmit = ( values: OneRequestType ) => {
-
-        dispatch<any>(changeCurrentRequest({ values }))
+    const onSubmit = async ( values: OneRequestType ) => {
+        // debugger
+        await dispatch<any>(changeCurrentRequest({ values }))
         dispatch(requestStoreActions.setIsNewRequest(false))
     }
 
@@ -73,10 +72,8 @@ export const RequestSection: React.FC = React.memo(() => {
         dispatch(requestStoreActions.setInitialValues(values))
     }
 
-    const activeTab = ( tab: string ) => {
-        if (tab === 'left') return setTabModes({ ...tabModesInitial, left: true })
-        if (tab === 'center') return setTabModes({ ...tabModesInitial, center: true })
-        if (tab === 'right') return setTabModes({ ...tabModesInitial, right: true })
+    const activeTab = ( tab: 'left' | 'center' | 'right' ) => {
+        setTabModes({ ...tabModesInitial, [tab]: true })
     }
 
     const cancelNavigate = (): To => {
@@ -159,9 +156,11 @@ export const RequestSection: React.FC = React.memo(() => {
                          onClick={ () => activeTab('center') }>
                         { 'Маршрут' }
                     </div>
-                    <div className={ styles.requestSection__bottomTabsItem + ' ' +
-                        ( tabModes.right && styles.requestSection__bottomTabsItem_active ) }
-                         onClick={ () => activeTab('right') }>
+                    <div className={ styles.requestSection__bottomTabsItem +
+                        ( tabModes.right ? ' ' + styles.requestSection__bottomTabsItem_active : '' ) +
+                        ( requestModes.createMode ? ' ' + styles.requestSection__bottomTabsItem_disabled : '' )
+                    }
+                         onClick={ () => !requestModes.createMode ? activeTab('right') : undefined }>
                         { 'Документы' }
                     </div>
                 </div>

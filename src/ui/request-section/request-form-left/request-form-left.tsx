@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import styles from './request-form-left.module.scss'
 import {
     getAllShippersSelectFromLocal,
@@ -40,6 +40,8 @@ import {Preloader} from '../../common/preloader/preloader';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect';
 import {SelectOptionsType, stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
+import {getShippersOptionsStore} from '../../../selectors/options/options-reselect';
+import {FormApi} from 'final-form';
 
 
 type OwnProps = {
@@ -89,7 +91,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     //         .map(( { title } ) => ( { value: title, label: title, key: title } )), [ requisitesInn ])
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
-    const customersSelect: SelectOptionsType[] = custumersByUserInn
+    const customersSelect: SelectOptionsType[] = useMemo(()=>custumersByUserInn,[shippersSelect])
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
 
     const buttonsAction = {
@@ -100,11 +102,14 @@ export const RequestFormLeft: React.FC<OwnProps> = (
             navigate(-1)
         },
         submitRequestAndSearch: async ( values: OneRequestType ) => {
-            await onSubmit(values)
-            // navigate(routes.searchList)
+            // сабмит запускается сам формой react-final-form в переднных ей параметрах
+            // await onSubmit(values)
+            navigate(routes.searchList)
         },
         submitRequestAndDrive: async ( values: OneRequestType ) => {
-            await onSubmit(values)
+            // сабмит запускается сам формой react-final-form в переднных ей параметрах
+            // await onSubmit(values)
+            // console.log(form.getState().submitSucceeded)
             navigate(routes.addDriver)
         },
     }
@@ -146,6 +151,10 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         }
     }, [ oneShipper, oneConsignee ])
 
+    useEffect(()=>{ // присваивается первое значение селектора
+        const idCustomer = customersSelect.length > 0 ? customersSelect[0].value : undefined
+        dispatch(requestStoreActions.setInitialValues({...initialValues, idCustomer}))
+    },[customersSelect])
 
     return (
         <div className={ styles.requestFormLeft }>
@@ -235,12 +244,12 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                             </div>
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
-                                    className={ styles.requestFormLeft__label }>{ labels.idUserCustomer }</label>
+                                    className={ styles.requestFormLeft__label }>{ labels.idCustomer }</label>
                                 { requestModes.createMode
-                                    ? <FormSelector named={ 'customer' }
-                                                    placeholder={ placehoders.idUserCustomer }
+                                    ? <FormSelector named={ 'idCustomer' }
+                                                    placeholder={ placehoders.idCustomer }
                                                     values={ customersSelect }
-                                                    validate={ validators.idUserCustomer }
+                                                    validate={ validators.idCustomer }
                                                     isClearable
                                     />
                                     : <div className={ styles.requestFormLeft__info + ' ' +
@@ -259,6 +268,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                     values={ shippersSelect }
                                                     validate={ validators.idSender }
                                                     handleChanger={ setOneShipper }
+                                                    isSubLabelOnOption
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
@@ -276,6 +286,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                                     values={ consigneesSelect }
                                                     validate={ validators.idRecipient }
                                                     handleChanger={ setOneConsignee }
+                                                    isSubLabelOnOption
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
@@ -322,7 +333,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 { !requestModes.historyMode ? <>
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ 'green' }
-                                                type={ 'submit' }
+                                                type={ requestModes.statusMode ? 'button' : 'submit' }
                                                 title={ requestModes.statusMode ? 'Принять заявку' : 'Поиск исполнителя' }
                                                 onClick={ () => {
                                                     requestModes.statusMode
@@ -334,7 +345,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     </div>
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ requestModes.statusMode ? 'red' : 'blue' }
-                                                type={ 'submit' }
+                                                type={ requestModes.statusMode ? 'button' : 'submit' }
                                                 title={ requestModes.statusMode ? 'Отказаться' : 'Cамовывоз' }
                                                 onClick={ () => {
                                                     requestModes.statusMode
@@ -352,7 +363,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 }
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
-                            {/*{ ( requestModes.createMode && !isFirstRender ) &&*/ }
+
                             {/*    <FormSpySimpleRequest*/ }
                             {/*        form={ form }*/ }
                             {/*        onChange={ ( { values, valid } ) => {*/ }

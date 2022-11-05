@@ -28,7 +28,7 @@ const initialState = {
         shipmentDate: 'Дата погрузки',
         distance: 'Расстояние, км.',
         cargoType: 'Тип груза',
-        idUserCustomer: 'Заказчик',
+        idCustomer: 'Заказчик',
         idSender: 'Грузоотправитель',
         idRecipient: 'Грузополучатель',
         requestCarrierId: 'Перевозчик',
@@ -53,7 +53,7 @@ const initialState = {
         shipmentDate: 'ДД-ММ-ГГГГ',
         distance: 'авто-расчет',
         cargoType: 'Тип груза',
-        idUserCustomer: 'Наименование организации заказчика',
+        idCustomer: 'Наименование организации заказчика',
         idSender: 'Наименование организации Владельца груза',
         idRecipient: 'Наименование организации Грузополучателя',
         requestCarrierId: 'Наименование организации Перевозчика',
@@ -68,7 +68,7 @@ const initialState = {
         shipmentDate: composeValidators(required),
         distance: undefined,
         cargoType: composeValidators(required),
-        idUserCustomer: composeValidators(required),
+        idCustomer: composeValidators(required),
         idSender: composeValidators(required),
         idRecipient: composeValidators(required),
         requestCarrierId: undefined,
@@ -85,6 +85,7 @@ const initialState = {
         shipmentDate: undefined,
         cargoType: undefined,
         idUserCustomer: undefined,
+        idCustomer: undefined,
         distance: undefined,
         idSender: undefined,
         idRecipient: undefined,
@@ -562,14 +563,14 @@ export const changeCurrentRequest = ( { values }: { values: OneRequestType } ): 
     async ( dispatch, getState ) => {
         // dispatch(requestStoreActions.setIsFetching(true))
         try {
-            // const idUserCustomer = getState().authStoreReducer.authID
+            const idUserCustomer = getState().authStoreReducer.authID
             // const initialValues = getState().requestStoreReducer.initialValues
             const initialValues = values
             const requestNumber = values.requestNumber?.toString() || '0'
             const response = await oneRequestApi.modifyOneRequest({
                     requestNumber,
                     requestDate: undefined, // потому как она уже задана при создании
-                    idUserCustomer: initialValues.idUserCustomer as string,
+                    idUserCustomer,
 
                     cargoComposition: initialValues.cargoComposition,
                     shipmentDate: yearMmDdFormatISO(initialValues.shipmentDate),
@@ -595,36 +596,36 @@ export const changeCurrentRequest = ( { values }: { values: OneRequestType } ): 
                     cargoWeight: initialValues.cargoWeight?.toString(),
                     uploadTime: initialValues.uploadTime?.toString(),
 
-                    proxyFreightLoader: initialValues.documents.proxyWay.proxyFreightLoader,
-                    proxyDriver: initialValues.documents.proxyWay.proxyDriver,
-                    proxyWaybillDriver: initialValues.documents.proxyWay.waybillDriver,
+                    proxyFreightLoader: initialValues.documents?.proxyWay?.proxyFreightLoader,
+                    proxyDriver: initialValues.documents?.proxyWay?.proxyDriver,
+                    proxyWaybillDriver: initialValues.documents?.proxyWay?.waybillDriver,
                     // здесь надо будет добавить файл
                     // cargoDocuments: initialValues.documents.cargoDocuments,
 
-                    ttnECPdocumentDownload: initialValues.documents.ttnECP.documentDownload,
+                    ttnECPdocumentDownload: initialValues.documents?.ttnECP?.documentDownload,
                     // здесь надо будет добавить файл
                     // ttnECPdocumentUpload: initialValues.documents.ttnECP.documentUpload,
-                    ttnECPcustomerIsSubscribe: initialValues.documents.ttnECP.customerIsSubscribe?.toString(),
-                    ttnECPcarrierIsSubscribe: initialValues.documents.ttnECP.carrierIsSubscribe?.toString(),
-                    ttnECPconsigneeIsSubscribe: initialValues.documents.ttnECP.consigneeIsSubscribe?.toString(),
+                    ttnECPcustomerIsSubscribe: initialValues.documents?.ttnECP?.customerIsSubscribe?.toString(),
+                    ttnECPcarrierIsSubscribe: initialValues.documents?.ttnECP?.carrierIsSubscribe?.toString(),
+                    ttnECPconsigneeIsSubscribe: initialValues.documents?.ttnECP?.consigneeIsSubscribe?.toString(),
 
-                    contractECPdocumentDownload: initialValues.documents.contractECP.documentDownload,
+                    contractECPdocumentDownload: initialValues.documents?.contractECP?.documentDownload,
                     // здесь надо будет добавить файл
                     // contractECPdocumentUpload: initialValues.documents.contractECPdocumentUpload,
-                    contractECPcustomerIsSubscribe: initialValues.documents.contractECP.customerIsSubscribe?.toString(),
-                    contractECPcarrierIsSubscribe: initialValues.documents.contractECP.carrierIsSubscribe?.toString(),
+                    contractECPcustomerIsSubscribe: initialValues.documents?.contractECP?.customerIsSubscribe?.toString(),
+                    contractECPcarrierIsSubscribe: initialValues.documents?.contractECP?.carrierIsSubscribe?.toString(),
 
-                    updECPdocumentDownload: initialValues.documents.updECP.documentDownload,
+                    updECPdocumentDownload: initialValues.documents?.updECP?.documentDownload,
                     // здесь надо будет добавить файл
                     // updECPdocumentUpload: initialValues.documents.updECP.documentUpload,
-                    updECPcustomerIsSubscribe: initialValues.documents.updECP.customerIsSubscribe?.toString(),
-                    updECPcarrierIsSubscribe: initialValues.documents.updECP.carrierIsSubscribe?.toString(),
+                    updECPcustomerIsSubscribe: initialValues.documents?.updECP?.customerIsSubscribe?.toString(),
+                    updECPcarrierIsSubscribe: initialValues.documents?.updECP?.carrierIsSubscribe?.toString(),
 
-                    customerToConsigneeContractECPdocumentDownload: initialValues.documents.customerToConsigneeContractECP.documentDownload,
+                    customerToConsigneeContractECPdocumentDownload: initialValues.documents?.customerToConsigneeContractECP?.documentDownload,
                     // здесь надо будет добавить файл
                     // customerToConsigneeContractECPdocumentUpload: initialValues.documents.customerToConsigneeContractECP.documentUpload,
-                    customerToConsigneeContractECPcustomerIsSubscribe: initialValues.documents.customerToConsigneeContractECP.customerIsSubscribe?.toString(),
-                    customerToConsigneeContractECPconsigneeIsSubscribe: initialValues.documents.customerToConsigneeContractECP.consigneeIsSubscribe?.toString(),
+                    customerToConsigneeContractECPcustomerIsSubscribe: initialValues.documents?.customerToConsigneeContractECP?.customerIsSubscribe?.toString(),
+                    customerToConsigneeContractECPconsigneeIsSubscribe: initialValues.documents?.customerToConsigneeContractECP?.consigneeIsSubscribe?.toString(),
                 },
             )
 
