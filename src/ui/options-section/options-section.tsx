@@ -74,7 +74,7 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                 { shipperIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
                     <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/> }
                 { employeeIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
-                    <ColumnDataList item={ employeesList } route={ optionsEdit.employees }/> }
+                    <ColumnDataList item={ employeesList } route={ optionsEdit.employees } isPlacemarked/> }
                 { transportIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
                     <ColumnDataList item={ transportList } route={ optionsEdit.transport } isPlacemarked/> }
                 { trailerIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :

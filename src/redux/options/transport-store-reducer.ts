@@ -189,3 +189,12 @@ export const oneTransportDeleteToAPI = ( idTransport: string ): TransportStoreRe
         }
         await dispatch(getAllTransportAPI())
     }
+
+
+export const rerenderTransport = (): TransportStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        dispatch(transportStoreActions.toggleTransportIsFetching(true))
+        await setTimeout(() =>
+                dispatch(transportStoreActions.toggleTransportIsFetching(false))
+            , 1000)
+    }

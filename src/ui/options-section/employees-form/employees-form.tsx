@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -35,7 +35,8 @@ import {parseAllNumbers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set';
 import {yearMmDdFormat} from '../../../utils/date-formats';
 import {getDrivingCategorySelector} from '../../../selectors/base-reselect';
-import {SelectOptionsType} from '../../common/form-selector/selector-utils';
+import {rerenderTransport} from '../../../redux/options/transport-store-reducer';
+import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer';
 
 
 type OwnProps = {}
@@ -58,16 +59,23 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
 
     const trailerSelect = useSelector(getAllTrailerSelectFromLocal)
-        .map(( values ) => ( {
-            ...values,
-            isDisabled: values.isDisabled && ( values.key !== initialValues.idTrailer ),
-        } ))
+        .map(( values ) => {
+            const isMatch = ( values.key === initialValues.idTrailer )
+            return {
+                ...values,
+                isDisabled: values.isDisabled && !isMatch,
+            }
+        })
 
     const transportSelect = useSelector(getAllTransportSelectFromLocal)
-        .map(( values ) => ( {
-            ...values,
-            isDisabled: values.isDisabled && ( values.key !== initialValues.idTransport ),
-        } ))
+        .map(( values ) => {
+            const isMatch = ( values.key === initialValues.idTransport )
+            return {
+                ...values,
+                // label: values.label + ( isMatch ? '' : values.subLabel ? ' - ' + values.subLabel : '' ),
+                isDisabled: values.isDisabled && !isMatch,
+            }
+        })
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployees = useSelector(getOneEmployeesFromLocal)
@@ -98,6 +106,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             // сохраняем измененное значение
             dispatch<any>(modifyOneEmployeeToAPI(demaskedValues, selectedImage))
         }
+        dispatch<any>(rerenderTransport())
+        dispatch<any>(rerenderTrailer())
         navigate(options) // и возвращаемся в предыдущее окно
     }
 
@@ -205,6 +215,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           placeholder={ label.idTransport }
                                                           values={ transportSelect }
                                                           validate={ validators.idTransport }
+                                                          isSubLabelOnOption
                                                           isClearable
                                             />
                                             <FormSelector named={ 'idTrailer' }
@@ -212,9 +223,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           values={ trailerSelect }
                                                           validate={ validators.idTrailer }
                                                           disabled={ !values.idTransport }
+                                                          isSubLabelOnOption
                                                           isClearable
                                             />
-
                                         </div>
                                         {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                         <div className={ styles.employeesForm__inputsWithPhoto }>

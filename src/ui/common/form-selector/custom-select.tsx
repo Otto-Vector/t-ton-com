@@ -19,6 +19,7 @@ export const CustomSelect = ( {
                                   disabled,
                                   defaultValue,
                                   isMulti,
+                                  isSubLabelOnOption,
                                   ...rest
                               }: FieldRenderProps<string, HTMLElement> ) => {
 
@@ -36,15 +37,19 @@ export const CustomSelect = ( {
         return context === 'menu' ? option.label : option.value
     }, [])
 
+    const formatOptionSubLabel = useCallback(( option, { context } ) => {
+        return context === 'menu' ? option.label + ( isSubLabelOnOption ? option.subLabel ? ' - ' + option.subLabel : '' : '' ) : option.label
+    }, [ isSubLabelOnOption ])
+
     const isMultiSelectOptionsCurrent = useCallback(( toFormValue = '' ): SelectOptionsType[] | '' => {
         const input = toFormValue?.split(', ')
         const zzz = input.map(( val = '' ) => options.find(( { value = '' } ) => value === val)) as SelectOptionsType[]
         return ( zzz.length < 1 ) ? '' : zzz
-    }, [])
+    }, [ options ])
 
     const optionsCurrent = useCallback(( inputValue: string ) => {
         return options ? options.find(( option: SelectOptionsType ) => option.value === inputValue) : ''
-    }, [])
+    }, [ options ])
     const isError = ( meta.error || meta.submitError ) && meta.touched
 
     return (
@@ -78,7 +83,7 @@ export const CustomSelect = ( {
                     isMulti={ isMulti }
                     options={ options }
                     isDisabled={ disabled }
-                    formatOptionLabel={ isMulti ? isMultiLabelToValueChange : undefined }
+                    formatOptionLabel={ isMulti ? isMultiLabelToValueChange : formatOptionSubLabel }
                     // defaultValue={ defaultValue }
                     value={ isMulti ? isMultiSelectOptionsCurrent(input.value) : optionsCurrent(input.value) }
                     { ...rest }

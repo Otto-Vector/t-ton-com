@@ -32,8 +32,8 @@ export const getAllTrailerSelectFromLocal = createSelector(
                         .filter(( { idTrailer: id } ) => id === idTrailer)
                         .map(( { employeeFIO } ) => parseFamilyToFIO(employeeFIO))
                     const isEmployeesHasTrailer = employeesHasTrailer.length > 0
-                    const subLabel = [ ...employeesHasTrailer ].join(',')
-                    const label = [ trailerTrademark, trailerNumber, cargoWeight ].join(', ') + 'т.' + subLabel
+                    const subLabel = employeesHasTrailer.join(',')
+                    const label = [ trailerTrademark, trailerNumber, '(' + cargoWeight ].join(', ') + 'т.)'
                     return ( {
                         key: idTrailer,
                         value: idTrailer,

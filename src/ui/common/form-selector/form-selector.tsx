@@ -20,6 +20,7 @@ type OwnProps = {
     disabled?: boolean
     defaultValue?: SelectOptionsType | SelectOptionsType[]
     isMulti?: boolean
+    isSubLabelOnOption?: boolean
 }
 
 
@@ -38,6 +39,7 @@ export const FormSelector: React.FC<OwnProps> = ( {
                                                       errorTop,
                                                       disabled,
                                                       defaultValue,
+                                                      isSubLabelOnOption,
                                                   } ) => {
 
     return <div className={ styles.dropdown }>
@@ -60,7 +62,8 @@ export const FormSelector: React.FC<OwnProps> = ( {
                               errorTop={ errorTop }
                               disabled={ disabled }
                               defaultValue={ defaultValue }
-                              isMulti={isMulti}
+                              isMulti={ isMulti }
+                              isSubLabelOnOption={ isSubLabelOnOption }
                 />
             ) }
         </Field>

@@ -94,10 +94,13 @@ export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrai
     })
 
 // выборка из списка загруженных прицепов
-export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, getEmployeesTitleOptionsStore,
-    ( employees: EmployeesCardType[], titles ): OptionsStoreReducerStateType['employees'] => {
+export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, getEmployeesTitleOptionsStore, getAllTransportStore,
+    ( employees: EmployeesCardType[], titles, transports ): OptionsStoreReducerStateType['employees'] => {
         return {
-            ...titles, content: employees.map(( { idEmployee: id, employeeFIO: title = '' } ) =>
-                ( { id, title } )),
+            ...titles, content: employees.map(( { idEmployee: id, employeeFIO: title = '', idTransport } ) => {
+                    const subTitleFind = transports.find(( { idTransport: trId } ) => idTransport === trId)
+                    return { id, title, subTitle: subTitleFind?.transportTrademark }
+                },
+            ),
         }
     })

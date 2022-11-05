@@ -190,3 +190,11 @@ export const oneTrailerDeleteToAPI = ( idTrailer: string ): TrailerStoreReducerT
         }
         await dispatch(getAllTrailerAPI())
     }
+
+export const rerenderTrailer = (): TrailerStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        dispatch(trailerStoreActions.toggleTrailerIsFetching(true))
+        await setTimeout(() =>
+                dispatch(trailerStoreActions.toggleTrailerIsFetching(false))
+            , 1000)
+    }
