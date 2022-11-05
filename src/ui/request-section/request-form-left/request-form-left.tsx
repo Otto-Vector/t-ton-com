@@ -40,15 +40,14 @@ import {Preloader} from '../../common/preloader/preloader';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect';
 import {SelectOptionsType, stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
-import {getShippersOptionsStore} from '../../../selectors/options/options-reselect';
-import {FormApi} from 'final-form';
+import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 
 
 type OwnProps = {
     requestModes: RequestModesType,
     initialValues: OneRequestType,
     onSubmit: ( value: OneRequestType ) => void
-    exposeValues?: ( { values, valid }: { values: any, valid: boolean } ) => void
+    exposeValues?: ( values: OneRequestType ) => void
 }
 
 export const RequestFormLeft: React.FC<OwnProps> = (
@@ -81,17 +80,18 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         dispatch(consigneesStoreActions.setCurrentId(searchId || ''))
     }
 
-    const oneCustomer = allShippers.filter(( { idSender } ) => idSender === initialValues.idUserCustomer)[0]
-    const oneCarrier = allShippers.filter(( { idSender } ) => idSender === initialValues.requestCarrierId)[0]
+    const oneCustomer = allShippers.find(( { idSender } ) => idSender === initialValues.idCustomer)
+    // const oneCustomer = allShippers.find(( { idSender } ) => idSender === '913a4b1d-0b85-4bc2-a9be-5b20f148856f')
+    const oneCarrier = allShippers.find(( { idSender } ) => idSender === initialValues.requestCarrierId)
 
-
-    const custumersByUserInn = allShippers.map(( { title } ) => ( { value: title, label: title, key: title } ))
+    // toDo: ВСЕ ПОДГРУЗКИ ЧЕРЕЗ БЭК!
+    const custumersByUserInn = allShippers.map(( { title , idSender} ) => ( { value: idSender, label: title, key: idSender } ))
     // useMemo(
     //     () => allShippers.filter(( { innNumber } ) => innNumber === requisitesInn)
     //         .map(( { title } ) => ( { value: title, label: title, key: title } )), [ requisitesInn ])
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
-    const customersSelect: SelectOptionsType[] = useMemo(()=>custumersByUserInn,[shippersSelect])
+    const customersSelect: SelectOptionsType[] = useMemo(() => custumersByUserInn, [ shippersSelect ])
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
 
     const buttonsAction = {
@@ -103,13 +103,13 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         },
         submitRequestAndSearch: async ( values: OneRequestType ) => {
             // сабмит запускается сам формой react-final-form в переднных ей параметрах
-            // await onSubmit(values)
+            await onSubmit(values)
             navigate(routes.searchList)
         },
         submitRequestAndDrive: async ( values: OneRequestType ) => {
             // сабмит запускается сам формой react-final-form в переднных ей параметрах
-            // await onSubmit(values)
             // console.log(form.getState().submitSucceeded)
+            await onSubmit(values)
             navigate(routes.addDriver)
         },
     }
@@ -151,10 +151,14 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         }
     }, [ oneShipper, oneConsignee ])
 
-    useEffect(()=>{ // присваивается первое значение селектора
-        const idCustomer = customersSelect.length > 0 ? customersSelect[0].value : undefined
-        dispatch(requestStoreActions.setInitialValues({...initialValues, idCustomer}))
-    },[customersSelect])
+    useEffect(() => { // присваивается первое значение селектора, если поле пустое
+        if (!initialValues.idCustomer) {
+            dispatch(requestStoreActions.setInitialValues({
+                ...initialValues,
+                idCustomer: customersSelect.length > 0 ? customersSelect[0].value : undefined,
+            }))
+        }
+    }, [ customersSelect ])
 
     return (
         <div className={ styles.requestFormLeft }>
@@ -333,7 +337,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 { !requestModes.historyMode ? <>
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ 'green' }
-                                                type={ requestModes.statusMode ? 'button' : 'submit' }
+                                                type={ 'button' }
                                                 title={ requestModes.statusMode ? 'Принять заявку' : 'Поиск исполнителя' }
                                                 onClick={ () => {
                                                     requestModes.statusMode
@@ -345,7 +349,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                     </div>
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ requestModes.statusMode ? 'red' : 'blue' }
-                                                type={ requestModes.statusMode ? 'button' : 'submit' }
+                                                type={ 'button' }
                                                 title={ requestModes.statusMode ? 'Отказаться' : 'Cамовывоз' }
                                                 onClick={ () => {
                                                     requestModes.statusMode
@@ -363,13 +367,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 }
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
-
-                            {/*    <FormSpySimpleRequest*/ }
-                            {/*        form={ form }*/ }
-                            {/*        onChange={ ( { values, valid } ) => {*/ }
-                            {/*            if (exposeValues) exposeValues({ values, valid })*/ }
-                            {/*        } }/>*/ }
-                            {/*}*/ }
+                            { requestModes.createMode && <FormSpySimple form={ form } onChange={ exposeValues }/> }
                         </form>
                     )
                 }/>

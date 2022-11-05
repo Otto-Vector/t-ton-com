@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './request-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -32,7 +32,7 @@ export type RequestModesType = { createMode: boolean, statusMode: boolean, histo
 
 export const RequestSection: React.FC = React.memo(() => {
 
-    const tabModesInitial = useMemo(()=>({ left: false, center: false, right: false }),[])
+    const tabModesInitial = useMemo(() => ( { left: false, center: false, right: false } ), [])
     const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
@@ -66,15 +66,14 @@ export const RequestSection: React.FC = React.memo(() => {
         dispatch(requestStoreActions.setIsNewRequest(false))
     }
 
-    const exposeValuesToInitialBuffer = ( { values, valid }: { values: OneRequestType, valid: boolean } ) => {
-        console.log(values, valid)
+    const exposeValuesToInitialBuffer = ( values: OneRequestType ) => {
         dispatch(requestStoreActions.setIsNewRequest(false))
         dispatch(requestStoreActions.setInitialValues(values))
     }
 
-    const activeTab = ( tab: 'left' | 'center' | 'right' ) => {
+    const activeTab = useCallback(( tab: 'left' | 'center' | 'right' ) => {
         setTabModes({ ...tabModesInitial, [tab]: true })
-    }
+    }, [])
 
     const cancelNavigate = (): To => {
         if (requestModes.statusMode) return routes.searchList
@@ -107,6 +106,9 @@ export const RequestSection: React.FC = React.memo(() => {
         if (requestModes.statusMode) {
             dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
         }
+        if (requestModes.historyMode) {
+            dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
+        }
     }, [])
 
     useEffect(() => {
@@ -120,7 +122,11 @@ export const RequestSection: React.FC = React.memo(() => {
     // if (!oneRequest && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
     if (currentRequestNumber === 0 && !requestModes.createMode) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА ! </div>
 
-    const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate) }`
+    const title = `Заявка №${
+        requestModes.createMode ? currentRequest.requestNumber : initialValues.requestNumber
+    } от ${
+        ddMmYearFormat(requestModes.createMode ? currentRequest.requestDate : initialValues.requestDate)
+    }`
 
     return (
         <section className={ styles.requestSection }>

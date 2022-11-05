@@ -490,7 +490,6 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
                         documents: {
                             proxyWay: {
                                 header: undefined,
-
                                 proxyFreightLoader: element.proxyFreightLoader,
                                 proxyDriver: element.proxyDriver,
                                 waybillDriver: element.proxyWaybillDriver,
@@ -571,6 +570,7 @@ export const changeCurrentRequest = ( { values }: { values: OneRequestType } ): 
                     requestNumber,
                     requestDate: undefined, // потому как она уже задана при создании
                     idUserCustomer,
+                    idCustomer: initialValues.idCustomer,
 
                     cargoComposition: initialValues.cargoComposition,
                     shipmentDate: yearMmDdFormatISO(initialValues.shipmentDate),
