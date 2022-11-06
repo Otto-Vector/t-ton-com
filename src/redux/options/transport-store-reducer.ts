@@ -23,11 +23,11 @@ const initialState = {
     } as TransportCardType<string | undefined>,
 
     maskOn: {
-        transportNumber: undefined, // просто текст
+        transportNumber: 'A ### AA | ### rus',
         transportTrademark: undefined, // просто текст
         transportModel: undefined, // просто текст
-        pts: undefined, // просто фото
-        dopog: undefined, // просто фото
+        pts: '## AA ######',
+        dopog: undefined, // просто текст
         cargoType: undefined, // просто текст
         cargoWeight: '##', // не больше 50-ти тонн
         propertyRights: undefined, // просто текст
@@ -37,7 +37,7 @@ const initialState = {
     initialValues: {} as TransportCardType,
 
     validators: {
-        transportNumber: syncValidators.trailerTransportNumber,
+        transportNumber: syncValidators.transportNumber,
         transportTrademark: syncValidators.trailerTransportModel,
         transportModel: syncValidators.trailerTransportModel,
         pts: syncValidators.pts,
@@ -49,10 +49,10 @@ const initialState = {
     } as TransportCardType<ValidateType>,
 
     parsers: {
-        transportNumber: syncParsers.trailerTransportNumber,
+        transportNumber: syncParsers.pseudoLatin,
         transportTrademark: undefined,
         transportModel: undefined,
-        pts: syncParsers.pts,
+        pts: syncParsers.pseudoLatin,
         dopog: undefined,
         cargoType: undefined,
         cargoWeight: undefined,

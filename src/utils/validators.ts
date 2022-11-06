@@ -12,6 +12,7 @@ export const maxLength = ( max: number ) => ( value: string ) => ( ( value && ( 
 export const minLength = ( min: number ) => ( value: string ) => ( ( value.length <= min ) ? `Меньше ${ min } символов!` : undefined )
 export const maxRangeNumber = ( max: number ) => ( value: string ) => ( ( ( value ? +value : 0 ) > max ) ? `Значение не должно превышать ${ max }!` : undefined )
 export const maxNumbers = ( max: number ) => ( value: string ) => ( ( parseAllNumbers(value).length > max ) ? `Больше ${ max } цифр!` : undefined )
+export const minNumbers = ( min: number ) => ( value: string ) => ( ( parseAllNumbers(value).length < min ) ? `Должно быть не менее ${ min } цифр!` : undefined )
 export const mustBe00Numbers = ( exact: number ) => ( value: string ) => ( value && ( parseAllNumbers(value).length !== exact ) ? `Должно быть ${ exact } цифр!` : undefined )
 export const mustNotBeOnlyNull = ( value: string ) => ( value && ( +parseAllNumbers(value) === 0 ) ? `Здесь только нули!` : undefined )
 export const mustBe0_0Numbers = ( from: number ) => ( to: number ) => ( value: string ) => (
@@ -48,11 +49,12 @@ export const syncValidators = {
     // категории прав
     drivingCategory: composeValidators(required, maxLength(20)),
     // номер машины/прицепа
-    trailerTransportNumber: composeValidators(required, maxLength(20)),
+    transportNumber: composeValidators(required, minNumbers(5)),
+    trailerNumber: composeValidators(required, minNumbers(6)),
     // название, модель машины/прицепа
     trailerTransportModel: composeValidators(required, maxLength(30)),
     // ПТС
-    pts: composeValidators(required, maxLength(14)),
+    pts: composeValidators(required, mustBe00Numbers(8)),
     // ДОПОГ
     dopog: composeValidators(required, maxLength(10)),
     // максимальный вес груза

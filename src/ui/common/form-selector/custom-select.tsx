@@ -26,7 +26,7 @@ export const CustomSelect = ( {
     const handleChange = useCallback(( option: SelectOptionsType | null ) => {
         input.onChange(option?.value)
         if (handleChanger) handleChanger(option?.value)
-    }, [])
+    }, [handleChanger])
 
     const isMultiHandleChange = useCallback(( option: SelectOptionsType[] ) => {
         const value = option.map(( { value } ) => value).join(', ')

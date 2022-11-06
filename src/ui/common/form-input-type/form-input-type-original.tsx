@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import styles from './form-input-type.module.scss'
 import {FieldState, FormApi} from 'final-form'
 import NumberFormat from 'react-number-format';
@@ -6,32 +6,22 @@ import ReactInputMask from 'react-input-mask';
 
 
 type OwnProps = {
-    // для включения кнопки сброса, необходимо передать значение form из final-form
-    resetFieldBy?: FormApi
-    // он же и label внутри поля ввода
-    placeholder?: string
-    // передаваемые значения из final-form
-    meta: FieldState<any>
+    resetFieldBy?: FormApi // для включения кнопки сброса, необходимо передать значение form из final-form
+    placeholder?: string // он же и label внутри поля ввода
+    meta: FieldState<any> // передаваемые значения из final-form
     input: any
     readOnly: boolean
-    // показывает символом сколько осталось ввести данных (по умолчанию равна "_")
-    mask?: string
-    // маска форматирования для NumberFormat и ReactInputMask
-    maskFormat?: string
+    mask?: string // показывает символом сколько осталось ввести данных (по умолчанию равна "_")
+    maskFormat?: string // маска форматирования для NumberFormat
     allowEmptyFormatting?: boolean // показывать maskFormat ДО ввода данных
     children?: React.ReactNode
     disabled?: boolean
-    // тэг input будет станет textarea
     textArea?: boolean
     inputType?: 'text' | 'date' | 'email' | 'money'
     min?: string
     max?: string
-    // отображаем ошибку внизу (по умолчаниию - наверху)
-    errorBottom?: boolean
-    // отключаем label совсем
-    noLabel?: boolean
-    isInputMask?: boolean
-    formatCharsToMaskA?: string
+    errorBottom?: boolean // отображаем ошибку внизу (по умолчаниию - наверху)
+    noLabel?: boolean // отключаем label совсем
 }
 
 
@@ -41,21 +31,13 @@ export const FormInputType: React.FC<OwnProps> = (
         children, disabled = false, mask = '_', maskFormat,
         textArea, allowEmptyFormatting, inputType = 'text',
         errorBottom, noLabel, min, max, readOnly,
-        formatCharsToMaskA, isInputMask = false,
     } ) => {
 
-    // если нужно просто текстовое поле
-    const InInput = textArea ? 'textarea' : 'input'
+    const InInput = textArea ? 'textarea' : 'input' // если нужен просто текстовое поле
 
     // const isError = ( meta.error || meta.submitError ) && meta.touched
     const isError = ( meta.error || meta.submitError ) && ( meta.active || meta.touched )
     const labelToView = ( input.value || allowEmptyFormatting || ( inputType !== 'text' ) ) && !noLabel
-
-    const formatChars = useMemo(()=>({
-        '#': '[0123456789]',
-        'A': formatCharsToMaskA || '[a-zA-ZА-Яа-я]',
-    }),[formatCharsToMaskA])
-
 
     return ( <div className={ styles.inputWrapper + ' ' + styles.search }>
             {/*кнопка для сброса параметров поля
@@ -69,7 +51,7 @@ export const FormInputType: React.FC<OwnProps> = (
                 } }
             ></div>
             }
-            { ( (maskFormat || inputType === 'money') && !isInputMask) ? // если формат отсутствует, то на обычный инпут
+            { ( maskFormat || inputType === 'money' ) ? // если формат отсутствует, то на обычный инпут
 
                 <NumberFormat
                     mask={ mask }
@@ -92,29 +74,16 @@ export const FormInputType: React.FC<OwnProps> = (
                     placeholder={ placeholder }
                     disabled={ disabled || meta.validating }
                 />
-                : isInputMask ?
-                    <ReactInputMask
-                        { ...input }
-                        className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
-                        mask={ maskFormat || ''}
-                        placeholder={ placeholder }
-                        //@ts-ignore
-                        formatChars={ formatChars }
-                        maskChar={ mask }
-                        alwaysShowMask={ allowEmptyFormatting }
-                        disabled={ disabled || meta.validating }
-                        readOnly={ readOnly }
-                    />
-                    :
-                    <InInput { ...input }
-                             type={ inputType }
-                             min={ inputType === 'date' ? min : undefined }
-                             max={ inputType === 'date' ? max : undefined }
-                             className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
-                             placeholder={ placeholder }
-                             disabled={ disabled || meta.validating }
-                             readOnly={ readOnly }
-                    />
+                :
+                <InInput { ...input }
+                         type={ inputType }
+                         min={ inputType === 'date' ? min : undefined }
+                         max={ inputType === 'date' ? max : undefined }
+                         className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
+                         placeholder={ placeholder }
+                         disabled={ disabled || meta.validating }
+                         readOnly={ readOnly }
+                />
 
             }
             { labelToView &&

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -29,10 +29,11 @@ import {
     oneTransportDeleteToAPI,
     transportStoreActions,
 } from '../../../redux/options/transport-store-reducer';
-import {parseAllNumbers} from '../../../utils/parsers';
+import {parseAllNumbers, parserDowngradeRUSatEnd} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
+
 
 type OwnProps = {}
 
@@ -76,8 +77,14 @@ export const TransportForm: React.FC<OwnProps> = () => {
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
 
-    const onSubmit = ( values: TransportCardType<string> ) => {
-        const demaskedValues = { ...values, cargoWeight: parseAllNumbers(values.cargoWeight) }
+    const onSubmit = useCallback(( values: TransportCardType<string> ) => {
+
+        const demaskedValues: TransportCardType<string> = {
+            ...values,
+            cargoWeight: parseAllNumbers(values.cargoWeight),
+            transportNumber: parserDowngradeRUSatEnd(values.transportNumber) || '',
+        }
+
         if (isNew) {
             //сохраняем НОВОЕ значение
             dispatch<any>(newTransportSaveToAPI(demaskedValues, selectedImage))
@@ -86,16 +93,19 @@ export const TransportForm: React.FC<OwnProps> = () => {
             dispatch<any>(modifyOneTransportToAPI(demaskedValues, selectedImage))
         }
         navigate(options) // и возвращаемся в предыдущее окно
-    }
+    },[selectedImage])
+
 
     const onCancelClick = () => {
         navigate(options)
     }
 
+
     const transportDeleteHandleClick = () => {
         dispatch<any>(oneTransportDeleteToAPI(currentId))
         navigate(options)
     }
+
 
     useEffect(() => {
             if (currentId === currentIdForShow) {
@@ -122,6 +132,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                       form,
                                       submitting,
                                       values,
+                                      pristine,
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.transportTrailerForm__form }>
                                         <div className={ styles.transportTrailerForm__inputsPanel }>
@@ -132,6 +143,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.transportNumber }
                                                    parse={ parsers.transportNumber }
+                                                   allowEmptyFormatting
+                                                   isInputMask
                                             />
                                             <Field name={ 'transportTrademark' }
                                                    placeholder={ label.transportTrademark }
@@ -156,6 +169,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.pts }
                                                    parse={ parsers.pts }
+                                                   allowEmptyFormatting
+                                                   isInputMask
                                             />
                                             <Field name={ 'dopog' }
                                                    placeholder={ label.dopog }
@@ -170,6 +185,12 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                 <FormSelector named={ 'cargoType' }
                                                               placeholder={ label.cargoType }
                                                               values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }
+                                                              handleChanger={ ( val: string ) => {
+                                                                  if (val === 'Тягач') {
+                                                                      form.resetFieldState('cargoWeight')
+                                                                      form.change('cargoWeight', '')
+                                                                  }
+                                                              } }
                                                               validate={ validators.cargoType }
                                                 />
                                             </div>
@@ -210,7 +231,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting || hasValidationErrors }
+                                                            disabled={ submitting || pristine }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded
@@ -221,7 +242,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                     </form>
                                 )
                             }/>
-                    </> }
+                    </>
+                }
                 <CancelButton onCancelClick={ onCancelClick }/>
                 <InfoText/>
             </div>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -29,10 +29,11 @@ import {
     oneTrailerDeleteToAPI,
     trailerStoreActions,
 } from '../../../redux/options/trailer-store-reducer';
-import {parseAllNumbers} from '../../../utils/parsers';
+import {parseAllNumbers, parserDowngradeRUSatEnd} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
+import {composeValidators} from '../../../utils/validators';
 
 type OwnProps = {}
 
@@ -56,13 +57,13 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const oneTrailer = useSelector(getOneTrailerFromLocal)
 
     const allBusyTrailer = useSelector(getAllTrailerSelectFromLocal)
-    const isBusyFilter = allBusyTrailer.filter(( { key, isDisabled } ) => key === currentId && isDisabled)
-    const isBusy = isBusyFilter.length > 0
+    const isBusyFind = allBusyTrailer.find(( { key, isDisabled } ) => key === currentId && isDisabled)
+
 
     const transportHasPassToDelete = () => {
         dispatch(globalModalStoreActions.setTextMessage(
             'Транспорт не может быть удалён, он привязан к сотруднику: '
-            + ( isBusy && isBusyFilter[0].subLabel ),
+            + ( isBusyFind && isBusyFind.subLabel ),
         ))
     }
     // вытаскиваем значение роутера
@@ -73,9 +74,17 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+    // для манипуляции с картинкой
+    const [ selectedImage, setSelectedImage ] = useState<File>();
 
-    const onSubmit = ( values: TrailerCardType<string> ) => {
-        const demaskedValues = { ...values, cargoWeight: parseAllNumbers(values.cargoWeight) }
+
+    const onSubmit = useCallback(( values: TrailerCardType<string> ) => {
+        const demaskedValues: TrailerCardType<string> = {
+            ...values,
+            cargoWeight: parseAllNumbers(values.cargoWeight),
+            trailerNumber: parserDowngradeRUSatEnd(values.trailerNumber) || ''
+        }
+
         if (isNew) {
             //сохраняем НОВОЕ значение
             dispatch<any>(newTrailerSaveToAPI(demaskedValues, selectedImage))
@@ -84,19 +93,19 @@ export const TrailerForm: React.FC<OwnProps> = () => {
             dispatch<any>(modifyOneTrailerToAPI(demaskedValues, selectedImage))
         }
         navigate(options) // и возвращаемся в предыдущее окно
-    }
+    }, [ selectedImage ])
+
 
     const onCancelClick = () => {
         navigate(options)
     }
+
 
     const trailerDeleteHandleClick = () => {
         dispatch<any>(oneTrailerDeleteToAPI(currentId))
         navigate(options)
     }
 
-    // для манипуляции с картинкой
-    const [ selectedImage, setSelectedImage ] = useState<File>();
 
     useEffect(() => {
             if (currentId === currentIdForShow) {
@@ -106,6 +115,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
             }
         }, [ currentId, initialValues ],
     )
+
 
     return (
         <div className={ styles.transportTrailerForm }>
@@ -123,6 +133,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                       form,
                                       submitting,
                                       values,
+                                      pristine,
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.transportTrailerForm__form }>
                                         <div className={ styles.transportTrailerForm__inputsPanel }>
@@ -133,6 +144,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.trailerNumber }
                                                    parse={ parsers.trailerNumber }
+                                                   allowEmptyFormatting
+                                                   isInputMask
                                             />
                                             <Field name={ 'trailerTrademark' }
                                                    placeholder={ label.trailerTrademark }
@@ -157,6 +170,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.pts }
                                                    parse={ parsers.pts }
+                                                   allowEmptyFormatting
+                                                   isInputMask
                                             />
                                             <Field name={ 'dopog' }
                                                    placeholder={ label.dopog }
@@ -204,14 +219,14 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                     <Button type={ 'button' }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ isBusy ? transportHasPassToDelete : trailerDeleteHandleClick }
+                                                            onClick={ isBusyFind ? transportHasPassToDelete : trailerDeleteHandleClick }
                                                             disabled={ isNew }
                                                             rounded
                                                     />
                                                 </div>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting || hasValidationErrors }
+                                                            disabled={ submitting || pristine }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

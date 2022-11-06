@@ -1,4 +1,4 @@
-export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] )=> ( value: string ): string =>
+export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] ) => ( value: string ): string =>
     parsers.reduce(( val, validator ) => validator(val), value);
 
 type parsePropType = string | undefined | null
@@ -40,7 +40,19 @@ export const parseNoFirstSpaces = ( val: parsePropType ): string => val ? val
 
 // только псевдолатинские русские буквы
 export const parsePseudoLatinCharsAndNumbers = ( val: parsePropType ): string => val ? val
-    .replace(/[^АВЕКМНОРСТУХавекмнорстух\s\d]/, '') : ''
+    .replace(/[^АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx|\d\s]/, '') : ''
+
+// латинские буквы в русские большие аналоги
+export const parseLatinCharsToRus = ( val: parsePropType ): string => val ?
+    val.split('')
+        .map(char => {
+            const pos = 'ABEKMHOPCTYXabekmhopctyx'.indexOf(char)
+            return pos > -1 ? 'АВЕКМНОРСТУХавекмнорстух'.charAt(pos) : char
+        }).join('') : ''
+
+// export const parseClearAllMaskPlaceholders = ( val: parsePropType ): string => val ? val
+//     .replaceAll('#', '').replaceAll('_', '') : ''
+export const parserDowngradeRUSatEnd = ( val: parsePropType ): string => val ? val.slice(0,-3)+'rus' : ''
 // export const parseTransportNumber = (val: string|null): string => val ? val.replace(/^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/ui,'') : ''
 
 // преобразовывает в заглавные буквы
@@ -74,6 +86,6 @@ export const syncParsers = {
     drivingLicence: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseToUpperCase),
     drivingCategory: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
     trailerTransportNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
-    pts: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
+    pseudoLatin: composeParsers(parsePseudoLatinCharsAndNumbers, parseLatinCharsToRus, parseToUpperCase),
     coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
 }
