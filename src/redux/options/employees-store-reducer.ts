@@ -30,7 +30,7 @@ const initialState = {
         passportSerial: 'Серия: ## ## №: ### ###', // 10 цифр
         passportFMS: undefined, // просто текст
         passportDate: undefined, // режим ввода даты
-        drivingLicenseNumber: undefined, // 10 цифр
+        drivingLicenseNumber: '## ## ######', // 10 цифр
         drivingCategory: undefined, // просто текст же?
         personnelNumber: '##### #####', // поставим ДО 10 цифр
         garageNumber: '##### #####', // поставим ДО 10 цифр

@@ -42,12 +42,14 @@ export const parseNoFirstSpaces = ( val: parsePropType ): string => val ? val
 export const parsePseudoLatinCharsAndNumbers = ( val: parsePropType ): string => val ? val
     .replace(/[^АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx|\d\s]/, '') : ''
 
+export const pseudoLatin = 'АВЕКМНОРСТУХавекмнорстух'
+export const pseudoRussian = 'АВЕКМНОРСТУХавекмнорстух'
 // латинские буквы в русские большие аналоги
 export const parseLatinCharsToRus = ( val: parsePropType ): string => val ?
     val.split('')
         .map(char => {
-            const pos = 'ABEKMHOPCTYXabekmhopctyx'.indexOf(char)
-            return pos > -1 ? 'АВЕКМНОРСТУХавекмнорстух'.charAt(pos) : char
+            const pos = 'pseudoRussian'.indexOf(char)
+            return pos > -1 ? 'pseudoLatin'.charAt(pos) : char
         }).join('') : ''
 
 // export const parseClearAllMaskPlaceholders = ( val: parsePropType ): string => val ? val

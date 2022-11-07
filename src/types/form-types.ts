@@ -173,7 +173,7 @@ export const cargoConstType = [ 'Бензовоз', 'Битумовоз', 'Га�
     'Тягач', 'Фургон, Борт', 'Цементовоз' ] as const
 export type CargoTypeType = typeof cargoConstType[number]
 
-export const propertyRights = [ 'Собственность', 'Аренда', 'Лизинг' ] as const
+export const propertyRights = [ 'Собственность', 'Cовместная собственность супругов',  'Аренда', 'Лизинг', 'Безвозмездное пользование' ] as const
 export type PropertyRightsType = typeof propertyRights[number]
 
 // на транспорт
