@@ -29,7 +29,7 @@ import {
     oneTransportDeleteToAPI,
     transportStoreActions,
 } from '../../../redux/options/transport-store-reducer';
-import {parseAllNumbers, parserDowngradeRUSatEnd, syncParsers} from '../../../utils/parsers';
+import { syncParsers } from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
@@ -69,7 +69,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
     }
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
-    const isNew = useMemo(()=>currentIdForShow === 'new',[currentIdForShow])
+    const isNew = useMemo(() => currentIdForShow === 'new', [ currentIdForShow ])
     const [ transportNumberRusCheck, setTransportNumberRusCheck ] = useState(isNew)
     const [ ptsRusCheck, setPtsRusCheck ] = useState(isNew)
 
@@ -85,8 +85,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
 
         const demaskedValues: TransportCardType<string> = {
             ...values,
-            cargoWeight: parseAllNumbers(values.cargoWeight),
-            transportNumber: parserDowngradeRUSatEnd(values.transportNumber) || '',
+            cargoWeight: syncParsers.parseAllNumbers(values.cargoWeight),
+            transportNumber: syncParsers.clearNormalizeTrailerTransportNumberAtEnd(values.transportNumber) || '',
         }
 
         if (isNew) {
@@ -148,7 +148,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
                                                        validate={ transportNumberRusCheck ? validators.transportNumber : syncValidators.textReqMicro }
-                                                       parse={ transportNumberRusCheck ? parsers.transportNumber : syncParsers.parseToUpperCase }
+                                                       parse={ transportNumberRusCheck ? parsers.transportNumber : undefined }
                                                        formatCharsToMaskA={ '[АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx]' }
                                                        allowEmptyFormatting={ transportNumberRusCheck }
                                                        isInputMask={ transportNumberRusCheck }
@@ -186,7 +186,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
                                                        validate={ ptsRusCheck ? validators.pts : syncValidators.textReqMicro }
-                                                       parse={ ptsRusCheck ? parsers.pts : syncParsers.parseToUpperCase }
+                                                       parse={ ptsRusCheck ? parsers.pts : undefined }
                                                        formatCharsToMaskA={ '[АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx]' }
                                                        allowEmptyFormatting={ ptsRusCheck }
                                                        isInputMask={ ptsRusCheck }

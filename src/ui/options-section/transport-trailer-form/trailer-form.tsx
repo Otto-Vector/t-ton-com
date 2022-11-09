@@ -29,12 +29,12 @@ import {
     oneTrailerDeleteToAPI,
     trailerStoreActions,
 } from '../../../redux/options/trailer-store-reducer';
-import {parseAllNumbers, parserDowngradeRUSatEnd, syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
 import {AntdSwitch} from '../../common/antd-switch/antd-switch';
 import {syncValidators} from '../../../utils/validators';
+import {syncParsers} from '../../../utils/parsers';
 
 type OwnProps = {}
 
@@ -83,8 +83,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const onSubmit = useCallback(( values: TrailerCardType<string> ) => {
         const demaskedValues: TrailerCardType<string> = {
             ...values,
-            cargoWeight: parseAllNumbers(values.cargoWeight),
-            trailerNumber: parserDowngradeRUSatEnd(values.trailerNumber) || '',
+            cargoWeight: syncParsers.parseAllNumbers(values.cargoWeight),
+            trailerNumber: syncParsers.clearNormalizeTrailerTransportNumberAtEnd(values.trailerNumber) || '',
         }
 
         if (isNew) {
@@ -146,7 +146,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
                                                        validate={ trailerNumberRusCheck ? validators.trailerNumber : syncValidators.textReqMicro }
-                                                       parse={ trailerNumberRusCheck ? parsers.trailerNumber : syncParsers.parseToUpperCase }
+                                                       parse={ trailerNumberRusCheck ? parsers.trailerNumber : undefined }
                                                        formatCharsToMaskA={ '[АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx]' }
                                                        allowEmptyFormatting={ trailerNumberRusCheck }
                                                        isInputMask={ trailerNumberRusCheck }

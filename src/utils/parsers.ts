@@ -52,8 +52,8 @@ export const parseLatinCharsToRus = ( val: parsePropType ): string => val ?
             return pos > -1 ? pseudoLatin.charAt(pos) : char
         }).join('') : ''
 
-// export const parseClearAllMaskPlaceholders = ( val: parsePropType ): string => val ? val
-//     .replaceAll('#', '').replaceAll('_', '') : ''
+export const parseClearAllMaskPlaceholders = ( val: parsePropType ): string => val ? val
+    .replaceAll('#', '').replaceAll('_', '') : ''
 export const parserDowngradeRUSatEnd = ( val: parsePropType ): string => val ? val.includes('RUS') ? val.slice(0, -3) + 'rus' : val : ''
 // export const parseTransportNumber = (val: string|null): string => val ? val.replace(/^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/ui,'') : ''
 
@@ -88,7 +88,9 @@ export const syncParsers = {
     drivingLicence: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseToUpperCase),
     drivingCategory: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
     trailerTransportNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
+    clearNormalizeTrailerTransportNumberAtEnd: composeParsers(parseToUpperCase, parseClearAllMaskPlaceholders, parserDowngradeRUSatEnd),
     pseudoLatin: composeParsers(parseLatinCharsToRus, parseToUpperCase, parserDowngradeRUSatEnd),
     coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
     parseToUpperCase,
+    parseAllNumbers
 }
