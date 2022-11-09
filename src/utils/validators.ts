@@ -47,7 +47,7 @@ export const syncValidators = {
     // серия номер паспорта
     passport: composeValidators(required, mustBe00Numbers(10), mustNotBeOnlyNull),
     // водительские права
-    drivingLicence: composeValidators(required, mustBe00Numbers(10)),
+    drivingLicence: composeValidators(required, mustBe0_0Numbers(8)(10)),
     // категории прав максимальная
     drivingCategory: composeValidators(required, maxLength(20)),
     // номер машины

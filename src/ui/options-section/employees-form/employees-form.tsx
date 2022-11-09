@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -31,12 +31,14 @@ import {
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllTrailerSelectFromLocal} from '../../../selectors/options/trailer-reselect';
 import {getAllTransportSelectFromLocal} from '../../../selectors/options/transport-reselect';
-import {parseAllNumbers} from '../../../utils/parsers';
+import {parseAllNumbers, syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set';
 import {yearMmDdFormat} from '../../../utils/date-formats';
 import {getDrivingCategorySelector} from '../../../selectors/base-reselect';
 import {rerenderTransport} from '../../../redux/options/transport-store-reducer';
 import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer';
+import {syncValidators} from '../../../utils/validators';
+import {AntdSwitch} from '../../common/antd-switch/antd-switch';
 
 
 type OwnProps = {}
@@ -82,7 +84,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
-    const isNew = currentIdForShow === 'new'
+    const isNew = useMemo(() => currentIdForShow === 'new', [ currentIdForShow ])
+    const [ drivingLicenseNumberRusCheck, setDrivingLicenseNumberRusCheck ] = useState(isNew)
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -180,14 +183,28 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.passportFMS }
                                                    parse={ parsers.passportFMS }
                                             />
-                                            <Field name={ 'drivingLicenseNumber' }
-                                                   placeholder={ label.drivingLicenseNumber }
-                                                   maskFormat={ maskOn.drivingLicenseNumber }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.drivingLicenseNumber }
-                                                   parse={ parsers.drivingLicenseNumber }
-                                            />
+                                            <div className={ styles.employeesForm__inputsPanel_withSwitcher }>
+                                                <Field name={ 'drivingLicenseNumber' }
+                                                       placeholder={ label.drivingLicenseNumber }
+                                                       maskFormat={ drivingLicenseNumberRusCheck ? maskOn.drivingLicenseNumber : undefined }
+                                                       component={ FormInputType }
+                                                       resetFieldBy={ form }
+                                                       validate={ drivingLicenseNumberRusCheck ? validators.drivingLicenseNumber : syncValidators.textReqMicro }
+                                                       parse={ !drivingLicenseNumberRusCheck ? parsers.drivingLicenseNumber : syncParsers.pseudoLatin }
+                                                       formatCharsToMaskA={ '[АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx0123456789]' }
+                                                       allowEmptyFormatting={ drivingLicenseNumberRusCheck }
+                                                       isInputMask={ drivingLicenseNumberRusCheck }
+                                                />
+                                                <AntdSwitch
+                                                    checkedChildren={ 'ru' }
+                                                    unCheckedChildren={ '--' }
+                                                    checked={ drivingLicenseNumberRusCheck }
+                                                    onClick={ () => {
+                                                        setDrivingLicenseNumberRusCheck(!drivingLicenseNumberRusCheck)
+                                                    } }
+                                                    isRotate
+                                                />
+                                            </div>
                                             <FormSelector named={ 'drivingCategory' }
                                                           placeholder={ label.drivingCategory }
                                                           values={ drivingCategorySelector }

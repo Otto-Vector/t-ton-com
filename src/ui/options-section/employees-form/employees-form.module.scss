@@ -40,8 +40,16 @@
     padding: 5px 10px;
     width: 330px;
 
+
     & > div {
       margin-bottom: 13px;
+    }
+
+    &_withSwitcher {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      width: 100%;
     }
 
     &_titled { // панель встраивается в центр
