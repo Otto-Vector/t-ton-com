@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -29,11 +29,11 @@ import {
     oneTransportDeleteToAPI,
     transportStoreActions,
 } from '../../../redux/options/transport-store-reducer';
-import { syncParsers } from '../../../utils/parsers';
+import {syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
-import {AntdSwitch} from '../../common/antd-switch/antd-switch';
+import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {syncValidators} from '../../../utils/validators';
 
 
@@ -69,7 +69,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
     }
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
-    const isNew = useMemo(() => currentIdForShow === 'new', [ currentIdForShow ])
+    const isNew = currentIdForShow === 'new'
+    // переменные для переключателей
     const [ transportNumberRusCheck, setTransportNumberRusCheck ] = useState(isNew)
     const [ ptsRusCheck, setPtsRusCheck ] = useState(isNew)
 
@@ -153,14 +154,11 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                        allowEmptyFormatting={ transportNumberRusCheck }
                                                        isInputMask={ transportNumberRusCheck }
                                                 />
-                                                <AntdSwitch
-                                                    checkedChildren={ 'ru' }
-                                                    unCheckedChildren={ '--' }
+                                                <SwitchMask
                                                     checked={ transportNumberRusCheck }
                                                     onClick={ () => {
                                                         setTransportNumberRusCheck(!transportNumberRusCheck)
                                                     } }
-                                                    isRotate
                                                 />
                                             </div>
                                             <Field name={ 'transportTrademark' }
@@ -191,14 +189,11 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                        allowEmptyFormatting={ ptsRusCheck }
                                                        isInputMask={ ptsRusCheck }
                                                 />
-                                                <AntdSwitch
-                                                    checkedChildren={ 'ru' }
-                                                    unCheckedChildren={ '--' }
+                                                <SwitchMask
                                                     checked={ ptsRusCheck }
                                                     onClick={ () => {
                                                         setPtsRusCheck(!ptsRusCheck)
                                                     } }
-                                                    isRotate
                                                 />
                                             </div>
                                             <Field name={ 'dopog' }

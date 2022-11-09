@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 
 // сейчас они прописаны на ui компоненте
 import 'antd/lib/style/index.css' // используем core стили antd
@@ -8,43 +8,48 @@ import {Switch} from 'antd';
 
 
 type OwnProps = {
-    // input: any
-    // meta: FieldState<any>
+    checkedChildren?: JSX.Element | string
+    unCheckedChildren?: JSX.Element | string
     checked: boolean
-    checkedChildren?: string
-    unCheckedChildren?: string
-    isRotate?: boolean
     onClick: () => void
 }
 
+const rotatedLabel = ( inside: any ) => <div style={ { transform: 'rotate(-90deg)' } }>{ inside }</div>
 
 export const AntdSwitch: React.FC<OwnProps> = ( {
-                                                    // input,
                                                     checked,
-                                                    // meta,
                                                     unCheckedChildren,
                                                     checkedChildren,
-                                                    isRotate,
                                                     onClick,
                                                 } ) => {
-    const rotatedLabel = useCallback(( inside: any ) => <div
-        style={ { transform: 'rotate(-90deg)' } }>{ inside }</div>, [])
-
-
     return (
-        <div style={ {
-            width: '40px',
-            transform:
-                `rotate(${ isRotate ? '9' : '' }0deg)`
-            ,
-        } } title={ 'Ввод по форме' }>
             <Switch
-                checkedChildren={ isRotate ? rotatedLabel(checkedChildren) : checkedChildren }
-                unCheckedChildren={ isRotate ? rotatedLabel(unCheckedChildren) : unCheckedChildren }
-                checked={ checked }
                 size={ 'small' }
+                checkedChildren={ checkedChildren }
+                unCheckedChildren={ unCheckedChildren }
+                checked={ checked }
                 onClick={ onClick }
             />
-        </div>
     )
+}
+
+
+type SwitchMaskProps = {
+    checked: boolean
+    onClick: () => void
+}
+
+export const SwitchMask: React.FC<SwitchMaskProps> = ( {
+                                                           checked,
+                                                           onClick,
+                                                       } ) => {
+    return <div style={ { width: '40px', transform: 'rotate(90deg)' } }
+                title={ 'Ввод по форме' }>
+        <AntdSwitch
+            checkedChildren={ rotatedLabel('ru')}
+            unCheckedChildren={ rotatedLabel('--')}
+            checked={ checked }
+            onClick={ onClick }
+        />
+    </div>
 }

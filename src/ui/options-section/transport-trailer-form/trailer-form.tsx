@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -32,7 +32,7 @@ import {
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
-import {AntdSwitch} from '../../common/antd-switch/antd-switch';
+import {AntdSwitch, SwitchMask} from '../../common/antd-switch/antd-switch';
 import {syncValidators} from '../../../utils/validators';
 import {syncParsers} from '../../../utils/parsers';
 
@@ -68,7 +68,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     }
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
-    const isNew = useMemo(() => currentIdForShow === 'new', [ currentIdForShow ])
+    const isNew =  currentIdForShow === 'new'
     const [ trailerNumberRusCheck, setTrailerNumberRusCheck ] = useState(isNew)
     const [ ptsRusCheck, setPtsRusCheck ] = useState(isNew)
 
@@ -151,14 +151,11 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                        allowEmptyFormatting={ trailerNumberRusCheck }
                                                        isInputMask={ trailerNumberRusCheck }
                                                 />
-                                                <AntdSwitch
-                                                    checkedChildren={ 'ru' }
-                                                    unCheckedChildren={ '--' }
+                                                <SwitchMask
                                                     checked={ trailerNumberRusCheck }
                                                     onClick={ () => {
                                                         setTrailerNumberRusCheck(!trailerNumberRusCheck)
                                                     } }
-                                                    isRotate
                                                 />
                                             </div>
                                             <Field name={ 'trailerTrademark' }
@@ -189,14 +186,11 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                        allowEmptyFormatting={ ptsRusCheck }
                                                        isInputMask={ ptsRusCheck }
                                                 />
-                                                <AntdSwitch
-                                                    checkedChildren={ 'ru' }
-                                                    unCheckedChildren={ '--' }
+                                                <SwitchMask
                                                     checked={ ptsRusCheck }
                                                     onClick={ () => {
                                                         setPtsRusCheck(!ptsRusCheck)
                                                     } }
-                                                    isRotate
                                                 />
                                             </div>
                                             <Field name={ 'dopog' }

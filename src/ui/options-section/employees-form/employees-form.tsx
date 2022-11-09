@@ -38,7 +38,7 @@ import {getDrivingCategorySelector} from '../../../selectors/base-reselect';
 import {rerenderTransport} from '../../../redux/options/transport-store-reducer';
 import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer';
 import {syncValidators} from '../../../utils/validators';
-import {AntdSwitch} from '../../common/antd-switch/antd-switch';
+import {SwitchMask} from '../../common/antd-switch/antd-switch';
 
 
 type OwnProps = {}
@@ -195,14 +195,11 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                        allowEmptyFormatting={ drivingLicenseNumberRusCheck }
                                                        isInputMask={ drivingLicenseNumberRusCheck }
                                                 />
-                                                <AntdSwitch
-                                                    checkedChildren={ 'ru' }
-                                                    unCheckedChildren={ '--' }
+                                                <SwitchMask
                                                     checked={ drivingLicenseNumberRusCheck }
                                                     onClick={ () => {
                                                         setDrivingLicenseNumberRusCheck(!drivingLicenseNumberRusCheck)
                                                     } }
-                                                    isRotate
                                                 />
                                             </div>
                                             <FormSelector named={ 'drivingCategory' }
