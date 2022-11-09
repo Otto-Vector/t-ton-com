@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -29,11 +29,12 @@ import {
     oneTrailerDeleteToAPI,
     trailerStoreActions,
 } from '../../../redux/options/trailer-store-reducer';
-import {parseAllNumbers, parserDowngradeRUSatEnd} from '../../../utils/parsers';
+import {parseAllNumbers, parserDowngradeRUSatEnd, syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
-import {composeValidators} from '../../../utils/validators';
+import {AntdSwitch} from '../../common/antd-switch/antd-switch';
+import {syncValidators} from '../../../utils/validators';
 
 type OwnProps = {}
 
@@ -42,7 +43,6 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
     const header = 'Прицеп'
     const isFetching = useSelector(getIsFetchingTrailerStore)
-
 
     const defaultInitialValues = useSelector(getInitialValuesTrailerStore)
     //для проброса загруженных данных в форму
@@ -68,7 +68,9 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     }
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
-    const isNew = currentIdForShow === 'new'
+    const isNew = useMemo(() => currentIdForShow === 'new', [ currentIdForShow ])
+    const [ trailerNumberRusCheck, setTrailerNumberRusCheck ] = useState(isNew)
+    const [ ptsRusCheck, setPtsRusCheck ] = useState(isNew)
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -82,7 +84,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         const demaskedValues: TrailerCardType<string> = {
             ...values,
             cargoWeight: parseAllNumbers(values.cargoWeight),
-            trailerNumber: parserDowngradeRUSatEnd(values.trailerNumber) || ''
+            trailerNumber: parserDowngradeRUSatEnd(values.trailerNumber) || '',
         }
 
         if (isNew) {
@@ -137,16 +139,28 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.transportTrailerForm__form }>
                                         <div className={ styles.transportTrailerForm__inputsPanel }>
-                                            <Field name={ 'trailerNumber' }
-                                                   placeholder={ label.trailerNumber }
-                                                   maskFormat={ maskOn.trailerNumber }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.trailerNumber }
-                                                   parse={ parsers.trailerNumber }
-                                                   allowEmptyFormatting
-                                                   isInputMask
-                                            />
+                                            <div className={ styles.transportTrailerForm__inputsPanel_withSwitcher }>
+                                                <Field name={ 'trailerNumber' }
+                                                       placeholder={ label.trailerNumber }
+                                                       maskFormat={ trailerNumberRusCheck ? maskOn.trailerNumber : undefined }
+                                                       component={ FormInputType }
+                                                       resetFieldBy={ form }
+                                                       validate={ trailerNumberRusCheck ? validators.trailerNumber : syncValidators.textReqMicro }
+                                                       parse={ trailerNumberRusCheck ? parsers.trailerNumber : syncParsers.parseToUpperCase }
+                                                       formatCharsToMaskA={ '[АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx]' }
+                                                       allowEmptyFormatting={ trailerNumberRusCheck }
+                                                       isInputMask={ trailerNumberRusCheck }
+                                                />
+                                                <AntdSwitch
+                                                    checkedChildren={ 'ru' }
+                                                    unCheckedChildren={ '--' }
+                                                    checked={ trailerNumberRusCheck }
+                                                    onClick={ () => {
+                                                        setTrailerNumberRusCheck(!trailerNumberRusCheck)
+                                                    } }
+                                                    isRotate
+                                                />
+                                            </div>
                                             <Field name={ 'trailerTrademark' }
                                                    placeholder={ label.trailerTrademark }
                                                    maskFormat={ maskOn.trailerTrademark }
@@ -163,16 +177,28 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.trailerModel }
                                                    parse={ parsers.trailerModel }
                                             />
-                                            <Field name={ 'pts' }
-                                                   placeholder={ label.pts }
-                                                   maskFormat={ maskOn.pts }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.pts }
-                                                   parse={ parsers.pts }
-                                                   allowEmptyFormatting
-                                                   isInputMask
-                                            />
+                                            <div className={ styles.transportTrailerForm__inputsPanel_withSwitcher }>
+                                                <Field name={ 'pts' }
+                                                       placeholder={ label.pts }
+                                                       maskFormat={ ptsRusCheck ? maskOn.pts : undefined }
+                                                       component={ FormInputType }
+                                                       resetFieldBy={ form }
+                                                       validate={ ptsRusCheck ? validators.pts : syncValidators.textReqMicro }
+                                                       parse={ ptsRusCheck ? parsers.pts : syncParsers.parseToUpperCase }
+                                                       formatCharsToMaskA={ '[АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx]' }
+                                                       allowEmptyFormatting={ ptsRusCheck }
+                                                       isInputMask={ ptsRusCheck }
+                                                />
+                                                <AntdSwitch
+                                                    checkedChildren={ 'ru' }
+                                                    unCheckedChildren={ '--' }
+                                                    checked={ ptsRusCheck }
+                                                    onClick={ () => {
+                                                        setPtsRusCheck(!ptsRusCheck)
+                                                    } }
+                                                    isRotate
+                                                />
+                                            </div>
                                             <Field name={ 'dopog' }
                                                    placeholder={ label.dopog }
                                                    maskFormat={ maskOn.dopog }

@@ -43,24 +43,24 @@ export const parsePseudoLatinCharsAndNumbers = ( val: parsePropType ): string =>
     .replace(/[^АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx|\d\s]/, '') : ''
 
 export const pseudoLatin = 'АВЕКМНОРСТУХавекмнорстух'
-export const pseudoRussian = 'АВЕКМНОРСТУХавекмнорстух'
+export const pseudoRussian = 'ABEKMHOPCTYXabekmhopctyx'
 // латинские буквы в русские большие аналоги
 export const parseLatinCharsToRus = ( val: parsePropType ): string => val ?
     val.split('')
         .map(char => {
-            const pos = 'pseudoRussian'.indexOf(char)
-            return pos > -1 ? 'pseudoLatin'.charAt(pos) : char
+            const pos = pseudoRussian.indexOf(char)
+            return pos > -1 ? pseudoLatin.charAt(pos) : char
         }).join('') : ''
 
 // export const parseClearAllMaskPlaceholders = ( val: parsePropType ): string => val ? val
 //     .replaceAll('#', '').replaceAll('_', '') : ''
-export const parserDowngradeRUSatEnd = ( val: parsePropType ): string => val ? val.slice(0,-3)+'rus' : ''
+export const parserDowngradeRUSatEnd = ( val: parsePropType ): string => val ? val.includes('RUS') ? val.slice(0, -3) + 'rus' : val : ''
 // export const parseTransportNumber = (val: string|null): string => val ? val.replace(/^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/ui,'') : ''
 
 // преобразовывает в заглавные буквы
 export const parseToUpperCase = ( val: parsePropType ): string => val ? val.toUpperCase() : ''
 
-// Фамилия Имя Отчество в Фамилия И.О.
+// Фамилия Имя Отчество в "Фамилия И.О."
 export const parseFamilyToFIO = ( val: parsePropType ): string => val ? val
         // .replace(/(?<=\S+) (\S)\S* (\S)\S*/, ' $1. $2.') : '' // не работает на сафари
         .split(' ')
@@ -88,6 +88,7 @@ export const syncParsers = {
     drivingLicence: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseToUpperCase),
     drivingCategory: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
     trailerTransportNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
-    pseudoLatin: composeParsers(parsePseudoLatinCharsAndNumbers, parseLatinCharsToRus, parseToUpperCase),
+    pseudoLatin: composeParsers(parseLatinCharsToRus, parseToUpperCase, parserDowngradeRUSatEnd),
     coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
+    parseToUpperCase,
 }

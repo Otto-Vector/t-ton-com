@@ -12,6 +12,7 @@ type OwnProps = {
     placeholder?: string
     // передаваемые значения из final-form
     meta: FieldState<any>
+    // input: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>
     input: any
     readOnly: boolean
     // показывает символом сколько осталось ввести данных (по умолчанию равна "_")
@@ -51,10 +52,11 @@ export const FormInputType: React.FC<OwnProps> = (
     const isError = ( meta.error || meta.submitError ) && ( meta.active || meta.touched )
     const labelToView = ( input.value || allowEmptyFormatting || ( inputType !== 'text' ) ) && !noLabel
 
-    const formatChars = useMemo(()=>({
+    const formatChars = useMemo(() => ( {
         '#': '[0123456789]',
         'A': formatCharsToMaskA || '[a-zA-ZА-Яа-я]',
-    }),[formatCharsToMaskA])
+    } ), [ formatCharsToMaskA ])
+
 
 
     return ( <div className={ styles.inputWrapper + ' ' + styles.search }>
@@ -64,12 +66,12 @@ export const FormInputType: React.FC<OwnProps> = (
             { resetFieldBy && input.value && !disabled && !readOnly && <div
                 className={ styles.clearSearch + ' ' + ( !meta.dirty && styles.clearSearch_unfocused ) }
                 onClick={ async () => {
-                    await resetFieldBy.change(input.name, '')
-                    await resetFieldBy.resetFieldState(input.name)
+                    await resetFieldBy.change(input.name + '', '')
+                    await resetFieldBy.resetFieldState(input.name + '')
                 } }
             ></div>
             }
-            { ( (maskFormat || inputType === 'money') && !isInputMask) ? // если формат отсутствует, то на обычный инпут
+            { ( ( maskFormat || inputType === 'money' ) && !isInputMask ) ? // если формат отсутствует, то на обычный инпут
 
                 <NumberFormat
                     mask={ mask }
@@ -82,10 +84,11 @@ export const FormInputType: React.FC<OwnProps> = (
                     autoComplete="off"
                     onBlur={ input.onBlur }
                     onFocus={ input.onFocus }
-                    onChange={ ( value: React.ChangeEvent<HTMLInputElement> ) => input.onChange(value) }
+                    onChange={ ( value: React.ChangeEvent<HTMLInputElement> ) => input?.onChange && input.onChange(value) }
                     onValueChange={ ( { formattedValue } ) =>
-                        input.onChange(formattedValue)
-                    }
+                        // @ts-ignore
+                        input?.onChange && input.onChange(formattedValue) }
+                    // @ts-ignore
                     type={ inputType }
                     { ...input }
                     className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
@@ -96,7 +99,7 @@ export const FormInputType: React.FC<OwnProps> = (
                     <ReactInputMask
                         { ...input }
                         className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
-                        mask={ maskFormat || ''}
+                        mask={ maskFormat || '' }
                         placeholder={ placeholder }
                         //@ts-ignore
                         formatChars={ formatChars }
@@ -115,7 +118,6 @@ export const FormInputType: React.FC<OwnProps> = (
                              disabled={ disabled || meta.validating }
                              readOnly={ readOnly }
                     />
-
             }
             { labelToView &&
                 <label className={ styles.label }>{ placeholder }</label>

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -29,10 +29,12 @@ import {
     oneTransportDeleteToAPI,
     transportStoreActions,
 } from '../../../redux/options/transport-store-reducer';
-import {parseAllNumbers, parserDowngradeRUSatEnd} from '../../../utils/parsers';
+import {parseAllNumbers, parserDowngradeRUSatEnd, syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
+import {AntdSwitch} from '../../common/antd-switch/antd-switch';
+import {syncValidators} from '../../../utils/validators';
 
 
 type OwnProps = {}
@@ -67,7 +69,9 @@ export const TransportForm: React.FC<OwnProps> = () => {
     }
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
-    const isNew = currentIdForShow === 'new'
+    const isNew = useMemo(()=>currentIdForShow === 'new',[currentIdForShow])
+    const [ transportNumberRusCheck, setTransportNumberRusCheck ] = useState(isNew)
+    const [ ptsRusCheck, setPtsRusCheck ] = useState(isNew)
 
     const { options } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -93,7 +97,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
             dispatch<any>(modifyOneTransportToAPI(demaskedValues, selectedImage))
         }
         navigate(options) // и возвращаемся в предыдущее окно
-    },[selectedImage])
+    }, [ selectedImage ])
 
 
     const onCancelClick = () => {
@@ -113,6 +117,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
             } else {
                 dispatch(transportStoreActions.setCurrentId(currentIdForShow || ''))
             }
+            // if (!initialValues.transportNumber) { setTransportNumberRusCheck(true)}
         }, [ currentId, initialValues ],
     )
 
@@ -136,16 +141,28 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.transportTrailerForm__form }>
                                         <div className={ styles.transportTrailerForm__inputsPanel }>
-                                            <Field name={ 'transportNumber' }
-                                                   placeholder={ label.transportNumber }
-                                                   maskFormat={ maskOn.transportNumber }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.transportNumber }
-                                                   parse={ parsers.transportNumber }
-                                                   allowEmptyFormatting
-                                                   isInputMask
-                                            />
+                                            <div className={ styles.transportTrailerForm__inputsPanel_withSwitcher }>
+                                                <Field name={ 'transportNumber' }
+                                                       placeholder={ label.transportNumber }
+                                                       maskFormat={ transportNumberRusCheck ? maskOn.transportNumber : undefined }
+                                                       component={ FormInputType }
+                                                       resetFieldBy={ form }
+                                                       validate={ transportNumberRusCheck ? validators.transportNumber : syncValidators.textReqMicro }
+                                                       parse={ transportNumberRusCheck ? parsers.transportNumber : syncParsers.parseToUpperCase }
+                                                       formatCharsToMaskA={ '[АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx]' }
+                                                       allowEmptyFormatting={ transportNumberRusCheck }
+                                                       isInputMask={ transportNumberRusCheck }
+                                                />
+                                                <AntdSwitch
+                                                    checkedChildren={ 'ru' }
+                                                    unCheckedChildren={ '--' }
+                                                    checked={ transportNumberRusCheck }
+                                                    onClick={ () => {
+                                                        setTransportNumberRusCheck(!transportNumberRusCheck)
+                                                    } }
+                                                    isRotate
+                                                />
+                                            </div>
                                             <Field name={ 'transportTrademark' }
                                                    placeholder={ label.transportTrademark }
                                                    maskFormat={ maskOn.transportTrademark }
@@ -162,16 +179,28 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.transportModel }
                                                    parse={ parsers.transportModel }
                                             />
-                                            <Field name={ 'pts' }
-                                                   placeholder={ label.pts }
-                                                   maskFormat={ maskOn.pts }
-                                                   component={ FormInputType }
-                                                   resetFieldBy={ form }
-                                                   validate={ validators.pts }
-                                                   parse={ parsers.pts }
-                                                   allowEmptyFormatting
-                                                   isInputMask
-                                            />
+                                            <div className={ styles.transportTrailerForm__inputsPanel_withSwitcher }>
+                                                <Field name={ 'pts' }
+                                                       placeholder={ label.pts }
+                                                       maskFormat={ ptsRusCheck ? maskOn.pts : undefined }
+                                                       component={ FormInputType }
+                                                       resetFieldBy={ form }
+                                                       validate={ ptsRusCheck ? validators.pts : syncValidators.textReqMicro }
+                                                       parse={ ptsRusCheck ? parsers.pts : syncParsers.parseToUpperCase }
+                                                       formatCharsToMaskA={ '[АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx]' }
+                                                       allowEmptyFormatting={ ptsRusCheck }
+                                                       isInputMask={ ptsRusCheck }
+                                                />
+                                                <AntdSwitch
+                                                    checkedChildren={ 'ru' }
+                                                    unCheckedChildren={ '--' }
+                                                    checked={ ptsRusCheck }
+                                                    onClick={ () => {
+                                                        setPtsRusCheck(!ptsRusCheck)
+                                                    } }
+                                                    isRotate
+                                                />
+                                            </div>
                                             <Field name={ 'dopog' }
                                                    placeholder={ label.dopog }
                                                    maskFormat={ maskOn.dopog }

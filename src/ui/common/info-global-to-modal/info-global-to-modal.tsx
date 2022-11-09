@@ -61,6 +61,5 @@ export const InfoGlobalToModal: React.FC = () => {
         >
             <p>{ textToGlobalModal }</p>
         </Modal>
-
     )
 }

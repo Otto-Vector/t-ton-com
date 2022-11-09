@@ -24,6 +24,8 @@ export const includesTitleValidator = ( list: string[], include: string ) => lis
 export const syncValidators = {
     required,
     justTenNumbers: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
+    // рекомендовано максимум 20 символов
+    textReqMicro: composeValidators(required, maxLength(20)),
     // рекомендовано максимум 50 символов
     textReqMin: composeValidators(required, maxLength(50)),
     // рекомендовано максимум 120 символов
@@ -46,10 +48,11 @@ export const syncValidators = {
     passport: composeValidators(required, mustBe00Numbers(10), mustNotBeOnlyNull),
     // водительские права
     drivingLicence: composeValidators(required, mustBe00Numbers(10)),
-    // категории прав
+    // категории прав максимальная
     drivingCategory: composeValidators(required, maxLength(20)),
-    // номер машины/прицепа
+    // номер машины
     transportNumber: composeValidators(required, minNumbers(5)),
+    // номер прицепа
     trailerNumber: composeValidators(required, minNumbers(6)),
     // название, модель машины/прицепа
     trailerTransportModel: composeValidators(required, maxLength(30)),
