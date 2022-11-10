@@ -44,13 +44,10 @@ export const parsePseudoLatinCharsAndNumbers = ( val: parsePropType ): string =>
 
 export const pseudoLatin = 'АВЕКМНОРСТУХавекмнорстух'
 export const pseudoRussian = 'ABEKMHOPCTYXabekmhopctyx'
+const enCharToRusChar = (char: string): string => pseudoLatin.charAt(pseudoRussian.indexOf(char)) || char
 // латинские буквы в русские большие аналоги
 export const parseLatinCharsToRus = ( val: parsePropType ): string => val ?
-    val.split('')
-        .map(char => {
-            const pos = pseudoRussian.indexOf(char)
-            return pos > -1 ? pseudoLatin.charAt(pos) : char
-        }).join('') : ''
+    val.split('').map(enCharToRusChar).join('') : ''
 
 export const parseClearAllMaskPlaceholders = ( val: parsePropType ): string => val ? val
     .replaceAll('#', '').replaceAll('_', '') : ''
