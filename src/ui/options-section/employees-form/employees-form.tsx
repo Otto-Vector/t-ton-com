@@ -285,7 +285,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.employeesForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting || submitError || hasValidationErrors || pristine }
+                                                            disabled={ submitting || submitError || pristine }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

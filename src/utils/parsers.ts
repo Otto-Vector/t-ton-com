@@ -1,3 +1,4 @@
+
 export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] ) => ( value: string ): string =>
     parsers.reduce(( val, validator ) => validator(val), value);
 
@@ -5,7 +6,14 @@ type parsePropType = string | undefined | null
 
 // только цифры
 export const parseAllNumbers = ( val: parsePropType ): string => val ? val
-    .replace(/[^\d]/g, '') : ''
+    .replace(/\D/g, '') : ''
+
+export const removeFirstSevenOrEight=( val: parsePropType ): string => val ? val
+    .replace('+7 (7','').replace('+7 (8','') : ''
+
+const toConsole =( val: parsePropType ): string => {
+    console.log(val)
+    return val||''}
 
 // только координаты
 export const parseAllCoords = ( val: parsePropType ): string => val ? val
@@ -88,6 +96,7 @@ export const syncParsers = {
     clearNormalizeTrailerTransportNumberAtEnd: composeParsers(parseToUpperCase, parseClearAllMaskPlaceholders, parserDowngradeRUSatEnd),
     pseudoLatin: composeParsers(parseLatinCharsToRus, parseToUpperCase, parserDowngradeRUSatEnd),
     coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
+    tel: composeParsers(removeFirstSevenOrEight),
     parseToUpperCase,
     parseAllNumbers
 }

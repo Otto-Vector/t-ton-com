@@ -14,7 +14,6 @@ type OwnProps = {
     onClick: () => void
 }
 
-const rotatedLabel = ( inside: any ) => <div style={ { transform: 'rotate(-90deg)' } }>{ inside }</div>
 
 export const AntdSwitch: React.FC<OwnProps> = ( {
                                                     checked,
@@ -23,13 +22,13 @@ export const AntdSwitch: React.FC<OwnProps> = ( {
                                                     onClick,
                                                 } ) => {
     return (
-            <Switch
-                size={ 'small' }
-                checkedChildren={ checkedChildren }
-                unCheckedChildren={ unCheckedChildren }
-                checked={ checked }
-                onClick={ onClick }
-            />
+        <Switch
+            size={ 'small' }
+            checkedChildren={ checkedChildren }
+            unCheckedChildren={ unCheckedChildren }
+            checked={ checked }
+            onClick={ onClick }
+        />
     )
 }
 
@@ -39,17 +38,21 @@ type SwitchMaskProps = {
     onClick: () => void
 }
 
+// повёрнутый на 90 градусов свич
 export const SwitchMask: React.FC<SwitchMaskProps> = ( {
                                                            checked,
                                                            onClick,
                                                        } ) => {
+
     return <div style={ { width: '40px', transform: 'rotate(90deg)' } }
                 title={ 'Ввод по форме' }>
         <AntdSwitch
-            checkedChildren={ rotatedLabel('ru')}
-            unCheckedChildren={ rotatedLabel('--')}
+            checkedChildren={ rotatedLabel('ru') }
+            unCheckedChildren={ rotatedLabel('--') }
             checked={ checked }
             onClick={ onClick }
         />
     </div>
 }
+// обёртка для поворота контента в свиче
+const rotatedLabel = ( inside: any ) => <div style={ { transform: 'rotate(-90deg)' } }>{ inside }</div>
