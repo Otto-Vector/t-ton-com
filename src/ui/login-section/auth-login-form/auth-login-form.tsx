@@ -23,7 +23,7 @@ import {
     newPassword,
     sendCodeToPhone,
 } from '../../../redux/auth-store-reducer'
-import {parseAllNumbers} from '../../../utils/parsers'
+import {parseAllNumbers, syncParsers} from '../../../utils/parsers'
 import {PhoneSubmitType} from '../../../types/form-types'
 
 import {useNavigate} from 'react-router-dom';
@@ -181,12 +181,11 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     return (
         <div className={ styles.loginForm }>
-
             <h4 className={ styles.loginForm__header }>{ isRegisterMode ? 'Регистрация' : 'Вход' }</h4>
             <Form
                 onSubmit={ onSubmit }
                 initialValues={ initialValues }
-
+                // subscription={{ submitting: true, pristine: true, validating: true, valid: true }}
                 render={
                     ( {
                           submitError,
@@ -230,6 +229,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                        allowEmptyFormatting
                                        maskFormat={ maskOn.phoneNumber }
                                        validate={ validators.phoneNumber }
+                                       parse={ syncParsers.tel }
                                        disabled={ isRegisterMode ? isAvailableSMS : false }
                                 />
                                 <Field name={ 'sms' }

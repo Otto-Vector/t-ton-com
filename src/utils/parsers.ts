@@ -1,4 +1,3 @@
-
 export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] ) => ( value: string ): string =>
     parsers.reduce(( val, validator ) => validator(val), value);
 
@@ -8,12 +7,13 @@ type parsePropType = string | undefined | null
 export const parseAllNumbers = ( val: parsePropType ): string => val ? val
     .replace(/\D/g, '') : ''
 
-export const removeFirstSevenOrEight=( val: parsePropType ): string => val ? val
-    .replace('+7 (7','').replace('+7 (8','') : ''
+export const removeFirstSevenOrEight = ( val: parsePropType ): string => val ? val
+    .replace(/^(\+7\s\([78])/, '+7 (') : ''
 
-const toConsole =( val: parsePropType ): string => {
+const toConsole = ( val: parsePropType ): string => {
     console.log(val)
-    return val||''}
+    return val || ''
+}
 
 // только координаты
 export const parseAllCoords = ( val: parsePropType ): string => val ? val
@@ -45,20 +45,23 @@ export const parseOnlyOneComma = ( val: parsePropType ): string => val ? val
 export const parseNoFirstSpaces = ( val: parsePropType ): string => val ? val
     .replace(/^\s*/g, '') : ''
 
-
+////////////////////////////////////////////////////////////////////////
 // только псевдолатинские русские буквы
+const pseudoLatin = 'АВЕКМНОРСТУХавекмнорстух'
+const pseudoRussian = 'ABEKMHOPCTYXabekmhopctyx'
+const regExpPatternNotRusLat = new RegExp('[^' + pseudoLatin + pseudoRussian + '|\d\s]', 'g')
+const regExpPatternPseudoLat = new RegExp('[' + pseudoLatin + ']', 'g')
+const enCharToRusChar = ( char: string ): string => pseudoLatin.charAt(pseudoRussian.indexOf(char))
+// удаляем все не (псевдолатиницы, пробелы, цифры и '|') из текста
 export const parsePseudoLatinCharsAndNumbers = ( val: parsePropType ): string => val ? val
-    .replace(/[^АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx|\d\s]/, '') : ''
-
-export const pseudoLatin = 'АВЕКМНОРСТУХавекмнорстух'
-export const pseudoRussian = 'ABEKMHOPCTYXabekmhopctyx'
-const enCharToRusChar = (char: string): string => pseudoLatin.charAt(pseudoRussian.indexOf(char)) || char
-// латинские буквы в русские большие аналоги
+    .replace(regExpPatternNotRusLat, '') : ''
+// латинские буквы в русские аналоги
 export const parseLatinCharsToRus = ( val: parsePropType ): string => val ?
-    val.split('').map(enCharToRusChar).join('') : ''
+    val.replace(regExpPatternPseudoLat, enCharToRusChar) : ''
+////////////////////////////////////////////////////////////////////////
 
 export const parseClearAllMaskPlaceholders = ( val: parsePropType ): string => val ? val
-    .replaceAll('#', '').replaceAll('_', '') : ''
+    .replaceAll(/[#_]/g, '') : ''
 export const parserDowngradeRUSatEnd = ( val: parsePropType ): string => val ? val.includes('RUS') ? val.slice(0, -3) + 'rus' : val : ''
 // export const parseTransportNumber = (val: string|null): string => val ? val.replace(/^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/ui,'') : ''
 
@@ -75,16 +78,14 @@ export const parseFamilyToFIO = ( val: parsePropType ): string => val ? val
 
 // из координат в строке "10.1235, 11.6548" в массив из двух элементов [10.1235, 11.6548]
 export const stringToCoords = ( coordsString: parsePropType ): [ number, number ] => {
-    const retArr = coordsString?.split(', ').map(Number) || [ 0, 0 ]
-    return [ retArr[0] || 0, retArr[1] || 0 ]
+    const [ latitude = 0, longitude = 0 ] = coordsString?.split(', ').map(Number) || []
+    return [ latitude, longitude ]
 }
 
 // из массива координат в стороковое значение с обрезанием мегаточности
-export const coordsToString = ( coordsNumArray?: [ number, number ] ): string => {
-    if (coordsNumArray)
-        return coordsNumArray.map(e => e.toFixed(6)).join(', ')
-    return 'неверные входные данные'
-}
+export const coordsToString = ( coordsNumArray?: [ number, number ] ): string =>
+    coordsNumArray?.map(e => e.toFixed(6)).join(', ') || 'неверные входные данные'
+
 
 export const syncParsers = {
     title: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
@@ -96,7 +97,7 @@ export const syncParsers = {
     clearNormalizeTrailerTransportNumberAtEnd: composeParsers(parseToUpperCase, parseClearAllMaskPlaceholders, parserDowngradeRUSatEnd),
     pseudoLatin: composeParsers(parseLatinCharsToRus, parseToUpperCase, parserDowngradeRUSatEnd),
     coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
-    tel: composeParsers(removeFirstSevenOrEight),
+    tel: composeParsers(removeFirstSevenOrEight, toConsole),
     parseToUpperCase,
-    parseAllNumbers
+    parseAllNumbers,
 }
