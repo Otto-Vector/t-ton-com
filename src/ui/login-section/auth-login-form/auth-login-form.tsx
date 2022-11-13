@@ -46,17 +46,16 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const [ isRegisterMode, setIsRegisterMode ] = useState(false)
     const isAvailableSMS = useSelector(getIsAvailableSMSrequest)
     const isAuth = useSelector(getIsAuthAuthStore)
+    const isFetching = useSelector(getIsFetchingAuth)
 
-    const label = useSelector(getLabelAuthStore)
     const absoluteInitialValues = useSelector(getInitialValuesAuthStore)
-
     const [ localInitialValues, setLocalInitialValues ] = useState(absoluteInitialValues)
 
+    const label = useSelector(getLabelAuthStore)
     const maskOn = useSelector(getMaskOnAuthStore)
     const validators = useSelector(getValidatorsAuthStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
 
-    const isFetching = useSelector(getIsFetchingAuth)
     const dispatch = useDispatch()
 
     // расчищаем значения от лишних символов и пробелов после маски
@@ -134,7 +133,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
         }))
     }
 
-    const newCode = ( phone: string ) => {
+    const newSMSCode = ( phone: string ) => {
         // сразу блокируем повторное нажание на 1 минуту
         dispatch<any>(fakeAuthFetching())
         dispatch<any>(newPassword({ phone }))
@@ -179,7 +178,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                         <form onSubmit={ handleSubmit }>
                             <FormSpySimple form={ form }
                                            onChange={ formSpyChangeHandlerToLocalInit }
-                                // onValid
                             />
                             <span className={ styles.onError }>{ submitError }</span>
                             <div className={ styles.loginForm__inputsPanel }>
@@ -227,7 +225,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                 colorMode={ 'gray' }
                                                 disabled={ !form.getFieldState('phoneNumber')?.valid || isFetching }
                                                 onClick={ () => {
-                                                    newCode(values.phoneNumber as string)
+                                                    newSMSCode(values.phoneNumber as string)
                                                 } }
                                                 rounded
                                         >{ 'Новый пароль' }</Button>

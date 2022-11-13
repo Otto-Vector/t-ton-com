@@ -44,6 +44,7 @@ import {includesTitleValidator} from '../../../utils/validators';
 import {getCityFromDispetcherAPI} from '../../../redux/options/shippers-store-reducer';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
 
 
 type OwnProps = {}
@@ -139,7 +140,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     }
 
     // автозаполнение полей при выборе селектора
-    const setDataToForm = ( form: FormApi<ConsigneesCardType> ) => ( kppNumber: string | undefined ) => {
+    const setDataToFormOnSelectorChange = ( form: FormApi<ConsigneesCardType> ) => ( kppNumber: string | undefined ) => {
         const demaskedValues = fromFormDemaskedValues(form.getState().values)
         if (kppNumber) {
             dispatch<any>(setOrganizationByInnKppConsignees({ formValue: demaskedValues, kppNumber }))
@@ -155,40 +156,46 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         }
     }
 
+
+    // синхронно/асинхронный валидатор на поле ИНН
+    const innPlusApiValidator = useInnPlusApiValidator<ConsigneesCardType<string>>(
+        dispatch, consigneesStoreActions.setInitialValues,
+        { organizationName: '', ogrn: '', address: '', kpp: '' } as ConsigneesCardType<string>,
+        true,
+    )
+
     // онлайн валидация ИНН с подгрузкой КПП в селектор
     const innValidate = async ( value: string ) => {
         const inn = +parseAllNumbers(value)
         return await dispatch<any>(getOrganizationByInnConsignee({ inn }))
     }
-
-    // синхронно/асинхронный валидатор на поле ИНН
-    const innPlusApiValidator = ( preValues: ConsigneesCardType ) => ( currentValue?: string ) => {
-        // расчищаем значения от лишних символов и пробелов после маски
-        const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
-
-        if (// зачистка авто-полей при невалидном поле, если до этого оно изменилось с валидного
-            ( validators.innNumber && current && prev !== current && validators.innNumber(current) && !validators.innNumber(prev) )
-            // а также при нажатии кнопки зачистки поля
-            || ( !current && prev !== current )
-        ) {
-            const formValue = {
-                ...preValues,
-                innNumber: current,
-                organizationName: '',
-                ogrn: '',
-                address: '',
-                kpp: '',
-            } as ConsigneesCardType
-
-            dispatch(daDataStoreActions.setSuggectionsValues([]))
-            dispatch(consigneesStoreActions.setInitialValues(formValue))
-        }
-
-        // запускаем асинхронную валидацию только после синхронной
-        return ( validators.innNumber && validators.innNumber(current) )
-            // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-            || ( current && ( prev !== current ) ? innValidate(current) : undefined )
-    }
+    // const innPlusApiValidator = ( preValues: ConsigneesCardType ) => ( currentValue?: string ) => {
+    //     // расчищаем значения от лишних символов и пробелов после маски
+    //     const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
+    //
+    //     if (// зачистка авто-полей при невалидном поле, если до этого оно изменилось с валидного
+    //         ( validators.innNumber && current && prev !== current && validators.innNumber(current) && !validators.innNumber(prev) )
+    //         // а также при нажатии кнопки зачистки поля
+    //         || ( !current && prev !== current )
+    //     ) {
+    //         const formValue = {
+    //             ...preValues,
+    //             innNumber: current,
+    //             organizationName: '',
+    //             ogrn: '',
+    //             address: '',
+    //             kpp: '',
+    //         } as ConsigneesCardType
+    //
+    //         dispatch(daDataStoreActions.setSuggectionsValues([]))
+    //         dispatch(consigneesStoreActions.setInitialValues(formValue))
+    //     }
+    //
+    //     // запускаем асинхронную валидацию только после синхронной
+    //     return ( validators.innNumber && validators.innNumber(current) )
+    //         // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
+    //         || ( current && ( prev !== current ) ? innValidate(current) : undefined )
+    // }
 
     // валидатор на одинаковые названия заголовков
     const titleValidator = ( preValue: string ) => ( currentValue: string ) => {
@@ -285,7 +292,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ isNew ? maskOn.innNumber : undefined }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values) : undefined }
+                                                   validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined }
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />
@@ -295,7 +302,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                               placeholder={ label.kpp }
                                                               values={ kppSelect }
                                                               validate={ validators.kpp }
-                                                              handleChanger={ setDataToForm(form) }
+                                                              handleChanger={ setDataToFormOnSelectorChange(form) }
                                                               disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }
                                                               errorTop
                                                               isClearable
