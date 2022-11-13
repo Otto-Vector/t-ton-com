@@ -55,6 +55,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector(getIsFetchingConsigneesStore)
 
     const initialValues = useSelector(getInitialValuesConsigneesStore)
+    const [localInitialValues, setLocalInitialValues] = useState(initialValues)
+
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
     const consigneesListExcludeCurrentToValidate = useSelector(getConsigneesNamesListOptionsStore)
     const consigneesAllListToValidate = useSelector(getConsigneesAllNamesListOptionsStore)
@@ -158,11 +160,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
 
     // синхронно/асинхронный валидатор на поле ИНН
-    const innPlusApiValidator = useInnPlusApiValidator<ConsigneesCardType<string>>(
-        dispatch, consigneesStoreActions.setInitialValues,
-        { organizationName: '', ogrn: '', address: '', kpp: '' } as ConsigneesCardType<string>,
-        true,
-    )
+    // const innPlusApiValidator = useInnPlusApiValidator<ConsigneesCardType<string>>(
+    //     dispatch, consigneesStoreActions.setInitialValues,
+    //     { organizationName: '', ogrn: '', address: '', kpp: '' } as ConsigneesCardType<string>,
+    //     true,
+    // )
 
     // онлайн валидация ИНН с подгрузкой КПП в селектор
     const innValidate = async ( value: string ) => {
