@@ -23,7 +23,7 @@ import {
     newPassword,
     sendCodeToPhone,
 } from '../../../redux/auth-store-reducer'
-import {parseAllNumbers, syncParsers} from '../../../utils/parsers'
+import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers'
 import {PhoneSubmitType} from '../../../types/form-types'
 
 import {useNavigate} from 'react-router-dom';
@@ -51,7 +51,10 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const isAuth = useSelector(getIsAuthAuthStore)
 
     const label = useSelector(getLabelAuthStore)
-    const initialValues = useSelector(getInitialValuesAuthStore)
+    const absoluteInitialValues = useSelector(getInitialValuesAuthStore)
+
+    const [ localInitialValues, setLocalInitialValues ] = useState(absoluteInitialValues)
+
     const maskOn = useSelector(getMaskOnAuthStore)
     const validators = useSelector(getValidatorsAuthStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
@@ -60,7 +63,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     // расчищаем значения от лишних символов и пробелов после маски
-    const fromFormDemaskedValues = ( values: PhoneSubmitType ): PhoneSubmitType => ( {
+    const fromFormUnmaskedValues = ( values: PhoneSubmitType ): PhoneSubmitType => ( {
         innNumber: parseAllNumbers(values.innNumber) || undefined,
         kppNumber: values.kppNumber || undefined,
         phoneNumber: ( parseAllNumbers(values.phoneNumber) === '7' ) ? '' : values.phoneNumber,
@@ -69,10 +72,11 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     // сохраняем изменения формы в стейт редакса
     const formSpyChangeHandlerToLocalInit = ( values: PhoneSubmitType ) => {
-        const [ demaskedValues, demaskedInitialValues ] = [ values, initialValues ].map(fromFormDemaskedValues)
-        if (!valuesAreEqual(demaskedValues, demaskedInitialValues)) {
+        const [ unmaskedValues, unmaskedInitialValues ] = [ values, localInitialValues ].map(fromFormUnmaskedValues)
+        if (!valuesAreEqual(unmaskedValues, unmaskedInitialValues)) {
             // debugger
-            dispatch(authStoreActions.setInitialValues(demaskedValues))
+            // dispatch(authStoreActions.setInitialValues(unmaskedValues))
+            setLocalInitialValues(unmaskedInitialValues)
         }
     }
 
@@ -155,7 +159,8 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
             // а также при нажатии кнопки зачистки поля
             || ( !current && prev !== current )
         ) {
-            dispatch(authStoreActions.setInitialValues({ ...preValues, kppNumber: '', innNumber: current }))
+            // dispatch(authStoreActions.setInitialValues({ ...preValues, kppNumber: '', innNumber: current }))
+            setLocalInitialValues({ ...preValues, kppNumber: '', innNumber: current })
             dispatch(daDataStoreActions.setSuggectionsValues([]))
         }
 
@@ -168,13 +173,17 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     useEffect(() => {
         // присваивается автоматически значение из первого селектора
         if (kppSelect.length > 0) {
-            const preKey = initialValues.kppNumber + '' + initialValues.innNumber
+            const preKey = absoluteInitialValues.kppNumber + '' + absoluteInitialValues.innNumber
             // если предыдущий список селектора не совпадает с выбраным
             if (!kppSelect.find(( { key } ) => key === preKey)) {
-                dispatch(authStoreActions.setInitialValues({
-                    ...initialValues,
+                // dispatch(authStoreActions.setInitialValues({
+                //     ...initialValues,
+                //     kppNumber: kppSelect[0].value,
+                // }))
+                setLocalInitialValues({
+                    ...localInitialValues,
                     kppNumber: kppSelect[0].value,
-                }))
+                })
             }
         }
     }, [ kppSelect ])
@@ -184,7 +193,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
             <h4 className={ styles.loginForm__header }>{ isRegisterMode ? 'Регистрация' : 'Вход' }</h4>
             <Form
                 onSubmit={ onSubmit }
-                initialValues={ initialValues }
+                initialValues={ localInitialValues }
                 // subscription={{ submitting: true, pristine: true, validating: true, valid: true }}
                 render={
                     ( {
@@ -194,12 +203,12 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                           form,
                           submitting,
                           values,
-                        valid
+                          valid,
                       } ) => (
                         <form onSubmit={ handleSubmit }>
                             <FormSpySimple form={ form }
                                            onChange={ formSpyChangeHandlerToLocalInit }
-                                           onValid
+                                // onValid
                             />
                             <span className={ styles.onError }>{ submitError }</span>
                             <div className={ styles.loginForm__inputsPanel }>
@@ -230,14 +239,14 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                        allowEmptyFormatting
                                        maskFormat={ maskOn.phoneNumber }
                                        validate={ validators.phoneNumber }
-                                       parse={ syncParsers.tel }
+                                       parse={ oneRenderParser({ form, parser: syncParsers.tel }) }
                                        disabled={ isRegisterMode ? isAvailableSMS : false }
                                 />
                                 <Field name={ 'sms' }
                                        placeholder={ label.sms }
                                        component={ FormInputType }
                                        maskFormat={ maskOn.sms }
-                                       validate={ !isRegisterMode || (isRegisterMode && isAvailableSMS) ? validators.sms : undefined }
+                                       validate={ !isRegisterMode || ( isRegisterMode && isAvailableSMS ) ? validators.sms : undefined }
                                        disabled={ isRegisterMode ? !isAvailableSMS : false }
                                 >
                                     { !isRegisterMode && <div className={
@@ -256,7 +265,8 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                             </div>
                             <div className={ styles.loginForm__buttonsPanel }>
                                 <Button type={ 'submit' }
-                                        disabled={ submitting || hasValidationErrors || isFetching || (!isRegisterMode && !valid)}
+                                        disabled={ submitting || hasValidationErrors || isFetching ||
+                                            ( !isRegisterMode && !form.getFieldState('phoneNumber')?.valid && !form.getFieldState('sms')?.valid ) }
                                         colorMode={ 'green' }
                                         title={ 'Далее' }
                                         rounded

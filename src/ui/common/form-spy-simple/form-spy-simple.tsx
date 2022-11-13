@@ -10,12 +10,12 @@ type Props = {
 
 
 // отслеживает значения в react-final-form и передаёт их в колбэк (a FormSpy работает с ошибкой https://github.com/final-form/react-final-form/issues/809)
-export const FormSpySimple: React.VFC<Props> = ( { onChange, form } ) => {
+export const FormSpySimple: React.VFC<Props> = ( { onChange, form, onValid } ) => {
     const { values, active, valid } = form.getState()
     const [ currentValues, setCurrentValues ] = useState(values)
 
     useEffect(() => {
-        if (!valuesAreEqual(values, currentValues)) {
+        if (!valuesAreEqual(values, currentValues) && ((onValid && valid) || !onValid)) {
             onChange && onChange(values)
             setCurrentValues(values)
         }

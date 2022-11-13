@@ -1,3 +1,11 @@
+export const oneRenderParser = ( {
+                                     form,
+                                     parser,
+                                 }: { form: any, parser: ( value: string ) => string } ) => ( value: string, name: string ): string => {
+    return value !== form.getFieldState(name)?.value ? parser(value) : value
+    // return value
+}
+
 export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] ) => ( value: string ): string =>
     parsers.reduce(( val, validator ) => validator(val), value);
 
