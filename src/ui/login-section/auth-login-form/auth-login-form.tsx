@@ -194,6 +194,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                           form,
                           submitting,
                           values,
+                        valid
                       } ) => (
                         <form onSubmit={ handleSubmit }>
                             <FormSpySimple form={ form }
@@ -236,7 +237,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                        placeholder={ label.sms }
                                        component={ FormInputType }
                                        maskFormat={ maskOn.sms }
-                                       validate={ isAvailableSMS ? validators.sms : undefined }
+                                       validate={ !isRegisterMode || (isRegisterMode && isAvailableSMS) ? validators.sms : undefined }
                                        disabled={ isRegisterMode ? !isAvailableSMS : false }
                                 >
                                     { !isRegisterMode && <div className={
@@ -255,7 +256,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                             </div>
                             <div className={ styles.loginForm__buttonsPanel }>
                                 <Button type={ 'submit' }
-                                        disabled={ submitting || hasValidationErrors || isFetching }
+                                        disabled={ submitting || hasValidationErrors || isFetching || (!isRegisterMode && !valid)}
                                         colorMode={ 'green' }
                                         title={ 'Далее' }
                                         rounded
