@@ -82,20 +82,20 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     // при нажатии кнопки ДАЛЕЕ
     const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: PhoneSubmitType ) => {
-        const [ inn, kpp ] = [ innNumber, kppNumber ].map(parseAllNumbers)
+        const [ unmaskedInn, unmaskedKpp ] = [ innNumber, kppNumber ].map(parseAllNumbers)
         let innError, phoneError, loginError
 
         if (isRegisterMode) { // если РЕГИСТРАЦИЯ, то сначала проверяем ИНН на сущестование
             if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан
-                innError = await dispatch<any>(getOrganizationsByInnKPP({ inn, kpp }))
+                innError = await dispatch<any>(getOrganizationsByInnKPP({ inn: unmaskedInn, kpp: unmaskedKpp }))
                 if (innError) { // если ошибка, то выводим её в форму
                     dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
                     return innError
                 } else { // потом отправляем sms на регистрацию
                     phoneError = await dispatch<any>(sendCodeToPhone({
                         phone: phoneNumber as string,
-                        kpp,
-                        innNumber: inn,
+                        kpp: unmaskedKpp,
+                        innNumber: unmaskedInn,
                     }))
                     if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
                         dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
@@ -239,7 +239,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                        allowEmptyFormatting
                                        maskFormat={ maskOn.phoneNumber }
                                        validate={ validators.phoneNumber }
-                                       parse={ oneRenderParser({ form, parser: syncParsers.tel }) }
+                                       parse={ oneRenderParser(form, syncParsers.tel) }
                                        disabled={ isRegisterMode ? isAvailableSMS : false }
                                 />
                                 <Field name={ 'sms' }

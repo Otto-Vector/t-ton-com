@@ -200,7 +200,7 @@ export const sendCodeToPhone = ( {
                 postAddress: data.address.value,
                 email: data.emails ? data.emails[0]?.value : undefined,
             })
-            console.log(response)
+
             dispatch(authStoreActions.setIsFetching(false))
             // обрабатываем ошибку
             if (response.message) {

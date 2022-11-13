@@ -31,7 +31,7 @@ import {
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllTrailerSelectFromLocal} from '../../../selectors/options/trailer-reselect';
 import {getAllTransportSelectFromLocal} from '../../../selectors/options/transport-reselect';
-import {parseAllNumbers, syncParsers} from '../../../utils/parsers';
+import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set';
 import {yearMmDdFormat} from '../../../utils/date-formats';
 import {getDrivingCategorySelector} from '../../../selectors/base-reselect';
@@ -250,7 +250,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.employeePhoneNumber }
-                                                   parse={ parsers.employeePhoneNumber }
+                                                   parse={ oneRenderParser(form, parsers.employeePhoneNumber) }
                                             />
                                             <Field name={ 'passportDate' }
                                                    placeholder={ label.passportDate }

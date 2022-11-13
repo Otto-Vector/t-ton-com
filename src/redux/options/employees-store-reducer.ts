@@ -58,7 +58,7 @@ const initialState = {
         employeeFIO: syncParsers.fio,
         employeePhoneNumber: syncParsers.tel,
         passportSerial: undefined,
-        passportFMS: syncParsers.passport,
+        passportFMS: syncParsers.passportFMS,
         passportDate: undefined,
         drivingLicenseNumber: syncParsers.drivingLicence,
         drivingCategory: syncParsers.drivingCategory,
