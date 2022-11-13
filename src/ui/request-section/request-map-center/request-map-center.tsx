@@ -1,16 +1,17 @@
-import React from 'react'
+import React, {memo} from 'react'
 import styles from './request-map-center.module.scss'
 
 import {RequestModesType} from '../request-section';
 import {YandexMapWithRoute} from '../../common/yandex-map-component/yandex-map-component';
 import {useSelector} from 'react-redux';
 import {getInitialDistanceRequestStore, getRouteRequestStore} from '../../../selectors/forms/request-form-reselect';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 type OwnProps = {
     requestModes: RequestModesType,
 }
 
-export const RequestMapCenter: React.FC<OwnProps> = ( { requestModes } ) => {
+export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes } ) => {
 
     let testCenter: [ number, number ] = [ 55.5907807700034, 84.09127066601563 ]
     let testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]
@@ -35,7 +36,5 @@ export const RequestMapCenter: React.FC<OwnProps> = ( { requestModes } ) => {
                 />
             </div>
         </div>
-
-
     )
-}
+}, valuesAreEqual)

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {memo, useEffect, useMemo, useState} from 'react'
 import styles from './request-form-left.module.scss'
 import {
     getAllShippersSelectFromLocal,
@@ -41,6 +41,7 @@ import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-t
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect';
 import {SelectOptionsType, stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 
 type OwnProps = {
@@ -50,7 +51,7 @@ type OwnProps = {
     exposeValues?: ( values: OneRequestType ) => void
 }
 
-export const RequestFormLeft: React.FC<OwnProps> = (
+export const RequestFormLeft: React.FC<OwnProps> = memo((
     {
         requestModes, initialValues, onSubmit, exposeValues,
     } ) => {
@@ -65,6 +66,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const placehoders = useSelector(getPlaceholderRequestStore)
     const validators = useSelector(getValidatorsRequestStore)
     const fieldInformation = useSelector(getInfoTextModalsRequestValuesStore)
+
     const currentDistance = useSelector(getCurrentDistanceRequestStore)
     const currentDistanceIfFetching = useSelector(getCurrentDistanceIsFetchingRequestStore)
     const { innNumber: requisitesInn } = useSelector(getStoredValuesRequisitesStore)
@@ -85,7 +87,11 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const oneCarrier = allShippers.find(( { idSender } ) => idSender === initialValues.requestCarrierId)
 
     // toDo: ВСЕ ПОДГРУЗКИ ЧЕРЕЗ БЭК!
-    const custumersByUserInn = allShippers.map(( { title , idSender} ) => ( { value: idSender, label: title, key: idSender } ))
+    const custumersByUserInn = allShippers.map(( { title, idSender } ) => ( {
+        value: idSender,
+        label: title,
+        key: idSender,
+    } ))
     // useMemo(
     //     () => allShippers.filter(( { innNumber } ) => innNumber === requisitesInn)
     //         .map(( { title } ) => ( { value: title, label: title, key: title } )), [ requisitesInn ])
@@ -94,7 +100,7 @@ export const RequestFormLeft: React.FC<OwnProps> = (
     const customersSelect: SelectOptionsType[] = useMemo(() => custumersByUserInn, [ shippersSelect ])
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
 
-    const buttonsAction = {
+    const buttonsAction = useMemo(() => ( {
         acceptRequest: async ( values: OneRequestType ) => {
             navigate(routes.addDriver + values.requestNumber)
         },
@@ -108,11 +114,10 @@ export const RequestFormLeft: React.FC<OwnProps> = (
         },
         submitRequestAndDrive: async ( values: OneRequestType ) => {
             // сабмит запускается сам формой react-final-form в переднных ей параметрах
-            // console.log(form.getState().submitSucceeded)
             await onSubmit(values)
             navigate(routes.addDriver)
         },
-    }
+    } ), [])
 
     const onCreateCompositionValue = ( newCargoCompositionItem: string ) => {
         dispatch<any>(setCargoCompositionSelector(newCargoCompositionItem))
@@ -367,11 +372,15 @@ export const RequestFormLeft: React.FC<OwnProps> = (
                                 }
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
-                            { requestModes.createMode && <FormSpySimple form={ form } onChange={ exposeValues }/> }
+                            { requestModes.createMode &&
+                                <FormSpySimple form={ form }
+                                               onChange={ exposeValues }
+                                               isOnActiveChange
+                                /> }
                         </form>
                     )
                 }/>
             <InfoText/>
         </div>
     )
-}
+}, valuesAreEqual)

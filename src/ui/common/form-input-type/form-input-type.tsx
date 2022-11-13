@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import styles from './form-input-type.module.scss'
 import {FieldState, FormApi} from 'final-form'
 import NumberFormat from 'react-number-format';
@@ -52,11 +52,7 @@ export const FormInputType: React.FC<OwnProps> = (
     const isError = ( meta.error || meta.submitError ) && ( meta.active || meta.touched )
     const labelToView = ( input.value || allowEmptyFormatting || ( inputType !== 'text' ) ) && !noLabel
 
-    const formatChars = useMemo(() => ( {
-        '#': '[0123456789]',
-        'A': formatCharsToMaskA || '[a-zA-ZА-Яа-я]',
-    } ), [ formatCharsToMaskA ])
-
+    const formatChars = { '#': '[0123456789]', 'A': formatCharsToMaskA || '[a-zA-ZА-Яа-я]' }
 
 
     return ( <div className={ styles.inputWrapper + ' ' + styles.search }>

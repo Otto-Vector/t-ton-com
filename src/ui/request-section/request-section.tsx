@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import styles from './request-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -32,7 +32,7 @@ export type RequestModesType = { createMode: boolean, statusMode: boolean, histo
 
 export const RequestSection: React.FC = React.memo(() => {
 
-    const tabModesInitial = useMemo(() => ( { left: false, center: false, right: false } ), [])
+    const tabModesInitial = { left: false, center: false, right: false }
     const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
@@ -164,8 +164,7 @@ export const RequestSection: React.FC = React.memo(() => {
                     </div>
                     <div className={ styles.requestSection__bottomTabsItem +
                         ( tabModes.right ? ' ' + styles.requestSection__bottomTabsItem_active : '' ) +
-                        ( requestModes.createMode ? ' ' + styles.requestSection__bottomTabsItem_disabled : '' )
-                    }
+                        ( requestModes.createMode ? ' ' + styles.requestSection__bottomTabsItem_disabled : '' ) }
                          onClick={ () => !requestModes.createMode ? activeTab('right') : undefined }>
                         { 'Документы' }
                     </div>
