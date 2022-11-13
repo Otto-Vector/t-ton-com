@@ -5,19 +5,25 @@ import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 type Props = {
     onChange?: ( props: any ) => void
     form: any
-    onValid?: boolean
+    isOnValidChange?: boolean
+    isOnActiveChange?: boolean
 }
 
 
 // отслеживает значения в react-final-form и передаёт их в колбэк (a FormSpy работает с ошибкой https://github.com/final-form/react-final-form/issues/809)
-export const FormSpySimple: React.VFC<Props> = ( { onChange, form, onValid } ) => {
+export const FormSpySimple: React.VFC<Props> = ( { onChange, form, isOnValidChange ,isOnActiveChange} ) => {
     const { values, active, valid } = form.getState()
     const [ currentValues, setCurrentValues ] = useState(values)
+    const [ currentActive, setCurrentActive ] = useState(active)
 
     useEffect(() => {
-        if (!valuesAreEqual(values, currentValues) && ((onValid && valid) || !onValid)) {
+        if (!valuesAreEqual(values, currentValues)
+            && ((isOnValidChange && valid) || !isOnValidChange)
+            && ((isOnActiveChange && (active!==currentActive)) || !isOnActiveChange)
+        ) {
             onChange && onChange(values)
-            setCurrentValues(values)
+            isOnValidChange && setCurrentValues(values)
+            isOnActiveChange && setCurrentActive(active)
         }
     }, [ values, active, valid ])
 

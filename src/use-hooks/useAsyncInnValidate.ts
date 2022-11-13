@@ -20,13 +20,14 @@ export const useInnPlusApiValidator =
 
             // проверяем, чтобы лишний раз не сработало
             if (prev !== current) {
-                const [ validPrev, validCurrent ] = [ current, prev ].map(syncValidators.inn)
+                const [ validCurrent, validPrev ] = [ current, prev ].map(syncValidators.inn)
                 // зачистка авто-полей при невалидном поле, если до этого оно изменилось с валидного,
                 // а также при нажатии кнопки зачистки поля
                 if (( current && validCurrent && !validPrev ) || !current) {
+                    const resetValues = { ...preValues, ...blankFields, innNumber: current }
                     isSetInitDispatch
-                        ? dispatch(setInitValues({ ...preValues, ...blankFields, innNumber: current }))
-                        : setInitValues({ ...preValues, ...blankFields, innNumber: current })
+                        ? dispatch(setInitValues(resetValues))
+                        : setInitValues(resetValues)
                     dispatch(daDataStoreActions.setSuggectionsValues([]))
                 }
                 // запускаем асинхронную валидацию только после синхронной

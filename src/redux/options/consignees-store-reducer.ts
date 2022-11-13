@@ -212,21 +212,6 @@ export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
         dispatch(consigneesStoreActions.toggleConsigneeIsFetching(false))
     }
 
-// запрос параметров организации из DaData
-export const getOrganizationByInnConsignee = ( { inn }: GetOrganizationByInnDaDataType ):
-    ConsigneesStoreReducerThunkActionType<string | null> =>
-    async ( dispatch, getState ) => {
-
-        const initVal = getState().consigneesStoreReducer.initialValues
-        const booleanMemo = ( +( initVal.innNumber || 0 ) !== inn )
-        const error = booleanMemo
-            ? await dispatch<any>(getOrganizationsByInn({ inn }))
-            : null
-
-        return error
-
-    }
-
 // сохранение параметров организации из ранее загруженного списка DaData
 export const setOrganizationByInnKppConsignees = ( {
                                                        kppNumber,

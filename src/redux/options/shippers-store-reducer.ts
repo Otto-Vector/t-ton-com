@@ -201,23 +201,6 @@ export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
         dispatch(shippersStoreActions.toggleShipperIsFetching(false))
     }
 
-// запрос параметров организации из DaData
-export const getOrganizationByInnShipper = ( { inn }: GetOrganizationByInnDaDataType ):
-    ShippersStoreReducerThunkActionType<string | null> =>
-    async ( dispatch, getState ) => {
-
-        const { innNumber } = getState().shippersStoreReducer.initialValues
-        const booleanMemo = ( +( innNumber || 0 ) !== inn )
-
-        const response = booleanMemo
-            ? await dispatch<any>(getOrganizationsByInn({ inn }))
-            : null
-
-        if (response !== null) {
-            return response
-        } else return null
-
-    }
 
 // сохранение параметров организации из ранее загруженного списка DaData
 export const setOrganizationByInnKppShippers = ( {

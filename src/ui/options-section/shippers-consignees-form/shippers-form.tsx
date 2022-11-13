@@ -24,7 +24,6 @@ import {
 } from '../../../selectors/options/shippers-reselect'
 import {
     getCityFromDispetcherAPI,
-    getOrganizationByInnShipper,
     modifyOneShipperToAPI,
     newShipperSaveToAPI,
     oneShipperDeleteToAPI,
@@ -45,6 +44,7 @@ import {
 import {includesTitleValidator} from '../../../utils/validators';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
+import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
 
 type OwnProps = {
     // onSubmit: (requisites: shippersCardType) => void
@@ -81,6 +81,9 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         ...values,
         innNumber: parseAllNumbers(values.innNumber) || undefined,
         ogrn: parseAllNumbers(values.ogrn) || undefined,
+        address: values.address || '',
+        kpp: values.kpp || '',
+        organizationName: values.organizationName || '',
         shipperTel: ( parseAllNumbers(values.shipperTel) === '7' ) ? '' : values.shipperTel,
     } )
 
@@ -157,39 +160,11 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     }
 
     // онлайн валидация ИНН с подгрузкой КПП в селектор
-    const innValidate = async ( value: string ) => {
-        const inn = +parseAllNumbers(value)
-        return await dispatch<any>(getOrganizationByInnShipper({ inn }))
-    }
-
-    // синхронно/асинхронный валидатор на поле ИНН
-    const innPlusApiValidator = ( preValues: ShippersCardType ) => ( currentValue?: string ) => {
-        // расчищаем значения от лишних символов и пробелов после маски
-        const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
-
-        if (// зачистка авто-полей при невалидном поле, если до этого оно изменилось с валидного
-            ( validators.innNumber && current && prev !== current && validators.innNumber(current) && !validators.innNumber(prev) )
-            // а также при нажатии кнопки зачистки поля
-            || ( !current && prev !== current )
-        ) {
-            const formValue = {
-                ...preValues,
-                organizationName: '',
-                ogrn: '',
-                address: '',
-                kpp: '',
-                innNumber: current,
-            } as ShippersCardType
-
-            dispatch(daDataStoreActions.setSuggectionsValues([]))
-            dispatch(shippersStoreActions.setInitialValues(formValue))
-        }
-
-        // запускаем асинхронную валидацию только после синхронной
-        return ( validators.innNumber && validators.innNumber(current) )
-            // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-            || ( current && ( prev !== current ) ? innValidate(current) : undefined )
-    }
+    const innPlusApiValidator = useInnPlusApiValidator<ShippersCardType<string>>(
+        dispatch, shippersStoreActions.setInitialValues,
+        { organizationName: '', ogrn: '', address: '', kpp: '' } as ShippersCardType<string>,
+        true,
+    )
 
     // валидатор на одинаковые названия заголовков
     const titleValidator = ( preValue: string ) => ( currentValue: string ) => {
@@ -266,7 +241,9 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                     <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
                                         {/*отслеживаем и отправляем данные в локальный инит*/ }
                                         <FormSpySimple form={ form }
-                                                       onChange={ formSpyChangeHandlerToLocalInit }/>
+                                                       onChange={ formSpyChangeHandlerToLocalInit }
+                                                       isOnActiveChange
+                                        />
                                         <div
                                             className={ styles.shippersConsigneesForm__inputsPanel + ' ' + styles.shippersConsigneesForm__inputsPanel_titled }>
                                             <Field name={ 'title' }
@@ -284,7 +261,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ isNew ? maskOn.innNumber : undefined }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values) : undefined }
+                                                   validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values as ShippersCardType<string>) : undefined }
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />
