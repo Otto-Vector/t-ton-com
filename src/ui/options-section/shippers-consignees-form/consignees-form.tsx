@@ -173,11 +173,11 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         ) {
             const formValue = {
                 ...preValues,
+                innNumber: current,
                 organizationName: '',
                 ogrn: '',
                 address: '',
                 kpp: '',
-                innNumber: current,
             } as ConsigneesCardType
 
             dispatch(daDataStoreActions.setSuggectionsValues([]))

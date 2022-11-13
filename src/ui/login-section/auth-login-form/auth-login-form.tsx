@@ -30,13 +30,10 @@ import {useNavigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
-import {
-    daDataStoreActions,
-    getOrganizationsByInn,
-    getOrganizationsByInnKPP,
-} from '../../../redux/api/dadata-response-reducer';
+import {daDataStoreActions, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
+import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
 
 
 type OwnProps = {}
@@ -74,8 +71,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const formSpyChangeHandlerToLocalInit = ( values: PhoneSubmitType ) => {
         const [ unmaskedValues, unmaskedInitialValues ] = [ values, localInitialValues ].map(fromFormUnmaskedValues)
         if (!valuesAreEqual(unmaskedValues, unmaskedInitialValues)) {
-            // debugger
-            // dispatch(authStoreActions.setInitialValues(unmaskedValues))
             setLocalInitialValues(unmaskedInitialValues)
         }
     }
@@ -145,30 +140,10 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
         dispatch<any>(newPassword({ phone }))
     }
 
-    // асинхронный валидатор ИНН через АПИ
-    const innValidate = async ( inn: string ) => {
-        return await dispatch<any>(getOrganizationsByInn({ inn: +parseAllNumbers(inn) }))
-    }
-
     // синхронно/асинхронный валидатор на поле ИНН
-    const innPlusApiValidator = ( preValues: PhoneSubmitType ) => ( currentValue?: string ) => {
-        const [ prev, current ] = [ preValues.innNumber, currentValue ].map(parseAllNumbers)
-
-        if (// зачистка авто-полей при невалидном поле, если до этого оно изменилось с валидного
-            ( validators.innNumber && current && prev !== current && validators.innNumber(current) && !validators.innNumber(prev) )
-            // а также при нажатии кнопки зачистки поля
-            || ( !current && prev !== current )
-        ) {
-            // dispatch(authStoreActions.setInitialValues({ ...preValues, kppNumber: '', innNumber: current }))
-            setLocalInitialValues({ ...preValues, kppNumber: '', innNumber: current })
-            dispatch(daDataStoreActions.setSuggectionsValues([]))
-        }
-
-        // запускаем асинхронную валидацию только после синхронной
-        return ( validators.innNumber && validators.innNumber(current) )
-            // отфильтровываем лишние срабатывания (в т.ч. undefined при первом рендере)
-            || ( current && ( prev !== current ) ? innValidate(current) : undefined )
-    }
+    const innPlusApiValidator = useInnPlusApiValidator<PhoneSubmitType<string>>(
+        dispatch, setLocalInitialValues, { kppNumber: '' } as PhoneSubmitType<string>
+    )
 
     useEffect(() => {
         // присваивается автоматически значение из первого селектора
@@ -176,10 +151,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
             const preKey = absoluteInitialValues.kppNumber + '' + absoluteInitialValues.innNumber
             // если предыдущий список селектора не совпадает с выбраным
             if (!kppSelect.find(( { key } ) => key === preKey)) {
-                // dispatch(authStoreActions.setInitialValues({
-                //     ...initialValues,
-                //     kppNumber: kppSelect[0].value,
-                // }))
                 setLocalInitialValues({
                     ...localInitialValues,
                     kppNumber: kppSelect[0].value,
@@ -219,7 +190,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                component={ FormInputType }
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
-                                               validate={ form.getFieldState('innNumber')?.visited ? innPlusApiValidator(values) : undefined }
+                                               validate={ form.getFieldState('innNumber')?.visited ? innPlusApiValidator(values as PhoneSubmitType<string>) : undefined }
                                                disabled={ isAvailableSMS }
                                         />
                                         <FormSelector named={ 'kppNumber' }
