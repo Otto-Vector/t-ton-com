@@ -29,6 +29,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
     const isAuth = useSelector(getIsAuthAuthStore)
+    // проверка на заполненность реквизитов
     const isRequisitesError = useSelector(getIsReqErrorRequisitesStore)
     const unreadMessagesCount = useSelector(getUnreadMessagesCountInfoStore)
     const dispatch = useDispatch()
@@ -44,8 +45,6 @@ export const MenuPanel: React.FC<OwnProps> = () => {
     }
 
     const newRequest = async () => {
-        dispatch(requestStoreActions.setIsNewRequest(true))
-        dispatch(requestStoreActions.setCurrentDistance(null))
         await dispatch<any>(textAndActionGlobalModal({
             text: 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?',
             navigateOnOk: newRequestRoute,

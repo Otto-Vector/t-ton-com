@@ -14,7 +14,7 @@ import {
 import {
     getInitialValuesRequestStore,
     getIsFetchingRequestStore,
-    getIsNewRequestRequestStore,
+
 } from '../../selectors/forms/request-form-reselect';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
@@ -25,9 +25,7 @@ import {ddMmYearFormat} from '../../utils/date-formats';
 import {SizedPreloader} from '../common/preloader/preloader';
 import {valuesAreEqual} from '../../utils/reactMemoUtils';
 
-// type OwnProps = {
-//     mode: 'create' | 'status' | 'history'
-// }
+// type OwnProps = { }
 
 export type RequestModesType = { createMode: boolean, statusMode: boolean, historyMode: boolean, acceptDriverMode: boolean }
 
@@ -50,20 +48,15 @@ export const RequestSection: React.FC = React.memo(() => {
     } ), [ pathname ])
 
     const isFetching = useSelector(getIsFetchingRequestStore)
-    const isNewRequest = useSelector(getIsNewRequestRequestStore) && reqNumber === 'new'
     const initialValues = useSelector(getInitialValuesRequestStore)
     const dispatch = useDispatch()
 
-    const currentRequest = ( requestModes.createMode && isNewRequest ) ? {} as OneRequestType : initialValues
 
     const onSubmit = async ( values: OneRequestType ) => {
-        // debugger
         await dispatch<any>(changeCurrentRequest({ values }))
-        isNewRequest && dispatch(requestStoreActions.setIsNewRequest(false))
     }
 
     const exposeValuesToInitialBuffer = ( values: OneRequestType ) => {
-        isNewRequest && dispatch(requestStoreActions.setIsNewRequest(false))
         dispatch(requestStoreActions.setInitialValues(values))
     }
 
@@ -79,10 +72,9 @@ export const RequestSection: React.FC = React.memo(() => {
 
     const onCancelButton = () => {
         if (requestModes.createMode) {
-            dispatch<any>(deleteCurrentRequestAPI({ requestNumber: +( currentRequest.requestNumber || 0 ) }))
+            dispatch<any>(deleteCurrentRequestAPI({ requestNumber: +( initialValues.requestNumber || 0 ) }))
         }
         navigate(cancelNavigate())
-        dispatch(requestStoreActions.setIsNewRequest(true))
         dispatch(requestStoreActions.setCurrentDistance(null))
     }
 
@@ -90,13 +82,11 @@ export const RequestSection: React.FC = React.memo(() => {
         if (isFirstRender) {
             setTabModes({ ...tabModesInitial, left: true })
 
-            if (requestModes.createMode && isNewRequest) {
+            if (requestModes.createMode) {
                 // запрашиваем (и создаём пустую) номер заявки
                 dispatch<any>(setNewRequestAPI())
                 // обнуляем данные маршрута
                 dispatch(requestStoreActions.setCurrentRoute(null))
-                // отменяем запрос на новую заявку
-                dispatch(requestStoreActions.setIsNewRequest(false))
             }
             if (requestModes.statusMode) {
                 dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
@@ -112,7 +102,7 @@ export const RequestSection: React.FC = React.memo(() => {
     // if (!requestModes.createMode && initialValues.requestNumber) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА !
     // </div>
 
-    const title = `Заявка №${ currentRequest.requestNumber } от ${ ddMmYearFormat(currentRequest.requestDate) }`
+    const title = `Заявка №${ initialValues.requestNumber } от ${ ddMmYearFormat(initialValues.requestDate) }`
 
     return (
         <section className={ styles.requestSection }>
@@ -127,7 +117,7 @@ export const RequestSection: React.FC = React.memo(() => {
                             <div
                                 className={ !tabModes.center ? styles.requestSection__formsWrapper : styles.requestSection__mapsWrapper }>
                                 { tabModes.left && <RequestFormLeft requestModes={ requestModes }
-                                                                    initialValues={ currentRequest }
+                                                                    initialValues={ initialValues }
                                                                     onSubmit={ onSubmit }
                                                                     exposeValues={ exposeValuesToInitialBuffer }
                                 /> }

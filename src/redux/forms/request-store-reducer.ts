@@ -20,7 +20,6 @@ const initialState = {
     currentDistance: 0 as number | null,
     currentDistanceIsFetching: false,
     currentRoute: null as number[][] | null,
-    isNewRequest: true,
 
     label: {
         requestNumber: 'Номер заявки',
@@ -223,12 +222,6 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
                 cargoComposition: action.cargoComposition,
             }
         }
-        case 'request-store-reducer/SET-IS-NEW-REQUEST': {
-            return {
-                ...state,
-                isNewRequest: action.isNewRequest,
-            }
-        }
         default: {
             return state
         }
@@ -250,10 +243,6 @@ export const requestStoreActions = {
     setContent: ( content: OneRequestType[] ) => ( {
         type: 'request-store-reducer/SET-CONTENT',
         content,
-    } as const ),
-    setIsNewRequest: ( isNewRequest: boolean ) => ( {
-        type: 'request-store-reducer/SET-IS-NEW-REQUEST',
-        isNewRequest,
     } as const ),
     setCurrentRequestNumber: ( currentRequestNumber: number | undefined ) => ( {
         type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
@@ -543,7 +532,7 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
 export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
-
+        dispatch(requestStoreActions.setInitialValues({} as OneRequestType))
         try {
             const idUserCustomer = getState().authStoreReducer.authID
             const response = await oneRequestApi.createOneRequest({ idUserCustomer })
@@ -564,10 +553,9 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
 // изменить текущую заявку
 export const changeCurrentRequest = ( { values }: { values: OneRequestType } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        // dispatch(requestStoreActions.setIsFetching(true))
+        dispatch(requestStoreActions.setIsFetching(true))
         try {
             const idUserCustomer = getState().authStoreReducer.authID
-            // const initialValues = getState().requestStoreReducer.initialValues
             const initialValues = values
             const requestNumber = values.requestNumber?.toString() || '0'
             const response = await oneRequestApi.modifyOneRequest({
@@ -639,7 +627,7 @@ export const changeCurrentRequest = ( { values }: { values: OneRequestType } ): 
         } catch (e) {
             alert(e)
         }
-        // dispatch(requestStoreActions.setIsFetching(false))
+        dispatch(requestStoreActions.setIsFetching(false))
     }
 
 export const deleteCurrentRequestAPI = ( { requestNumber }: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
@@ -699,7 +687,6 @@ export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): Req
         } catch (e) {
             alert(e)
             dispatch(requestStoreActions.setCurrentDistance(null))
-            // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
         }
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
     }
