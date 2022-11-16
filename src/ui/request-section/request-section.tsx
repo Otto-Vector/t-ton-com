@@ -48,6 +48,7 @@ export const RequestSection: React.FC = React.memo(() => {
 
     const isFetching = useSelector(getIsFetchingRequestStore)
     const initialValues = useSelector(getInitialValuesRequestStore)
+    const title = `Заявка №${ initialValues.requestNumber } от ${ ddMmYearFormat(initialValues.requestDate) }`
     const dispatch = useDispatch()
 
 
@@ -55,6 +56,7 @@ export const RequestSection: React.FC = React.memo(() => {
         await dispatch<any>(changeCurrentRequest({ values }))
     }
 
+    // для сохранения отображаемых данных при переключении вкладок
     const exposeValuesToInitialBuffer = ( values: OneRequestType ) => {
         dispatch(requestStoreActions.setInitialValues(values))
     }
@@ -94,10 +96,9 @@ export const RequestSection: React.FC = React.memo(() => {
     }, [ isFirstRender ])
 
 
-    // if (!requestModes.createMode && initialValues.requestNumber) return <div><br/><br/> ДАННАЯ ЗАЯВКА НЕДОСТУПНА !
-    // </div>
-
-    const title = `Заявка №${ initialValues.requestNumber } от ${ ddMmYearFormat(initialValues.requestDate) }`
+    if (!requestModes.createMode && initialValues.requestNumber) return <div>
+        <br/><br/> { 'ДАННАЯ ЗАЯВКА НЕДОСТУПНА !' }
+    </div>
 
     return (
         <section className={ styles.requestSection }>
