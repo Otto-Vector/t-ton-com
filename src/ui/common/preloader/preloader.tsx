@@ -11,8 +11,8 @@ export const Preloader: React.FC = () => {
     )
 }
 
-type OwnProps = { sizeHW: string }
-export const SizedPreloader: React.FC<OwnProps> = ( { sizeHW } ) =>
-    <div style={ { height: `${ sizeHW }`, width: `${ sizeHW }` } }>
+type OwnProps = { sizeHW: string, marginH?: string}
+export const SizedPreloader: React.FC<OwnProps> = ( { sizeHW ,marginH} ) =>
+    <div style={ { height: `${ sizeHW }`, width: `${ sizeHW }`, margin: `${marginH || 'auto'} auto` } }>
         <Preloader/>
     </div>

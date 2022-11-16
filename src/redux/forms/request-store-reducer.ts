@@ -8,6 +8,7 @@ import {polyline_decode} from '../../utils/polilyne-decode';
 import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelector.api';
 import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
+import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -284,7 +285,7 @@ export const requestStoreActions = {
 
 /* САНКИ */
 
-export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, RequestStoreActionsType>
+export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, RequestStoreActionsType | GlobalModalActionsType>
 
 
 export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
@@ -410,14 +411,15 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             alert(e)
         }
     }
+
 // забрать данные одной СОЗДАННОЙ заявки от сервера
 export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
+        dispatch(requestStoreActions.setIsFetching(true))
         try {
             const response = await oneRequestApi.getOneRequestById({ requestNumber })
             if (response.length > 0) {
                 let element = response[0]
-
                 dispatch(requestStoreActions.setInitialValues({
                         requestNumber: +element.requestNumber,
                         requestDate: element.requestDate ? new Date(apiToISODateFormat(element.requestDate)) : undefined,
@@ -528,11 +530,13 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
                     }),
                 )
             } else {
-                requestStoreActions.setCurrentRequestNumber(0)
+                console.log('НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №', requestNumber)
             }
         } catch (e) {
-            alert(e)
+            dispatch(globalModalStoreActions.setTextMessage(e as string))
+            dispatch(requestStoreActions.setIsFetching(false))
         }
+        dispatch(requestStoreActions.setIsFetching(false))
     }
 
 // создать одну пустую заявку и вернуть дату и номер создания
@@ -552,7 +556,7 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
                 }))
             }
         } catch (e) {
-            alert(e)
+            dispatch(globalModalStoreActions.setTextMessage(e as string))
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }

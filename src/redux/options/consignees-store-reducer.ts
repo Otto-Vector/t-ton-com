@@ -252,7 +252,7 @@ export const newConsigneeSaveToAPI = ( values: ConsigneesCardType<string> ): Con
             if (response.success) console.log(response.success)
         } catch (e) {
             // @ts-ignore
-            alert(e.response.data.failed)
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data.failed)))
         }
         await dispatch(getAllConsigneesAPI())
     }

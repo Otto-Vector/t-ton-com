@@ -92,9 +92,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         label: title,
         key: idSender,
     } ))
-    // useMemo(
-    //     () => allShippers.filter(( { innNumber } ) => innNumber === requisitesInn)
-    //         .map(( { title } ) => ( { value: title, label: title, key: title } )), [ requisitesInn ])
+
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
     const customersSelect: SelectOptionsType[] = useMemo(() => custumersByUserInn, [ shippersSelect ])
