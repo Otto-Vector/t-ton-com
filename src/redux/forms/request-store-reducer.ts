@@ -551,73 +551,99 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
     }
 
 // изменить текущую заявку
-export const changeCurrentRequest = ( { values }: { values: OneRequestType } ): RequestStoreReducerThunkActionType =>
+export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
         try {
             const idUserCustomer = getState().authStoreReducer.authID
-            const initialValues = values
-            const requestNumber = values.requestNumber?.toString() || '0'
+            const requestNumber = submitValues.requestNumber?.toString() || '0'
             const response = await oneRequestApi.modifyOneRequest({
                     requestNumber,
                     requestDate: undefined, // потому как она уже задана при создании
                     idUserCustomer,
-                    idCustomer: initialValues.idCustomer,
+                    idCustomer: submitValues.idCustomer,
 
-                    cargoComposition: initialValues.cargoComposition,
-                    shipmentDate: yearMmDdFormatISO(initialValues.shipmentDate),
-                    cargoType: initialValues.cargoType,
-                    idSender: initialValues.idSender,
-                    idRecipient: initialValues.idRecipient,
-                    distance: initialValues.distance?.toString(),
-                    note: initialValues.note,
+                    cargoComposition: submitValues.cargoComposition,
+                    shipmentDate: yearMmDdFormatISO(submitValues.shipmentDate),
+                    cargoType: submitValues.cargoType,
+                    idSender: submitValues.idSender,
+                    idRecipient: submitValues.idRecipient,
+                    distance: submitValues.distance?.toString(),
+                    note: submitValues.note,
 
-                    globalStatus: initialValues.globalStatus,
-                    localStatuspaymentHasBeenTransferred: initialValues.localStatus?.paymentHasBeenTransferred,
-                    localStatuscargoHasBeenTransferred: initialValues.localStatus?.cargoHasBeenTransferred,
-                    localStatuspaymentHasBeenReceived: initialValues.localStatus?.paymentHasBeenReceived,
-                    localStatuscargoHasBeenReceived: initialValues.localStatus?.cargoHasBeenReceived,
+                    globalStatus: submitValues.globalStatus,
+                    localStatuspaymentHasBeenTransferred: submitValues.localStatus?.paymentHasBeenTransferred,
+                    localStatuscargoHasBeenTransferred: submitValues.localStatus?.cargoHasBeenTransferred,
+                    localStatuspaymentHasBeenReceived: submitValues.localStatus?.paymentHasBeenReceived,
+                    localStatuscargoHasBeenReceived: submitValues.localStatus?.cargoHasBeenReceived,
 
-                    requestCarrierId: initialValues.requestCarrierId,
-                    idEmployee: initialValues.idEmployee,
-                    idTransport: initialValues.idTransport,
-                    idTrailer: initialValues.idTrailer,
-                    responseStavka: initialValues.responseStavka,
-                    responseTax: initialValues.responseTax,
-                    responsePrice: initialValues.responsePrice,
-                    cargoWeight: initialValues.cargoWeight?.toString(),
-                    uploadTime: initialValues.uploadTime?.toString(),
+                    // idUserSender: submitValues.idUserSender,
+                    titleSender: submitValues.sender.title,
+                    innNumberSender: submitValues.sender.innNumber,
+                    organizationNameSender: submitValues.sender.organizationName,
+                    kppSender: submitValues.sender.kpp,
+                    ogrnSender: submitValues.sender.ogrn,
+                    addressSender: submitValues.sender.address,
+                    shipperFioSender: submitValues.sender.shipperFio,
+                    shipperTelSender: submitValues.sender.shipperTel,
+                    descriptionSender: submitValues.sender.description,
+                    coordinatesSender: submitValues.sender.coordinates,
+                    citySender: submitValues.sender.city,
 
-                    proxyFreightLoader: initialValues.documents?.proxyWay?.proxyFreightLoader,
-                    proxyDriver: initialValues.documents?.proxyWay?.proxyDriver,
-                    proxyWaybillDriver: initialValues.documents?.proxyWay?.waybillDriver,
+                    // idUserRecipient: submitValues.idUserRecipient,
+                    titleRecipient: submitValues.recipient.title,
+                    innNumberRecipient: submitValues.recipient.innNumber,
+                    organizationNameRecipient: submitValues.recipient.organizationName,
+                    kppRecipient: submitValues.recipient.kpp,
+                    ogrnRecipient: submitValues.recipient.ogrn,
+                    addressRecipient: submitValues.recipient.address,
+                    consigneesFioRecipient: submitValues.recipient.consigneesFio,
+                    consigneesTelRecipient: submitValues.recipient.consigneesTel,
+                    descriptionRecipient: submitValues.recipient.description,
+                    coordinatesRecipient: submitValues.recipient.coordinates,
+                    cityRecipient: submitValues.recipient.city,
+
+                    // ответка на заявку
+                    requestCarrierId: submitValues.requestCarrierId,
+                    idEmployee: submitValues.idEmployee,
+                    idTransport: submitValues.idTransport,
+                    idTrailer: submitValues.idTrailer,
+                    responseStavka: submitValues.responseStavka,
+                    responseTax: submitValues.responseTax,
+                    responsePrice: submitValues.responsePrice,
+                    cargoWeight: submitValues.cargoWeight?.toString(),
+                    uploadTime: submitValues.uploadTime?.toString(),
+
+                    proxyFreightLoader: submitValues.documents?.proxyWay?.proxyFreightLoader,
+                    proxyDriver: submitValues.documents?.proxyWay?.proxyDriver,
+                    proxyWaybillDriver: submitValues.documents?.proxyWay?.waybillDriver,
                     // здесь надо будет добавить файл
                     // cargoDocuments: initialValues.documents.cargoDocuments,
 
-                    ttnECPdocumentDownload: initialValues.documents?.ttnECP?.documentDownload,
+                    ttnECPdocumentDownload: submitValues.documents?.ttnECP?.documentDownload,
                     // здесь надо будет добавить файл
                     // ttnECPdocumentUpload: initialValues.documents.ttnECP.documentUpload,
-                    ttnECPcustomerIsSubscribe: initialValues.documents?.ttnECP?.customerIsSubscribe?.toString(),
-                    ttnECPcarrierIsSubscribe: initialValues.documents?.ttnECP?.carrierIsSubscribe?.toString(),
-                    ttnECPconsigneeIsSubscribe: initialValues.documents?.ttnECP?.consigneeIsSubscribe?.toString(),
+                    ttnECPcustomerIsSubscribe: submitValues.documents?.ttnECP?.customerIsSubscribe?.toString(),
+                    ttnECPcarrierIsSubscribe: submitValues.documents?.ttnECP?.carrierIsSubscribe?.toString(),
+                    ttnECPconsigneeIsSubscribe: submitValues.documents?.ttnECP?.consigneeIsSubscribe?.toString(),
 
-                    contractECPdocumentDownload: initialValues.documents?.contractECP?.documentDownload,
+                    contractECPdocumentDownload: submitValues.documents?.contractECP?.documentDownload,
                     // здесь надо будет добавить файл
                     // contractECPdocumentUpload: initialValues.documents.contractECPdocumentUpload,
-                    contractECPcustomerIsSubscribe: initialValues.documents?.contractECP?.customerIsSubscribe?.toString(),
-                    contractECPcarrierIsSubscribe: initialValues.documents?.contractECP?.carrierIsSubscribe?.toString(),
+                    contractECPcustomerIsSubscribe: submitValues.documents?.contractECP?.customerIsSubscribe?.toString(),
+                    contractECPcarrierIsSubscribe: submitValues.documents?.contractECP?.carrierIsSubscribe?.toString(),
 
-                    updECPdocumentDownload: initialValues.documents?.updECP?.documentDownload,
+                    updECPdocumentDownload: submitValues.documents?.updECP?.documentDownload,
                     // здесь надо будет добавить файл
                     // updECPdocumentUpload: initialValues.documents.updECP.documentUpload,
-                    updECPcustomerIsSubscribe: initialValues.documents?.updECP?.customerIsSubscribe?.toString(),
-                    updECPcarrierIsSubscribe: initialValues.documents?.updECP?.carrierIsSubscribe?.toString(),
+                    updECPcustomerIsSubscribe: submitValues.documents?.updECP?.customerIsSubscribe?.toString(),
+                    updECPcarrierIsSubscribe: submitValues.documents?.updECP?.carrierIsSubscribe?.toString(),
 
-                    customerToConsigneeContractECPdocumentDownload: initialValues.documents?.customerToConsigneeContractECP?.documentDownload,
+                    customerToConsigneeContractECPdocumentDownload: submitValues.documents?.customerToConsigneeContractECP?.documentDownload,
                     // здесь надо будет добавить файл
                     // customerToConsigneeContractECPdocumentUpload: initialValues.documents.customerToConsigneeContractECP.documentUpload,
-                    customerToConsigneeContractECPcustomerIsSubscribe: initialValues.documents?.customerToConsigneeContractECP?.customerIsSubscribe?.toString(),
-                    customerToConsigneeContractECPconsigneeIsSubscribe: initialValues.documents?.customerToConsigneeContractECP?.consigneeIsSubscribe?.toString(),
+                    customerToConsigneeContractECPcustomerIsSubscribe: submitValues.documents?.customerToConsigneeContractECP?.customerIsSubscribe?.toString(),
+                    customerToConsigneeContractECPconsigneeIsSubscribe: submitValues.documents?.customerToConsigneeContractECP?.consigneeIsSubscribe?.toString(),
                 },
             )
 

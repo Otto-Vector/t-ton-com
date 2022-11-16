@@ -30,6 +30,7 @@ import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
+    changeCurrentRequest,
     getRouteFromAPI,
     requestStoreActions,
     setCargoCompositionSelector,
@@ -38,8 +39,7 @@ import {shippersStoreActions} from '../../../redux/options/shippers-store-reduce
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
 import {Preloader} from '../../common/preloader/preloader';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
-import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect';
-import {SelectOptionsType, stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
+import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
@@ -47,13 +47,11 @@ import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 type OwnProps = {
     requestModes: RequestModesType,
     initialValues: OneRequestType,
-    onSubmit: ( value: OneRequestType ) => void
-    exposeValues?: ( values: OneRequestType ) => void
 }
 
 export const RequestFormLeft: React.FC<OwnProps> = memo((
     {
-        requestModes, initialValues, onSubmit, exposeValues,
+        requestModes, initialValues,
     } ) => {
 
     const routes = useSelector(getRoutesStore)
@@ -69,7 +67,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
 
     const currentDistance = useSelector(getCurrentDistanceRequestStore)
     const currentDistanceIfFetching = useSelector(getCurrentDistanceIsFetchingRequestStore)
-    const { innNumber: requisitesInn } = useSelector(getStoredValuesRequisitesStore)
 
     const allShippers = useSelector(getAllShippersStore)
     const oneShipper = useSelector(getOneShipperFromLocal)
@@ -83,20 +80,22 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     }
 
     const oneCustomer = allShippers.find(( { idSender } ) => idSender === initialValues.idCustomer)
-    // const oneCustomer = allShippers.find(( { idSender } ) => idSender === '913a4b1d-0b85-4bc2-a9be-5b20f148856f')
     const oneCarrier = allShippers.find(( { idSender } ) => idSender === initialValues.requestCarrierId)
 
-    // toDo: ВСЕ ПОДГРУЗКИ ЧЕРЕЗ БЭК!
-    const custumersByUserInn = allShippers.map(( { title, idSender } ) => ( {
-        value: idSender,
-        label: title,
-        key: idSender,
-    } ))
-
-
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
-    const customersSelect: SelectOptionsType[] = useMemo(() => custumersByUserInn, [ shippersSelect ])
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
+    const customersSelect = shippersSelect
+
+    const onSubmit = async ( values: OneRequestType ) => {
+        await dispatch<any>(changeCurrentRequest(values))
+        console.log(values)
+        debugger
+    }
+
+    // для сохранения отображаемых данных при переключении вкладок
+    const exposeValues = ( values: OneRequestType ) => {
+        dispatch(requestStoreActions.setInitialValues(values))
+    }
 
     const buttonsAction = useMemo(() => ( {
         acceptRequest: async ( values: OneRequestType ) => {
@@ -151,6 +150,14 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             } else {
                 dispatch(requestStoreActions.setCurrentDistance(0))
             }
+            // подгружаем данные в инит при смене грузополучателя/грузоотправителя
+            dispatch(requestStoreActions.setInitialValues({
+                ...initialValues,
+                idSender: oneShipper.idSender,
+                sender: oneShipper,
+                idRecipient: oneConsignee.idRecipient,
+                recipient: oneConsignee,
+            }))
         }
     }, [ oneShipper, oneConsignee ])
 
@@ -261,7 +268,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     />
                                     : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
-                                        { oneCustomer?.title + ', ' + oneCustomer?.city }
+                                        { oneCustomer?.title }
                                     </div>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.customer } mode={ 'inForm' }/>

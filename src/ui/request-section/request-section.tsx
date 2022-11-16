@@ -52,15 +52,6 @@ export const RequestSection: React.FC = React.memo(() => {
     const dispatch = useDispatch()
 
 
-    const onSubmit = async ( values: OneRequestType ) => {
-        await dispatch<any>(changeCurrentRequest({ values }))
-    }
-
-    // для сохранения отображаемых данных при переключении вкладок
-    const exposeValuesToInitialBuffer = ( values: OneRequestType ) => {
-        dispatch(requestStoreActions.setInitialValues(values))
-    }
-
 
     const cancelNavigate = (): To => {
         if (requestModes.statusMode) return routes.searchList
@@ -96,7 +87,7 @@ export const RequestSection: React.FC = React.memo(() => {
     }, [ isFirstRender ])
 
 
-    if (!requestModes.createMode && initialValues.requestNumber) return <div>
+    if (!requestModes.createMode && !initialValues.requestNumber) return <div>
         <br/><br/> { 'ДАННАЯ ЗАЯВКА НЕДОСТУПНА !' }
     </div>
 
@@ -114,8 +105,6 @@ export const RequestSection: React.FC = React.memo(() => {
                                 className={ !tabModes.center ? styles.requestSection__formsWrapper : styles.requestSection__mapsWrapper }>
                                 { tabModes.left && <RequestFormLeft requestModes={ requestModes }
                                                                     initialValues={ initialValues }
-                                                                    onSubmit={ onSubmit }
-                                                                    exposeValues={ exposeValuesToInitialBuffer }
                                 /> }
                                 { tabModes.center && <RequestMapCenter requestModes={ requestModes }/> }
                                 { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
