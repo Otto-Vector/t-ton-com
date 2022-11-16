@@ -11,11 +11,7 @@ import {
     requestStoreActions,
     setNewRequestAPI,
 } from '../../redux/forms/request-store-reducer';
-import {
-    getInitialValuesRequestStore,
-    getIsFetchingRequestStore,
-
-} from '../../selectors/forms/request-form-reselect';
+import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
 import {RequestMapCenter} from './request-map-center/request-map-center';
@@ -31,8 +27,11 @@ export type RequestModesType = { createMode: boolean, statusMode: boolean, histo
 
 export const RequestSection: React.FC = React.memo(() => {
 
-    const tabModesInitial = { left: false, center: false, right: false }
-    const [ tabModes, setTabModes ] = useState({ ...tabModesInitial, left: true })
+    const [ tabModes, setTabModes ] = useState({ left: false, center: false, right: false })
+    const activeTab = useCallback(( tab: 'left' | 'center' | 'right' ) => {
+        setTabModes({ ...{ left: false, center: false, right: false }, [tab]: true })
+    }, [])
+
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
     const routes = useSelector(getRoutesStore)
@@ -60,9 +59,6 @@ export const RequestSection: React.FC = React.memo(() => {
         dispatch(requestStoreActions.setInitialValues(values))
     }
 
-    const activeTab = useCallback(( tab: 'left' | 'center' | 'right' ) => {
-        setTabModes({ ...tabModesInitial, [tab]: true })
-    }, [])
 
     const cancelNavigate = (): To => {
         if (requestModes.statusMode) return routes.searchList
@@ -80,8 +76,7 @@ export const RequestSection: React.FC = React.memo(() => {
 
     useEffect(() => {// должен сработать ТОЛЬКО один раз
         if (isFirstRender) {
-            setTabModes({ ...tabModesInitial, left: true })
-
+            activeTab('left')
             if (requestModes.createMode) {
                 // запрашиваем (и создаём пустую) номер заявки
                 dispatch<any>(setNewRequestAPI())
