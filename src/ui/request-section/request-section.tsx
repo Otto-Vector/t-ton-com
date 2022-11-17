@@ -52,12 +52,12 @@ export const RequestSection: React.FC = React.memo(() => {
     const dispatch = useDispatch()
 
 
-
     const cancelNavigate = (): To => {
         if (requestModes.statusMode) return routes.searchList
         if (requestModes.historyMode) return routes.historyList
         return -1 as To
     }
+
 
     const onCancelButton = () => {
         if (requestModes.createMode) {
@@ -74,7 +74,7 @@ export const RequestSection: React.FC = React.memo(() => {
                 // запрашиваем (и создаём пустую) номер заявки
                 dispatch<any>(setNewRequestAPI())
                 // обнуляем данные маршрута
-                dispatch(requestStoreActions.setCurrentRoute(null))
+                // dispatch(requestStoreActions.setCurrentRoute(null))
             }
             if (requestModes.statusMode) {
                 dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))

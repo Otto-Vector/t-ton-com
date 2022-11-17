@@ -1,5 +1,5 @@
 // для перевода зашифрованной полилинии автодиспетчера в набор координат
-export const polyline_decode = function ( str: string, precision?: number ): number[][] {
+export const polyline_decode = function ( polyline: string, precision?: number ): number[][] {
     let index = 0,
         lat = 0,
         lng = 0,
@@ -15,7 +15,7 @@ export const polyline_decode = function ( str: string, precision?: number ): num
     // track of whether we've hit the end of the string. In each
     // loop iteration, a single coordinate is decoded.
 
-    while (index < str.length) {
+    while (index < polyline.length) {
 
         // Reset shift, result, and byte_var
         byte_var = null;
@@ -23,7 +23,7 @@ export const polyline_decode = function ( str: string, precision?: number ): num
         result = 0;
 
         do {
-            byte_var = str.charCodeAt(index++) - 63;
+            byte_var = polyline.charCodeAt(index++) - 63;
             result |= ( byte_var & 0x1f ) << shift;
             shift += 5;
         } while (byte_var >= 0x20);
@@ -33,7 +33,7 @@ export const polyline_decode = function ( str: string, precision?: number ): num
         shift = result = 0;
 
         do {
-            byte_var = str.charCodeAt(index++) - 63;
+            byte_var = polyline.charCodeAt(index++) - 63;
             result |= ( byte_var & 0x1f ) << shift;
             shift += 5;
         } while (byte_var >= 0x20);

@@ -97,7 +97,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
             action: null,
         },
         {
-            route: routes.options, src: optionsPNG, title: 'Панель настроек (админ)',
+            route: routes.options, src: optionsPNG, title: 'Панель настроек',
             buttonText: 'Настройки', active: !isNewRegistrationRoute && isAuth,
             action: null,
         },

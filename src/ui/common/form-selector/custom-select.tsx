@@ -1,11 +1,12 @@
 import styles from './form-selector.module.scss'
-import Select, {GroupBase} from 'react-select';
+import Select, {ControlProps, GroupBase} from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import {SelectComponents} from 'react-select/dist/declarations/src/components';
 import {components} from './form-selector-creatable-corrector';
 import {FieldRenderProps} from 'react-final-form';
 import {SelectOptionsType} from './selector-utils';
 import {useCallback} from 'react';
+import {StylesConfigFunction} from 'react-select/dist/declarations/src/styles';
 
 export const CustomSelect = ( {
                                   input,
@@ -26,7 +27,7 @@ export const CustomSelect = ( {
     const handleChange = useCallback(( option: SelectOptionsType | null ) => {
         input.onChange(option?.value)
         if (handleChanger) handleChanger(option?.value)
-    }, [handleChanger])
+    }, [ handleChanger ])
 
     const isMultiHandleChange = useCallback(( option: SelectOptionsType[] ) => {
         const value = option.map(( { value } ) => value).join(', ')
@@ -50,7 +51,13 @@ export const CustomSelect = ( {
     const optionsCurrent = useCallback(( inputValue: string ) => {
         return options ? options.find(( option: SelectOptionsType ) => option.value === inputValue) : ''
     }, [ options ])
+
     const isError = ( meta.error || meta.submitError ) && meta.touched
+
+    const styleControl: StylesConfigFunction<ControlProps<any, any, GroupBase<any>>> = ( baseStyles ) => ( {
+        ...baseStyles,
+        borderColor: isError ? '#C70707BF' : '#92ABC8',
+    } )
 
     return (
         <>
@@ -58,6 +65,7 @@ export const CustomSelect = ( {
                 ?
                 <CreatableSelect
                     { ...input }
+                    styles={ { control: styleControl } }
                     // для изменяемого input при вводе нового значения
                     components={ components as Partial<SelectComponents<any, boolean, GroupBase<unknown>>> }
                     isClearable={ isClearable }
@@ -76,6 +84,7 @@ export const CustomSelect = ( {
                 />
                 : <Select
                     { ...input }
+                    styles={ { control: styleControl } }
                     isClearable={ isClearable }
                     aria-invalid={ 'grammar' }
                     classNamePrefix={ 'react-select-ton' }

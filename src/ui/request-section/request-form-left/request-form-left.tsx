@@ -88,8 +88,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
 
     const onSubmit = async ( values: OneRequestType ) => {
         await dispatch<any>(changeCurrentRequest(values))
-        console.log(values)
-        debugger
     }
 
     // для сохранения отображаемых данных при переключении вкладок
@@ -105,12 +103,12 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             navigate(-1)
         },
         submitRequestAndSearch: async ( values: OneRequestType ) => {
-            // сабмит запускается сам формой react-final-form в переднных ей параметрах
+            // сабмит запускается сам формой react-final-form в переданных ей параметрах
             await onSubmit(values)
             navigate(routes.searchList)
         },
         submitRequestAndDrive: async ( values: OneRequestType ) => {
-            // сабмит запускается сам формой react-final-form в переднных ей параметрах
+            // сабмит запускается сам формой react-final-form в переданных ей параметрах
             await onSubmit(values)
             navigate(routes.addDriver)
         },
@@ -143,21 +141,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         if (requestModes.createMode && !isFirstRender) {
             if (oneShipper.idSender && oneConsignee.idRecipient) {
                 dispatch<any>(
-                    getRouteFromAPI({
-                        from: oneShipper.coordinates as string,
-                        to: oneConsignee.coordinates as string,
-                    }))
+                    getRouteFromAPI({ oneShipper, oneConsignee }))
             } else {
                 dispatch(requestStoreActions.setCurrentDistance(0))
             }
-            // подгружаем данные в инит при смене грузополучателя/грузоотправителя
-            dispatch(requestStoreActions.setInitialValues({
-                ...initialValues,
-                idSender: oneShipper.idSender,
-                sender: oneShipper,
-                idRecipient: oneConsignee.idRecipient,
-                recipient: oneConsignee,
-            }))
         }
     }, [ oneShipper, oneConsignee ])
 
@@ -347,14 +334,14 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 { !requestModes.historyMode ? <>
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ 'green' }
-                                                type={ 'button' }
+                                                type={ 'submit' }
                                                 title={ requestModes.statusMode ? 'Принять заявку' : 'Поиск исполнителя' }
-                                                onClick={ () => {
-                                                    requestModes.statusMode
-                                                        ? buttonsAction.acceptRequest(values)
-                                                        : buttonsAction.submitRequestAndSearch(values)
-                                                } }
-                                                disabled={ hasValidationErrors }
+                                            // onClick={ () => {
+                                            //     !hasValidationErrors && requestModes.statusMode
+                                            //         ? buttonsAction.acceptRequest(values)
+                                            //         : buttonsAction.submitRequestAndSearch(values)
+                                            // } }
+                                                disabled={ submitting || submitError }
                                                 rounded/>
                                     </div>
                                     <div className={ styles.requestFormLeft__panelButton }>

@@ -1,10 +1,16 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {CargoTypeType, DocumentsRequestType, OneRequestType, ValidateType} from '../../types/form-types'
+import {
+    CargoTypeType,
+    ConsigneesCardType,
+    DocumentsRequestType,
+    OneRequestType,
+    ShippersCardType,
+    ValidateType,
+} from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
 import {initialDocumentsRequestValues} from '../../initials-test-data';
-import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
-import {polyline_decode} from '../../utils/polilyne-decode';
+import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
 import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelector.api';
 import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
@@ -19,7 +25,6 @@ const initialState = {
     currentRequestNumber: undefined as undefined | number,
     currentDistance: 0 as number | null,
     currentDistanceIsFetching: false,
-    currentRoute: null as number[][] | null,
 
     label: {
         requestNumber: 'Номер заявки',
@@ -213,7 +218,8 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
         case 'request-store-reducer/SET-CURRENT-ROUTE': {
             return {
                 ...state,
-                currentRoute: action.currentRoute,
+                initialValues: { ...state.initialValues, route: action.currentRoute },
+                // currentRoute: action.currentRoute,
             }
         }
         case 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR': {
@@ -253,7 +259,7 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE',
         currentDistance,
     } as const ),
-    setCurrentRoute: ( currentRoute: number[][] | null ) => ( {
+    setCurrentRoute: ( currentRoute: string | undefined ) => ( {
         type: 'request-store-reducer/SET-CURRENT-ROUTE',
         currentRoute,
     } as const ),
@@ -328,6 +334,7 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
                         },
 
                         distance: Number(elem.distance),
+                        route: elem.route,
                         note: elem.note,
                         visible: true,
                         marked: false,
@@ -451,7 +458,9 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
                             coordinates: element.coordinatesRecipient,
                             city: element.cityRecipient,
                         },
+
                         distance: Number(element.distance),
+                        route: element.route,
                         note: element.note,
                         visible: true,
                         marked: false,
@@ -569,6 +578,7 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
                     idSender: submitValues.idSender,
                     idRecipient: submitValues.idRecipient,
                     distance: submitValues.distance?.toString(),
+                    route: submitValues.route,
                     note: submitValues.note,
 
                     globalStatus: submitValues.globalStatus,
@@ -696,22 +706,34 @@ export const setCargoCompositionSelector = ( newCargoCompositionItem: string ): 
         }
     }
 
-export const getRouteFromAPI = ( { from, to }: GetAvtodispetcherRouteType ): RequestStoreReducerThunkActionType =>
+export const getRouteFromAPI = ( {
+                                     oneShipper,
+                                     oneConsignee,
+                                 }: { oneShipper: ShippersCardType, oneConsignee: ConsigneesCardType } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(true))
         try {
-            const response = await getRouteFromAvtodispetcherApi({ from, to })
+            const initialValues = getState().requestStoreReducer.initialValues
+            const response = await getRouteFromAvtodispetcherApi({
+                from: oneShipper.coordinates || '',
+                to: oneConsignee.coordinates || '',
+            })
 
             dispatch(requestStoreActions.setCurrentDistance(
                 +( +response.kilometers * getState().appStoreReducer.distanceCoefficient ).toFixed(0)))
 
-            // переводим зашифрованную строку polyline в массив координат и записываем в стэйт
-            dispatch(requestStoreActions.setCurrentRoute(
-                polyline_decode(response.polyline),
-            ))
-
+            // записываем изменения селекторов и прилепляем данные грузоотправителя и грузополучателя
+            dispatch(requestStoreActions.setInitialValues({
+                ...initialValues,
+                idSender: oneShipper.idSender,
+                sender: oneShipper,
+                idRecipient: oneConsignee.idRecipient,
+                recipient: oneConsignee,
+                route: response.polyline,
+            }))
         } catch (e) {
-            alert(e)
+            dispatch(globalModalStoreActions.setTextMessage(e as string))
+            dispatch(requestStoreActions.setCurrentRoute(''))
             dispatch(requestStoreActions.setCurrentDistance(null))
         }
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))

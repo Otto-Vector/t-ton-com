@@ -4,7 +4,10 @@ import styles from './request-map-center.module.scss'
 import {RequestModesType} from '../request-section';
 import {YandexMapWithRoute} from '../../common/yandex-map-component/yandex-map-component';
 import {useSelector} from 'react-redux';
-import {getInitialDistanceRequestStore, getRouteRequestStore} from '../../../selectors/forms/request-form-reselect';
+import {
+    getInitialDistanceRequestStore,
+    getRoutesParsedFromPolylineRequestStore,
+} from '../../../selectors/forms/request-form-reselect';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 type OwnProps = {
@@ -17,7 +20,7 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes } ) =>
     let testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]
 
     const distance = useSelector(getInitialDistanceRequestStore) || 0
-    const route = useSelector(getRouteRequestStore) || testLine
+    const route = useSelector(getRoutesParsedFromPolylineRequestStore) || testLine
     const routeCenterIndex = route ? Math.ceil(route.length / 2) : 0
     const center = route !== testLine ? route[routeCenterIndex] as [ number, number ] : testCenter
 

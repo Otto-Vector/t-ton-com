@@ -13,6 +13,7 @@ export const parseAllNumbers = ( val: parsePropType ) =>
 export const removeFirstSevenOrEight = ( val: parsePropType ) =>
     val?.replace(/^(\+7\s\([78])/, '+7 (') || ''
 
+// для отсмотра состояния парсера на разных этапах обработки
 const toConsole = ( val: parsePropType ) => {
     console.log(val)
     return val || ''

@@ -2,6 +2,7 @@ import {AppStateType} from '../../redux/redux-store'
 import {RequestStoreReducerStateType} from '../../redux/forms/request-store-reducer';
 import {createSelector} from 'reselect';
 import {OneRequestType} from '../../types/form-types';
+import {polyline_decode} from '../../utils/polilyne-decode';
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
@@ -19,7 +20,7 @@ export const getValidatorsRequestStore: RequestStoreSelectors<'validators'> = ( 
 export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state ) => state.requestStoreReducer.content
 export const getCurrentDistanceRequestStore: RequestStoreSelectors<'currentDistance'> = ( state ) => state.requestStoreReducer.currentDistance
 export const getCurrentDistanceIsFetchingRequestStore: RequestStoreSelectors<'currentDistanceIsFetching'> = ( state ) => state.requestStoreReducer.currentDistanceIsFetching
-export const getRouteRequestStore: RequestStoreSelectors<'currentRoute'> = ( state ) => state.requestStoreReducer.currentRoute
+export const getPolylineRouteRequestStore = ( state: AppStateType )=> state.requestStoreReducer.initialValues.route
 export const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state ) => state.requestStoreReducer.currentRequestNumber
 
 export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
@@ -28,3 +29,6 @@ export const getOneRequestStore = createSelector(getAllRequestStore, getCurrentR
     ( content, numberValue ): OneRequestType => {
         return content?.filter(( { requestNumber } ) => requestNumber === numberValue)[0]
     })
+
+export const getRoutesParsedFromPolylineRequestStore = createSelector(getPolylineRouteRequestStore,
+    (polyline): number[][]  | undefined => polyline ? polyline_decode(polyline): undefined)
