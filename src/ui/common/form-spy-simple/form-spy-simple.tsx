@@ -5,7 +5,9 @@ import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 type Props = {
     onChange?: ( props: any ) => void
     form: any
+    // реагирует на изменения, если все поля обработаны без ошибок
     isOnValidChange?: boolean
+    // реагирует на изменения, при переходе из одного поля в другое
     isOnActiveChange?: boolean
 }
 

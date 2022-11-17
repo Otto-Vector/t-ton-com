@@ -334,24 +334,28 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 { !requestModes.historyMode ? <>
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ 'green' }
-                                                type={ 'submit' }
+                                                type={ hasValidationErrors ? 'submit' : 'button' }
                                                 title={ requestModes.statusMode ? 'Принять заявку' : 'Поиск исполнителя' }
-                                            // onClick={ () => {
-                                            //     !hasValidationErrors && requestModes.statusMode
-                                            //         ? buttonsAction.acceptRequest(values)
-                                            //         : buttonsAction.submitRequestAndSearch(values)
-                                            // } }
+                                                onClick={ () => {
+                                                    !hasValidationErrors &&
+                                                    ( requestModes.statusMode
+                                                            ? buttonsAction.acceptRequest(values)
+                                                            : buttonsAction.submitRequestAndSearch(values)
+                                                    )
+                                                } }
                                                 disabled={ submitting || submitError }
                                                 rounded/>
                                     </div>
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ requestModes.statusMode ? 'red' : 'blue' }
-                                                type={ 'button' }
+                                                type={ hasValidationErrors ? 'submit' : 'button' }
                                                 title={ requestModes.statusMode ? 'Отказаться' : 'Cамовывоз' }
                                                 onClick={ () => {
-                                                    requestModes.statusMode
-                                                        ? buttonsAction.cancelRequest()
-                                                        : buttonsAction.submitRequestAndDrive(values)
+                                                    !hasValidationErrors &&
+                                                    ( requestModes.statusMode
+                                                            ? buttonsAction.cancelRequest()
+                                                            : buttonsAction.submitRequestAndDrive(values)
+                                                    )
                                                 } }
                                                 disabled={ hasValidationErrors }
                                                 rounded/>
