@@ -4,6 +4,7 @@ import './react-select-ton.scss'
 import {Field} from 'react-final-form'
 import {CustomSelect} from './custom-select';
 import {SelectOptionsType} from './selector-utils';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 
 type OwnProps = {
@@ -25,7 +26,7 @@ type OwnProps = {
 
 
 // передача в обработчик react-form
-export const FormSelector: React.FC<OwnProps> = ( {
+export const FormSelector: React.FC<OwnProps> = React.memo (( {
                                                       values,
                                                       named,
                                                       label,
@@ -68,6 +69,6 @@ export const FormSelector: React.FC<OwnProps> = ( {
             ) }
         </Field>
     </div>
-}
+}, valuesAreEqual)
 
 
