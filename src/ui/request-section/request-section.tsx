@@ -13,6 +13,8 @@ import {RequestFormLeft} from './request-form-left/request-form-left';
 import {ddMmYearFormat} from '../../utils/date-formats';
 import {SizedPreloader} from '../common/preloader/preloader';
 import {valuesAreEqual} from '../../utils/reactMemoUtils';
+import {getOneEmployeeFromAPI} from '../../redux/options/employees-store-reducer';
+import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect';
 
 // type OwnProps = { }
 
@@ -41,6 +43,7 @@ export const RequestSection: React.FC = React.memo(() => {
 
     const isFetching = useSelector(getIsFetchingRequestStore)
     const initialValues = useSelector(getInitialValuesRequestStore)
+    const oneEmployee = useSelector(getInitialValuesEmployeesStore)
     const title = `Заявка №${ initialValues.requestNumber } от ${ ddMmYearFormat(initialValues.requestDate) }`
     const dispatch = useDispatch()
 
@@ -71,7 +74,9 @@ export const RequestSection: React.FC = React.memo(() => {
             if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
                 dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
             }
-
+            if (requestModes.statusMode) { // для прогрузки данных искомого водителя в форму
+                dispatch<any>(getOneEmployeeFromAPI)
+            }
             setIsFirstRender(false)
         }
     }, [ isFirstRender ])
@@ -96,7 +101,9 @@ export const RequestSection: React.FC = React.memo(() => {
                                 { tabModes.left && <RequestFormLeft requestModes={ requestModes }
                                                                     initialValues={ initialValues }
                                 /> }
-                                { tabModes.center && <RequestMapCenter requestModes={ requestModes }/> }
+                                { tabModes.center && <RequestMapCenter requestModes={ requestModes }
+                                                                       driverCoords={ oneEmployee.coordinates }
+                                /> }
                                 { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
                             </div>
 

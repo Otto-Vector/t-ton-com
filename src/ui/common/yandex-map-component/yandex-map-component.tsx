@@ -117,6 +117,7 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center, zoom, chi
 
 type ToRouteMap = {
     center: [ number, number ]
+    driverHere?: [ number, number ]
     polyline: number[][]
     bounds?: MapState['bounds']
     zoom?: number
@@ -125,18 +126,25 @@ type ToRouteMap = {
 
 
 // карта с отрисованным маршрутом
-export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( { center, polyline, zoom = 5, bounds, maxZoom } ) => {
+export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( {
+                                                                         driverHere,
+                                                                         center,
+                                                                         polyline,
+                                                                         zoom = 5,
+                                                                         bounds,
+                                                                         maxZoom,
+                                                                     } ) => {
 
     return (
         <YandexMapComponent
-            maxZoom={maxZoom}
+            maxZoom={ maxZoom }
             state={ {
                 center,
                 zoom,
                 bounds: bounds as undefined,
             } }
         >
-            <Placemark geometry={ center }/>
+            { driverHere && <Placemark geometry={ driverHere }/> }
             <Polyline geometry={ polyline }
                       options={ { strokeColor: '#023E8A', strokeWidth: 4, opacity: 0.8 } }
             />

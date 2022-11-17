@@ -3,8 +3,6 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
 import {coordsToString, syncParsers} from '../../utils/parsers';
-import {GetOrganizationByInnDaDataType} from '../../api/external-api/dadata.api';
-import {getOrganizationsByInn} from '../api/dadata-response-reducer';
 import {consigneesApi} from '../../api/local-api/options/consignees.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
@@ -277,7 +275,7 @@ export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): C
         await dispatch(getAllConsigneesAPI())
     }
 
-
+// УДАЛИТЬ одного ГРУЗОполучателя
 export const oneConsigneeDeleteToAPI = ( idRecipient: string | null ): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
@@ -290,4 +288,20 @@ export const oneConsigneeDeleteToAPI = ( idRecipient: string | null ): Consignee
             alert(JSON.stringify(e.response.data))
         }
         await dispatch(getAllConsigneesAPI())
+    }
+
+// ЗАПРОСИТЬ одного ГРУЗОполучателя
+export const getOneConsigneeFromAPI = ( idRecipient: string | null ): ConsigneesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            if (idRecipient) {
+                const response = await consigneesApi.getOneConsigneeById({ idRecipient })
+                if (response.message) console.log(response.message)
+                const oneConsignee = response[0]
+                dispatch(consigneesStoreActions.setInitialValues(oneConsignee))
+            }
+        } catch (e) {
+            // @ts-ignore
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+        }
     }

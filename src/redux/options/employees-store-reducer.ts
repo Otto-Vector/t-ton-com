@@ -79,6 +79,12 @@ export const employeesStoreReducer = ( state = initialState, action: ActionsType
 
     switch (action.type) {
 
+        case 'employees-store-reducer/SET-INITIAL-VALUES': {
+            return {
+                ...state,
+                initialValues: action.initialValues,
+            }
+        }
         case 'employees-store-reducer/SET-CURRENT-ID': {
             return {
                 ...state,
@@ -119,6 +125,10 @@ export const employeesStoreActions = {
     toggleEmployeeIsFetching: ( employeeIsFetching: boolean ) => ( {
         type: 'employees-store-reducer/TOGGLE-EMPLOYEE-IS-FETCHING',
         employeeIsFetching,
+    } as const ),
+    setInitialValues: ( initialValues: EmployeesCardType ) => ( {
+        type: 'employees-store-reducer/SET-INITIAL-VALUES',
+        initialValues,
     } as const ),
 }
 
@@ -190,12 +200,29 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
         await dispatch(getAllEmployeesAPI())
     }
 
-// удаляем один ПРИЦЕП
+// удаляем одного СОТРУДНИКА
 export const oneEmployeesDeleteToAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await employeesApi.deleteOneEmployee({ idEmployee })
             if (response.message) console.log(response.message)
+        } catch (e) {
+            // @ts-ignore
+            alert(JSON.stringify(e.response.data))
+        }
+        await dispatch(getAllEmployeesAPI())
+    }
+
+export const getOneEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await employeesApi.getOneEmployeeById({ idEmployee })
+            if (response.message) console.log(response.message)
+            if (response.length > 0) {
+                const oneEmployee = response[0]
+                dispatch(employeesStoreActions.setInitialValues(oneEmployee))
+            }
+
         } catch (e) {
             // @ts-ignore
             alert(JSON.stringify(e.response.data))

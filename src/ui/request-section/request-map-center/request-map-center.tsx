@@ -9,12 +9,14 @@ import {
     getRoutesParsedFromPolylineRequestStore,
 } from '../../../selectors/forms/request-form-reselect';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {stringToCoords} from '../../../utils/parsers';
 
 type OwnProps = {
     requestModes: RequestModesType,
+    driverCoords?: string
 }
 
-export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes } ) => {
+export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, driverCoords } ) => {
 
     let testCenter: [ number, number ] = [ 55.5907807700034, 84.09127066601563 ]
     let testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]
@@ -26,7 +28,8 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes } ) =>
 
     // bounds почему-то не всегда отрабатывает поставил зум вручную
     // const zoomCoords = [route[0],route[route.length-1]]
-    const maxZoom = requestModes.acceptDriverMode ? 11 : undefined
+    const maxZoom = requestModes.acceptDriverMode ? 10 : undefined
+    const driverHere = !requestModes.acceptDriverMode && driverCoords ? stringToCoords(driverCoords) : undefined
     const zoom = ( distance < 200 ) ? 9 : ( distance > 2000 ) ? 4 : 6
 
     return (
@@ -35,7 +38,8 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes } ) =>
                 <YandexMapWithRoute center={ center }
                                     polyline={ route || testLine }
                                     zoom={ zoom }
-                                    maxZoom={maxZoom}
+                                    maxZoom={ maxZoom }
+                                    driverHere={ driverHere }
                     // bounds={zoomCoords}
                 />
             </div>
