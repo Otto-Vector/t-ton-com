@@ -18,9 +18,9 @@ export const getPlaceholderRequestStore: RequestStoreSelectors<'placeholder'> = 
 export const getValidatorsRequestStore: RequestStoreSelectors<'validators'> = ( state ) => state.requestStoreReducer.validators
 
 export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state ) => state.requestStoreReducer.content
-export const getCurrentDistanceRequestStore: RequestStoreSelectors<'currentDistance'> = ( state ) => state.requestStoreReducer.currentDistance
+export const getCurrentDistanceRequestStore = ( state: AppStateType ) => state.requestStoreReducer.initialValues.distance
 export const getCurrentDistanceIsFetchingRequestStore: RequestStoreSelectors<'currentDistanceIsFetching'> = ( state ) => state.requestStoreReducer.currentDistanceIsFetching
-export const getPolylineRouteRequestStore = ( state: AppStateType )=> state.requestStoreReducer.initialValues.route
+export const getPolylineRouteRequestStore = ( state: AppStateType ) => state.requestStoreReducer.initialValues.route
 export const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state ) => state.requestStoreReducer.currentRequestNumber
 
 export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
@@ -31,4 +31,4 @@ export const getOneRequestStore = createSelector(getAllRequestStore, getCurrentR
     })
 
 export const getRoutesParsedFromPolylineRequestStore = createSelector(getPolylineRouteRequestStore,
-    (polyline): number[][]  | undefined => polyline ? polyline_decode(polyline): undefined)
+    ( polyline ): number[][] | undefined => polyline ? polyline_decode(polyline) : undefined)

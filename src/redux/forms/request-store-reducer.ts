@@ -23,7 +23,6 @@ const initialState = {
     requestIsFetching: false,
     cargoComposition: [] as string[],
     currentRequestNumber: undefined as undefined | number,
-    currentDistance: 0 as number | null,
     currentDistanceIsFetching: false,
 
     label: {
@@ -203,23 +202,10 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
                         ? { ...oneRequest, visible: !oneRequest.visible } : oneRequest) ],
             }
         }
-        case 'request-store-reducer/SET-CURRENT-DISTANCE': {
-            return {
-                ...state,
-                currentDistance: action.currentDistance,
-            }
-        }
         case 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING': {
             return {
                 ...state,
                 currentDistanceIsFetching: action.isFetching,
-            }
-        }
-        case 'request-store-reducer/SET-CURRENT-ROUTE': {
-            return {
-                ...state,
-                initialValues: { ...state.initialValues, route: action.currentRoute },
-                // currentRoute: action.currentRoute,
             }
         }
         case 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR': {
@@ -253,15 +239,6 @@ export const requestStoreActions = {
     setCurrentRequestNumber: ( currentRequestNumber: number | undefined ) => ( {
         type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
         currentRequestNumber,
-    } as const ),
-    // дистанция в километрах, отображаемая в форме ввода заявки
-    setCurrentDistance: ( currentDistance: number | null ) => ( {
-        type: 'request-store-reducer/SET-CURRENT-DISTANCE',
-        currentDistance,
-    } as const ),
-    setCurrentRoute: ( currentRoute: string | undefined ) => ( {
-        type: 'request-store-reducer/SET-CURRENT-ROUTE',
-        currentRoute,
     } as const ),
     setCurrentDistanceIsFetching: ( isFetching: boolean ) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING',
@@ -712,15 +689,14 @@ export const getRouteFromAPI = ( {
                                  }: { oneShipper: ShippersCardType, oneConsignee: ConsigneesCardType } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(true))
+        const initialValues = getState().requestStoreReducer.initialValues
         try {
-            const initialValues = getState().requestStoreReducer.initialValues
             const response = await getRouteFromAvtodispetcherApi({
                 from: oneShipper.coordinates || '',
                 to: oneConsignee.coordinates || '',
             })
 
-            dispatch(requestStoreActions.setCurrentDistance(
-                +( +response.kilometers * getState().appStoreReducer.distanceCoefficient ).toFixed(0)))
+            const distance = +( +response.kilometers * getState().appStoreReducer.distanceCoefficient ).toFixed(0)
 
             // записываем изменения селекторов и прилепляем данные грузоотправителя и грузополучателя
             dispatch(requestStoreActions.setInitialValues({
@@ -730,11 +706,13 @@ export const getRouteFromAPI = ( {
                 idRecipient: oneConsignee.idRecipient,
                 recipient: oneConsignee,
                 route: response.polyline,
+                distance,
             }))
         } catch (e) {
             dispatch(globalModalStoreActions.setTextMessage(e as string))
-            dispatch(requestStoreActions.setCurrentRoute(''))
-            dispatch(requestStoreActions.setCurrentDistance(null))
+            dispatch(requestStoreActions.setInitialValues({
+                ...initialValues, route: '', distance: 0,
+            }))
         }
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
     }

@@ -126,8 +126,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 dispatch(consigneesStoreActions.setCurrentId(''))
             }
 
-            if (currentDistance) dispatch(requestStoreActions.setCurrentDistance(0))
-
             if (requestModes.historyMode) {
                 dispatch(shippersStoreActions.setCurrentId(initialValues.idSender + ''))
                 dispatch(consigneesStoreActions.setCurrentId(initialValues.idRecipient + ''))
@@ -142,8 +140,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             if (oneShipper.idSender && oneConsignee.idRecipient) {
                 dispatch<any>(
                     getRouteFromAPI({ oneShipper, oneConsignee }))
-            } else {
-                dispatch(requestStoreActions.setCurrentDistance(0))
             }
         }
     }, [ oneShipper, oneConsignee ])
@@ -199,7 +195,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                resetFieldBy={ form }
                                                inputType={ 'date' }
                                                value={ yearMmDdFormat(initialValues.shipmentDate || new Date()) }
-                                               min={ yearMmDdFormat(new Date()) } // для ввода от сегодняшнего дня value обязателен
+                                               min={ yearMmDdFormat(new Date()) }// для ввода от сегодняшнего дня value обязателен
                                                validate={ validators.shipmentDate }
                                                errorBottom
                                         />
@@ -214,13 +210,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                         { labels.distance }</label>
                                     <div className={ styles.requestFormLeft__info }>
                                         {
-                                            !currentDistanceIfFetching ?
-                                                (
-                                                    // корявый, но рабочий костыль toDo: cделать по феншую
-                                                    ( values.distance = currentDistance || initialValues.distance )
-                                                    // currentDistance
-                                                    || placehoders.distance
-                                                )
+                                            !currentDistanceIfFetching
+                                                ? ( values.distance || placehoders.distance )
                                                 : <Preloader/>
                                         }
                                     </div>

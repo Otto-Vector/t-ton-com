@@ -5,10 +5,8 @@ import {useDispatch, useSelector} from 'react-redux'
 import {To, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {
-    changeCurrentRequest,
     deleteCurrentRequestAPI,
     getOneRequestsAPI,
-    requestStoreActions,
     setNewRequestAPI,
 } from '../../redux/forms/request-store-reducer';
 import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect';
@@ -16,7 +14,6 @@ import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
 import {RequestMapCenter} from './request-map-center/request-map-center';
 import {RequestFormLeft} from './request-form-left/request-form-left';
-import {OneRequestType} from '../../types/form-types';
 import {ddMmYearFormat} from '../../utils/date-formats';
 import {SizedPreloader} from '../common/preloader/preloader';
 import {valuesAreEqual} from '../../utils/reactMemoUtils';
@@ -64,8 +61,8 @@ export const RequestSection: React.FC = React.memo(() => {
             dispatch<any>(deleteCurrentRequestAPI({ requestNumber: +( initialValues.requestNumber || 0 ) }))
         }
         navigate(cancelNavigate())
-        dispatch(requestStoreActions.setCurrentDistance(null))
     }
+
 
     useEffect(() => {// должен сработать ТОЛЬКО один раз
         if (isFirstRender) {
@@ -73,8 +70,6 @@ export const RequestSection: React.FC = React.memo(() => {
             if (requestModes.createMode) {
                 // запрашиваем (и создаём пустую) номер заявки
                 dispatch<any>(setNewRequestAPI())
-                // обнуляем данные маршрута
-                // dispatch(requestStoreActions.setCurrentRoute(null))
             }
             if (requestModes.statusMode) {
                 dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
