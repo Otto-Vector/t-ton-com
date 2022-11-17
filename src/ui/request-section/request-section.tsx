@@ -68,7 +68,7 @@ export const RequestSection: React.FC = React.memo(() => {
         if (isFirstRender) {
             activeTab('left')
             if (requestModes.createMode) {
-                // запрашиваем (и создаём пустую) номер заявки
+                // создаём пустую и записываем номер заявки
                 dispatch<any>(setNewRequestAPI())
             }
             if (requestModes.statusMode) {

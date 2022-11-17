@@ -522,7 +522,7 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
         try {
             const idUserCustomer = getState().authStoreReducer.authID
             const response = await oneRequestApi.createOneRequest({ idUserCustomer })
-            // debugger
+
             if (response.success) {
                 dispatch(requestStoreActions.setInitialValues({
                     ...getState().requestStoreReducer.initialValues,
