@@ -3,6 +3,7 @@ import styles from './form-input-type.module.scss'
 import {FieldState, FormApi} from 'final-form'
 import NumberFormat from 'react-number-format';
 import ReactInputMask from 'react-input-mask';
+import {valuesAreEqualFormInput} from '../../../utils/reactMemoUtils';
 
 
 type OwnProps = {
@@ -36,7 +37,7 @@ type OwnProps = {
 }
 
 
-export const FormInputType: React.FC<OwnProps> = (
+export const FormInputType: React.FC<OwnProps> = React.memo ((
     {
         input, meta, resetFieldBy, placeholder,
         children, disabled = false, mask = '_', maskFormat,
@@ -127,5 +128,4 @@ export const FormInputType: React.FC<OwnProps> = (
             }</span> ) }
         </div>
     )
-}
-
+}, valuesAreEqualFormInput)

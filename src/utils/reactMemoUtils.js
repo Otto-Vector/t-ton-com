@@ -10,6 +10,12 @@ export const valuesAreEqual = (prevProps, nextProps) => {
     return prevValue === nextValue
 }
 
+export const valuesAreEqualFormInput = (prevProps, nextProps) => {
+    const prevValue = JSON.stringify({...prevProps, children: null, resetFieldBy: null})
+    const nextValue = JSON.stringify({...nextProps, children: null, resetFieldBy: null})
+    return prevValue === nextValue
+}
+
 // type PropsAreEqualType<FormData = AnyObject> = (
 //     prevProps: FormRenderProps<FormData>,
 //     nextProps: FormRenderProps<FormData>,
