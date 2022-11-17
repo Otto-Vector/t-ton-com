@@ -127,7 +127,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <label
                                                     className={ styles.addDriversForm__label }>
                                                     { label.idEmployee + ':' }</label>
-                                                <FormSelector named={ 'driverFIO' }
+                                                <FormSelector nameForSelector={ 'driverFIO' }
                                                               placeholder={ placeholder.idEmployee }
                                                               values={ employeesSelect }
                                                               validate={ validators.idEmployee }
@@ -138,7 +138,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <label
                                                     className={ styles.addDriversForm__label }>
                                                     { label.idTransport + ':' }</label>
-                                                <FormSelector named={ 'driverTransport' }
+                                                <FormSelector nameForSelector={ 'driverTransport' }
                                                               placeholder={ placeholder.idTransport }
                                                               values={ transportSelect }
                                                               validate={ validators.idTransport }
@@ -149,7 +149,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <label
                                                     className={ styles.addDriversForm__label }>
                                                     { label.idTrailer + ':' }</label>
-                                                <FormSelector named={ 'driverTrailer' }
+                                                <FormSelector nameForSelector={ 'driverTrailer' }
                                                               placeholder={ placeholder.idTrailer }
                                                               values={ trailerSelect }
                                                               validate={ validators.idTrailer }

@@ -191,7 +191,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                validate={ form.getFieldState('innNumber')?.visited ? innPlusApiValidator(values as PhoneSubmitType<string>) : undefined }
                                                disabled={ isAvailableSMS }
                                         />
-                                        <FormSelector named={ 'kppNumber' }
+                                        <FormSelector nameForSelector={ 'kppNumber' }
                                                       placeholder={ label.kppNumber }
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }

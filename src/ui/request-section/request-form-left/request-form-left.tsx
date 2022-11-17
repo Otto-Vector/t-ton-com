@@ -183,7 +183,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.cargoComposition }</label>
                                     { requestModes.createMode
-                                        ? <FormSelector named={ 'cargoComposition' }
+                                        ? <FormSelector nameForSelector={ 'cargoComposition' }
                                                         placeholder={ placehoders.cargoComposition }
                                                         values={ stringArrayToSelectValue(cargoComposition) }
                                                         validate={ validators.cargoComposition }
@@ -243,7 +243,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.cargoType }</label>
                                     { requestModes.createMode
-                                        ? <FormSelector named={ 'cargoType' }
+                                        ? <FormSelector nameForSelector={ 'cargoType' }
                                                         placeholder={ labels.cargoType }
                                                         values={ stringArrayToSelectValue([ ...cargoConstType ]) }
                                                         validate={ validators.cargoType }
@@ -260,7 +260,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idCustomer }</label>
                                 { requestModes.createMode
-                                    ? <FormSelector named={ 'idCustomer' }
+                                    ? <FormSelector nameForSelector={ 'idCustomer' }
                                                     placeholder={ placehoders.idCustomer }
                                                     values={ customersSelect }
                                                     validate={ validators.idCustomer }
@@ -277,7 +277,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idSender }</label>
                                 { requestModes.createMode
-                                    ? <FormSelector named={ 'idSender' }
+                                    ? <FormSelector nameForSelector={ 'idSender' }
                                                     placeholder={ placehoders.idSender }
                                                     values={ shippersSelect }
                                                     validate={ validators.idSender }
@@ -295,7 +295,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idRecipient }</label>
                                 { requestModes.createMode
-                                    ? <FormSelector named={ 'idRecipient' }
+                                    ? <FormSelector nameForSelector={ 'idRecipient' }
                                                     placeholder={ placehoders.idRecipient }
                                                     values={ consigneesSelect }
                                                     validate={ validators.idRecipient }

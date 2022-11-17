@@ -202,7 +202,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                     } }
                                                 />
                                             </div>
-                                            <FormSelector named={ 'drivingCategory' }
+                                            <FormSelector nameForSelector={ 'drivingCategory' }
                                                           placeholder={ label.drivingCategory }
                                                           values={ drivingCategorySelector }
                                                           validate={ validators.idTransport }
@@ -225,14 +225,14 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.garageNumber }
                                                    parse={ parsers.garageNumber }
                                             />
-                                            <FormSelector named={ 'idTransport' }
+                                            <FormSelector nameForSelector={ 'idTransport' }
                                                           placeholder={ label.idTransport }
                                                           values={ transportSelect }
                                                           validate={ validators.idTransport }
                                                           isSubLabelOnOption
                                                           isClearable
                                             />
-                                            <FormSelector named={ 'idTrailer' }
+                                            <FormSelector nameForSelector={ 'idTrailer' }
                                                           placeholder={ label.idTrailer }
                                                           values={ trailerSelect }
                                                           validate={ validators.idTrailer }

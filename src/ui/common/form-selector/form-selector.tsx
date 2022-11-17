@@ -8,7 +8,7 @@ import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 
 type OwnProps = {
-    named: string
+    nameForSelector: string
     values: { value: string, label: string, key: string }[]
     label?: string
     placeholder?: string
@@ -26,9 +26,10 @@ type OwnProps = {
 
 
 // передача в обработчик react-form
-export const FormSelector: React.FC<OwnProps> = React.memo (( {
+export const FormSelector: React.FC<OwnProps> = React.memo (
+    ( {
                                                       values,
-                                                      named,
+                                                      nameForSelector,
                                                       label,
                                                       placeholder,
                                                       validate,
@@ -46,7 +47,7 @@ export const FormSelector: React.FC<OwnProps> = React.memo (( {
     return <div className={ styles.dropdown }>
         { label && <label className={ styles.label }>{ label }</label> }
         <Field className={ styles.select }
-               name={ named }
+               name={ nameForSelector }
                placeholder={ placeholder }
                validate={ validate }
                disabled={ disabled }

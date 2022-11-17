@@ -267,7 +267,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                             />
                                             { isNew
                                                 ?
-                                                <FormSelector named={ 'kpp' }
+                                                <FormSelector nameForSelector={ 'kpp' }
                                                               placeholder={ label.kpp }
                                                               values={ kppSelect }
                                                               validate={ validators.kpp }

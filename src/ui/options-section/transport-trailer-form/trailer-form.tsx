@@ -203,7 +203,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             />
 
                                             <div className={ styles.transportTrailerForm__smallInput }>
-                                                <FormSelector named={ 'cargoType' }
+                                                <FormSelector nameForSelector={ 'cargoType' }
                                                               placeholder={ label.cargoType }
                                                               values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }
                                                               validate={ validators.cargoType }
@@ -219,7 +219,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                        disabled={ values.cargoType === 'Тягач' }
                                                 />
                                             </div>
-                                            <FormSelector named={ 'propertyRights' }
+                                            <FormSelector nameForSelector={ 'propertyRights' }
                                                           placeholder={ label.propertyRights }
                                                           values={ stringArrayToSelectValue(propertyRights.map(x => x)) }
                                                           validate={ validators.propertyRights }

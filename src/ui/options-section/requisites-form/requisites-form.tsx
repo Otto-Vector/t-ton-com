@@ -143,7 +143,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                                    disabled={ disableCompanyReqChange }
                                             />
                                             { isNew ?
-                                                <FormSelector named={ 'taxMode' }
+                                                <FormSelector nameForSelector={ 'taxMode' }
                                                               placeholder={ label.taxMode }
                                                               values={ stringArrayToSelectValue([ 'Без НДС', 'НДС 20%' ]) }
                                                               validate={ validators.taxMode }
