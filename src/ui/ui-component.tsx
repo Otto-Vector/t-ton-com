@@ -71,14 +71,14 @@ export const UiComponent: React.FC<OwnProps> = () => {
                                element={ <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
                         <Route path={ routes.requestInfo.status + ':reqNumber' }
                                element={
-                                   <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*ПРОСМОТР активных заявок для перевозчика*/ }
+                                   <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*ПРОСМОТР активных заявок того кто их создал или участвует в ней*/ }
                         <Route path={ routes.requestInfo.history + ':reqNumber' }
                                element={
                                    <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/>{/*ПРОСМОТР ЗАЯВКИ без возможности изменения*/ }
-                        <Route path={ routes.requestInfo.driver + ':reqNumber' }
+                        <Route path={ routes.requestInfo.accept + ':reqNumber' }
                                element={ <ТoAuthRedirect>
-                                   <div className={ styles.ui__fake }><h2>СТАТУС ЗАЯВКИ</h2></div>
-                               </ТoAuthRedirect> }/> {/*статус заявки*/ }
+                                   <RequestSection/> {/*ПРОСМОТР ЗАЯВКИ с возможностью её принять или отказаться*/}
+                               </ТoAuthRedirect> }/>
 
                         <Route path={ routes.requestsList } element={ <ТoAuthRedirect><SearchSection
                             mode={ 'status' }/></ТoAuthRedirect> }/> {/*таблица статусов по активным заявкам*/ }

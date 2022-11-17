@@ -26,7 +26,7 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes } ) =>
 
     // bounds почему-то не всегда отрабатывает поставил зум вручную
     // const zoomCoords = [route[0],route[route.length-1]]
-
+    const maxZoom = requestModes.acceptDriverMode ? 11 : undefined
     const zoom = ( distance < 200 ) ? 9 : ( distance > 2000 ) ? 4 : 6
 
     return (
@@ -35,6 +35,7 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes } ) =>
                 <YandexMapWithRoute center={ center }
                                     polyline={ route || testLine }
                                     zoom={ zoom }
+                                    maxZoom={maxZoom}
                     // bounds={zoomCoords}
                 />
             </div>

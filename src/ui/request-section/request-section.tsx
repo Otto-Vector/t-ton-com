@@ -4,11 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {To, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {
-    deleteCurrentRequestAPI,
-    getOneRequestsAPI,
-    setNewRequestAPI,
-} from '../../redux/forms/request-store-reducer';
+import {deleteCurrentRequestAPI, getOneRequestsAPI, setNewRequestAPI} from '../../redux/forms/request-store-reducer';
 import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
@@ -40,7 +36,7 @@ export const RequestSection: React.FC = React.memo(() => {
         createMode: pathname.includes(routes.requestInfo.create),
         statusMode: pathname.includes(routes.requestInfo.status),
         historyMode: pathname.includes(routes.requestInfo.history),
-        acceptDriverMode: pathname.includes(routes.requestInfo.driver),
+        acceptDriverMode: pathname.includes(routes.requestInfo.accept),
     } ), [ pathname ])
 
     const isFetching = useSelector(getIsFetchingRequestStore)
@@ -50,7 +46,8 @@ export const RequestSection: React.FC = React.memo(() => {
 
 
     const cancelNavigate = (): To => {
-        if (requestModes.statusMode) return routes.searchList
+        if (requestModes.acceptDriverMode) return routes.searchList
+        if (requestModes.statusMode) return routes.requestsList
         if (requestModes.historyMode) return routes.historyList
         return -1 as To
     }
@@ -71,12 +68,10 @@ export const RequestSection: React.FC = React.memo(() => {
                 // создаём пустую и записываем номер заявки
                 dispatch<any>(setNewRequestAPI())
             }
-            if (requestModes.statusMode) {
+            if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
                 dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
             }
-            if (requestModes.historyMode) {
-                dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
-            }
+
             setIsFirstRender(false)
         }
     }, [ isFirstRender ])
@@ -121,8 +116,8 @@ export const RequestSection: React.FC = React.memo(() => {
                     </div>
                     <div className={ styles.requestSection__bottomTabsItem +
                         ( tabModes.right ? ' ' + styles.requestSection__bottomTabsItem_active : '' ) +
-                        ( requestModes.createMode ? ' ' + styles.requestSection__bottomTabsItem_disabled : '' ) }
-                         onClick={ () => !requestModes.createMode ? activeTab('right') : undefined }>
+                        ( ( requestModes.createMode || requestModes.acceptDriverMode ) ? ' ' + styles.requestSection__bottomTabsItem_disabled : '' ) }
+                         onClick={ () => ( requestModes.createMode || requestModes.acceptDriverMode ) ? undefined : activeTab('right') }>
                         { 'Документы' }
                     </div>
                 </div>

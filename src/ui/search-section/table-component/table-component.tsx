@@ -25,7 +25,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const { balance, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = useSelector(getAuthCashAuthStore)
     const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
-    // const initialValues = useSelector(geInitialValuesTableStore)
+
     const TABLE_CONTENT = useSelector(getContentTableStore)
 
     const data = React.useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
@@ -88,31 +88,24 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 Header: '',
                 accessor: 'price',
                 disableFilters: true,
-
-                Cell: ( { requestNumber, price }: { requestNumber: number, price: number } ) => {
-                    if (tableModes.searchTblMode)
-                        return <Button title={ 'Открыть' }
-                                       onClick={ () => {
-                                           price > authCash
-                                               ? navigate(balance)
-                                               : navigate(requestInfo.driver + requestNumber)
-                                       } }
-                                       colorMode={ price > authCash ? 'gray' : 'blue' }
-                        />
-                    if (tableModes.statusTblMode)
-                        return <Button title={ 'Открыть' }
-                                       onClick={ () => {
-                                           navigate(maps.answers + requestNumber)
-                                       } }
-                                       colorMode={ 'green' }
-                        />
-                    if (tableModes.historyTblMode)
-                        return <Button title={ 'Открыть' }
-                                       onClick={ () => {
-                                           navigate(requestInfo.history + requestNumber)
-                                       } }
-                                       colorMode={ 'pink' }/>
-                },
+                Cell: ( { requestNumber, price }: { requestNumber: number, price: number } ) =>
+                    <Button title={ 'Открыть' }
+                            onClick={ () => {
+                                if (tableModes.searchTblMode)
+                                    price > authCash
+                                        ? navigate(balance)
+                                        : navigate(requestInfo.accept + requestNumber)
+                                if (tableModes.statusTblMode) navigate(maps.answers + requestNumber)
+                                if (tableModes.historyTblMode) navigate(requestInfo.history + requestNumber)
+                            } }
+                            colorMode={
+                                tableModes.searchTblMode ?
+                                    price > authCash ? 'gray' : 'blue'
+                                    : tableModes.statusTblMode ? 'green'
+                                        : tableModes.historyTblMode ? 'pink'
+                                            : 'redAlert'
+                            }
+                    />,
             },
         ],
         [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT,

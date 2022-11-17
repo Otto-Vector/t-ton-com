@@ -11,6 +11,21 @@ export const oneRequestApi = {
         // 1.	Code 200, Models: OneRequestApiType[]
         // 2.	Code 520, {"message":"Error"}
     },
+    // запрос списка всех заявок созданных данным пользователем PATCH /api/onerequesttypeuser/
+    getAllRequestByUser( { idUserCustomer }: { idUserCustomer: string } ) {
+        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypedate/', { idUserCustomer })
+            .then(response => response.data)
+        // 1.	Code 200, Models: OneRequestApiType[]
+        // 2.	Code 520, {"message":"Error"}
+    },
+    // запрос списка заявок начиная от такой-то даты (включительно) PATCH /api/onerequesttypedate/
+    getAllRequestByDate( { shipmentDate }: { shipmentDate: string } ) {
+        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypedate/', { shipmentDate })
+            .then(response => response.data)
+        // 1.	Code 200, Models: OneRequestApiType[]
+        // 2.	Code 520, {"message":"Error"}
+    },
+
     // запрос на одну Заявку PATCH /api/onerequesttype/
     getOneRequestById( { requestNumber }: { requestNumber: number } ) {
         return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttype/', { requestNumber })

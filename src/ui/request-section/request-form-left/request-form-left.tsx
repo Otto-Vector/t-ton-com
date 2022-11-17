@@ -10,7 +10,6 @@ import {cargoConstType, OneRequestType} from '../../../types/form-types'
 import {
     getCargoCompositionRequestStore,
     getCurrentDistanceIsFetchingRequestStore,
-    getCurrentDistanceRequestStore,
     getInfoTextModalsRequestValuesStore,
     getLabelRequestStore,
     getPlaceholderRequestStore,
@@ -54,6 +53,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         requestModes, initialValues,
     } ) => {
 
+    const acceptDriverModePlaceholder = 'данные будут доступны после принятия заявки'
     const routes = useSelector(getRoutesStore)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -65,7 +65,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const validators = useSelector(getValidatorsRequestStore)
     const fieldInformation = useSelector(getInfoTextModalsRequestValuesStore)
 
-    const currentDistance = useSelector(getCurrentDistanceRequestStore)
     const currentDistanceIfFetching = useSelector(getCurrentDistanceIsFetchingRequestStore)
 
     const allShippers = useSelector(getAllShippersStore)
@@ -103,14 +102,12 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             navigate(-1)
         },
         submitRequestAndSearch: async ( values: OneRequestType ) => {
-            // сабмит запускается сам формой react-final-form в переданных ей параметрах
             await onSubmit(values)
             navigate(routes.searchList)
         },
         submitRequestAndDrive: async ( values: OneRequestType ) => {
-            // сабмит запускается сам формой react-final-form в переданных ей параметрах
             await onSubmit(values)
-            navigate(routes.addDriver)
+            navigate(routes.addDriver + values.requestNumber)
         },
     } ), [])
 
@@ -152,6 +149,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             }))
         }
     }, [ customersSelect ])
+
 
     return (
         <div className={ styles.requestFormLeft }>
@@ -246,7 +244,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     />
                                     : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
-                                        { oneCustomer?.title }
+                                        { requestModes.acceptDriverMode ? acceptDriverModePlaceholder : oneCustomer?.title }
                                     </div>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.customer } mode={ 'inForm' }/>
@@ -264,7 +262,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
-                                        { oneShipper?.title + ', ' + oneShipper?.city }
+                                        { requestModes.acceptDriverMode ? acceptDriverModePlaceholder
+                                            : `${ oneShipper?.title + ', ' + oneShipper?.city }` }
                                     </div>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.shipper } mode={ 'inForm' }/>
@@ -282,7 +281,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
-                                        { oneConsignee?.title + ', ' + oneConsignee?.city }
+                                        { requestModes.acceptDriverMode ? acceptDriverModePlaceholder
+                                            : `${ oneConsignee?.title + ', ' + oneConsignee?.city }` }
                                     </div>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.consignee } mode={ 'inForm' }/>
@@ -326,10 +326,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ 'green' }
                                                 type={ hasValidationErrors ? 'submit' : 'button' }
-                                                title={ requestModes.statusMode ? 'Принять заявку' : 'Поиск исполнителя' }
+                                                title={ requestModes.acceptDriverMode ? 'Принять заявку' : 'Поиск исполнителя' }
                                                 onClick={ () => {
                                                     !hasValidationErrors &&
-                                                    ( requestModes.statusMode
+                                                    ( requestModes.acceptDriverMode
                                                             ? buttonsAction.acceptRequest(values)
                                                             : buttonsAction.submitRequestAndSearch(values)
                                                     )
@@ -338,12 +338,12 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                 rounded/>
                                     </div>
                                     <div className={ styles.requestFormLeft__panelButton }>
-                                        <Button colorMode={ requestModes.statusMode ? 'red' : 'blue' }
+                                        <Button colorMode={ requestModes.acceptDriverMode ? 'red' : 'blue' }
                                                 type={ hasValidationErrors ? 'submit' : 'button' }
-                                                title={ requestModes.statusMode ? 'Отказаться' : 'Cамовывоз' }
+                                                title={ requestModes.acceptDriverMode ? 'Отказаться' : 'Cамовывоз' }
                                                 onClick={ () => {
                                                     !hasValidationErrors &&
-                                                    ( requestModes.statusMode
+                                                    ( requestModes.acceptDriverMode
                                                             ? buttonsAction.cancelRequest()
                                                             : buttonsAction.submitRequestAndDrive(values)
                                                     )

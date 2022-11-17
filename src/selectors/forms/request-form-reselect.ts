@@ -5,6 +5,7 @@ import {OneRequestType} from '../../types/form-types';
 import {polyline_decode} from '../../utils/polilyne-decode';
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = ( state: AppStateType ) => Y[T]
+type RequestStoreSelectorsInit<T extends keyof Y, Y = RequestStoreReducerStateType['initialValues']> = ( state: AppStateType ) => Y[T]
 
 export const getIsFetchingRequestStore: RequestStoreSelectors<'requestIsFetching'> = ( state ) => state.requestStoreReducer.requestIsFetching
 export const getCargoCompositionRequestStore: RequestStoreSelectors<'cargoComposition'> = ( state ) => state.requestStoreReducer.cargoComposition
@@ -18,9 +19,8 @@ export const getPlaceholderRequestStore: RequestStoreSelectors<'placeholder'> = 
 export const getValidatorsRequestStore: RequestStoreSelectors<'validators'> = ( state ) => state.requestStoreReducer.validators
 
 export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state ) => state.requestStoreReducer.content
-export const getCurrentDistanceRequestStore = ( state: AppStateType ) => state.requestStoreReducer.initialValues.distance
 export const getCurrentDistanceIsFetchingRequestStore: RequestStoreSelectors<'currentDistanceIsFetching'> = ( state ) => state.requestStoreReducer.currentDistanceIsFetching
-export const getPolylineRouteRequestStore = ( state: AppStateType ) => state.requestStoreReducer.initialValues.route
+export const getPolylineRouteRequestStore:RequestStoreSelectorsInit<'route'> = ( state: AppStateType ) => state.requestStoreReducer.initialValues.route
 export const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state ) => state.requestStoreReducer.currentRequestNumber
 
 export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)

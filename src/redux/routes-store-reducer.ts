@@ -2,37 +2,63 @@ import {GetActionsTypes} from './redux-store'
 
 const initialState = {
     routes: {
+        // '/hello'
         hello: '/hello',
+        // '/login'
         login: '/login',
+        // '/search'
         searchList: '/search',
+        // '/requests/'
         requestsList: '/requests/',
+        // '/history'
         historyList: '/history',
+        // '/request/myDriversForm/'
         myDrivers: '/request/myDriversForm/',
+        // '/request/addDriversForm/'
         addDriver: '/request/addDriversForm/',
         requestInfo: {
+            // '/request/status/'
             status: '/request/status/',
+            // '/request/driver/'
             driver: '/request/driver/',
+            // '/request/history/'
             history: '/request/history/',
+            // '/request/create/'
             create: '/request/create/',
+            // '/request/accept/'
             accept: '/request/accept/',
         },
+        // '/maps'
         map: '/maps',
         maps: {
+            // '/maps/address/'
             address: '/maps/address/',
+            // '/maps/answers/'
             answers: '/maps/answers/',
+            // '/maps/routes/'
             routes: '/maps/routes/',
         },
+        // '/balance'
         balance: '/balance',
+        // '/options'
         options: '/options',
         optionsEdit: {
+            // '/options/shippers/'
             shippers: '/options/shippers/',
+            // '/options/employees/'
             employees: '/options/employees/',
+            // '/options/transport/'
             transport: '/options/transport/',
+            // '/options/trailer/'
             trailer: '/options/trailer/',
+            // '/options/consignees/'
             consignees: '/options/consignees/',
         },
+        // '/requisites/'
         requisites: '/requisites/',
+        // '/info'
         info: '/info',
+        // '/test'
         test: '/test',
     },
 }

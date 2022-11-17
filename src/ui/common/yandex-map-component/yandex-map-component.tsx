@@ -11,6 +11,7 @@ type OwnProps = {
     modules?: string[]
     instance?: ( instance: React.Ref<any> ) => void
     onClick?: ( e: any ) => void
+    maxZoom?: number
 }
 
 
@@ -20,6 +21,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                                                             children,
                                                             instance,
                                                             onClick,
+                                                            maxZoom = 18,
                                                         } ) => {
 
     return (
@@ -32,8 +34,8 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                      suppressMapOpenBlock: true,
                      suppressObsoleteBrowserNotifier: true,
                      yandexMapDisablePoiInteractivity: true,
-                     maxZoom: 18,
-                     minZoom: 3,
+                     maxZoom,
+                     minZoom: 4,
                  } }
                  onClick={ onClick }
             >
@@ -118,14 +120,16 @@ type ToRouteMap = {
     polyline: number[][]
     bounds?: MapState['bounds']
     zoom?: number
+    maxZoom?: number
 }
 
 
 // карта с отрисованным маршрутом
-export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( { center, polyline, zoom = 5, bounds } ) => {
+export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( { center, polyline, zoom = 5, bounds, maxZoom } ) => {
 
     return (
         <YandexMapComponent
+            maxZoom={maxZoom}
             state={ {
                 center,
                 zoom,
