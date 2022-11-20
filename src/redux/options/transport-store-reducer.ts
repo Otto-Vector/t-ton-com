@@ -92,6 +92,12 @@ export const transportStoreReducer = ( state = initialState, action: ActionsType
                 transportIsFetching: action.transportIsFetching,
             }
         }
+        case 'transport-store-reducer/SET-INITIAL-VALUES': {
+            return {
+                ...state,
+                initialValues: action.initialValues,
+            }
+        }
         default: {
             return state
         }
@@ -114,13 +120,17 @@ export const transportStoreActions = {
         type: 'transport-store-reducer/SET-IS-FETCHING',
         transportIsFetching,
     } as const ),
+    setInitialValues: ( initialValues: TransportCardType ) => ( {
+        type: 'transport-store-reducer/SET-INITIAL-VALUES',
+        initialValues,
+    } as const ),
 }
 
 /* САНКИ */
 
 export type TransportStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
 
-// запрос всего транспорта пользователя от сервера
+// запрос всего ТРАНСПОРТА пользователя от сервера
 export const getAllTransportAPI = (): TransportStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(transportStoreActions.toggleTransportIsFetching(true))
@@ -158,7 +168,7 @@ export const newTransportSaveToAPI = ( values: TransportCardType<string>, image:
         await dispatch(getAllTransportAPI())
     }
 
-// изменить одну запись ТРАНСПОРТА через АПИ
+// изменить ОДНУ запись ТРАНСПОРТА через АПИ
 export const modifyOneTransportToAPI = ( values: TransportCardType<string>, image: File | undefined ): TransportStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
@@ -190,7 +200,23 @@ export const oneTransportDeleteToAPI = ( idTransport: string ): TransportStoreRe
         await dispatch(getAllTransportAPI())
     }
 
+// запрос данных на один ТРАНСПОРТ из бэка
+export const getOneTransportFromAPI = ( idTransport: string ): TransportStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await transportApi.getOneTransportById({ idTransport })
+            if (response.message) console.log(response.message)
+            if (response.length > 0) {
+                const oneTransport = response[0]
+                dispatch(transportStoreActions.setInitialValues(oneTransport))
+            }
+        } catch (e) {
+            // @ts-ignore
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+        }
+    }
 
+// было добавлено для адекватного отображения инфы по привязке к сотрудникам (в списке)
 export const rerenderTransport = (): TransportStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(transportStoreActions.toggleTransportIsFetching(true))

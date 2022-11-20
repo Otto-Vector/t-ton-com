@@ -35,9 +35,8 @@ export const transportApi = {
     },
 
     // запрос на один ТРАНСПОРТ • PATCH /api/transport/
-    // (на данный момент поиск производится по уже загруженному списку, локально)
     getOneTransportById( idTransport: { idTransport: string } ) {
-        return instanceBack.patch<InfoResponseType | TransportApiType[]>('/api/transport/', idTransport)
+        return instanceBack.patch<InfoResponseType & TransportApiType[]>('/api/transport/', idTransport)
             .then(response => response.data)
         // 1.	Code 200, Models: TransportApiType[]
         // 2.	Code 520, {"message":"Error"}

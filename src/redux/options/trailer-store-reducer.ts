@@ -92,7 +92,7 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
                 trailerIsFetching: action.trailerIsFetching,
             }
         }
-        case 'trailer-store-reducer/SET-INITIAL-VALUES':{
+        case 'trailer-store-reducer/SET-INITIAL-VALUES': {
             return {
                 ...state,
                 initialValues: action.initialValues,
@@ -130,7 +130,7 @@ export const trailerStoreActions = {
 
 export type TrailerStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-// запрос всего транспорта пользователя от сервера
+// запрос всех ПРИЦЕПОВ пользователя от сервера
 export const getAllTrailerAPI = (): TrailerStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(trailerStoreActions.toggleTrailerIsFetching(true))
@@ -151,7 +151,7 @@ export const getAllTrailerAPI = (): TrailerStoreReducerThunkActionType =>
         dispatch(trailerStoreActions.toggleTrailerIsFetching(false))
     }
 
-// добавить одну запись ТРАНСПОРТА через АПИ
+// добавить одну запись ПРИЦЕПА через АПИ
 export const newTrailerSaveToAPI = ( values: TrailerCardType<string>, image: File | undefined ): TrailerStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
 
@@ -201,6 +201,7 @@ export const oneTrailerDeleteToAPI = ( idTrailer: string ): TrailerStoreReducerT
         await dispatch(getAllTrailerAPI())
     }
 
+// запрос данных на один ПРИЦЕП из бэка
 export const getOneTrailerFromAPI = ( idTrailer: string ): TrailerStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
@@ -217,6 +218,7 @@ export const getOneTrailerFromAPI = ( idTrailer: string ): TrailerStoreReducerTh
         }
     }
 
+// было добавлено для адекватного отображения инфы по привязке к сотрудникам (в списке)
 export const rerenderTrailer = (): TrailerStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(trailerStoreActions.toggleTrailerIsFetching(true))
