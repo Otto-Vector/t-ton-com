@@ -170,7 +170,6 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
-
             // @ts-ignore
             console.error(JSON.stringify(e.response.data))
         }
@@ -225,7 +224,6 @@ export const getOneEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReduc
 
         } catch (e) {
             // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
         }
-        await dispatch(getAllEmployeesAPI())
     }

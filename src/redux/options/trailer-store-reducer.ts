@@ -92,6 +92,12 @@ export const trailerStoreReducer = ( state = initialState, action: ActionsType )
                 trailerIsFetching: action.trailerIsFetching,
             }
         }
+        case 'trailer-store-reducer/SET-INITIAL-VALUES':{
+            return {
+                ...state,
+                initialValues: action.initialValues,
+            }
+        }
         default: {
             return state
         }
@@ -113,6 +119,10 @@ export const trailerStoreActions = {
     toggleTrailerIsFetching: ( trailerIsFetching: boolean ) => ( {
         type: 'trailer-store-reducer/SET-IS-FETCHING',
         trailerIsFetching,
+    } as const ),
+    setInitialValues: ( initialValues: TrailerCardType ) => ( {
+        type: 'trailer-store-reducer/SET-INITIAL-VALUES',
+        initialValues,
     } as const ),
 }
 
@@ -189,6 +199,22 @@ export const oneTrailerDeleteToAPI = ( idTrailer: string ): TrailerStoreReducerT
             alert(JSON.stringify(e.response.data))
         }
         await dispatch(getAllTrailerAPI())
+    }
+
+export const getOneTrailerFromAPI = ( idTrailer: string ): TrailerStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await trailerApi.getOneTrailerById({ idTrailer })
+            if (response.message) console.log(response.message)
+            if (response.length > 0) {
+                const oneTrailer = response[0]
+                dispatch(trailerStoreActions.setInitialValues(oneTrailer))
+            }
+
+        } catch (e) {
+            // @ts-ignore
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+        }
     }
 
 export const rerenderTrailer = (): TrailerStoreReducerThunkActionType =>
