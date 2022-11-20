@@ -115,7 +115,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div className={ styles.requestFormDocumentRight__buttonItem }>
                     <label className={ styles.requestFormDocumentRight__label }>
                         { labels.cargoDocuments }</label>
-                    <Button colorMode={ 'whiteBlueDoc' }>
+                    <Button colorMode={ 'whiteBlueDoc' }
+                            disabled={ requestModes.historyMode }
+                    >
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
                                     { initialValues.cargoDocuments || 'Загрузить' }</span>
                         <MaterialIcon icon_name={ 'attach_file' }/>
@@ -123,6 +125,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                className={ styles.requestFormDocumentRight__hiddenAttachFile }
                                accept={ '.png, .jpeg, .pdf, .jpg' }
                                onChange={ buttonsAction.sendUploadDocument }
+                               disabled={ requestModes.historyMode }
                         />
                     </Button>
                 </div>
@@ -167,7 +170,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             </div>
             <div className={ styles.requestFormDocumentRight__documentsPanel }>
                 <div className={ styles.requestFormDocumentRight__buttonItem }>
-                    <Button colorMode={ 'whiteBlueDoc' }>
+                    <Button colorMode={ 'whiteBlueDoc' }
+                            disabled={ requestModes.historyMode }
+                    >
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
                                     { labels.ttnECP.documentDownload }</span>
                         <MaterialIcon icon_name={ 'attach_file' }/>
@@ -175,6 +180,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                className={ styles.requestFormDocumentRight__hiddenAttachFile }
                                accept={ '.png, .jpeg, .pdf, .jpg' }
                                onChange={ buttonsAction.sendTtnECPFile }
+                               disabled={ requestModes.historyMode }
                         />
                     </Button>
                     <InfoButtonToModal textToModal={ modalsText.ttnECP }/>
@@ -197,7 +203,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ 'whiteBlueDoc' }>
+                        <Button colorMode={ 'whiteBlueDoc' }
+                                disabled={ requestModes.historyMode }
+                        >
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
                                     { labels.contractECP.documentDownload }</span>
                             <MaterialIcon icon_name={ 'attach_file' }/>
@@ -205,6 +213,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
                                    accept={ '.png, .jpeg, .pdf, .jpg' }
                                    onChange={ buttonsAction.sendContractECPFile }
+                                   disabled={ requestModes.historyMode }
                             />
                         </Button>
                         <InfoButtonToModal textToModal={ modalsText.contractECP }/>
@@ -229,7 +238,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
 
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ 'whiteBlueDoc' }>
+                        <Button colorMode={ 'whiteBlueDoc' }
+                                disabled={ requestModes.historyMode }
+                        >
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
                                     { labels.updECP.documentDownload }</span>
                             <MaterialIcon icon_name={ 'attach_file' }/>
@@ -237,6 +248,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
                                    accept={ '.png, .jpeg, .pdf, .jpg' }
                                    onChange={ buttonsAction.sendUpdECPFile }
+                                   disabled={ requestModes.historyMode }
                             />
                         </Button>
                         <InfoButtonToModal textToModal={ modalsText.updECP }/>
@@ -262,7 +274,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ 'whiteBlueDoc' }>
+                        <Button colorMode={ 'whiteBlueDoc' }
+                                disabled={ requestModes.historyMode }
+                        >
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
                                     { labels.customerToConsigneeContractECP.documentDownload }</span>
                             <MaterialIcon icon_name={ 'attach_file' }/>
@@ -270,6 +284,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
                                    accept={ '.png, .jpeg, .pdf, .jpg' }
                                    onChange={ buttonsAction.sendCustomerToConsigneeECPFile }
+                                   disabled={ requestModes.historyMode }
                             />
                         </Button>
                         <InfoButtonToModal textToModal={ modalsText.customerToConsigneeContractECP }/>
@@ -279,25 +294,28 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__line }></div>
             {/*///////////////////ПАНЕЛЬ КНОПОК/////////////////*/ }
             <div className={ styles.requestFormDocumentRight__buttonsPanel }>
-                <div className={ styles.requestFormDocumentRight__panelButton }>
-                    <Button colorMode={ 'gray' }
-                            wordWrap rounded
-                            title={ labelsR.localStatus.paymentHasBeenReceived }
-                            onClick={ () => {
-                            } }
-                    />
-                </div>
-                <div className={ styles.requestFormDocumentRight__panelButton }>
-                    <Button colorMode={ 'gray' }
-                            wordWrap
-                            rounded
-                            title={ labelsR.localStatus.cargoHasBeenReceived }
-                            onClick={ () => {
-                            } }
-                    />
-                </div>
+                { !requestModes.historyMode && <>
+                    <div className={ styles.requestFormDocumentRight__panelButton }>
+                        <Button colorMode={ 'gray' }
+                                wordWrap rounded
+                                title={ labelsR.localStatus.paymentHasBeenReceived }
+                                onClick={ () => {
+                                } }
+                        />
+                    </div>
+                    <div className={ styles.requestFormDocumentRight__panelButton }>
+                        <Button colorMode={ 'gray' }
+                                wordWrap
+                                rounded
+                                title={ labelsR.localStatus.cargoHasBeenReceived }
+                                onClick={ () => {
+                                } }
+                        />
+                    </div>
+                </>
+                }
             </div>
-            <InfoText/>
+            { !requestModes.historyMode && <InfoText/> }
         </div>
 
     )
