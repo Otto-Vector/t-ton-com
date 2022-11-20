@@ -291,7 +291,7 @@ export const oneConsigneeDeleteToAPI = ( idRecipient: string | null ): Consignee
     }
 
 // ЗАПРОСИТЬ одного ГРУЗОполучателя
-export const getOneConsigneeFromAPI = ( idRecipient: string | null ): ConsigneesStoreReducerThunkActionType =>
+export const getOneConsigneeFromAPI = ( idRecipient: string ): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             if (idRecipient) {

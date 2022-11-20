@@ -281,6 +281,22 @@ export const oneShipperDeleteToAPI = ( idSender: string | null ): ShippersStoreR
         await dispatch(getAllShippersAPI())
     }
 
+// ЗАПРОСИТЬ одного ГРУЗО-отправителя из бэка
+export const getOneShipperFromAPI = ( idSender: string ): ShippersStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            if (idSender) {
+                const response = await shippersApi.getOneShipperById({ idSender })
+                if (response.message) console.log(response.message)
+                const oneShipper = response[0]
+                dispatch(shippersStoreActions.setInitialValues(oneShipper))
+            }
+        } catch (e) {
+            // @ts-ignore
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+        }
+    }
+
 // геолокируем (вытаскиваем) название города из запроса автодиспетчера
 export const getCityFromDispetcherAPI = ( {
                                               from,
