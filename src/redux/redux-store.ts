@@ -20,6 +20,7 @@ import {bigMapStoreReducer} from './maps/big-map-store-reducer';
 import {appStoreReducer} from './app-store-reducer';
 import {daDataStoreReducer} from './api/dadata-response-reducer';
 import {globalModalStoreReducer} from './utils/global-modal-store-reducer';
+import {avtoDispetcherStoreReducer} from './api/avto-dispetcher-response-reducer';
 
 
 const reducersObject = {
@@ -42,6 +43,7 @@ const reducersObject = {
     lightBoxStoreReducer,
     bigMapStoreReducer,
     daDataStoreReducer,
+    avtoDispetcherStoreReducer,
     globalModalStoreReducer,
 }
 

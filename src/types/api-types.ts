@@ -191,7 +191,7 @@ interface State {
 
 
 //////////AVTODISPETCHER///////////////////////////////////////////////////////////
-export type AvtodispetcherResponseType = {
+export type AvtoDispetcherResponseType = {
     kilometers: number
     polyline: string
     minutes: number;

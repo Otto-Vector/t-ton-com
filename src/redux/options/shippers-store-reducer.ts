@@ -297,23 +297,3 @@ export const getOneShipperFromAPI = ( idSender: string ): ShippersStoreReducerTh
         }
     }
 
-// геолокируем (вытаскиваем) название города из запроса автодиспетчера
-export const getCityFromDispetcherAPI = ( {
-                                              from,
-                                              to,
-                                          }: GetAvtodispetcherRouteType ): ShippersStoreReducerThunkActionType<{ coordinates?: string, city?: string } | null> =>
-    async ( dispatch ) => {
-        try {
-            const response = await getRouteFromAvtodispetcherApi({ from, to })
-
-            if (response.segments.length > 0) {
-                return ( { city: response.segments[0].start.name } )
-            }
-
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage('Ошибка запроса на название города'))
-            return ( { coordinates: 'Ошибка запроса на название города, измените координаты' } )
-        }
-
-        return null
-    }

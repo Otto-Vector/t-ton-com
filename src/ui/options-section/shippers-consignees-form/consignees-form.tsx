@@ -40,10 +40,10 @@ import {
     getConsigneesNamesListOptionsStore,
 } from '../../../selectors/options/options-reselect';
 import {includesTitleValidator} from '../../../utils/validators';
-import {getCityFromDispetcherAPI} from '../../../redux/options/shippers-store-reducer';
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import { getCityFromDispetcherAPI } from '../../../redux/api/avto-dispetcher-response-reducer'
 
 
 type OwnProps = {}

@@ -2,7 +2,7 @@ import axios from 'axios'
 import {qsNormalize} from '../../utils/norm-query'
 import {parseNoSpace} from '../../utils/parsers'
 import base64 from 'base-64'
-import {AvtodispetcherResponseType} from '../../types/api-types';
+import {AvtoDispetcherResponseType} from '../../types/api-types';
 
 
 const { REACT_APP_AVTODISPETCHER_KEY, REACT_APP_DEPLOY_MODE } = process.env
@@ -32,6 +32,6 @@ export const getRouteFromAvtodispetcherApi = ( { from, to }: GetAvtodispetcherRo
         to: parseNoSpace(to),
     }, false, false)
 
-    return instance.get<AvtodispetcherResponseType>(`/v1/route?${ decodedQuery }`)
+    return instance.get<AvtoDispetcherResponseType>(`/v1/route?${ decodedQuery }`)
         .then(response => response.data)
 }

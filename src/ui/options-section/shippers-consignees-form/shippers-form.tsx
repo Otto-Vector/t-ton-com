@@ -23,7 +23,6 @@ import {
     getValidatorsShippersStore,
 } from '../../../selectors/options/shippers-reselect'
 import {
-    getCityFromDispetcherAPI,
     modifyOneShipperToAPI,
     newShipperSaveToAPI,
     oneShipperDeleteToAPI,
@@ -45,6 +44,7 @@ import {includesTitleValidator} from '../../../utils/validators';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
+import { getCityFromDispetcherAPI } from '../../../redux/api/avto-dispetcher-response-reducer'
 
 type OwnProps = {
     // onSubmit: (requisites: shippersCardType) => void
