@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import styles from './add-drivers-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../common/button/button'
@@ -9,7 +9,7 @@ import {
     getIsFetchingRequisitesStore,
     getStoredValuesRequisitesStore,
 } from '../../selectors/options/requisites-reselect'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {CancelButton} from '../common/cancel-button/cancel-button'
 import {ResponseToRequestCardType} from '../../types/form-types'
 
@@ -21,7 +21,7 @@ import {
 } from '../../selectors/forms/add-driver-reselect'
 import {FormSelector} from '../common/form-selector/form-selector'
 import {FormInputType} from '../common/form-input-type/form-input-type'
-import {getOneRequestStore} from '../../selectors/forms/request-form-reselect'
+import {getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {getAllEmployeesSelectFromLocal, getOneEmployeesFromLocal} from '../../selectors/options/employees-reselect'
 import {getAllTransportSelectFromLocal, getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
@@ -32,17 +32,21 @@ import {transportStoreActions} from '../../redux/options/transport-store-reducer
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
 import {AppStateType} from '../../redux/redux-store';
+import {getOneRequestsAPI} from '../../redux/forms/request-store-reducer';
 
 type OwnProps = {}
 
 export const AddDriversForm: React.FC<OwnProps> = () => {
+
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
+    const setImage = ( urlImage?: string ): string => urlImage ? currentURL + urlImage : noImage
 
-    const setImage = ( urlImage: string ): string => urlImage ? currentURL + urlImage : noImage
-
+    const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
+    const requestNumber = +( reqNumber || 0 )
     const header = ( requestNumber: number, shipmentDate: Date ): string =>
         `Заявка ${ requestNumber } от ${ ddMmYearFormat(shipmentDate) }`
 
+    const [ isFirstRender, setIsFirstRender ] = useState(true)
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
     const initialValues = useSelector(getInitialValuesAddDriverStore)
@@ -50,11 +54,13 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const placeholder = useSelector(getPlaceholderAddDriverStore)
     const validators = useSelector(getValidatorsAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
-    const { distance } = useSelector(getOneRequestStore)
+    const requestValues = useSelector(getInitialValuesRequestStore)
+    const distance = requestValues?.distance
+
     const dispatch = useDispatch()
 
-    const setLightBoxImage = ( image?: string | null ) => {
-        dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
+    const setLightBoxImage = ( imageURL?: string ) => {
+        dispatch(lightBoxStoreActions.setLightBoxImage(setImage(imageURL)))
     }
 
     const employeesSelect = useSelector(getAllEmployeesSelectFromLocal)
@@ -103,12 +109,38 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         navigate(-1)
     }
 
+    useEffect(() => {
+        if (isFirstRender) {
+            // избавляемся от лишнего запроса
+            if (requestValues?.requestNumber !== requestNumber) {
+                dispatch<any>(getOneRequestsAPI(requestNumber))
+            }
+            // чистим данные
+            setOneEmployee('')
+            setOneTransport('')
+            setOneTrailer('')
+            setIsFirstRender(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (!isFirstRender && oneEmployee) {
+            setOneTransport(oneEmployee.idTransport)
+            setOneTrailer(oneEmployee.idTrailer)
+        }
+        // dispatch(addDriverStoreActions.setValues({
+        //     ...initialValues,
+        //     idTransport: oneEmployee.idTransport,
+        //     idTrailer: oneEmployee.idTrailer,
+        // }))
+    }, [ oneEmployee ])
+
     return (
         <div className={ styles.addDriversForm }>
             <div className={ styles.addDriversForm__wrapper }>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <h4 className={ styles.addDriversForm__header }>{ header(999, new Date()) }</h4>
+                        <h4 className={ styles.addDriversForm__header }>{ header(requestNumber, new Date()) }</h4>
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
@@ -181,13 +213,14 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                     {
                                                         values.responsePrice =
                                                             resultDistanceCost()(values.responseStavka as string)
-                                                            || 'за весь рейс'
+                                                            ||
+                                                            'за весь рейс'
                                                     }
                                                 </div>
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
-                                                    { 'Выполнено заказов:' }</label>
+                                                    { 'Вып. заказов:' }</label>
                                                 <div className={ styles.addDriversForm__info }>
                                                     { employeeOneRating || '-' }
                                                 </div>

@@ -86,7 +86,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const customersSelect = shippersSelect
 
     const onSubmit = async ( values: OneRequestType ) => {
-        await dispatch<any>(changeCurrentRequest(values))
+        await dispatch<any>(changeCurrentRequest({...values, globalStatus: 'новая заявка'}))
     }
 
     // для сохранения отображаемых данных при переключении вкладок

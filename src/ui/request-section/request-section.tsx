@@ -72,7 +72,8 @@ export const RequestSection: React.FC = React.memo(() => {
                 dispatch<any>(setNewRequestAPI())
             }
             if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
-                dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
+                if (initialValues.requestNumber !== +( reqNumber || 0 ))
+                    dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
             }
             if (requestModes.statusMode) { // для прогрузки данных искомого водителя в форму
                 dispatch<any>(getOneEmployeeFromAPI)
