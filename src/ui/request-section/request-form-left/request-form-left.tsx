@@ -367,7 +367,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                         </form>
                     )
                 }/>
-            <InfoText/>
+            { requestModes.createMode && <InfoText/> }
         </div>
     )
 }, valuesAreEqual)

@@ -23,14 +23,12 @@
     height: 663px;
     padding: 0;
     border-radius: 25px;
-    //display: flex;
-    //justify-content: center;
-    //align-items: center;
+    display: flex;
+    justify-content: center;
   }
 
   &__header {
     position: absolute;
-    width: 100%;
     text-align: center;
     white-space: nowrap;
     font-family: $RalewayFont;
@@ -38,6 +36,7 @@
     font-size: 22px;
     line-height: 1.2;
     color: #023C85;
+    //text-shadow: 1px 1px rgba(158, 158, 158, 40%);
     padding-top: 15px;
     background-color: transparent;
     z-index: inherit;
@@ -46,6 +45,7 @@
   &__formsWrapper {
     margin-top: 45px;
     height: calc(100% - 55px);
+    width: 100%;
   }
 
   &__mapsWrapper {
@@ -112,6 +112,7 @@
 
     &_disabled {
       background-color: #2D2D2D;
+
       &:hover {
         height: 51px;
       }
