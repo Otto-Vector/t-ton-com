@@ -14,7 +14,7 @@ import {cargoConstType, propertyRights, TransportCardType} from '../../../types/
 import {
     getAllTransportSelectFromLocal,
     getCurrentIdTransportStore,
-    getInitialValuesTransportStore,
+    getInitialValuesTransportStore, getIsBusyTransport,
     getIsFetchingTransportStore,
     getLabelTransportStore,
     getMaskOnTransportStore,
@@ -57,16 +57,15 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const currentId = useSelector(getCurrentIdTransportStore)
     const oneTransport = useSelector(getOneTransportFromLocal)
 
-    const allBusyTransport = useSelector(getAllTransportSelectFromLocal)
-    const isBusyFilter = allBusyTransport.filter(( { key, isDisabled } ) => key === currentId && isDisabled)
-    const isBusy = isBusyFilter.length > 0
+    const isBusyTransport = useSelector(getIsBusyTransport)
 
     const transportHasPassToDelete = () => {
         dispatch(globalModalStoreActions.setTextMessage(
             'Транспорт не может быть удалён, он привязан к сотруднику: '
-            + ( isBusy && isBusyFilter[0].subLabel ),
+            + ( isBusyTransport?.subLabel ),
         ))
     }
+
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
     const isNew = currentIdForShow === 'new'
@@ -78,9 +77,9 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
+
 
     const onSubmit = useCallback(( values: TransportCardType<string> ) => {
 
@@ -248,7 +247,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                     <Button type={ 'button' }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ isBusy ? transportHasPassToDelete : transportDeleteHandleClick }
+                                                            onClick={ isBusyTransport ? transportHasPassToDelete : transportDeleteHandleClick }
                                                             rounded
                                                             disabled={ isNew }
                                                     />

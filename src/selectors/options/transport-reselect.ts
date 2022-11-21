@@ -18,12 +18,13 @@ export const getIsFetchingTransportStore: TransportStoreSelectors<'transportIsFe
 export const getAllTransportStore: TransportStoreSelectors<'content'> = ( state ) => state.transportStoreReducer.content
 export const getCurrentIdTransportStore: TransportStoreSelectors<'currentId'> = ( state ) => state.transportStoreReducer.currentId
 
-
+// выборка искомого ТРАНСПОРТА из локально загруженного списка
 export const getOneTransportFromLocal = createSelector(getCurrentIdTransportStore, getAllTransportStore, getInitialValuesTransportStore,
     ( currentId, transport, initials ): TransportCardType => {
         return transport.filter(( { idTransport } ) => idTransport === currentId)[0] || initials
     })
 
+// список транспорта в селекторы
 export const getAllTransportSelectFromLocal = createSelector(
     getAllTransportStore, getAllEmployeesStore, ( transports, employees ): SelectOptionsType[] =>
         transports
@@ -43,4 +44,10 @@ export const getAllTransportSelectFromLocal = createSelector(
                     } )
                 },
             ),
+)
+
+// индикатор привязки данного ТРАНСПОРТА к сотруднику из списка для селектора по доп. признаку isDisabled
+export const getIsBusyTransport = createSelector(getAllTransportSelectFromLocal, getCurrentIdTransportStore,
+    ( list, currentId ): SelectOptionsType | undefined => list
+        .find(( { key, isDisabled } ) => key === currentId && isDisabled),
 )

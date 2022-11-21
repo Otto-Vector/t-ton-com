@@ -18,12 +18,13 @@ export const getIsFetchingTrailerStore: TrailerStoreSelectors<'trailerIsFetching
 export const getAllTrailerStore: TrailerStoreSelectors<'content'> = ( state ) => state.trailerStoreReducer.content
 export const getCurrentIdTrailerStore: TrailerStoreSelectors<'currentId'> = ( state ) => state.trailerStoreReducer.currentId
 
-
+// выборка искомого ПРИЦЕПА из локально загруженного списка
 export const getOneTrailerFromLocal = createSelector(getCurrentIdTrailerStore, getAllTrailerStore, getInitialValuesTrailerStore,
     ( currentId, trailer, initials ): TrailerCardType => {
         return trailer.filter(( { idTrailer } ) => idTrailer === currentId)[0] || initials
     })
 
+// список ПРИЦЕПОВ в селекторы
 export const getAllTrailerSelectFromLocal = createSelector(
     getAllTrailerStore, getAllEmployeesStore, ( trailers, employees ): SelectOptionsType[] =>
         trailers
@@ -43,4 +44,10 @@ export const getAllTrailerSelectFromLocal = createSelector(
                     } )
                 },
             ),
+)
+
+// индикатор привязки данного ПРИЦЕПА к сотруднику из списка для селектора по доп. признаку isDisabled
+export const getIsBusyTrailer = createSelector(getAllTrailerSelectFromLocal, getCurrentIdTrailerStore,
+    ( list, currentId ): SelectOptionsType | undefined => list
+        .find(( { key, isDisabled } ) => key === currentId && isDisabled),
 )

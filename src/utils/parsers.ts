@@ -64,9 +64,9 @@ export const parseLatinCharsToRus = ( val: parsePropType ) =>
 
 export const parseClearAllMaskPlaceholders = ( val: parsePropType ) =>
     val?.replaceAll(/[#_]/g, '') || ''
+
 export const parserDowngradeRUSatEnd = ( val: parsePropType ) =>
     val?.replace(/RUS$/, 'rus') || ''
-// export const parseTransportNumber = (val: string|null): string => val ? vaal.replace(/^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/ui,'') : ''
 
 // преобразовывает в заглавные буквы
 export const parseToUpperCase = ( val: parsePropType ) =>
@@ -92,15 +92,23 @@ export const coordsToString = ( coordsNumArray?: [ number, number ] ): string =>
 
 
 export const syncParsers = {
+    // parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces
     title: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+    // parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces
     fio: composeParsers(parseFIO, parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+    // parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces
     passportFMS: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
+    // parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseToUpperCase
     drivingLicence: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces, parseToUpperCase),
+    // parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces
     drivingCategory: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),
-    // trailerTransportNumber: composeParsers(parsePseudoLatinCharsAndNumbers, parseLatinCharsToRus, parseOnlyOneSpace, parseNoFirstSpaces, parseToUpperCase),
+    // parseToUpperCase, parseClearAllMaskPlaceholders, parserDowngradeRUSatEnd
     clearNormalizeTrailerTransportNumberAtEnd: composeParsers(parseToUpperCase, parseClearAllMaskPlaceholders, parserDowngradeRUSatEnd),
+    // parseLatinCharsToRus, parseToUpperCase, parserDowngradeRUSatEnd
     pseudoLatin: composeParsers(parseLatinCharsToRus, parseToUpperCase, parserDowngradeRUSatEnd),
+    // parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma
     coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
+    // removeFirstSevenOrEight
     tel: composeParsers(removeFirstSevenOrEight),
     parseToUpperCase,
     parseAllNumbers,

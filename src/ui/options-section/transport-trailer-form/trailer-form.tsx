@@ -13,9 +13,9 @@ import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoConstType, propertyRights, TrailerCardType} from '../../../types/form-types'
 import {
-    getAllTrailerSelectFromLocal,
     getCurrentIdTrailerStore,
     getInitialValuesTrailerStore,
+    getIsBusyTrailer,
     getIsFetchingTrailerStore,
     getLabelTrailerStore,
     getMaskOnTrailerStore,
@@ -32,7 +32,7 @@ import {
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
-import {AntdSwitch, SwitchMask} from '../../common/antd-switch/antd-switch';
+import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {syncValidators} from '../../../utils/validators';
 import {syncParsers} from '../../../utils/parsers';
 
@@ -56,19 +56,18 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const currentId = useSelector(getCurrentIdTrailerStore)
     const oneTrailer = useSelector(getOneTrailerFromLocal)
 
-    const allBusyTrailer = useSelector(getAllTrailerSelectFromLocal)
-    const isBusyFind = allBusyTrailer.find(( { key, isDisabled } ) => key === currentId && isDisabled)
-
+    const isBusyTrailer = useSelector(getIsBusyTrailer)
 
     const transportHasPassToDelete = () => {
         dispatch(globalModalStoreActions.setTextMessage(
-            'Транспорт не может быть удалён, он привязан к сотруднику: '
-            + ( isBusyFind && isBusyFind.subLabel ),
+            'Прицеп не может быть удалён, он привязан к сотруднику: '
+            + ( isBusyTrailer?.subLabel ),
         ))
     }
+
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
-    const isNew =  currentIdForShow === 'new'
+    const isNew = currentIdForShow === 'new'
     const [ trailerNumberRusCheck, setTrailerNumberRusCheck ] = useState(isNew)
     const [ ptsRusCheck, setPtsRusCheck ] = useState(isNew)
 
@@ -110,13 +109,12 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
 
     useEffect(() => {
-            if (currentId === currentIdForShow) {
-                setInitialValues(oneTrailer)
-            } else {
-                dispatch(trailerStoreActions.setCurrentId(currentIdForShow || ''))
-            }
-        }, [ currentId, initialValues ],
-    )
+        if (currentId === currentIdForShow) {
+            setInitialValues(oneTrailer)
+        } else {
+            dispatch(trailerStoreActions.setCurrentId(currentIdForShow || ''))
+        }
+    }, [ currentId, initialValues ])
 
 
     return (
@@ -239,7 +237,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                     <Button type={ 'button' }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ isBusyFind ? transportHasPassToDelete : trailerDeleteHandleClick }
+                                                            onClick={ isBusyTrailer ? transportHasPassToDelete : trailerDeleteHandleClick }
                                                             disabled={ isNew }
                                                             rounded
                                                     />
