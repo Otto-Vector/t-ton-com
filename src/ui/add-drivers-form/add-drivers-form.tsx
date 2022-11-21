@@ -35,6 +35,7 @@ import {AppStateType} from '../../redux/redux-store';
 import {getOneRequestsAPI} from '../../redux/forms/request-store-reducer';
 import {syncParsers} from '../../utils/parsers';
 import {FormApi} from 'final-form';
+import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple';
 
 type OwnProps = {}
 
@@ -72,19 +73,13 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const navigate = useNavigate()
 
     const onSubmit = ( values: ResponseToRequestCardType ) => {
+        console.log(values)
         // navigate(create)
     }
 
     const oneEmployee = useSelector(getOneEmployeeFromLocal)
     const setOneEmployee = ( searchId: string ) => {
         dispatch(employeesStoreActions.setCurrentId(searchId))
-    }
-
-    const setOneEmployeeForm = ( form: FormApi<ResponseToRequestCardType> ) => ( searchId: string ) => {
-        // сбрасываем состояние поля, чтобы пересчитать при ручном вводе
-        form.resetFieldState('responseStavka')
-        form.change('responseStavka', '')
-        setOneEmployee(searchId)
     }
 
     const employeeOneImage = oneEmployee.photoFace
@@ -102,6 +97,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const setOneTrailer = ( searchId: string | undefined ) => {
         dispatch(trailerStoreActions.setCurrentId(searchId || ''))
     }
+
     const trailerOneImage = oneTrailer.trailerImage
     const trailerOneCargoWeight = oneTrailer.cargoWeight
 
@@ -112,6 +108,11 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * ( trailerNum + transportNum ) * distanceNum )))
         return validators.responseStavka ? ( validators.responseStavka(stavka) || '' ) : ''
     }, [ trailerOneCargoWeight, transportOneCargoWeight, distance ])
+
+    // перезаписываем состояние в стейт для перерасчёта калькулятора
+    const spyChanger = (values: ResponseToRequestCardType) => {
+        setInitialValues(values)
+    }
 
     const onCancelClick = () => {
         navigate(-1)
@@ -136,8 +137,18 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
             setOneTransport(oneEmployee.idTransport)
             setOneTrailer(oneEmployee.idTrailer)
         }
-
     }, [ oneEmployee ])
+
+    useEffect(() => {
+        if (oneTrailer.idTrailer !== initialValues.idTrailer || oneTransport.idTransport !== initialValues.idTransport)
+            setInitialValues({
+                ...initialValues,
+                idEmployee: oneEmployee.idEmployee,
+                idTransport: oneTransport.idTransport,
+                idTrailer: oneTrailer.idTrailer,
+                responseTax: taxMode,
+            })
+    }, [ oneTrailer, oneTransport ])
 
     return (
         <div className={ styles.addDriversForm }>
@@ -157,17 +168,21 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                       values,
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }>
+                                        <FormSpySimple form={form}
+                                                       isOnActiveChange
+                                                       onChange={spyChanger}
+                                        />
                                         <div
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>
                                                     { label.idEmployee + ':' }</label>
-                                                <FormSelector nameForSelector={ 'driverFIO' }
+                                                <FormSelector nameForSelector={ 'idEmployee' }
                                                               placeholder={ placeholder.idEmployee }
                                                               values={ employeesSelect }
                                                               validate={ validators.idEmployee }
-                                                              handleChanger={ setOneEmployeeForm(form) }
+                                                              handleChanger={ setOneEmployee }
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
