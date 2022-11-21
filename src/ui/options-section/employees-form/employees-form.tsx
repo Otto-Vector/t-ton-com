@@ -59,15 +59,15 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     // селекторы
     const drivingCategorySelector = useSelector(getDrivingCategorySelector)
-    const trailerSelect = useSelector(getTrailerSelectEnableCurrentEmployee)
     const transportSelect = useSelector(getTransportSelectEnableCurrentEmployee)
+    const trailerSelect = useSelector(getTrailerSelectEnableCurrentEmployee)
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployee = useSelector(getOneEmployeeFromLocal)
 
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
-    const isNew = useMemo(() => currentIdForShow === 'new', [ currentIdForShow ])
+    const isNew = currentIdForShow === 'new'
     const [ drivingLicenseNumberRusCheck, setDrivingLicenseNumberRusCheck ] = useState(isNew)
 
     const { options } = useSelector(getRoutesStore)
@@ -77,6 +77,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
+
 
     const onSubmit = ( values: EmployeesCardType<string> ) => {
         const demaskedValues: EmployeesCardType<string> = {
@@ -97,14 +98,17 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         navigate(options) // и возвращаемся в предыдущее окно
     }
 
+
     const onCancelClick = () => {
         navigate(options)
     }
+
 
     const employeesDeleteHandleClick = ( currentId: string ) => {
         dispatch<any>(oneEmployeesDeleteToAPI(currentId))
         navigate(options)
     }
+
 
     useEffect(() => {
             if (currentId === currentIdForShow) {
@@ -114,6 +118,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             }
         }, [ currentId, initialValues ],
     )
+
 
     return (
         <div className={ styles.employeesForm }>

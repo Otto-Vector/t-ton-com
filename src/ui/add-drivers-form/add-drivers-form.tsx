@@ -24,15 +24,17 @@ import {FormInputType} from '../common/form-input-type/form-input-type'
 import {getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {getAllEmployeesSelectFromLocal, getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
-import {getAllTransportSelectFromLocal, getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
+import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
 
-import {getAllTrailerSelectFromLocal, getOneTrailerFromLocal} from '../../selectors/options/trailer-reselect'
+import {getOneTrailerFromLocal} from '../../selectors/options/trailer-reselect'
 import {employeesStoreActions} from '../../redux/options/employees-store-reducer'
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
 import {AppStateType} from '../../redux/redux-store';
 import {getOneRequestsAPI} from '../../redux/forms/request-store-reducer';
+import {syncParsers} from '../../utils/parsers';
+import {FormApi} from 'final-form';
 
 type OwnProps = {}
 
@@ -49,7 +51,9 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const initialValues = useSelector(getInitialValuesAddDriverStore)
+    const externalInitialValues = useSelector(getInitialValuesAddDriverStore)
+    const [ initialValues, setInitialValues ] = useState(externalInitialValues)
+
     const label = useSelector(getLabelAddDriverStore)
     const placeholder = useSelector(getPlaceholderAddDriverStore)
     const validators = useSelector(getValidatorsAddDriverStore)
@@ -64,10 +68,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     }
 
     const employeesSelect = useSelector(getAllEmployeesSelectFromLocal)
-    const transportSelect = useSelector(getAllTransportSelectFromLocal)
-    const trailerSelect = useSelector(getAllTrailerSelectFromLocal)
 
-    // const { requestInfo: { create } } = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
     const onSubmit = ( values: ResponseToRequestCardType ) => {
@@ -75,9 +76,17 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     }
 
     const oneEmployee = useSelector(getOneEmployeeFromLocal)
-    const setOneEmployee = ( searchId: string | undefined ) => {
-        dispatch(employeesStoreActions.setCurrentId(searchId || ''))
+    const setOneEmployee = ( searchId: string ) => {
+        dispatch(employeesStoreActions.setCurrentId(searchId))
     }
+
+    const setOneEmployeeForm = ( form: FormApi<ResponseToRequestCardType> ) => ( searchId: string ) => {
+        // сбрасываем состояние поля, чтобы пересчитать при ручном вводе
+        form.resetFieldState('responseStavka')
+        form.change('responseStavka', '')
+        setOneEmployee(searchId)
+    }
+
     const employeeOneImage = oneEmployee.photoFace
     const employeeOneRating = oneEmployee.rating
     // const employeeOnePhone = oneEmployee.employeePhoneNumber
@@ -97,12 +106,11 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const trailerOneCargoWeight = oneTrailer.cargoWeight
 
     // подсчёт стоимости в зависимости от расстояния, ставки и веса груза
-    const resultDistanceCost = useCallback(() => ( stavka: string ): string => {
+    const resultDistanceCost = useCallback(( form: FormApi<ResponseToRequestCardType> ) => ( stavka: string ): string => {
         const [ stavkaNum, trailerNum, transportNum, distanceNum ] = [ stavka, trailerOneCargoWeight, transportOneCargoWeight, distance ]
-            .map(Number)
-        return ( stavkaNum * ( trailerNum + transportNum ) * distanceNum )
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+            .map(( v ) => +( v || 0 ))
+        form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * ( trailerNum + transportNum ) * distanceNum )))
+        return validators.responseStavka ? ( validators.responseStavka(stavka) || '' ) : ''
     }, [ trailerOneCargoWeight, transportOneCargoWeight, distance ])
 
     const onCancelClick = () => {
@@ -128,11 +136,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
             setOneTransport(oneEmployee.idTransport)
             setOneTrailer(oneEmployee.idTrailer)
         }
-        // dispatch(addDriverStoreActions.setValues({
-        //     ...initialValues,
-        //     idTransport: oneEmployee.idTransport,
-        //     idTrailer: oneEmployee.idTrailer,
-        // }))
+
     }, [ oneEmployee ])
 
     return (
@@ -163,43 +167,43 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                               placeholder={ placeholder.idEmployee }
                                                               values={ employeesSelect }
                                                               validate={ validators.idEmployee }
-                                                              handleChanger={ setOneEmployee }
+                                                              handleChanger={ setOneEmployeeForm(form) }
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>
                                                     { label.idTransport + ':' }</label>
-                                                <FormSelector nameForSelector={ 'driverTransport' }
-                                                              placeholder={ placeholder.idTransport }
-                                                              values={ transportSelect }
-                                                              validate={ validators.idTransport }
-                                                              handleChanger={ setOneTransport }
-                                                />
+                                                <div className={ styles.addDriversForm__info }>
+                                                    { oneTransport.transportNumber
+                                                        ? oneTransport.transportNumber + ', (' + oneTransport.cargoWeight + 'т.)'
+                                                        : 'не привязан'
+                                                    }
+                                                </div>
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>
                                                     { label.idTrailer + ':' }</label>
-                                                <FormSelector nameForSelector={ 'driverTrailer' }
-                                                              placeholder={ placeholder.idTrailer }
-                                                              values={ trailerSelect }
-                                                              validate={ validators.idTrailer }
-                                                              handleChanger={ setOneTrailer }
-                                                />
+                                                <div className={ styles.addDriversForm__info }>
+                                                    { oneTrailer.trailerNumber
+                                                        ? oneTrailer.trailerNumber + ', (' + oneTrailer.cargoWeight + 'т.)'
+                                                        : 'не привязан'
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
                                         <div className={ styles.addDriversForm__infoPanel }>
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.responseStavka + ':' }</label>
-                                                <Field name={ 'driverStavka' }
+                                                <Field name={ 'responseStavka' }
                                                        placeholder={ placeholder.responseStavka }
                                                        component={ FormInputType }
                                                        inputType={ 'money' }
                                                        pattern={ '/d*.' }
                                                        resetFieldBy={ form }
-                                                       validate={ validators.responseStavka }
+                                                       validate={ resultDistanceCost(form) }
                                                        noLabel
                                                        errorBottom
                                                 />
@@ -210,12 +214,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                     { label.responsePrice + ':' }</label>
                                                 <div className={ styles.addDriversForm__info + ' ' +
                                                     styles.addDriversForm__info_long }>
-                                                    {
-                                                        values.responsePrice =
-                                                            resultDistanceCost()(values.responseStavka as string)
-                                                            ||
-                                                            'за весь рейс'
-                                                    }
+                                                    { values.responsePrice || 'за весь рейс' }
                                                 </div>
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>

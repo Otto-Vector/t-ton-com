@@ -54,14 +54,15 @@ export const parseNoFirstSpaces = ( val: parsePropType ) =>
 const pseudoLatin = 'АВЕКМНОРСТУХавекмнорстух'
 const pseudoRussian = 'ABEKMHOPCTYXabekmhopctyx'
 const enCharToRusChar = ( char: string ): string => pseudoLatin.charAt(pseudoRussian.indexOf(char))
-// удаляем все не (псевдолатиницы, пробелы, цифры и '|') из текста
+// удаляем все НЕ (псевдолатиницы, пробелы, цифры и '|') из текста
 export const parsePseudoLatinCharsAndNumbers = ( val: parsePropType ) =>
     val?.replace(/[^АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx|\d\s]/g, '') || ''
 // латинские буквы в русские аналоги
 export const parseLatinCharsToRus = ( val: parsePropType ) =>
     val?.replace(/[ABEKMHOPCTYXabekmhopctyx]/g, enCharToRusChar) || ''
 ////////////////////////////////////////////////////////////////////////
-
+ export const parseToNormalMoney = ( val: number ) =>
+     (+val||0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''
 export const parseClearAllMaskPlaceholders = ( val: parsePropType ) =>
     val?.replaceAll(/[#_]/g, '') || ''
 
@@ -110,6 +111,7 @@ export const syncParsers = {
     coordinates: composeParsers(parseAllCoords, parseOnlyOneSpace, parseOnlyOneDot, parseNoFirstSpaces, parseOnlyOneComma),
     // removeFirstSevenOrEight
     tel: composeParsers(removeFirstSevenOrEight),
+    parseToNormalMoney,
     parseToUpperCase,
     parseAllNumbers,
 }
