@@ -10,7 +10,7 @@ import {
 import {getLabelAddDriverStore} from '../../selectors/forms/add-driver-reselect'
 import {getOneRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
-import {getOneEmployeesFromLocal} from '../../selectors/options/employees-reselect'
+import {getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
 import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
 
 import {getOneTrailerFromLocal} from '../../selectors/options/trailer-reselect'
@@ -35,7 +35,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const initialValues = useSelector(getOneEmployeesFromLocal)
+    const initialValues = useSelector(getOneEmployeeFromLocal)
     const label = useSelector(getLabelAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
     const oneRequest = useSelector(getOneRequestStore)

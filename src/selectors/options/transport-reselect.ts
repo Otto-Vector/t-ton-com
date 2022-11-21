@@ -3,7 +3,7 @@ import {TransportStoreReducerStateType} from '../../redux/options/transport-stor
 import {TransportCardType} from '../../types/form-types';
 import {createSelector} from 'reselect';
 import {parseFamilyToFIO} from '../../utils/parsers';
-import {getAllEmployeesStore} from './employees-reselect';
+import {getAllEmployeesStore, getOneEmployeeFromLocal} from './employees-reselect';
 import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
 
 type TransportStoreSelectors<T extends keyof Y, Y = TransportStoreReducerStateType> = ( state: AppStateType ) => Y[T]
@@ -50,4 +50,12 @@ export const getAllTransportSelectFromLocal = createSelector(
 export const getIsBusyTransport = createSelector(getAllTransportSelectFromLocal, getCurrentIdTransportStore,
     ( list, currentId ): SelectOptionsType | undefined => list
         .find(( { key, isDisabled } ) => key === currentId && isDisabled),
+)
+
+// селектор для сотрудника с активным выбором его же ТРАНСПОРТА
+export const getTransportSelectEnableCurrentEmployee = createSelector(getAllTransportSelectFromLocal, getOneEmployeeFromLocal,
+    ( trailerSelect, oneEmployee ) => trailerSelect.map(values => ( {
+        ...values,
+        isDisabled: values.isDisabled && ( values.key !== oneEmployee.idTransport ),
+    } )),
 )

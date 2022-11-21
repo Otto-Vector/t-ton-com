@@ -2,7 +2,7 @@ import {AppStateType} from '../../redux/redux-store'
 import {TrailerStoreReducerStateType} from '../../redux/options/trailer-store-reducer'
 import {createSelector} from 'reselect';
 import {TrailerCardType} from '../../types/form-types';
-import {getAllEmployeesStore} from './employees-reselect';
+import {getAllEmployeesStore, getOneEmployeeFromLocal} from './employees-reselect';
 import {parseFamilyToFIO} from '../../utils/parsers';
 import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
 
@@ -50,4 +50,12 @@ export const getAllTrailerSelectFromLocal = createSelector(
 export const getIsBusyTrailer = createSelector(getAllTrailerSelectFromLocal, getCurrentIdTrailerStore,
     ( list, currentId ): SelectOptionsType | undefined => list
         .find(( { key, isDisabled } ) => key === currentId && isDisabled),
+)
+
+// селектор для сотрудника с активным выбором его же ПРИЦЕПА
+export const getTrailerSelectEnableCurrentEmployee = createSelector(getAllTrailerSelectFromLocal, getOneEmployeeFromLocal,
+    ( trailerSelect, oneEmployee ) => trailerSelect.map(values => ( {
+        ...values,
+        isDisabled: values.isDisabled && ( values.key !== oneEmployee.idTrailer ),
+    } )),
 )

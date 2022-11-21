@@ -23,7 +23,7 @@ import {FormSelector} from '../common/form-selector/form-selector'
 import {FormInputType} from '../common/form-input-type/form-input-type'
 import {getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
-import {getAllEmployeesSelectFromLocal, getOneEmployeesFromLocal} from '../../selectors/options/employees-reselect'
+import {getAllEmployeesSelectFromLocal, getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
 import {getAllTransportSelectFromLocal, getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
 
 import {getAllTrailerSelectFromLocal, getOneTrailerFromLocal} from '../../selectors/options/trailer-reselect'
@@ -74,7 +74,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         // navigate(create)
     }
 
-    const oneEmployee = useSelector(getOneEmployeesFromLocal)
+    const oneEmployee = useSelector(getOneEmployeeFromLocal)
     const setOneEmployee = ( searchId: string | undefined ) => {
         dispatch(employeesStoreActions.setCurrentId(searchId || ''))
     }

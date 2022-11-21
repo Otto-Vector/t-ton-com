@@ -17,7 +17,7 @@ import {
     getIsFetchingEmployeesStore,
     getLabelEmployeesStore,
     getMaskOnEmployeesStore,
-    getOneEmployeesFromLocal,
+    getOneEmployeeFromLocal,
     getParsersEmployeesStore,
     getValidatorsEmployeesStore,
 } from '../../../selectors/options/employees-reselect'
@@ -29,8 +29,8 @@ import {
 } from '../../../redux/options/employees-store-reducer';
 
 import {FormSelector} from '../../common/form-selector/form-selector';
-import {getAllTrailerSelectFromLocal} from '../../../selectors/options/trailer-reselect';
-import {getAllTransportSelectFromLocal} from '../../../selectors/options/transport-reselect';
+import {getTrailerSelectEnableCurrentEmployee} from '../../../selectors/options/trailer-reselect';
+import {getTransportSelectEnableCurrentEmployee} from '../../../selectors/options/transport-reselect';
 import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set';
 import {yearMmDdFormat} from '../../../utils/date-formats';
@@ -49,7 +49,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector(getIsFetchingEmployeesStore)
 
     const defaultInitialValues = useSelector(getInitialValuesEmployeesStore)
-    //для проброса загруженных данных в форму
+    // для проброса загруженных данных в форму
     const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
     const label = useSelector(getLabelEmployeesStore)
@@ -57,30 +57,13 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsEmployeesStore)
     const parsers = useSelector(getParsersEmployeesStore)
 
+    // селекторы
     const drivingCategorySelector = useSelector(getDrivingCategorySelector)
-
-
-    const trailerSelect = useSelector(getAllTrailerSelectFromLocal)
-        .map(( values ) => {
-            const isMatch = ( values.key === initialValues.idTrailer )
-            return {
-                ...values,
-                isDisabled: values.isDisabled && !isMatch,
-            }
-        })
-
-    const transportSelect = useSelector(getAllTransportSelectFromLocal)
-        .map(( values ) => {
-            const isMatch = ( values.key === initialValues.idTransport )
-            return {
-                ...values,
-                // label: values.label + ( isMatch ? '' : values.subLabel ? ' - ' + values.subLabel : '' ),
-                isDisabled: values.isDisabled && !isMatch,
-            }
-        })
+    const trailerSelect = useSelector(getTrailerSelectEnableCurrentEmployee)
+    const transportSelect = useSelector(getTransportSelectEnableCurrentEmployee)
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
-    const oneEmployees = useSelector(getOneEmployeesFromLocal)
+    const oneEmployee = useSelector(getOneEmployeeFromLocal)
 
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
@@ -125,7 +108,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     useEffect(() => {
             if (currentId === currentIdForShow) {
-                setInitialValues(oneEmployees)
+                setInitialValues(oneEmployee)
             } else {
                 dispatch(employeesStoreActions.setCurrentId(currentIdForShow || ''))
             }

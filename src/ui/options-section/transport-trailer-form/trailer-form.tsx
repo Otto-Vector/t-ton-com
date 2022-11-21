@@ -83,7 +83,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
         const demaskedValues: TrailerCardType<string> = {
             ...values,
             cargoWeight: syncParsers.parseAllNumbers(values.cargoWeight),
-            trailerNumber: syncParsers.clearNormalizeTrailerTransportNumberAtEnd(values.trailerNumber) || '',
+            trailerNumber: syncParsers.clearNormalizeTrailerTransportNumberAtEnd(values.trailerNumber),
         }
 
         if (isNew) {

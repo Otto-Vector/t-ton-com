@@ -12,9 +12,9 @@ import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {cargoConstType, propertyRights, TransportCardType} from '../../../types/form-types'
 import {
-    getAllTransportSelectFromLocal,
     getCurrentIdTransportStore,
-    getInitialValuesTransportStore, getIsBusyTransport,
+    getInitialValuesTransportStore,
+    getIsBusyTransport,
     getIsFetchingTransportStore,
     getLabelTransportStore,
     getMaskOnTransportStore,
@@ -86,7 +86,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
         const demaskedValues: TransportCardType<string> = {
             ...values,
             cargoWeight: syncParsers.parseAllNumbers(values.cargoWeight),
-            transportNumber: syncParsers.clearNormalizeTrailerTransportNumberAtEnd(values.transportNumber) || '',
+            transportNumber: syncParsers.clearNormalizeTrailerTransportNumberAtEnd(values.transportNumber),
         }
 
         if (isNew) {
@@ -112,14 +112,12 @@ export const TransportForm: React.FC<OwnProps> = () => {
 
 
     useEffect(() => {
-            if (currentId === currentIdForShow) {
-                setInitialValues(oneTransport)
-            } else {
-                dispatch(transportStoreActions.setCurrentId(currentIdForShow || ''))
-            }
-            // if (!initialValues.transportNumber) { setTransportNumberRusCheck(true)}
-        }, [ currentId, initialValues ],
-    )
+        if (currentId === currentIdForShow) {
+            setInitialValues(oneTransport)
+        } else {
+            dispatch(transportStoreActions.setCurrentId(currentIdForShow || ''))
+        }
+    }, [ currentId, initialValues ])
 
     return (
         <div className={ styles.transportTrailerForm }>

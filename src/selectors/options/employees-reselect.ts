@@ -20,7 +20,7 @@ export const getAllEmployeesStore: EmployeesStoreSelectors<'content'> = ( state 
 export const getCurrentIdEmployeesStore: EmployeesStoreSelectors<'currentId'> = ( state ) => state.employeesStoreReducer.currentId
 
 
-export const getOneEmployeesFromLocal = createSelector(getCurrentIdEmployeesStore, getAllEmployeesStore, getInitialValuesEmployeesStore,
+export const getOneEmployeeFromLocal = createSelector(getCurrentIdEmployeesStore, getAllEmployeesStore, getInitialValuesEmployeesStore,
     ( currentId, employees, initials ): EmployeesCardType => {
         return employees.filter(( { idEmployee } ) => idEmployee === currentId)[0] || initials
     })
