@@ -13,6 +13,8 @@ import {getAllConsigneesStore, getCurrentIdConsigneeStore} from './consignees-re
 import {getAllTransportSelectFromLocal, getAllTransportStore} from './transport-reselect';
 import {getAllTrailerSelectFromLocal, getAllTrailerStore} from './trailer-reselect';
 import {getAllEmployeesStore} from './employees-reselect';
+import {parseFamilyToFIO} from '../../utils/parsers';
+import { SelectOptionsType } from '../../ui/common/form-selector/selector-utils';
 
 type OptionsStoreSelectors<T extends keyof Y, Y = OptionsStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
@@ -104,3 +106,14 @@ export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, get
             ),
         }
     })
+
+export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStore, getEmployeesOptionsStore,
+    ( employees, { content } ): SelectOptionsType[] => employees.map(( { idEmployee, employeeFIO }, index ) =>
+        ( {
+            key: idEmployee,
+            value: idEmployee,
+            label: parseFamilyToFIO(employeeFIO),
+            isDisabled: !content[index].subTitle,
+            subLabel: !content[index].subTitle ? 'без транспорта': '',
+        } )),
+)

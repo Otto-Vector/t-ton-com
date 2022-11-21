@@ -17,6 +17,10 @@
     box-shadow: $cardsShadow;
     border-radius: 25px;
     padding: 10px;
+
+    &_width {
+      width: 290px;
+    }
   }
 
   &__header, &__label {
@@ -78,6 +82,11 @@
 
     &_long {
       height: 38px;
+    }
+
+    &_maxHeight {
+      height: auto;
+      max-height: 60px;
     }
   }
 

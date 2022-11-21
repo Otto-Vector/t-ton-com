@@ -4,6 +4,7 @@ import {EmployeesCardType} from '../../types/form-types';
 import {createSelector} from 'reselect';
 import {parseFamilyToFIO} from '../../utils/parsers';
 import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
+import {getEmployeesOptionsStore} from './options-reselect';
 
 
 type EmployeesStoreSelectors<T extends keyof Y, Y = EmployeesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
@@ -24,8 +25,3 @@ export const getOneEmployeeFromLocal = createSelector(getCurrentIdEmployeesStore
     ( currentId, employees, initials ): EmployeesCardType => {
         return employees.filter(( { idEmployee } ) => idEmployee === currentId)[0] || initials
     })
-
-export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStore,
-    ( employees ): SelectOptionsType[] => employees.map(( { idEmployee, employeeFIO } ) =>
-        ( { key: idEmployee, value: idEmployee, label: parseFamilyToFIO(employeeFIO) } )),
-)

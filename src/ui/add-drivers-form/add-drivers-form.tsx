@@ -23,7 +23,7 @@ import {FormSelector} from '../common/form-selector/form-selector'
 import {FormInputType} from '../common/form-input-type/form-input-type'
 import {getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
-import {getAllEmployeesSelectFromLocal, getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
+import {getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
 import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
 
 import {getOneTrailerFromLocal} from '../../selectors/options/trailer-reselect'
@@ -36,6 +36,7 @@ import {getOneRequestsAPI} from '../../redux/forms/request-store-reducer';
 import {syncParsers} from '../../utils/parsers';
 import {FormApi} from 'final-form';
 import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple';
+import {getAllEmployeesSelectFromLocal} from '../../selectors/options/options-reselect';
 
 type OwnProps = {}
 
@@ -110,7 +111,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     }, [ trailerOneCargoWeight, transportOneCargoWeight, distance ])
 
     // перезаписываем состояние в стейт для перерасчёта калькулятора
-    const spyChanger = (values: ResponseToRequestCardType) => {
+    const spyChanger = ( values: ResponseToRequestCardType ) => {
         setInitialValues(values)
     }
 
@@ -152,7 +153,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
 
     return (
         <div className={ styles.addDriversForm }>
-            <div className={ styles.addDriversForm__wrapper }>
+            <div className={ styles.addDriversForm__wrapper + ' ' + styles.addDriversForm__wrapper_width }>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
                         <h4 className={ styles.addDriversForm__header }>{ header(requestNumber, new Date()) }</h4>
@@ -168,9 +169,9 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                       values,
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.addDriversForm__form }>
-                                        <FormSpySimple form={form}
+                                        <FormSpySimple form={ form }
                                                        isOnActiveChange
-                                                       onChange={spyChanger}
+                                                       onChange={ spyChanger }
                                         />
                                         <div
                                             className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
@@ -183,15 +184,17 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                               values={ employeesSelect }
                                                               validate={ validators.idEmployee }
                                                               handleChanger={ setOneEmployee }
+                                                              isSubLabelOnOption
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>
                                                 <label
                                                     className={ styles.addDriversForm__label }>
                                                     { label.idTransport + ':' }</label>
-                                                <div className={ styles.addDriversForm__info }>
+                                                <div
+                                                    className={ styles.addDriversForm__info + ' ' + styles.addDriversForm__info_maxHeight }>
                                                     { oneTransport.transportNumber
-                                                        ? oneTransport.transportNumber + ', (' + oneTransport.cargoWeight + 'т.)'
+                                                        ? oneTransport.transportModel + ', ' + oneTransport.transportNumber + ', (' + oneTransport.cargoWeight + 'т.)'
                                                         : 'не привязан'
                                                     }
                                                 </div>
@@ -200,9 +203,10 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <label
                                                     className={ styles.addDriversForm__label }>
                                                     { label.idTrailer + ':' }</label>
-                                                <div className={ styles.addDriversForm__info }>
+                                                <div
+                                                    className={ styles.addDriversForm__info + ' ' + styles.addDriversForm__info_maxHeight }>
                                                     { oneTrailer.trailerNumber
-                                                        ? oneTrailer.trailerNumber + ', (' + oneTrailer.cargoWeight + 'т.)'
+                                                        ? oneTrailer.trailerModel + ', ' + oneTrailer.trailerNumber + ', (' + oneTrailer.cargoWeight + 'т.)'
                                                         : 'не привязан'
                                                     }
                                                 </div>

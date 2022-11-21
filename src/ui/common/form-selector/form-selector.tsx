@@ -21,6 +21,7 @@ type OwnProps = {
     disabled?: boolean
     defaultValue?: SelectOptionsType | SelectOptionsType[]
     isMulti?: boolean
+    // добавляет отображение поля subLabel
     isSubLabelOnOption?: boolean
 }
 
