@@ -321,13 +321,13 @@ export type OneRequestType = {
     requestCarrierId: undefined | string
     // id водителя (из карточки отклика)
     idEmployee: undefined | string
-    responseEmployee?: EmployeesCardType
+    responseEmployee?: Partial<EmployeesCardType>
     // id транспорта (из карточки отклика)
     idTransport: undefined | string
-    responseTransport?: TransportCardType
+    responseTransport?: Partial<TransportCardType>
     // id прицепа (из карточки отклика)
     idTrailer: undefined | string
-    responseTrailer?: TrailerCardType
+    responseTrailer?: Partial<TrailerCardType>
     // тариф ставки перевозки 1 тонны на 1 км (из карточки отклика)
     responseStavka: undefined | string
     // система налогообложения (ОСН, УСН, ЕСХН, ПСН, НПД и т.д.) (из карточки отклика)
@@ -450,12 +450,67 @@ export type OneRequestApiType = {
     note?: string
     visible?: string
     marked?: string
+
     globalStatus?: string
     localStatuspaymentHasBeenTransferred?: boolean
     localStatuscargoHasBeenTransferred?: boolean
     localStatuspaymentHasBeenReceived?: boolean
     localStatuscargoHasBeenReceived?: boolean
+
     answers?: string
+
+    // заявки, доступ к которым оплачен данным пользователем
+    acceptedUsers: string[] | undefined
+    /*НОВЫЕ ПОЛЯ НА СОТРУДНИКА*/
+    // ФИО сотрудника
+    responseEmployeeFIO: undefined | string
+    // Телефон сотрудника
+    responseEmployeePhoneNumber: undefined | string
+    // Серия, № паспорта
+    responseEmployeepassportSerial: undefined | string
+    // Кем выдан паспорт
+    responseEmployeepassportFMS: undefined | string
+    // Когда выдан
+    responseEmployeepassportDate: undefined | string
+    // Номер водительского удостоверения
+    responseEmployeedrivingLicenseNumber: undefined | string
+
+    /*НОВЫЕ ПОЛЯ НА ТРАНСПОРТ*/
+    // Гос. номер авто
+    responseTransportNumber: undefined | string
+    // Марка авто
+    responseTransportTrademark: undefined | string
+    // Модель авто
+    responseTransportModel: undefined | string
+    // ПТС
+    responseTransportPts: undefined | string
+    // ДОПОГ
+    responseTransportDopog: undefined | string
+    // Тип груза
+    responseTransportCargoType: undefined | string
+    // Вес груза
+    responseTransportCargoWeight: undefined | string
+    // Право собственности
+    responseTransportPropertyRights: undefined | string
+
+    /*НОВЫЕ ПОЛЯ НА ПРИЦЕП*/
+    // Гос. номер авто
+    responseTrailertrailerNumber: undefined | string
+    // Марка авто
+    responseTrailerTrademark: undefined | string
+    // Модель авто
+    responseTrailerModel: undefined | string
+    // ПТС
+    responseTrailerPts: undefined | string
+    // ДОПОГ
+    responseTrailerDopog: undefined | string
+    // Тип груза
+    responseTrailerCargoType: undefined | string
+    // Вес груза
+    responseTrailerCargoWeight: undefined | string,
+    responseTrailerPropertyRights: undefined | string
+
+
 
     requestUserCarrierId?: string
     requestCarrierId?: string

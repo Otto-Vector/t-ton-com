@@ -4,6 +4,7 @@ import {
     CargoTypeType,
     ConsigneesCardType,
     DocumentsRequestType,
+    OneRequestApiType,
     OneRequestType,
     ShippersCardType,
     ValidateType,
@@ -255,130 +256,167 @@ export const requestStoreActions = {
 
 }
 
+const parseRequestFromAPI = ( elem: OneRequestApiType ) => ( {
+    requestNumber: +elem.requestNumber,
+    requestDate: elem.requestDate ? new Date(apiToISODateFormat(elem.requestDate)) : undefined,
+    cargoComposition: elem.cargoComposition,
+    shipmentDate: elem.shipmentDate ? new Date(elem.shipmentDate) : undefined,
+    cargoType: elem.cargoType as CargoTypeType,
+
+    idUserCustomer: elem.idUserCustomer,
+    idCustomer: elem.idCustomer,
+
+    idUserSender: elem.idUserSender,
+    idSender: elem.idSender,
+    sender: {
+        idSender: elem.idSender + '',
+        title: elem.titleSender,
+        innNumber: elem.innNumberSender,
+        organizationName: elem.organizationNameSender,
+        kpp: elem.kppSender,
+        ogrn: elem.ogrnSender,
+        address: elem.addressSender,
+        shipperFio: elem.shipperFioSender,
+        shipperTel: elem.shipperTelSender,
+        description: elem.descriptionSender,
+        coordinates: elem.coordinatesSender,
+        city: elem.citySender,
+    },
+
+    idRecipient: elem.idRecipient,
+    idUserRecipient: elem.idUserRecipient,
+    recipient: {
+        idRecipient: elem.idRecipient as string,
+        title: elem.titleRecipient,
+        innNumber: elem.innNumberRecipient,
+        organizationName: elem.organizationNameRecipient,
+        kpp: elem.kppRecipient,
+        ogrn: elem.ogrnRecipient,
+        address: elem.addressRecipient,
+        consigneesFio: elem.consigneesFioRecipient,
+        consigneesTel: elem.consigneesTelRecipient,
+        description: elem.descriptionRecipient,
+        coordinates: elem.coordinatesRecipient,
+        city: elem.cityRecipient,
+    },
+
+    distance: Number(elem.distance),
+    route: elem.route,
+    note: elem.note,
+    visible: true,
+    marked: false,
+
+    globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
+    localStatus: {
+        paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
+        paymentHasBeenReceived: elem.localStatuscargoHasBeenReceived,
+        cargoHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
+        cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
+    },
+
+    acceptedUsers: elem.acceptedUsers,
+    answers: elem.answers?.split(','),
+
+    requestUserCarrierId: elem.requestUserCarrierId,
+    requestCarrierId: elem.requestCarrierId,
+    idEmployee: elem.idEmployee,
+    responseEmployee: {
+        idEmployee: elem.idEmployee,
+        employeeFIO: elem.responseEmployeeFIO,
+        phoneNumber: elem.responseEmployeePhoneNumber,
+        passportSerial: elem.responseEmployeepassportSerial,
+        passportFMS: elem.responseEmployeepassportFMS,
+        passportDate: elem.responseEmployeepassportDate,
+        drivingLicenseNumber: elem.responseEmployeedrivingLicenseNumber,
+    },
+
+    idTransport: elem.idTransport,
+    responseTransport: {
+        idTransport: elem.idTransport,
+        transportNumber: elem.responseTransportNumber,
+        transportTrademark: elem.responseTransportTrademark,
+        transportModel: elem.responseTransportModel,
+        pts: elem.responseTransportPts,
+        dopog: elem.responseTransportDopog,
+        cargoType: elem.responseTransportCargoType,
+        cargoWeight: elem.responseTransportCargoWeight,
+        propertyRights: elem.responseTransportCargoWeight,
+    },
+
+    idTrailer: elem.idTrailer,
+    responseTrailer: {
+        idTrailer: elem.idTrailer,
+        trailerNumber: elem.responseTrailertrailerNumber,
+        trailerTrademark: elem.responseTrailerTrademark,
+        trailerModel: elem.responseTrailerModel,
+        pts: elem.responseTrailerPts,
+        dopog: elem.responseTrailerDopog,
+        cargoType: elem.responseTrailerCargoType,
+        cargoWeight: elem.responseTrailerCargoWeight,
+        propertyRights: elem.responseTrailerCargoWeight,
+    },
+
+    responseStavka: elem.responseStavka,
+    responseTax: elem.responseTax,
+
+    responsePrice: elem.responsePrice,
+    cargoWeight: elem.cargoWeight,
+
+    uploadTime: elem.uploadTime && new Date(elem.uploadTime),
+
+    documents: {
+        proxyWay: {
+            header: undefined,
+
+            proxyFreightLoader: elem.proxyFreightLoader,
+            proxyDriver: elem.proxyDriver,
+            waybillDriver: elem.proxyWaybillDriver,
+        },
+        cargoDocuments: elem.cargoDocuments,
+        ttnECP: {
+            header: undefined,
+            documentUpload: undefined,
+            documentDownload: elem.ttnECPdocumentDownload,
+            customerIsSubscribe: elem.ttnECPcustomerIsSubscribe === 'true',
+            carrierIsSubscribe: elem.ttnECPcarrierIsSubscribe === 'true',
+            consigneeIsSubscribe: elem.ttnECPconsigneeIsSubscribe === 'true',
+        },
+        contractECP: {
+            header: undefined,
+            documentUpload: undefined,
+            documentDownload: elem.contractECPdocumentDownload,
+            customerIsSubscribe: elem.contractECPcustomerIsSubscribe === 'true',
+            carrierIsSubscribe: elem.contractECPcarrierIsSubscribe === 'true',
+        },
+        updECP: {
+            header: undefined,
+            documentUpload: undefined,
+            documentDownload: elem.updECPdocumentDownload,
+            customerIsSubscribe: elem.updECPcustomerIsSubscribe === 'true',
+            carrierIsSubscribe: elem.updECPcarrierIsSubscribe === 'true',
+        },
+        customerToConsigneeContractECP: {
+            header: undefined,
+            documentUpload: undefined,
+            documentDownload: elem.customerToConsigneeContractECPdocumentDownload,
+            customerIsSubscribe: elem.customerToConsigneeContractECPcustomerIsSubscribe === 'true',
+            consigneeIsSubscribe: elem.customerToConsigneeContractECPconsigneeIsSubscribe === 'true',
+        },
+    },
+} )
+
 /* САНКИ */
 
 export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, RequestStoreActionsType | GlobalModalActionsType>
 
-
+// запрос списка всех заявок из бэка
 export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await oneRequestApi.getAllRequests()
             if (response.length > 0) {
 
-                dispatch(requestStoreActions.setContent(response.map(( elem ) => ( {
-                        requestNumber: +elem.requestNumber,
-                        requestDate: elem.requestDate ? new Date(apiToISODateFormat(elem.requestDate)) : undefined,
-                        cargoComposition: elem.cargoComposition,
-                        shipmentDate: elem.shipmentDate ? new Date(elem.shipmentDate) : undefined,
-                        cargoType: elem.cargoType as CargoTypeType,
-
-                        idUserCustomer: elem.idUserCustomer,
-                        idCustomer: elem.idCustomer,
-
-                        idUserSender: elem.idUserSender,
-                        idSender: elem.idSender,
-                        sender: {
-                            idSender: elem.idSender + '',
-                            title: elem.titleSender,
-                            innNumber: elem.innNumberSender,
-                            organizationName: elem.organizationNameSender,
-                            kpp: elem.kppSender,
-                            ogrn: elem.ogrnSender,
-                            address: elem.addressSender,
-                            shipperFio: elem.shipperFioSender,
-                            shipperTel: elem.shipperTelSender,
-                            description: elem.descriptionSender,
-                            coordinates: elem.coordinatesSender,
-                            city: elem.citySender,
-                        },
-
-                        idRecipient: elem.idRecipient,
-                        idUserRecipient: elem.idUserRecipient,
-                        recipient: {
-                            idRecipient: elem.idRecipient as string,
-                            title: elem.titleRecipient,
-                            innNumber: elem.innNumberRecipient,
-                            organizationName: elem.organizationNameRecipient,
-                            kpp: elem.kppRecipient,
-                            ogrn: elem.ogrnRecipient,
-                            address: elem.addressRecipient,
-                            consigneesFio: elem.consigneesFioRecipient,
-                            consigneesTel: elem.consigneesTelRecipient,
-                            description: elem.descriptionRecipient,
-                            coordinates: elem.coordinatesRecipient,
-                            city: elem.cityRecipient,
-                        },
-
-                        distance: Number(elem.distance),
-                        route: elem.route,
-                        note: elem.note,
-                        visible: true,
-                        marked: false,
-
-                        globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
-                        localStatus: {
-                            paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
-                            paymentHasBeenReceived: elem.localStatuscargoHasBeenReceived,
-                            cargoHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
-                            cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
-                        },
-
-                        answers: elem.answers?.split(','),
-                        requestUserCarrierId: elem.requestUserCarrierId,
-                        requestCarrierId: elem.requestCarrierId,
-                        idEmployee: elem.idEmployee,
-                        idTransport: elem.idTransport,
-                        idTrailer: elem.idTrailer,
-                        responseStavka: elem.responseStavka,
-                        responseTax: elem.responseTax,
-
-                        responsePrice: elem.responsePrice,
-                        cargoWeight: elem.cargoWeight,
-
-                        uploadTime: elem.uploadTime && new Date(elem.uploadTime),
-
-                        documents: {
-                            proxyWay: {
-                                header: undefined,
-
-                                proxyFreightLoader: elem.proxyFreightLoader,
-                                proxyDriver: elem.proxyDriver,
-                                waybillDriver: elem.proxyWaybillDriver,
-                            },
-                            cargoDocuments: elem.cargoDocuments,
-                            ttnECP: {
-                                header: undefined,
-                                documentUpload: undefined,
-                                documentDownload: elem.ttnECPdocumentDownload,
-                                customerIsSubscribe: elem.ttnECPcustomerIsSubscribe === 'true',
-                                carrierIsSubscribe: elem.ttnECPcarrierIsSubscribe === 'true',
-                                consigneeIsSubscribe: elem.ttnECPconsigneeIsSubscribe === 'true',
-                            },
-                            contractECP: {
-                                header: undefined,
-                                documentUpload: undefined,
-                                documentDownload: elem.contractECPdocumentDownload,
-                                customerIsSubscribe: elem.contractECPcustomerIsSubscribe === 'true',
-                                carrierIsSubscribe: elem.contractECPcarrierIsSubscribe === 'true',
-                            },
-                            updECP: {
-                                header: undefined,
-                                documentUpload: undefined,
-                                documentDownload: elem.updECPdocumentDownload,
-                                customerIsSubscribe: elem.updECPcustomerIsSubscribe === 'true',
-                                carrierIsSubscribe: elem.updECPcarrierIsSubscribe === 'true',
-                            },
-                            customerToConsigneeContractECP: {
-                                header: undefined,
-                                documentUpload: undefined,
-                                documentDownload: elem.customerToConsigneeContractECPdocumentDownload,
-                                customerIsSubscribe: elem.customerToConsigneeContractECPcustomerIsSubscribe === 'true',
-                                consigneeIsSubscribe: elem.customerToConsigneeContractECPconsigneeIsSubscribe === 'true',
-                            },
-                        },
-                    } ),
-                )))
+                dispatch(requestStoreActions.setContent(response.map(parseRequestFromAPI)))
             }
         } catch (e) {
             alert(e)
@@ -393,119 +431,9 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
             const response = await oneRequestApi.getOneRequestById({ requestNumber })
             if (response.length > 0) {
                 let element = response[0]
-                dispatch(requestStoreActions.setInitialValues({
-                        requestNumber: +element.requestNumber,
-                        requestDate: element.requestDate ? new Date(apiToISODateFormat(element.requestDate)) : undefined,
-                        cargoComposition: element.cargoComposition,
-                        shipmentDate: element.shipmentDate ? new Date(element.shipmentDate) : undefined,
-                        cargoType: element.cargoType as CargoTypeType,
-
-                        idUserCustomer: element.idUserCustomer,
-                        idCustomer: element.idCustomer,
-
-                        idSender: element.idSender,
-                        idUserSender: element.idUserSender,
-                        sender: {
-                            idSender: element.idSender + '',
-                            title: element.titleSender,
-                            innNumber: element.innNumberSender,
-                            organizationName: element.organizationNameSender,
-                            kpp: element.kppSender,
-                            ogrn: element.ogrnSender,
-                            address: element.addressSender,
-                            shipperFio: element.shipperFioSender,
-                            shipperTel: element.shipperTelSender,
-                            description: element.descriptionSender,
-                            coordinates: element.coordinatesSender,
-                            city: element.citySender,
-                        },
-                        idRecipient: element.idRecipient,
-                        idUserRecipient: element.idUserRecipient,
-                        recipient: {
-                            idRecipient: element.idRecipient as string,
-                            title: element.titleRecipient,
-                            innNumber: element.innNumberRecipient,
-                            organizationName: element.organizationNameRecipient,
-                            kpp: element.kppRecipient,
-                            ogrn: element.ogrnRecipient,
-                            address: element.addressRecipient,
-                            consigneesFio: element.consigneesFioRecipient,
-                            consigneesTel: element.consigneesTelRecipient,
-                            description: element.descriptionRecipient,
-                            coordinates: element.coordinatesRecipient,
-                            city: element.cityRecipient,
-                        },
-
-                        distance: Number(element.distance),
-                        route: element.route,
-                        note: element.note,
-                        visible: true,
-                        marked: false,
-
-                        globalStatus: element.globalStatus as OneRequestType['globalStatus'],
-                        localStatus: {
-                            paymentHasBeenTransferred: element.localStatuspaymentHasBeenTransferred,
-                            paymentHasBeenReceived: element.localStatuscargoHasBeenReceived,
-                            cargoHasBeenTransferred: element.localStatuspaymentHasBeenTransferred,
-                            cargoHasBeenReceived: element.localStatuscargoHasBeenReceived,
-                        },
-                        answers: element.answers?.split(','),
-
-                        requestUserCarrierId: element.requestUserCarrierId,
-                        requestCarrierId: element.requestCarrierId,
-                        idEmployee: element.idEmployee,
-                        idTransport: element.idTransport,
-                        idTrailer: element.idTrailer,
-                        responseStavka: element.responseStavka,
-                        responseTax: element.responseTax,
-
-                        responsePrice: element.responsePrice,
-                        cargoWeight: element.cargoWeight,
-
-                        uploadTime: element.uploadTime && new Date(element.uploadTime),
-
-                        documents: {
-                            proxyWay: {
-                                header: undefined,
-                                proxyFreightLoader: element.proxyFreightLoader,
-                                proxyDriver: element.proxyDriver,
-                                waybillDriver: element.proxyWaybillDriver,
-                            },
-                            cargoDocuments: element.cargoDocuments,
-                            ttnECP: {
-                                header: undefined,
-                                documentUpload: undefined,
-                                documentDownload: element.ttnECPdocumentDownload,
-                                customerIsSubscribe: element.ttnECPcustomerIsSubscribe === 'true',
-                                carrierIsSubscribe: element.ttnECPcarrierIsSubscribe === 'true',
-                                consigneeIsSubscribe: element.ttnECPconsigneeIsSubscribe === 'true',
-                            },
-                            contractECP: {
-                                header: undefined,
-                                documentUpload: undefined,
-                                documentDownload: element.contractECPdocumentDownload,
-                                customerIsSubscribe: element.contractECPcustomerIsSubscribe === 'true',
-                                carrierIsSubscribe: element.contractECPcarrierIsSubscribe === 'true',
-                            },
-                            updECP: {
-                                header: undefined,
-                                documentUpload: undefined,
-                                documentDownload: element.updECPdocumentDownload,
-                                customerIsSubscribe: element.updECPcustomerIsSubscribe === 'true',
-                                carrierIsSubscribe: element.updECPcarrierIsSubscribe === 'true',
-                            },
-                            customerToConsigneeContractECP: {
-                                header: undefined,
-                                documentUpload: undefined,
-                                documentDownload: element.customerToConsigneeContractECPdocumentDownload,
-                                customerIsSubscribe: element.customerToConsigneeContractECPcustomerIsSubscribe === 'true',
-                                consigneeIsSubscribe: element.customerToConsigneeContractECPconsigneeIsSubscribe === 'true',
-                            },
-                        },
-                    }),
-                )
+                dispatch(requestStoreActions.setInitialValues(parseRequestFromAPI(element)))
             } else {
-                console.log('НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №', requestNumber)
+                dispatch(globalModalStoreActions.setTextMessage('НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber))
             }
         } catch (e) {
             dispatch(globalModalStoreActions.setTextMessage(e as string))
@@ -544,6 +472,8 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
             const idUserCustomer = getState().authStoreReducer.authID
             const requestNumber = submitValues.requestNumber?.toString() || '0'
             const response = await oneRequestApi.modifyOneRequest({
+                    acceptedUsers: undefined,
+
                     requestNumber,
                     requestDate: undefined, // потому как она уже задана при создании
                     idUserCustomer,
@@ -557,6 +487,7 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
                     distance: submitValues.distance?.toString(),
                     route: submitValues.route,
                     note: submitValues.note,
+
 
                     globalStatus: submitValues.globalStatus,
                     localStatuspaymentHasBeenTransferred: submitValues.localStatus?.paymentHasBeenTransferred,
@@ -592,9 +523,34 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
 
                     // ответка на заявку
                     requestCarrierId: submitValues.requestCarrierId,
+                    // сотрудник
                     idEmployee: submitValues.idEmployee,
+                    responseEmployeeFIO: submitValues.responseEmployee?.employeeFIO,
+                    responseEmployeePhoneNumber: submitValues.responseEmployee?.employeePhoneNumber,
+                    responseEmployeedrivingLicenseNumber: submitValues.responseEmployee?.drivingLicenseNumber,
+                    responseEmployeepassportDate: submitValues.responseEmployee?.passportDate as string,
+                    responseEmployeepassportFMS: submitValues.responseEmployee?.passportFMS,
+                    responseEmployeepassportSerial: submitValues.responseEmployee?.idEmployee,
+                    // транспорт
                     idTransport: submitValues.idTransport,
+                    responseTransportCargoType: submitValues.responseTransport?.cargoType,
+                    responseTransportCargoWeight: submitValues.responseTransport?.cargoWeight,
+                    responseTransportDopog: submitValues.responseTransport?.dopog,
+                    responseTransportModel: submitValues.responseTransport?.transportModel,
+                    responseTransportNumber: submitValues.responseTransport?.transportNumber,
+                    responseTransportPropertyRights: submitValues.responseTransport?.propertyRights,
+                    responseTransportPts: submitValues.responseTransport?.pts,
+                    responseTransportTrademark: submitValues.responseTransport?.transportTrademark,
+                    // прицеп
                     idTrailer: submitValues.idTrailer,
+                    responseTrailerCargoType: submitValues.responseTrailer?.cargoType,
+                    responseTrailerCargoWeight: submitValues.responseTrailer?.cargoWeight,
+                    responseTrailerDopog: submitValues.responseTrailer?.dopog,
+                    responseTrailerModel: submitValues.responseTrailer?.trailerModel,
+                    responseTrailerPropertyRights: submitValues.responseTrailer?.propertyRights,
+                    responseTrailerPts: submitValues.responseTrailer?.pts,
+                    responseTrailerTrademark: submitValues.responseTrailer?.trailerTrademark,
+                    responseTrailertrailerNumber: submitValues.responseTrailer?.trailerNumber,
                     responseStavka: submitValues.responseStavka,
                     responseTax: submitValues.responseTax,
                     responsePrice: submitValues.responsePrice,
