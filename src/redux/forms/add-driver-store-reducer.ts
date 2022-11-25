@@ -64,7 +64,6 @@ export const addDriverStoreReducer = ( state = initialState, action: ActionsType
             return state
         }
     }
-
 }
 
 /* ЭКШОНЫ */

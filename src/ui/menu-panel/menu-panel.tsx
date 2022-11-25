@@ -19,19 +19,21 @@ import {getIsAuthAuthStore} from '../../selectors/auth-reselect';
 import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect';
 import {logoutAuth} from '../../redux/auth-store-reducer';
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
-import {requestStoreActions} from '../../redux/forms/request-store-reducer';
-import {getIsReqErrorRequisitesStore} from '../../selectors/options/requisites-reselect';
+import {getIsReqErrorRequisitesStore, getTariffsRequisitesStore} from '../../selectors/options/requisites-reselect';
+import {addRequestCashPay} from '../../redux/options/requisites-store-reducer';
+import {valuesAreEqual} from '../../utils/reactMemoUtils';
 
 
 type OwnProps = {}
 
-export const MenuPanel: React.FC<OwnProps> = () => {
+export const MenuPanel: React.FC<OwnProps> = React.memo (() => {
 
     const routes = useSelector(getRoutesStore)
     const isAuth = useSelector(getIsAuthAuthStore)
     // проверка на заполненность реквизитов
     const isRequisitesError = useSelector(getIsReqErrorRequisitesStore)
     const unreadMessagesCount = useSelector(getUnreadMessagesCountInfoStore)
+    const tariffs = useSelector(getTariffsRequisitesStore)
     const dispatch = useDispatch()
     const { pathname } = useLocation()
     const newRequestRoute = routes.requestInfo.create + 'new'
@@ -46,7 +48,8 @@ export const MenuPanel: React.FC<OwnProps> = () => {
 
     const newRequest = async () => {
         await dispatch<any>(textAndActionGlobalModal({
-            text: 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?',
+            text: 'СОЗДАТЬ НОВУЮ ЗАЯВКУ? \n Стоимость создания:'+tariffs.create+' руб.',
+            action: addRequestCashPay,
             navigateOnOk: newRequestRoute,
         }))
     }
@@ -59,6 +62,7 @@ export const MenuPanel: React.FC<OwnProps> = () => {
             navigateOnCancel: routes.requisites + 'new',
         }))
     }
+
     // вынес за пределы NavLink назначение классов
     const activeClass = ( { isActive }: { isActive: boolean } ): string =>
         `${ styles.menuPanel__item } ${ isActive
@@ -140,4 +144,4 @@ export const MenuPanel: React.FC<OwnProps> = () => {
             ) }
         </nav>
     )
-}
+},valuesAreEqual)

@@ -26,7 +26,7 @@ export type PersonalResponseType = {
     phoneValidate: boolean,
     password: string,
     role: string,
-    cash: string,
+    cash: number,
     requestActiveCount: string,
     maxRequests: string,
     tarifCreate: string,

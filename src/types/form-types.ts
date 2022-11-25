@@ -55,7 +55,7 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
     dispatcherFIO: T
 
     // количество денег на счету
-    cash: T
+    cash?: number
     // количество активных заявок
     requestActiveCount: T
     // максимальное количество заявок (редактируется админом)
@@ -257,37 +257,37 @@ export type OneRequestType = {
     далее заявка ТОЛЬКО редактируется или УДАЛЯЕТСЯ */
 
     // уникальный номер заявки (числовой номер/каждая новая заявка создаётся с номером+1 от предыдущей на бэке)
-    requestNumber: undefined | number
+    requestNumber?: number
     // дата создания заявки
-    requestDate: undefined | Date
+    requestDate?: Date
 
     // вид груза
-    cargoComposition: undefined | string
+    cargoComposition?: string
     // дата погрузки
-    shipmentDate: undefined | Date
+    shipmentDate?: Date
     // тип груза (заведомо известный набор типов)
-    cargoType: undefined | CargoTypeType
+    cargoType?: CargoTypeType
 
     // заказчик (совпадает с id пользователя (потому как данные по ИНН/КПП и счетам будут браться оттуда)
-    idUserCustomer: undefined | string
+    idUserCustomer?: string
     idCustomer?: string
 
     // грузоотправитель
-    idSender: undefined | string
+    idSender?: string
     idUserSender?: string,
     sender: ShippersCardType,
 
     // грузополучатель
-    idRecipient: undefined | string
+    idRecipient?: string
     idUserRecipient?: string,
     recipient: ConsigneesCardType,
 
     // расстояние (высчитывается автоматически при выборе грузоотправитель+грузополучатель)
-    distance: undefined | number
+    distance?: number
     // маршрут для карты
     route?: string
     // примечание
-    note: undefined | string
+    note?: string
     // видимость для таблицы (используется только на фронте)
     visible?: boolean
     // выделение для таблицы (используется только на фронте)
@@ -296,52 +296,52 @@ export type OneRequestType = {
     // БЛОК СТАТУСОВ ЗАЯВКИ
 
     // глобальный статус заявки
-    globalStatus: 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | undefined
+    globalStatus?: 'новая заявка' | 'в работе' | 'завершена' | 'отменена'
     // локальный статус заявки
     localStatus: {
         // Оплату передал
-        paymentHasBeenTransferred: boolean | undefined
+        paymentHasBeenTransferred?: boolean
         // Оплату получил
-        paymentHasBeenReceived: boolean | undefined
+        paymentHasBeenReceived?: boolean
         // Груз передан
-        cargoHasBeenTransferred: boolean | undefined
+        cargoHasBeenTransferred?: boolean
         // Груз получен
-        cargoHasBeenReceived: boolean | undefined
+        cargoHasBeenReceived?: boolean
     }
     // количество ответов от водителей // массив с айдишками
-    answers: string[] | undefined
+    answers?: string[]
     // заявки, доступ к которым оплачен данным пользователем /*чтобы он по каким-либо причинам не слетел с неё*/
-    acceptedUsers: string[] | undefined
+    acceptedUsers?: string[]
     /* поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку */
     /* НЕИЗМЕНЯЕМЫЕ*/
 
     // привязывается id пользователя при создании отклика
     requestUserCarrierId?: string
     // привязывается id карточки
-    requestCarrierId: undefined | string
+    requestCarrierId?: string
     // id водителя (из карточки отклика)
-    idEmployee: undefined | string
+    idEmployee?: string
     responseEmployee?: Partial<EmployeesCardType>
     // id транспорта (из карточки отклика)
-    idTransport: undefined | string
+    idTransport?: string
     responseTransport?: Partial<TransportCardType>
     // id прицепа (из карточки отклика)
-    idTrailer: undefined | string
+    idTrailer?: string
     responseTrailer?: Partial<TrailerCardType>
     // тариф ставки перевозки 1 тонны на 1 км (из карточки отклика)
-    responseStavka: undefined | string
+    responseStavka?: string
     // система налогообложения (ОСН, УСН, ЕСХН, ПСН, НПД и т.д.) (из карточки отклика)
-    responseTax: undefined | string
+    responseTax?: string
 
     // поля вкладки ДОКУМЕНТЫ
     // подсчитанная сумма (считается на фронте) (из карточки отклика)
-    responsePrice: undefined | string
+    responsePrice?: string
     // Вес груза, в тн. (высчитывается автоматически по тоннажу тягач+прицеп (из карточки отклика)
     cargoWeight?: number | string
 
     // ИЗМЕНЯЕМЫЕ
     // Время погрузки (устанавливается автоматически после нажатия кнопки "Груз у водителя"(сайт) или "Груз получил"(приложение на тел.)
-    uploadTime: Date | undefined | string
+    uploadTime?: Date | string
 
     documents: DocumentsRequestType // блок с документами
 }
@@ -349,20 +349,20 @@ export type OneRequestType = {
 // выделенный в отдельный блок РАБОТА С ДОКУМЕНТАМИ
 export type DocumentsRequestType = {
     proxyWay: {
-        header: string | undefined // Транспортные документы Сторон (Заголовок / ТОЛЬКО ФРОНТ)
-        proxyFreightLoader: undefined | string // Доверенность Грузовладельцу (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
-        proxyDriver: undefined | string // Доверенность на Водителя (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
-        waybillDriver: undefined | string // Путевой Лист Водителя (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
+        header?: string // Транспортные документы Сторон (Заголовок / ТОЛЬКО ФРОНТ)
+        proxyFreightLoader?: string // Доверенность Грузовладельцу (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
+        proxyDriver?: string // Доверенность на Водителя (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
+        waybillDriver?: string // Путевой Лист Водителя (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
     },
 
-    cargoDocuments: string | undefined | File // Документы груза (содержит строку с путём) (File НА ОТГРУЗ)
+    cargoDocuments?: string | File // Документы груза (содержит строку с путём) (File НА ОТГРУЗ)
 
     ttnECP: {
-        header: string | undefined // ТТН или ЭТрН с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
+        header?: string // ТТН или ЭТрН с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
 
-        documentDownload: string | undefined // строка со ссылкой на сгенерированный БЭКОМ документ
+        documentDownload?: string // строка со ссылкой на сгенерированный БЭКОМ документ
         // (!!! заменяется на сгенерированный ???)
-        documentUpload: File | undefined // участвует ТОЛЬКО при редактировании формы
+        documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
         // статусы подписания документа (хранятся на бэке, редактируются фронтом)
         customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
@@ -371,11 +371,11 @@ export type DocumentsRequestType = {
     },
 
     contractECP: {
-        header: string | undefined // Договор оказания транспортных услуг с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
+        header?: string // Договор оказания транспортных услуг с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
 
-        documentDownload: string | undefined // строка со ссылкой на сгенерированный БЭКОМ документ
+        documentDownload?: string // строка со ссылкой на сгенерированный БЭКОМ документ
         // (!!! заменяется на сгенерированный ???)
-        documentUpload: File | undefined // участвует ТОЛЬКО при редактировании формы
+        documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
         // статусы подписания документа (хранятся на бэке, редактируются фронтом)
         customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
@@ -383,22 +383,22 @@ export type DocumentsRequestType = {
     },
 
     updECP: {
-        header: string | undefined // УПД от Перевозчика для Заказчика с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
+        header?: string // УПД от Перевозчика для Заказчика с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
 
-        documentDownload: string | undefined // строка со ссылкой на сгенерированный БЭКОМ документ
+        documentDownload?: string // строка со ссылкой на сгенерированный БЭКОМ документ
         // (!!! заменяется на сгенерированный ???)
-        documentUpload: File | undefined // участвует ТОЛЬКО при редактировании формы
+        documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
         customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
         carrierIsSubscribe: boolean | string // Перевозчик загрузил, подписал и выгрузил подписанный док
     },
 
     customerToConsigneeContractECP: {
-        header: string | undefined // Документы от Заказчика для Получателя с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
+        header?: string // Документы от Заказчика для Получателя с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
 
-        documentDownload: string | undefined // строка со ссылкой на сгенерированный БЭКОМ документ
+        documentDownload?: string // строка со ссылкой на сгенерированный БЭКОМ документ
         // (!!! заменяется на сгенерированный ???)
-        documentUpload: File | undefined // участвует ТОЛЬКО при редактировании формы
+        documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
         customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
         consigneeIsSubscribe: boolean | string // Грузополучатель загрузил, подписал и выгрузил подписанный док
@@ -460,57 +460,55 @@ export type OneRequestApiType = {
     answers?: string
 
     // заявки, доступ к которым оплачен данным пользователем
-    acceptedUsers: string[] | undefined
+    acceptedUsers?: string
     /*НОВЫЕ ПОЛЯ НА СОТРУДНИКА*/
     // ФИО сотрудника
-    responseEmployeeFIO: undefined | string
+    responseEmployeeFIO?: string
     // Телефон сотрудника
-    responseEmployeePhoneNumber: undefined | string
+    responseEmployeePhoneNumber?: string
     // Серия, № паспорта
-    responseEmployeepassportSerial: undefined | string
+    responseEmployeepassportSerial?: string
     // Кем выдан паспорт
-    responseEmployeepassportFMS: undefined | string
+    responseEmployeepassportFMS?: string
     // Когда выдан
-    responseEmployeepassportDate: undefined | string
+    responseEmployeepassportDate?: string
     // Номер водительского удостоверения
-    responseEmployeedrivingLicenseNumber: undefined | string
+    responseEmployeedrivingLicenseNumber?: string
 
     /*НОВЫЕ ПОЛЯ НА ТРАНСПОРТ*/
     // Гос. номер авто
-    responseTransportNumber: undefined | string
+    responseTransportNumber?: string
     // Марка авто
-    responseTransportTrademark: undefined | string
+    responseTransportTrademark?: string
     // Модель авто
-    responseTransportModel: undefined | string
+    responseTransportModel?: string
     // ПТС
-    responseTransportPts: undefined | string
+    responseTransportPts?: string
     // ДОПОГ
-    responseTransportDopog: undefined | string
+    responseTransportDopog?: string
     // Тип груза
-    responseTransportCargoType: undefined | string
+    responseTransportCargoType?: string
     // Вес груза
-    responseTransportCargoWeight: undefined | string
+    responseTransportCargoWeight?: string
     // Право собственности
-    responseTransportPropertyRights: undefined | string
+    responseTransportPropertyRights?: string
 
     /*НОВЫЕ ПОЛЯ НА ПРИЦЕП*/
-    // Гос. номер авто
-    responseTrailertrailerNumber: undefined | string
-    // Марка авто
-    responseTrailerTrademark: undefined | string
-    // Модель авто
-    responseTrailerModel: undefined | string
+    // Гос. номер прицепа
+    responseTrailertrailerNumber?: string
+    // Марка прицепа
+    responseTrailerTrademark?: string
+    // Модель прицепа
+    responseTrailerModel?: string
     // ПТС
-    responseTrailerPts: undefined | string
+    responseTrailerPts?: string
     // ДОПОГ
-    responseTrailerDopog: undefined | string
+    responseTrailerDopog?: string
     // Тип груза
-    responseTrailerCargoType: undefined | string
+    responseTrailerCargoType?: string
     // Вес груза
-    responseTrailerCargoWeight: undefined | string,
-    responseTrailerPropertyRights: undefined | string
-
-
+    responseTrailerCargoWeight?: string
+    responseTrailerPropertyRights?: string
 
     requestUserCarrierId?: string
     requestCarrierId?: string

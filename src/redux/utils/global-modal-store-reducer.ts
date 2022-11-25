@@ -127,6 +127,7 @@ export const textAndActionGlobalModal = ( {
     async ( dispatch ) => {
         dispatch(globalModalStoreActions.setAction(action || null))
         dispatch(globalModalStoreActions.setNavigateToOk(navigateOnOk))
+        dispatch(globalModalStoreActions.setNavigateToCancel(navigateOnCancel))
         dispatch(globalModalStoreActions.setTitle(title))
         dispatch(globalModalStoreActions.setTextMessage(text))
     }

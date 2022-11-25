@@ -12,8 +12,6 @@ import {
 } from '../utils/global-modal-store-reducer';
 
 
-const initialValues = {} as CompanyRequisitesType
-
 const initialState = {
     isFetching: false,
     storedMode: false, // подгружать данные или вводить новые м.б удалю
@@ -110,8 +108,6 @@ const initialState = {
 
     } as CompanyRequisitesType<ParserType>,
 
-    initialValues: { ...initialValues },
-
     storedValues: {} as CompanyRequisitesType,
 
 }
@@ -134,12 +130,6 @@ export const requisitesStoreReducer = ( state = initialState, action: ActionsTyp
             return {
                 ...state,
                 isRequisitesError: action.isRequisitesError,
-            }
-        }
-        case 'requisites-store-reducer/SET-INITIAL-VALUES' : {
-            return {
-                ...state,
-                initialValues: action.initialValues,
             }
         }
         case 'requisites-store-reducer/SET-STORED-VALUES' : {
@@ -166,10 +156,6 @@ export const requisitesStoreActions = {
         type: 'requisites-store-reducer/SET-IS-REQUISITES-ERROR',
         isRequisitesError,
     } as const ),
-    setInitialValues: ( initialValues: CompanyRequisitesType ) => ( {
-        type: 'requisites-store-reducer/SET-INITIAL-VALUES',
-        initialValues,
-    } as const ),
     setStoredValues: ( storedValues: CompanyRequisitesType ) => ( {
         type: 'requisites-store-reducer/SET-STORED-VALUES',
         storedValues,
@@ -184,6 +170,7 @@ export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promis
 export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
     RequisitesStoreReducerThunkActionType<string | undefined> =>
     async ( dispatch, getState ) => {
+        dispatch(requisitesStoreActions.setIsFetching(true))
         const idUser = getState().authStoreReducer.authID
         try {
             const setPersonal = await requisitesApi.changePersonalData({
@@ -208,19 +195,51 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
                 korrAccount: values.korrAccount,
             } as PersonalResponseType)
 
-            console.log('setPersonal: ', setPersonal)
+            // console.log('setPersonal: ', setPersonal)
 
             if (setPersonal.success) {
                 await dispatch(getPersonalOrganizationRequisites())
             }
         } catch (error) {
-
             // @ts-ignore
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data)))
+            dispatch(requisitesStoreActions.setIsFetching(false))
             return 'Ошибка сохранения данных, попробуйте ещё раз'
         }
     }
 
+// сохранение данных оплаты в БЭК
+export const setOrganizationCashRequisites = ( cash: number ): RequisitesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        dispatch(requisitesStoreActions.setIsFetching(true))
+        const idUser = getState().authStoreReducer.authID
+        const localCash = +( getState().requisitesStoreReducer.storedValues.cash || 0 )
+        try {
+            const setPersonal = await requisitesApi.changePersonalData({
+                idUser, cash: localCash + cash,
+            } as PersonalResponseType)
+            // console.log('setPersonal: ', setPersonal)
+            if (setPersonal.success) {
+                await dispatch(getPersonalOrganizationRequisites())
+            }
+        } catch (error) {
+            // @ts-ignore
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data)))
+            dispatch(requisitesStoreActions.setIsFetching(false))
+        }
+    }
+
+export const addRequestCashPay = (): RequisitesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        const addRequestCost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
+        await dispatch(setOrganizationCashRequisites(-addRequestCost))
+    }
+
+export const cancelRequestCashReturn = (): RequisitesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        const addRequestCost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
+        await dispatch(setOrganizationCashRequisites(addRequestCost))
+    }
 // запрос данных активного пользователя
 export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
@@ -236,7 +255,7 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
             if (user.length > 0) {
                 dispatch<any>(authStoreActions.setAuthPhone(user[0].phone || ''))
                 dispatch(requisitesStoreActions.setStoredValues({
-                    ...getState().requisitesStoreReducer.initialValues,
+                    // ...getState().requisitesStoreReducer.initialValues,
                     innNumber: user[0].nnNumber,
                     organizationName: user[0].organizationName,
                     taxMode: user[0].taxMode,
@@ -247,6 +266,10 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
                     description: user[0].description,
                     dispatcherFIO: user[0].dispatcherFIO,
                     mechanicFIO: user[0].mechanicFIO,
+
+                    cash: user[0].cash,
+                    requestActiveCount: user[0].requestActiveCount,
+                    maxRequests: user[0].maxRequests,
 
                     postAddress: user[0].postAddress,
                     phoneDirector: user[0].phoneDirector,
@@ -282,7 +305,9 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
                 }
             }
         } catch (error) {
-            console.error('Ошибка API запроса реквизитов организации: ', error)
+            // console.error('Ошибка API запроса реквизитов организации: ', error)
+            dispatch(globalModalStoreActions.setTextMessage('Ошибка API запроса реквизитов организации: ' + error))
+            dispatch(requisitesStoreActions.setIsFetching(false))
         }
         dispatch(requisitesStoreActions.setIsFetching(false))
     }

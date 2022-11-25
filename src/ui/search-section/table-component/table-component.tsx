@@ -10,9 +10,9 @@ import {getContentTableStore} from '../../../selectors/table/table-reselect'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {getAuthCashAuthStore} from '../../../selectors/auth-reselect'
 import {TableModesType} from '../search-section'
 import {ddMmYearFormat} from '../../../utils/date-formats';
+import {getCashRequisitesStore} from '../../../selectors/options/requisites-reselect';
 
 type OwnProps = {
     tableModes: TableModesType
@@ -23,7 +23,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
 
     const navigate = useNavigate()
     const { balance, maps, requestInfo } = useSelector(getRoutesStore)
-    const authCash = useSelector(getAuthCashAuthStore)
+    const authCash = +( useSelector(getCashRequisitesStore) || 0 )
     const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
 
     const TABLE_CONTENT = useSelector(getContentTableStore)
@@ -91,10 +91,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 Cell: ( { requestNumber, price }: { requestNumber: number, price: number } ) =>
                     <Button title={ 'Открыть' }
                             onClick={ () => {
-                                if (tableModes.searchTblMode)
-                                    price > authCash
-                                        ? navigate(balance)
-                                        : navigate(requestInfo.accept + requestNumber)
+                                if (tableModes.searchTblMode) navigate(price > authCash ? balance : requestInfo.accept + requestNumber)
                                 if (tableModes.statusTblMode) navigate(maps.answers + requestNumber)
                                 if (tableModes.historyTblMode) navigate(requestInfo.history + requestNumber)
                             } }

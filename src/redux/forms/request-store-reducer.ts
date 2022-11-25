@@ -256,7 +256,7 @@ export const requestStoreActions = {
 
 }
 
-const parseRequestFromAPI = ( elem: OneRequestApiType ) => ( {
+const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     requestNumber: +elem.requestNumber,
     requestDate: elem.requestDate ? new Date(apiToISODateFormat(elem.requestDate)) : undefined,
     cargoComposition: elem.cargoComposition,
@@ -314,7 +314,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ) => ( {
         cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
     },
 
-    acceptedUsers: elem.acceptedUsers,
+    acceptedUsers: elem.acceptedUsers?.split(','),
     answers: elem.answers?.split(','),
 
     requestUserCarrierId: elem.requestUserCarrierId,
@@ -323,7 +323,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ) => ( {
     responseEmployee: {
         idEmployee: elem.idEmployee,
         employeeFIO: elem.responseEmployeeFIO,
-        phoneNumber: elem.responseEmployeePhoneNumber,
+        employeePhoneNumber: elem.responseEmployeePhoneNumber,
         passportSerial: elem.responseEmployeepassportSerial,
         passportFMS: elem.responseEmployeepassportFMS,
         passportDate: elem.responseEmployeepassportDate,
@@ -367,7 +367,6 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ) => ( {
     documents: {
         proxyWay: {
             header: undefined,
-
             proxyFreightLoader: elem.proxyFreightLoader,
             proxyDriver: elem.proxyDriver,
             waybillDriver: elem.proxyWaybillDriver,
@@ -415,11 +414,10 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
         try {
             const response = await oneRequestApi.getAllRequests()
             if (response.length > 0) {
-
                 dispatch(requestStoreActions.setContent(response.map(parseRequestFromAPI)))
             }
         } catch (e) {
-            alert(e)
+            dispatch(globalModalStoreActions.setTextMessage(e as string))
         }
     }
 
@@ -472,10 +470,10 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
             const idUserCustomer = getState().authStoreReducer.authID
             const requestNumber = submitValues.requestNumber?.toString() || '0'
             const response = await oneRequestApi.modifyOneRequest({
-                    acceptedUsers: undefined,
+                    acceptedUsers: undefined, // изменяется через другой запрос
+                    requestDate: undefined, // потому как она уже задана при создании
 
                     requestNumber,
-                    requestDate: undefined, // потому как она уже задана при создании
                     idUserCustomer,
                     idCustomer: submitValues.idCustomer,
 

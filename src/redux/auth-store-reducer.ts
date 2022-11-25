@@ -21,7 +21,6 @@ const initialState = {
     isAuth: false,
     authID: '',
     authPhone: '',
-    authCash: 100,
     isAvailableSMSRequest: false,
     kppBuffer: [] as string[] | null,
     isFetching: false,

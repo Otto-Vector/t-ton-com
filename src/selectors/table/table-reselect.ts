@@ -5,7 +5,7 @@ import {getAllRequestStore} from '../forms/request-form-reselect'
 import {getAllConsigneesStore} from '../options/consignees-reselect'
 import {getAllShippersStore} from '../options/shippers-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats';
-import {getTarifsRequisitesStore} from '../options/requisites-reselect';
+import {getTariffsRequisitesStore} from '../options/requisites-reselect';
 
 
 type TableStoreSelectors<T extends keyof Y, Y = TableStoreReducerStateType> = ( state: AppStateType ) => Y[T]
@@ -19,7 +19,7 @@ export const getContentTableStore = createSelector(
     getAllConsigneesStore,
     getAllShippersStore,
     geInitialValuesTableStore,
-    getTarifsRequisitesStore,
+    getTariffsRequisitesStore,
     ( requests, consignees, shippers, initial, { acceptShortRoute, acceptLongRoute } ): OneRequestTableType[] => {
         return requests.filter(( { visible } ) => visible).map((
             {
