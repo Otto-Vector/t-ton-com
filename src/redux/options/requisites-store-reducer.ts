@@ -231,15 +231,28 @@ export const setOrganizationCashRequisites = ( cash: number ): RequisitesStoreRe
 
 export const addRequestCashPay = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        const addRequestCost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
-        await dispatch(setOrganizationCashRequisites(-addRequestCost))
+        const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
+        await dispatch(setOrganizationCashRequisites(-cost))
     }
 
 export const cancelRequestCashReturn = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        const addRequestCost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
-        await dispatch(setOrganizationCashRequisites(addRequestCost))
+        const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
+        await dispatch(setOrganizationCashRequisites(cost))
     }
+
+export const acceptShorRoutePay = (): RequisitesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.acceptShortRoute || 0 )
+        await dispatch(setOrganizationCashRequisites(-cost))
+    }
+
+export const acceptLongRoutePay = (): RequisitesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.acceptLongRoute || 0 )
+        await dispatch(setOrganizationCashRequisites(-cost))
+    }
+
 // запрос данных активного пользователя
 export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
