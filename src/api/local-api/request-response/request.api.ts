@@ -1,6 +1,10 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
 import {OneRequestApiType} from '../../../types/form-types';
 
+export type accessUserToRequestType = {
+    requestNumber: string
+    idUser: string
+}
 
 export const oneRequestApi = {
 
@@ -11,6 +15,7 @@ export const oneRequestApi = {
         // 1.	Code 200, Models: OneRequestApiType[]
         // 2.	Code 520, {"message":"Error"}
     },
+
     // запрос списка всех заявок созданных данным пользователем PATCH /api/onerequesttypeuser/
     getAllRequestByUser( { idUserCustomer }: { idUserCustomer: string } ) {
         return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypedate/', { idUserCustomer })
@@ -18,6 +23,7 @@ export const oneRequestApi = {
         // 1.	Code 200, Models: OneRequestApiType[]
         // 2.	Code 520, {"message":"Error"}
     },
+
     // запрос списка заявок начиная от такой-то даты (включительно) PATCH /api/onerequesttypedate/
     getAllRequestByDate( { shipmentDate }: { shipmentDate: string } ) {
         return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypedate/', { shipmentDate })
@@ -33,15 +39,17 @@ export const oneRequestApi = {
         // 1.	Code 200, Models: OneRequestApiType[]
         // 2.	Code 520, {"message":"Error"}
     },
+
     // создать одну Заявку POST /api/onerequesttype/
-    createOneRequest( { idUserCustomer }: { idUserCustomer: string } ) {
-        return instanceBack.post<{ success: string, Number: string, Date: string, message?: string }>('/api/onerequesttype/', { idUserCustomer })
+    createOneRequest( idUserCustomer: { idUserCustomer: string } ) {
+        return instanceBack.post<{ success: string, Number: string, Date: string, message?: string }>('/api/onerequesttype/', idUserCustomer)
             .then(response => response.data)
         // 1.	Code 200, {"success": "OneRequestType '{}' created successfully".format(new_Request. requestNumber),
         // "Number": new_Request.requestNumber,
         // "Date": new_Request.requestDate }
         // 2.	Code 520, {"message":"Error"}
     },
+
     // ИЗМЕНИТЬ одну Заявку PUT /api/onerequesttype/
     modifyOneRequest( responseToRequest: OneRequestApiType ) {
         return instanceBack.put<InfoResponseType>('/api/onerequesttype/', responseToRequest)
@@ -49,12 +57,36 @@ export const oneRequestApi = {
         // 1.	Code 449, {'failed': "OneRequestType is not updated"}
         // 2.	Code 200, {"success": "OneRequestType '{}' updated successfully".format(OneRequestApiType_saved.responseId)}
     },
+
     // УДАЛИТЬ одну Заявку DELETE /api/onerequesttype/
     deleteOneRequest( { requestNumber }: { requestNumber: number } ) {
         return instanceBack.delete<InfoResponseType>('/api/onerequesttype/', { data: { requestNumber } })
             .then(response => response.data)
         // 1.	Code 200, {"message": "OneRequestType with id `{}` has been deleted.".format(request.data['requestNumber'])}
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
+    },
+
+    /*-----------------------------------------------*/
+
+    // ДОБАВИТЬ доступ пользователя к Заявке PUT /api/onerequesttypeacceptuser/
+    // (изменяет поле acceptedUsers в OneRequestApiType)
+    addOneUserAcceptRequest( responseToRequest: OneRequestApiType ) {
+        return instanceBack.put<InfoResponseType>('/api/onerequesttypeacceptuser/', responseToRequest)
+            .then(response => response.data)
+        // 1.	Code 449, {'failed': "OneRequestType is not updated"}
+        // 2.	Code 200, {"success": "OneRequestType '{}' updated successfully".format(OneRequestApiType_saved.responseId)}
+    },
+
+    // УДАЛИТЬ доступ пользователя к Заявке DELETE /api/onerequesttypeacceptuser/
+    // (изменяет поле acceptedUsers в OneRequestApiType)
+    deleteOneUserAcceptRequest( accessUserToRequest: accessUserToRequestType ) {
+        return instanceBack.delete<InfoResponseType>('/api/onerequesttypeacceptuser/', { data: accessUserToRequest })
+            .then(response => response.data)
+        // 1.	Code 200, {'message': 'Error, login please'}
+        // 2.	Code 200 {'message': 'Пользователю '+request.data['idUser']+' закрыт доступ к просмотру заявки ' + request.data['requestNumber']}
+        // 3.	Code 400, {'message':'Удалить не удалось,  Заявка № '+str(request.data['requestNumber'])+' не существует'}
+        // 4.	Code 520, {"message":"Error"}
+
     },
 }
 

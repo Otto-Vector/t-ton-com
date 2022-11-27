@@ -194,7 +194,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <div
                                                     className={ styles.addDriversForm__info + ' ' + styles.addDriversForm__info_maxHeight }>
                                                     { oneTransport.transportNumber
-                                                        ? oneTransport.transportModel + ', ' + oneTransport.transportNumber + ', (' + oneTransport.cargoWeight + 'т.)'
+                                                        ? oneTransport.transportTrademark + ', ' + oneTransport.transportNumber + ', (' + oneTransport.cargoWeight + 'т.)'
                                                         : 'не привязан'
                                                     }
                                                 </div>
@@ -206,7 +206,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                 <div
                                                     className={ styles.addDriversForm__info + ' ' + styles.addDriversForm__info_maxHeight }>
                                                     { oneTrailer.trailerNumber
-                                                        ? oneTrailer.trailerModel + ', ' + oneTrailer.trailerNumber + ', (' + oneTrailer.cargoWeight + 'т.)'
+                                                        ? oneTrailer.trailerTrademark + ', ' + oneTrailer.trailerNumber + ', (' + oneTrailer.cargoWeight + 'т.)'
                                                         : 'не привязан'
                                                     }
                                                 </div>

@@ -2,6 +2,8 @@ import {InfoResponseType, instanceBack} from '../back-instance.api';
 import {ResponseToRequestCardType} from '../../../types/form-types';
 
 
+export type addResponseToRequestType = { requestNumber: string, responseId: string }
+
 export const responseToRequestApi = {
 
     // запрос списка ВСЕХ Ответов на Заявки GET /api/responsetorequestcardtype/
@@ -42,6 +44,28 @@ export const responseToRequestApi = {
             .then(response => response.data)
         // 1.	Code 200, {"message": "ResponseToRequestCardType with id `{}` has been deleted.".format(request.data['responseId'])}
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
+    },
+
+    // ПРИВЯЗАТЬ Ответ к заявке PUT /api/onerequesttyperesponses/
+    // (изменяет поле answers в OneRequestApiType)
+    addReponseToRequest( addReponseToRequest: addResponseToRequestType ) {
+        return instanceBack.put<InfoResponseType>('/api/onerequesttyperesponses/', addReponseToRequest)
+            .then(response => response.data)
+        // 1.	Code 200, {'message': 'Error, login please'}
+        // 2.	Code 200, {'message': 'Ответ '+str(request.data['responseId'])+' прикреплен к заявке ' + str(request.data['requestNumber'])}
+        // 3.	Code 400, {'message':'Удалить не удалось,  Заявка № '+str(request.data['requestNumber'])+' не существует'}
+        // 4.	Code 520, {"message":"Error"}
+    },
+
+    // отВЯЗАТЬ Ответ от заявки DELETE /api/onerequesttyperesponses/
+    // (изменяет поле answers в OneRequestApiType)
+    removeReponseFromRequest( removeReponseFromRequest: addResponseToRequestType ) {
+        return instanceBack.delete<InfoResponseType>('/api/onerequesttyperesponses/', { data: removeReponseFromRequest })
+            .then(response => response.data)
+        // 1.	Code 200, {'message': 'Error, login please'}
+        // 2.	Code 200 {'message': 'Ответ '+request.data['responseId']+' откреплен от заявки ' + request.data['requestNumber']}
+        // 3.	Code 400, {'message':'Удалить не удалось,  Заявка № '+str(request.data['requestNumber'])+' не существует'}
+        // 4.	Code 520, {"message":"Error"}
     },
 }
 

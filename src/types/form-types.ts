@@ -457,11 +457,20 @@ export type OneRequestApiType = {
     localStatuspaymentHasBeenReceived?: boolean
     localStatuscargoHasBeenReceived?: boolean
 
+    // ответы на заявки от перевозчиков (псевдо-массив строка id чз ', ')
     answers?: string
-
-    // заявки, доступ к которым оплачен данным пользователем
+    // заявки, доступ к которым оплачен данным пользователем (псевдо-массив строка id чз ', ')
     acceptedUsers?: string
-    /*НОВЫЕ ПОЛЯ НА СОТРУДНИКА*/
+
+    /* Привязанные данные из карточки ответа на заявку =НАЧАЛО= */
+
+    // id Пользователя, в принятом ответе на заявку (перевозчик)
+    requestUserCarrierId?: string
+    // id ответа на заявку (перевозчик)
+    requestCarrierId?: string
+
+    /* СОТРУДНИК */
+    idEmployee?: string
     // ФИО сотрудника
     responseEmployeeFIO?: string
     // Телефон сотрудника
@@ -475,49 +484,49 @@ export type OneRequestApiType = {
     // Номер водительского удостоверения
     responseEmployeedrivingLicenseNumber?: string
 
-    /*НОВЫЕ ПОЛЯ НА ТРАНСПОРТ*/
+    /* ТРАНСПОРТ */
+    idTransport?: string
     // Гос. номер авто
     responseTransportNumber?: string
     // Марка авто
     responseTransportTrademark?: string
     // Модель авто
     responseTransportModel?: string
-    // ПТС
+    // ПТС авто
     responseTransportPts?: string
-    // ДОПОГ
+    // ДОПОГ авто
     responseTransportDopog?: string
-    // Тип груза
+    // Тип груза авто
     responseTransportCargoType?: string
-    // Вес груза
+    // Вес груза авто
     responseTransportCargoWeight?: string
-    // Право собственности
+    // Право собственности авто
     responseTransportPropertyRights?: string
 
-    /*НОВЫЕ ПОЛЯ НА ПРИЦЕП*/
+    /* ПРИЦЕП */
+    idTrailer?: string
     // Гос. номер прицепа
     responseTrailertrailerNumber?: string
     // Марка прицепа
     responseTrailerTrademark?: string
     // Модель прицепа
     responseTrailerModel?: string
-    // ПТС
+    // ПТС прицепа
     responseTrailerPts?: string
-    // ДОПОГ
+    // ДОПОГ прицепа
     responseTrailerDopog?: string
-    // Тип груза
+    // Тип груза прицепа
     responseTrailerCargoType?: string
-    // Вес груза
+    // Вес груза прицепа
     responseTrailerCargoWeight?: string
+    // Права собственности прицепа
     responseTrailerPropertyRights?: string
 
-    requestUserCarrierId?: string
-    requestCarrierId?: string
-    idEmployee?: string
-    idTransport?: string
-    idTrailer?: string
     responseStavka?: string
     responseTax?: string
     responsePrice?: string
+    /* Привязанные данные из карточки ответа на заявку =КОНЕЦ= */
+
     cargoWeight?: string
     uploadTime?: string
 
