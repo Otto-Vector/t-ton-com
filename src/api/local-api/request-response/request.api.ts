@@ -73,8 +73,11 @@ export const oneRequestApi = {
     addOneUserAcceptRequest( responseToRequest: OneRequestApiType ) {
         return instanceBack.put<InfoResponseType>('/api/onerequesttypeacceptuser/', responseToRequest)
             .then(response => response.data)
-        // 1.	Code 449, {'failed': "OneRequestType is not updated"}
-        // 2.	Code 200, {"success": "OneRequestType '{}' updated successfully".format(OneRequestApiType_saved.responseId)}
+        // 1.	Code 200, {'message': 'Error, login please'}
+        // 2.	Code 200, {'message': 'Пользователю '+request.data['idUser']+' предоставлен доступ к просмотру заявки ' + request.data['requestNumber']}
+        // 3.	Code 400, {'message':'Добавить не удалось,  Заявка № '+str(request.data['requestNumber'])+' не существует'}
+        // 4.	Code 520, {"message":"Error"} // также возвращает его если id не существует
+
     },
 
     // УДАЛИТЬ доступ пользователя к Заявке DELETE /api/onerequesttypeacceptuser/
@@ -85,7 +88,7 @@ export const oneRequestApi = {
         // 1.	Code 200, {'message': 'Error, login please'}
         // 2.	Code 200 {'message': 'Пользователю '+request.data['idUser']+' закрыт доступ к просмотру заявки ' + request.data['requestNumber']}
         // 3.	Code 400, {'message':'Удалить не удалось,  Заявка № '+str(request.data['requestNumber'])+' не существует'}
-        // 4.	Code 520, {"message":"Error"}
+        // 4.	Code 520, {"message":"Error"} // также возвращает его если id не существует
 
     },
 }

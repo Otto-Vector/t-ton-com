@@ -46,6 +46,8 @@ export const responseToRequestApi = {
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
     },
 
+    /*-----------------------------------------------*/
+
     // ПРИВЯЗАТЬ Ответ к заявке PUT /api/onerequesttyperesponses/
     // (изменяет поле answers в OneRequestApiType)
     addReponseToRequest( addReponseToRequest: addResponseToRequestType ) {
