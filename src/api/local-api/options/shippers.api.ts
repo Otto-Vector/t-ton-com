@@ -1,23 +1,5 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
-
-
-export type ShippersApiType = {
-    idUser: string
-    idSender: string
-    title: string
-    innNumber: string
-    organizationName: string
-    kpp: string
-    ogrn: string
-    address: string
-    shipperFio: string
-    shipperTel: string
-    description: string
-    coordinates: string
-    city: string
-}
-
-export type CreateShippersApiType = Omit<ShippersApiType, 'idSender'>
+import {ShippersApiType} from '../../../types/form-types';
 
 
 export const shippersApi = {

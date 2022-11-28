@@ -1,21 +1,5 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
-
-
-export type ConsigneesApiType = {
-    idUser: string
-    idRecipient: string
-    title: string
-    innNumber: string
-    organizationName: string
-    kpp: string
-    ogrn: string
-    address: string
-    consigneesFio: string
-    consigneesTel: string
-    description: string
-    coordinates: string
-    city: string
-}
+import {ConsigneesApiType} from '../../../types/form-types';
 
 
 export const consigneesApi = {

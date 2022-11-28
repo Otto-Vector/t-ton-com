@@ -3,10 +3,7 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ParserType, ShippersCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
 import {coordsToString, syncParsers} from '../../utils/parsers';
-import {GetOrganizationByInnDaDataType} from '../../api/external-api/dadata.api';
-import {getOrganizationsByInn} from '../api/dadata-response-reducer';
 import {shippersApi} from '../../api/local-api/options/shippers.api';
-import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
 
@@ -186,13 +183,12 @@ export const getAllShippersAPI = (): ShippersStoreReducerThunkActionType =>
         dispatch(shippersStoreActions.toggleShipperIsFetching(true))
         dispatch(shippersStoreActions.setShippersContent([]))
         try {
-
             const idUser = getState().authStoreReducer.authID
             const response = await shippersApi.getAllShippersByUserId({ idUser })
             if (response.message || !response.length) {
                 throw new Error(response.message || `Грузоотправители не найдены или пока не внесены`)
             } else {
-                dispatch(shippersStoreActions.setShippersContent(response.map(( { idUser, ...values } ) => values)))
+                dispatch(shippersStoreActions.setShippersContent(response))
             }
 
         } catch (e) {
@@ -237,11 +233,12 @@ export const newShipperSaveToAPI = ( values: ShippersCardType<string> ): Shipper
 
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await shippersApi.createOneShipper({ idUser, ...values })
+            const response = await shippersApi.createOneShipper({ ...values, idUser })
             if (response.success) console.log(response.success)
         } catch (e) {
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data.failed)))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore-next-line
+                JSON.stringify(e.response.data.failed)))
         }
         await dispatch(getAllShippersAPI())
     }
@@ -253,14 +250,15 @@ export const modifyOneShipperToAPI = ( values: ShippersCardType<string> ): Shipp
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await shippersApi.modifyOneShipper({
-                idUser, ...values,
+                ...values, idUser,
                 description: values.description || '-',
                 city: values.city || '-',
             })
             if (response.success) console.log(response.success)
         } catch (e) {
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore-next-line
+                JSON.stringify(e.response.data)))
         }
         await dispatch(getAllShippersAPI())
     }
@@ -275,8 +273,9 @@ export const oneShipperDeleteToAPI = ( idSender: string | null ): ShippersStoreR
                 if (response.message) console.log(response.message)
             }
         } catch (e) {
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore-next-line
+                JSON.stringify(e.response.data)))
         }
         await dispatch(getAllShippersAPI())
     }
@@ -292,8 +291,9 @@ export const getOneShipperFromAPI = ( idSender: string ): ShippersStoreReducerTh
                 dispatch(shippersStoreActions.setInitialValues(oneShipper))
             }
         } catch (e) {
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore-next-line
+                JSON.stringify(e.response.data)))
         }
     }
 

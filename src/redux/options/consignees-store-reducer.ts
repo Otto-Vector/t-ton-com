@@ -198,11 +198,7 @@ export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
             if (response.message || !response.length) {
                 throw new Error(response.message || `Грузополучатели не найдены или пока не внесены`)
             } else {
-                dispatch(
-                    consigneesStoreActions.setConsigneesContent(response.map(( {
-                                                                                   idUser,
-                                                                                   ...values
-                                                                               } ) => values)))
+                dispatch(consigneesStoreActions.setConsigneesContent(response))
             }
         } catch (e) {
             console.error('Ошибка в запросе грузополучателей: ', e)
@@ -246,11 +242,12 @@ export const newConsigneeSaveToAPI = ( values: ConsigneesCardType<string> ): Con
 
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await consigneesApi.createOneConsignee({ idUser, ...values })
+            const response = await consigneesApi.createOneConsignee({ ...values, idUser })
             if (response.success) console.log(response.success)
         } catch (e) {
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data.failed)))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore-next-line
+                JSON.stringify(e.response.data.failed)))
         }
         await dispatch(getAllConsigneesAPI())
     }
@@ -264,13 +261,15 @@ export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): C
             const response = await consigneesApi.modifyOneConsignee({
                 ...values,
                 idUser,
+                // для перезаписи данных, если поле пустое
                 description: values.description || '-',
                 city: values.city || '-',
             })
             if (response.success) console.log(response.success)
         } catch (e) {
-            // @ts-ignore
-            console.error(JSON.stringify(e.response.data))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore-next-line
+                JSON.stringify(e.response.data)))
         }
         await dispatch(getAllConsigneesAPI())
     }
@@ -284,8 +283,9 @@ export const oneConsigneeDeleteToAPI = ( idRecipient: string | null ): Consignee
                 if (response.message) console.log(response.message)
             }
         } catch (e) {
-            // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore-next-line
+                JSON.stringify(e.response.data)))
         }
         await dispatch(getAllConsigneesAPI())
     }
@@ -301,7 +301,8 @@ export const getOneConsigneeFromAPI = ( idRecipient: string ): ConsigneesStoreRe
                 dispatch(consigneesStoreActions.setInitialValues(oneConsignee))
             }
         } catch (e) {
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore-next-line
+                JSON.stringify(e.response.data)))
         }
     }

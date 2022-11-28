@@ -12,7 +12,7 @@ export type PhoneSubmitType<T = DefaultFormType> = {
     kppNumber: T
     sms: T
 }
-
+///////////////////////////////////////////////////////////
 // на форму с реквизитами
 export type CompanyRequisitesType<T = DefaultFormType> = {
     // ИНН
@@ -73,7 +73,44 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
         paySafeTax: T,
     },
 }
-
+// на форму с реквизитами - возврат с бэка
+export type CompanyRequisitesApiType = {
+    idUser: string,
+    innNumber: string,
+    nnNumber: string,
+    organizationName: string,
+    taxMode: string,
+    kpp?: string,
+    ogrn: string,
+    okpo: string,
+    legalAddress: string,
+    description: string,
+    postAddress: string,
+    phoneDirector: string,
+    phoneAccountant: string,
+    email: string,
+    bikBank: string,
+    nameBank: string,
+    checkingAccount: string,
+    korrAccount: string,
+    is_staff: boolean,
+    is_active: boolean,
+    phone: string,
+    phoneCode: string,
+    phoneValidate: boolean,
+    password: string,
+    role: string,
+    cash: number,
+    requestActiveCount: string,
+    maxRequests: string,
+    tarifCreate: string,
+    tarifAcceptShortRoute: string,
+    tarifAcceptLongRoute: string,
+    tarifPaySafeTax: string,
+    mechanicFIO?: string,
+    dispatcherFIO?: string,
+}
+///////////////////////////////////////////////////////////
 // на сотрудника
 export type EmployeesCardType<T = DefaultFormType> = {
     idUser: T
@@ -112,9 +149,10 @@ export type EmployeesCardType<T = DefaultFormType> = {
 }
 // на сотрудника - ответка из бэка
 export type EmployeesApiType = EmployeesCardType<string>
-
+///////////////////////////////////////////////////////////
 // на грузоПОЛУЧАТЕЛЯ
 export type ConsigneesCardType<T = DefaultFormType> = {
+    idUser: T
     // идентификатор
     idRecipient: string
     // укороченное название
@@ -140,9 +178,12 @@ export type ConsigneesCardType<T = DefaultFormType> = {
     // присваивается автоматически
     city: T
 }
+// на грузоПОЛУЧАТЕЛЯ - ответка из бэка
+export type ConsigneesApiType = ConsigneesCardType<string>
 
 // на грузоотправителя
 export type ShippersCardType<T = DefaultFormType> = {
+    idUser: T
     // идентификатор
     idSender: string
     // укороченное название
@@ -168,6 +209,8 @@ export type ShippersCardType<T = DefaultFormType> = {
     // город (присваивается автоматически)
     city: T
 }
+// на грузоотправителя - ответка из бэка
+export type ShippersApiType = ShippersCardType<string>
 
 /////////////////////////////////////////////////////////////////////////////
 export const cargoFormats = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',

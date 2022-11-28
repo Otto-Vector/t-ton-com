@@ -271,6 +271,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     idUserSender: elem.idUserSender,
     idSender: elem.idSender,
     sender: {
+        idUser: elem.idUserSender,
         idSender: elem.idSender + '',
         title: elem.titleSender,
         innNumber: elem.innNumberSender,
@@ -288,6 +289,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     idRecipient: elem.idRecipient,
     idUserRecipient: elem.idUserRecipient,
     recipient: {
+        idUser: elem.idUserRecipient,
         idRecipient: elem.idRecipient as string,
         title: elem.titleRecipient,
         innNumber: elem.innNumberRecipient,

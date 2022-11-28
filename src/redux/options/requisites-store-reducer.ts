@@ -1,8 +1,8 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-import {CompanyRequisitesType, ParserType, ValidateType} from '../../types/form-types';
+import {CompanyRequisitesType, ParserType, CompanyRequisitesApiType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
-import {PersonalResponseType, requisitesApi} from '../../api/local-api/options/requisites.api';
+import {requisitesApi} from '../../api/local-api/options/requisites.api';
 import {syncParsers} from '../../utils/parsers';
 import {authStoreActions, logoutAuth} from '../auth-store-reducer';
 import {
@@ -193,16 +193,16 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
                 bikBank: values.bikBank,
                 checkingAccount: values.checkingAccount,
                 korrAccount: values.korrAccount,
-            } as PersonalResponseType)
-
-            // console.log('setPersonal: ', setPersonal)
+            } as CompanyRequisitesApiType)
 
             if (setPersonal.success) {
                 await dispatch(getPersonalOrganizationRequisites())
             }
+
         } catch (error) {
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data)))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore
+                JSON.stringify(error.response.data)))
             dispatch(requisitesStoreActions.setIsFetching(false))
             return 'Ошибка сохранения данных, попробуйте ещё раз'
         }
@@ -217,7 +217,7 @@ export const setOrganizationCashRequisites = ( cash: number ): RequisitesStoreRe
         try {
             const setPersonal = await requisitesApi.changePersonalData({
                 idUser, cash: localCash + cash,
-            } as PersonalResponseType)
+            } as CompanyRequisitesApiType)
             // console.log('setPersonal: ', setPersonal)
             if (setPersonal.success) {
                 await dispatch(getPersonalOrganizationRequisites())
