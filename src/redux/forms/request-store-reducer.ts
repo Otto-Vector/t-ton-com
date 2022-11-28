@@ -22,8 +22,10 @@ const defaultInitialStateValues = {} as OneRequestType
 
 const initialState = {
     requestIsFetching: false,
+    // список названий грузов (изменяемый при создании заявки) - подгружается из бэка
     cargoComposition: [] as string[],
     currentRequestNumber: undefined as undefined | number,
+    // для отрисовки ожидания построения маршрута при создании заявки
     currentDistanceIsFetching: false,
 
     label: {
@@ -340,7 +342,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         dopog: elem.responseTransportDopog,
         cargoType: elem.responseTransportCargoType,
         cargoWeight: elem.responseTransportCargoWeight,
-        propertyRights: elem.responseTransportCargoWeight,
+        propertyRights: elem.responseTransportPropertyRights,
     },
 
     idTrailer: elem.idTrailer,
@@ -353,7 +355,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         dopog: elem.responseTrailerDopog,
         cargoType: elem.responseTrailerCargoType,
         cargoWeight: elem.responseTrailerCargoWeight,
-        propertyRights: elem.responseTrailerCargoWeight,
+        propertyRights: elem.responseTrailerPropertyRights,
     },
 
     responseStavka: elem.responseStavka,

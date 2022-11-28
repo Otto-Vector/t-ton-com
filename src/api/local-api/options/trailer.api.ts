@@ -1,19 +1,5 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
-
-
-export type TrailerApiType = {
-    idUser: string
-    idTrailer: string
-    trailerNumber: string
-    trailerTrademark: string
-    trailerModel: string
-    pts: string
-    dopog: string
-    cargoType: string
-    cargoWeight: string
-    propertyRights: string
-    trailerImage: string
-}
+import {TrailerApiType} from '../../../types/form-types';
 
 
 export const trailerApi = {

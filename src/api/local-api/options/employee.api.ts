@@ -1,25 +1,6 @@
+import { EmployeesApiType } from '../../../types/form-types';
 import {InfoResponseType, instanceBack} from '../back-instance.api';
 
-
-export type EmployeesApiType = {
-    idUser: string
-    idEmployee: string
-    employeeFIO: string
-    employeePhoneNumber: string
-    passportSerial: string
-    passportFMS: string
-    passportDate: string
-    drivingLicenseNumber: string
-    drivingCategory: string
-    personnelNumber: string
-    garageNumber: string
-    photoFace: string
-    rating: string
-    coordinates: string
-    status: string
-    idTransport: string
-    idTrailer: string
-}
 
 
 export const employeesApi = {

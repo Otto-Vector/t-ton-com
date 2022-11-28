@@ -1,20 +1,5 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
-
-
-export type TransportApiType = {
-    idUser: string
-    idTransport: string
-    transportNumber: string
-    transportTrademark: string
-    transportModel: string
-    pts: string
-    dopog: string
-    cargoType: string
-    cargoWeight: string
-    propertyRights: string
-    transportImage: string
-}
-
+import {TransportApiType} from '../../../types/form-types';
 
 export const transportApi = {
 

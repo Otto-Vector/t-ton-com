@@ -149,7 +149,7 @@ export const getAllEmployeesAPI = (): EmployeesStoreReducerThunkActionType =>
             if (response.message || !response.length) {
                 throw new Error(response.message || `Сотрудники не найдены или пока не внесены`)
             } else {
-                dispatch(employeesStoreActions.setEmployeesContent(response.map(( { idUser, ...values } ) => values)))
+                dispatch(employeesStoreActions.setEmployeesContent(response))
             }
 
         } catch (e) {
@@ -166,7 +166,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.createOneEmployee({
-                idUser, ...values, passportDate: values.passportDate as string,
+                ...values, idUser, passportDate: values.passportDate as string,
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
@@ -188,8 +188,7 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
                 idTransport: values.idTransport || '-',
                 idTrailer: !values.idTransport ? '-' : values.idTrailer || '-',
                 rating: '-',
-                // toDo: что-то сделать со статусами
-                status: 'free',
+                status: 'свободен',
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {

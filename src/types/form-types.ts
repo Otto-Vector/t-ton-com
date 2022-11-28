@@ -76,6 +76,7 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
 
 // на сотрудника
 export type EmployeesCardType<T = DefaultFormType> = {
+    idUser: T
     // идентификатор
     idEmployee: string
     // ФИО сотрудника
@@ -103,12 +104,14 @@ export type EmployeesCardType<T = DefaultFormType> = {
     // координаты местоположения водителя
     coordinates: T
     // статус водителя
-    status: T
+    status?: 'на заявке' | 'свободен' | 'ожидает принятия' | 'в отпуске' | 'уволен'
     // прикреплённый транспорт
     idTransport: T
     // прикреплённый прицеп
     idTrailer: T
 }
+// на сотрудника - ответка из бэка
+export type EmployeesApiType = EmployeesCardType<string>
 
 // на грузоПОЛУЧАТЕЛЯ
 export type ConsigneesCardType<T = DefaultFormType> = {
@@ -178,6 +181,7 @@ export type PropertyRightsType = typeof propertyRights[number]
 
 // на транспорт
 export type TransportCardType<T = DefaultFormType> = {
+    idUser: T
     // идентификатор
     idTransport: string
     // Гос. номер авто
@@ -191,38 +195,43 @@ export type TransportCardType<T = DefaultFormType> = {
     // ДОПОГ
     dopog: T
     // Тип груза
-    cargoType: T | CargoTypeType
+    cargoType?: CargoTypeType
     // Вес груза
     cargoWeight: T
     // Право собственности
-    propertyRights: T | PropertyRightsType
+    propertyRights?: PropertyRightsType
     // Фото транспорта
     transportImage: T
 }
+// на транспорт - ответка из бэка
+export type TransportApiType = TransportCardType<string>
 
 // на прицеп
 export type TrailerCardType<T = DefaultFormType> = {
+    idUser: T
     // идентификатор
     idTrailer: string
     // Гос. номер авто
     trailerNumber: T
-    // Марка авто
+    // Марка трейлера
     trailerTrademark: T
-    // Модель авто
+    // Модель трейлера
     trailerModel: T
-    // ПТС
+    // ПТС трейлера
     pts: T
-    // ДОПОГ
+    // ДОПОГ трейлера
     dopog: T
-    // Тип груза
-    cargoType: T | CargoTypeType
-    // Вес груза
+    // Тип груза трейлера
+    cargoType?: CargoTypeType
+    // Вес груза трейлера
     cargoWeight: T
-    // Право собственности
-    propertyRights: T | PropertyRightsType
-    // Фото транспорта
+    // Право собственности трейлера
+    propertyRights?: PropertyRightsType
+    // Фото трейлера
     trailerImage: T
 }
+
+export type TrailerApiType = TrailerCardType<string>
 
 // на добавление отклика на заявку
 export type ResponseToRequestCardType<T = DefaultFormType> = {
@@ -497,11 +506,11 @@ export type OneRequestApiType = {
     // ДОПОГ авто
     responseTransportDopog?: string
     // Тип груза авто
-    responseTransportCargoType?: string
+    responseTransportCargoType?: CargoTypeType
     // Вес груза авто
     responseTransportCargoWeight?: string
     // Право собственности авто
-    responseTransportPropertyRights?: string
+    responseTransportPropertyRights?: PropertyRightsType
 
     /* ПРИЦЕП */
     idTrailer?: string
@@ -516,11 +525,11 @@ export type OneRequestApiType = {
     // ДОПОГ прицепа
     responseTrailerDopog?: string
     // Тип груза прицепа
-    responseTrailerCargoType?: string
+    responseTrailerCargoType?: CargoTypeType
     // Вес груза прицепа
     responseTrailerCargoWeight?: string
     // Права собственности прицепа
-    responseTrailerPropertyRights?: string
+    responseTrailerPropertyRights?: PropertyRightsType
 
     responseStavka?: string
     responseTax?: string

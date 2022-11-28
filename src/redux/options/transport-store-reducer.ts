@@ -20,7 +20,7 @@ const initialState = {
         cargoWeight: 'Вес груза (тн.)',
         propertyRights: 'Право собственности',
         transportImage: 'Фото транспорта',
-    } as TransportCardType<string | undefined>,
+    } as Record<keyof TransportCardType, string>,
 
     maskOn: {
         transportNumber: 'A ### AA | ### rus',
@@ -46,7 +46,7 @@ const initialState = {
         cargoWeight: syncValidators.cargoWeight,
         propertyRights: syncValidators.required,
         transportImage: undefined,
-    } as TransportCardType<ValidateType>,
+    } as Record<keyof TransportCardType, ValidateType>,
 
     parsers: {
         transportNumber: syncParsers.pseudoLatin,
@@ -142,7 +142,7 @@ export const getAllTransportAPI = (): TransportStoreReducerThunkActionType =>
             if (response.message || !response.length) {
                 throw new Error(response.message || `Транспорт не найден или пока не внесен`)
             } else {
-                dispatch(transportStoreActions.setTransportContent(response.map(( { idUser, ...values } ) => values)))
+                dispatch(transportStoreActions.setTransportContent(response))
             }
         } catch (e) {
             console.error('Ошибка в запросе списка транспорта: ', e)
@@ -157,13 +157,14 @@ export const newTransportSaveToAPI = ( values: TransportCardType<string>, image:
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await transportApi.createOneTransport({
-                idUser, ...values,
+                ...values, idUser,
                 cargoWeight: values.cargoWeight || '0',
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
-            // @ts-ignore
-            console.error(e.response.data.failed)
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore
+                e.response.data.failed))
         }
         await dispatch(getAllTransportAPI())
     }
@@ -181,8 +182,9 @@ export const modifyOneTransportToAPI = ( values: TransportCardType<string>, imag
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
-            // @ts-ignore
-            console.error(JSON.stringify(e.response.data))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore
+                JSON.stringify(e.response.data)))
         }
         await dispatch(getAllTransportAPI())
     }
@@ -194,8 +196,9 @@ export const oneTransportDeleteToAPI = ( idTransport: string ): TransportStoreRe
             const response = await transportApi.deleteOneTransport({ idTransport })
             if (response.message) console.log(response.message)
         } catch (e) {
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore
+                JSON.stringify(e.response.data)))
         }
         await dispatch(getAllTransportAPI())
     }

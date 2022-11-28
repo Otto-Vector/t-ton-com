@@ -82,7 +82,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const onSubmit = useCallback(( values: TrailerCardType<string> ) => {
         const demaskedValues: TrailerCardType<string> = {
             ...values,
-            cargoWeight: syncParsers.parseAllNumbers(values.cargoWeight),
+            cargoWeight: syncParsers.parseAllNumbers(values.cargoWeight) || '0',
             trailerNumber: syncParsers.clearNormalizeTrailerTransportNumberAtEnd(values.trailerNumber),
         }
 
