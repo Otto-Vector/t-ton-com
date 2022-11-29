@@ -229,24 +229,28 @@ export const setOrganizationCashRequisites = ( cash: number ): RequisitesStoreRe
         }
     }
 
+// списание оплаты за создание заявки
 export const addRequestCashPay = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
         await dispatch(setOrganizationCashRequisites(-cost))
     }
 
+// возврат оплаты за создание заявки
 export const cancelRequestCashReturn = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
         await dispatch(setOrganizationCashRequisites(cost))
     }
 
+// оплата за принятие заявки на КОРОТКОЙ дистанции
 export const acceptShorRoutePay = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.acceptShortRoute || 0 )
         await dispatch(setOrganizationCashRequisites(-cost))
     }
 
+// оплата за принятие заявки на ДЛИННОЙ дистанции
 export const acceptLongRoutePay = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.acceptLongRoute || 0 )

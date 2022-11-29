@@ -28,16 +28,22 @@ type OwnProps = {}
 
 export const MenuPanel: React.FC<OwnProps> = React.memo (() => {
 
-    const routes = useSelector(getRoutesStore)
-    const isAuth = useSelector(getIsAuthAuthStore)
-    // проверка на заполненность реквизитов
-    const isRequisitesError = useSelector(getIsReqErrorRequisitesStore)
-    const unreadMessagesCount = useSelector(getUnreadMessagesCountInfoStore)
-    const tariffs = useSelector(getTariffsRequisitesStore)
     const dispatch = useDispatch()
     const { pathname } = useLocation()
+
+    const routes = useSelector(getRoutesStore)
     const newRequestRoute = routes.requestInfo.create + 'new'
-    const isNewRegistrationRoute = pathname === routes.requisites + 'new'
+
+    // проверка авторизован ли пользователь
+    const isAuth = useSelector(getIsAuthAuthStore)
+
+    // проверка на заполненность реквизитов
+    const isRequisitesError = useSelector(getIsReqErrorRequisitesStore)
+    const newRequisitesRoute = routes.requisites + 'new'
+    const isNewRegistrationRoute = pathname === newRequisitesRoute
+    // проверка на непрочитанные сообщения
+    const unreadMessagesCount = useSelector(getUnreadMessagesCountInfoStore)
+
 
     const logout = async () => {
         await dispatch<any>(textAndActionGlobalModal({
@@ -48,8 +54,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo (() => {
 
     const newRequest = async () => {
         await dispatch<any>(textAndActionGlobalModal({
-            text: 'СОЗДАТЬ НОВУЮ ЗАЯВКУ? \n Стоимость создания:'+tariffs.create+' руб.',
-            action: addRequestCashPay,
+            text: 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?',
             navigateOnOk: newRequestRoute,
         }))
     }
@@ -58,8 +63,8 @@ export const MenuPanel: React.FC<OwnProps> = React.memo (() => {
         await dispatch<any>(textAndActionGlobalModal({
             title: 'Внимание!',
             text: 'НЕОБХОДИМО ЗАПОЛНИТЬ ДАННЫЕ РЕКВИЗИТОВ!',
-            navigateOnOk: routes.requisites + 'new',
-            navigateOnCancel: routes.requisites + 'new',
+            navigateOnOk: newRequisitesRoute,
+            navigateOnCancel: newRequisitesRoute,
         }))
     }
 

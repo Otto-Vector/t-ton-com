@@ -41,6 +41,11 @@ import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-t
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {
+    acceptLongRoutePay,
+    acceptShorRoutePay,
+    addRequestCashPay,
+} from '../../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {
@@ -61,7 +66,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
 
     const cargoComposition = useSelector(getCargoCompositionRequestStore)
     const labels = useSelector(getLabelRequestStore)
-    const placehoders = useSelector(getPlaceholderRequestStore)
+    const placeholders = useSelector(getPlaceholderRequestStore)
     const validators = useSelector(getValidatorsRequestStore)
     const fieldInformation = useSelector(getInfoTextModalsRequestValuesStore)
 
@@ -86,7 +91,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const customersSelect = shippersSelect
 
     const onSubmit = async ( values: OneRequestType ) => {
-        await dispatch<any>(changeCurrentRequest({...values, globalStatus: 'новая заявка'}))
+        await dispatch<any>(changeCurrentRequest({ ...values, globalStatus: 'новая заявка' }))
     }
 
     // для сохранения отображаемых данных при переключении вкладок
@@ -96,6 +101,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
 
     const buttonsAction = useMemo(() => ( {
         acceptRequest: async ( values: OneRequestType ) => {
+            // оплата за принятие заявки в работу
+            // dispatch<any>(+( values.distance || 0 ) <= 100 ? acceptShorRoutePay() : acceptLongRoutePay())
             navigate(routes.addDriver + values.requestNumber)
         },
         cancelRequest: () => {
@@ -103,10 +110,14 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         },
         submitRequestAndSearch: async ( values: OneRequestType ) => {
             await onSubmit(values)
+            // оплата за создание заявки
+            dispatch<any>(addRequestCashPay())
             navigate(routes.searchList)
         },
         submitRequestAndDrive: async ( values: OneRequestType ) => {
             await onSubmit(values)
+            // оплата за создание заявки
+            dispatch<any>(addRequestCashPay())
             navigate(routes.addDriver + values.requestNumber)
         },
     } ), [])
@@ -165,7 +176,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                         { labels.cargoComposition }</label>
                                     { requestModes.createMode
                                         ? <FormSelector nameForSelector={ 'cargoComposition' }
-                                                        placeholder={ placehoders.cargoComposition }
+                                                        placeholder={ placeholders.cargoComposition }
                                                         values={ stringArrayToSelectValue(cargoComposition) }
                                                         validate={ validators.cargoComposition }
                                                         isCreatableSelect
@@ -209,7 +220,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     <div className={ styles.requestFormLeft__info }>
                                         {
                                             !currentDistanceIfFetching
-                                                ? ( values.distance || placehoders.distance )
+                                                ? ( values.distance || placeholders.distance )
                                                 : <Preloader/>
                                         }
                                     </div>
@@ -237,7 +248,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     className={ styles.requestFormLeft__label }>{ labels.idCustomer }</label>
                                 { requestModes.createMode
                                     ? <FormSelector nameForSelector={ 'idCustomer' }
-                                                    placeholder={ placehoders.idCustomer }
+                                                    placeholder={ placeholders.idCustomer }
                                                     values={ customersSelect }
                                                     validate={ validators.idCustomer }
                                                     isClearable
@@ -254,7 +265,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     className={ styles.requestFormLeft__label }>{ labels.idSender }</label>
                                 { requestModes.createMode
                                     ? <FormSelector nameForSelector={ 'idSender' }
-                                                    placeholder={ placehoders.idSender }
+                                                    placeholder={ placeholders.idSender }
                                                     values={ shippersSelect }
                                                     validate={ validators.idSender }
                                                     handleChanger={ setOneShipper }
@@ -273,7 +284,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     className={ styles.requestFormLeft__label }>{ labels.idRecipient }</label>
                                 { requestModes.createMode
                                     ? <FormSelector nameForSelector={ 'idRecipient' }
-                                                    placeholder={ placehoders.idRecipient }
+                                                    placeholder={ placeholders.idRecipient }
                                                     values={ consigneesSelect }
                                                     validate={ validators.idRecipient }
                                                     handleChanger={ setOneConsignee }
@@ -292,7 +303,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     { labels.requestCarrierId }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { oneCarrier ? ( oneCarrier.title + ', ' + oneCarrier.city ) : placehoders.requestCarrierId }
+                                    { oneCarrier ? ( oneCarrier.title + ', ' + oneCarrier.city ) : placeholders.requestCarrierId }
                                 </div>
                                 <InfoButtonToModal textToModal={ fieldInformation.carrier } mode={ 'inForm' }/>
                             </div>
@@ -301,7 +312,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     { labels.idEmployee }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { initialValues.idEmployee || placehoders.idEmployee }
+                                    { initialValues.idEmployee || placeholders.idEmployee }
                                 </div>
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>
@@ -312,7 +323,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     ? <Field name={ 'note' }
                                              component={ FormInputType }
                                              resetFieldBy={ form }
-                                             placeholder={ placehoders.note }
+                                             placeholder={ placeholders.note }
                                              inputType={ 'text' }
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>

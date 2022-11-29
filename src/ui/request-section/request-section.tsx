@@ -15,7 +15,6 @@ import {SizedPreloader} from '../common/preloader/preloader';
 import {valuesAreEqual} from '../../utils/reactMemoUtils';
 import {getOneEmployeeFromAPI} from '../../redux/options/employees-store-reducer';
 import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect';
-import {cancelRequestCashReturn} from '../../redux/options/requisites-store-reducer';
 
 // type OwnProps = { }
 
@@ -60,7 +59,6 @@ export const RequestSection: React.FC = React.memo(() => {
     const onCancelButton = () => {
         if (requestModes.createMode) {
             dispatch<any>(deleteCurrentRequestAPI({ requestNumber: +( initialValues.requestNumber || 0 ) }))
-            dispatch<any>(cancelRequestCashReturn())
         }
         navigate(cancelNavigate())
     }
