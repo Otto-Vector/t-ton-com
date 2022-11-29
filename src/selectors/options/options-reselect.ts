@@ -107,6 +107,7 @@ export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, get
         }
     })
 
+// выборка из списка сотрудников в селектор с информацией о прикрепленном транспорте
 export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStore, getEmployeesOptionsStore,
     ( employees, { content } ): SelectOptionsType[] => employees.map(( { idEmployee, employeeFIO }, index ) =>
         ( {
@@ -116,4 +117,26 @@ export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStor
             isDisabled: !content[index].subTitle,
             subLabel: !content[index].subTitle ? 'без транспорта': '',
         } )),
+)
+
+export const getAllEmployeesSelectWithCargoType = createSelector(getAllEmployeesStore, getAllTransportStore, getAllTrailerStore,
+    ( employees, transports, trailer ): SelectOptionsType[] => employees
+        .map(( { idEmployee, idTransport, idTrailer, employeeFIO } ) => {
+                const cargoTypeTransport = transports.find(v => v.idTransport === idTransport)
+                const cargoTypeTransportTrailer = cargoTypeTransport?.cargoType !== 'Тягач'
+                    ? cargoTypeTransport?.cargoType
+                    : trailer.find(v => v.idTrailer === idTrailer)?.cargoType
+                return ( {
+                    key: idEmployee,
+                    value: idEmployee,
+                    label: parseFamilyToFIO(employeeFIO),
+                    subLabel: cargoTypeTransport
+                        ? cargoTypeTransport?.transportTrademark + ', '
+                        + (cargoTypeTransportTrailer?.toUpperCase() || '(0т.)')
+                        : 'без транспорта',
+                    isDisabled: !cargoTypeTransport?.idTransport || !cargoTypeTransportTrailer,
+                    extendInfo: cargoTypeTransportTrailer,
+                } )
+            },
+        ),
 )

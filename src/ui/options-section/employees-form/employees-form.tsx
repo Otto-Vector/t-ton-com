@@ -43,6 +43,7 @@ import {rerenderTransport} from '../../../redux/options/transport-store-reducer'
 import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer';
 import {syncValidators} from '../../../utils/validators';
 import {SwitchMask} from '../../common/antd-switch/antd-switch';
+import {SelectOptionsType} from '../../common/form-selector/selector-utils';
 
 
 type OwnProps = {}
@@ -65,7 +66,11 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const drivingCategorySelector = useSelector(getDrivingCategorySelector)
     const transportSelect = useSelector(getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel)
     const trailerSelect = useSelector(getTrailerSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel)
-    const [ trailerSelectDisableWrongCargoType, setTrailerSelectDisableWrongCargoType ] = useState(trailerSelect)
+    const [ trailerSelectDisableWrongCargoType, setTrailerSelectDisableWrongCargoType ] = useState<SelectOptionsType[]>([ {
+        key: '',
+        value: '',
+        label: '',
+    } ])
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployee = useSelector(getOneEmployeeFromLocal)
@@ -132,6 +137,17 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             } else {
                 dispatch(employeesStoreActions.setCurrentId(currentIdForShow || ''))
             }
+
+            // фильтрация селектора по типу груза при иницализации сотрудника с транспортом
+            if (!trailerSelectDisableWrongCargoType[0].value && initialValues.idTransport && !isNew) {
+                const selectedTransportCargo = transportSelect.find(( { value } ) => value === initialValues.idTransport)?.extendInfo
+                setTrailerSelectDisableWrongCargoType(selectedTransportCargo === 'Тягач' ? trailerSelect
+                    : trailerSelect.map(( val ) => ( {
+                        ...val, isDisabled: selectedTransportCargo !== val.extendInfo,
+                    } )),
+                )
+            }
+
         }, [ currentId, initialValues ],
     )
 

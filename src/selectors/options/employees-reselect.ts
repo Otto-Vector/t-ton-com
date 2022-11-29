@@ -2,9 +2,10 @@ import {AppStateType} from '../../redux/redux-store'
 import {EmployeesStoreReducerStateType} from '../../redux/options/employees-store-reducer'
 import {EmployeesCardType} from '../../types/form-types';
 import {createSelector} from 'reselect';
-import {parseFamilyToFIO} from '../../utils/parsers';
 import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
-import {getEmployeesOptionsStore} from './options-reselect';
+import {getAllTransportStore} from './transport-reselect';
+import {getAllTrailerStore} from './trailer-reselect';
+import {parseFamilyToFIO} from '../../utils/parsers';
 
 
 type EmployeesStoreSelectors<T extends keyof Y, Y = EmployeesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
@@ -25,3 +26,4 @@ export const getOneEmployeeFromLocal = createSelector(getCurrentIdEmployeesStore
     ( currentId, employees, initials ): EmployeesCardType => {
         return employees.filter(( { idEmployee } ) => idEmployee === currentId)[0] || initials
     })
+

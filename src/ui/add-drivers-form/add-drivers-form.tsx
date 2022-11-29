@@ -36,7 +36,7 @@ import {getOneRequestsAPI} from '../../redux/forms/request-store-reducer';
 import {syncParsers} from '../../utils/parsers';
 import {FormApi} from 'final-form';
 import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple';
-import {getAllEmployeesSelectFromLocal} from '../../selectors/options/options-reselect';
+import {getAllEmployeesSelectWithCargoType} from '../../selectors/options/options-reselect';
 
 type OwnProps = {}
 
@@ -69,7 +69,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         dispatch(lightBoxStoreActions.setLightBoxImage(setImage(imageURL)))
     }
 
-    const employeesSelect = useSelector(getAllEmployeesSelectFromLocal)
+    const employeesSelect = useSelector(getAllEmployeesSelectWithCargoType)
 
     const navigate = useNavigate()
 
