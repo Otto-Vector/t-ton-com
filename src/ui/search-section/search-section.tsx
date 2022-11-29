@@ -5,7 +5,7 @@ import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {filtersStoreActions, initialFiltersState} from '../../redux/table/filters-store-reducer'
 import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
-import {cargoFormats} from '../../types/form-types'
+import {cargoConstType} from '../../types/form-types'
 import {JustSelect} from '../common/just-select/just-select';
 
 
@@ -88,7 +88,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                             ( !!value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             {
                                 ( key === 'cargoFilter' )
-                                    ? <JustSelect optionItems={ cargoFormats }
+                                    ? <JustSelect optionItems={ [...cargoConstType] }
                                                   selectedValue={ cargoFilter }
                                                   titleValue={ value.title }
                                                   onChange={ filtersAction[key] }

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -29,8 +29,13 @@ import {
 } from '../../../redux/options/employees-store-reducer';
 
 import {FormSelector} from '../../common/form-selector/form-selector';
-import {getTrailerSelectEnableCurrentEmployee} from '../../../selectors/options/trailer-reselect';
-import {getTransportSelectEnableCurrentEmployee} from '../../../selectors/options/transport-reselect';
+import {
+    getOneTrailerFromLocal,
+    getTrailerSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
+} from '../../../selectors/options/trailer-reselect';
+import {
+    getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
+} from '../../../selectors/options/transport-reselect';
 import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set';
 import {yearMmDdFormat} from '../../../utils/date-formats';
@@ -59,12 +64,13 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     // селекторы
     const drivingCategorySelector = useSelector(getDrivingCategorySelector)
-    const transportSelect = useSelector(getTransportSelectEnableCurrentEmployee)
-    const trailerSelect = useSelector(getTrailerSelectEnableCurrentEmployee)
+    const transportSelect = useSelector(getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel)
+    const trailerSelect = useSelector(getTrailerSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel)
+    const [ trailerSelectDisableWrongCargoType, setTrailerSelectDisableWrongCargoType ] = useState(trailerSelect)
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployee = useSelector(getOneEmployeeFromLocal)
-
+    const cargoType = useSelector(getOneTrailerFromLocal).cargoType
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
     const isNew = currentIdForShow === 'new'
@@ -107,6 +113,16 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const employeesDeleteHandleClick = ( currentId: string ) => {
         dispatch<any>(oneEmployeesDeleteToAPI(currentId))
         navigate(options)
+    }
+
+    // исключаем из селектора прицепов неподходящий по типу груза
+    const setCargoTypeFilter = ( idTrailer: string ) => {
+        const selectedTransportCargo = transportSelect.find(( { value } ) => value === idTrailer)?.extendInfo
+        setTrailerSelectDisableWrongCargoType(selectedTransportCargo === 'Тягач' ? trailerSelect
+            : trailerSelect.map(( val ) => ( {
+                ...val, isDisabled: selectedTransportCargo !== val.extendInfo,
+            } )),
+        )
     }
 
 
@@ -217,12 +233,13 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           placeholder={ label.idTransport }
                                                           values={ transportSelect }
                                                           validate={ validators.idTransport }
+                                                          handleChanger={ setCargoTypeFilter }
                                                           isSubLabelOnOption
                                                           isClearable
                                             />
                                             <FormSelector nameForSelector={ 'idTrailer' }
                                                           placeholder={ label.idTrailer }
-                                                          values={ trailerSelect }
+                                                          values={ trailerSelectDisableWrongCargoType }
                                                           validate={ validators.idTrailer }
                                                           disabled={ !values.idTransport }
                                                           isSubLabelOnOption
@@ -273,7 +290,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.employeesForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting || submitError || pristine }
+                                                            disabled={ submitting || pristine }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

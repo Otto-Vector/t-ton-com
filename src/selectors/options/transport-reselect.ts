@@ -21,26 +21,25 @@ export const getCurrentIdTransportStore: TransportStoreSelectors<'currentId'> = 
 // выборка искомого ТРАНСПОРТА из локально загруженного списка
 export const getOneTransportFromLocal = createSelector(getCurrentIdTransportStore, getAllTransportStore, getInitialValuesTransportStore,
     ( currentId, transport, initials ): TransportCardType => {
-        return transport.filter(( { idTransport } ) => idTransport === currentId)[0] || initials
+        return transport.find(( { idTransport } ) => idTransport === currentId) || initials
     })
 
 // список транспорта в селекторы
 export const getAllTransportSelectFromLocal = createSelector(
     getAllTransportStore, getAllEmployeesStore, ( transports, employees ): SelectOptionsType[] =>
         transports
-            .map(( { idTransport, transportTrademark, transportNumber, cargoWeight } ) => {
+            .map(( { idTransport, transportTrademark, transportNumber, cargoWeight, cargoType } ) => {
                     const employeesHasTransport = employees
                         .filter(( { idTransport: id } ) => id === idTransport)
                         .map(( { employeeFIO } ) => parseFamilyToFIO(employeeFIO))
-                    const isEmployeesHasTransport = employeesHasTransport.length > 0
-                    const subLabel = isEmployeesHasTransport ? employeesHasTransport.join(',') : undefined
-                    const label = [ transportTrademark, transportNumber, '(' + cargoWeight ].join(', ') + 'т.)'
+                        .join(',')
                     return ( {
                         key: idTransport,
                         value: idTransport,
-                        label,
-                        isDisabled: isEmployeesHasTransport,
-                        subLabel,
+                        label: [ transportTrademark, transportNumber, '(' + cargoWeight + 'т.)' ].join(', '),
+                        isDisabled: !!employeesHasTransport,
+                        subLabel: employeesHasTransport,
+                        extendInfo: cargoType,
                     } )
                 },
             ),
@@ -54,8 +53,15 @@ export const getIsBusyTransport = createSelector(getAllTransportSelectFromLocal,
 
 // селектор для сотрудника с активным выбором его же ТРАНСПОРТА
 export const getTransportSelectEnableCurrentEmployee = createSelector(getAllTransportSelectFromLocal, getOneEmployeeFromLocal,
-    ( trailerSelect, oneEmployee ) => trailerSelect.map(values => ( {
+    ( trailerSelect, oneEmployee ): SelectOptionsType[] => trailerSelect.map(values => ( {
         ...values,
-        isDisabled: values.isDisabled && ( values.key !== oneEmployee.idTransport ),
+        isDisabled: values.isDisabled && ( values.value !== oneEmployee.idTransport ),
     } )),
 )
+
+export const getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel = createSelector(getTransportSelectEnableCurrentEmployee,
+    ( transportSelect ): SelectOptionsType[] => transportSelect.map(( values ) => ( {
+            ...values,
+            subLabel: !values.isDisabled ? values.extendInfo?.toUpperCase() : values.subLabel,
+        }
+    )))

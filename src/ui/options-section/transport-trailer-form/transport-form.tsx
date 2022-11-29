@@ -205,7 +205,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <FormSelector nameForSelector={ 'cargoType' }
                                                               placeholder={ label.cargoType }
-                                                              values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }
+                                                              values={ stringArrayToSelectValue([...cargoConstType]) }
                                                               handleChanger={ ( val: string ) => {
                                                                   if (val === 'Тягач') {
                                                                       form.resetFieldState('cargoWeight')

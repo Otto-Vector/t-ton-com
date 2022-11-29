@@ -146,6 +146,8 @@ export type EmployeesCardType<T = DefaultFormType> = {
     idTransport: T
     // прикреплённый прицеп
     idTrailer: T
+    // список ответок, к которым привязан водитель
+    responseToRequest: T
 }
 // на сотрудника - ответка из бэка
 export type EmployeesApiType = EmployeesCardType<string>
@@ -213,8 +215,6 @@ export type ShippersCardType<T = DefaultFormType> = {
 export type ShippersApiType = ShippersCardType<string>
 
 /////////////////////////////////////////////////////////////////////////////
-export const cargoFormats = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
-    'Тягач', 'Фургон, Борт', 'Цементовоз' ]
 export const cargoConstType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
     'Тягач', 'Фургон, Борт', 'Цементовоз' ] as const
 export type CargoTypeType = typeof cargoConstType[number]

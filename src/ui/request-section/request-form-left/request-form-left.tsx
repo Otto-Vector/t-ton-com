@@ -41,11 +41,7 @@ import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-t
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
-import {
-    acceptLongRoutePay,
-    acceptShorRoutePay,
-    addRequestCashPay,
-} from '../../../redux/options/requisites-store-reducer';
+import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {
@@ -126,7 +122,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         dispatch<any>(setCargoCompositionSelector(newCargoCompositionItem))
     }
 
-    useEffect(() => { // зачистка / присвоение значений при первом рендере
+    useEffect(() => { // зачистка & присвоение значений при первом рендере
         if (isFirstRender) {
             // зачистка значений при первом рендере
             if (requestModes.createMode) {
@@ -232,7 +228,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     { requestModes.createMode
                                         ? <FormSelector nameForSelector={ 'cargoType' }
                                                         placeholder={ labels.cargoType }
-                                                        values={ stringArrayToSelectValue([ ...cargoConstType ]) }
+                                                        values={ stringArrayToSelectValue([ ...cargoConstType.filter(x => x !== 'Тягач') ]) }
                                                         validate={ validators.cargoType }
                                                         isClearable
                                         />

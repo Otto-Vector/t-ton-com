@@ -28,19 +28,18 @@ export const getOneTrailerFromLocal = createSelector(getCurrentIdTrailerStore, g
 export const getAllTrailerSelectFromLocal = createSelector(
     getAllTrailerStore, getAllEmployeesStore, ( trailers, employees ): SelectOptionsType[] =>
         trailers
-            .map(( { idTrailer, trailerTrademark, trailerNumber, cargoWeight } ) => {
+            .map(( { idTrailer, trailerTrademark, trailerNumber, cargoWeight, cargoType } ) => {
                     const employeesHasTrailer = employees
                         .filter(( { idTrailer: id } ) => id === idTrailer)
                         .map(( { employeeFIO } ) => parseFamilyToFIO(employeeFIO))
-                    const isEmployeesHasTrailer = employeesHasTrailer.length > 0
-                    const subLabel = employeesHasTrailer.join(',')
-                    const label = [ trailerTrademark, trailerNumber, '(' + cargoWeight ].join(', ') + 'т.)'
+                        .join(',')
                     return ( {
                         key: idTrailer,
                         value: idTrailer,
-                        label,
-                        isDisabled: isEmployeesHasTrailer,
-                        subLabel,
+                        label: [ trailerTrademark, trailerNumber, '(' + cargoWeight ].join(', ') + 'т.)',
+                        isDisabled: !!employeesHasTrailer.length,
+                        subLabel: employeesHasTrailer,
+                        extendInfo: cargoType,
                     } )
                 },
             ),
@@ -59,3 +58,9 @@ export const getTrailerSelectEnableCurrentEmployee = createSelector(getAllTraile
         isDisabled: values.isDisabled && ( values.key !== oneEmployee.idTrailer ),
     } )),
 )
+
+export const getTrailerSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel = createSelector(getTrailerSelectEnableCurrentEmployee,
+    ( trailerSelect ): SelectOptionsType[] => trailerSelect.map(( values ) => ( {
+        ...values,
+        subLabel: !values.isDisabled ? values.extendInfo?.toUpperCase() : values.subLabel,
+    } )))

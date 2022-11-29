@@ -203,7 +203,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             <div className={ styles.transportTrailerForm__smallInput }>
                                                 <FormSelector nameForSelector={ 'cargoType' }
                                                               placeholder={ label.cargoType }
-                                                              values={ stringArrayToSelectValue(cargoConstType.map(x => x)) }
+                                                              values={ stringArrayToSelectValue([ ...cargoConstType.filter(x => x !== 'Тягач') ]) }
                                                               validate={ validators.cargoType }
                                                 />
                                             </div>
