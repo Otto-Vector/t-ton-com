@@ -30,7 +30,6 @@ import {
 
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {
-    getOneTrailerFromLocal,
     getTrailerSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
 } from '../../../selectors/options/trailer-reselect';
 import {
@@ -70,7 +69,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployee = useSelector(getOneEmployeeFromLocal)
-    const cargoType = useSelector(getOneTrailerFromLocal).cargoType
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
     const isNew = currentIdForShow === 'new'
@@ -117,12 +115,14 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     // исключаем из селектора прицепов неподходящий по типу груза
     const setCargoTypeFilter = ( idTrailer: string ) => {
-        const selectedTransportCargo = transportSelect.find(( { value } ) => value === idTrailer)?.extendInfo
-        setTrailerSelectDisableWrongCargoType(selectedTransportCargo === 'Тягач' ? trailerSelect
-            : trailerSelect.map(( val ) => ( {
-                ...val, isDisabled: selectedTransportCargo !== val.extendInfo,
-            } )),
-        )
+        if (idTrailer) {
+            const selectedTransportCargo = transportSelect.find(( { value } ) => value === idTrailer)?.extendInfo
+            setTrailerSelectDisableWrongCargoType(selectedTransportCargo === 'Тягач' ? trailerSelect
+                : trailerSelect.map(( val ) => ( {
+                    ...val, isDisabled: selectedTransportCargo !== val.extendInfo,
+                } )),
+            )
+        }
     }
 
 
