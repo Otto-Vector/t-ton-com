@@ -21,6 +21,7 @@ export const CustomSelect = ( {
                                   defaultValue,
                                   isMulti,
                                   isSubLabelOnOption,
+                                  onDisableHandleClick,
                                   ...rest
                               }: FieldRenderProps<string, HTMLElement> ) => {
 
@@ -59,6 +60,14 @@ export const CustomSelect = ( {
         borderColor: isError ? '#C70707BF' : '#92ABC8',
     } )
 
+    // обёртка для доп контента на клик по
+    const Option =( props: any ) => <div
+        onClick={ () => {
+            onDisableHandleClick && props.data.isDisabled && onDisableHandleClick(props.data as SelectOptionsType)
+        } }>
+        <components.Option { ...props } />
+    </div>
+
     return (
         <>
             { isCreatableSelect
@@ -85,6 +94,7 @@ export const CustomSelect = ( {
                 : <Select
                     { ...input }
                     styles={ { control: styleControl } }
+                    components={ { Option } }
                     isClearable={ isClearable }
                     aria-invalid={ 'grammar' }
                     classNamePrefix={ 'react-select-ton' }

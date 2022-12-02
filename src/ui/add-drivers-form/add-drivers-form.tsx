@@ -36,11 +36,10 @@ import {getOneRequestsAPI} from '../../redux/forms/request-store-reducer';
 import {syncParsers} from '../../utils/parsers';
 import {FormApi} from 'final-form';
 import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple';
-import {
-    getAllEmployeesSelectWithCargoType,
-    getAllEmployeesSelectWithCargoTypeDisabledWrongCargo,
-} from '../../selectors/options/options-reselect';
+import {getAllEmployeesSelectWithCargoTypeDisabledWrongCargo} from '../../selectors/options/options-reselect';
 import {setAddDriverValues} from '../../redux/forms/add-driver-store-reducer';
+import {SelectOptionsType} from '../common/form-selector/selector-utils';
+import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
 
 type OwnProps = {}
 
@@ -123,6 +122,12 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         navigate(-1)
     }
 
+    const onDisableOptionSelectorHandleClick = ( optionValue: SelectOptionsType ) => {
+        dispatch<any>(textAndActionGlobalModal({
+            text: 'Нельзя добавить, причина: ' + optionValue.extendInfo,
+        }))
+    }
+
     useEffect(() => {
         if (isFirstRender) {
             // избавляемся от лишнего запроса
@@ -150,7 +155,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         if (oneTrailer.idTrailer !== initialValues.idTrailer || oneTransport.idTransport !== initialValues.idTransport)
             setInitialValues({
                 ...initialValues,
-                requestNumber: requestNumber+'',
+                requestNumber: requestNumber + '',
                 idEmployee: oneEmployee.idEmployee,
                 idTransport: oneTransport.idTransport,
                 idTrailer: oneTrailer.idTrailer,
@@ -194,6 +199,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
                                                               validate={ validators.idEmployee }
                                                               handleChanger={ setOneEmployee }
                                                               isSubLabelOnOption
+                                                              onDisableHandleClick={ onDisableOptionSelectorHandleClick }
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__selector }>

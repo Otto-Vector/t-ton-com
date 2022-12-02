@@ -23,6 +23,8 @@ type OwnProps = {
     isMulti?: boolean
     // добавляет отображение поля subLabel
     isSubLabelOnOption?: boolean
+    // обработка клика мышью по неактивному полю
+    onDisableHandleClick?: Function
 }
 
 
@@ -43,6 +45,7 @@ export const FormSelector: React.FC<OwnProps> = React.memo (
                                                       disabled,
                                                       defaultValue,
                                                       isSubLabelOnOption,
+        onDisableHandleClick
                                                   } ) => {
 
     return <div className={ styles.dropdown }>
@@ -67,6 +70,7 @@ export const FormSelector: React.FC<OwnProps> = React.memo (
                               defaultValue={ defaultValue }
                               isMulti={ isMulti }
                               isSubLabelOnOption={ isSubLabelOnOption }
+                              onDisableHandleClick={onDisableHandleClick}
                 />
             ) }
         </Field>
