@@ -29,52 +29,52 @@ type OwnProps = {
 
 
 // передача в обработчик react-form
-export const FormSelector: React.FC<OwnProps> = React.memo (
+export const FormSelector: React.FC<OwnProps> = React.memo(
     ( {
-                                                      values,
-                                                      nameForSelector,
-                                                      label,
-                                                      placeholder,
-                                                      validate,
-                                                      isClearable = false,
-                                                      isCreatableSelect = false,
-                                                      isMulti = false,
-                                                      handleCreate,
-                                                      handleChanger,
-                                                      errorTop,
-                                                      disabled,
-                                                      defaultValue,
-                                                      isSubLabelOnOption,
-        onDisableHandleClick
-                                                  } ) => {
+          values,
+          nameForSelector,
+          label,
+          placeholder,
+          validate,
+          isClearable = false,
+          isCreatableSelect = false,
+          isMulti = false,
+          handleCreate,
+          handleChanger,
+          errorTop,
+          disabled,
+          defaultValue,
+          isSubLabelOnOption,
+          onDisableHandleClick,
+      } ) => {
 
-    return <div className={ styles.dropdown }>
-        { label && <label className={ styles.label }>{ label }</label> }
-        <Field className={ styles.select }
-               name={ nameForSelector }
-               placeholder={ placeholder }
-               validate={ validate }
-               disabled={ disabled }
-        >
-            { ( { input, meta, placeholder } ) => (
-                <CustomSelect input={ input }
-                              meta={ meta }
-                              options={ values }
-                              placeholder={ placeholder }
-                              isClearable={ isClearable }
-                              isCreatableSelect={ isCreatableSelect }
-                              handleCreate={ handleCreate }
-                              handleChanger={ handleChanger }
-                              errorTop={ errorTop }
-                              disabled={ disabled }
-                              defaultValue={ defaultValue }
-                              isMulti={ isMulti }
-                              isSubLabelOnOption={ isSubLabelOnOption }
-                              onDisableHandleClick={onDisableHandleClick}
-                />
-            ) }
-        </Field>
-    </div>
-}, valuesAreEqual)
+        return <div className={ styles.dropdown }>
+            { label && <label className={ styles.label }>{ label }</label> }
+            <Field className={ styles.select }
+                   name={ nameForSelector }
+                   placeholder={ placeholder }
+                   validate={ validate }
+                   disabled={ disabled }
+            >
+                { ( { input, meta, placeholder } ) => (
+                    <CustomSelect input={ input }
+                                  meta={ meta }
+                                  options={ values }
+                                  placeholder={ placeholder }
+                                  isClearable={ isClearable }
+                                  isCreatableSelect={ isCreatableSelect }
+                                  handleCreate={ handleCreate }
+                                  handleChanger={ handleChanger }
+                                  errorTop={ errorTop }
+                                  disabled={ disabled }
+                                  defaultValue={ defaultValue }
+                                  isMulti={ isMulti }
+                                  isSubLabelOnOption={ isSubLabelOnOption }
+                                  onDisableHandleClick={ onDisableHandleClick }
+                    />
+                ) }
+            </Field>
+        </div>
+    }, valuesAreEqual)
 
 

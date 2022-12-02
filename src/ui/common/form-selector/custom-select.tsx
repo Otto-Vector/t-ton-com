@@ -60,8 +60,8 @@ export const CustomSelect = ( {
         borderColor: isError ? '#C70707BF' : '#92ABC8',
     } )
 
-    // обёртка для доп контента на клик по
-    const Option =( props: any ) => <div
+    // обёртка для доп контента на клик по отключенному пункту селектора
+    const Option = ( props: any ) => <div
         onClick={ () => {
             onDisableHandleClick && props.data.isDisabled && onDisableHandleClick(props.data as SelectOptionsType)
         } }>

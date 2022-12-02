@@ -124,23 +124,19 @@ export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStor
 export const getAllEmployeesSelectWithCargoType = createSelector(
     getAllEmployeesStore,
     getAllTransportStore,
-    getAllTrailerStore,
-    ( employees, transports, trailer): SelectOptionsType[] => employees
-        .map(( { idEmployee, idTransport, idTrailer, employeeFIO } ) => {
-                const cargoTypeTransport = transports.find(v => v.idTransport === idTransport)
-                const cargoTypeTransportTrailer = cargoTypeTransport?.cargoType !== 'Тягач'
-                    ? cargoTypeTransport?.cargoType
-                    : trailer.find(v => v.idTrailer === idTrailer)?.cargoType
+    ( employees, transports ): SelectOptionsType[] => employees
+        .map(( { idEmployee, idTransport, employeeFIO } ) => {
+                const currentTransport = transports.find(v => v.idTransport === idTransport)
+                const cargoType = currentTransport?.cargoType || ''
                 return ( {
                     key: idEmployee,
                     value: idEmployee,
                     label: parseFamilyToFIO(employeeFIO),
-                    subLabel: cargoTypeTransport
-                        ? cargoTypeTransport?.transportTrademark + ', '
-                        + ( cargoTypeTransportTrailer?.toUpperCase() || '(0т.)' )
+                    subLabel: currentTransport
+                        ? currentTransport?.transportTrademark + ', ' + ( cargoType.toUpperCase() )
                         : 'без транспорта',
-                    isDisabled: !cargoTypeTransport?.idTransport || !cargoTypeTransportTrailer,
-                    extendInfo: cargoTypeTransportTrailer,
+                    isDisabled: !currentTransport?.idTransport || !cargoType,
+                    extendInfo: cargoType || 'без транспорта',
                 } )
             },
         ),
@@ -150,8 +146,8 @@ export const getAllEmployeesSelectWithCargoType = createSelector(
 export const getAllEmployeesSelectWithCargoTypeDisabledWrongCargo = createSelector(
     getAllEmployeesSelectWithCargoType,
     getInitialValuesRequestStore,
-    (employees, { cargoType }):SelectOptionsType[]=>employees.map((val)=>({
+    ( employees, { cargoType } ): SelectOptionsType[] => employees.map(( val ) => ( {
         ...val,
-        isDisabled: val.isDisabled || val.extendInfo !== cargoType
-    }))
+        isDisabled: val.isDisabled || val.extendInfo !== cargoType,
+    } )),
 )
