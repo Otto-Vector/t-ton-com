@@ -19,20 +19,26 @@ import {getIsAuthAuthStore} from '../../selectors/auth-reselect';
 import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect';
 import {logoutAuth} from '../../redux/auth-store-reducer';
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
-import {getIsReqErrorRequisitesStore, getTariffsRequisitesStore} from '../../selectors/options/requisites-reselect';
-import {addRequestCashPay} from '../../redux/options/requisites-store-reducer';
+import {
+    getCashRequisitesStore,
+    getIsReqErrorRequisitesStore,
+    getTariffsRequisitesStore,
+} from '../../selectors/options/requisites-reselect';
 import {valuesAreEqual} from '../../utils/reactMemoUtils';
 
 
 type OwnProps = {}
 
-export const MenuPanel: React.FC<OwnProps> = React.memo (() => {
+export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
 
     const dispatch = useDispatch()
     const { pathname } = useLocation()
 
     const routes = useSelector(getRoutesStore)
     const newRequestRoute = routes.requestInfo.create + 'new'
+    const { create: createCost } = useSelector(getTariffsRequisitesStore)
+    const cashUser = useSelector(getCashRequisitesStore)
+    const isCorrectCashToCreate = +( cashUser || 0 ) >= +( createCost || 0 )
 
     // проверка авторизован ли пользователь
     const isAuth = useSelector(getIsAuthAuthStore)
@@ -54,8 +60,9 @@ export const MenuPanel: React.FC<OwnProps> = React.memo (() => {
 
     const newRequest = async () => {
         await dispatch<any>(textAndActionGlobalModal({
-            text: 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?',
-            navigateOnOk: newRequestRoute,
+            text: isCorrectCashToCreate ? 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?'
+                : 'НЕ ХВАТАТЕ СРЕДСТВ НА СОЗДАНИЕ ЗАЯВКИ, НЕОБХОДИМО ПОПОЛНИТЬ БАЛАНС НА ' + createCost + 'руб. \n ОК - переход к оплате',
+            navigateOnOk: isCorrectCashToCreate ? newRequestRoute : routes.info,
         }))
     }
 
@@ -116,7 +123,9 @@ export const MenuPanel: React.FC<OwnProps> = React.memo (() => {
             action: null,
         },
         {
-            route: routes.test, src: testPNG, title: 'Для тестов отрисовки компонентов',
+            // route: routes.test,
+            route: routes.addDriver+'36',
+            src: testPNG, title: 'Для тестов отрисовки компонентов',
             buttonText: 'Тест', active: !isNewRegistrationRoute && isAuth,
             action: null,
         },
@@ -149,4 +158,4 @@ export const MenuPanel: React.FC<OwnProps> = React.memo (() => {
             ) }
         </nav>
     )
-},valuesAreEqual)
+}, valuesAreEqual)

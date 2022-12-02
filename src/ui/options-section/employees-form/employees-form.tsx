@@ -119,9 +119,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     }
 
     // исключаем из селектора прицепов неподходящий по типу груза
-    const setCargoTypeFilter = ( idTrailer: string ) => {
-        if (idTrailer) {
-            const selectedTransportCargo = transportSelect.find(( { value } ) => value === idTrailer)?.extendInfo
+    const setCargoTypeFilter = ( idTransport: string ) => {
+        if (idTransport) {
+            const selectedTransportCargo = transportSelect.find(( { value } ) => value === idTransport)?.extendInfo
             setTrailerSelectDisableWrongCargoType(selectedTransportCargo === 'Тягач' ? trailerSelect
                 : trailerSelect.map(( val ) => ( {
                     ...val, isDisabled: selectedTransportCargo !== val.extendInfo,
@@ -138,14 +138,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                 dispatch(employeesStoreActions.setCurrentId(currentIdForShow || ''))
             }
 
-            // фильтрация селектора по типу груза при иницализации сотрудника с транспортом
+            // фильтрация селектора по типу груза при редактировании сотрудника с транспортом
             if (!trailerSelectDisableWrongCargoType[0].value && initialValues.idTransport && !isNew) {
-                const selectedTransportCargo = transportSelect.find(( { value } ) => value === initialValues.idTransport)?.extendInfo
-                setTrailerSelectDisableWrongCargoType(selectedTransportCargo === 'Тягач' ? trailerSelect
-                    : trailerSelect.map(( val ) => ( {
-                        ...val, isDisabled: selectedTransportCargo !== val.extendInfo,
-                    } )),
-                )
+                setCargoTypeFilter(initialValues.idTransport)
             }
 
         }, [ currentId, initialValues ],
