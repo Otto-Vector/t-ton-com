@@ -124,7 +124,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
 
     const onDisableOptionSelectorHandleClick = ( optionValue: SelectOptionsType ) => {
         dispatch<any>(textAndActionGlobalModal({
-            text: 'Нельзя добавить, причина: ' + optionValue.extendInfo,
+            text: 'Нельзя добавить, причина: ' + optionValue.extendInfo+ '. На заявке нужен: ' + requestValues.cargoType,
         }))
     }
 
