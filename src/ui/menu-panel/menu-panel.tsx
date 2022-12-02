@@ -36,9 +36,9 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
 
     const routes = useSelector(getRoutesStore)
     const newRequestRoute = routes.requestInfo.create + 'new'
-    const { create: createCost } = useSelector(getTariffsRequisitesStore)
+    const tariffs = useSelector(getTariffsRequisitesStore)
     const cashUser = useSelector(getCashRequisitesStore)
-    const isCorrectCashToCreate = +( cashUser || 0 ) >= +( createCost || 0 )
+    const isCorrectCashToCreate = +( cashUser || 0 ) >= +( tariffs?.create || 0 )
 
     // проверка авторизован ли пользователь
     const isAuth = useSelector(getIsAuthAuthStore)
@@ -61,7 +61,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
     const newRequest = async () => {
         await dispatch<any>(textAndActionGlobalModal({
             text: isCorrectCashToCreate ? 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?'
-                : 'НЕ ХВАТАТЕ СРЕДСТВ НА СОЗДАНИЕ ЗАЯВКИ, НЕОБХОДИМО ПОПОЛНИТЬ БАЛАНС НА ' + createCost + 'руб. \n ОК - переход к оплате',
+                : 'НЕ ХВАТАТЕ СРЕДСТВ НА СОЗДАНИЕ ЗАЯВКИ, НЕОБХОДИМО ПОПОЛНИТЬ БАЛАНС НА ' + tariffs?.create + 'руб. \n ОК - переход к оплате',
             navigateOnOk: isCorrectCashToCreate ? newRequestRoute : routes.info,
         }))
     }

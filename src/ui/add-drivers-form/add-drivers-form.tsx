@@ -36,7 +36,11 @@ import {getOneRequestsAPI} from '../../redux/forms/request-store-reducer';
 import {syncParsers} from '../../utils/parsers';
 import {FormApi} from 'final-form';
 import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple';
-import {getAllEmployeesSelectWithCargoType} from '../../selectors/options/options-reselect';
+import {
+    getAllEmployeesSelectWithCargoType,
+    getAllEmployeesSelectWithCargoTypeDisabledWrongCargo,
+} from '../../selectors/options/options-reselect';
+import {setAddDriverValues} from '../../redux/forms/add-driver-store-reducer';
 
 type OwnProps = {}
 
@@ -69,14 +73,9 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         dispatch(lightBoxStoreActions.setLightBoxImage(setImage(imageURL)))
     }
 
-    const employeesSelect = useSelector(getAllEmployeesSelectWithCargoType)
+    const employeesSelect = useSelector(getAllEmployeesSelectWithCargoTypeDisabledWrongCargo)
 
     const navigate = useNavigate()
-
-    const onSubmit = ( values: ResponseToRequestCardType ) => {
-        console.log(values)
-        // navigate(create)
-    }
 
     const oneEmployee = useSelector(getOneEmployeeFromLocal)
     const setOneEmployee = ( searchId: string ) => {
@@ -92,7 +91,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         dispatch(transportStoreActions.setCurrentId(searchId || ''))
     }
     const transportOneImage = oneTransport.transportImage
-    const transportOneCargoWeight = oneTransport.cargoWeight
+    const transportOneCargoWeight = +( oneTransport.cargoWeight || 0 )
 
     const oneTrailer = useSelector(getOneTrailerFromLocal)
     const setOneTrailer = ( searchId: string | undefined ) => {
@@ -100,15 +99,20 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     }
 
     const trailerOneImage = oneTrailer.trailerImage
-    const trailerOneCargoWeight = oneTrailer.cargoWeight
+    const trailerOneCargoWeight = +( oneTrailer.cargoWeight || 0 )
 
     // подсчёт стоимости в зависимости от расстояния, ставки и веса груза
     const resultDistanceCost = useCallback(( form: FormApi<ResponseToRequestCardType> ) => ( stavka: string ): string => {
-        const [ stavkaNum, trailerNum, transportNum, distanceNum ] = [ stavka, trailerOneCargoWeight, transportOneCargoWeight, distance ]
+        const [ stavkaNum, cargoWeight, distanceNum ] = [ stavka, form.getState().values.cargoWeight, distance ]
             .map(( v ) => +( v || 0 ))
-        form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * ( trailerNum + transportNum ) * distanceNum )))
+        form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * cargoWeight * distanceNum )))
         return validators.responseStavka ? ( validators.responseStavka(stavka) || '' ) : ''
-    }, [ trailerOneCargoWeight, transportOneCargoWeight, distance ])
+    }, [ distance ])
+
+    const onSubmit = ( values: ResponseToRequestCardType ) => {
+        dispatch<any>(setAddDriverValues(values))
+        // navigate(create)
+    }
 
     // перезаписываем состояние в стейт для перерасчёта калькулятора
     const spyChanger = ( values: ResponseToRequestCardType ) => {
@@ -134,6 +138,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     }, [])
 
     useEffect(() => {
+        // подгружаем данные водителя и транспорта
         if (!isFirstRender && oneEmployee) {
             setOneTransport(oneEmployee.idTransport)
             setOneTrailer(oneEmployee.idTrailer)
@@ -141,12 +146,16 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     }, [ oneEmployee ])
 
     useEffect(() => {
+        // подгружаем данные в стейт формы для перерасчёта калькулятора суммы при изменении водителя в селекторе
         if (oneTrailer.idTrailer !== initialValues.idTrailer || oneTransport.idTransport !== initialValues.idTransport)
             setInitialValues({
                 ...initialValues,
+                requestNumber: requestNumber+'',
                 idEmployee: oneEmployee.idEmployee,
                 idTransport: oneTransport.idTransport,
                 idTrailer: oneTrailer.idTrailer,
+                // под шумок втыкаем общий вес перевозимого груза
+                cargoWeight: ( trailerOneCargoWeight + transportOneCargoWeight ).toString(),
                 responseTax: taxMode,
             })
     }, [ oneTrailer, oneTransport ])

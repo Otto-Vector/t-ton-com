@@ -14,7 +14,8 @@ import {getAllTransportSelectFromLocal, getAllTransportStore} from './transport-
 import {getAllTrailerSelectFromLocal, getAllTrailerStore} from './trailer-reselect';
 import {getAllEmployeesStore} from './employees-reselect';
 import {parseFamilyToFIO} from '../../utils/parsers';
-import { SelectOptionsType } from '../../ui/common/form-selector/selector-utils';
+import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
+import {getInitialValuesRequestStore} from '../forms/request-form-reselect';
 
 type OptionsStoreSelectors<T extends keyof Y, Y = OptionsStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
@@ -115,12 +116,16 @@ export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStor
             value: idEmployee,
             label: parseFamilyToFIO(employeeFIO),
             isDisabled: !content[index].subTitle,
-            subLabel: !content[index].subTitle ? 'без транспорта': '',
+            subLabel: !content[index].subTitle ? 'без транспорта' : '',
         } )),
 )
 
-export const getAllEmployeesSelectWithCargoType = createSelector(getAllEmployeesStore, getAllTransportStore, getAllTrailerStore,
-    ( employees, transports, trailer ): SelectOptionsType[] => employees
+// все сотрудники в селектор с доп. данными о типе груза
+export const getAllEmployeesSelectWithCargoType = createSelector(
+    getAllEmployeesStore,
+    getAllTransportStore,
+    getAllTrailerStore,
+    ( employees, transports, trailer): SelectOptionsType[] => employees
         .map(( { idEmployee, idTransport, idTrailer, employeeFIO } ) => {
                 const cargoTypeTransport = transports.find(v => v.idTransport === idTransport)
                 const cargoTypeTransportTrailer = cargoTypeTransport?.cargoType !== 'Тягач'
@@ -132,11 +137,21 @@ export const getAllEmployeesSelectWithCargoType = createSelector(getAllEmployees
                     label: parseFamilyToFIO(employeeFIO),
                     subLabel: cargoTypeTransport
                         ? cargoTypeTransport?.transportTrademark + ', '
-                        + (cargoTypeTransportTrailer?.toUpperCase() || '(0т.)')
+                        + ( cargoTypeTransportTrailer?.toUpperCase() || '(0т.)' )
                         : 'без транспорта',
                     isDisabled: !cargoTypeTransport?.idTransport || !cargoTypeTransportTrailer,
                     extendInfo: cargoTypeTransportTrailer,
                 } )
             },
         ),
+)
+
+// все сотрудники в селектор с доп. данными о типе груза и отключенным выбором неверного типа груза
+export const getAllEmployeesSelectWithCargoTypeDisabledWrongCargo = createSelector(
+    getAllEmployeesSelectWithCargoType,
+    getInitialValuesRequestStore,
+    (employees, { cargoType }):SelectOptionsType[]=>employees.map((val)=>({
+        ...val,
+        isDisabled: val.isDisabled || val.extendInfo !== cargoType
+    }))
 )

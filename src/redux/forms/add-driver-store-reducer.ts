@@ -2,6 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ResponseToRequestCardType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
+import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api';
 
 const testInitialValues = {} as ResponseToRequestCardType
 
@@ -88,13 +89,24 @@ export const getTestAddDriverValues = ( responseNumber?: number ): AddDriverStor
     async ( dispatch ) => {
         dispatch(addDriverStoreActions.setIsFetching(true))
         try {
-            // const response = await getIconsFromApi( { domain } )
             const response = testInitialValues
             dispatch(addDriverStoreActions.setValues(response))
         } catch (e) {
             alert(e)
-            // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
         }
         dispatch(addDriverStoreActions.setIsFetching(false))
     }
 
+export const setAddDriverValues = ( addDriverValues: ResponseToRequestCardType ): AddDriverStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+    try {
+        const requestCarrierId = getState().authStoreReducer.authID
+        const response = responseToRequestApi.createOneResponseToRequest({
+            ...addDriverValues, requestCarrierId
+        })
+        console.log(response)
+
+        } catch (e) {
+            alert(e)
+        }
+    }
