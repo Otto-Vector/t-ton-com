@@ -1,5 +1,5 @@
 import styles from './form-selector.module.scss'
-import Select, {ControlProps, GroupBase} from 'react-select';
+import Select, {ControlProps, GroupBase, OptionContext, OptionProps} from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import {SelectComponents} from 'react-select/dist/declarations/src/components';
 import {components} from './form-selector-creatable-corrector';
@@ -83,8 +83,6 @@ export const CustomSelect = ( {
                     classNamePrefix={ 'react-select-ton' }
                     onChange={ handleChange }
                     // onInputChange={handleChange} // возможно будет нужен при обработке нового значения
-                    // aria-label={'555'}
-                    // aria-labelledby={'666'}
                     isDisabled={ disabled }
                     onCreateOption={ handleCreate }
                     options={ options }
@@ -94,6 +92,7 @@ export const CustomSelect = ( {
                 : <Select
                     { ...input }
                     // defaultMenuIsOpen //* для облегчения стилизации при открытом списке*//
+                    // defaultValue={ defaultValue }
                     styles={ { control: styleControl } }
                     components={ { Option } }
                     isClearable={ isClearable }
@@ -104,7 +103,6 @@ export const CustomSelect = ( {
                     options={ options }
                     isDisabled={ disabled }
                     formatOptionLabel={ isMulti ? isMultiLabelToValueChange : formatOptionSubLabel }
-                    // defaultValue={ defaultValue }
                     value={ isMulti ? isMultiSelectOptionsCurrent(input.value) : optionsCurrent(input.value) }
                     { ...rest }
                 /> }

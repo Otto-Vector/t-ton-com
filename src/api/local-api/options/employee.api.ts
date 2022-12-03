@@ -1,6 +1,5 @@
-import { EmployeesApiType } from '../../../types/form-types';
+import {EmployeesApiType} from '../../../types/form-types';
 import {InfoResponseType, instanceBack} from '../back-instance.api';
-
 
 
 export const employeesApi = {
@@ -63,4 +62,24 @@ export const employeesApi = {
         // 1.	Code 200, {"message": "Employee with id `{}` has been deleted.".format(request.data['idEmployee']}
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
     },
+
+    // ДОБАВИТЬ ДАННЫЕ о привязке к ответу на заявку PUT /api/employeeupgrade/
+    addResponseToRequestToEmployee( data: { idEmployee: string, addedToResponse: string } ) {
+        return instanceBack.put<InfoResponseType>('/api/employeeupgrade/', data)
+            .then(response => response.data)
+        // 1.	Code 200, {'message': 'Error, login please'}
+        // 2.	Code 200, {'success': 'В поле addedToResponse для водителя '+request.data['idEmployee']+' добалено значение'}
+        // 3.	Code 520, {"message":"Error"}
+    },
+
+    // УДАЛИТЬ ДАННЫЕ о привязке к ответу на заявку DELETE /api/employeeupgrade/
+    removeResponseToRequestFromEmployee( data: { idEmployee: string, addedToResponse: string | 'all' } ) {
+        return instanceBack.delete<InfoResponseType>('/api/employeeupgrade/', { data })
+            .then(response => response.data)
+        // 1.	Code 200, {'message': 'Error, login please'}
+        // 2.	Code 200 {'success': 'Из поля addedToResponse для водителя '+request.data['idEmployee']+' удалены все значения'}
+        // 3.	Code 200 {'success': 'Из поля addedToResponse для водителя '+request.data['idEmployee']+' удалено значение'}
+        // 4.	Code 520, {"message":"Error"}
+    },
+
 }

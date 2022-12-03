@@ -3,6 +3,7 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ResponseToRequestCardType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api';
+import {addResponseIdToEmployee} from '../options/employees-store-reducer';
 
 const testInitialValues = {} as ResponseToRequestCardType
 
@@ -78,7 +79,6 @@ export const addDriverStoreActions = {
         type: 'add-driver-store-reducer/SET-IS-FETCHING',
         isFetching,
     } as const ),
-
 }
 
 /* САНКИ */
@@ -97,15 +97,19 @@ export const getTestAddDriverValues = ( responseNumber?: number ): AddDriverStor
         dispatch(addDriverStoreActions.setIsFetching(false))
     }
 
-export const setAddDriverValues = ( addDriverValues: ResponseToRequestCardType ): AddDriverStoreReducerThunkActionType =>
+export const setAddDriverValues = ( addDriverValues: ResponseToRequestCardType<string> ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-    try {
-        const requestCarrierId = getState().authStoreReducer.authID
-        const response = responseToRequestApi.createOneResponseToRequest({
-            ...addDriverValues, requestCarrierId
-        })
-        console.log(response)
+        try {
+            const requestCarrierId = getState().authStoreReducer.authID
+            const response = await responseToRequestApi.createOneResponseToRequest({
+                ...addDriverValues, requestCarrierId,
+            })
+            console.log(response)
 
+            dispatch(addResponseIdToEmployee({
+                addedToResponse: addDriverValues.responseId,
+                idEmployee: addDriverValues.idEmployee,
+            }))
         } catch (e) {
             alert(e)
         }

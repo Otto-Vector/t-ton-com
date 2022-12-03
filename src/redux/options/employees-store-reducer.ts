@@ -4,6 +4,7 @@ import {syncValidators} from '../../utils/validators'
 import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {syncParsers} from '../../utils/parsers';
 import {employeesApi} from '../../api/local-api/options/employee.api';
+import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
 const initialState = {
     employeeIsFetching: false,
@@ -134,7 +135,7 @@ export const employeesStoreActions = {
 
 /* САНКИ */
 
-export type EmployeesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type EmployeesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
 
 
 // запрос всех водителей принадлежащих организации
@@ -205,8 +206,9 @@ export const oneEmployeesDeleteToAPI = ( idEmployee: string ): EmployeesStoreRed
             const response = await employeesApi.deleteOneEmployee({ idEmployee })
             if (response.message) console.log(response.message)
         } catch (e) {
-            // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore
+                JSON.stringify(e.response.data)))
         }
         await dispatch(getAllEmployeesAPI())
     }
@@ -222,7 +224,32 @@ export const getOneEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReduc
             }
 
         } catch (e) {
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e.response.data)))
+            dispatch(globalModalStoreActions.setTextMessage(
+                // @ts-ignore
+                JSON.stringify(e.response.data)))
+        }
+    }
+
+// добавить пользователю информацию о привязке к ответу по заявке
+export const addResponseIdToEmployee = ( data: { idEmployee: string, addedToResponse: string } ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await employeesApi.addResponseToRequestToEmployee(data)
+            if (response.success) console.log(response.success)
+            if (response.message) console.log(response.message)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+// удалить данные пользователя
+    export const removeResponseIdFromEmployee = ( data: { idEmployee: string, addedToResponse: string | 'all' } ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await employeesApi.removeResponseToRequestFromEmployee(data)
+            if (response.success) console.log(response.success)
+            if (response.message) console.log(response.message)
+        } catch (e) {
+            console.log(e)
         }
     }

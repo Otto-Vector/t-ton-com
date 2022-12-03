@@ -101,14 +101,14 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     const trailerOneCargoWeight = +( oneTrailer.cargoWeight || 0 )
 
     // подсчёт стоимости в зависимости от расстояния, ставки и веса груза
-    const resultDistanceCost = useCallback(( form: FormApi<ResponseToRequestCardType> ) => ( stavka: string ): string => {
+    const resultDistanceCost = useCallback(( form: FormApi<ResponseToRequestCardType<string>> ) => ( stavka: string ): string => {
         const [ stavkaNum, cargoWeight, distanceNum ] = [ stavka, form.getState().values.cargoWeight, distance ]
             .map(( v ) => +( v || 0 ))
         form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * cargoWeight * distanceNum )))
         return validators.responseStavka ? ( validators.responseStavka(stavka) || '' ) : ''
     }, [ distance ])
 
-    const onSubmit = ( values: ResponseToRequestCardType ) => {
+    const onSubmit = ( values: ResponseToRequestCardType<string> ) => {
         dispatch<any>(setAddDriverValues(values))
         // navigate(create)
     }

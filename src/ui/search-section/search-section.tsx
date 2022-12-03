@@ -88,7 +88,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                             ( !!value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             {
                                 ( key === 'cargoFilter' )
-                                    ? <JustSelect optionItems={ [...cargoConstType] }
+                                    ? <JustSelect optionItems={ [...cargoConstType.filter(v=>v!=='Тягач')] }
                                                   selectedValue={ cargoFilter }
                                                   titleValue={ value.title }
                                                   onChange={ filtersAction[key] }
