@@ -96,7 +96,7 @@ export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrai
         }
     })
 
-// выборка из списка загруженных прицепов
+// выборка из списка загруженных сотрудников
 export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, getEmployeesTitleOptionsStore, getAllTransportStore,
     ( employees: EmployeesCardType[], titles, transports ): OptionsStoreReducerStateType['employees'] => {
         return {
@@ -107,18 +107,6 @@ export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, get
             ),
         }
     })
-
-// выборка из списка сотрудников в селектор с информацией о прикрепленном транспорте
-export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStore, getEmployeesOptionsStore,
-    ( employees, { content } ): SelectOptionsType[] => employees.map(( { idEmployee, employeeFIO }, index ) =>
-        ( {
-            key: idEmployee,
-            value: idEmployee,
-            label: parseFamilyToFIO(employeeFIO),
-            isDisabled: !content[index].subTitle,
-            subLabel: !content[index].subTitle ? 'без транспорта' : '',
-        } )),
-)
 
 // все сотрудники в селектор с доп. данными о типе груза
 export const getAllEmployeesSelectWithCargoType = createSelector(

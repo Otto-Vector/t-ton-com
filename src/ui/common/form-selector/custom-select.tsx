@@ -93,6 +93,7 @@ export const CustomSelect = ( {
                 />
                 : <Select
                     { ...input }
+                    // defaultMenuIsOpen //* для облегчения стилизации при открытом списке*//
                     styles={ { control: styleControl } }
                     components={ { Option } }
                     isClearable={ isClearable }

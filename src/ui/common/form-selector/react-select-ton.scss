@@ -49,9 +49,16 @@
     }
 
     &--is-disabled:hover {
-      color: $accentColor !important;
+      color: white !important;
     }
 
+    @at-root {
+      &--is-disabled#{&}--is-focused {
+        background-color: rgba($accentColor, .5) !important;
+        color: $accentColor !important;
+      }
+    }
   }
 
 }
+

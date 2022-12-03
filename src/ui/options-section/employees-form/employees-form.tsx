@@ -44,6 +44,7 @@ import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer';
 import {syncValidators} from '../../../utils/validators';
 import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {SelectOptionsType} from '../../common/form-selector/selector-utils';
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
 
 
 type OwnProps = {}
@@ -130,6 +131,12 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         }
     }
 
+    // диалоговое окно, при неверном выборе транспорта
+    const onDisableOptionSelectorHandleClick = ( optionValue: SelectOptionsType ) => {
+        dispatch<any>(textAndActionGlobalModal({
+            text: 'Нельзя добавить, данный элемент УЖЕ привязан к сотруднику: ' + optionValue.subLabel,
+        }))
+    }
 
     useEffect(() => {
             if (currentId === currentIdForShow) {
@@ -247,6 +254,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           handleChanger={ setCargoTypeFilter }
                                                           isSubLabelOnOption
                                                           isClearable
+                                                          onDisableHandleClick={ onDisableOptionSelectorHandleClick }
                                             />
                                             <FormSelector nameForSelector={ 'idTrailer' }
                                                           placeholder={ label.idTrailer }
