@@ -124,19 +124,22 @@ export const getAllEmployeesSelectFromLocal = createSelector(getAllEmployeesStor
 export const getAllEmployeesSelectWithCargoType = createSelector(
     getAllEmployeesStore,
     getAllTransportStore,
-    ( employees, transports ): SelectOptionsType[] => employees
-        .map(( { idEmployee, idTransport, employeeFIO } ) => {
+    getAllTrailerStore,
+    ( employees, transports, trailers ): SelectOptionsType[] => employees
+        .map(( { idEmployee, idTransport, idTrailer, employeeFIO } ) => {
                 const currentTransport = transports.find(v => v.idTransport === idTransport)
-                const cargoType = currentTransport?.cargoType || ''
+                const transportCargoType = currentTransport?.cargoType || 'без транспорта'
+                const transportTrailerCargoType = transportCargoType !== 'Тягач' ? transportCargoType
+                    : trailers.find(v => v.idTrailer === idTrailer)?.cargoType || transportCargoType
                 return ( {
                     key: idEmployee,
                     value: idEmployee,
                     label: parseFamilyToFIO(employeeFIO),
                     subLabel: currentTransport
-                        ? currentTransport?.transportTrademark + ', ' + ( cargoType.toUpperCase() )
-                        : 'без транспорта',
-                    isDisabled: !currentTransport?.idTransport || !cargoType,
-                    extendInfo: cargoType || 'без транспорта',
+                        ? currentTransport?.transportTrademark + ', ' + ( transportTrailerCargoType.toUpperCase() )
+                        : transportTrailerCargoType,
+                    isDisabled: !currentTransport?.idTransport || !transportTrailerCargoType,
+                    extendInfo: transportTrailerCargoType,
                 } )
             },
         ),
