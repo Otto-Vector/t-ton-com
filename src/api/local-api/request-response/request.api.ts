@@ -51,7 +51,7 @@ export const oneRequestApi = {
     },
 
     // ИЗМЕНИТЬ одну Заявку PUT /api/onerequesttype/
-    modifyOneRequest( responseToRequest: OneRequestApiType ) {
+    modifyOneRequest( responseToRequest: Partial<OneRequestApiType> & { requestNumber: string } ) {
         return instanceBack.put<InfoResponseType>('/api/onerequesttype/', responseToRequest)
             .then(response => response.data)
         // 1.	Code 449, {'failed': "OneRequestType is not updated"}

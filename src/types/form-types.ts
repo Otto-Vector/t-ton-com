@@ -503,7 +503,7 @@ export type OneRequestApiType = {
     visible?: string
     marked?: string
 
-    globalStatus?: string
+    globalStatus?: 'новая заявка' | 'в работе' | 'завершена' | 'отменена'
     localStatuspaymentHasBeenTransferred?: boolean
     localStatuscargoHasBeenTransferred?: boolean
     localStatuspaymentHasBeenReceived?: boolean

@@ -201,14 +201,16 @@ export const oneTrailerDeleteToAPI = ( idTrailer: string ): TrailerStoreReducerT
 // запрос данных на один ПРИЦЕП из бэка
 export const getOneTrailerFromAPI = ( idTrailer: string ): TrailerStoreReducerThunkActionType =>
     async ( dispatch ) => {
+        dispatch(trailerStoreActions.setInitialValues({} as TrailerCardType))
         try {
-            const response = await trailerApi.getOneTrailerById({ idTrailer })
-            if (response.message) console.log(response.message)
-            if (response.length > 0) {
-                const oneTrailer = response[0]
-                dispatch(trailerStoreActions.setInitialValues(oneTrailer))
+            if (idTrailer) {
+                const response = await trailerApi.getOneTrailerById({ idTrailer })
+                if (response.message) console.log(response.message)
+                if (response.length > 0) {
+                    const oneTrailer = response[0]
+                    dispatch(trailerStoreActions.setInitialValues(oneTrailer))
+                }
             }
-
         } catch (e) {
             dispatch(globalModalStoreActions.setTextMessage(
                 // @ts-ignore

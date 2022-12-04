@@ -6,6 +6,7 @@ import {
     DocumentsRequestType,
     OneRequestApiType,
     OneRequestType,
+    ResponseToRequestCardType,
     ShippersCardType,
     ValidateType,
 } from '../../types/form-types'
@@ -16,6 +17,10 @@ import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelecto
 import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
+import {getOneEmployeeFromAPI} from '../options/employees-store-reducer';
+import {getOneTransportFromAPI} from '../options/transport-store-reducer';
+import {getOneTrailerFromAPI} from '../options/trailer-store-reducer';
+import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -467,6 +472,68 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
     }
 
 // изменить текущую заявку
+export const addAcceptedResponseToRequest = ( submitValues: ResponseToRequestCardType<string> ): RequestStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        dispatch(requestStoreActions.setIsFetching(true))
+
+        // подгружаем все данные из бэка по айдишкам
+        await dispatch(getOneEmployeeFromAPI(submitValues.idEmployee))
+        const employeeValues = getState().employeesStoreReducer.initialValues
+        await dispatch(getOneTransportFromAPI(submitValues.idTransport))
+        const transportValues = getState().transportStoreReducer.initialValues
+        await dispatch(getOneTrailerFromAPI(submitValues.idTrailer))
+        const trailerValues = getState().trailerStoreReducer.initialValues
+
+        // удаляем все ответы, привязанные к данной заявке
+        await dispatch(removeResponseToRequestsBzAcceptRequest(submitValues.requestNumber))
+
+        try {
+            const response = await oneRequestApi.modifyOneRequest({
+                requestNumber: submitValues.requestNumber,
+                globalStatus: 'в работе',
+                responseStavka: submitValues.responseStavka,
+                responseTax: submitValues.responseId,
+                responsePrice: submitValues.responsePrice,
+                /* СОТРУДНИК */
+                idEmployee: employeeValues.idEmployee,
+                responseEmployeeFIO: employeeValues.employeeFIO,
+                responseEmployeePhoneNumber: employeeValues.employeePhoneNumber,
+                responseEmployeepassportSerial: employeeValues.passportSerial,
+                responseEmployeepassportFMS: employeeValues.passportFMS,
+                responseEmployeepassportDate: employeeValues.passportDate as string,
+                responseEmployeedrivingLicenseNumber: employeeValues.drivingLicenseNumber,
+                /* ТРАНСПОРТ */
+                idTransport: transportValues.idTransport,
+                responseTransportNumber: transportValues.transportNumber,
+                responseTransportTrademark: transportValues.transportTrademark,
+                responseTransportModel: transportValues.transportModel,
+                responseTransportPts: transportValues.pts,
+                responseTransportDopog: transportValues.dopog,
+                responseTransportCargoType: transportValues.cargoType,
+                responseTransportCargoWeight: transportValues.cargoWeight,
+                responseTransportPropertyRights: transportValues.propertyRights,
+                /* ПРИЦЕП */
+                idTrailer: trailerValues.idTrailer,
+                responseTrailertrailerNumber: trailerValues.trailerNumber,
+                responseTrailerTrademark: trailerValues.trailerTrademark,
+                responseTrailerModel: trailerValues.trailerModel,
+                responseTrailerPts: trailerValues.pts,
+                responseTrailerDopog: trailerValues.dopog,
+                responseTrailerCargoType: trailerValues.cargoType,
+                responseTrailerCargoWeight: trailerValues.cargoWeight,
+                responseTrailerPropertyRights: trailerValues.propertyRights,
+            })
+
+            if (response.success) {
+                await dispatch(getAllRequestsAPI())
+            }
+
+        } catch (e) {
+            dispatch(globalModalStoreActions.setTextMessage(e as string))
+        }
+    }
+
+// изменить текущую заявку
 export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
@@ -596,7 +663,7 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
                 await dispatch(getAllRequestsAPI())
             }
         } catch (e) {
-            alert(e)
+            dispatch(globalModalStoreActions.setTextMessage(e as string))
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }
@@ -607,8 +674,9 @@ export const deleteCurrentRequestAPI = ( { requestNumber }: { requestNumber: num
             const response = await oneRequestApi.deleteOneRequest({ requestNumber })
             console.log(response.message)
         } catch (e) {
-            // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(
+                // @ts-ignore-next-line
+                e.response.data)))
         }
     }
 
@@ -621,7 +689,7 @@ export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionTyp
             const reparsedResponse = response.map(( { text } ) => text).reverse()
             dispatch(requestStoreActions.setCargoCompositionSelector(reparsedResponse))
         } catch (e) {
-            alert(e)
+            console.log(e)
         }
     }
 
@@ -636,8 +704,9 @@ export const setCargoCompositionSelector = ( newCargoCompositionItem: string ): 
                 await dispatch(getCargoCompositionSelector())
             }
         } catch (e) {
-            // @ts-ignore
-            alert(JSON.stringify(e.response.data))
+            console.log(JSON.stringify(
+                // @ts-ignore-next-line
+                e.response.data))
         }
     }
 

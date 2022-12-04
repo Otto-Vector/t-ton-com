@@ -3,9 +3,8 @@ import {AppStateType, GetActionsTypes} from '../redux-store'
 import {ResponseToRequestCardType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api';
-import {addResponseIdToEmployee} from '../options/employees-store-reducer';
+import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 
-const testInitialValues = {} as ResponseToRequestCardType
 
 
 const initialState = {
@@ -19,14 +18,7 @@ const initialState = {
         responseTax: 'Налог',
     } as ResponseToRequestCardType,
 
-    initialValues: {
-        idEmployee: undefined,
-        idTransport: undefined,
-        idTrailer: undefined,
-        responseStavka: undefined,
-        responsePrice: undefined,
-        responseTax: undefined,
-    } as ResponseToRequestCardType,
+    initialValues: {} as ResponseToRequestCardType,
 
     placeholder: {
         idEmployee: 'Поиск водителя...',
@@ -83,34 +75,49 @@ export const addDriverStoreActions = {
 
 /* САНКИ */
 
-export type AddDriverStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type AddDriverStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
 
-export const getTestAddDriverValues = ( responseNumber?: number ): AddDriverStoreReducerThunkActionType =>
-    async ( dispatch ) => {
-        dispatch(addDriverStoreActions.setIsFetching(true))
-        try {
-            const response = testInitialValues
-            dispatch(addDriverStoreActions.setValues(response))
-        } catch (e) {
-            alert(e)
-        }
-        dispatch(addDriverStoreActions.setIsFetching(false))
-    }
 
-export const setAddDriverValues = ( addDriverValues: ResponseToRequestCardType<string> ): AddDriverStoreReducerThunkActionType =>
+export const setOneResponseToRequest = ( addDriverValues: ResponseToRequestCardType<string> ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
+        dispatch(addDriverStoreActions.setIsFetching(true))
         try {
             const requestCarrierId = getState().authStoreReducer.authID
             const response = await responseToRequestApi.createOneResponseToRequest({
                 ...addDriverValues, requestCarrierId,
             })
             console.log(response)
-
-            dispatch(addResponseIdToEmployee({
-                addedToResponse: addDriverValues.responseId,
-                idEmployee: addDriverValues.idEmployee,
-            }))
         } catch (e) {
-            alert(e)
+            dispatch(addDriverStoreActions.setIsFetching(false))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(
+                // @ts-ignore-next-line
+                e.response.data)))
+        }
+        dispatch(addDriverStoreActions.setIsFetching(false))
+    }
+
+// удаление ответов на заявки, из-за принятия на заявке
+export const removeResponseToRequestsBzAcceptRequest = ( requestNumber: string ): AddDriverStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await responseToRequestApi.deleteSomeResponseToRequest({ requestNumber })
+            console.log(response)
+        } catch (e) {
+            console.log(JSON.stringify(
+                // @ts-ignore-next-line
+                e.response.data))
+        }
+    }
+
+// удаление ответов на заявки, привязанных к сотруднику
+export const removeResponseToRequestsBzEmployee = ( responseId: string ): AddDriverStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await responseToRequestApi.deleteSomeResponseToRequest({ responseId })
+            console.log(response)
+        } catch (e) {
+            console.log(JSON.stringify(
+                // @ts-ignore-next-line
+                e.response.data))
         }
     }

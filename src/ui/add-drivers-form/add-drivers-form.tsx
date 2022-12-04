@@ -22,7 +22,6 @@ import {
 import {FormSelector} from '../common/form-selector/form-selector'
 import {FormInputType} from '../common/form-input-type/form-input-type'
 import {getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
-import {ddMmYearFormat} from '../../utils/date-formats'
 import {getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
 import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
 
@@ -32,14 +31,14 @@ import {transportStoreActions} from '../../redux/options/transport-store-reducer
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
 import {AppStateType} from '../../redux/redux-store';
-import {getOneRequestsAPI} from '../../redux/forms/request-store-reducer';
+import {addAcceptedResponseToRequest, getOneRequestsAPI} from '../../redux/forms/request-store-reducer';
 import {syncParsers} from '../../utils/parsers';
 import {FormApi} from 'final-form';
 import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple';
 import {getAllEmployeesSelectWithCargoTypeDisabledWrongCargo} from '../../selectors/options/options-reselect';
-import {setAddDriverValues} from '../../redux/forms/add-driver-store-reducer';
 import {SelectOptionsType} from '../common/form-selector/selector-utils';
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
+import {ddMmYearFormat} from '../../utils/date-formats';
 
 type OwnProps = {}
 
@@ -50,8 +49,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
 
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const requestNumber = +( reqNumber || 0 )
-    const header = ( requestNumber: number, shipmentDate: Date ): string =>
-        `Заявка ${ requestNumber } от ${ ddMmYearFormat(shipmentDate) }`
+
 
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     const isFetching = useSelector(getIsFetchingRequisitesStore)
@@ -109,7 +107,8 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
     }, [ distance ])
 
     const onSubmit = ( values: ResponseToRequestCardType<string> ) => {
-        dispatch<any>(setAddDriverValues(values))
+        // dispatch<any>(setOneResponseToRequest(values))
+        dispatch<any>(addAcceptedResponseToRequest(values))
         // navigate(create)
     }
 
@@ -124,7 +123,7 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
 
     const onDisableOptionSelectorHandleClick = ( optionValue: SelectOptionsType ) => {
         dispatch<any>(textAndActionGlobalModal({
-            text: 'Нельзя добавить, причина: ' + optionValue.extendInfo+ '. На заявке нужен: ' + requestValues.cargoType,
+            text: 'Нельзя добавить, причина: ' + optionValue.extendInfo + '. На заявке нужен: ' + requestValues.cargoType,
         }))
     }
 
@@ -134,10 +133,12 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
             if (requestValues?.requestNumber !== requestNumber) {
                 dispatch<any>(getOneRequestsAPI(requestNumber))
             }
-            // чистим данные
-            setOneEmployee('')
-            setOneTransport('')
-            setOneTrailer('')
+                // чистим данные
+                setInitialValues({} as ResponseToRequestCardType)
+                setOneEmployee('')
+                setOneTransport('')
+                setOneTrailer('')
+            // }
             setIsFirstRender(false)
         }
     }, [])
@@ -170,7 +171,9 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
             <div className={ styles.addDriversForm__wrapper + ' ' + styles.addDriversForm__wrapper_width }>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <h4 className={ styles.addDriversForm__header }>{ header(requestNumber, new Date()) }</h4>
+                        <h4 className={ styles.addDriversForm__header }>{
+                            `Заявка ${ requestNumber } от ${ ddMmYearFormat(requestValues.shipmentDate) }` }
+                        </h4>
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }

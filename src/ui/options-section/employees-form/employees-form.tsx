@@ -90,18 +90,24 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
 
     const onSubmit = ( values: EmployeesCardType<string> ) => {
-        const demaskedValues: EmployeesCardType<string> = {
+        const placeholder = '-'
+        const unmaskedValues: EmployeesCardType<string> = {
             ...values,
             personnelNumber: parseAllNumbers(values.personnelNumber),
             garageNumber: parseAllNumbers(values.garageNumber),
+            idTransport: values.idTransport || placeholder,
+            idTrailer: !values.idTransport ? placeholder : values.idTrailer || placeholder,
         }
 
         if (isNew) {
             // сохраняем НОВОЕ значение
-            dispatch<any>(newEmployeeSaveToAPI(demaskedValues, selectedImage))
+            dispatch<any>(newEmployeeSaveToAPI({
+                ...unmaskedValues,
+                rating: '-', status: 'свободен',
+            }, selectedImage))
         } else {
             // сохраняем измененное значение
-            dispatch<any>(modifyOneEmployeeToAPI(demaskedValues, selectedImage))
+            dispatch<any>(modifyOneEmployeeToAPI(unmaskedValues, selectedImage))
         }
         dispatch<any>(rerenderTransport())
         dispatch<any>(rerenderTrailer())

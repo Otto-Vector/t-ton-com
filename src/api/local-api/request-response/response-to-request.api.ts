@@ -2,8 +2,6 @@ import {InfoResponseType, instanceBack} from '../back-instance.api';
 import {ResponseToRequestCardType} from '../../../types/form-types';
 
 
-export type addResponseToRequestType = { requestNumber: string, responseId: string }
-
 export const responseToRequestApi = {
 
     // запрос списка ВСЕХ Ответов на Заявки GET /api/responsetorequestcardtype/
@@ -39,8 +37,9 @@ export const responseToRequestApi = {
     },
 
     // УДАЛИТЬ один Ответ на Заявку DELETE /api/responsetorequestcardtype/
-    deleteOneResponseToRequest( responseId: string ) {
-        return instanceBack.delete<InfoResponseType>('/api/responsetorequestcardtype/', { data: { responseId } })
+    // также удаляет все id-шки по списку
+    deleteSomeResponseToRequest( data: { requestNumber?: string, responseId?: string } ) {
+        return instanceBack.delete<InfoResponseType>('/api/responsetorequestcardtype/', { data })
             .then(response => response.data)
         // 1.	Code 200, {"message": "ResponseToRequestCardType with id `{}` has been deleted.".format(request.data['responseId'])}
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
@@ -50,8 +49,8 @@ export const responseToRequestApi = {
 
     // ПРИВЯЗАТЬ Ответ к заявке PUT /api/onerequesttyperesponses/
     // (изменяет поле answers в OneRequestApiType)
-    addReponseToRequest( addReponseToRequest: addResponseToRequestType ) {
-        return instanceBack.put<InfoResponseType>('/api/onerequesttyperesponses/', addReponseToRequest)
+    addReponseToRequest( addResponseToRequest: { requestNumber: string, responseId: string } ) {
+        return instanceBack.put<InfoResponseType>('/api/onerequesttyperesponses/', addResponseToRequest)
             .then(response => response.data)
         // 1.	Code 200, {'message': 'Error, login please'}
         // 2.	Code 200, {'message': 'Ответ '+str(request.data['responseId'])+' прикреплен к заявке ' + str(request.data['requestNumber'])}
@@ -61,8 +60,8 @@ export const responseToRequestApi = {
 
     // отВЯЗАТЬ Ответ от заявки DELETE /api/onerequesttyperesponses/
     // (изменяет поле answers в OneRequestApiType)
-    removeReponseFromRequest( removeReponseFromRequest: addResponseToRequestType ) {
-        return instanceBack.delete<InfoResponseType>('/api/onerequesttyperesponses/', { data: removeReponseFromRequest })
+    removeReponseFromRequest( removeResponseFromRequest: { requestNumber: string, responseId: string } ) {
+        return instanceBack.delete<InfoResponseType>('/api/onerequesttyperesponses/', { data: removeResponseFromRequest })
             .then(response => response.data)
         // 1.	Code 200, {'message': 'Error, login please'}
         // 2.	Code 200 {'message': 'Ответ '+request.data['responseId']+' откреплен от заявки ' + request.data['requestNumber']}

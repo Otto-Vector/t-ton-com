@@ -186,15 +186,12 @@ export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image
             const response = await employeesApi.modifyOneEmployee({
                 ...values, idUser,
                 passportDate: values.passportDate as string,
-                idTransport: values.idTransport || '-',
-                idTrailer: !values.idTransport ? '-' : values.idTrailer || '-',
-                rating: '-',
-                status: 'свободен',
             }, image)
             if (response.success) console.log(response.success)
         } catch (e) {
-            // @ts-ignore
-            console.error(JSON.stringify(e.response.data))
+            console.error(JSON.stringify(
+                // @ts-ignore-next-line
+                e.response.data))
         }
         await dispatch(getAllEmployeesAPI())
     }
@@ -206,9 +203,9 @@ export const oneEmployeesDeleteToAPI = ( idEmployee: string ): EmployeesStoreRed
             const response = await employeesApi.deleteOneEmployee({ idEmployee })
             if (response.message) console.log(response.message)
         } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                JSON.stringify(e.response.data)))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(
+                // @ts-ignore-next-line
+                e.response.data)))
         }
         await dispatch(getAllEmployeesAPI())
     }
@@ -243,7 +240,7 @@ export const addResponseIdToEmployee = ( data: { idEmployee: string, addedToResp
     }
 
 // удалить данные пользователя
-    export const removeResponseIdFromEmployee = ( data: { idEmployee: string, addedToResponse: string | 'all' } ): EmployeesStoreReducerThunkActionType =>
+export const removeResponseIdFromEmployee = ( data: { idEmployee: string, addedToResponse: string | 'all' } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await employeesApi.removeResponseToRequestFromEmployee(data)

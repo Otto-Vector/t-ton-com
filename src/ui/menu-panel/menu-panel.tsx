@@ -124,7 +124,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
         },
         {
             // route: routes.test,
-            route: routes.addDriver+'36',
+            route: routes.addDriver+'33',
             src: testPNG, title: 'Для тестов отрисовки компонентов',
             buttonText: 'Тест', active: !isNewRegistrationRoute && isAuth,
             action: null,
