@@ -1,16 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType, GetActionsTypes} from '../redux-store'
-
-
-export type OneRequestTableType = {
-    requestNumber: number | undefined
-    cargoType: string | undefined
-    shipmentDate: string | undefined
-    distance: number | undefined
-    route: string | undefined
-    answers: number | undefined
-    price: number | undefined
-}
+import {OneRequestTableType} from '../../types/form-types';
 
 
 const initialState = {

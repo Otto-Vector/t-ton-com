@@ -303,6 +303,8 @@ export type ResponseToRequestCardType<T = DefaultFormType> = {
     responseTax: T,
 }
 
+export type RequestGlobalStatusType = 'новая заявка' | 'в работе' | 'завершена' | 'отменена'
+
 // ЗАЯВКА
 export type OneRequestType = {
     /* эти два поля создаются автоматически на бэке при запросе на создание,
@@ -348,7 +350,7 @@ export type OneRequestType = {
     // БЛОК СТАТУСОВ ЗАЯВКИ
 
     // глобальный статус заявки
-    globalStatus?: 'новая заявка' | 'в работе' | 'завершена' | 'отменена'
+    globalStatus?: RequestGlobalStatusType
     // локальный статус заявки
     localStatus: {
         // Оплату передал
@@ -503,7 +505,7 @@ export type OneRequestApiType = {
     visible?: string
     marked?: string
 
-    globalStatus?: 'новая заявка' | 'в работе' | 'завершена' | 'отменена'
+    globalStatus?: RequestGlobalStatusType
     localStatuspaymentHasBeenTransferred?: boolean
     localStatuscargoHasBeenTransferred?: boolean
     localStatuspaymentHasBeenReceived?: boolean
@@ -603,4 +605,17 @@ export type OneRequestApiType = {
     customerToConsigneeContractECPdocumentUpload?: string
     customerToConsigneeContractECPcustomerIsSubscribe?: string
     customerToConsigneeContractECPconsigneeIsSubscribe?: string
+}
+
+// для полей в таблице
+export type OneRequestTableType = {
+    requestNumber?: number
+    cargoType?: string
+    shipmentDate?: string
+    distance?: number
+    route?: string
+    answers?: number
+    price?: number
+    globalStatus?: RequestGlobalStatusType
+    responseEmployee?: string
 }

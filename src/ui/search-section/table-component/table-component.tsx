@@ -6,7 +6,7 @@ import {ColumnInputFilter} from './filter/column-filters'
 import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
 import {useSelector} from 'react-redux'
 import {UseFiltersColumnProps} from 'react-table'
-import {getContentTableStore} from '../../../selectors/table/table-reselect'
+import {getContentTableStore, getContentTableStoreInWork} from '../../../selectors/table/table-reselect'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
@@ -26,7 +26,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const authCash = +( useSelector(getCashRequisitesStore) || 0 )
     const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
 
-    const TABLE_CONTENT = useSelector(getContentTableStore)
+    const TABLE_CONTENT = useSelector(tableModes.searchTblMode ? getContentTableStore : getContentTableStoreInWork)
 
     const data = React.useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
@@ -79,8 +79,8 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 disableFilters: true,
             },
             {
-                Header: 'Ответы',
-                accessor: 'answers',
+                Header: tableModes.statusTblMode ? 'На заявке' : 'Ответы',
+                accessor: tableModes.statusTblMode ? 'responseEmployee':'answers',
                 Filter: ColumnInputFilter,
                 disableFilters: true,
 
