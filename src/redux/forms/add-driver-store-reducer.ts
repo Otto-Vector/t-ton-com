@@ -4,6 +4,7 @@ import {ResponseToRequestCardType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
+import {getAllRequestsAPI} from './request-store-reducer';
 
 
 
@@ -87,6 +88,7 @@ export const setOneResponseToRequest = ( addDriverValues: ResponseToRequestCardT
                 ...addDriverValues, requestCarrierId,
             })
             console.log(response)
+            dispatch(getAllRequestsAPI())
         } catch (e) {
             dispatch(addDriverStoreActions.setIsFetching(false))
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(

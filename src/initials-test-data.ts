@@ -1,6 +1,7 @@
 import {
     DocumentsRequestType,
 } from './types/form-types'
+import {AvtoDispetcherResponseType} from './types/api-types';
 
 
 export const cargoType = [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',

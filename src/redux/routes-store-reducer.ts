@@ -12,8 +12,10 @@ const initialState = {
         requestsList: '/requests/',
         // '/history'
         historyList: '/history',
-        // '/request/myDriversForm/'
-        myDrivers: '/request/myDriversForm/',
+        // добавление водителя при создании заявки "самовывоз"
+        // '/request/selfExportDriverForm/'
+        selfExportDriver: '/request/selfExportDriverForm/',
+        // добавление водителя при отклике на заявку
         // '/request/addDriversForm/'
         addDriver: '/request/addDriversForm/',
         requestInfo: {

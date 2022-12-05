@@ -273,6 +273,15 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     idUserCustomer: elem.idUserCustomer,
     idCustomer: elem.idCustomer,
 
+    distance: Number(elem.distance),
+    route: elem.route,
+    note: elem.note,
+    visible: true,
+    marked: false,
+
+    acceptedUsers: elem.acceptedUsers?.split(', ').filter(v => v),
+    answers: elem.answers?.split(', ').filter(v => v),
+
     idUserSender: elem.idUserSender,
     idSender: elem.idSender,
     sender: {
@@ -290,6 +299,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         coordinates: elem.coordinatesSender,
         city: elem.citySender,
     },
+
 
     idRecipient: elem.idRecipient,
     idUserRecipient: elem.idUserRecipient,
@@ -309,12 +319,6 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         city: elem.cityRecipient,
     },
 
-    distance: Number(elem.distance),
-    route: elem.route,
-    note: elem.note,
-    visible: true,
-    marked: false,
-
     globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
     localStatus: {
         paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
@@ -323,8 +327,6 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
     },
 
-    acceptedUsers: elem.acceptedUsers?.split(','),
-    answers: elem.answers?.split(','),
 
     requestUserCarrierId: elem.requestUserCarrierId,
     requestCarrierId: elem.requestCarrierId,

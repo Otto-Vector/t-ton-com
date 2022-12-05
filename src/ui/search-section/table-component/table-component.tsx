@@ -83,6 +83,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 accessor: 'answers',
                 Filter: ColumnInputFilter,
                 disableFilters: true,
+
             },
             {
                 Header: '',

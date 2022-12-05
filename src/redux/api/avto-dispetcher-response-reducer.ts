@@ -50,12 +50,19 @@ export const getCityFromDispetcherAPI = ( {
             const response = await getRouteFromAvtodispetcherApi({ from, to })
 
             if (response.segments.length > 0) {
-                return ( { city: response.segments[0].start.name } )
+                // может и вернуть просто координаты, если точка в полях
+                const city = response.segments[0].start.name
+                // тут закомментирована логика на отображение ближайшего по маршруту названия
+                // const cityStatr = response.segments[0].start.name
+                // const cityFinish = response.segments[0].finish.name
+                // const city = !(+(cityStart[0] || 0)) ? cityStart: cityFinish
+                // return ( { city: response.segments[0].start.name } )
+                return { city }
             }
 
         } catch (e) {
             dispatch(globalModalStoreActions.setTextMessage('Ошибка запроса на название города'))
-            return ( { coordinates: 'Ошибка запроса на название города, измените координаты' } )
+            return { coordinates: 'Ошибка запроса на название города, измените координаты' }
         }
 
         return null

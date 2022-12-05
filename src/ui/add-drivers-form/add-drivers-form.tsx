@@ -39,17 +39,27 @@ import {getAllEmployeesSelectWithCargoTypeDisabledWrongCargo} from '../../select
 import {SelectOptionsType} from '../common/form-selector/selector-utils';
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
 import {ddMmYearFormat} from '../../utils/date-formats';
+import {setOneResponseToRequest} from '../../redux/forms/add-driver-store-reducer';
+import {getRoutesStore} from '../../selectors/routes-reselect';
 
-type OwnProps = {}
 
-export const AddDriversForm: React.FC<OwnProps> = () => {
+type OwnProps = {
+    mode: 'addDriver' | 'selfExportDriver'
+}
+
+
+export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
     const setImage = ( urlImage?: string ): string => urlImage ? currentURL + urlImage : noImage
 
+    const addDriverModes = {
+        addDriver: mode === 'addDriver',
+        selfExportDriver: mode === 'selfExportDriver',
+    }
+    const navRoutes = useSelector(getRoutesStore)
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const requestNumber = +( reqNumber || 0 )
-
 
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     const isFetching = useSelector(getIsFetchingRequisitesStore)
@@ -106,10 +116,16 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
         return validators.responseStavka ? ( validators.responseStavka(stavka) || '' ) : ''
     }, [ distance ])
 
-    const onSubmit = ( values: ResponseToRequestCardType<string> ) => {
-        // dispatch<any>(setOneResponseToRequest(values))
-        dispatch<any>(addAcceptedResponseToRequest(values))
-        // navigate(create)
+
+    const onSubmit = async ( values: ResponseToRequestCardType<string> ) => {
+        if (addDriverModes.addDriver) {
+            await dispatch<any>(setOneResponseToRequest(values))
+            navigate(navRoutes.searchList)
+        }
+        if (addDriverModes.selfExportDriver) {
+            await dispatch<any>(addAcceptedResponseToRequest(values))
+            navigate(navRoutes.requestsList)
+        }
     }
 
     // перезаписываем состояние в стейт для перерасчёта калькулятора
@@ -133,11 +149,11 @@ export const AddDriversForm: React.FC<OwnProps> = () => {
             if (requestValues?.requestNumber !== requestNumber) {
                 dispatch<any>(getOneRequestsAPI(requestNumber))
             }
-                // чистим данные
-                setInitialValues({} as ResponseToRequestCardType)
-                setOneEmployee('')
-                setOneTransport('')
-                setOneTrailer('')
+            // чистим данные
+            setInitialValues({} as ResponseToRequestCardType)
+            setOneEmployee('')
+            setOneTransport('')
+            setOneTrailer('')
             // }
             setIsFirstRender(false)
         }

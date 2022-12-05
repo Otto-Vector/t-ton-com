@@ -25,7 +25,6 @@ import {AddDriversForm} from './add-drivers-form/add-drivers-form';
 import {InfoSection} from './info-section/info-section';
 import {MapSection} from './map-section/map-section';
 import {LightBoxComponent} from './common/lightbox-component/lightbox-component'
-import {AddDriversView} from './add-drivers-form/add-drivers-view';
 import {AppStateType} from '../redux/redux-store';
 import {initializedAll} from '../redux/app-store-reducer';
 import {Preloader} from './common/preloader/preloader';
@@ -74,19 +73,21 @@ export const UiComponent: React.FC<OwnProps> = () => {
                                    <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*ПРОСМОТР активных заявок того кто их создал или участвует в ней*/ }
                         <Route path={ routes.requestInfo.history + ':reqNumber' }
                                element={
-                                   <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/>{/*ПРОСМОТР ЗАЯВКИ без возможности изменения*/ }
+                                   <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*ПРОСМОТР ЗАЯВКИ без возможности изменения*/ }
                         <Route path={ routes.requestInfo.accept + ':reqNumber' }
                                element={ <ТoAuthRedirect>
-                                   <RequestSection/> {/*ПРОСМОТР ЗАЯВКИ с возможностью её принять или отказаться*/}
+                                   <RequestSection/> {/*ПРОСМОТР ЗАЯВКИ с возможностью её принять или отказаться*/ }
                                </ТoAuthRedirect> }/>
 
-                        <Route path={ routes.requestsList } element={ <ТoAuthRedirect><SearchSection
-                            mode={ 'status' }/></ТoAuthRedirect> }/> {/*таблица статусов по активным заявкам*/ }
-                        <Route path={ routes.searchList } element={ <ТoAuthRedirect><SearchSection
-                            mode={ 'search' }/></ТoAuthRedirect> }/> {/*ПОИСК активных заявок*/ }
-                        <Route path={ routes.historyList }
-                               element={ <ТoAuthRedirect><SearchSection
-                                   mode={ 'history' }/></ТoAuthRedirect> }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
+                        <Route path={ routes.requestsList } element={ <ТoAuthRedirect>
+                            <SearchSection mode={ 'status' }/> {/*таблица статусов по активным заявкам*/ }
+                        </ТoAuthRedirect> }/>
+                        <Route path={ routes.searchList } element={ <ТoAuthRedirect>
+                            <SearchSection mode={ 'search' }/> {/*ПОИСК активных заявок*/ }
+                        </ТoAuthRedirect> }/>
+                        <Route path={ routes.historyList } element={ <ТoAuthRedirect>
+                            <SearchSection mode={ 'history' }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
+                        </ТoAuthRedirect> }/>
 
                         <Route path={ routes.map } element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.maps.answers + ':reqNumber' }
@@ -95,8 +96,12 @@ export const UiComponent: React.FC<OwnProps> = () => {
                                    </div>
                                </ТoAuthRedirect> }/>
                         <Route path={ routes.info } element={ <ТoAuthRedirect><InfoSection/></ТoAuthRedirect> }/>
-                        <Route path={ routes.addDriver + ':reqNumber' }
-                               element={ <ТoAuthRedirect><AddDriversForm/></ТoAuthRedirect> }/>
+                        <Route path={ routes.addDriver + ':reqNumber' }                               element={ <ТoAuthRedirect>
+                                   <AddDriversForm mode={'addDriver'}/>
+                        </ТoAuthRedirect> }/>
+                        <Route path={ routes.selfExportDriver + ':reqNumber' } element={ <ТoAuthRedirect>
+                            <AddDriversForm mode={'selfExportDriver'}/>
+                        </ТoAuthRedirect> }/>
 
                         <Route path={ routes.optionsEdit.shippers + ':id' }
                                element={ <ТoAuthRedirect><ShippersForm/></ТoAuthRedirect> }/>
@@ -113,8 +118,8 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.requisites + ':newFlag' } element={ <RequisitesForm/> }/>
 
                         <Route path={ routes.test }
-                               element={ <AddDriversForm/> }/>
-                               {/*element={ <AddDriversView idEmployee={ '0ce2d16f-582e-4d49-ac35-e0c8f9c53b06' }/> }/>*/}
+                               element={ <AddDriversForm mode={'addDriver'}/> }/>
+                        {/*element={ <AddDriversView idEmployee={ '0ce2d16f-582e-4d49-ac35-e0c8f9c53b06' }/> }/>*/ }
 
                         <Route path="*" element={ <h2>This site NOT FOUND. Try another address</h2> }/>
                     </Routes>

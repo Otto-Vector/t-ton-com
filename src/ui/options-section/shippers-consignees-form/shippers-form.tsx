@@ -44,7 +44,7 @@ import {includesTitleValidator} from '../../../utils/validators';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
-import { getCityFromDispetcherAPI } from '../../../redux/api/avto-dispetcher-response-reducer'
+import {getCityFromDispetcherAPI} from '../../../redux/api/avto-dispetcher-response-reducer'
 
 type OwnProps = {
     // onSubmit: (requisites: shippersCardType) => void
@@ -105,12 +105,12 @@ export const ShippersForm: React.FC<OwnProps> = () => {
         if (demaskedValues.coordinates !== initialCoords) {
             const currentCitySearch = await dispatch<any>(getCityFromDispetcherAPI({
                 from: demaskedValues.coordinates as string,
-                to: '55.032328, 82.819442',
+                to: '55.032328, 82.819442', // Новосибирск
             }))
             if (currentCitySearch.city) {
                 demaskedValues.city = currentCitySearch.city
             } else {
-                return currentCitySearch
+                return currentCitySearch || { coordinates: 'Ошибка запроса. Измените координаты' }
             }
         }
 
