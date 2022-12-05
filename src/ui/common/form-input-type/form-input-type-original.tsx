@@ -2,7 +2,6 @@ import React from 'react'
 import styles from './form-input-type.module.scss'
 import {FieldState, FormApi} from 'final-form'
 import NumberFormat from 'react-number-format';
-import ReactInputMask from 'react-input-mask';
 
 
 type OwnProps = {

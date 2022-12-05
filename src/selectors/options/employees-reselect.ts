@@ -2,11 +2,6 @@ import {AppStateType} from '../../redux/redux-store'
 import {EmployeesStoreReducerStateType} from '../../redux/options/employees-store-reducer'
 import {EmployeesCardType} from '../../types/form-types';
 import {createSelector} from 'reselect';
-import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
-import {getAllTransportStore} from './transport-reselect';
-import {getAllTrailerStore} from './trailer-reselect';
-import {parseFamilyToFIO} from '../../utils/parsers';
-
 
 type EmployeesStoreSelectors<T extends keyof Y, Y = EmployeesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 

@@ -1,7 +1,5 @@
 import {AppStateType} from '../../redux/redux-store'
 import {RequisitesStoreReducerStateType} from '../../redux/options/requisites-store-reducer';
-import {CompanyRequisitesType} from '../../types/form-types';
-import {createSelector} from 'reselect';
 
 type RequisitesStoreSelectors<T extends keyof Y, Y = RequisitesStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 type RequisitesStoreSelectorsInit<T extends keyof Y, Y = RequisitesStoreReducerStateType['storedValues']> = ( state: AppStateType ) => Y[T]
