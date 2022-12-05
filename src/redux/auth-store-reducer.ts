@@ -210,12 +210,12 @@ export const sendCodeToPhone = ( {
             if (response.success) {
                 dispatch(globalModalStoreActions.setTextMessage(response.success + 'ПАРОЛЬ: ' + response.password))
             }
-        } catch (error) {
+        } catch (error: { error: { response: { data: { message: string } } } } | any) {
             dispatch(authStoreActions.setIsFetching(false))
-            // @ts-ignore
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data.message)))
-            // @ts-ignore
-            return { innNumber: error.response.data.message }
+
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error?.response?.data?.message)))
+
+            return { innNumber: error?.response?.data?.message }
         }
         dispatch(authStoreActions.setIsAvailableSMSRequest(true))
         dispatch(authStoreActions.setIsFetching(false))
