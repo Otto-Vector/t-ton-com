@@ -7,6 +7,7 @@ import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} f
 import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-reducer';
 import {appActions} from './app-store-reducer';
 import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
+import {TtonErrorType} from '../types/other-types';
 
 
 const initialValues: PhoneSubmitType = {
@@ -210,7 +211,7 @@ export const sendCodeToPhone = ( {
             if (response.success) {
                 dispatch(globalModalStoreActions.setTextMessage(response.success + 'ПАРОЛЬ: ' + response.password))
             }
-        } catch (error: { error: { response: { data: { message: string } } } } | any) {
+        } catch (error: TtonErrorType) {
             dispatch(authStoreActions.setIsFetching(false))
 
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error?.response?.data?.message)))
@@ -254,12 +255,12 @@ export const loginAuthorization = ( {
                 dispatch(authStoreActions.setIsAuth(true))
             }
 
-        } catch (error) {
+        } catch (error: TtonErrorType) {
             dispatch(authStoreActions.setIsFetching(false))
-            // @ts-ignore
-            dispatch<any>(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data.message)))
-            // @ts-ignore
-            return { sms: error.response.data.message }
+
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error?.response?.data?.message)))
+
+            return { sms: error?.response?.data?.message }
         }
 
         dispatch(authStoreActions.setIsFetching(false))
@@ -275,7 +276,6 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
             dispatch(authStoreActions.setIsAuth(false))
             dispatch(authStoreActions.setAuthId(''))
             if (response.status) {
-                // dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(response.status)))
                 console.log(response.status)
             }
         } catch (error) {
@@ -294,11 +294,14 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             if (response.success) dispatch(globalModalStoreActions.setTextMessage(response.success + '\n ПАРОЛЬ: ' + response.password))
             if (response.message) dispatch(globalModalStoreActions.setTextMessage(response.message))
 
-        } catch (error) {
+        } catch (error: TtonErrorType) {
             dispatch(authStoreActions.setIsFetching(false))
-            // @ts-ignore
-            if (error.response.data.message) dispatch(globalModalStoreActions.setTextMessage(error.response.data.message + '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
-            else dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+
+            if (error?.response?.data?.message) {
+                dispatch(globalModalStoreActions.setTextMessage(error.response.data.message + '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
+            } else {
+                dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+            }
         }
         dispatch(authStoreActions.setIsFetching(false))
     }
@@ -318,13 +321,12 @@ export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
                 console.log(response.message)
                 dispatch(globalModalStoreActions.setTextMessage(response.message))
             }
-        } catch (error) {
-            // @ts-ignore
-            if (error.response.data.message) {
-                // @ts-ignore
+        } catch (error: TtonErrorType) {
+            if (error?.response?.data?.message) {
                 console.log(error.response.data.message)
-            } else dispatch(globalModalStoreActions.setTextMessage('Ошибка при автоматической авторизации: ' + JSON.stringify(error)))
+            } else {
+                dispatch(globalModalStoreActions.setTextMessage('Ошибка при автоматической авторизации: ' + JSON.stringify(error)))
+            }
         }
-
         dispatch(authStoreActions.setAutologinDone())
     }
