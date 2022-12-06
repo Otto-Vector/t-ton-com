@@ -43,7 +43,7 @@ export const employeesApi = {
     },
 
     // ИЗМЕНИТЬ одного водителя PUT /api/employee/
-    modifyOneEmployee( { photoFace, ...requestData }: EmployeesApiType, image: File | undefined ) {
+    modifyOneEmployee( { photoFace, ...requestData }: EmployeesApiType, image?: File ) {
         let formData = new FormData()
         Object.entries(requestData).map(( [ key, value ] ) => formData.append(key, value))
         if (image) {

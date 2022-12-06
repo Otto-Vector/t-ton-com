@@ -103,11 +103,11 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             // сохраняем НОВОЕ значение
             dispatch<any>(newEmployeeSaveToAPI({
                 ...unmaskedValues,
-                rating: '-', status: 'свободен',
+                rating: '-',
             }, selectedImage))
         } else {
             // сохраняем измененное значение
-            dispatch<any>(modifyOneEmployeeToAPI(unmaskedValues, selectedImage))
+            dispatch<any>(modifyOneEmployeeToAPI({ employeeValues: unmaskedValues, image: selectedImage }))
         }
         dispatch<any>(rerenderTransport())
         dispatch<any>(rerenderTrailer())

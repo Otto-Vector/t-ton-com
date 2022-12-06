@@ -150,7 +150,7 @@ export type EmployeesCardType<T = DefaultFormType> = {
     responseToRequest: T
 }
 // на сотрудника - ответка из бэка
-export type EmployeesApiType = EmployeesCardType<string> & { passportDate: string }
+export type EmployeesApiType = EmployeesCardType<string> & { passportDate?: string }
 ///////////////////////////////////////////////////////////
 // на грузоПОЛУЧАТЕЛЯ
 export type ConsigneesCardType<T = DefaultFormType> = {

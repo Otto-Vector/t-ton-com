@@ -4,6 +4,7 @@ import {
     CargoTypeType,
     ConsigneesCardType,
     DocumentsRequestType,
+    EmployeesCardType,
     OneRequestApiType,
     OneRequestType,
     ResponseToRequestCardType,
@@ -17,10 +18,10 @@ import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelecto
 import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {getOneEmployeeFromAPI} from '../options/employees-store-reducer';
+import {getOneEmployeeFromAPI, modifyOneEmployeeToAPI} from '../options/employees-store-reducer';
 import {getOneTransportFromAPI} from '../options/transport-store-reducer';
 import {getOneTrailerFromAPI} from '../options/trailer-store-reducer';
-import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
+import {removeResponseToRequestsBzAcceptRequest, removeResponseToRequestsBzEmployee} from './add-driver-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 
 
@@ -481,14 +482,15 @@ export const addAcceptedResponseToRequest = ( submitValues: ResponseToRequestCar
 
         // подгружаем все данные из бэка по айдишкам
         await dispatch(getOneEmployeeFromAPI(submitValues.idEmployee))
-        const employeeValues = getState().employeesStoreReducer.initialValues
+        const employeeValues = {
+            ...getState().employeesStoreReducer.initialValues,
+            status: 'на заявке',
+        } as EmployeesCardType<string>
         await dispatch(getOneTransportFromAPI(submitValues.idTransport))
         const transportValues = getState().transportStoreReducer.initialValues
         await dispatch(getOneTrailerFromAPI(submitValues.idTrailer))
         const trailerValues = getState().trailerStoreReducer.initialValues
 
-        // удаляем все ответы, привязанные к данной заявке
-        await dispatch(removeResponseToRequestsBzAcceptRequest(submitValues.requestNumber))
 
         try {
             const response = await oneRequestApi.modifyOneRequest({
@@ -528,6 +530,13 @@ export const addAcceptedResponseToRequest = ( submitValues: ResponseToRequestCar
             })
 
             if (response.success) {
+                // удаляем все ответы, привязанные к данной заявке
+                await dispatch(removeResponseToRequestsBzAcceptRequest(submitValues.requestNumber))
+                // применяем статус 'на заявке'
+                await dispatch(modifyOneEmployeeToAPI({ employeeValues, status: 'на заявке' }))
+                // удаляем все ответы на запросы у данного сотрудника
+                await dispatch(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
+                // перезаливаем все заявки
                 await dispatch(getAllRequestsAPI())
             }
 
@@ -710,6 +719,7 @@ export const setCargoCompositionSelector = ( newCargoCompositionItem: string ): 
         }
     }
 
+// загрузка километража и прорисовка пути в карту
 export const getRouteFromAPI = ( {
                                      oneShipper,
                                      oneConsignee,

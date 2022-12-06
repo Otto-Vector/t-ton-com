@@ -5,6 +5,7 @@ import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-type
 import {syncParsers} from '../../utils/parsers';
 import {employeesApi} from '../../api/local-api/options/employee.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
+import {TtonErrorType} from '../../types/other-types';
 
 const initialState = {
     employeeIsFetching: false,
@@ -167,31 +168,35 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.createOneEmployee({
-                ...values, idUser, passportDate: values.passportDate as string,
+                ...values, idUser,
+                passportDate: values.passportDate as string,
+                status: 'свободен'
             }, image)
             if (response.success) console.log(response.success)
-        } catch (e) {
-            // @ts-ignore
-            console.error(JSON.stringify(e.response.data))
+        } catch (e: TtonErrorType) {
+            console.log(JSON.stringify(e?.response?.data))
         }
         await dispatch(getAllEmployeesAPI())
     }
 
 // изменить одну запись СОТРУДНИКА через АПИ
-export const modifyOneEmployeeToAPI = ( values: EmployeesCardType<string>, image: File | undefined ): EmployeesStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
+export const modifyOneEmployeeToAPI = (
+    {
+        employeeValues,
+        image,
+        status = 'свободен',
+    }: { employeeValues: EmployeesCardType<string>, image?: File , status?: EmployeesCardType['status']} ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
 
         try {
-            const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.modifyOneEmployee({
-                ...values, idUser,
-                passportDate: values.passportDate as string,
+                ...employeeValues,
+                passportDate: employeeValues.passportDate as string,
+                status
             }, image)
             if (response.success) console.log(response.success)
-        } catch (e) {
-            console.error(JSON.stringify(
-                // @ts-ignore-next-line
-                e.response.data))
+        } catch (e: TtonErrorType) {
+            console.error(JSON.stringify(e?.response?.data))
         }
         await dispatch(getAllEmployeesAPI())
     }
@@ -202,10 +207,8 @@ export const oneEmployeesDeleteToAPI = ( idEmployee: string ): EmployeesStoreRed
         try {
             const response = await employeesApi.deleteOneEmployee({ idEmployee })
             if (response.message) console.log(response.message)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(
-                // @ts-ignore-next-line
-                e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
         await dispatch(getAllEmployeesAPI())
     }
@@ -220,10 +223,8 @@ export const getOneEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReduc
                 dispatch(employeesStoreActions.setInitialValues(oneEmployee))
             }
 
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
     }
 

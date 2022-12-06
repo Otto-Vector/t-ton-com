@@ -15,11 +15,11 @@ export const instanceBack = axios.create({
 // {'message': 'Error, account deleted'}
 
 export type InfoResponseType = {
-    message?: string
     success?: string
-    failed?: string
     status?: string
     userid?: string
     password?: string
+    failed?: string
+    message?: string
     error?: string
 }
