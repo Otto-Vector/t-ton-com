@@ -9,6 +9,8 @@ import {
     OneRequestType,
     ResponseToRequestCardType,
     ShippersCardType,
+    TrailerCardType,
+    TransportCardType,
     ValidateType,
 } from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
@@ -18,10 +20,13 @@ import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelecto
 import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {getOneEmployeeFromAPI, modifyOneEmployeeToAPI} from '../options/employees-store-reducer';
+import {
+    getOneEmployeeFromAPI,
+    modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest,
+} from '../options/employees-store-reducer';
 import {getOneTransportFromAPI} from '../options/transport-store-reducer';
 import {getOneTrailerFromAPI} from '../options/trailer-store-reducer';
-import {removeResponseToRequestsBzAcceptRequest, removeResponseToRequestsBzEmployee} from './add-driver-store-reducer';
+import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 
 
@@ -476,29 +481,24 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
     }
 
 // изменить текущую заявку
-export const addAcceptedResponseToRequest = ( submitValues: ResponseToRequestCardType<string> ): RequestStoreReducerThunkActionType =>
+export const addAcceptedResponseToRequest = (
+    { addDriverValues, oneEmployee: employeeValues, oneTransport: transportValues, oneTrailer: trailerValues }
+        : {
+        addDriverValues: ResponseToRequestCardType<string>,
+        oneEmployee: EmployeesCardType<string>
+        oneTransport: TransportCardType<string>
+        oneTrailer: TrailerCardType<string>
+    } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
 
-        // подгружаем все данные из бэка по айдишкам
-        await dispatch(getOneEmployeeFromAPI(submitValues.idEmployee))
-        const employeeValues = {
-            ...getState().employeesStoreReducer.initialValues,
-            status: 'на заявке',
-        } as EmployeesCardType<string>
-        await dispatch(getOneTransportFromAPI(submitValues.idTransport))
-        const transportValues = getState().transportStoreReducer.initialValues
-        await dispatch(getOneTrailerFromAPI(submitValues.idTrailer))
-        const trailerValues = getState().trailerStoreReducer.initialValues
-
-
         try {
             const response = await oneRequestApi.modifyOneRequest({
-                requestNumber: submitValues.requestNumber,
+                requestNumber: addDriverValues.requestNumber,
                 globalStatus: 'в работе',
-                responseStavka: submitValues.responseStavka,
-                responseTax: submitValues.responseId,
-                responsePrice: submitValues.responsePrice,
+                responseStavka: addDriverValues.responseStavka,
+                responseTax: addDriverValues.responseId,
+                responsePrice: addDriverValues.responsePrice,
                 /* СОТРУДНИК */
                 idEmployee: employeeValues.idEmployee,
                 responseEmployeeFIO: employeeValues.employeeFIO,
@@ -531,11 +531,9 @@ export const addAcceptedResponseToRequest = ( submitValues: ResponseToRequestCar
 
             if (response.success) {
                 // удаляем все ответы, привязанные к данной заявке
-                await dispatch(removeResponseToRequestsBzAcceptRequest(submitValues.requestNumber))
+                await dispatch(removeResponseToRequestsBzAcceptRequest(addDriverValues.requestNumber))
                 // применяем статус 'на заявке'
-                await dispatch(modifyOneEmployeeToAPI({ employeeValues, status: 'на заявке' }))
-                // удаляем все ответы на запросы у данного сотрудника
-                await dispatch(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
+                await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({ employeeValues }))
                 // перезаливаем все заявки
                 await dispatch(getAllRequestsAPI())
             }

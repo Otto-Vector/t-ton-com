@@ -6,6 +6,7 @@ import {syncParsers} from '../../utils/parsers';
 import {employeesApi} from '../../api/local-api/options/employee.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
+import {removeResponseToRequestsBzEmployee} from '../forms/add-driver-store-reducer';
 
 const initialState = {
     employeeIsFetching: false,
@@ -170,7 +171,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: 
             const response = await employeesApi.createOneEmployee({
                 ...values, idUser,
                 passportDate: values.passportDate as string,
-                status: 'свободен'
+                status: 'свободен',
             }, image)
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
@@ -184,21 +185,50 @@ export const modifyOneEmployeeToAPI = (
     {
         employeeValues,
         image,
-        status = 'свободен',
-    }: { employeeValues: EmployeesCardType<string>, image?: File , status?: EmployeesCardType['status']} ): EmployeesStoreReducerThunkActionType =>
+        status,
+    }: { employeeValues: EmployeesCardType<string>, image?: File, status: EmployeesCardType['status'] } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
 
         try {
             const response = await employeesApi.modifyOneEmployee({
                 ...employeeValues,
                 passportDate: employeeValues.passportDate as string,
-                status
+                status,
             }, image)
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
             console.error(JSON.stringify(e?.response?.data))
         }
         await dispatch(getAllEmployeesAPI())
+    }
+
+// события после изменения данных пользователя, ведущих к удалению ответов на заявки, в которых он учавстовал
+// и очистки его статуса на статус 'свободен'
+export const modifyOneEmployeeResetResponsesAndStatus = (
+    {
+        employeeValues,
+        image,
+    }: { employeeValues: EmployeesCardType<string>, image?: File } ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        // удаляем все ответы на запросы у данного сотрудника
+        await dispatch(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
+        await dispatch(modifyOneEmployeeToAPI({ employeeValues, image, status: 'свободен' }))
+    }
+
+// события после утверждения пользователя на заявке
+export const modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest = (
+    { employeeValues }: { employeeValues: EmployeesCardType<string> } ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        // удаляем все ответы на запросы у данного сотрудника
+        await dispatch(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
+        await dispatch(modifyOneEmployeeToAPI({ employeeValues, status: 'на заявке' }))
+    }
+
+// события после добавления пользователя на заявку
+export const modifyOneEmployeeSetStatusAddedToResponse = (
+    { employeeValues }: { employeeValues: EmployeesCardType<string> } ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        await dispatch(modifyOneEmployeeToAPI({ employeeValues, status: 'ожидает принятия' }))
     }
 
 // удаляем одного СОТРУДНИКА

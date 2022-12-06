@@ -11,7 +11,7 @@ import {
 } from '../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
 import {CancelButton} from '../common/cancel-button/cancel-button'
-import {ResponseToRequestCardType} from '../../types/form-types'
+import {EmployeesCardType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
 
 import {
     getInitialValuesAddDriverStore,
@@ -84,7 +84,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
     const navigate = useNavigate()
 
-    const oneEmployee = useSelector(getOneEmployeeFromLocal)
+    const oneEmployee = useSelector(getOneEmployeeFromLocal) as EmployeesCardType<string>
     const setOneEmployee = ( searchId: string ) => {
         dispatch(employeesStoreActions.setCurrentId(searchId))
     }
@@ -93,14 +93,14 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     const employeeOneRating = oneEmployee.rating
     // const employeeOnePhone = oneEmployee.employeePhoneNumber
 
-    const oneTransport = useSelector(getOneTransportFromLocal)
+    const oneTransport = useSelector(getOneTransportFromLocal) as TransportCardType<string>
     const setOneTransport = ( searchId: string | undefined ) => {
         dispatch(transportStoreActions.setCurrentId(searchId || ''))
     }
     const transportOneImage = oneTransport.transportImage
     const transportOneCargoWeight = +( oneTransport.cargoWeight || 0 )
 
-    const oneTrailer = useSelector(getOneTrailerFromLocal)
+    const oneTrailer = useSelector(getOneTrailerFromLocal) as TrailerCardType<string>
     const setOneTrailer = ( searchId: string | undefined ) => {
         dispatch(trailerStoreActions.setCurrentId(searchId || ''))
     }
@@ -117,16 +117,18 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     }, [ distance ])
 
 
-    const onSubmit = async ( values: ResponseToRequestCardType<string> ) => {
+    const onSubmit = useCallback(async ( addDriverValues: ResponseToRequestCardType<string> ) => {
         if (addDriverModes.addDriver) {
-            await dispatch<any>(setOneResponseToRequest(values))
+            await dispatch<any>(setOneResponseToRequest({ addDriverValues, oneEmployee }))
             navigate(navRoutes.searchList)
         }
         if (addDriverModes.selfExportDriver) {
-            await dispatch<any>(addAcceptedResponseToRequest(values))
+            await dispatch<any>(addAcceptedResponseToRequest({
+                addDriverValues, oneEmployee, oneTrailer, oneTransport,
+            }))
             navigate(navRoutes.requestsList)
         }
-    }
+    }, [ oneEmployee, oneTransport, oneTrailer ])
 
     // перезаписываем состояние в стейт для перерасчёта калькулятора
     const spyChanger = ( values: ResponseToRequestCardType ) => {

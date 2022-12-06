@@ -23,6 +23,7 @@ import {
 } from '../../../selectors/options/employees-reselect'
 import {
     employeesStoreActions,
+    modifyOneEmployeeResetResponsesAndStatus,
     modifyOneEmployeeToAPI,
     newEmployeeSaveToAPI,
     oneEmployeesDeleteToAPI,
@@ -44,7 +45,7 @@ import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer';
 import {syncValidators} from '../../../utils/validators';
 import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {SelectOptionsType} from '../../common/form-selector/selector-utils';
-import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
 
 
 type OwnProps = {}
@@ -99,27 +100,43 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             idTrailer: !values.idTransport ? placeholder : values.idTrailer || placeholder,
         }
 
-        if (isNew) {
-            // сохраняем НОВОЕ значение
-            dispatch<any>(newEmployeeSaveToAPI({
-                ...unmaskedValues,
-                rating: placeholder,
-            }, selectedImage))
+        if (!isNew && ( oneEmployee.idTransport !== unmaskedValues.idTransport
+                || oneEmployee.idTrailer !== unmaskedValues.idTrailer )
+            && unmaskedValues.status === 'ожидает принятия'
+        ) {
+            dispatch<any>(textAndActionGlobalModal({
+                text: 'Данный сотрудник ожидает принятия ответа на заявку, вы поменяли ему состав сцепки Транспорт/Прицеп',
+                action: () => {
+                    modifyOneEmployeeResetResponsesAndStatus({
+                            employeeValues: unmaskedValues,
+                            image: selectedImage,
+                        },
+                    )
+                },
+                navigateOnOk: options,
+                navigateOnCancel: options,
+            }))
+
         } else {
-            if ((oneEmployee.idTransport !== unmaskedValues.idTransport
-                || oneEmployee.idTrailer !== unmaskedValues.idTrailer)
-                // && unmaskedValues.status=== 'ожидает принятия'
-            ){
-                dispatch(globalModalStoreActions.setTextMessage('Данный сотрудник ожидает принятия ответа на заявку, вы поменяли ему состав спепки Транспорт/Прицеп'))
-                // alert('Данный сотрудник ожидает принятия ответа на заявку, вы поменяли ему состав спепки Транспорт/Прицеп')
-            }
+            if (isNew) {
+                // сохраняем НОВОЕ значение
+                dispatch<any>(newEmployeeSaveToAPI({
+                    ...unmaskedValues,
+                    rating: placeholder,
+                }, selectedImage))
+            } else {
                 // сохраняем измененное значение
-                dispatch<any>(modifyOneEmployeeToAPI({ employeeValues: unmaskedValues, image: selectedImage }))
+                dispatch<any>(modifyOneEmployeeToAPI({
+                    employeeValues: unmaskedValues,
+                    image: selectedImage,
+                    status: unmaskedValues.status,
+                }))
+            }
+            navigate(options) // и возвращаемся в предыдущее окно
         }
         dispatch<any>(rerenderTransport())
         dispatch<any>(rerenderTrailer())
-        navigate(options) // и возвращаемся в предыдущее окно
-    }, [oneEmployee.idTransport, oneEmployee.idTrailer])
+    }, [ oneEmployee.idTransport, oneEmployee.idTrailer ])
 
 
     const onCancelClick = () => {
