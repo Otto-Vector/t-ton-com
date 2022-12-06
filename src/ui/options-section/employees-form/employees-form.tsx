@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -44,7 +44,7 @@ import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer';
 import {syncValidators} from '../../../utils/validators';
 import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {SelectOptionsType} from '../../common/form-selector/selector-utils';
-import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
+import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
 
 
 type OwnProps = {}
@@ -89,7 +89,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const [ selectedImage, setSelectedImage ] = useState<File>();
 
 
-    const onSubmit = ( values: EmployeesCardType<string> ) => {
+    const onSubmit = useCallback(( values: EmployeesCardType<string> ) => {
         const placeholder = '-'
         const unmaskedValues: EmployeesCardType<string> = {
             ...values,
@@ -103,16 +103,23 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             // сохраняем НОВОЕ значение
             dispatch<any>(newEmployeeSaveToAPI({
                 ...unmaskedValues,
-                rating: '-',
+                rating: placeholder,
             }, selectedImage))
         } else {
-            // сохраняем измененное значение
-            dispatch<any>(modifyOneEmployeeToAPI({ employeeValues: unmaskedValues, image: selectedImage }))
+            if ((oneEmployee.idTransport !== unmaskedValues.idTransport
+                || oneEmployee.idTrailer !== unmaskedValues.idTrailer)
+                // && unmaskedValues.status=== 'ожидает принятия'
+            ){
+                dispatch(globalModalStoreActions.setTextMessage('Данный сотрудник ожидает принятия ответа на заявку, вы поменяли ему состав спепки Транспорт/Прицеп'))
+                // alert('Данный сотрудник ожидает принятия ответа на заявку, вы поменяли ему состав спепки Транспорт/Прицеп')
+            }
+                // сохраняем измененное значение
+                dispatch<any>(modifyOneEmployeeToAPI({ employeeValues: unmaskedValues, image: selectedImage }))
         }
         dispatch<any>(rerenderTransport())
         dispatch<any>(rerenderTrailer())
         navigate(options) // и возвращаемся в предыдущее окно
-    }
+    }, [oneEmployee.idTransport, oneEmployee.idTrailer])
 
 
     const onCancelClick = () => {
