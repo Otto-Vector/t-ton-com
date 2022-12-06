@@ -5,20 +5,7 @@ import {syncValidators} from '../../utils/validators'
 import {coordsToString, syncParsers} from '../../utils/parsers';
 import {consigneesApi} from '../../api/local-api/options/consignees.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-
-export const defaultInitialConsigneesValues = {
-    title: '',
-    innNumber: '',
-    organizationName: '',
-    kpp: '',
-    ogrn: '',
-    address: '',
-    consigneesFio: '',
-    consigneesTel: '',
-    description: '',
-    coordinates: '',
-    city: '',
-} as ConsigneesCardType
+import {TtonErrorType} from '../../types/other-types';
 
 
 const initialState = {
@@ -73,7 +60,7 @@ const initialState = {
         address: syncValidators.textReqMiddle,
         consigneesFio: syncValidators.textReqMin,
         consigneesTel: syncValidators.phone,
-        description: syncValidators.textReqMax,
+        description: syncValidators.textMax,
         coordinates: syncValidators.required,
     } as ConsigneesCardType<ValidateType>,
 
@@ -187,7 +174,7 @@ export const consigneesStoreActions = {
 
 export type ConsigneesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
 
-
+// запрос всех грузополучателей по id пользователя
 export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(consigneesStoreActions.toggleConsigneeIsFetching(true))
@@ -242,12 +229,14 @@ export const newConsigneeSaveToAPI = ( values: ConsigneesCardType<string> ): Con
 
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await consigneesApi.createOneConsignee({ ...values, idUser })
+            const response = await consigneesApi.createOneConsignee({
+                ...values, idUser,
+                description: values.description || '-',
+                city: values.city || '-',
+            })
             if (response.success) console.log(response.success)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore-next-line
-                JSON.stringify(e.response.data.failed)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.failed)))
         }
         await dispatch(getAllConsigneesAPI())
     }
@@ -259,17 +248,13 @@ export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): C
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await consigneesApi.modifyOneConsignee({
-                ...values,
-                idUser,
-                // для перезаписи данных, если поле пустое
+                ...values, idUser,
                 description: values.description || '-',
                 city: values.city || '-',
             })
             if (response.success) console.log(response.success)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore-next-line
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
         await dispatch(getAllConsigneesAPI())
     }
@@ -282,10 +267,8 @@ export const oneConsigneeDeleteToAPI = ( idRecipient: string | null ): Consignee
                 const response = await consigneesApi.deleteOneConsignee({ idRecipient })
                 if (response.message) console.log(response.message)
             }
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore-next-line
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
         await dispatch(getAllConsigneesAPI())
     }
@@ -300,9 +283,7 @@ export const getOneConsigneeFromAPI = ( idRecipient: string ): ConsigneesStoreRe
                 const oneConsignee = response[0]
                 dispatch(consigneesStoreActions.setInitialValues(oneConsignee))
             }
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore-next-line
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
     }

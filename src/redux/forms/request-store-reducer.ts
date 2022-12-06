@@ -21,6 +21,7 @@ import {getOneEmployeeFromAPI} from '../options/employees-store-reducer';
 import {getOneTransportFromAPI} from '../options/transport-store-reducer';
 import {getOneTrailerFromAPI} from '../options/trailer-store-reducer';
 import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
+import {TtonErrorType} from '../../types/other-types';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -676,10 +677,8 @@ export const deleteCurrentRequestAPI = ( { requestNumber }: { requestNumber: num
         try {
             const response = await oneRequestApi.deleteOneRequest({ requestNumber })
             console.log(response.message)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(
-                // @ts-ignore-next-line
-                e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
     }
 
@@ -706,10 +705,8 @@ export const setCargoCompositionSelector = ( newCargoCompositionItem: string ): 
             if (response.success) {
                 await dispatch(getCargoCompositionSelector())
             }
-        } catch (e) {
-            console.log(JSON.stringify(
-                // @ts-ignore-next-line
-                e.response.data))
+        } catch (e: TtonErrorType) {
+            console.log(JSON.stringify(e?.response?.data))
         }
     }
 

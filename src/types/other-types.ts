@@ -1,1 +1,1 @@
-export type TtonErrorType = { error: { response: { data: { message: string } } } } | any
+export type TtonErrorType = { error: { response?: { data?: { message?: string, failed?: string } } } } | any

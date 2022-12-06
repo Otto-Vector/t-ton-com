@@ -5,6 +5,7 @@ import {syncValidators} from '../../utils/validators'
 import {coordsToString, syncParsers} from '../../utils/parsers';
 import {shippersApi} from '../../api/local-api/options/shippers.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
+import {TtonErrorType} from '../../types/other-types';
 
 
 const initialState = {
@@ -62,7 +63,7 @@ const initialState = {
         address: syncValidators.textReqMiddle,
         shipperFio: syncValidators.textReqMin,
         shipperTel: syncValidators.phone,
-        description: syncValidators.textReqMax,
+        description: syncValidators.textMax,
         coordinates: syncValidators.required,
     } as ShippersCardType<ValidateType>,
 
@@ -230,15 +231,16 @@ export const setOrganizationByInnKppShippers = ( {
 // добавить одну запись ГРУЗООТПРАВИТЕЛЯ через АПИ
 export const newShipperSaveToAPI = ( values: ShippersCardType<string> ): ShippersStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-
         try {
             const idUser = getState().authStoreReducer.authID
-            const response = await shippersApi.createOneShipper({ ...values, idUser })
+            const response = await shippersApi.createOneShipper({
+                ...values, idUser,
+                description: values.description || '-',
+                city: values.city || '-',
+            })
             if (response.success) console.log(response.success)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore-next-line
-                JSON.stringify(e.response.data.failed)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.failed)))
         }
         await dispatch(getAllShippersAPI())
     }
@@ -255,10 +257,8 @@ export const modifyOneShipperToAPI = ( values: ShippersCardType<string> ): Shipp
                 city: values.city || '-',
             })
             if (response.success) console.log(response.success)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore-next-line
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
         await dispatch(getAllShippersAPI())
     }
@@ -272,10 +272,8 @@ export const oneShipperDeleteToAPI = ( idSender: string | null ): ShippersStoreR
                 const response = await shippersApi.deleteOneShipper({ idSender })
                 if (response.message) console.log(response.message)
             }
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore-next-line
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
         await dispatch(getAllShippersAPI())
     }
@@ -290,10 +288,8 @@ export const getOneShipperFromAPI = ( idSender: string ): ShippersStoreReducerTh
                 const oneShipper = response[0]
                 dispatch(shippersStoreActions.setInitialValues(oneShipper))
             }
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore-next-line
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
     }
 
