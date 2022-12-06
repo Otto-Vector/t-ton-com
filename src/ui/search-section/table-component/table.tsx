@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React from 'react';
 import {Column, useFilters, useGlobalFilter, useTable} from 'react-table';
 import styles from './table-component.module.scss'
 import {TableModesType} from '../search-section';
@@ -8,6 +8,7 @@ import {TableModesType} from '../search-section';
 type OwnProps = {
     columns: readonly Column[],
     data: readonly {}[],
+    // data:  OneRequestTableType[],
     tableModes: TableModesType
 }
 
@@ -29,12 +30,12 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
         useGlobalFilter)
     // const {globalFilter} = state
 
-    // отмечаем цветом выбранную строку
-    const [ selectedRow, setSelectedRow ] = useState(rows.map(() => false))
-    // сбрасывается только при смене вкладки
-    useMemo(() => {
-        setSelectedRow(selectedRow.map(() => false))
-    }, [ tableModes.searchTblMode, tableModes.historyTblMode, tableModes.statusTblMode ])
+    // // отмечаем цветом выбранную строку
+    // const [ selectedRow, setSelectedRow ] = useState(rows.map(() => false))
+    // // сбрасывается только при смене вкладки
+    // useMemo(() => {
+    //     setSelectedRow(selectedRow.map(() => false))
+    // }, [ tableModes.searchTblMode, tableModes.historyTblMode, tableModes.statusTblMode ])
 
     // Render the UI for your table
 
@@ -60,11 +61,10 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                     prepareRow(row)
                     return (
                         <tr { ...row.getRowProps() } className={
-                            ( selectedRow[rowId] ? styles.selected : '' ) }
+                            (// @ts-ignore-next-line
+                                data[rowId]?.marked ? styles.selected : '' ) }
                             onClick={ () => {
-                                setSelectedRow(selectedRow.map(
-                                    ( val, id ) => id === rowId ? !val : val,
-                                ))
+                                console.log(data[rowId])
                             } }>
                             { row.cells.map(cell => {
                                 return <td { ...cell.getCellProps() }

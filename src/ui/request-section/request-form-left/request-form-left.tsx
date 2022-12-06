@@ -114,7 +114,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             await onSubmit(values)
             // оплата за создание заявки
             dispatch<any>(addRequestCashPay())
-            navigate(routes.addDriver + values.requestNumber)
+            navigate(routes.selfExportDriver + values.requestNumber)
         },
     } ), [])
 
@@ -355,7 +355,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                             : buttonsAction.submitRequestAndDrive(values)
                                                     )
                                                 } }
-                                                disabled={ hasValidationErrors }
+                                                disabled={ submitting || submitError }
                                                 rounded/>
                                         { requestModes.createMode &&
                                             <InfoButtonToModal textToModal={ fieldInformation.selfDeliveryButton }

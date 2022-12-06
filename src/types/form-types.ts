@@ -618,4 +618,5 @@ export type OneRequestTableType = {
     price?: number
     globalStatus?: RequestGlobalStatusType
     responseEmployee?: string
+    marked?: boolean
 }

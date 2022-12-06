@@ -7,9 +7,3 @@ export const getValuesFiltersStore: FiltersStoreSelectors<'values'> = ( state ) 
 export const getButtonsFiltersStore: FiltersStoreSelectors<'buttons'> = ( state ) => state.filtersStoreReducer.buttons
 export const getFiltersStore = ( state: AppStateType ): FiltersStoreReducerStateType => state.filtersStoreReducer
 
-
-// // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API
-// export const getOneBookFromLocal = createSelector( getBooksList, getBookToView,
-//     ( booksList, bookToView ): ItemBook['volumeInfo'] | undefined => {
-//         return booksList.filter( ( book ) => book.id === bookToView.bookId )[0]?.volumeInfo
-//     } )

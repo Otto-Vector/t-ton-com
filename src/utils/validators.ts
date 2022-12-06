@@ -28,6 +28,8 @@ export const syncValidators = {
     textReqMicro: composeValidators(required, maxLength(20)),
     // рекомендовано максимум 50 символов
     textReqMin: composeValidators(required, maxLength(50)),
+    // максимум 50 символов
+    textMin: composeValidators(maxLength(50)),
     // рекомендовано максимум 120 символов
     textReqMiddle: composeValidators(required, maxLength(120)),
     // рекомендовано максимум 300 символов

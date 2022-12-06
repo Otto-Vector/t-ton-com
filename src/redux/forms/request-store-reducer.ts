@@ -542,6 +542,7 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
         try {
             const idUserCustomer = getState().authStoreReducer.authID
             const requestNumber = submitValues.requestNumber?.toString() || '0'
+            const placeholder = '-'
             const response = await oneRequestApi.modifyOneRequest({
                     acceptedUsers: undefined, // изменяется через другой запрос
                     requestDate: undefined, // потому как она уже задана при создании
@@ -588,7 +589,7 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
                     addressRecipient: submitValues.recipient.address,
                     consigneesFioRecipient: submitValues.recipient.consigneesFio,
                     consigneesTelRecipient: submitValues.recipient.consigneesTel,
-                    descriptionRecipient: submitValues.recipient.description,
+                    descriptionRecipient: submitValues.recipient.description || placeholder,
                     coordinatesRecipient: submitValues.recipient.coordinates,
                     cityRecipient: submitValues.recipient.city,
 

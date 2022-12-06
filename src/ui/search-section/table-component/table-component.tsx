@@ -6,7 +6,10 @@ import {ColumnInputFilter} from './filter/column-filters'
 import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
 import {useSelector} from 'react-redux'
 import {UseFiltersColumnProps} from 'react-table'
-import {getContentTableStore, getContentTableStoreInWork} from '../../../selectors/table/table-reselect'
+import {
+    getContentTableStoreInWork,
+    getContentTableStoreNew,
+} from '../../../selectors/table/table-reselect'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
@@ -26,7 +29,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const authCash = +( useSelector(getCashRequisitesStore) || 0 )
     const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
 
-    const TABLE_CONTENT = useSelector(tableModes.searchTblMode ? getContentTableStore : getContentTableStoreInWork)
+    const TABLE_CONTENT = useSelector(tableModes.searchTblMode ? getContentTableStoreNew : getContentTableStoreInWork)
 
     const data = React.useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
@@ -83,7 +86,6 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 accessor: tableModes.statusTblMode ? 'responseEmployee':'answers',
                 Filter: ColumnInputFilter,
                 disableFilters: true,
-
             },
             {
                 Header: '',

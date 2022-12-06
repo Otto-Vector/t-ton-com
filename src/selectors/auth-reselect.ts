@@ -3,6 +3,7 @@ import {AuthStoreReducerStateType} from '../redux/auth-store-reducer';
 
 type AuthStoreSelectors<T extends keyof Y, Y = AuthStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
+export const getAuthIdAuthStore: AuthStoreSelectors<'authID'> = ( state ) => state.authStoreReducer.authID
 export const getIsAuthAuthStore: AuthStoreSelectors<'isAuth'> = ( state ) => state.authStoreReducer.isAuth
 export const getAutologinAuthStore: AuthStoreSelectors<'isAutoLoginTry'> = ( state ) => state.authStoreReducer.isAutoLoginTry
 

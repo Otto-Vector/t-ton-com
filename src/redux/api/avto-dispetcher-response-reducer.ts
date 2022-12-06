@@ -50,13 +50,9 @@ export const getCityFromDispetcherAPI = ( {
             const response = await getRouteFromAvtodispetcherApi({ from, to })
 
             if (response.segments.length > 0) {
-                // может и вернуть просто координаты, если точка в полях
-                const city = response.segments[0].start.name
-                // тут закомментирована логика на отображение ближайшего по маршруту названия
-                // const cityStatr = response.segments[0].start.name
-                // const cityFinish = response.segments[0].finish.name
-                // const city = !(+(cityStart[0] || 0)) ? cityStart: cityFinish
-                // return ( { city: response.segments[0].start.name } )
+                const cityNameStart = response.segments[0].start.name
+                const cityNameFinish = response.segments[0].finish.name
+                const city = isNaN(+cityNameStart[0]) ? cityNameStart : cityNameFinish
                 return { city }
             }
 

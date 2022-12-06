@@ -67,8 +67,8 @@ const initialState = {
         ogrn: syncValidators.ogrn,
         okpo: syncValidators.okpo,
         legalAddress: syncValidators.textReqMiddle,
-        mechanicFIO: syncValidators.textReqMin,
-        dispatcherFIO: syncValidators.textReqMin,
+        mechanicFIO: syncValidators.textMin,
+        dispatcherFIO: syncValidators.textMin,
 
         postAddress: syncValidators.textReqMiddle,
         phoneDirector: syncValidators.phone,

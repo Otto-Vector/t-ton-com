@@ -6,6 +6,7 @@ import {ddMmYearFormat} from '../../utils/date-formats';
 import {getTariffsRequisitesStore} from '../options/requisites-reselect';
 import {OneRequestTableType} from '../../types/form-types';
 import {parseFamilyToFIO} from '../../utils/parsers';
+import {getAuthIdAuthStore} from '../auth-reselect';
 
 
 type TableStoreSelectors<T extends keyof Y, Y = TableStoreReducerStateType> = ( state: AppStateType ) => Y[T]
@@ -18,12 +19,14 @@ export const getContentTableStore = createSelector(
     getAllRequestStore,
     geInitialValuesTableStore,
     getTariffsRequisitesStore,
-    ( requests, initial, { acceptShortRoute, acceptLongRoute } ): OneRequestTableType[] => {
+    getAuthIdAuthStore,
+    ( requests, initial, { acceptShortRoute, acceptLongRoute }, authId ): OneRequestTableType[] => {
         return requests.filter(( { visible } ) => visible).map((
             {
                 requestNumber,
                 shipmentDate,
                 cargoType,
+                idUserCustomer,
                 sender: { city: cityShipper },
                 recipient: { city: cityConsignee },
                 distance,
@@ -41,9 +44,13 @@ export const getContentTableStore = createSelector(
                 // ставим цену в зависимости от расстояния
                 price: ( distance || 0 ) > 100 ? +( acceptLongRoute || 0 ) : +( acceptShortRoute || 0 ),
                 globalStatus,
-                responseEmployee: parseFamilyToFIO(responseEmployee?.employeeFIO)
+                responseEmployee: parseFamilyToFIO(responseEmployee?.employeeFIO),
+                marked: authId === idUserCustomer
             } )) || [ initial ]
     })
+
+export const getContentTableStoreNew = createSelector(getContentTableStore,
+    ( requests ) => requests.filter(( { globalStatus } ) => globalStatus === 'новая заявка'))
 
 export const getContentTableStoreInWork = createSelector(getContentTableStore,
     ( requests ) => requests.filter(( { globalStatus } ) => globalStatus === 'в работе'))

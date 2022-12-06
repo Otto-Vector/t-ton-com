@@ -282,7 +282,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                             />
                                             <div className={ styles.requisitesForm__buttonsPanel }>
                                                 <Button type={ 'submit' }
-                                                        disabled={ submitting || hasValidationErrors || pristine }
+                                                        disabled={ submitting || pristine }
                                                         colorMode={ 'green' }
                                                         title={ 'Cохранить' }
                                                         rounded

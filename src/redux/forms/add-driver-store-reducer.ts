@@ -5,7 +5,7 @@ import {syncValidators} from '../../utils/validators';
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 import {getAllRequestsAPI} from './request-store-reducer';
-
+import {TtonErrorType} from '../../types/other-types';
 
 
 const initialState = {
@@ -89,11 +89,9 @@ export const setOneResponseToRequest = ( addDriverValues: ResponseToRequestCardT
             })
             console.log(response)
             dispatch(getAllRequestsAPI())
-        } catch (e) {
+        } catch (e: TtonErrorType) {
             dispatch(addDriverStoreActions.setIsFetching(false))
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(
-                // @ts-ignore-next-line
-                e.response.data)))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
         }
         dispatch(addDriverStoreActions.setIsFetching(false))
     }
@@ -104,22 +102,18 @@ export const removeResponseToRequestsBzAcceptRequest = ( requestNumber: string )
         try {
             const response = await responseToRequestApi.deleteSomeResponseToRequest({ requestNumber })
             console.log(response)
-        } catch (e) {
-            console.log(JSON.stringify(
-                // @ts-ignore-next-line
-                e.response.data))
+        } catch (e: TtonErrorType) {
+            console.log(JSON.stringify(e?.response?.data))
         }
     }
 
 // удаление ответов на заявки, привязанных к сотруднику
-export const removeResponseToRequestsBzEmployee = ( responseId: string ): AddDriverStoreReducerThunkActionType =>
+export const removeResponseToRequestsBzEmployee = ( idEmployee: string ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await responseToRequestApi.deleteSomeResponseToRequest({ responseId })
+            const response = await responseToRequestApi.deleteSomeResponseToRequest({ idEmployee })
             console.log(response)
-        } catch (e) {
-            console.log(JSON.stringify(
-                // @ts-ignore-next-line
-                e.response.data))
+        } catch (e: TtonErrorType) {
+            console.log(JSON.stringify(e?.response?.data))
         }
     }
