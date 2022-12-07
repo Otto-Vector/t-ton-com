@@ -66,6 +66,13 @@ export const TransportForm: React.FC<OwnProps> = () => {
         ))
     }
 
+    const unchangeableField = () => {
+        dispatch(globalModalStoreActions.setTextMessage(
+            'Данное поле Прицепа не может быть изменено, пока он привязан к сотруднику: '
+            + ( isBusyTransport?.subLabel ),
+        ))
+    }
+
     // вытаскиваем значение роутера
     const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
     const isNew = currentIdForShow === 'new'
@@ -201,11 +208,12 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.dopog }
                                                    parse={ parsers.dopog }
                                             />
-
-                                            <div className={ styles.transportTrailerForm__smallInput }>
+                                            <div className={ styles.transportTrailerForm__smallInput }
+                                                 onClick={ isBusyTransport && unchangeableField }
+                                            >
                                                 <FormSelector nameForSelector={ 'cargoType' }
                                                               placeholder={ label.cargoType }
-                                                              values={ stringArrayToSelectValue([...cargoConstType]) }
+                                                              values={ stringArrayToSelectValue([ ...cargoConstType ]) }
                                                               handleChanger={ ( val: string ) => {
                                                                   if (val === 'Тягач') {
                                                                       form.resetFieldState('cargoWeight')
@@ -213,16 +221,19 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                                   }
                                                               } }
                                                               validate={ validators.cargoType }
+                                                              disabled={ !!isBusyTransport }
                                                 />
                                             </div>
-                                            <div className={ styles.transportTrailerForm__smallInput }>
+                                            <div className={ styles.transportTrailerForm__smallInput }
+                                                 onClick={ isBusyTransport && unchangeableField }
+                                            >
                                                 <Field name={ 'cargoWeight' }
                                                        placeholder={ label.cargoWeight }
                                                        maskFormat={ maskOn.cargoWeight }
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
                                                        validate={ validators.cargoWeight }
-                                                       disabled={ values.cargoType === 'Тягач' }
+                                                       disabled={ values.cargoType === 'Тягач' || !!isBusyTransport }
                                                 />
                                             </div>
                                             <FormSelector nameForSelector={ 'propertyRights' }

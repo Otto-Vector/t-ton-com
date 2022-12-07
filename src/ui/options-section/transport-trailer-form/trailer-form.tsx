@@ -58,9 +58,16 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
     const isBusyTrailer = useSelector(getIsBusyTrailer)
 
-    const transportHasPassToDelete = () => {
+    const trailertHasPassToDelete = () => {
         dispatch(globalModalStoreActions.setTextMessage(
             'Прицеп не может быть удалён, он привязан к сотруднику: '
+            + ( isBusyTrailer?.subLabel ),
+        ))
+    }
+
+    const unchangeableField = () => {
+        dispatch(globalModalStoreActions.setTextMessage(
+            'Данное поле Прицепа не может быть изменено, пока он привязан к сотруднику: '
             + ( isBusyTrailer?.subLabel ),
         ))
     }
@@ -200,21 +207,26 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                    parse={ parsers.dopog }
                                             />
 
-                                            <div className={ styles.transportTrailerForm__smallInput }>
+                                            <div className={ styles.transportTrailerForm__smallInput }
+                                                 onClick={ isBusyTrailer && unchangeableField }
+                                            >
                                                 <FormSelector nameForSelector={ 'cargoType' }
                                                               placeholder={ label.cargoType }
                                                               values={ stringArrayToSelectValue([ ...cargoConstType.filter(x => x !== 'Тягач') ]) }
                                                               validate={ validators.cargoType }
+                                                              disabled={ !!isBusyTrailer }
                                                 />
                                             </div>
-                                            <div className={ styles.transportTrailerForm__smallInput }>
+                                            <div className={ styles.transportTrailerForm__smallInput }
+                                                 onClick={ isBusyTrailer && unchangeableField }
+                                            >
                                                 <Field name={ 'cargoWeight' }
                                                        placeholder={ label.cargoWeight }
                                                        maskFormat={ maskOn.cargoWeight }
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
                                                        validate={ validators.cargoWeight }
-                                                       disabled={ values.cargoType === 'Тягач' }
+                                                       disabled={ values.cargoType === 'Тягач' || !!isBusyTrailer }
                                                 />
                                             </div>
                                             <FormSelector nameForSelector={ 'propertyRights' }
@@ -237,7 +249,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                     <Button type={ 'button' }
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
-                                                            onClick={ isBusyTrailer ? transportHasPassToDelete : trailerDeleteHandleClick }
+                                                            onClick={ isBusyTrailer ? trailertHasPassToDelete : trailerDeleteHandleClick }
                                                             disabled={ isNew }
                                                             rounded
                                                     />
