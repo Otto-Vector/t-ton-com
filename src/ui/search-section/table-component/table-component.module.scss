@@ -1,17 +1,16 @@
 @import 'src/styles/variables';
 @import 'src/styles/mixins';
 
+// миксин для наведения на выделенный и не только, с отменой по кнопке "открыть"
 @mixin table-bg($color) {
   tr.selected, tr:hover {
     td {
       background-color: rgba($color, .5);
     }
-
     &:hover {
       td {
         background-color: rgba($color, .8);
       }
-
       td:nth-child(7) {
         background: none;
       }

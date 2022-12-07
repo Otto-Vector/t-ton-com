@@ -46,6 +46,7 @@ import {syncValidators} from '../../../utils/validators';
 import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {SelectOptionsType} from '../../common/form-selector/selector-utils';
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
+import {FormApi} from 'final-form';
 
 
 type OwnProps = {}
@@ -149,13 +150,18 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    // исключаем из селектора прицепов неподходящий по типу груза
-    const setCargoTypeFilter = ( idTransport: string ) => {
+    const setCargoTypeFilter = (form?: FormApi<EmployeesCardType<string>>)=>( idTransport: string ) => {
+        // if (form) {
+        //     // console.log('from form: ',form.getState().values, ' idTransport: ', idTransport)
+        //     setInitialValues({...form.getState().values, idTransport, idTrailer: ''})
+        // }
+
         if (idTransport) {
+            // исключаем из селектора прицепов неподходящий по типу груза
             const selectedTransportCargo = transportSelect.find(( { value } ) => value === idTransport)?.extendInfo
             setTrailerSelectDisableWrongCargoType(selectedTransportCargo === 'Тягач' ? trailerSelect
                 : trailerSelect.map(( val ) => ( {
-                    ...val, isDisabled: selectedTransportCargo !== val.extendInfo,
+                    ...val, isDisabled: val.isDisabled || selectedTransportCargo !== val.extendInfo,
                 } )),
             )
         }
@@ -177,7 +183,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
             // фильтрация селектора по типу груза при редактировании сотрудника с транспортом
             if (!trailerSelectDisableWrongCargoType[0].value && initialValues.idTransport && !isNew) {
-                setCargoTypeFilter(initialValues.idTransport)
+                setCargoTypeFilter()(initialValues.idTransport)
             }
 
         }, [ currentId, initialValues ],
@@ -281,7 +287,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           placeholder={ label.idTransport }
                                                           values={ transportSelect }
                                                           validate={ validators.idTransport }
-                                                          handleChanger={ setCargoTypeFilter }
+                                                          handleChanger={ setCargoTypeFilter(form) }
                                                           isSubLabelOnOption
                                                           isClearable
                                                           onDisableHandleClick={ onDisableOptionSelectorHandleClick }

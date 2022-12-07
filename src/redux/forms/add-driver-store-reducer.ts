@@ -6,7 +6,7 @@ import {responseToRequestApi} from '../../api/local-api/request-response/respons
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 import {getAllRequestsAPI} from './request-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
-import {getOneEmployeeFromAPI, modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer';
+import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer';
 
 
 const initialState = {
@@ -93,7 +93,7 @@ export const setOneResponseToRequest = (
             console.log(response)
 
             // ставим статус водителю
-            await dispatch(modifyOneEmployeeSetStatusAddedToResponse({employeeValues}))
+            await dispatch(modifyOneEmployeeSetStatusAddedToResponse({ employeeValues }))
             dispatch(getAllRequestsAPI())
         } catch (e: TtonErrorType) {
             dispatch(addDriverStoreActions.setIsFetching(false))
@@ -104,7 +104,7 @@ export const setOneResponseToRequest = (
 
 // удаление ответов на заявки, из-за принятия на заявке
 export const removeResponseToRequestsBzAcceptRequest = ( requestNumber: string ): AddDriverStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+    async () => {
         try {
             const response = await responseToRequestApi.deleteSomeResponseToRequest({ requestNumber })
             console.log(response)
@@ -115,7 +115,7 @@ export const removeResponseToRequestsBzAcceptRequest = ( requestNumber: string )
 
 // удаление ответов на заявки, привязанных к сотруднику
 export const removeResponseToRequestsBzEmployee = ( idEmployee: string ): AddDriverStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+    async () => {
         try {
             const response = await responseToRequestApi.deleteSomeResponseToRequest({ idEmployee })
             console.log(response)
