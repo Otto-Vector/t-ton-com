@@ -107,10 +107,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             dispatch<any>(textAndActionGlobalModal({
                 text: 'Данный сотрудник ожидает принятия ответа на заявку, вы поменяли ему состав сцепки Транспорт/Прицеп',
                 action: () => {
-                    modifyOneEmployeeResetResponsesAndStatus({
+                    dispatch<any>(modifyOneEmployeeResetResponsesAndStatus({
                             employeeValues: unmaskedValues,
                             image: selectedImage,
-                        },
+                        }),
                     )
                 },
                 navigateOnOk: options,

@@ -156,7 +156,6 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
             setOneEmployee('')
             setOneTransport('')
             setOneTrailer('')
-            // }
             setIsFirstRender(false)
         }
     }, [])

@@ -1,6 +1,23 @@
 @import 'src/styles/variables';
 @import 'src/styles/mixins';
 
+@mixin table-bg($color) {
+  tr.selected, tr:hover {
+    td {
+      background-color: rgba($color, .5);
+    }
+
+    &:hover {
+      td {
+        background-color: rgba($color, .8);
+      }
+
+      td:nth-child(7) {
+        background: none;
+      }
+    }
+  }
+}
 
 .tableComponent {
 
@@ -106,30 +123,19 @@
       text-align: center;
       padding: 0.1rem 0.5rem;
       white-space: nowrap;
+      //transition: background-color .5s;
     }
   }
 
   &__search {
-    tr:hover, tr.selected {
-      td {
-        background-color: rgba($accentColor, .5);
-      }
-    }
+    @include table-bg($accentColor);
   }
 
   &__history {
-    tr:hover, tr.selected {
-      td {
-        background-color: rgba($grayFontColor, .5);
-      }
-    }
+    @include table-bg($grayFontColor);
   }
 
   &__status {
-    tr:hover, tr.selected {
-      td {
-        background-color: rgba($greenColor, .5);
-      }
-    }
+    @include table-bg($greenColor);
   }
 }

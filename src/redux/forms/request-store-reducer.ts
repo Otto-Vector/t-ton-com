@@ -679,13 +679,14 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
         dispatch(requestStoreActions.setIsFetching(false))
     }
 
+// удаляем заявку по её номеру
 export const deleteCurrentRequestAPI = ( { requestNumber }: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await oneRequestApi.deleteOneRequest({ requestNumber })
             console.log(response.message)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
         }
     }
 
