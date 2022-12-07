@@ -3,7 +3,7 @@ import {ThunkAction} from 'redux-thunk';
 import {To} from 'react-router-dom';
 
 const initialState = {
-    modalGlobalTextMessage: '',
+    modalGlobalTextMessage: '' as string | string[],
     titleText: undefined as string | undefined,
     navigateToOk: undefined as undefined | To,
     navigateToCancel: undefined as undefined | To,
@@ -74,7 +74,7 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
 
 /* ЭКШОНЫ */
 export const globalModalStoreActions = {
-    setTextMessage: ( modalGlobalTextMessage: string ) => ( {
+    setTextMessage: ( modalGlobalTextMessage: string | string[] ) => ( {
         type: 'global-modal-reducer/SET-TEXT-MESSAGE',
         modalGlobalTextMessage,
     } as const ),
@@ -109,7 +109,7 @@ export type GlobalModalStoreReducerThunkActionType<R = void> = ThunkAction<Promi
 
 
 type GlobalModalType = {
-    text: string
+    text: string | string[]
     action?: () => void
     navigateOnOk?: To
     navigateOnCancel?: To

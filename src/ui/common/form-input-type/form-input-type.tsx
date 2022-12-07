@@ -37,7 +37,7 @@ type OwnProps = {
 }
 
 
-export const FormInputType: React.FC<OwnProps> = React.memo ((
+export const FormInputType: React.FC<OwnProps> = React.memo((
     {
         input, meta, resetFieldBy, placeholder,
         children, disabled = false, mask = '_', maskFormat,
@@ -74,6 +74,7 @@ export const FormInputType: React.FC<OwnProps> = React.memo ((
                     mask={ mask }
                     format={ maskFormat }
                     // fixedDecimalScale={true}
+                    // decimalSeparator={','}
                     decimalScale={ inputType === 'money' ? 2 : 0 }
                     allowEmptyFormatting={ allowEmptyFormatting } // показывает формат при пустых значениях
                     displayType="input"
@@ -82,9 +83,7 @@ export const FormInputType: React.FC<OwnProps> = React.memo ((
                     onBlur={ input.onBlur }
                     onFocus={ input.onFocus }
                     onChange={ ( value: React.ChangeEvent<HTMLInputElement> ) => input?.onChange && input.onChange(value) }
-                    onValueChange={ ( { formattedValue } ) =>
-                        // @ts-ignore
-                        input?.onChange && input.onChange(formattedValue) }
+                    // onValueChange={ ( { formattedValue } ) => input?.onChange && input.onChange(formattedValue) }
                     // @ts-ignore
                     type={ inputType }
                     { ...input }

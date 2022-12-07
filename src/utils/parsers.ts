@@ -1,3 +1,5 @@
+import {isNumber} from 'util';
+
 export const oneRenderParser = ( form: any, parser?: ( value: string ) => string ) => ( value: string, name: string ): string =>
     value !== form.getFieldState(name)?.value ? parser ? parser(value) : value : value
 
@@ -8,7 +10,7 @@ type parsePropType = string | undefined | null
 
 // только цифры
 export const parseAllNumbers = ( val: parsePropType ) =>
-    val?.replace(/\D/g, '') || ''
+    (''+val).replace(/\D/g, '') || ''
 
 export const removeFirstSevenOrEight = ( val: parsePropType ) =>
     val?.replace(/^(\+7\s\([78])/, '+7 (') || ''

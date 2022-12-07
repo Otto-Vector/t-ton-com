@@ -64,7 +64,7 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                             (// @ts-ignore-next-line
                                 data[rowId]?.marked ? styles.selected : '' ) }
                             onClick={ () => {
-                                console.log(data[rowId])
+                                // console.log(data[rowId])
                             } }>
                             { row.cells.map(cell => {
                                 return <td { ...cell.getCellProps() }

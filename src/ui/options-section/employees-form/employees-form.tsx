@@ -107,7 +107,12 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             && unmaskedValues.status === 'ожидает принятия'
         ) {
             dispatch<any>(textAndActionGlobalModal({
-                text: 'Данный сотрудник ожидает принятия ответа на заявку, вы поменяли ему состав сцепки Транспорт/Прицеп',
+                title: 'Внимание!',
+                text: [
+                    'Данный сотрудник ожидает принятия ответа на заявку, вы поменяли ему состав сцепки Транспорт/Прицеп.',
+                    '- "ОК" удалит все отклики с данным водителем и сохранит изменения.',
+                    '- "Cancel" отменит изменения и вернёт в раздел "Настройки"'
+                ],
                 action: () => {
                     dispatch<any>(modifyOneEmployeeResetResponsesAndStatus({
                             employeeValues: unmaskedValues,

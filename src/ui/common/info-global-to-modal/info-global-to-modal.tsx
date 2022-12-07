@@ -46,6 +46,11 @@ export const InfoGlobalToModal: React.FC = () => {
         navToOnCancel && navigate(navToOnCancel)
     }
 
+    const textFromArrayToParagraph = (text: string|string[])=> {
+        if (typeof text==="string") return <p>{text}</p>
+        return text.map((line)=><p>{line}</p>)
+    }
+
     const titleHere = title || ( ( action || navToOnOk ) ? 'Вопрос' : 'Информация' )
 
     useEffect(() => {
@@ -59,7 +64,7 @@ export const InfoGlobalToModal: React.FC = () => {
                onOk={ onOkHandle }
                onCancel={ onCancelHandle }
         >
-            <p>{ textToGlobalModal }</p>
+            { textFromArrayToParagraph(textToGlobalModal) }
         </Modal>
     )
 }

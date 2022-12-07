@@ -2,4 +2,7 @@
 
 .ant-switch-checked {
   background-color: $accentColor !important;
+  &:focus {
+    box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.54) !important;
+  }
 }

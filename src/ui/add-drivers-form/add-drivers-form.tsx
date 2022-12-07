@@ -255,7 +255,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                                                        placeholder={ placeholder.responseStavka }
                                                        component={ FormInputType }
                                                        inputType={ 'money' }
-                                                       pattern={ '/d*.,' }
+                                                       pattern={ '/d*.' }
                                                        resetFieldBy={ form }
                                                        validate={ resultDistanceCost(form) }
                                                        noLabel
