@@ -95,9 +95,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         const placeholder = '-'
         const unmaskedValues: EmployeesCardType<string> = {
             ...values,
-            personnelNumber: parseAllNumbers(values.personnelNumber),
-            garageNumber: parseAllNumbers(values.garageNumber),
+            personnelNumber: parseAllNumbers(values.personnelNumber) || placeholder,
+            garageNumber: parseAllNumbers(values.garageNumber) || placeholder,
             idTransport: values.idTransport || placeholder,
+            // проверка (на всякий случай) если отсутствует транспорт, не должно быть и прицепа
             idTrailer: !values.idTransport ? placeholder : values.idTrailer || placeholder,
         }
 
@@ -150,11 +151,11 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const setCargoTypeFilter = (form?: FormApi<EmployeesCardType<string>>)=>( idTransport: string ) => {
-        // if (form) {
-        //     // console.log('from form: ',form.getState().values, ' idTransport: ', idTransport)
-        //     setInitialValues({...form.getState().values, idTransport, idTrailer: ''})
-        // }
+    const setCargoTypeFilter = ( form?: FormApi<EmployeesCardType<string>> ) => async ( idTransport: string ) => {
+
+        if (form) { // при изменении селектора зачищаем значение прицепа
+            await form.change('idTrailer', '-')
+        }
 
         if (idTransport) {
             // исключаем из селектора прицепов неподходящий по типу груза

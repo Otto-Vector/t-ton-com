@@ -76,5 +76,3 @@ export const FormSelector: React.FC<OwnProps> = React.memo(
             </Field>
         </div>
     }, valuesAreEqual)
-
-

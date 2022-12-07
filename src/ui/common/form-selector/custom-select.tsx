@@ -25,6 +25,9 @@ export const CustomSelect = ( {
                                   ...rest
                               }: FieldRenderProps<string, HTMLElement> ) => {
 
+    // пустой option для несовпадающих значений
+    const empty: SelectOptionsType = { value: '', label: '', key: 'empty' }
+
     const handleChange = useCallback(( option: SelectOptionsType | null ) => {
         input.onChange(option?.value)
         if (handleChanger) handleChanger(option?.value)
@@ -35,6 +38,7 @@ export const CustomSelect = ( {
         input.onChange(value)
     }, [ input ])
 
+    // корректное отображение значения при мультивыборе
     const isMultiLabelToValueChange = useCallback(( option, { context } ) => {
         return context === 'menu' ? option.label : option.value
     }, [])
@@ -50,7 +54,7 @@ export const CustomSelect = ( {
     }, [ options ])
 
     const optionsCurrent = useCallback(( inputValue: string ) => {
-        return options ? options.find(( option: SelectOptionsType ) => option.value === inputValue) : ''
+        return options ? options.find(( option: SelectOptionsType ) => option.value === inputValue) || empty : empty
     }, [ options ])
 
     const isError = ( meta.error || meta.submitError ) && meta.touched
