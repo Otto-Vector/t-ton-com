@@ -44,9 +44,8 @@ export const RequestSection: React.FC = React.memo(() => {
     const isFetching = useSelector(getIsFetchingRequestStore)
     const initialValues = useSelector(getInitialValuesRequestStore)
     const oneEmployee = useSelector(getInitialValuesEmployeesStore)
-    const title = `Заявка №${ initialValues.requestNumber } от ${ ddMmYearFormat(initialValues.requestDate) }`
-    const dispatch = useDispatch()
 
+    const dispatch = useDispatch()
 
     const cancelNavigate = (): To => {
         if (requestModes.acceptDriverMode) return routes.searchList
@@ -90,12 +89,11 @@ export const RequestSection: React.FC = React.memo(() => {
     return (
         <section className={ styles.requestSection }>
             <div className={ styles.requestSection__subWrapper }>
-
                 <div className={ styles.requestSection__wrapper }>
                     { isFetching ? <SizedPreloader sizeHW={ '400px' } marginH={ '25%' }/> :
                         <>
                             <header className={ styles.requestSection__header }>
-                                { title }
+                                { `Заявка №${ initialValues.requestNumber } от ${ ddMmYearFormat(initialValues.requestDate) }` }
                             </header>
                             <div
                                 className={ !tabModes.center ? styles.requestSection__formsWrapper : styles.requestSection__mapsWrapper }>
