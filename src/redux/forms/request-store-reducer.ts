@@ -20,12 +20,7 @@ import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelecto
 import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {
-    getOneEmployeeFromAPI,
-    modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest,
-} from '../options/employees-store-reducer';
-import {getOneTransportFromAPI} from '../options/transport-store-reducer';
-import {getOneTrailerFromAPI} from '../options/trailer-store-reducer';
+import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer';
 import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 
@@ -727,12 +722,20 @@ export const getRouteFromAPI = ( {
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(true))
         const initialValues = getState().requestStoreReducer.initialValues
         try {
+            // отправляем запрос на маршрут
             const response = await getRouteFromAvtodispetcherApi({
                 from: oneShipper.coordinates || '',
                 to: oneConsignee.coordinates || '',
             })
 
+            // конвертируем дистанцию с учетом коэффициэнта
             const distance = +( +response.kilometers * getState().appStoreReducer.distanceCoefficient ).toFixed(0)
+
+            // максимальное количество символов, которые мы можем у себя сохранить
+            if (response.polyline && response.polyline.length > 49990) {
+                // уходим в ошибку
+                throw new Error(`Слишком длинный маршрут (${ distance }км), выберите другого грузоотправителя или грузополучателя`)
+            }
 
             // записываем изменения селекторов и прилепляем данные грузоотправителя и грузополучателя
             dispatch(requestStoreActions.setInitialValues({
@@ -744,11 +747,24 @@ export const getRouteFromAPI = ( {
                 route: response.polyline,
                 distance,
             }))
+
         } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(e as string))
+
+            const isSenderChanged = oneShipper.idSender !== initialValues.idSender
+            const isConsigneeChanged = oneConsignee.idRecipient !== initialValues.idRecipient
+            // зачищаем поле при изменении которого возникли ошибки
             dispatch(requestStoreActions.setInitialValues({
-                ...initialValues, route: '', distance: 0,
+                ...initialValues,
+                idSender: isSenderChanged ? '' : oneShipper.idSender,
+                sender: isSenderChanged ? {} as ShippersCardType : oneShipper,
+                idRecipient: isConsigneeChanged ? '' : oneConsignee.idRecipient,
+                recipient: isConsigneeChanged ? {} as ConsigneesCardType : oneConsignee,
+                route: '',
+                distance: 0,
             }))
+            // выводим ошибку
+            dispatch(globalModalStoreActions.setTextMessage(e + ''))
         }
+
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
     }
