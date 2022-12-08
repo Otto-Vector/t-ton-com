@@ -28,11 +28,11 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
     const dispatch = useDispatch()
 
-    const toGlobalModalQuest = () => {
+    const toGlobalModalQuest = (price: number) => {
         dispatch<any>(textAndActionGlobalModal({
             text: [
-                'Не хватает средств для возможности просмотра и оставления отклика на заявку',
-                '- "OK" для перехода к оплате',
+                'Не хватает средств ('+price+'руб) для возможности просмотра и оставления отклика на заявку',
+                '- "OK" для перехода к пополнению личного счёта',
             ],
             navigateOnOk: info
         }))
@@ -105,7 +105,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                             onClick={ () => {
                                 if (tableModes.searchTblMode) {
                                     ( price > authCash )
-                                        ? toGlobalModalQuest()
+                                        ? toGlobalModalQuest(price)
                                         : navigate(requestInfo.accept + requestNumber)
                                 }
                                 if (tableModes.statusTblMode) navigate(maps.answers + requestNumber)
