@@ -76,11 +76,11 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
                     >
                         <div
                             className={ styles.rowItem__label +
-                                ( ( isPlacemarked && subTitle ) ? ' ' + styles.rowItem__label_marked : '' )+
-                                (( isPlacemarked && extendInfo==="ожидает принятия" ) ? ' ' + styles.rowItem__label_markedAwait : '' )+
-                                (( isPlacemarked && extendInfo==="на заявке" ) ? ' ' + styles.rowItem__label_markedOnRequest : '' )
-                        }
-                            title={ title + ( subTitle ? ` [${ subTitle }]` : '' )+' '+extendInfo }>
+                                ( ( isPlacemarked && subTitle ) ? ' ' + styles.rowItem__label_marked : '' ) +
+                                ( ( isPlacemarked && extendInfo === 'ожидает принятия' ) ? ' ' + styles.rowItem__label_markedAwait : '' ) +
+                                ( ( isPlacemarked && extendInfo === 'на заявке' ) ? ' ' + styles.rowItem__label_markedOnRequest : '' )
+                            }
+                            title={ title + ( subTitle ? ` [${ subTitle }]` : '' ) + ( extendInfo ? ' ' + extendInfo : '' ) }>
                             { title || 'null' }
                         </div>
                     </div>)

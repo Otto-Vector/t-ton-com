@@ -10,6 +10,7 @@ const initialState = {
     navigateToCancel: undefined as undefined | To,
     isOkHandle: false,
     action: null as null | ( () => void ),
+    timeToDeactivate: null as null | number,
 }
 
 export type GlobalModalStoreReducerStateType = typeof initialState
@@ -56,6 +57,12 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 titleText: action.titleText,
             }
         }
+        case 'global-modal-reducer/SET-TIME-TO-DEACTIVATE': {
+            return {
+                ...state,
+                timeToDeactivate: action.timeToDeactivate,
+            }
+        }
         case 'global-modal-reducer/RESET-ALL-VALUES': {
             return {
                 ...state,
@@ -65,6 +72,7 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 navigateToCancel: undefined,
                 isOkHandle: false,
                 action: null,
+                timeToDeactivate: null,
             }
         }
         default: {
@@ -102,6 +110,10 @@ export const globalModalStoreActions = {
         type: 'global-modal-reducer/SET-ACTION',
         action,
     } as const ),
+    setTimeToDeactivate: ( timeToDeactivate: null | number ) => ( {
+        type: 'global-modal-reducer/SET-TIME-TO-DEACTIVATE',
+        timeToDeactivate,
+    } as const ),
 }
 
 
@@ -111,10 +123,13 @@ export type GlobalModalStoreReducerThunkActionType<R = void> = ThunkAction<Promi
 
 type GlobalModalType = {
     text: string | string[]
+    // заворачиваем диспатч внутрь анонимной функции: ()=>{dispatch(выполняйтся)}
     action?: () => void
     navigateOnOk?: To
     navigateOnCancel?: To
     title?: 'Вопрос' | 'Сообщение' | 'Внимание!' | 'Информация'
+    // в миллисекундах
+    timeToDeactivate?: number
 }
 
 // для создания диалогового окна с переданной функцией
@@ -124,6 +139,7 @@ export const textAndActionGlobalModal = ( {
                                               navigateOnOk,
                                               navigateOnCancel,
                                               title,
+                                              timeToDeactivate,
                                           }: GlobalModalType ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(globalModalStoreActions.setAction(action || null))
@@ -131,4 +147,5 @@ export const textAndActionGlobalModal = ( {
         dispatch(globalModalStoreActions.setNavigateToCancel(navigateOnCancel))
         dispatch(globalModalStoreActions.setTitle(title))
         dispatch(globalModalStoreActions.setTextMessage(text))
+        dispatch(globalModalStoreActions.setTimeToDeactivate(timeToDeactivate || null))
     }

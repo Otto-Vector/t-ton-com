@@ -7,5 +7,5 @@ export const getTextGlobalModalStore: GlobalModalStoreSelectors<'modalGlobalText
 export const getNavigateToOkGlobalModalStore: GlobalModalStoreSelectors<'navigateToOk'> = ( state ) => state.globalModalStoreReducer.navigateToOk
 export const getNavigateToCancelGlobalModalStore: GlobalModalStoreSelectors<'navigateToCancel'> = ( state ) => state.globalModalStoreReducer.navigateToCancel
 export const getTitleGlobalModalStore: GlobalModalStoreSelectors<'titleText'> = ( state ) => state.globalModalStoreReducer.titleText
-export const getIsOkHandleGlobalModalStore: GlobalModalStoreSelectors<'isOkHandle'> = ( state ) => state.globalModalStoreReducer.isOkHandle
+export const getTimeToDeactivateGlobalModalStore: GlobalModalStoreSelectors<'timeToDeactivate'> = ( state ) => state.globalModalStoreReducer.timeToDeactivate
 export const getActionGlobalModalStore: GlobalModalStoreSelectors<'action'> = ( state ) => state.globalModalStoreReducer.action

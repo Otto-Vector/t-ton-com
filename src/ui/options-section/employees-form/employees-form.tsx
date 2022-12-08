@@ -114,11 +114,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                     '- "Cancel" отменит изменения и вернёт в раздел "Настройки"',
                 ],
                 action: () => {
-                    dispatch<any>(modifyOneEmployeeResetResponsesAndStatus({
+                   dispatch<any>(modifyOneEmployeeResetResponsesAndStatus({
                             employeeValues: unmaskedValues,
                             image: selectedImage,
-                        }),
-                    )
+                        }))
                 },
                 navigateOnOk: options,
                 navigateOnCancel: options,

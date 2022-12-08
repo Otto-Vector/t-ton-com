@@ -188,6 +188,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     useEffect(()=>{ // если "по таймингу" или случайно захотелось ответить на заявку, на которую невозможно ответить
         if (requestValues.globalStatus === 'в работе') {
             dispatch(globalModalStoreActions.setTextMessage('Извините, заявку уже приняли в работу. Обновляем данные...'))
+            dispatch(globalModalStoreActions.setTimeToDeactivate(3000))
             dispatch<any>(getAllRequestsAPI())
             navigate(navRoutes.searchList)
         }

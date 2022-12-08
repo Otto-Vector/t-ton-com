@@ -95,7 +95,9 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
             await dispatch<any>(textAndActionGlobalModal({
                 title: 'Внимание!',
                 text: 'ДАННОЕ ДЕЙСТВИЕ УДАЛИТ ВСЕ ДАННЫЕ ПОЛЬЗОВАТЕЛЯ ПРИ РЕГИСТРАЦИИ',
-                action: deletePersonalOrganizationRequisites,
+                action: () => {
+                    dispatch<any>(deletePersonalOrganizationRequisites())
+                },
                 navigateOnOk: login,
             }))
         } else {

@@ -54,7 +54,9 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
     const logout = async () => {
         await dispatch<any>(textAndActionGlobalModal({
             text: 'ВЫ ДЕЙСТВИТЕЛЬНО ХОТИТЕ ВЫЙТИ?',
-            action: logoutAuth,
+            action: () => {
+                dispatch<any>(logoutAuth)
+            },
         }))
     }
 
@@ -124,7 +126,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
         },
         {
             // route: routes.test,
-            route: routes.addDriver+'60',
+            route: routes.addDriver + '60',
             src: testPNG, title: 'Для тестов отрисовки компонентов',
             buttonText: 'Тест', active: !isNewRegistrationRoute && isAuth,
             action: null,

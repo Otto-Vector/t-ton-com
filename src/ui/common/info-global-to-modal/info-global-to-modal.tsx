@@ -11,6 +11,7 @@ import {
     getNavigateToCancelGlobalModalStore,
     getNavigateToOkGlobalModalStore,
     getTextGlobalModalStore,
+    getTimeToDeactivateGlobalModalStore,
     getTitleGlobalModalStore,
 } from '../../../selectors/utils/global-modal-reselect';
 import {useNavigate} from 'react-router-dom';
@@ -29,13 +30,21 @@ export const InfoGlobalToModal: React.FC = () => {
     const navToOnOk = useSelector(getNavigateToOkGlobalModalStore)
     const navToOnCancel = useSelector(getNavigateToCancelGlobalModalStore)
     const title = useSelector(getTitleGlobalModalStore)
+    const timeToDeactivate = useSelector(getTimeToDeactivateGlobalModalStore)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const [ visible, setVisible ] = useState(false)
+    const [ isOneTimeActivated, setIsOneTimeActivated ] = useState(false)
+    const [ timeToKillModal, setTimeToKillModal ] = useState<null | any>(null)
 
     const onCloseLocal = () => {
+        // эти три команды, чтобы нормально отработать с таймером
+        clearTimeout(timeToKillModal)
+        setTimeToKillModal(null)
+        setIsOneTimeActivated(false)
+
         setVisible(false)
         dispatch(globalModalStoreActions.resetAllValues())
     }
@@ -43,7 +52,7 @@ export const InfoGlobalToModal: React.FC = () => {
     const onOkHandle = () => {
         onCloseLocal()
         // выполняем прокинутый экшон (если он есть)
-        action && dispatch<any>(action())
+        action && action()
         navToOnOk && navigate(navToOnOk)
     }
 
@@ -58,6 +67,15 @@ export const InfoGlobalToModal: React.FC = () => {
         setVisible(!!textToGlobalModal)
     }, [ textToGlobalModal ])
 
+    useEffect(() => {
+        // активируем один раз
+        if (timeToDeactivate && !isOneTimeActivated) {
+            setIsOneTimeActivated(true)
+            setTimeToKillModal(setTimeout(() => {
+                onCloseLocal()
+            }, timeToDeactivate))
+        }
+    }, [ timeToDeactivate ])
 
     return (
         <Modal title={ titleHere }

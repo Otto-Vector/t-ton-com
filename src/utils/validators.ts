@@ -23,7 +23,7 @@ export const includesTitleValidator = ( list: string[], include: string ) => lis
 
 export const syncValidators = {
     required,
-    justTenNumbers: composeValidators(maxNumbers(10), mustNotBeOnlyNull),
+    justTenNumbers: composeValidators(maxNumbers(10)),
     // рекомендовано максимум 20 символов
     textReqMicro: composeValidators(required, maxLength(20)),
     // рекомендовано максимум 50 символов
