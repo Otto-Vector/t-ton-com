@@ -6,6 +6,7 @@ import {syncParsers} from '../../utils/parsers';
 import {trailerApi} from '../../api/local-api/options/trailer.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 import {GetActionsTypes} from '../../types/utils';
+import {TtonErrorType} from '../../types/other-types';
 
 
 const initialState = {
@@ -161,10 +162,8 @@ export const newTrailerSaveToAPI = ( values: TrailerCardType<string>, image: Fil
             const idUser = getState().authStoreReducer.authID
             const response = await trailerApi.createOneTrailer({ ...values, idUser }, image)
             if (response.success) console.log(response.success)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                e.response.data.failed))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(e?.response?.data?.failed))
         }
         await dispatch(getAllTrailerAPI())
     }
@@ -177,10 +176,8 @@ export const modifyOneTrailerToAPI = ( values: TrailerCardType<string>, image: F
             const idUser = getState().authStoreReducer.authID
             const response = await trailerApi.modifyOneTrailer({ ...values, idUser }, image)
             if (response.success) console.log(response.success)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
         await dispatch(getAllTrailerAPI())
     }
@@ -191,10 +188,8 @@ export const oneTrailerDeleteToAPI = ( idTrailer: string ): TrailerStoreReducerT
         try {
             const response = await trailerApi.deleteOneTrailer({ idTrailer })
             if (response.message) console.log(response.message)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
         await dispatch(getAllTrailerAPI())
     }
@@ -212,10 +207,8 @@ export const getOneTrailerFromAPI = ( idTrailer: string ): TrailerStoreReducerTh
                     dispatch(trailerStoreActions.setInitialValues(oneTrailer))
                 }
             }
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
     }
 
