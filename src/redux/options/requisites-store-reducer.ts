@@ -1,5 +1,5 @@
 import {ThunkAction} from 'redux-thunk'
-import {AppStateType, GetActionsTypes} from '../redux-store'
+import {AppStateType} from '../redux-store'
 import {CompanyRequisitesType, ParserType, CompanyRequisitesApiType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
 import {requisitesApi} from '../../api/local-api/options/requisites.api';
@@ -10,6 +10,7 @@ import {
     globalModalStoreActions,
     textAndActionGlobalModal,
 } from '../utils/global-modal-store-reducer';
+import {GetActionsTypes} from '../../types/utils';
 
 
 const initialState = {

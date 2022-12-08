@@ -1,4 +1,4 @@
-import {GetActionsTypes} from '../redux-store'
+import {GetActionsTypes} from '../../types/utils';
 
 const initialState = {
     isLightBoxOpen: false as boolean,

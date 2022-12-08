@@ -1,6 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
-import {AppStateType, GetActionsTypes} from '../redux-store'
+import {AppStateType} from '../redux-store'
 import {OneRequestTableType} from '../../types/form-types';
+import {GetActionsTypes} from '../../types/utils';
 
 
 const initialState = {

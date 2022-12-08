@@ -1,9 +1,10 @@
-import {AppStateType, GetActionsTypes} from '../redux-store'
+import {AppStateType} from '../redux-store'
 import {AvtoDispetcherResponseType} from '../../types/api-types'
 
 import {ThunkAction} from 'redux-thunk'
 import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
+import {GetActionsTypes} from '../../types/utils';
 
 const initialState = {
     responseRoute: {} as AvtoDispetcherResponseType,

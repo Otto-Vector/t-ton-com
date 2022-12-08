@@ -1,5 +1,5 @@
 import {ThunkAction} from 'redux-thunk';
-import {AppStateType, GetActionsTypes} from './redux-store';
+import {AppStateType} from './redux-store';
 import {getPersonalOrganizationRequisites} from './options/requisites-store-reducer';
 import {getAllEmployeesAPI} from './options/employees-store-reducer';
 import {getAllConsigneesAPI} from './options/consignees-store-reducer';
@@ -9,6 +9,7 @@ import {getAllTrailerAPI} from './options/trailer-store-reducer';
 import {getAllTransportAPI} from './options/transport-store-reducer';
 import {geoPositionTake} from './auth-store-reducer';
 import {getInfoMessages} from './info-store-reducer';
+import {GetActionsTypes} from '../types/utils';
 
 const initialState = {
     initialized: false,

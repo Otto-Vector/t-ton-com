@@ -1,4 +1,4 @@
-import {AppStateType, GetActionsTypes} from '../redux-store'
+import {AppStateType} from '../redux-store'
 import {DaDataResponseAPIType} from '../../types/api-types'
 import {
     getOrganizationByInnDaDataAPI,
@@ -7,6 +7,7 @@ import {
     GetOrganizationByInnKPPDaDataType,
 } from '../../api/external-api/dadata.api'
 import {ThunkAction} from 'redux-thunk'
+import {GetActionsTypes} from '../../types/utils';
 
 const initialState = {
     suggestions: [] as DaDataResponseAPIType[],

@@ -1,8 +1,9 @@
 import {ThunkAction} from 'redux-thunk'
-import {AppStateType, GetActionsTypes} from './../redux-store'
+import {AppStateType} from './../redux-store'
 
 import {geoPosition} from '../../api/utils-api/geolocation.api';
 import {parseFamilyToFIO, stringToCoords} from '../../utils/parsers';
+import {GetActionsTypes} from '../../types/utils';
 
 export type DriverOnMapType = {
     id: number,

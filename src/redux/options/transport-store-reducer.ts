@@ -1,10 +1,11 @@
 import {ThunkAction} from 'redux-thunk'
-import {AppStateType, GetActionsTypes} from '../redux-store'
+import {AppStateType} from '../redux-store'
 import {ParserType, TransportCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
 import {syncParsers} from '../../utils/parsers';
 import {transportApi} from '../../api/local-api/options/transport.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
+import {GetActionsTypes} from '../../types/utils';
 
 
 const initialState = {

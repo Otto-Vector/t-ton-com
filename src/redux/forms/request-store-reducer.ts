@@ -1,5 +1,5 @@
 import {ThunkAction} from 'redux-thunk'
-import {AppStateType, GetActionsTypes} from '../redux-store'
+import {AppStateType} from '../redux-store'
 import {
     CargoTypeType,
     ConsigneesCardType,
@@ -23,6 +23,7 @@ import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-m
 import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer';
 import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
+import {GetActionsTypes} from '../../types/utils';
 
 
 const defaultInitialStateValues = {} as OneRequestType

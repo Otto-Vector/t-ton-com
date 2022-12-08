@@ -1,5 +1,5 @@
 import {ThunkAction} from 'redux-thunk'
-import {AppStateType, GetActionsTypes} from '../redux-store'
+import {AppStateType} from '../redux-store'
 import {EmployeesCardType, ResponseToRequestCardType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api';
@@ -7,6 +7,7 @@ import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-m
 import {getAllRequestsAPI} from './request-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer';
+import {GetActionsTypes} from '../../types/utils';
 
 
 const initialState = {
@@ -105,10 +106,8 @@ export const setOneResponseToRequest = (
 // удаление ответов на заявки, из-за принятия на заявке
 export const removeResponseToRequestsBzAcceptRequest = ( requestNumber: string ): AddDriverStoreReducerThunkActionType =>
     async () => {
-    const responseId = ''
-    const idEmployee = ''
         try {
-            const response = await responseToRequestApi.deleteSomeResponseToRequest({ requestNumber,responseId,idEmployee })
+            const response = await responseToRequestApi.deleteSomeResponseToRequest({ requestNumber })
             console.log(response)
         } catch (e: TtonErrorType) {
             console.log(JSON.stringify(e?.response?.data))

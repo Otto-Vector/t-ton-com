@@ -1,6 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
-import {AppStateType, GetActionsTypes} from '../redux-store'
+import {AppStateType} from '../redux-store'
 import {addOneDay, ddMmFormat} from '../../utils/date-formats';
+import {GetActionsTypes} from '../../types/utils';
 
 
 const date = new Date()
