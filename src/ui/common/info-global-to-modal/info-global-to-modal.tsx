@@ -16,6 +16,12 @@ import {
 import {useNavigate} from 'react-router-dom';
 
 
+const textFromArrayToParagraph = ( text: string | string[] ) => {
+    if (typeof text === 'string') return <p>{ text }</p>
+    return text.map(( line, index, textArr ) =>
+        <p style={ { marginBottom: index + 1 === textArr.length ? '0' : '.5rem' } } key={ line }>{ line }</p>)
+}
+
 export const InfoGlobalToModal: React.FC = () => {
 
     const textToGlobalModal = useSelector(getTextGlobalModalStore)
@@ -44,11 +50,6 @@ export const InfoGlobalToModal: React.FC = () => {
     const onCancelHandle = () => {
         onCloseLocal()
         navToOnCancel && navigate(navToOnCancel)
-    }
-
-    const textFromArrayToParagraph = (text: string|string[])=> {
-        if (typeof text==="string") return <p>{text}</p>
-        return text.map((line)=><p>{line}</p>)
     }
 
     const titleHere = title || ( ( action || navToOnOk ) ? 'Вопрос' : 'Информация' )

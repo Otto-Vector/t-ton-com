@@ -4,18 +4,16 @@ import styles from './table-component.module.scss'
 import {Table} from './table'
 import {ColumnInputFilter} from './filter/column-filters'
 import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {UseFiltersColumnProps} from 'react-table'
-import {
-    getContentTableStoreInWork,
-    getContentTableStoreNew,
-} from '../../../selectors/table/table-reselect'
+import {getContentTableStoreInWork, getContentTableStoreNew} from '../../../selectors/table/table-reselect'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {TableModesType} from '../search-section'
 import {ddMmYearFormat} from '../../../utils/date-formats';
 import {getCashRequisitesStore} from '../../../selectors/options/requisites-reselect';
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
 
 type OwnProps = {
     tableModes: TableModesType
@@ -25,9 +23,20 @@ type OwnProps = {
 export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
 
     const navigate = useNavigate()
-    const { balance, maps, requestInfo } = useSelector(getRoutesStore)
+    const { info, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = +( useSelector(getCashRequisitesStore) || 0 )
     const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
+    const dispatch = useDispatch()
+
+    const toGlobalModalQuest = () => {
+        dispatch<any>(textAndActionGlobalModal({
+            text: [
+                'Не хватает средств для возможности просмотра и оставления отклика на заявку',
+                '- "OK" для перехода к оплате',
+            ],
+            navigateOnOk: info
+        }))
+    }
 
     const TABLE_CONTENT = useSelector(tableModes.searchTblMode ? getContentTableStoreNew : getContentTableStoreInWork)
 
@@ -83,7 +92,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             },
             {
                 Header: tableModes.statusTblMode ? 'На заявке' : 'Ответы',
-                accessor: tableModes.statusTblMode ? 'responseEmployee':'answers',
+                accessor: tableModes.statusTblMode ? 'responseEmployee' : 'answers',
                 Filter: ColumnInputFilter,
                 disableFilters: true,
             },
@@ -94,7 +103,11 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 Cell: ( { requestNumber, price }: { requestNumber: number, price: number } ) =>
                     <Button title={ 'Открыть' }
                             onClick={ () => {
-                                if (tableModes.searchTblMode) navigate(price > authCash ? balance : requestInfo.accept + requestNumber)
+                                if (tableModes.searchTblMode) {
+                                    ( price > authCash )
+                                        ? toGlobalModalQuest()
+                                        : navigate(requestInfo.accept + requestNumber)
+                                }
                                 if (tableModes.statusTblMode) navigate(maps.answers + requestNumber)
                                 if (tableModes.historyTblMode) navigate(requestInfo.history + requestNumber)
                             } }
@@ -109,7 +122,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             },
         ],
         [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT,
-            balance, maps.answers, navigate, requestInfo.driver, requestInfo.history, requestInfo.accept ],
+            maps.answers, navigate, requestInfo.driver, requestInfo.history, requestInfo.accept ],
     )
     const tableModesStyle = styles['tableComponent__' + (
         tableModes.searchTblMode ? 'search'
