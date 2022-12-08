@@ -96,17 +96,22 @@ export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrai
         }
     })
 
-// выборка из списка загруженных сотрудников
+// выборка из списка загруженных сотрудников в список отображения "Настройки"
 export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, getEmployeesTitleOptionsStore, getAllTransportStore,
     ( employees: EmployeesCardType[], titles, transports ): OptionsStoreReducerStateType['employees'] => {
         return {
-            ...titles, content: employees.map(( { idEmployee: id, employeeFIO: title = '', idTransport } ) => {
+            ...titles, content: employees.map(
+                ( { idEmployee: id, employeeFIO: title = '', idTransport,status } ) => {
                     const subTitleFind = transports.find(( { idTransport: trId } ) => idTransport === trId)
-                    return { id, title, subTitle: subTitleFind?.transportTrademark }
+                    return { id, title, subTitle: subTitleFind?.transportTrademark, extendInfo: status }
                 },
             ),
         }
     })
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // СЕЛЕКТОР ПО СОТРУДНИКАМ, РАБОТАЕТ ТОЛЬКО ОТСЮДА, ВИДИМО ИЗ-ЗА ОЧЕРЕДНОСТЕЙ ИМПОРТОВ //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+const t=true
 
 // все сотрудники в селектор с доп. данными о типе груза
 export const getAllEmployeesSelectWithCargoType = createSelector(

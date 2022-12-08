@@ -67,7 +67,7 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
             </header>
             {/*ГЕНЕРИРУЕМЫЙ СПИСОК*/ }
             <div className={ styles.columnDataList__list }>
-                { content.map(( { id, title, subTitle } ) =>
+                { content.map(( { id, title, subTitle, extendInfo } ) =>
                     <div className={ styles.columnDataList__item + ' ' + styles.rowItem }
                          onClick={ () => {
                              navigate(route + id)
@@ -75,8 +75,12 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
                          key={ item.label + id + title }
                     >
                         <div
-                            className={ styles.rowItem__label + ( ( isPlacemarked && subTitle ) ? ' ' + styles.rowItem__label_marked : '' ) }
-                            title={ title + ( subTitle ? ` [${ subTitle }]` : '' ) }>
+                            className={ styles.rowItem__label +
+                                ( ( isPlacemarked && subTitle ) ? ' ' + styles.rowItem__label_marked : '' )+
+                                (( isPlacemarked && extendInfo==="ожидает принятия" ) ? ' ' + styles.rowItem__label_markedAwait : '' )+
+                                (( isPlacemarked && extendInfo==="на заявке" ) ? ' ' + styles.rowItem__label_markedOnRequest : '' )
+                        }
+                            title={ title + ( subTitle ? ` [${ subTitle }]` : '' )+' '+extendInfo }>
                             { title || 'null' }
                         </div>
                     </div>)

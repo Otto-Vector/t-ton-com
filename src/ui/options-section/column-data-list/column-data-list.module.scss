@@ -1,6 +1,11 @@
 @import 'src/styles/mixins';
 @import 'src/styles/variables';
 
+@mixin gradient($color) {
+  background-image: linear-gradient(90rad, #00000000, #00000000 95%, $accentColor),
+  linear-gradient(90rad, $color, #00000000 5%, #00000000);
+}
+
 .columnDataList {
   @include flex-center(column);
   justify-content: flex-start;
@@ -84,8 +89,17 @@
     color: black;
 
     &_marked {
-      background-image: linear-gradient(90rad, #00000000, #00000000 95%, $accentColor);
+      @include gradient(#00000000);
+
+      &Await {
+        @include gradient(orange);
+      }
+
+      &OnRequest {
+        @include gradient(green);
+      }
     }
+
   }
 
 

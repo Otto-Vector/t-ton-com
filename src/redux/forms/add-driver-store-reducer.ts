@@ -105,8 +105,10 @@ export const setOneResponseToRequest = (
 // удаление ответов на заявки, из-за принятия на заявке
 export const removeResponseToRequestsBzAcceptRequest = ( requestNumber: string ): AddDriverStoreReducerThunkActionType =>
     async () => {
+    const responseId = ''
+    const idEmployee = ''
         try {
-            const response = await responseToRequestApi.deleteSomeResponseToRequest({ requestNumber })
+            const response = await responseToRequestApi.deleteSomeResponseToRequest({ requestNumber,responseId,idEmployee })
             console.log(response)
         } catch (e: TtonErrorType) {
             console.log(JSON.stringify(e?.response?.data))

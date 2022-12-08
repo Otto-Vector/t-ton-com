@@ -13,8 +13,12 @@ export const responseToRequestApi = {
     },
 
     // запрос на один Ответ на Заявку PATCH /api/responsetorequestcardtype/
-    getOneResponseToRequestById( requestId: { requestId: string } ) {
-        return instanceBack.patch<InfoResponseType | ResponseToRequestCardType[]>('/api/responsetorequestcardtype/', requestId)
+    getOneResponseToRequest( data: { requestNumber: string } | { responseId: string } | { idEmployee: string } ) {
+        // самопроверка на "дурака"
+        if (Object.entries(data).length > 1) {
+            throw new Error('Должно быть ОДНО поле: requestNumber || responseId || idEmployee')
+        }
+        return instanceBack.patch<InfoResponseType | ResponseToRequestCardType[]>('/api/responsetorequestcardtype/', data)
             .then(response => response.data)
         // 1.	Code 200, Models: ResponseToRequestCardType[]
         // 2.	Code 520, {"message":"Error"}
@@ -38,7 +42,11 @@ export const responseToRequestApi = {
 
     // УДАЛИТЬ один Ответ на Заявку DELETE /api/responsetorequestcardtype/
     // также удаляет все id-шки по списку в поле responseId чз ', '
-    deleteSomeResponseToRequest( data: { requestNumber?: string, responseId?: string , idEmployee?: string} ) {
+    deleteSomeResponseToRequest( data: { requestNumber: string } | { responseId: string } | { idEmployee: string } ) {
+        // самопроверка на "дурака"
+        if (Object.entries(data).length > 1) {
+            throw new Error('Должно быть ОДНО поле: requestNumber || responseId || idEmployee')
+        }
         return instanceBack.delete<InfoResponseType>('/api/responsetorequestcardtype/', { data })
             .then(response => response.data)
         // 1.	Code 200, {"message": "ResponseToRequestCardType with id `{}` has been deleted.".format(request.data['responseId'])}
