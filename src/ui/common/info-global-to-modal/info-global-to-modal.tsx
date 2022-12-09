@@ -41,7 +41,7 @@ export const InfoGlobalToModal: React.FC = () => {
 
     const onCloseLocal = () => {
         // эти три команды, чтобы нормально отработать с таймером
-        clearTimeout(timeToKillModal)
+        timeToKillModal && clearTimeout(timeToKillModal)
         setTimeToKillModal(null)
         setIsOneTimeActivated(false)
 

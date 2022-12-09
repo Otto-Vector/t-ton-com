@@ -136,5 +136,7 @@
 
   &__status {
     @include table-bg($greenColor);
+    cursor: pointer;
+    user-select: none;
   }
 }

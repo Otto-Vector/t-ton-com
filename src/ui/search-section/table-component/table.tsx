@@ -2,6 +2,10 @@ import React from 'react';
 import {Column, useFilters, useGlobalFilter, useTable} from 'react-table';
 import styles from './table-component.module.scss'
 import {TableModesType} from '../search-section';
+import {useSelector} from 'react-redux';
+import {getRoutesStore} from '../../../selectors/routes-reselect';
+import {useNavigate} from 'react-router-dom';
+import {OneRequestTableType} from '../../../types/form-types';
 // import {GlobalFilter} from './filter/global-filter';
 
 
@@ -13,6 +17,13 @@ type OwnProps = {
 }
 
 export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
+    const navRoutes = useSelector(getRoutesStore)
+    const navigate = useNavigate()
+
+    const onDoubleClick = ( rowData: OneRequestTableType ) => () => {
+        tableModes.statusTblMode && navigate(navRoutes.requestInfo.status + rowData.requestNumber)
+    }
+
     // Use the state and functions returned from useTable to build your UI
     const {
         getTableProps,
@@ -30,14 +41,6 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
         useGlobalFilter)
     // const {globalFilter} = state
 
-    // // отмечаем цветом выбранную строку
-    // const [ selectedRow, setSelectedRow ] = useState(rows.map(() => false))
-    // // сбрасывается только при смене вкладки
-    // useMemo(() => {
-    //     setSelectedRow(selectedRow.map(() => false))
-    // }, [ tableModes.searchTblMode, tableModes.historyTblMode, tableModes.statusTblMode ])
-
-    // Render the UI for your table
 
     return ( <>
             {/*<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />*/ }
@@ -60,11 +63,14 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                 { rows.map(( row, rowId ) => {
                     prepareRow(row)
                     return (
-                        <tr { ...row.getRowProps() } className={
-                            (// @ts-ignore-next-line
-                                data[rowId]?.marked ? styles.selected : '' ) }
+                        <tr { ...row.getRowProps() }
+                            className={ (// @ts-ignore-next-line
+                                    data[rowId]?.marked ? styles.selected : '' )
+                            }
+                            onDoubleClick={ onDoubleClick(data[rowId]) }
                             onClick={ () => {
                                 // console.log(data[rowId])
+
                             } }>
                             { row.cells.map(cell => {
                                 return <td { ...cell.getCellProps() }
