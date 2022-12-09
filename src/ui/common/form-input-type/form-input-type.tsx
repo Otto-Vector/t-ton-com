@@ -60,13 +60,15 @@ export const FormInputType: React.FC<OwnProps> = React.memo((
             {/*кнопка для сброса параметров поля
             (проявляется, если переданы методы resetFieldBy={form} в объявленном объекте Field
             а также при введенных данных*/ }
-            { resetFieldBy && input.value && !disabled && !readOnly && <div
-                className={ styles.clearSearch + ' ' + ( !meta.dirty && styles.clearSearch_unfocused ) }
-                onClick={ async () => {
-                    await resetFieldBy.change(input.name + '', '')
-                    await resetFieldBy.resetFieldState(input.name + '')
-                } }
-            ></div>
+            { ( resetFieldBy && input.value && !disabled && !readOnly )
+                ? <div
+                    className={ styles.clearSearch + ' ' + ( !meta.dirty && styles.clearSearch_unfocused ) }
+                    onClick={ async () => {
+                        await resetFieldBy.change(input.name + '', '')
+                        await resetFieldBy.resetFieldState(input.name + '')
+                    } }
+                />
+                : null
             }
             { ( ( maskFormat || inputType === 'money' ) && !isInputMask ) ? // если формат отсутствует, то на обычный инпут
 

@@ -84,7 +84,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
 
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
-
+    const [ isImageChanged, setIsImageChanged ] = useState(false);
 
     const onSubmit = useCallback(( values: TrailerCardType<string> ) => {
 
@@ -242,6 +242,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                 <ImageViewSet imageURL={ values.trailerImage }
                                                               onSelectNewImageFileToSend={ ( image ) => {
                                                                   setSelectedImage(image)
+                                                                  setIsImageChanged(true)
                                                               } }
                                                 />
                                             </div>
@@ -257,7 +258,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting || pristine }
+                                                            disabled={ !isImageChanged && ( submitting || pristine ) }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

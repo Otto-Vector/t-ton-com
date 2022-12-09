@@ -47,6 +47,7 @@ import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {SelectOptionsType} from '../../common/form-selector/selector-utils';
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
 import {FormApi} from 'final-form';
+import {removeResponseToRequestsBzEmployee} from '../../../redux/forms/add-driver-store-reducer';
 
 
 type OwnProps = {}
@@ -89,6 +90,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
 
     // для манипуляции с картинкой
     const [ selectedImage, setSelectedImage ] = useState<File>();
+    const [ isImageChanged, setIsImageChanged ] = useState(false);
 
 
     const onSubmit = useCallback(( values: EmployeesCardType<string> ) => {
@@ -114,10 +116,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                     '- "Cancel" отменит изменения и вернёт в раздел "Настройки"',
                 ],
                 action: () => {
-                   dispatch<any>(modifyOneEmployeeResetResponsesAndStatus({
-                            employeeValues: unmaskedValues,
-                            image: selectedImage,
-                        }))
+                    dispatch<any>(modifyOneEmployeeResetResponsesAndStatus({
+                        employeeValues: unmaskedValues,
+                        image: selectedImage,
+                    }))
                 },
                 navigateOnOk: options,
                 navigateOnCancel: options,
@@ -150,9 +152,31 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     }
 
 
-    const employeesDeleteHandleClick = ( currentId: string ) => {
-        dispatch<any>(oneEmployeesDeleteToAPI(currentId))
-        navigate(options)
+    const employeesDeleteHandleClick = ( employeeValues: EmployeesCardType ) => {
+        if (initialValues.status === 'ожидает принятия') {
+            dispatch<any>(textAndActionGlobalModal({
+                title: 'Внимание!',
+                text: [
+                    'Данный сотрудник ожидает принятия ответа на заявку, вы желаете его Удалить?',
+                    '- "ОК" удалит все отклики с данным водителем и данные водителя',
+                    '- "Cancel" отменит запрос на удаление, вернёт к карточке водителя',
+                ],
+                action: () => {
+                    dispatch<any>(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
+                    dispatch<any>(oneEmployeesDeleteToAPI(employeeValues.idEmployee))
+                },
+                navigateOnOk: options,
+            }))
+        }
+        if (initialValues.status === 'на заявке') {
+            dispatch<any>(textAndActionGlobalModal({
+                text: 'Данный сотрудник находится на выполнении заявки, завершите выполнение заявки.',
+            }))
+        }
+        if (initialValues.status === 'свободен') {
+            dispatch<any>(oneEmployeesDeleteToAPI(employeeValues.idEmployee))
+            navigate(options)
+        }
     }
 
     const setCargoTypeFilter = ( form?: FormApi<EmployeesCardType<string>> ) => async ( idTransport: string ) => {
@@ -296,14 +320,15 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           isSubLabelOnOption
                                                           isClearable
                                                           onDisableHandleClick={ onDisableOptionSelectorHandleClick }
+                                                          disabled={ initialValues.status === 'на заявке' }
                                             />
                                             <FormSelector nameForSelector={ 'idTrailer' }
                                                           placeholder={ label.idTrailer }
                                                           values={ trailerSelectDisableWrongCargoType }
                                                           validate={ validators.idTrailer }
-                                                          disabled={ !values.idTransport }
                                                           isSubLabelOnOption
                                                           isClearable
+                                                          disabled={ !values.idTransport || initialValues.status === 'на заявке' }
                                             />
                                         </div>
                                         {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
@@ -333,6 +358,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 <ImageViewSet imageURL={ values.photoFace }
                                                               onSelectNewImageFileToSend={ ( image ) => {
                                                                   setSelectedImage(image)
+                                                                  setIsImageChanged(true)
                                                               } }
                                                 />
                                             </div>
@@ -343,14 +369,14 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                             colorMode={ 'red' }
                                                             title={ 'Удалить' }
                                                             onClick={ () => {
-                                                                employeesDeleteHandleClick(currentId)
+                                                                employeesDeleteHandleClick(initialValues)
                                                             } }
                                                             rounded
                                                     />
                                                 </div>
                                                 <div className={ styles.employeesForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ submitting || pristine }
+                                                            disabled={ !isImageChanged && (submitting || pristine) }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

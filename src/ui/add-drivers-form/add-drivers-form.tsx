@@ -114,6 +114,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     const trailerOneCargoWeight = +( oneTrailer.cargoWeight || 0 )
 
     // подсчёт стоимости в зависимости от расстояния, ставки и веса груза
+    // (встроен в валидатор ввода цены тн за км)
     const resultDistanceCost = useCallback(( form: FormApi<ResponseToRequestCardType<string>> ) => ( stavka: string ): string => {
         const [ stavkaNum, cargoWeight, distanceNum ] = [ stavka, form.getState().values.cargoWeight, distance ]
             .map(( v ) => +( v || 0 ))
