@@ -21,4 +21,3 @@ export const getOneEmployeeFromLocal = createSelector(getCurrentIdEmployeesStore
     ( currentId, employees, initials ): EmployeesCardType => {
         return employees.filter(( { idEmployee } ) => idEmployee === currentId)[0] || initials
     })
-

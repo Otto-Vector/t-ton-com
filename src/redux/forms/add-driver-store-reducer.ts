@@ -8,6 +8,7 @@ import {getAllRequestsAPI} from './request-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer';
 import {GetActionsTypes} from '../../types/utils';
+import {syncParsers} from '../../utils/parsers';
 
 
 const initialState = {
@@ -79,7 +80,7 @@ export const addDriverStoreActions = {
 /* САНКИ */
 export type AddDriverStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
 
-
+// сохраняем новый ответ на заявку
 export const setOneResponseToRequest = (
     {
         addDriverValues, oneEmployee: employeeValues,
@@ -91,16 +92,73 @@ export const setOneResponseToRequest = (
             const response = await responseToRequestApi.createOneResponseToRequest({
                 ...addDriverValues, requestCarrierId,
             })
-            console.log(response)
 
             // ставим статус водителю
             await dispatch(modifyOneEmployeeSetStatusAddedToResponse({ employeeValues }))
             dispatch(getAllRequestsAPI())
         } catch (e: TtonErrorType) {
             dispatch(addDriverStoreActions.setIsFetching(false))
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+            if (e?.response?.data?.prevResponseToRequest) {
+                dispatch(globalModalStoreActions.setTextMessage([
+                    'Водитель уже был привязан к данной заявке.',
+                    'Cтоимость скорректирована с учётом внесённых данных.',
+                    'Водитель: ' + employeeValues.employeeFIO,
+                    'Общий перевозимый вес: ' + addDriverValues.cargoWeight + ' тн.',
+                    'Стоимость тн.км.: ' + addDriverValues.responseStavka + ' руб.',
+                    'Общая цена за заявку: ' + syncParsers.parseToNormalMoney(+addDriverValues.responsePrice) + ' руб.',
+                ]))
+                await dispatch(modifyOneResponseToRequest({
+                    addDriverValues,
+                    responseId: e.response.data.prevResponseToRequest,
+                }))
+            } else {
+                dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+            }
         }
         dispatch(addDriverStoreActions.setIsFetching(false))
+    }
+
+// изменяем существующий ответ на заявку
+export const modifyOneResponseToRequest = ( {
+                                                addDriverValues,
+                                                responseId,
+                                            }: { addDriverValues: ResponseToRequestCardType<string>, responseId: string } ): AddDriverStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await responseToRequestApi.modifyOneResponseToRequest({ ...addDriverValues, responseId })
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+        }
+    }
+
+// запрос на список ответов на заявки, по данным водителя
+export const getResponseToRequestListByIdEmployee = ( idEmployee: { idEmployee: string } ): AddDriverStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await responseToRequestApi.getOneResponseToRequest(idEmployee)
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+        }
+    }
+
+// запрос на список ответов на заявки, по данным номера заявки
+export const getResponseToRequestListByRequestNumber = ( requestNumber: { requestNumber: string } ): AddDriverStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await responseToRequestApi.getOneResponseToRequest(requestNumber)
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+        }
+    }
+
+// запрос на список ответов на заявки, по данным номера заявки
+export const getOneResponseToRequestById = ( responseId: { responseId: string } ): AddDriverStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await responseToRequestApi.getOneResponseToRequest(responseId)
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+        }
     }
 
 // удаление ответов на заявки, из-за принятия на заявке

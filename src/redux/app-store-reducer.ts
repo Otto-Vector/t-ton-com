@@ -56,17 +56,17 @@ export type InitializedThunkActionType = ThunkAction<void, AppStateType, unknown
 export const initializedAll = (): InitializedThunkActionType =>
     async ( dispatch ) => {
         try { // реджектить промисы здесь https://qna.habr.com/q/1060904
-            const getPersonal = await dispatch(getPersonalOrganizationRequisites())
-            const getGeoPosition = await dispatch(geoPositionTake())
-            const getAllShippers = await dispatch(getAllShippersAPI())
-            const getAllConsignees = await dispatch(getAllConsigneesAPI())
-            const getAllTransport = await dispatch(getAllTransportAPI())
-            const getAllTrailer = await dispatch(getAllTrailerAPI())
-            const getAllEmployees = await dispatch(getAllEmployeesAPI())
-            const getCargoComposition = await dispatch(getCargoCompositionSelector())
+            const getPersonal = dispatch(getPersonalOrganizationRequisites())
+            const getGeoPosition = dispatch(geoPositionTake())
+            const getAllShippers = dispatch(getAllShippersAPI())
+            const getAllConsignees = dispatch(getAllConsigneesAPI())
+            const getAllTransport = dispatch(getAllTransportAPI())
+            const getAllTrailer = dispatch(getAllTrailerAPI())
+            const getAllEmployees = dispatch(getAllEmployeesAPI())
+            const getCargoComposition = dispatch(getCargoCompositionSelector())
 
-            const getAllRequests = await dispatch(getAllRequestsAPI())
-            const getAllInfoMessages = await dispatch(getInfoMessages())
+            const getAllRequests = dispatch(getAllRequestsAPI())
+            const getAllInfoMessages = dispatch(getInfoMessages())
 
             Promise.all([
                 getPersonal,

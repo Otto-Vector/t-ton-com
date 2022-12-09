@@ -101,7 +101,7 @@ export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, get
     ( employees: EmployeesCardType[], titles, transports ): OptionsStoreReducerStateType['employees'] => {
         return {
             ...titles, content: employees.map(
-                ( { idEmployee: id, employeeFIO: title = '', idTransport,status } ) => {
+                ( { idEmployee: id, employeeFIO: title = '', idTransport, status } ) => {
                     const subTitleFind = transports.find(( { idTransport: trId } ) => idTransport === trId)
                     return { id, title, subTitle: subTitleFind?.transportTrademark, extendInfo: status }
                 },
@@ -109,9 +109,9 @@ export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, get
         }
     })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // СЕЛЕКТОР ПО СОТРУДНИКАМ, РАБОТАЕТ ТОЛЬКО ОТСЮДА, ВИДИМО ИЗ-ЗА ОЧЕРЕДНОСТЕЙ ИМПОРТОВ //
+// СЕЛЕКТОР ПО СОТРУДНИКАМ, РАБОТАЕТ ТОЛЬКО ОТСЮДА, ВИДИМО ИЗ-ЗА ОЧЕРЕДНОСТЕЙ ИМПОРТОВ //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-const t=true
+const t = true
 
 // все сотрудники в селектор с доп. данными о типе груза
 export const getAllEmployeesSelectWithCargoType = createSelector(
@@ -119,20 +119,22 @@ export const getAllEmployeesSelectWithCargoType = createSelector(
     getAllTransportStore,
     getAllTrailerStore,
     ( employees, transports, trailers ): SelectOptionsType[] => employees
-        .map(( { idEmployee, idTransport, idTrailer, employeeFIO } ) => {
+        .map(( { idEmployee, idTransport, idTrailer, employeeFIO, status } ) => {
                 const currentTransport = transports.find(v => v.idTransport === idTransport)
                 const transportCargoType = currentTransport?.cargoType || 'без транспорта'
                 const transportTrailerCargoType = transportCargoType !== 'Тягач' ? transportCargoType
                     : trailers.find(v => v.idTrailer === idTrailer)?.cargoType || transportCargoType
+                const subLabelTransport = currentTransport
+                    ? currentTransport?.transportTrademark + ', ' + ( transportTrailerCargoType.toUpperCase() )
+                    : transportTrailerCargoType
+                const busyStatus = status === 'на заявке' && 'на другой заявке'
                 return ( {
                     key: idEmployee,
                     value: idEmployee,
                     label: parseFamilyToFIO(employeeFIO),
-                    subLabel: currentTransport
-                        ? currentTransport?.transportTrademark + ', ' + ( transportTrailerCargoType.toUpperCase() )
-                        : transportTrailerCargoType,
+                    subLabel: busyStatus || subLabelTransport,
                     isDisabled: !currentTransport?.idTransport || !transportTrailerCargoType,
-                    extendInfo: transportTrailerCargoType,
+                    extendInfo: busyStatus || transportTrailerCargoType,
                 } )
             },
         ),

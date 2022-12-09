@@ -64,7 +64,9 @@ export const parseLatinCharsToRus = ( val: parsePropType ) =>
     val?.replace(/[ABEKMHOPCTYXabekmhopctyx]/g, enCharToRusChar) || ''
 ////////////////////////////////////////////////////////////////////////
  export const parseToNormalMoney = ( val: number ) =>
-     (+val||0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''
+     (+val||0).toFixed(1)
+         .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+         .replace(',', ' ') || ''
 export const parseClearAllMaskPlaceholders = ( val: parsePropType ) =>
     val?.replaceAll(/[#_]/g, '') || ''
 
@@ -116,4 +118,5 @@ export const syncParsers = {
     parseToNormalMoney,
     parseToUpperCase,
     parseAllNumbers,
+    parseNoSpace
 }

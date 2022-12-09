@@ -3,7 +3,7 @@ import {ResponseToRequestCardType} from '../../../types/form-types';
 import {ExactlyOne} from '../../../types/utils';
 
 // одно обязательное поле из трёх
-type ExatlyOnOfThree = ExactlyOne<{ requestNumber: string , responseId: string , idEmployee: string }>
+export type ExatlyOnOfThree = ExactlyOne<{ requestNumber: string , responseId: string , idEmployee: string }>
 
 export const responseToRequestApi = {
 
@@ -29,7 +29,7 @@ export const responseToRequestApi = {
 
     // создать один Ответ на Заявку POST /api/responsetorequestcardtype/
     createOneResponseToRequest( { responseId, ...responseToRequest }: ResponseToRequestCardType ) {
-        return instanceBack.post<InfoResponseType>('/api/responsetorequestcardtype/', responseToRequest)
+        return instanceBack.post<InfoResponseType & {prevResponseToRequest: string}>('/api/responsetorequestcardtype/', responseToRequest)
             .then(response => response.data)
         // 1.	Code 200, {"success": "ResponseToRequestCardType '{}' created successfully".format(new_Response.responseId)}
         // 2.	Code 520, {"message":"Error"}

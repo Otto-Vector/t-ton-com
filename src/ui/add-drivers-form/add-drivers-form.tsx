@@ -21,7 +21,7 @@ import {
 } from '../../selectors/forms/add-driver-reselect'
 import {FormSelector} from '../common/form-selector/form-selector'
 import {FormInputType} from '../common/form-input-type/form-input-type'
-import {getAllRequestStore, getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
+import {getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
 import {getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
 import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
 
@@ -39,12 +39,12 @@ import {
 import {syncParsers} from '../../utils/parsers';
 import {FormApi} from 'final-form';
 import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple';
-import {getAllEmployeesSelectWithCargoTypeDisabledWrongCargo} from '../../selectors/options/options-reselect';
 import {SelectOptionsType} from '../common/form-selector/selector-utils';
 import {globalModalStoreActions, textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
 import {ddMmYearFormat} from '../../utils/date-formats';
 import {setOneResponseToRequest} from '../../redux/forms/add-driver-store-reducer';
 import {getRoutesStore} from '../../selectors/routes-reselect';
+import {getAllEmployeesSelectWithCargoTypeDisabledWrongCargo} from '../../selectors/options/options-reselect';
 
 
 type OwnProps = {
@@ -124,13 +124,17 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
 
     const onSubmit = useCallback(async ( addDriverValues: ResponseToRequestCardType<string> ) => {
+        const demaskedValues: ResponseToRequestCardType<string> = {
+            ...addDriverValues,
+            responsePrice: syncParsers.parseNoSpace(addDriverValues.responsePrice),
+        }
         if (addDriverModes.addDriver) {
-            await dispatch<any>(setOneResponseToRequest({ addDriverValues, oneEmployee }))
+            await dispatch<any>(setOneResponseToRequest({ addDriverValues: demaskedValues, oneEmployee }))
             navigate(navRoutes.searchList)
         }
         if (addDriverModes.selfExportDriver) {
             await dispatch<any>(addAcceptedResponseToRequest({
-                addDriverValues, oneEmployee, oneTrailer, oneTransport,
+                addDriverValues: demaskedValues, oneEmployee, oneTrailer, oneTransport,
             }))
             navigate(navRoutes.requestsList)
         }
@@ -147,7 +151,10 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
     const onDisableOptionSelectorHandleClick = ( optionValue: SelectOptionsType ) => {
         dispatch<any>(textAndActionGlobalModal({
-            text: 'Нельзя добавить, причина: ' + optionValue.extendInfo + '. На заявке нужен: ' + requestValues.cargoType,
+            text: [
+                'Нельзя добавить, причина: ' + optionValue.extendInfo?.toUpperCase(),
+                'На заявке нужен: ' + requestValues.cargoType?.toUpperCase(),
+            ],
         }))
     }
 
@@ -186,7 +193,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
             })
     }, [ oneTrailer, oneTransport ])
 
-    useEffect(()=>{ // если "по таймингу" или случайно захотелось ответить на заявку, на которую невозможно ответить
+    useEffect(() => { // если "по таймингу" или случайно захотелось ответить на заявку, на которую невозможно ответить
         if (requestValues.globalStatus === 'в работе') {
             dispatch(globalModalStoreActions.setTextMessage('Извините, заявку уже приняли в работу. Обновляем данные...'))
             dispatch(globalModalStoreActions.setTimeToDeactivate(3000))
