@@ -27,6 +27,7 @@ export const getOneShipperFromLocal = createSelector(
         return shippers.filter(( { idSender } ) => idSender === currentId)[0] || initials
     })
 
+// все грузоотправители в формате "для селектора"
 export const getAllShippersSelectFromLocal = createSelector(getAllShippersStore,
     ( shippers ): SelectOptionsType[] => shippers.map(( { idSender, title, city } ) =>
         ( { key: idSender + '', value: idSender + '', label: title + '' , subLabel: city} )),

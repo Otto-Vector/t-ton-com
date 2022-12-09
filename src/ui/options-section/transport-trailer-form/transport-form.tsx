@@ -14,7 +14,6 @@ import {cargoConstType, propertyRights, TransportCardType} from '../../../types/
 import {
     getCurrentIdTransportStore,
     getInitialValuesTransportStore,
-    getIsBusyTransport,
     getIsFetchingTransportStore,
     getLabelTransportStore,
     getMaskOnTransportStore,
@@ -35,6 +34,7 @@ import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-r
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
 import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {syncValidators} from '../../../utils/validators';
+import {getIsBusyTransport} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect';
 
 
 type OwnProps = {}
@@ -104,7 +104,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
             dispatch<any>(modifyOneTransportToAPI(demaskedValues, selectedImage))
         }
         navigate(options) // и возвращаемся в предыдущее окно
-    }, [ selectedImage ])
+
+    }, [ selectedImage, isNew, navigate, options ])
 
 
     const onCancelClick = () => {

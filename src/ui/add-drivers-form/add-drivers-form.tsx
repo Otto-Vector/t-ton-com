@@ -44,7 +44,9 @@ import {globalModalStoreActions, textAndActionGlobalModal} from '../../redux/uti
 import {ddMmYearFormat} from '../../utils/date-formats';
 import {setOneResponseToRequest} from '../../redux/forms/add-driver-store-reducer';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {getAllEmployeesSelectWithCargoTypeDisabledWrongCargo} from '../../selectors/options/options-reselect';
+import {
+    getAllEmployeesSelectWithCargoTypeDisabledWrongCargo
+} from '../../selectors/options/for-selectors/all-selectors-buffer-reselect';
 
 
 type OwnProps = {
@@ -120,7 +122,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
             .map(( v ) => +( v || 0 ))
         form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * cargoWeight * distanceNum )))
         return validators.responseStavka ? ( validators.responseStavka(stavka) || '' ) : ''
-    }, [ distance ])
+    }, [ distance, validators ])
 
 
     const onSubmit = useCallback(async ( addDriverValues: ResponseToRequestCardType<string> ) => {

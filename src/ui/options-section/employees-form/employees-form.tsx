@@ -30,12 +30,7 @@ import {
 } from '../../../redux/options/employees-store-reducer';
 
 import {FormSelector} from '../../common/form-selector/form-selector';
-import {
-    getTrailerSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
-} from '../../../selectors/options/trailer-reselect';
-import {
-    getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
-} from '../../../selectors/options/transport-reselect';
+
 import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set';
 import {yearMmDdFormat} from '../../../utils/date-formats';
@@ -48,6 +43,10 @@ import {SelectOptionsType} from '../../common/form-selector/selector-utils';
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
 import {FormApi} from 'final-form';
 import {removeResponseToRequestsBzEmployee} from '../../../redux/forms/add-driver-store-reducer';
+import {
+    getTrailerSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
+    getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
+} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect';
 
 
 type OwnProps = {}

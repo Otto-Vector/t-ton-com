@@ -15,7 +15,6 @@ import {cargoConstType, propertyRights, TrailerCardType} from '../../../types/fo
 import {
     getCurrentIdTrailerStore,
     getInitialValuesTrailerStore,
-    getIsBusyTrailer,
     getIsFetchingTrailerStore,
     getLabelTrailerStore,
     getMaskOnTrailerStore,
@@ -35,6 +34,7 @@ import {stringArrayToSelectValue} from '../../common/form-selector/selector-util
 import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {syncValidators} from '../../../utils/validators';
 import {syncParsers} from '../../../utils/parsers';
+import {getIsBusyTrailer} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect';
 
 type OwnProps = {}
 
@@ -102,7 +102,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
             dispatch<any>(modifyOneTrailerToAPI(demaskedValues, selectedImage))
         }
         navigate(options) // и возвращаемся в предыдущее окно
-    }, [ selectedImage ])
+
+    }, [ selectedImage, isNew, navigate, options ])
 
 
     const onCancelClick = () => {
