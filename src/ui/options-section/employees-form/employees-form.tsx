@@ -144,13 +144,12 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         }
         dispatch<any>(rerenderTransport())
         dispatch<any>(rerenderTrailer())
-    }, [ oneEmployee.idTransport, oneEmployee.idTrailer ])
+    }, [ oneEmployee.idTransport, oneEmployee.idTrailer, selectedImage ])
 
 
     const onCancelClick = () => {
         navigate(options)
     }
-
 
     const employeesDeleteHandleClick = ( employeeValues: EmployeesCardType ) => {
         if (initialValues.status === 'ожидает принятия') {
@@ -292,7 +291,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             <FormSelector nameForSelector={ 'drivingCategory' }
                                                           placeholder={ label.drivingCategory }
                                                           values={ drivingCategorySelector }
-                                                          validate={ validators.idTransport }
+                                                          validate={ validators.drivingCategory }
                                                           isMulti
                                                           isClearable
                                             />
@@ -376,7 +375,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.employeesForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ !isImageChanged && (submitting || pristine) }
+                                                            disabled={ !isImageChanged && ( submitting || pristine ) }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded
