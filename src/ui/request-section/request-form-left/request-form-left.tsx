@@ -86,7 +86,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 ( +( initialValues.responseTrailer?.cargoWeight || 0 ) ) ) + ' тн',
         ].filter(x => x).join(', ') : ''
 
-    const acceptedCarrierData = initialValues.requestCarrierUser?.organizationName
+    const acceptedCarrierData = ( requestModes.historyMode || requestModes.statusMode ) ?
+        [
+            initialValues.requestCarrierUser?.organizationName,
+            initialValues.requestCarrierUser?.legalAddress,
+        ].filter(x => x).join(', ') : ''
 
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     const setOneConsignee = ( searchId: string | undefined ) => {
@@ -346,13 +350,17 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ 'green' }
                                                 type={ hasValidationErrors ? 'submit' : 'button' }
-                                                title={ requestModes.acceptDriverMode ? 'Принять заявку' : 'Поиск исполнителя' }
+                                                title={ (
+                                                    ( requestModes.createMode && 'Поиск исполнителя' ) ||
+                                                    ( requestModes.acceptDriverMode && 'Принять заявку' ) ||
+                                                    ( requestModes.statusMode && 'Груз у водителя' ) ) + ''
+                                                }
                                                 onClick={ () => {
-                                                    !hasValidationErrors &&
-                                                    ( requestModes.acceptDriverMode
-                                                            ? buttonsAction.acceptRequest(values)
-                                                            : buttonsAction.submitRequestAndSearch(values)
-                                                    )
+                                                    if (!hasValidationErrors) {
+                                                        requestModes.createMode && buttonsAction.submitRequestAndSearch(values)
+                                                        requestModes.acceptDriverMode && buttonsAction.acceptRequest(values)
+                                                    }
+
                                                 } }
                                                 disabled={ submitting || submitError }
                                                 rounded/>
@@ -360,13 +368,16 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={ requestModes.acceptDriverMode ? 'red' : 'blue' }
                                                 type={ hasValidationErrors ? 'submit' : 'button' }
-                                                title={ requestModes.acceptDriverMode ? 'Отказаться' : 'Cамовывоз' }
+                                                title={ (
+                                                    ( requestModes.createMode && 'Cамовывоз' ) ||
+                                                    ( requestModes.acceptDriverMode && 'Отказаться' ) ||
+                                                    ( requestModes.statusMode && 'Груз у получателя' ) ) + ''
+                                                }
                                                 onClick={ () => {
-                                                    !hasValidationErrors &&
-                                                    ( requestModes.acceptDriverMode
-                                                            ? buttonsAction.cancelRequest()
-                                                            : buttonsAction.submitRequestAndDrive(values)
-                                                    )
+                                                    if (!hasValidationErrors) {
+                                                        requestModes.createMode && buttonsAction.submitRequestAndDrive(values)
+                                                        requestModes.acceptDriverMode && buttonsAction.cancelRequest()
+                                                    }
                                                 } }
                                                 disabled={ submitting || submitError }
                                                 rounded/>

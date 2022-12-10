@@ -416,7 +416,7 @@ export type OneRequestType = {
 }
 
 // выделенный в отдельный блок РАБОТА С ДОКУМЕНТАМИ
-export type DocumentsRequestType = {
+export type DocumentsRequestType<T=boolean> = {
     proxyWay: {
         header?: string // Транспортные документы Сторон (Заголовок / ТОЛЬКО ФРОНТ)
         proxyFreightLoader?: string // Доверенность Грузовладельцу (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
@@ -434,9 +434,9 @@ export type DocumentsRequestType = {
         documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
         // статусы подписания документа (хранятся на бэке, редактируются фронтом)
-        customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
-        carrierIsSubscribe: boolean | string // Перевозчик загрузил, подписал и выгрузил подписанный док
-        consigneeIsSubscribe: boolean | string // Грузополучатель загрузил, подписал и выгрузил подписанный док
+        customerIsSubscribe?: T // Заказчик загрузил, подписал и выгрузил подписанный док
+        carrierIsSubscribe?: T  // Перевозчик загрузил, подписал и выгрузил подписанный док
+        consigneeIsSubscribe?: T // Грузополучатель загрузил, подписал и выгрузил подписанный док
     },
 
     contractECP: {
@@ -447,8 +447,8 @@ export type DocumentsRequestType = {
         documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
         // статусы подписания документа (хранятся на бэке, редактируются фронтом)
-        customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
-        carrierIsSubscribe: boolean | string // Перевозчик загрузил, подписал и выгрузил подписанный док
+        customerIsSubscribe?: T // Заказчик загрузил, подписал и выгрузил подписанный док
+        carrierIsSubscribe?: T // Перевозчик загрузил, подписал и выгрузил подписанный док
     },
 
     updECP: {
@@ -458,8 +458,8 @@ export type DocumentsRequestType = {
         // (!!! заменяется на сгенерированный ???)
         documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
-        customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
-        carrierIsSubscribe: boolean | string // Перевозчик загрузил, подписал и выгрузил подписанный док
+        customerIsSubscribe?: T // Заказчик загрузил, подписал и выгрузил подписанный док
+        carrierIsSubscribe?: T // Перевозчик загрузил, подписал и выгрузил подписанный док
     },
 
     customerToConsigneeContractECP: {
@@ -469,8 +469,8 @@ export type DocumentsRequestType = {
         // (!!! заменяется на сгенерированный ???)
         documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
-        customerIsSubscribe: boolean | string // Заказчик загрузил, подписал и выгрузил подписанный док
-        consigneeIsSubscribe: boolean | string // Грузополучатель загрузил, подписал и выгрузил подписанный док
+        customerIsSubscribe?: T // Заказчик загрузил, подписал и выгрузил подписанный док
+        consigneeIsSubscribe?: T // Грузополучатель загрузил, подписал и выгрузил подписанный док
     },
 }
 
@@ -671,21 +671,21 @@ export type OneRequestApiType = {
     cargoDocuments?: string
     ttnECPdocumentDownload?: string
     ttnECPdocumentUpload?: string
-    ttnECPcustomerIsSubscribe?: string
-    ttnECPcarrierIsSubscribe?: string
-    ttnECPconsigneeIsSubscribe?: string
+    ttnECPcustomerIsSubscribe?: boolean
+    ttnECPcarrierIsSubscribe?: boolean
+    ttnECPconsigneeIsSubscribe?: boolean
     contractECPdocumentDownload?: string
     contractECPdocumentUpload?: string
-    contractECPcustomerIsSubscribe?: string
-    contractECPcarrierIsSubscribe?: string
+    contractECPcustomerIsSubscribe?: boolean
+    contractECPcarrierIsSubscribe?: boolean
     updECPdocumentDownload?: string
     updECPdocumentUpload?: string
-    updECPcustomerIsSubscribe?: string
-    updECPcarrierIsSubscribe?: string
+    updECPcustomerIsSubscribe?: boolean
+    updECPcarrierIsSubscribe?: boolean
     customerToConsigneeContractECPdocumentDownload?: string
     customerToConsigneeContractECPdocumentUpload?: string
-    customerToConsigneeContractECPcustomerIsSubscribe?: string
-    customerToConsigneeContractECPconsigneeIsSubscribe?: string
+    customerToConsigneeContractECPcustomerIsSubscribe?: boolean
+    customerToConsigneeContractECPconsigneeIsSubscribe?: boolean
 }
 
 // для полей в таблице

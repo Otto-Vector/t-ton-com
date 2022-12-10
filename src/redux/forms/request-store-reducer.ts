@@ -23,7 +23,7 @@ import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-m
 import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer';
 import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
-import {GetActionsTypes} from '../../types/utils';
+import {GetActionsTypes, NestedKeyOf} from '../../types/utils';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -114,6 +114,7 @@ const initialState = {
     content: [] as OneRequestType[], // создаём тестовые заявки
 
     labelDocumentsRequestValues: {
+
         proxyWay: {
             header: 'Транспортные документы Сторон',
             proxyFreightLoader: 'Доверенность Грузовладельцу',
@@ -142,13 +143,14 @@ const initialState = {
             carrierIsSubscribe: 'Перевозчик',
             documentDownload: 'Загрузить',
         },
+
         customerToConsigneeContractECP: {
             header: 'Документы от Заказчика для ГрузоПолучателя с ЭЦП',
             customerIsSubscribe: 'Заказчик',
             consigneeIsSubscribe: 'Грузополучатель',
             documentDownload: 'Загрузить',
         },
-    } as DocumentsRequestType,
+    } as DocumentsRequestType<string>,
 
     // инфо для модальных окон после нажатия на кнопку
     infoTextModals: {
@@ -375,7 +377,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     localStatus: {
         paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
         paymentHasBeenReceived: elem.localStatuscargoHasBeenReceived,
-        cargoHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
+        cargoHasBeenTransferred: elem.localStatuscargoHasBeenTransferred,
         cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
     },
 
@@ -458,30 +460,30 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
             header: undefined,
             documentUpload: undefined,
             documentDownload: elem.ttnECPdocumentDownload,
-            customerIsSubscribe: elem.ttnECPcustomerIsSubscribe === 'true',
-            carrierIsSubscribe: elem.ttnECPcarrierIsSubscribe === 'true',
-            consigneeIsSubscribe: elem.ttnECPconsigneeIsSubscribe === 'true',
+            customerIsSubscribe: elem.ttnECPcustomerIsSubscribe,
+            carrierIsSubscribe: elem.ttnECPcarrierIsSubscribe,
+            consigneeIsSubscribe: elem.ttnECPconsigneeIsSubscribe,
         },
         contractECP: {
             header: undefined,
             documentUpload: undefined,
             documentDownload: elem.contractECPdocumentDownload,
-            customerIsSubscribe: elem.contractECPcustomerIsSubscribe === 'true',
-            carrierIsSubscribe: elem.contractECPcarrierIsSubscribe === 'true',
+            customerIsSubscribe: elem.contractECPcustomerIsSubscribe,
+            carrierIsSubscribe: elem.contractECPcarrierIsSubscribe,
         },
         updECP: {
             header: undefined,
             documentUpload: undefined,
             documentDownload: elem.updECPdocumentDownload,
-            customerIsSubscribe: elem.updECPcustomerIsSubscribe === 'true',
-            carrierIsSubscribe: elem.updECPcarrierIsSubscribe === 'true',
+            customerIsSubscribe: elem.updECPcustomerIsSubscribe,
+            carrierIsSubscribe: elem.updECPcarrierIsSubscribe,
         },
         customerToConsigneeContractECP: {
             header: undefined,
             documentUpload: undefined,
             documentDownload: elem.customerToConsigneeContractECPdocumentDownload,
-            customerIsSubscribe: elem.customerToConsigneeContractECPcustomerIsSubscribe === 'true',
-            consigneeIsSubscribe: elem.customerToConsigneeContractECPconsigneeIsSubscribe === 'true',
+            customerIsSubscribe: elem.customerToConsigneeContractECPcustomerIsSubscribe,
+            consigneeIsSubscribe: elem.customerToConsigneeContractECPconsigneeIsSubscribe,
         },
     },
 } )
