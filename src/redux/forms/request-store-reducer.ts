@@ -24,7 +24,6 @@ import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../opti
 import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 import {GetActionsTypes} from '../../types/utils';
-import {requisitesApi} from '../../api/local-api/options/requisites.api';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -484,7 +483,7 @@ export const addAcceptedResponseToRequestOnCreate = (
         oneTransport: TransportCardType<string>
         oneTrailer: TrailerCardType<string>
     } ): RequestStoreReducerThunkActionType =>
-    async ( dispatch , getState) => {
+    async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
         const idUser = getState().authStoreReducer.authID
         try {
@@ -544,28 +543,52 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
         try {
-            const idUserCustomer = getState().authStoreReducer.authID
-            // const idUserSender = getState().authStoreReducer.authID
-            // const idUserRecipient = getState().authStoreReducer.authID
+            const userId = getState().authStoreReducer.authID
+            // механика выяснения какому пользователю каокй инн
+            const filteredContent = getState().requisitesStoreReducer.filteredContent
+            const innCustomer = getState().shippersStoreReducer.content
+                .find(( { idSender } ) => idSender === submitValues.idCustomer)?.innNumber
+            const userCustomer = filteredContent?.find(( { innNumber } ) => innNumber === innCustomer)
+            const userSender = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.sender.innNumber)
+            const userRecipient = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.recipient.innNumber)
+            const acceptedUsers = [ userCustomer?.idUser || userId, userSender?.idUser, userRecipient?.idUser ].filter(x => x).join(', ')
+
             const requestNumber = submitValues.requestNumber?.toString() || '0'
             const placeholder = '-'
+
             const response = await oneRequestApi.modifyOneRequest({
 
                     requestNumber,
                     globalStatus: 'новая заявка',
-
-                    idUserCustomer,
-                    idCustomer: submitValues.idCustomer,
+                    acceptedUsers,
                     cargoComposition: submitValues.cargoComposition,
                     shipmentDate: yearMmDdFormatISO(submitValues.shipmentDate),
                     cargoType: submitValues.cargoType,
-                    idSender: submitValues.idSender,
-                    idRecipient: submitValues.idRecipient,
                     distance: submitValues.distance?.toString(),
                     route: submitValues.route,
                     note: submitValues.note,
 
-                    // idUserSender: submitValues.idUserSender,
+                    idCustomer: submitValues.idCustomer,
+                    idUserCustomer: userCustomer?.idUser || userId,
+                    // organizationNameCustomer: userCustomer?.organizationName,
+                    // taxModeCustomer: userCustomer?.taxMode,
+                    // kppCustomer: userCustomer?.kpp,
+                    // ogrnCustomer: userCustomer?.ogrn,
+                    // okpoCustomer: userCustomer?.okpo,
+                    // legalAddressCustomer: userCustomer?.legalAddress,
+                    // descriptionCustomer: userCustomer?.description,
+                    // postAddressCustomer: userCustomer?.postAddress,
+                    // phoneDirectorCustomer: userCustomer?.phoneDirector,
+                    // phoneAccountantCustomer: userCustomer?.phoneAccountant,
+                    // emailCustomer: userCustomer?.email,
+                    // bikBankCustomer: userCustomer?.bikBank,
+                    // nameBankCustomer: userCustomer?.nameBank,
+                    // checkingAccountCustomer: userCustomer?.checkingAccount,
+                    // korrAccountCustomer: userCustomer?.korrAccount,
+                    // mechanicFIOCustomer: userCustomer?.mechanicFIO,
+                    // dispatcherFIOCustomer: userCustomer?.dispatcherFIO,
+
+                    idSender: submitValues.idSender,
                     titleSender: submitValues.sender.title,
                     innNumberSender: submitValues.sender.innNumber,
                     organizationNameSender: submitValues.sender.organizationName,
@@ -578,7 +601,22 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     coordinatesSender: submitValues.sender.coordinates,
                     citySender: submitValues.sender.city,
 
-                    // idUserRecipient: submitValues.idUserRecipient,
+                    idUserSender: userSender?.idUser,
+                    // taxModeSender: userSender?.taxMode,
+                    // okpoSender: userSender?.okpo,
+                    // legalAddressSender: userSender?.legalAddress,
+                    // postAddressSender: userSender?.postAddress,
+                    // phoneDirectorSender: userSender?.phoneDirector,
+                    // phoneAccountantSender: userSender?.phoneAccountant,
+                    // emailSender: userSender?.email,
+                    // bikBankSender: userSender?.bikBank,
+                    // nameBankSender: userSender?.nameBank,
+                    // checkingAccountSender: userSender?.checkingAccount,
+                    // korrAccountSender: userSender?.korrAccount,
+                    // mechanicFIOSender: userSender?.mechanicFIO,
+                    // dispatcherFIOSender: userSender?.dispatcherFIO,
+
+                    idRecipient: submitValues.idRecipient,
                     titleRecipient: submitValues.recipient.title,
                     innNumberRecipient: submitValues.recipient.innNumber,
                     organizationNameRecipient: submitValues.recipient.organizationName,
@@ -590,6 +628,21 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     descriptionRecipient: submitValues.recipient.description || placeholder,
                     coordinatesRecipient: submitValues.recipient.coordinates,
                     cityRecipient: submitValues.recipient.city,
+
+                    idUserRecipient: userRecipient?.idUser,
+                    // taxModeRecipient: userRecipient?.taxMode,
+                    // okpoRecipient: userRecipient?.okpo,
+                    // legalAddressRecipient: userRecipient?.legalAddress,
+                    // postAddressRecipient: userRecipient?.postAddress,
+                    // phoneDirectorRecipient: userRecipient?.phoneDirector,
+                    // phoneAccountantRecipient: userRecipient?.phoneAccountant,
+                    // emailRecipient: userRecipient?.email,
+                    // bikBankRecipient: userRecipient?.bikBank,
+                    // nameBankRecipient: userRecipient?.nameBank,
+                    // checkingAccountRecipient: userRecipient?.checkingAccount,
+                    // korrAccountRecipient: userRecipient?.korrAccount,
+                    // mechanicFIORecipient: userRecipient?.mechanicFIO,
+                    // dispatcherFIORecipient: userRecipient?.dispatcherFIO,
                 },
             )
 
@@ -598,40 +651,6 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
             }
         } catch (e) {
             dispatch(globalModalStoreActions.setTextMessage(e as string))
-        }
-        dispatch(requestStoreActions.setIsFetching(false))
-    }
-
-// подгружаем и добавляем данные грузоперевозчика в заявку
-export const setCarrierDataToLocalRequest = ( requestUserCarrierId: string ): RequestStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
-        try {
-            const localInitValues = getState().requestStoreReducer.initialValues
-            const userId = getState().authStoreReducer.authID
-            const localDataCarrier = getState().requisitesStoreReducer.storedValues
-            if (!localInitValues.requestCarrier)
-                if (requestUserCarrierId !== userId) {
-                    dispatch(requestStoreActions.setIsFetching(true))
-                    const response = await requisitesApi.getPersonalDataFromId({ idUser: requestUserCarrierId })
-                    if (response?.message) {
-                        console.log('чёт не вышло: ', response.message)
-                        return
-                    }
-                    if (response.length > 0) {
-                        dispatch(requestStoreActions.setInitialValues({
-                            ...localInitValues,
-                            requestCarrier: response[0],
-                        }))
-                    }
-                } else {
-                    dispatch(requestStoreActions.setInitialValues({
-                        ...localInitValues,
-                        requestCarrier: localDataCarrier,
-                    }))
-                }
-
-        } catch (e: TtonErrorType) {
-            console.log('ошибка в сопоставлении данных пользователя ',e)
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }

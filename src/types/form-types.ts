@@ -15,6 +15,7 @@ export type PhoneSubmitType<T = DefaultFormType> = {
 ///////////////////////////////////////////////////////////
 // на форму с реквизитами
 export type CompanyRequisitesType<T = DefaultFormType> = {
+    idUser: T
     // ИНН
     innNumber: T
     // Наименование организации
@@ -486,7 +487,7 @@ export type OneRequestApiType = {
 
     idSender?: string
     idUserSender?: string
-       titleSender?: string
+    titleSender?: string
     innNumberSender?: string
     organizationNameSender?: string
     kppSender?: string
@@ -500,7 +501,7 @@ export type OneRequestApiType = {
 
     idRecipient?: string
     idUserRecipient?: string
-       titleRecipient?: string
+    titleRecipient?: string
     innNumberRecipient?: string
     organizationNameRecipient?: string
     kppRecipient?: string
@@ -537,71 +538,71 @@ export type OneRequestApiType = {
     // id ответа на заявку (перевозчик)
     requestCarrierId?: string
 
-        innNumberCarrier?: string
-        organizationNameCarrier?: string
-        taxModeCarrier?: string
-        kppCarrier?: string
-        ogrnCarrier?: string
-        okpoCarrier?: string
-        legalAddressCarrier?: string
-        descriptionCarrier?: string
-        postAddressCarrier?: string
-        phoneDirectorCarrier?: string
-        phoneAccountantCarrier?: string
-        emailCarrier?: string
-        bikBankCarrier?: string
-        nameBankCarrier?: string
-        checkingAccountCarrier?: string
-        korrAccountCarrier?: string
-        mechanicFIOCarrier?: string
-        dispatcherFIOCarrier?: string
+    innNumberCarrier?: string
+    organizationNameCarrier?: string
+    taxModeCarrier?: string
+    kppCarrier?: string
+    ogrnCarrier?: string
+    okpoCarrier?: string
+    legalAddressCarrier?: string
+    descriptionCarrier?: string
+    postAddressCarrier?: string
+    phoneDirectorCarrier?: string
+    phoneAccountantCarrier?: string
+    emailCarrier?: string
+    bikBankCarrier?: string
+    nameBankCarrier?: string
+    checkingAccountCarrier?: string
+    korrAccountCarrier?: string
+    mechanicFIOCarrier?: string
+    dispatcherFIOCarrier?: string
 
-        innNumberCustomer?: string
-        organizationNameCustomer?: string
-        taxModeCustomer?: string
-        kppCustomer?: string
-        ogrnCustomer?: string
-        okpoCustomer?: string
-        legalAddressCustomer?: string
-        descriptionCustomer?: string
-        postAddressCustomer?: string
-        phoneDirectorCustomer?: string
-        phoneAccountantCustomer?: string
-        emailCustomer?: string
-        bikBankCustomer?: string
-        nameBankCustomer?: string
-        checkingAccountCustomer?: string
-        korrAccountCustomer?: string
-        mechanicFIOCustomer?: string
-        dispatcherFIOCustomer?: string
+    innNumberCustomer?: string
+    organizationNameCustomer?: string
+    taxModeCustomer?: string
+    kppCustomer?: string
+    ogrnCustomer?: string
+    okpoCustomer?: string
+    legalAddressCustomer?: string
+    descriptionCustomer?: string
+    postAddressCustomer?: string
+    phoneDirectorCustomer?: string
+    phoneAccountantCustomer?: string
+    emailCustomer?: string
+    bikBankCustomer?: string
+    nameBankCustomer?: string
+    checkingAccountCustomer?: string
+    korrAccountCustomer?: string
+    mechanicFIOCustomer?: string
+    dispatcherFIOCustomer?: string
 
-        taxModeSender?: string
-        okpoSender?: string
-        legalAddressSender?: string
-        postAddressSender?: string
-        phoneDirectorSender?: string
-        phoneAccountantSender?: string
-        emailSender?: string
-        bikBankSender?: string
-        nameBankSender?: string
-        checkingAccountSender?: string
-        korrAccountSender?: string
-        mechanicFIOSender?: string
-        dispatcherFIOSender?: string
+    taxModeSender?: string
+    okpoSender?: string
+    legalAddressSender?: string
+    postAddressSender?: string
+    phoneDirectorSender?: string
+    phoneAccountantSender?: string
+    emailSender?: string
+    bikBankSender?: string
+    nameBankSender?: string
+    checkingAccountSender?: string
+    korrAccountSender?: string
+    mechanicFIOSender?: string
+    dispatcherFIOSender?: string
 
-        taxModeRecipient?: string
-        okpoRecipient?: string
-        legalAddressRecipient?: string
-        postAddressRecipient?: string
-        phoneDirectorRecipient?: string
-        phoneAccountantRecipient?: string
-        emailRecipient?: string
-        bikBankRecipient?: string
-        nameBankRecipient?: string
-        checkingAccountRecipient?: string
-        korrAccountRecipient?: string
-        mechanicFIORecipient?: string
-        dispatcherFIORecipient?: string
+    taxModeRecipient?: string
+    okpoRecipient?: string
+    legalAddressRecipient?: string
+    postAddressRecipient?: string
+    phoneDirectorRecipient?: string
+    phoneAccountantRecipient?: string
+    emailRecipient?: string
+    bikBankRecipient?: string
+    nameBankRecipient?: string
+    checkingAccountRecipient?: string
+    korrAccountRecipient?: string
+    mechanicFIORecipient?: string
+    dispatcherFIORecipient?: string
 
     /* СОТРУДНИК */
     idEmployee?: string

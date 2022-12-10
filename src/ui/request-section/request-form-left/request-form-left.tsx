@@ -86,7 +86,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 ( +( initialValues.responseTrailer?.cargoWeight || 0 ) ) ) + ' тн',
         ].filter(x => x).join(', ') : ''
 
-    const acceptedCarrierData = initialValues.requestCarrier?.organizationName
+    const acceptedCarrierData = initialValues.requestCarrierUser?.organizationName
 
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     const setOneConsignee = ( searchId: string | undefined ) => {

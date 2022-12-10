@@ -365,7 +365,8 @@ export const getListOrganizationRequisites = (): RequisitesStoreReducerThunkActi
                 console.log('Сообщение в запросе списка пользователей', JSON.stringify(response.message))
             }
             if (response.length > 0) {
-                dispatch(requisitesStoreActions.setFilteredContent(response.filter(( { nnNumber } ) => nnNumber)?.map(
+                dispatch(requisitesStoreActions.setFilteredContent(response.filter(
+                    ( { idUser, nnNumber } ) => idUser && nnNumber)?.map(
                     ( {
                           idUser,
                           nnNumber,
@@ -385,6 +386,7 @@ export const getListOrganizationRequisites = (): RequisitesStoreReducerThunkActi
                           phoneDirector,
                           phoneAccountant,
                           postAddress,
+                          description,
                       } ) => ( {
                         idUser,
                         innNumber: nnNumber,
@@ -404,6 +406,7 @@ export const getListOrganizationRequisites = (): RequisitesStoreReducerThunkActi
                         phoneDirector,
                         phoneAccountant,
                         postAddress,
+                        description,
                     } ),
                 ) || null))
             }
