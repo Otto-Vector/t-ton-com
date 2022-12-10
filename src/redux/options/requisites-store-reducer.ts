@@ -169,7 +169,7 @@ export const requisitesStoreActions = {
         type: 'requisites-store-reducer/SET-STORED-VALUES',
         storedValues,
     } as const ),
-    setFilteredContent: ( filteredContent: Partial<CompanyRequisitesType>[] | null) => ( {
+    setFilteredContent: ( filteredContent: Partial<CompanyRequisitesType>[] | null ) => ( {
         type: 'requisites-store-reducer/SET-FILTERED-CONTENT',
         filteredContent,
     } as const ),
@@ -357,16 +357,55 @@ export const deletePersonalOrganizationRequisites = (): RequisitesStoreReducerTh
 
 // загрузить список данных для сопоставления в заявках
 export const getListOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
+    async ( dispatch ) => {
         dispatch(requisitesStoreActions.setFilteredContent(null))
         try {
-            const idUser = getState().authStoreReducer.authID
             const response = await requisitesApi.getPersonalDataList()
             if (response.message) {
                 console.log('Сообщение в запросе списка пользователей', JSON.stringify(response.message))
             }
             if (response.length > 0) {
-
+                dispatch(requisitesStoreActions.setFilteredContent(response.filter(( { nnNumber } ) => nnNumber)?.map(
+                    ( {
+                          idUser,
+                          nnNumber,
+                          organizationName,
+                          taxMode,
+                          kpp,
+                          ogrn,
+                          okpo,
+                          legalAddress,
+                          dispatcherFIO,
+                          mechanicFIO,
+                          bikBank,
+                          checkingAccount,
+                          korrAccount,
+                          nameBank,
+                          email,
+                          phoneDirector,
+                          phoneAccountant,
+                          postAddress,
+                      } ) => ( {
+                        idUser,
+                        innNumber: nnNumber,
+                        organizationName,
+                        taxMode,
+                        kpp,
+                        ogrn,
+                        okpo,
+                        legalAddress,
+                        dispatcherFIO,
+                        mechanicFIO,
+                        bikBank,
+                        checkingAccount,
+                        korrAccount,
+                        nameBank,
+                        email,
+                        phoneDirector,
+                        phoneAccountant,
+                        postAddress,
+                    } ),
+                ) || null))
             }
         } catch (error: TtonErrorType) {
             console.log('Не удалось загрузить список пользователей: ', error)

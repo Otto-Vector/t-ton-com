@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk';
 import {AppStateType} from './redux-store';
-import {getPersonalOrganizationRequisites} from './options/requisites-store-reducer';
+import {getListOrganizationRequisites, getPersonalOrganizationRequisites} from './options/requisites-store-reducer';
 import {getAllEmployeesAPI} from './options/employees-store-reducer';
 import {getAllConsigneesAPI} from './options/consignees-store-reducer';
 import {getAllRequestsAPI, getCargoCompositionSelector} from './forms/request-store-reducer';
@@ -58,6 +58,7 @@ export const initializedAll = (): InitializedThunkActionType =>
         try { // реджектить промисы здесь https://qna.habr.com/q/1060904
             const getPersonal = dispatch(getPersonalOrganizationRequisites())
             const getGeoPosition = dispatch(geoPositionTake())
+            const getOrganisationsList = dispatch(getListOrganizationRequisites())
             const getAllShippers = dispatch(getAllShippersAPI())
             const getAllConsignees = dispatch(getAllConsigneesAPI())
             const getAllTransport = dispatch(getAllTransportAPI())
@@ -71,6 +72,7 @@ export const initializedAll = (): InitializedThunkActionType =>
             Promise.all([
                 getPersonal,
                 getGeoPosition,
+                getOrganisationsList,
                 getCargoComposition,
                 getAllShippers,
                 getAllConsignees,
