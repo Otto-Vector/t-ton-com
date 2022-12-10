@@ -8,6 +8,7 @@ export const getIsFetchingRequisitesStore: RequisitesStoreSelectors<'isFetching'
 
 export const getLabelRequisitesStore: RequisitesStoreSelectors<'label'> = ( state ) => state.requisitesStoreReducer.label
 export const getStoredValuesRequisitesStore: RequisitesStoreSelectors<'storedValues'> = ( state ) => state.requisitesStoreReducer.storedValues
+export const getFilteredContentRequisitesStore: RequisitesStoreSelectors<'filteredContent'> = ( state ) => state.requisitesStoreReducer.filteredContent
 
 export const getCashRequisitesStore: RequisitesStoreSelectorsInit<'cash'> = (state)=> state.requisitesStoreReducer.storedValues.cash
 export const getTariffsRequisitesStore: RequisitesStoreSelectorsInit<'tariffs'>  = ( state ) => state.requisitesStoreReducer.storedValues.tariffs

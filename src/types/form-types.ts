@@ -75,40 +75,40 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
 }
 // на форму с реквизитами - возврат с бэка
 export type CompanyRequisitesApiType = {
-    idUser: string,
-    // innNumber: string,
-    nnNumber: string,
-    organizationName: string,
-    taxMode: string,
-    kpp?: string,
-    ogrn: string,
-    okpo: string,
-    legalAddress: string,
-    description: string,
-    postAddress: string,
-    phoneDirector: string,
-    phoneAccountant: string,
-    email: string,
-    bikBank: string,
-    nameBank: string,
-    checkingAccount: string,
-    korrAccount: string,
+    idUser: string
+    // innNumber: string
+    nnNumber: string
+    organizationName: string
+    taxMode: string
+    kpp?: string
+    ogrn: string
+    okpo: string
+    legalAddress: string
+    description: string
+    postAddress: string
+    phoneDirector: string
+    phoneAccountant: string
+    email: string
+    bikBank: string
+    nameBank: string
+    checkingAccount: string
+    korrAccount: string
     is_staff: boolean,
     is_active: boolean,
-    phone: string,
-    phoneCode: string,
+    phone: string
+    phoneCode: string
     phoneValidate: boolean,
-    password: string,
-    role: string,
+    password: string
+    role: string
     cash: number,
-    requestActiveCount: string,
-    maxRequests: string,
-    tarifCreate: string,
-    tarifAcceptShortRoute: string,
-    tarifAcceptLongRoute: string,
-    tarifPaySafeTax: string,
-    mechanicFIO?: string,
-    dispatcherFIO?: string,
+    requestActiveCount: string
+    maxRequests: string
+    tarifCreate: string
+    tarifAcceptShortRoute: string
+    tarifAcceptLongRoute: string
+    tarifPaySafeTax: string
+    mechanicFIO?: string
+    dispatcherFIO?: string
 }
 ///////////////////////////////////////////////////////////
 // на сотрудника
@@ -322,19 +322,30 @@ export type OneRequestType = {
     // тип груза (заведомо известный набор типов)
     cargoType?: CargoTypeType
 
-    // заказчик (совпадает с id пользователя (потому как данные по ИНН/КПП и счетам будут браться оттуда)
-    idUserCustomer?: string
+    // заказчик
     idCustomer?: string
+    // id пользователя заказчика
+    idUserCustomer?: string
+    //
+    customerUser?: Partial<CompanyRequisitesType>
 
     // грузоотправитель
     idSender?: string
-    idUserSender?: string,
+    // id пользователя отправителя
+    idUserSender?: string
+    // данные грузополучателя из карточки
     sender: ShippersCardType,
+    // данные пользователя грузоотправителя
+    senderUser?: Partial<CompanyRequisitesType>
 
     // грузополучатель
     idRecipient?: string
-    idUserRecipient?: string,
-    recipient: ConsigneesCardType,
+    // id пользователя грузополучателя
+    idUserRecipient?: string
+    // данные грузополучателя из карточки
+    recipient: ConsigneesCardType
+    // данные пользователя грузополучателя
+    recipientUser?: Partial<CompanyRequisitesType>
 
     // расстояние (высчитывается автоматически при выборе грузоотправитель+грузополучатель)
     distance?: number
@@ -373,8 +384,9 @@ export type OneRequestType = {
     requestUserCarrierId?: string
     // привязывается id карточки
     requestCarrierId?: string
-    // подгружается отдельно из бэка
-    requestCarrier?: Partial<CompanyRequisitesType>
+    // данные грузоотправителя
+    requestCarrierUser?: Partial<CompanyRequisitesType>
+
     // id водителя (из карточки отклика)
     idEmployee?: string
     responseEmployee?: Partial<EmployeesCardType>
@@ -473,33 +485,33 @@ export type OneRequestApiType = {
     cargoType?: string
 
     idSender?: string
-    idUserSender?: string,
-    titleSender?: string,
-    innNumberSender?: string,
-    organizationNameSender?: string,
-    kppSender?: string,
-    ogrnSender?: string,
-    addressSender?: string,
-    shipperFioSender?: string,
-    shipperTelSender?: string,
-    descriptionSender?: string,
-    coordinatesSender?: string,
-    citySender?: string,
+    idUserSender?: string
+       titleSender?: string
+    innNumberSender?: string
+    organizationNameSender?: string
+    kppSender?: string
+    ogrnSender?: string
+    addressSender?: string
+    shipperFioSender?: string
+    shipperTelSender?: string
+    descriptionSender?: string
+    coordinatesSender?: string
+    citySender?: string
 
-    idRecipient?: string,
-    idUserRecipient?: string,
-    titleRecipient?: string,
-    innNumberRecipient?: string,
-    organizationNameRecipient?: string,
-    kppRecipient?: string,
-    ogrnRecipient?: string,
-    addressRecipient?: string,
-    consigneesFioRecipient?: string,
-    consigneesTelRecipient?: string,
-    descriptionRecipient?: string,
-    coordinatesRecipient?: string,
-    cityRecipient?: string,
-    route?: string,
+    idRecipient?: string
+    idUserRecipient?: string
+       titleRecipient?: string
+    innNumberRecipient?: string
+    organizationNameRecipient?: string
+    kppRecipient?: string
+    ogrnRecipient?: string
+    addressRecipient?: string
+    consigneesFioRecipient?: string
+    consigneesTelRecipient?: string
+    descriptionRecipient?: string
+    coordinatesRecipient?: string
+    cityRecipient?: string
+    route?: string
     addedPrice?: number,
 
     distance?: string
@@ -525,71 +537,71 @@ export type OneRequestApiType = {
     // id ответа на заявку (перевозчик)
     requestCarrierId?: string
 
-        innNumberCarrier?: string,
-        organizationNameCarrier?: string,
-        taxModeCarrier?: string,
-        kppCarrier?: string,
-        ogrnCarrier?: string,
-        okpoCarrier?: string,
-        legalAddressCarrier?: string,
-        descriptionCarrier?: string,
-        postAddressCarrier?: string,
-        phoneDirectorCarrier?: string,
-        phoneAccountantCarrier?: string,
-        emailCarrier?: string,
-        bikBankCarrier?: string,
-        nameBankCarrier?: string,
-        checkingAccountCarrier?: string,
-        korrAccountCarrier?: string,
-        mechanicFIOCarrier?: string,
-        dispatcherFIOCarrier?: string,
+        innNumberCarrier?: string
+        organizationNameCarrier?: string
+        taxModeCarrier?: string
+        kppCarrier?: string
+        ogrnCarrier?: string
+        okpoCarrier?: string
+        legalAddressCarrier?: string
+        descriptionCarrier?: string
+        postAddressCarrier?: string
+        phoneDirectorCarrier?: string
+        phoneAccountantCarrier?: string
+        emailCarrier?: string
+        bikBankCarrier?: string
+        nameBankCarrier?: string
+        checkingAccountCarrier?: string
+        korrAccountCarrier?: string
+        mechanicFIOCarrier?: string
+        dispatcherFIOCarrier?: string
 
-        innNumberCustomer?: string,
-        organizationNameCustomer?: string,
-        taxModeCustomer?: string,
-        kppCustomer?: string,
-        ogrnCustomer?: string,
-        okpoCustomer?: string,
-        legalAddressCustomer?: string,
-        descriptionCustomer?: string,
-        postAddressCustomer?: string,
-        phoneDirectorCustomer?: string,
-        phoneAccountantCustomer?: string,
-        emailCustomer?: string,
-        bikBankCustomer?: string,
-        nameBankCustomer?: string,
-        checkingAccountCustomer?: string,
-        korrAccountCustomer?: string,
-        mechanicFIOCustomer?: string,
-        dispatcherFIOCustomer?: string,
+        innNumberCustomer?: string
+        organizationNameCustomer?: string
+        taxModeCustomer?: string
+        kppCustomer?: string
+        ogrnCustomer?: string
+        okpoCustomer?: string
+        legalAddressCustomer?: string
+        descriptionCustomer?: string
+        postAddressCustomer?: string
+        phoneDirectorCustomer?: string
+        phoneAccountantCustomer?: string
+        emailCustomer?: string
+        bikBankCustomer?: string
+        nameBankCustomer?: string
+        checkingAccountCustomer?: string
+        korrAccountCustomer?: string
+        mechanicFIOCustomer?: string
+        dispatcherFIOCustomer?: string
 
-        taxModeSender?: string,
-        okpoSender?: string,
-        legalAddressSender?: string,
-        postAddressSender?: string,
-        phoneDirectorSender?: string,
-        phoneAccountantSender?: string,
-        emailSender?: string,
-        bikBankSender?: string,
-        nameBankSender?: string,
-        checkingAccountSender?: string,
-        korrAccountSender?: string,
-        mechanicFIOSender?: string,
-        dispatcherFIOSender?: string,
+        taxModeSender?: string
+        okpoSender?: string
+        legalAddressSender?: string
+        postAddressSender?: string
+        phoneDirectorSender?: string
+        phoneAccountantSender?: string
+        emailSender?: string
+        bikBankSender?: string
+        nameBankSender?: string
+        checkingAccountSender?: string
+        korrAccountSender?: string
+        mechanicFIOSender?: string
+        dispatcherFIOSender?: string
 
-        taxModeRecipient?: string,
-        okpoRecipient?: string,
-        legalAddressRecipient?: string,
-        postAddressRecipient?: string,
-        phoneDirectorRecipient?: string,
-        phoneAccountantRecipient?: string,
-        emailRecipient?: string,
-        bikBankRecipient?: string,
-        nameBankRecipient?: string,
-        checkingAccountRecipient?: string,
-        korrAccountRecipient?: string,
-        mechanicFIORecipient?: string,
-        dispatcherFIORecipient?: string,
+        taxModeRecipient?: string
+        okpoRecipient?: string
+        legalAddressRecipient?: string
+        postAddressRecipient?: string
+        phoneDirectorRecipient?: string
+        phoneAccountantRecipient?: string
+        emailRecipient?: string
+        bikBankRecipient?: string
+        nameBankRecipient?: string
+        checkingAccountRecipient?: string
+        korrAccountRecipient?: string
+        mechanicFIORecipient?: string
+        dispatcherFIORecipient?: string
 
     /* СОТРУДНИК */
     idEmployee?: string
