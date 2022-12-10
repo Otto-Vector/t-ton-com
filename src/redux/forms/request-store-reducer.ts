@@ -24,6 +24,7 @@ import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../opti
 import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 import {GetActionsTypes} from '../../types/utils';
+import {requisitesApi} from '../../api/local-api/options/requisites.api';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -303,7 +304,6 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         city: elem.citySender,
     },
 
-
     idRecipient: elem.idRecipient,
     idUserRecipient: elem.idUserRecipient,
     recipient: {
@@ -330,9 +330,9 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
     },
 
-
     requestUserCarrierId: elem.requestUserCarrierId,
     requestCarrierId: elem.requestCarrierId,
+
     idEmployee: elem.idEmployee,
     responseEmployee: {
         idEmployee: elem.idEmployee,
@@ -372,7 +372,6 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
 
     responseStavka: elem.responseStavka,
     responseTax: elem.responseTax,
-
     responsePrice: elem.responsePrice,
     cargoWeight: elem.cargoWeight,
 
@@ -442,8 +441,7 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
         try {
             const response = await oneRequestApi.getOneRequestById({ requestNumber })
             if (response.length > 0) {
-                let element = response[0]
-                dispatch(requestStoreActions.setInitialValues(parseRequestFromAPI(element)))
+                dispatch(requestStoreActions.setInitialValues(parseRequestFromAPI(response[0])))
             } else {
                 dispatch(globalModalStoreActions.setTextMessage('НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber))
             }
@@ -453,6 +451,7 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }
+
 
 // создать одну пустую заявку и вернуть дату и номер создания
 export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
@@ -476,8 +475,8 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
         dispatch(requestStoreActions.setIsFetching(false))
     }
 
-// изменить текущую заявку
-export const addAcceptedResponseToRequest = (
+// акцептировать текущую заявку и присвоить ей статус "в работе" ПРИ САМОВЫВОЗЕ
+export const addAcceptedResponseToRequestOnCreate = (
     { addDriverValues, oneEmployee: employeeValues, oneTransport: transportValues, oneTrailer: trailerValues }
         : {
         addDriverValues: ResponseToRequestCardType<string>,
@@ -485,9 +484,9 @@ export const addAcceptedResponseToRequest = (
         oneTransport: TransportCardType<string>
         oneTrailer: TrailerCardType<string>
     } ): RequestStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
+    async ( dispatch , getState) => {
         dispatch(requestStoreActions.setIsFetching(true))
-
+        const idUser = getState().authStoreReducer.authID
         try {
             const response = await oneRequestApi.modifyOneRequest({
                 requestNumber: addDriverValues.requestNumber,
@@ -495,6 +494,7 @@ export const addAcceptedResponseToRequest = (
                 responseStavka: addDriverValues.responseStavka,
                 responseTax: addDriverValues.responseId,
                 responsePrice: addDriverValues.responsePrice,
+                requestUserCarrierId: idUser,
                 /* СОТРУДНИК */
                 idEmployee: employeeValues.idEmployee,
                 responseEmployeeFIO: employeeValues.employeeFIO,
@@ -539,22 +539,23 @@ export const addAcceptedResponseToRequest = (
         }
     }
 
-// изменить текущую заявку
-export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestStoreReducerThunkActionType =>
+// изменить текущую заявку ПРИ СОЗДАНИИ
+export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
         try {
             const idUserCustomer = getState().authStoreReducer.authID
+            // const idUserSender = getState().authStoreReducer.authID
+            // const idUserRecipient = getState().authStoreReducer.authID
             const requestNumber = submitValues.requestNumber?.toString() || '0'
             const placeholder = '-'
             const response = await oneRequestApi.modifyOneRequest({
-                    acceptedUsers: undefined, // изменяется через другой запрос
-                    requestDate: undefined, // потому как она уже задана при создании
 
                     requestNumber,
+                    globalStatus: 'новая заявка',
+
                     idUserCustomer,
                     idCustomer: submitValues.idCustomer,
-
                     cargoComposition: submitValues.cargoComposition,
                     shipmentDate: yearMmDdFormatISO(submitValues.shipmentDate),
                     cargoType: submitValues.cargoType,
@@ -563,13 +564,6 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
                     distance: submitValues.distance?.toString(),
                     route: submitValues.route,
                     note: submitValues.note,
-
-
-                    globalStatus: submitValues.globalStatus,
-                    localStatuspaymentHasBeenTransferred: submitValues.localStatus?.paymentHasBeenTransferred,
-                    localStatuscargoHasBeenTransferred: submitValues.localStatus?.cargoHasBeenTransferred,
-                    localStatuspaymentHasBeenReceived: submitValues.localStatus?.paymentHasBeenReceived,
-                    localStatuscargoHasBeenReceived: submitValues.localStatus?.cargoHasBeenReceived,
 
                     // idUserSender: submitValues.idUserSender,
                     titleSender: submitValues.sender.title,
@@ -596,73 +590,6 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
                     descriptionRecipient: submitValues.recipient.description || placeholder,
                     coordinatesRecipient: submitValues.recipient.coordinates,
                     cityRecipient: submitValues.recipient.city,
-
-                    // ответка на заявку
-                    requestCarrierId: submitValues.requestCarrierId,
-                    // сотрудник
-                    idEmployee: submitValues.idEmployee,
-                    responseEmployeeFIO: submitValues.responseEmployee?.employeeFIO,
-                    responseEmployeePhoneNumber: submitValues.responseEmployee?.employeePhoneNumber,
-                    responseEmployeedrivingLicenseNumber: submitValues.responseEmployee?.drivingLicenseNumber,
-                    responseEmployeepassportDate: submitValues.responseEmployee?.passportDate as string,
-                    responseEmployeepassportFMS: submitValues.responseEmployee?.passportFMS,
-                    responseEmployeepassportSerial: submitValues.responseEmployee?.idEmployee,
-                    // транспорт
-                    idTransport: submitValues.idTransport,
-                    responseTransportCargoType: submitValues.responseTransport?.cargoType,
-                    responseTransportCargoWeight: submitValues.responseTransport?.cargoWeight,
-                    responseTransportDopog: submitValues.responseTransport?.dopog,
-                    responseTransportModel: submitValues.responseTransport?.transportModel,
-                    responseTransportNumber: submitValues.responseTransport?.transportNumber,
-                    responseTransportPropertyRights: submitValues.responseTransport?.propertyRights,
-                    responseTransportPts: submitValues.responseTransport?.pts,
-                    responseTransportTrademark: submitValues.responseTransport?.transportTrademark,
-                    // прицеп
-                    idTrailer: submitValues.idTrailer,
-                    responseTrailerCargoType: submitValues.responseTrailer?.cargoType,
-                    responseTrailerCargoWeight: submitValues.responseTrailer?.cargoWeight,
-                    responseTrailerDopog: submitValues.responseTrailer?.dopog,
-                    responseTrailerModel: submitValues.responseTrailer?.trailerModel,
-                    responseTrailerPropertyRights: submitValues.responseTrailer?.propertyRights,
-                    responseTrailerPts: submitValues.responseTrailer?.pts,
-                    responseTrailerTrademark: submitValues.responseTrailer?.trailerTrademark,
-                    responseTrailertrailerNumber: submitValues.responseTrailer?.trailerNumber,
-                    responseStavka: submitValues.responseStavka,
-                    responseTax: submitValues.responseTax,
-                    responsePrice: submitValues.responsePrice,
-                    cargoWeight: submitValues.cargoWeight?.toString(),
-                    uploadTime: submitValues.uploadTime?.toString(),
-
-                    proxyFreightLoader: submitValues.documents?.proxyWay?.proxyFreightLoader,
-                    proxyDriver: submitValues.documents?.proxyWay?.proxyDriver,
-                    proxyWaybillDriver: submitValues.documents?.proxyWay?.waybillDriver,
-                    // здесь надо будет добавить файл
-                    // cargoDocuments: initialValues.documents.cargoDocuments,
-
-                    ttnECPdocumentDownload: submitValues.documents?.ttnECP?.documentDownload,
-                    // здесь надо будет добавить файл
-                    // ttnECPdocumentUpload: initialValues.documents.ttnECP.documentUpload,
-                    ttnECPcustomerIsSubscribe: submitValues.documents?.ttnECP?.customerIsSubscribe?.toString(),
-                    ttnECPcarrierIsSubscribe: submitValues.documents?.ttnECP?.carrierIsSubscribe?.toString(),
-                    ttnECPconsigneeIsSubscribe: submitValues.documents?.ttnECP?.consigneeIsSubscribe?.toString(),
-
-                    contractECPdocumentDownload: submitValues.documents?.contractECP?.documentDownload,
-                    // здесь надо будет добавить файл
-                    // contractECPdocumentUpload: initialValues.documents.contractECPdocumentUpload,
-                    contractECPcustomerIsSubscribe: submitValues.documents?.contractECP?.customerIsSubscribe?.toString(),
-                    contractECPcarrierIsSubscribe: submitValues.documents?.contractECP?.carrierIsSubscribe?.toString(),
-
-                    updECPdocumentDownload: submitValues.documents?.updECP?.documentDownload,
-                    // здесь надо будет добавить файл
-                    // updECPdocumentUpload: initialValues.documents.updECP.documentUpload,
-                    updECPcustomerIsSubscribe: submitValues.documents?.updECP?.customerIsSubscribe?.toString(),
-                    updECPcarrierIsSubscribe: submitValues.documents?.updECP?.carrierIsSubscribe?.toString(),
-
-                    customerToConsigneeContractECPdocumentDownload: submitValues.documents?.customerToConsigneeContractECP?.documentDownload,
-                    // здесь надо будет добавить файл
-                    // customerToConsigneeContractECPdocumentUpload: initialValues.documents.customerToConsigneeContractECP.documentUpload,
-                    customerToConsigneeContractECPcustomerIsSubscribe: submitValues.documents?.customerToConsigneeContractECP?.customerIsSubscribe?.toString(),
-                    customerToConsigneeContractECPconsigneeIsSubscribe: submitValues.documents?.customerToConsigneeContractECP?.consigneeIsSubscribe?.toString(),
                 },
             )
 
@@ -671,6 +598,40 @@ export const changeCurrentRequest = ( submitValues: OneRequestType ): RequestSto
             }
         } catch (e) {
             dispatch(globalModalStoreActions.setTextMessage(e as string))
+        }
+        dispatch(requestStoreActions.setIsFetching(false))
+    }
+
+// подгружаем и добавляем данные грузоперевозчика в заявку
+export const setCarrierDataToLocalRequest = ( requestUserCarrierId: string ): RequestStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        try {
+            const localInitValues = getState().requestStoreReducer.initialValues
+            const userId = getState().authStoreReducer.authID
+            const localDataCarrier = getState().requisitesStoreReducer.storedValues
+            if (!localInitValues.requestCarrier)
+                if (requestUserCarrierId !== userId) {
+                    dispatch(requestStoreActions.setIsFetching(true))
+                    const response = await requisitesApi.getPersonalDataFromId({ idUser: requestUserCarrierId })
+                    if (response?.message) {
+                        console.log('чёт не вышло: ', response.message)
+                        return
+                    }
+                    if (response.length > 0) {
+                        dispatch(requestStoreActions.setInitialValues({
+                            ...localInitValues,
+                            requestCarrier: response[0],
+                        }))
+                    }
+                } else {
+                    dispatch(requestStoreActions.setInitialValues({
+                        ...localInitValues,
+                        requestCarrier: localDataCarrier,
+                    }))
+                }
+
+        } catch (e: TtonErrorType) {
+            console.log('ошибка в сопоставлении данных пользователя ',e)
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }

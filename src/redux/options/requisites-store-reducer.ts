@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
-import {CompanyRequisitesType, ParserType, CompanyRequisitesApiType, ValidateType} from '../../types/form-types';
+import {CompanyRequisitesApiType, CompanyRequisitesType, ParserType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
 import {requisitesApi} from '../../api/local-api/options/requisites.api';
 import {syncParsers} from '../../utils/parsers';
@@ -11,6 +11,7 @@ import {
     textAndActionGlobalModal,
 } from '../utils/global-modal-store-reducer';
 import {GetActionsTypes} from '../../types/utils';
+import {TtonErrorType} from '../../types/other-types';
 
 
 const initialState = {
@@ -38,7 +39,7 @@ const initialState = {
         nameBank: 'Наименование Банка',
         checkingAccount: 'Расчётный счёт',
         korrAccount: 'Корреспондентский счёт',
-    } as CompanyRequisitesType<string | undefined>,
+    } as CompanyRequisitesType,
 
     maskOn: {
         innNumber: '############', // 10,12 цифр
@@ -111,6 +112,7 @@ const initialState = {
 
     storedValues: {} as CompanyRequisitesType,
 
+    filteredContent: [ {} ] as Partial<CompanyRequisitesType>[] | null,
 }
 
 export type RequisitesStoreReducerStateType = typeof initialState
@@ -139,6 +141,12 @@ export const requisitesStoreReducer = ( state = initialState, action: ActionsTyp
                 storedValues: action.storedValues,
             }
         }
+        case 'requisites-store-reducer/SET-FILTERED-CONTENT': {
+            return {
+                ...state,
+                filteredContent: action.filteredContent,
+            }
+        }
         default: {
             return state
         }
@@ -161,7 +169,10 @@ export const requisitesStoreActions = {
         type: 'requisites-store-reducer/SET-STORED-VALUES',
         storedValues,
     } as const ),
-
+    setFilteredContent: ( filteredContent: Partial<CompanyRequisitesType>[] | null) => ( {
+        type: 'requisites-store-reducer/SET-FILTERED-CONTENT',
+        filteredContent,
+    } as const ),
 }
 
 /* САНКИ */
@@ -201,10 +212,8 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
                 await dispatch(getPersonalOrganizationRequisites())
             }
 
-        } catch (error) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                JSON.stringify(error.response.data)))
+        } catch (error: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error?.response?.data)))
             dispatch(requisitesStoreActions.setIsFetching(false))
             return 'Ошибка сохранения данных, попробуйте ещё раз'
         }
@@ -220,7 +229,7 @@ export const setOrganizationCashRequisites = ( cash: number ): RequisitesStoreRe
             const setPersonal = await requisitesApi.changePersonalData({
                 idUser, cash: localCash + cash,
             } as CompanyRequisitesApiType)
-            // console.log('setPersonal: ', setPersonal)
+
             if (setPersonal.success) {
                 await dispatch(getPersonalOrganizationRequisites())
             }
@@ -331,16 +340,35 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
         dispatch(requisitesStoreActions.setIsFetching(false))
     }
 
+// удалить данного пользователя (если вдруг что)
 export const deletePersonalOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await requisitesApi.removePersonalData({ idUser })
-            console.log(response.message)
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(response.message)))
-            dispatch(logoutAuth())
-        } catch (error) {
-            // @ts-ignore
+            if (response.message) {
+                dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(response.message)))
+            }
+        } catch (error: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response?.error)))
+        }
+        dispatch(logoutAuth())
+    }
+
+// загрузить список данных для сопоставления в заявках
+export const getListOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        dispatch(requisitesStoreActions.setFilteredContent(null))
+        try {
+            const idUser = getState().authStoreReducer.authID
+            const response = await requisitesApi.getPersonalDataList()
+            if (response.message) {
+                console.log('Сообщение в запросе списка пользователей', JSON.stringify(response.message))
+            }
+            if (response.length > 0) {
+
+            }
+        } catch (error: TtonErrorType) {
+            console.log('Не удалось загрузить список пользователей: ', error)
         }
     }

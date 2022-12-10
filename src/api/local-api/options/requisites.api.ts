@@ -6,19 +6,20 @@ export const requisitesApi = {
 
     // отправка запроса на данные ВСЕХ пользователей • GET /api/personality/
     getPersonalDataList() {
-        return instanceBack.get<CompanyRequisitesApiType>('/api/personality/')
+        return instanceBack.get<InfoResponseType & CompanyRequisitesApiType[]>('/api/personality/')
             .then(response => response.data)
         // 1.	code 200, models: PersonalResponseType
-        // 2.	code 520, "Error"
+        // 2.	code 520, {"message": "Error"}
     },
 
     // добавление персональных данных • POST/api/personality/
+    // СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ, но он возможно не будет работать ;)
     setPersonalData( requisites: CompanyRequisitesApiType ) {
         return instanceBack.post<InfoResponseType>('/api/personality/', requisites)
             .then(response => response.data)
         // 1.	code 200, {"success": "Personals '{}' created successfully".format(new_user.phone)}
         // 2.	code 422, {'failed':'Пользователь уже создан'}
-        // 3.	code 520, "Error"
+        // 3.	code 520, {"message": "Error"}
     },
 
     // запрос данных по Id пользователя • PATCH /api/personality/
@@ -26,7 +27,7 @@ export const requisitesApi = {
         return instanceBack.patch<InfoResponseType & CompanyRequisitesApiType[]>('/api/personality/', idUser)
             .then(response => response.data)
         // 1.	code 200, models: PersonalResponseType
-        // 2.	code 520, "Error"
+        // 2.	code 520, {"message": "Error"}
     },
 
     // изменение персональных данных • PUT /api/personality/

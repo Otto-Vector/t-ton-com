@@ -32,7 +32,7 @@ import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
 import {AppStateType} from '../../redux/redux-store';
 import {
-    addAcceptedResponseToRequest,
+    addAcceptedResponseToRequestOnCreate,
     getAllRequestsAPI,
     getOneRequestsAPI,
 } from '../../redux/forms/request-store-reducer';
@@ -135,7 +135,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
             navigate(navRoutes.searchList)
         }
         if (addDriverModes.selfExportDriver) {
-            await dispatch<any>(addAcceptedResponseToRequest({
+            await dispatch<any>(addAcceptedResponseToRequestOnCreate({
                 addDriverValues: demaskedValues, oneEmployee, oneTrailer, oneTransport,
             }))
             navigate(navRoutes.requestsList)

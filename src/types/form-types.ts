@@ -373,6 +373,8 @@ export type OneRequestType = {
     requestUserCarrierId?: string
     // привязывается id карточки
     requestCarrierId?: string
+    // подгружается отдельно из бэка
+    requestCarrier?: Partial<CompanyRequisitesType>
     // id водителя (из карточки отклика)
     idEmployee?: string
     responseEmployee?: Partial<EmployeesCardType>
@@ -522,6 +524,25 @@ export type OneRequestApiType = {
     requestUserCarrierId?: string
     // id ответа на заявку (перевозчик)
     requestCarrierId?: string
+
+        // innNumberCarrier?: string,
+        // organizationNameCarrier?: string,
+        // taxModeCarrier?: string,
+        // kppCarrier?: string,
+        // ogrnCarrier?: string,
+        // okpoCarrier?: string,
+        // legalAddressCarrier?: string,
+        // descriptionCarrier?: string,
+        // postAddressCarrier?: string,
+        // phoneDirectorCarrier?: string,
+        // phoneAccountantCarrier?: string,
+        // emailCarrier?: string,
+        // bikBankCarrier?: string,
+        // nameBankCarrier?: string,
+        // checkingAccountCarrier?: string,
+        // korrAccountCarrier?: string,
+        // mechanicFIOCarrier?: string,
+        // dispatcherFIOCarrier?: string,
 
     /* СОТРУДНИК */
     idEmployee?: string

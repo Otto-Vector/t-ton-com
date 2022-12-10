@@ -29,7 +29,7 @@ import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
-    changeCurrentRequest,
+    changeCurrentRequestOnCreate,
     getRouteFromAPI,
     requestStoreActions,
     setCargoCompositionSelector,
@@ -42,6 +42,7 @@ import {stringArrayToSelectValue} from '../../common/form-selector/selector-util
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer';
+import {parseFamilyToFIO} from '../../../utils/parsers';
 
 
 type OwnProps = {
@@ -74,20 +75,32 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         dispatch(shippersStoreActions.setCurrentId(searchId || ''))
     }
 
+    // в отображение данных акцептированного водителя
+    const acceptedEmployeeData = ( requestModes.historyMode || requestModes.statusMode ) ?
+        [
+            parseFamilyToFIO(initialValues.responseEmployee?.employeeFIO),
+            initialValues.responseTransport?.transportModel,
+            initialValues.responseTransport?.transportNumber,
+            initialValues.responseTrailer?.trailerModel,
+            ( +( initialValues.responseTransport?.cargoWeight || 0 ) +
+                ( +( initialValues.responseTrailer?.cargoWeight || 0 ) ) ) + ' тн',
+        ].filter(x => x).join(', ') : ''
+
+    const acceptedCarrierData = initialValues.requestCarrier?.organizationName
+
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     const setOneConsignee = ( searchId: string | undefined ) => {
         dispatch(consigneesStoreActions.setCurrentId(searchId || ''))
     }
 
     const oneCustomer = allShippers.find(( { idSender } ) => idSender === initialValues.idCustomer)
-    const oneCarrier = allShippers.find(( { idSender } ) => idSender === initialValues.requestCarrierId)
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
     const customersSelect = shippersSelect
 
-    const onSubmit = async ( values: OneRequestType ) => {
-        await dispatch<any>(changeCurrentRequest({ ...values, globalStatus: 'новая заявка' }))
+    const onSubmit = async ( oneRequestValues: OneRequestType ) => {
+        await dispatch<any>(changeCurrentRequestOnCreate(oneRequestValues))
     }
 
     // для сохранения отображаемых данных при переключении вкладок
@@ -299,7 +312,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     { labels.requestCarrierId }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { oneCarrier ? ( oneCarrier.title + ', ' + oneCarrier.city ) : placeholders.requestCarrierId }
+                                    { acceptedCarrierData || placeholders.requestCarrierId }
                                 </div>
                                 <InfoButtonToModal textToModal={ fieldInformation.carrier } mode={ 'inForm' }/>
                             </div>
@@ -308,7 +321,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     { labels.idEmployee }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { initialValues.idEmployee || placeholders.idEmployee }
+                                    { acceptedEmployeeData || placeholders.idEmployee }
                                 </div>
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>

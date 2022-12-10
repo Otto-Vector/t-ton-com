@@ -4,7 +4,12 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {To, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {deleteCurrentRequestAPI, getOneRequestsAPI, setNewRequestAPI} from '../../redux/forms/request-store-reducer';
+import {
+    deleteCurrentRequestAPI,
+    getOneRequestsAPI,
+    setCarrierDataToLocalRequest,
+    setNewRequestAPI,
+} from '../../redux/forms/request-store-reducer';
 import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
@@ -81,6 +86,13 @@ export const RequestSection: React.FC = React.memo(() => {
         }
     }, [ isFirstRender ])
 
+    useEffect(() => { //подгружаем данные грузо-перевозчика
+        if (initialValues.requestUserCarrierId && !initialValues.requestCarrier) {
+            if (requestModes.historyMode || requestModes.statusMode) {
+                dispatch<any>(setCarrierDataToLocalRequest(initialValues.requestUserCarrierId + ''))
+            }
+        }
+    })
 
     if (!requestModes.createMode && !initialValues.requestNumber) return <div>
         <br/><br/> { 'ДАННАЯ ЗАЯВКА НЕДОСТУПНА !' }
