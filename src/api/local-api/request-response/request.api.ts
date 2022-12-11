@@ -17,24 +17,24 @@ export const oneRequestApi = {
     },
 
     // запрос списка всех заявок созданных данным пользователем PATCH /api/onerequesttypeuser/
-    getAllRequestByUser( { idUserCustomer }: { idUserCustomer: string } ) {
-        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypedate/', { idUserCustomer })
+    getAllRequestByUser( idUserCustomer: { idUserCustomer: string } ) {
+        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypedate/', idUserCustomer)
             .then(response => response.data)
         // 1.	Code 200, Models: OneRequestApiType[]
         // 2.	Code 520, {"message":"Error"}
     },
 
     // запрос списка заявок начиная от такой-то даты (включительно) PATCH /api/onerequesttypedate/
-    getAllRequestByDate( { shipmentDate }: { shipmentDate: string } ) {
-        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypedate/', { shipmentDate })
+    getAllRequestByDate( shipmentDate: { shipmentDate: string } ) {
+        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypedate/', shipmentDate)
             .then(response => response.data)
         // 1.	Code 200, Models: OneRequestApiType[]
         // 2.	Code 520, {"message":"Error"}
     },
 
     // запрос на одну Заявку PATCH /api/onerequesttype/
-    getOneRequestById( { requestNumber }: { requestNumber: number } ) {
-        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttype/', { requestNumber })
+    getOneRequestById( requestNumber: { requestNumber: number } ) {
+        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttype/', requestNumber)
             .then(response => response.data)
         // 1.	Code 200, Models: OneRequestApiType[]
         // 2.	Code 520, {"message":"Error"}
@@ -44,9 +44,11 @@ export const oneRequestApi = {
     createOneRequest( idUserCustomer: { idUserCustomer: string } ) {
         return instanceBack.post<{ success: string, Number: string, Date: string, message?: string }>('/api/onerequesttype/', idUserCustomer)
             .then(response => response.data)
-        // 1.	Code 200, {"success": "OneRequestType '{}' created successfully".format(new_Request. requestNumber),
-        // "Number": new_Request.requestNumber,
-        // "Date": new_Request.requestDate }
+        // 1.	Code 200, {
+        //          "success": "OneRequestType '{}' created successfully".format(new_Request. requestNumber),
+        //          "Number": new_Request.requestNumber,
+        //          "Date": new_Request.requestDate
+        //      }
         // 2.	Code 520, {"message":"Error"}
     },
 
@@ -56,11 +58,12 @@ export const oneRequestApi = {
             .then(response => response.data)
         // 1.	Code 449, {'failed': "OneRequestType is not updated"}
         // 2.	Code 200, {"success": "OneRequestType '{}' updated successfully".format(OneRequestApiType_saved.responseId)}
+        // 3.   Code 404, {"detail": "Not found."}
     },
 
     // УДАЛИТЬ одну Заявку DELETE /api/onerequesttype/
-    deleteOneRequest( { requestNumber }: { requestNumber: number } ) {
-        return instanceBack.delete<InfoResponseType>('/api/onerequesttype/', { data: { requestNumber } })
+    deleteOneRequest( requestNumber: { requestNumber: number } ) {
+        return instanceBack.delete<InfoResponseType>('/api/onerequesttype/', { data: requestNumber })
             .then(response => response.data)
         // 1.	Code 200, {"message": "OneRequestType with id `{}` has been deleted.".format(request.data['requestNumber'])}
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}

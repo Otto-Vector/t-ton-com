@@ -312,7 +312,7 @@ export type OneRequestType = {
     далее заявка ТОЛЬКО редактируется или УДАЛЯЕТСЯ */
 
     // уникальный номер заявки (числовой номер/каждая новая заявка создаётся с номером+1 от предыдущей на бэке)
-    requestNumber?: number
+    requestNumber: number
     // дата создания заявки
     requestDate?: Date
 
@@ -416,7 +416,7 @@ export type OneRequestType = {
 }
 
 // выделенный в отдельный блок РАБОТА С ДОКУМЕНТАМИ
-export type DocumentsRequestType<T=boolean> = {
+export type DocumentsRequestType = {
     proxyWay: {
         header?: string // Транспортные документы Сторон (Заголовок / ТОЛЬКО ФРОНТ)
         proxyFreightLoader?: string // Доверенность Грузовладельцу (ГЕНЕРИРУЕТСЯ на БЭКЕ, содержит строку с путём)
@@ -434,9 +434,9 @@ export type DocumentsRequestType<T=boolean> = {
         documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
         // статусы подписания документа (хранятся на бэке, редактируются фронтом)
-        customerIsSubscribe?: T // Заказчик загрузил, подписал и выгрузил подписанный док
-        carrierIsSubscribe?: T  // Перевозчик загрузил, подписал и выгрузил подписанный док
-        consigneeIsSubscribe?: T // Грузополучатель загрузил, подписал и выгрузил подписанный док
+        customerIsSubscribe?: boolean // Заказчик загрузил, подписал и выгрузил подписанный док
+        carrierIsSubscribe?: boolean  // Перевозчик загрузил, подписал и выгрузил подписанный док
+        consigneeIsSubscribe?: boolean // Грузополучатель загрузил, подписал и выгрузил подписанный док
     },
 
     contractECP: {
@@ -447,8 +447,8 @@ export type DocumentsRequestType<T=boolean> = {
         documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
         // статусы подписания документа (хранятся на бэке, редактируются фронтом)
-        customerIsSubscribe?: T // Заказчик загрузил, подписал и выгрузил подписанный док
-        carrierIsSubscribe?: T // Перевозчик загрузил, подписал и выгрузил подписанный док
+        customerIsSubscribe?: boolean // Заказчик загрузил, подписал и выгрузил подписанный док
+        carrierIsSubscribe?: boolean // Перевозчик загрузил, подписал и выгрузил подписанный док
     },
 
     updECP: {
@@ -458,8 +458,8 @@ export type DocumentsRequestType<T=boolean> = {
         // (!!! заменяется на сгенерированный ???)
         documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
-        customerIsSubscribe?: T // Заказчик загрузил, подписал и выгрузил подписанный док
-        carrierIsSubscribe?: T // Перевозчик загрузил, подписал и выгрузил подписанный док
+        customerIsSubscribe?: boolean // Заказчик загрузил, подписал и выгрузил подписанный док
+        carrierIsSubscribe?: boolean // Перевозчик загрузил, подписал и выгрузил подписанный док
     },
 
     customerToConsigneeContractECP: {
@@ -469,8 +469,8 @@ export type DocumentsRequestType<T=boolean> = {
         // (!!! заменяется на сгенерированный ???)
         documentUpload?: File // участвует ТОЛЬКО при редактировании формы
 
-        customerIsSubscribe?: T // Заказчик загрузил, подписал и выгрузил подписанный док
-        consigneeIsSubscribe?: T // Грузополучатель загрузил, подписал и выгрузил подписанный док
+        customerIsSubscribe?: boolean // Заказчик загрузил, подписал и выгрузил подписанный док
+        consigneeIsSubscribe?: boolean // Грузополучатель загрузил, подписал и выгрузил подписанный док
     },
 }
 

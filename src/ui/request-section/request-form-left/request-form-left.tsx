@@ -121,6 +121,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         cancelRequest: () => {
             navigate(-1)
         },
+        cargoHasBeenTransferred: ()=> {
+        },
+        cargoHasBeenReceived: ()=> {
+
+        },
         submitRequestAndSearch: async ( values: OneRequestType ) => {
             await onSubmit(values)
             // оплата за создание заявки
@@ -359,6 +364,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     if (!hasValidationErrors) {
                                                         requestModes.createMode && buttonsAction.submitRequestAndSearch(values)
                                                         requestModes.acceptDriverMode && buttonsAction.acceptRequest(values)
+                                                        requestModes.statusMode && buttonsAction.cargoHasBeenTransferred()
                                                     }
 
                                                 } }

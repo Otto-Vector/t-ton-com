@@ -14,7 +14,6 @@ import {
     ValidateType,
 } from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
-import {initialDocumentsRequestValues} from '../../initials-test-data';
 import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
 import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelector.api';
 import {oneRequestApi} from '../../api/local-api/request-response/request.api';
@@ -23,7 +22,7 @@ import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-m
 import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer';
 import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
-import {GetActionsTypes, NestedKeyOf} from '../../types/utils';
+import {AllNestedKeysToType, GetActionsTypes} from '../../types/utils';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -59,7 +58,7 @@ const initialState = {
             cargoHasBeenTransferred: 'Груз передан',
             cargoHasBeenReceived: 'Закрыть заявку',
         },
-    } as Record<keyof OneRequestType, string | undefined> & { localStatus: Record<keyof OneRequestType['localStatus'], string | undefined> },
+    } as AllNestedKeysToType<OneRequestType, (string|undefined)>,
 
     placeholder: {
         requestNumber: '№',
@@ -95,20 +94,6 @@ const initialState = {
 
     initialValues: {
         requestNumber: 0,
-        requestDate: undefined,
-        cargoComposition: undefined,
-        shipmentDate: undefined,
-        cargoType: undefined,
-        idUserCustomer: undefined,
-        idCustomer: undefined,
-        distance: undefined,
-        idSender: undefined,
-        idRecipient: undefined,
-        requestCarrierId: undefined,
-        idEmployee: undefined,
-        note: undefined,
-        visible: true,
-        documents: initialDocumentsRequestValues,
     } as OneRequestType,
 
     content: [] as OneRequestType[], // создаём тестовые заявки
@@ -150,7 +135,7 @@ const initialState = {
             consigneeIsSubscribe: 'Грузополучатель',
             documentDownload: 'Загрузить',
         },
-    } as DocumentsRequestType<string>,
+    } as AllNestedKeysToType<DocumentsRequestType>,
 
     // инфо для модальных окон после нажатия на кнопку
     infoTextModals: {
@@ -173,7 +158,7 @@ const initialState = {
         selfDeliveryButton: 'Использование собственных сотрудников и транспорта, для оказания услуг транспортировки. Услуга оплачивается со счета Перевозчика-Заказчика.',
     },
 
-    initialDocumentsRequestValues: initialDocumentsRequestValues,
+    initialDocumentsRequestValues: {} as DocumentsRequestType,
 }
 
 export type RequestStoreReducerStateType = typeof initialState
@@ -535,10 +520,10 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
 
             if (response.success) {
                 dispatch(requestStoreActions.setInitialValues({
-                    ...getState().requestStoreReducer.initialValues,
+                    idUserCustomer,
                     requestNumber: +response.Number,
                     requestDate: new Date(apiToISODateFormat(response.Date)),
-                }))
+                } as OneRequestType))
             }
         } catch (e) {
             dispatch(globalModalStoreActions.setTextMessage(e as string))
@@ -561,6 +546,7 @@ export const addAcceptedResponseToRequestOnCreate = (
         try {
             const response = await oneRequestApi.modifyOneRequest({
                 requestNumber: addDriverValues.requestNumber,
+
                 globalStatus: 'в работе',
                 responseStavka: addDriverValues.responseStavka,
                 responseTax: addDriverValues.responseId,
