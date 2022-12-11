@@ -5,7 +5,7 @@ import {syncValidators} from '../../utils/validators'
 import {syncParsers} from '../../utils/parsers';
 import {trailerApi} from '../../api/local-api/options/trailer.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {GetActionsTypes} from '../../types/utils';
+import {GetActionsTypes} from '../../types/ts-utils';
 import {TtonErrorType} from '../../types/other-types';
 
 

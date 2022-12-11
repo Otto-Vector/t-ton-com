@@ -1,4 +1,4 @@
-import {GetActionsTypes} from '../types/utils';
+import {GetActionsTypes} from '../types/ts-utils';
 
 const initialState = {
     routes: {

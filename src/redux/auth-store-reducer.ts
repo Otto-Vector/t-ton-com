@@ -8,7 +8,7 @@ import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-
 import {appActions} from './app-store-reducer';
 import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
 import {TtonErrorType} from '../types/other-types';
-import {GetActionsTypes} from '../types/utils';
+import {GetActionsTypes} from '../types/ts-utils';
 
 
 const initialValues: PhoneSubmitType = {
