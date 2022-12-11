@@ -1,7 +1,7 @@
 import {AppStateType} from '../redux-store'
 import {ThunkAction} from 'redux-thunk';
 import {To} from 'react-router-dom';
-import {GetActionsTypes} from '../../types/utils';
+import {GetActionsTypes} from '../../types/ts-utils';
 
 const initialState = {
     modalGlobalTextMessage: '' as string | string[],

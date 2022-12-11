@@ -1,6 +1,6 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
 import {ResponseToRequestCardType} from '../../../types/form-types';
-import {ExactlyOne} from '../../../types/utils';
+import {ExactlyOne} from '../../../types/ts-utils';
 
 // одно обязательное поле из трёх
 export type ExatlyOnOfThree = ExactlyOne<{ requestNumber: string , responseId: string , idEmployee: string }>

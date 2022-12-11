@@ -9,7 +9,7 @@ import {getAllTrailerAPI} from './options/trailer-store-reducer';
 import {getAllTransportAPI} from './options/transport-store-reducer';
 import {geoPositionTake} from './auth-store-reducer';
 import {getInfoMessages} from './info-store-reducer';
-import {GetActionsTypes} from '../types/utils';
+import {GetActionsTypes} from '../types/ts-utils';
 
 const initialState = {
     initialized: false,

@@ -22,7 +22,7 @@ import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-m
 import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer';
 import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
-import {AllNestedKeysToType, GetActionsTypes} from '../../types/utils';
+import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils';
 
 
 const defaultInitialStateValues = {} as OneRequestType

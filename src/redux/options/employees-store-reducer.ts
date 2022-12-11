@@ -7,7 +7,7 @@ import {employeesApi} from '../../api/local-api/options/employee.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 import {removeResponseToRequestsBzEmployee} from '../forms/add-driver-store-reducer';
-import {GetActionsTypes} from '../../types/utils';
+import {GetActionsTypes} from '../../types/ts-utils';
 
 const initialState = {
     employeeIsFetching: false,

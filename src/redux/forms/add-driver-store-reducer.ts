@@ -7,7 +7,7 @@ import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-m
 import {getAllRequestsAPI} from './request-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer';
-import {GetActionsTypes} from '../../types/utils';
+import {GetActionsTypes} from '../../types/ts-utils';
 import {syncParsers} from '../../utils/parsers';
 
 

@@ -5,7 +5,7 @@ import {syncValidators} from '../../utils/validators'
 import {syncParsers} from '../../utils/parsers';
 import {transportApi} from '../../api/local-api/options/transport.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {GetActionsTypes} from '../../types/utils';
+import {GetActionsTypes} from '../../types/ts-utils';
 
 
 const initialState = {

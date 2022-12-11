@@ -6,7 +6,7 @@ import {coordsToString, syncParsers} from '../../utils/parsers';
 import {consigneesApi} from '../../api/local-api/options/consignees.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
-import {GetActionsTypes} from '../../types/utils';
+import {GetActionsTypes} from '../../types/ts-utils';
 
 
 const initialState = {

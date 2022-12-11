@@ -7,7 +7,7 @@ import {
     GetOrganizationByInnKPPDaDataType,
 } from '../../api/external-api/dadata.api'
 import {ThunkAction} from 'redux-thunk'
-import {GetActionsTypes} from '../../types/utils';
+import {GetActionsTypes} from '../../types/ts-utils';
 
 const initialState = {
     suggestions: [] as DaDataResponseAPIType[],
