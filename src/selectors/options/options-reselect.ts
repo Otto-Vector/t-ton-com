@@ -4,7 +4,7 @@ import {createSelector} from 'reselect'
 import {getAllShippersStore, getCurrentIdShipperStore} from './shippers-reselect';
 import {
     ConsigneesCardType,
-    EmployeesCardType,
+    EmployeeCardType,
     ShippersCardType,
     TrailerCardType,
     TransportCardType,
@@ -100,7 +100,7 @@ export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrai
 
 // выборка из списка загруженных сотрудников в список отображения "Настройки"
 export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, getEmployeesTitleOptionsStore, getAllTransportStore,
-    ( employees: EmployeesCardType[], titles, transports ): OptionsStoreReducerStateType['employees'] => {
+    ( employees: EmployeeCardType[], titles, transports ): OptionsStoreReducerStateType['employees'] => {
         return {
             ...titles, content: employees.map(
                 ( { idEmployee: id, employeeFIO: title = '', idTransport, status } ) => {

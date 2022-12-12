@@ -28,14 +28,14 @@ export const employeesApi = {
         // 2.	Code 520, {"message":"Error"}
     },
 
-    // создать одного водителя POST /api/employee/
+    // СОЗДАТЬ одного водителя POST /api/employee/
     createOneEmployee( { idEmployee, photoFace, ...requestData }: EmployeesApiType, image: File | undefined ) {
         const formData = new FormData()
         Object.entries(requestData).map(( [ key, value ] ) => formData.append(key, value))
         if (image) {
             formData.append('photoFace', image, 'employeeImage.jpg')
         }
-        return instanceBack.post<InfoResponseType>('/api/employee/', formData)
+        return instanceBack.post<InfoResponseType & { idEmployee?: string }>('/api/employee/', formData)
             .then(response => response.data)
         // 1.	Code 422, {'failed':'Сотрудник уже создан'}
         // 2.	Code 200, {"success": "Employees '{}' created successfully".format(new_Employee.idEmployee)}
@@ -55,9 +55,17 @@ export const employeesApi = {
         // 2.	Code 200, "success": "Employee'{}' updated successfully".format(Employee_saved.idEmployee)
     },
 
+    // ИЗМЕНИТЬ одного водителя ЧАСТИЧНО PUT /api/employee/
+    modifyOneEmployeeNoPhoto( employeeData: Partial<Omit<EmployeesApiType, 'idEmployee' | 'photoFace'>> & { idEmployee: string } ) {
+        return instanceBack.put<InfoResponseType>('/api/employee/', employeeData)
+            .then(response => response.data)
+        // 1.	Code 449, {'failed': "Employee is not updated"}
+        // 2.	Code 200, "success": "Employee'{}' updated successfully".format(Employee_saved.idEmployee)
+    },
+
     // УДАЛИТЬ одного водителя DELETE /api/employee/
-    deleteOneEmployee( { idEmployee }: { idEmployee: string } ) {
-        return instanceBack.delete<InfoResponseType>('/api/employee/', { data: { idEmployee } })
+    deleteOneEmployee( idEmployee: { idEmployee: string } ) {
+        return instanceBack.delete<InfoResponseType>('/api/employee/', { data: idEmployee })
             .then(response => response.data)
         // 1.	Code 200, {"message": "Employee with id `{}` has been deleted.".format(request.data['idEmployee']}
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}

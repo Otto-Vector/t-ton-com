@@ -113,7 +113,7 @@ export type CompanyRequisitesApiType = {
 }
 ///////////////////////////////////////////////////////////
 // на сотрудника
-export type EmployeesCardType<T = DefaultFormType> = {
+export type EmployeeCardType<T = DefaultFormType> = {
     idUser: T
     // идентификатор
     idEmployee: string
@@ -126,7 +126,7 @@ export type EmployeesCardType<T = DefaultFormType> = {
     // Кем выдан паспорт
     passportFMS: T
     // Когда выдан
-    passportDate: T | Date
+    passportDate: T
     // Номер водительского удостоверения
     drivingLicenseNumber: T
     // Водительские категории
@@ -151,7 +151,7 @@ export type EmployeesCardType<T = DefaultFormType> = {
     responseToRequest: T
 }
 // на сотрудника - ответка из бэка
-export type EmployeesApiType = EmployeesCardType<string> & { passportDate?: string }
+export type EmployeesApiType = EmployeeCardType<string>
 ///////////////////////////////////////////////////////////
 // на грузоПОЛУЧАТЕЛЯ
 export type ConsigneesCardType<T = DefaultFormType> = {
@@ -390,7 +390,7 @@ export type OneRequestType = {
 
     // id водителя (из карточки отклика)
     idEmployee?: string
-    responseEmployee?: Partial<EmployeesCardType>
+    responseEmployee?: Partial<EmployeeCardType>
     // id транспорта (из карточки отклика)
     idTransport?: string
     responseTransport?: Partial<TransportCardType>
@@ -453,7 +453,6 @@ export type DocumentsRequestType = {
 
     updECP: {
         header?: string // УПД от Перевозчика для Заказчика с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
-
         documentDownload?: string // строка со ссылкой на сгенерированный БЭКОМ документ
         // (!!! заменяется на сгенерированный ???)
         documentUpload?: File // участвует ТОЛЬКО при редактировании формы

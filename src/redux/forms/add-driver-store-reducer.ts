@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
-import {EmployeesCardType, ResponseToRequestCardType, ValidateType} from '../../types/form-types';
+import {EmployeeCardType, ResponseToRequestCardType, ValidateType} from '../../types/form-types';
 import {syncValidators} from '../../utils/validators';
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
@@ -84,7 +84,7 @@ export type AddDriverStoreReducerThunkActionType<R = void> = ThunkAction<Promise
 export const setOneResponseToRequest = (
     {
         addDriverValues, oneEmployee: employeeValues,
-    }: { addDriverValues: ResponseToRequestCardType<string>, oneEmployee: EmployeesCardType<string> } ): AddDriverStoreReducerThunkActionType =>
+    }: { addDriverValues: ResponseToRequestCardType<string>, oneEmployee: EmployeeCardType<string> } ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(addDriverStoreActions.setIsFetching(true))
         try {
@@ -94,7 +94,7 @@ export const setOneResponseToRequest = (
             })
 
             // ставим статус водителю
-            await dispatch(modifyOneEmployeeSetStatusAddedToResponse({ employeeValues }))
+            await dispatch(modifyOneEmployeeSetStatusAddedToResponse({ idEmployee: employeeValues.idEmployee }))
             dispatch(getAllRequestsAPI())
         } catch (e: TtonErrorType) {
             dispatch(addDriverStoreActions.setIsFetching(false))

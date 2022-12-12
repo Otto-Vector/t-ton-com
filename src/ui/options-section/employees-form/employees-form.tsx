@@ -10,7 +10,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../../common/info-text/into-text'
 import {CancelButton} from '../../common/cancel-button/cancel-button'
-import {EmployeesCardType, ParserType, ValidateType} from '../../../types/form-types'
+import {EmployeeCardType, ParserType, ValidateType} from '../../../types/form-types'
 import {
     getCurrentIdEmployeesStore,
     getInitialValuesEmployeesStore,
@@ -23,10 +23,11 @@ import {
 } from '../../../selectors/options/employees-reselect'
 import {
     employeesStoreActions,
+    getOneFiredEmployeeFromAPI,
     modifyOneEmployeeResetResponsesAndStatus,
     modifyOneEmployeeToAPI,
     newEmployeeSaveToAPI,
-    oneEmployeesDeleteToAPI,
+    oneEmployeeDeleteSoftToAPI,
 } from '../../../redux/options/employees-store-reducer';
 
 import {FormSelector} from '../../common/form-selector/form-selector';
@@ -57,8 +58,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const isFetching = useSelector(getIsFetchingEmployeesStore)
 
     const defaultInitialValues = useSelector(getInitialValuesEmployeesStore)
-    // для проброса загруженных данных в форму
-    const [ initialValues, setInitialValues ] = useState(defaultInitialValues)
 
     const label = useSelector(getLabelEmployeesStore)
     const maskOn = useSelector(getMaskOnEmployeesStore)
@@ -78,11 +77,13 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const currentId = useSelector(getCurrentIdEmployeesStore)
     const oneEmployee = useSelector(getOneEmployeeFromLocal)
     // вытаскиваем значение роутера
-    const { id: currentIdForShow } = useParams<{ id: string | undefined }>()
+    const { id: currentIdForShow = '' } = useParams<{ id: string | undefined }>()
     const isNew = currentIdForShow === 'new'
     const [ drivingLicenseNumberRusCheck, setDrivingLicenseNumberRusCheck ] = useState(isNew)
+    // для проброса загруженных данных в форму
+    const [ initialValues, setInitialValues ] = useState<EmployeeCardType>({} as EmployeeCardType)
 
-    const { options } = useSelector(getRoutesStore)
+    const { options, optionsEdit: { employees } } = useSelector(getRoutesStore)
     const navigate = useNavigate()
 
     const dispatch = useDispatch()
@@ -92,9 +93,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const [ isImageChanged, setIsImageChanged ] = useState(false);
 
 
-    const onSubmit = useCallback(( values: EmployeesCardType<string> ) => {
+    const onSubmit = useCallback(async ( values: EmployeeCardType<string> ) => {
         const placeholder = '-'
-        const unmaskedValues: EmployeesCardType<string> = {
+        const unmaskedValues: EmployeeCardType<string> = {
             ...values,
             personnelNumber: parseAllNumbers(values.personnelNumber) || placeholder,
             garageNumber: parseAllNumbers(values.garageNumber) || placeholder,
@@ -103,8 +104,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             idTrailer: !values.idTransport ? placeholder : values.idTrailer || placeholder,
         }
 
-        if (!isNew && ( oneEmployee.idTransport !== unmaskedValues.idTransport
-                || oneEmployee.idTrailer !== unmaskedValues.idTrailer )
+        if (!isNew && ( oneEmployee?.idTransport !== unmaskedValues.idTransport
+                || oneEmployee?.idTrailer !== unmaskedValues.idTrailer )
             && unmaskedValues.status === 'ожидает принятия'
         ) {
             dispatch<any>(textAndActionGlobalModal({
@@ -127,10 +128,19 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         } else {
             if (isNew) {
                 // сохраняем НОВОЕ значение
-                dispatch<any>(newEmployeeSaveToAPI({
+                // если такой номер паспорта есть, то возвращает его idEmployee
+                const idEmployee = await dispatch<any>(newEmployeeSaveToAPI({
                     ...unmaskedValues,
                     rating: placeholder,
                 }, selectedImage))
+                debugger
+                if (idEmployee) {
+                    dispatch<any>(textAndActionGlobalModal({
+                        text: 'Сотрудник с данным номером паспорта уже есть в системе. Попытаться его восстановить?',
+                        navigateOnOk: employees + idEmployee,
+                        navigateOnCancel: options,
+                    }))
+                }
             } else {
                 // сохраняем измененное значение
                 dispatch<any>(modifyOneEmployeeToAPI({
@@ -138,19 +148,20 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                     image: selectedImage,
                     status: unmaskedValues.status,
                 }))
+                navigate(options) // и возвращаемся в предыдущее окно
             }
-            navigate(options) // и возвращаемся в предыдущее окно
         }
         dispatch<any>(rerenderTransport())
         dispatch<any>(rerenderTrailer())
-    }, [ oneEmployee.idTransport, oneEmployee.idTrailer, selectedImage ])
+    }, [ oneEmployee?.idTransport, oneEmployee?.idTrailer, selectedImage ])
 
 
     const onCancelClick = () => {
         navigate(options)
     }
 
-    const employeesDeleteHandleClick = ( employeeValues: EmployeesCardType ) => {
+    const employeesDeleteHandleClick = ( employeeValues: EmployeeCardType ) => {
+
         if (initialValues.status === 'ожидает принятия') {
             dispatch<any>(textAndActionGlobalModal({
                 title: 'Внимание!',
@@ -161,23 +172,36 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                 ],
                 action: () => {
                     dispatch<any>(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
-                    dispatch<any>(oneEmployeesDeleteToAPI(employeeValues.idEmployee))
+                    dispatch<any>(oneEmployeeDeleteSoftToAPI(employeeValues.idEmployee))
                 },
                 navigateOnOk: options,
             }))
         }
+
         if (initialValues.status === 'на заявке') {
             dispatch<any>(textAndActionGlobalModal({
                 text: 'Данный сотрудник находится на выполнении заявки, завершите выполнение заявки.',
             }))
         }
+
         if (initialValues.status === 'свободен') {
-            dispatch<any>(oneEmployeesDeleteToAPI(employeeValues.idEmployee))
-            navigate(options)
+            dispatch<any>(textAndActionGlobalModal({
+                title: 'Внимание!',
+                text: [
+                    'Вы собираетесь удалить сотрудника: ' + employeeValues.employeeFIO,
+                    'ОК - удалит сотрудника для данной организации',
+                    'Cancel - возврат в редактирование сотрудника',
+                ],
+                action: () => {
+                    dispatch<any>(oneEmployeeDeleteSoftToAPI(employeeValues.idEmployee))
+                },
+                navigateOnOk: options,
+            }))
         }
     }
 
-    const setCargoTypeFilter = ( form?: FormApi<EmployeesCardType<string>> ) => async ( idTransport: string ) => {
+    // фильтруем прицепы по значению поля Транспорт
+    const setCargoTypeFilter = ( form?: FormApi<EmployeeCardType<string>> ) => async ( idTransport: string ) => {
 
         if (form) { // при изменении селектора зачищаем значение прицепа
             await form.change('idTrailer', '-')
@@ -202,10 +226,21 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     }
 
     useEffect(() => {
+        dispatch(employeesStoreActions.setInitialValues({} as EmployeeCardType))
+    }, [])
+
+    useEffect(() => {
             if (currentId === currentIdForShow) {
-                setInitialValues(oneEmployee)
+                if (oneEmployee?.idUser) {
+                    setInitialValues(oneEmployee)
+                } else {
+                    if (!isNew) {
+                        dispatch<any>(getOneFiredEmployeeFromAPI(currentIdForShow))
+                    }
+                }
+
             } else {
-                dispatch(employeesStoreActions.setCurrentId(currentIdForShow || ''))
+                dispatch(employeesStoreActions.setCurrentId(currentIdForShow))
             }
 
             // фильтрация селектора по типу груза при редактировании сотрудника с транспортом
@@ -213,7 +248,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                 setCargoTypeFilter()(initialValues.idTransport)
             }
 
-        }, [ currentId, initialValues ],
+        }, [ currentId, currentIdForShow, initialValues.idTransport, oneEmployee?.idUser, isNew ],
     )
 
 
@@ -348,7 +383,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    inputType={ 'date' }
                                                    validate={ validators.passportDate as ValidateType }
                                                    parse={ parsers.passportDate as ParserType }
-                                                   value={ yearMmDdFormat(initialValues.passportDate as Date || new Date()) }
+                                                   value={ initialValues.passportDate || yearMmDdFormat(new Date()) }
                                                    max={ yearMmDdFormat(new Date()) } // для ввода от сегодняшнего дня value обязателен
                                             />
                                             {/*/////////////---ИЗОБРАЖЕНИЕ---///////////////////////////////*/ }
@@ -374,7 +409,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.employeesForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ !isImageChanged && ( submitting || pristine ) }
+                                                            disabled={ !isImageChanged && ( submitting || ( isNew ? false : pristine ) ) }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

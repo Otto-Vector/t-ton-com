@@ -4,7 +4,7 @@ import {
     CargoTypeType,
     ConsigneesCardType,
     DocumentsRequestType,
-    EmployeesCardType,
+    EmployeeCardType,
     OneRequestApiType,
     OneRequestType,
     ResponseToRequestCardType,
@@ -58,7 +58,7 @@ const initialState = {
             cargoHasBeenTransferred: 'Груз передан',
             cargoHasBeenReceived: 'Закрыть заявку',
         },
-    } as AllNestedKeysToType<OneRequestType, (string|undefined)>,
+    } as AllNestedKeysToType<OneRequestType, ( string | undefined )>,
 
     placeholder: {
         requestNumber: '№',
@@ -499,7 +499,11 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
             if (response.length > 0) {
                 dispatch(requestStoreActions.setInitialValues(parseRequestFromAPI(response[0])))
             } else {
-                dispatch(globalModalStoreActions.setTextMessage('НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber))
+                dispatch(globalModalStoreActions.setTextMessage(
+                    ['НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber,
+                    ( response.message ? ' Причина' + response.message : '' ),
+                    ]
+                ))
             }
         } catch (e) {
             dispatch(globalModalStoreActions.setTextMessage(e as string))
@@ -536,7 +540,7 @@ export const addAcceptedResponseToRequestOnCreate = (
     { addDriverValues, oneEmployee: employeeValues, oneTransport: transportValues, oneTrailer: trailerValues }
         : {
         addDriverValues: ResponseToRequestCardType<string>,
-        oneEmployee: EmployeesCardType<string>
+        oneEmployee: EmployeeCardType<string>
         oneTransport: TransportCardType<string>
         oneTrailer: TrailerCardType<string>
     } ): RequestStoreReducerThunkActionType =>
@@ -584,9 +588,9 @@ export const addAcceptedResponseToRequestOnCreate = (
 
             if (response.success) {
                 // удаляем все ответы, привязанные к данной заявке
-                await dispatch(removeResponseToRequestsBzAcceptRequest(addDriverValues.requestNumber))
+                // await dispatch(removeResponseToRequestsBzAcceptRequest(addDriverValues.requestNumber))
                 // применяем статус 'на заявке'
-                await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({ employeeValues }))
+                await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({ idEmployee: employeeValues.idEmployee }))
                 // перезаливаем все заявки
                 await dispatch(getAllRequestsAPI())
             }

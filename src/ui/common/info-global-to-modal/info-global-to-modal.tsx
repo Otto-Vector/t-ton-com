@@ -19,7 +19,7 @@ import {useNavigate} from 'react-router-dom';
 
 const textFromArrayToParagraph = ( text: string | string[] ) => {
     if (typeof text === 'string') return <p>{ text }</p>
-    return text.map(( line, index, textArr ) =>
+    return text.filter(x => x).map(( line, index, textArr ) =>
         <p style={ { marginBottom: index + 1 === textArr.length ? '0' : '.5rem' } } key={ line }>{ line }</p>)
 }
 

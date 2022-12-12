@@ -1,13 +1,19 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {syncValidators} from '../../utils/validators'
-import {EmployeesCardType, ParserType, ValidateType} from '../../types/form-types'
+import {EmployeeCardType, ParserType, ValidateType} from '../../types/form-types'
 import {syncParsers} from '../../utils/parsers';
 import {employeesApi} from '../../api/local-api/options/employee.api';
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
+import {
+    GlobalModalActionsType,
+    globalModalStoreActions,
+    textAndActionGlobalModal,
+} from '../utils/global-modal-store-reducer';
 import {TtonErrorType} from '../../types/other-types';
 import {removeResponseToRequestsBzEmployee} from '../forms/add-driver-store-reducer';
 import {GetActionsTypes} from '../../types/ts-utils';
+import {rerenderTransport} from './transport-store-reducer';
+import {rerenderTrailer} from './trailer-store-reducer';
 
 const initialState = {
     employeeIsFetching: false,
@@ -26,7 +32,7 @@ const initialState = {
         rating: 'Рейтинг:',
         idTransport: 'Прикреплённый транспорт',
         idTrailer: 'Прикреплённый прицеп',
-    } as EmployeesCardType<string>,
+    } as EmployeeCardType<string>,
 
     maskOn: {
         employeeFIO: undefined, // просто текст
@@ -40,9 +46,9 @@ const initialState = {
         garageNumber: '##### #####', // поставим ДО 10 цифр
         photoFace: undefined, // путь к файлу изображения
         rating: '##', // чило ДО 2-х цифр
-    } as EmployeesCardType,
+    } as EmployeeCardType,
 
-    initialValues: {} as EmployeesCardType,
+    initialValues: {} as EmployeeCardType,
 
     validators: {
         employeeFIO: syncValidators.textReqMin,
@@ -56,7 +62,7 @@ const initialState = {
         garageNumber: syncValidators.justTenNumbers,
         photoFace: undefined,
         rating: undefined,
-    } as EmployeesCardType<ValidateType>,
+    } as EmployeeCardType<ValidateType>,
 
     parsers: {
         employeeFIO: syncParsers.fio,
@@ -70,9 +76,9 @@ const initialState = {
         garageNumber: undefined,
         photoFace: undefined,
         rating: undefined,
-    } as EmployeesCardType<ParserType>,
+    } as EmployeeCardType<ParserType>,
 
-    content: [] as EmployeesCardType[],
+    content: [] as EmployeeCardType[],
 }
 
 export type EmployeesStoreReducerStateType = typeof initialState
@@ -118,7 +124,7 @@ export const employeesStoreReducer = ( state = initialState, action: ActionsType
 
 /* ЭКШОНЫ */
 export const employeesStoreActions = {
-    setEmployeesContent: ( employees: EmployeesCardType[] ) => ( {
+    setEmployeesContent: ( employees: EmployeeCardType[] ) => ( {
         type: 'employees-store-reducer/SET-EMPLOYEES-CONTENT',
         employees,
     } as const ),
@@ -130,7 +136,7 @@ export const employeesStoreActions = {
         type: 'employees-store-reducer/TOGGLE-EMPLOYEE-IS-FETCHING',
         employeeIsFetching,
     } as const ),
-    setInitialValues: ( initialValues: EmployeesCardType ) => ( {
+    setInitialValues: ( initialValues: EmployeeCardType ) => ( {
         type: 'employees-store-reducer/SET-INITIAL-VALUES',
         initialValues,
     } as const ),
@@ -164,18 +170,21 @@ export const getAllEmployeesAPI = (): EmployeesStoreReducerThunkActionType =>
     }
 
 // добавить одну запись СОТРУДНИКА через АПИ
-export const newEmployeeSaveToAPI = ( values: EmployeesCardType<string>, image: File | undefined ): EmployeesStoreReducerThunkActionType =>
+export const newEmployeeSaveToAPI = ( values: EmployeeCardType<string>, image: File | undefined ): EmployeesStoreReducerThunkActionType<string | void> =>
     async ( dispatch, getState ) => {
 
         try {
             const idUser = getState().authStoreReducer.authID
             const response = await employeesApi.createOneEmployee({
                 ...values, idUser,
-                passportDate: values.passportDate as string,
                 status: 'свободен',
+                rating: '-',
             }, image)
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
+            if (e?.response?.data?.failed) { // если сотрудник с данным паспортом уже существует
+                return e?.response?.data?.idEmployee
+            }
             console.log(JSON.stringify(e?.response?.data))
         }
         await dispatch(getAllEmployeesAPI())
@@ -187,18 +196,38 @@ export const modifyOneEmployeeToAPI = (
         employeeValues,
         image,
         status,
-    }: { employeeValues: EmployeesCardType<string>, image?: File, status: EmployeesCardType['status'] } ): EmployeesStoreReducerThunkActionType =>
+    }: { employeeValues: EmployeeCardType<string>, image?: File, status: EmployeeCardType['status'] } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
 
         try {
             const response = await employeesApi.modifyOneEmployee({
                 ...employeeValues,
-                passportDate: employeeValues.passportDate as string,
                 status,
             }, image)
             if (response.success) console.log(response.success)
+            if (response.message) console.log(response.message)
+            // перерисовываем список транспорт/прицеп при любом изменении сотрудника
+            dispatch(rerenderTransport())
+            dispatch(rerenderTrailer())
         } catch (e: TtonErrorType) {
             console.error(JSON.stringify(e?.response?.data))
+        }
+        await dispatch(getAllEmployeesAPI())
+    }
+
+// частичное изменение данных сотрудника
+export const modifyOneEmployeeSoftToAPI = ( employeeData: Partial<Omit<EmployeeCardType, 'idEmployee' | 'photoFace'>> & { idEmployee: string } ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            // удаляем (заменяем на "-") привязку пользователя
+            const response = await employeesApi.modifyOneEmployeeNoPhoto(employeeData)
+            if (response.message) console.log(response.message)
+            if (response.success) console.log(response.success)
+            // перерисовываем список транспорт/прицеп при любом изменении сотрудника
+            dispatch(rerenderTransport())
+            dispatch(rerenderTrailer())
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
         await dispatch(getAllEmployeesAPI())
     }
@@ -209,7 +238,7 @@ export const modifyOneEmployeeResetResponsesAndStatus = (
     {
         employeeValues,
         image,
-    }: { employeeValues: EmployeesCardType<string>, image?: File } ): EmployeesStoreReducerThunkActionType =>
+    }: { employeeValues: EmployeeCardType<string>, image?: File } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
         await dispatch(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
@@ -218,22 +247,35 @@ export const modifyOneEmployeeResetResponsesAndStatus = (
 
 // события после утверждения пользователя на заявке
 export const modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest = (
-    { employeeValues }: { employeeValues: EmployeesCardType<string> } ): EmployeesStoreReducerThunkActionType =>
+    { idEmployee }: { idEmployee: string } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
-        await dispatch(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
-        await dispatch(modifyOneEmployeeToAPI({ employeeValues, status: 'на заявке' }))
+        await dispatch(removeResponseToRequestsBzEmployee(idEmployee))
+        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, status: 'на заявке' }))
     }
 
 // события после добавления пользователя на заявку
 export const modifyOneEmployeeSetStatusAddedToResponse = (
-    { employeeValues }: { employeeValues: EmployeesCardType<string> } ): EmployeesStoreReducerThunkActionType =>
+    { idEmployee }: { idEmployee: string } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
-        await dispatch(modifyOneEmployeeToAPI({ employeeValues, status: 'ожидает принятия' }))
+        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, status: 'ожидает принятия' }))
     }
 
-// удаляем одного СОТРУДНИКА
-export const oneEmployeesDeleteToAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
+
+// удаляем одного СОТРУДНИКА "частично"
+export const oneEmployeeDeleteSoftToAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        await dispatch(modifyOneEmployeeSoftToAPI({
+            idEmployee,
+            idUser: '-',
+            status: 'уволен',
+            idTransport: '-',
+            idTrailer: '-',
+        }))
+    }
+
+// удаляем одного СОТРУДНИКА ПОЛНОСТЬЮ
+export const oneEmployeeDeleteHardToAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await employeesApi.deleteOneEmployee({ idEmployee })
@@ -244,6 +286,7 @@ export const oneEmployeesDeleteToAPI = ( idEmployee: string ): EmployeesStoreRed
         await dispatch(getAllEmployeesAPI())
     }
 
+// простой запрос на одного сотрудника по idEmployee
 export const getOneEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
@@ -253,12 +296,42 @@ export const getOneEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReduc
                 const oneEmployee = response[0]
                 dispatch(employeesStoreActions.setInitialValues(oneEmployee))
             }
-
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
     }
-
+// запрос на одного сотрудника по idEmployee ДЛЯ ВОССТАНОВЛЕНИЯ
+export const getOneFiredEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        dispatch(employeesStoreActions.setInitialValues({} as EmployeeCardType))
+        try {
+            const response = await employeesApi.getOneEmployeeById({ idEmployee })
+            if (response.message) console.log(response.message)
+            if (response.length > 0) {
+                const oneEmployee = response[0]
+                const organization = getState().requisitesStoreReducer.filteredContent?.find(( { idUser } ) => idUser === oneEmployee.idUser)
+                const { options } = getState().routesStoreReducer.routes
+                if (oneEmployee.status === 'уволен' || oneEmployee.idUser === '-') {
+                    dispatch(employeesStoreActions.setInitialValues(oneEmployee))
+                    await dispatch(textAndActionGlobalModal({
+                        text: 'Восстановление сотрудника успешно выполнено!',
+                        timeToDeactivate: 3000
+                    }))
+                } else {
+                    await dispatch(textAndActionGlobalModal({
+                        text: [
+                            'Сотрудник с данным паспортом приписан к другой оранизации: ' + organization?.organizationName?.toUpperCase(),
+                            'Необходимо его уволить (УДАЛИТЬ) в другой организации, чтобы приписать к вашей',
+                        ],
+                        navigateOnOk: options,
+                        navigateOnCancel: options,
+                    }))
+                }
+            }
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+        }
+    }
 // добавить пользователю информацию о привязке к ответу по заявке
 export const addResponseIdToEmployee = ( data: { idEmployee: string, addedToResponse: string } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {

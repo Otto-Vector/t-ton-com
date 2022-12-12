@@ -11,7 +11,7 @@ import {
 } from '../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
 import {CancelButton} from '../common/cancel-button/cancel-button'
-import {EmployeesCardType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
+import {EmployeeCardType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
 
 import {
     getInitialValuesAddDriverStore,
@@ -91,7 +91,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
     const navigate = useNavigate()
 
-    const oneEmployee = useSelector(getOneEmployeeFromLocal) as EmployeesCardType<string>
+    const oneEmployee = useSelector(getOneEmployeeFromLocal) as EmployeeCardType<string>
     const setOneEmployee = ( searchId: string ) => {
         dispatch(employeesStoreActions.setCurrentId(searchId))
     }
