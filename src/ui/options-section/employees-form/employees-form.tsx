@@ -238,7 +238,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                         dispatch<any>(getOneFiredEmployeeFromAPI(currentIdForShow))
                     }
                 }
-
             } else {
                 dispatch(employeesStoreActions.setCurrentId(currentIdForShow))
             }

@@ -7,6 +7,7 @@ import {AttachImageButton} from '../attach-image-button/attach-image-button';
 import imageCompression from 'browser-image-compression'
 import {lightBoxStoreActions} from '../../../redux/utils/lightbox-store-reducer';
 import noImage from '../../../media/logo192.png'
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 type OwnProps = {
     imageURL?: string
@@ -14,11 +15,11 @@ type OwnProps = {
     title?: string
 }
 
-export const ImageViewSet: React.FC<OwnProps> = ( {
-                                                      imageURL,
-                                                      onSelectNewImageFileToSend,
-                                                      title = 'Добавить/изменить фото',
-                                                  } ) => {
+export const ImageViewSet: React.FC<OwnProps> = React.memo(( {
+                                                                 imageURL,
+                                                                 onSelectNewImageFileToSend,
+                                                                 title = 'Добавить/изменить фото',
+                                                             } ) => {
 
     const dispatch = useDispatch()
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
@@ -73,4 +74,4 @@ export const ImageViewSet: React.FC<OwnProps> = ( {
 
         </div>
     )
-}
+}, valuesAreEqual)
