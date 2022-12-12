@@ -11,6 +11,7 @@ type OwnProps = {
     rounded?: boolean
     children?: React.ReactNode
     wordWrap?: boolean
+    isSelectOnTab?: boolean
 }
 
 export const Button: React.FC<OwnProps> = (
@@ -18,6 +19,7 @@ export const Button: React.FC<OwnProps> = (
         disabled, onClick, title = '',
         colorMode = 'noFill', rounded,
         type = 'button', children, wordWrap,
+        isSelectOnTab = true,
     } ) => {
 
     return <button className={
@@ -30,6 +32,7 @@ export const Button: React.FC<OwnProps> = (
                    onClick={ onClick }
                    type={ type }
                    title={ title + ( disabled ? ' (кнопка неактивна)' : '' ) }
+                   tabIndex={ isSelectOnTab ? 0 : -1 }
     >{ // отображаем то что внутри тега button
         children || title
     }

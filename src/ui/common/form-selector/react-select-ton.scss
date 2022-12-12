@@ -3,7 +3,7 @@
 .react-select-ton {
   &__control {
     box-sizing: border-box !important;
-    border-color: #92ABC8 !important;
+    //border-color: #92ABC8 !important; // выбор цвета стоит внутри компоненты
     border-width: 2px !important;
     border-radius: 12px !important;
     padding-right: 6px !important;

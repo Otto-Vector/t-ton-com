@@ -25,6 +25,7 @@ export const InfoButtonToModal: React.FC<OwnProps> = ( { textToModal = '', mode 
         <div className={ styles.infoButtonToModal + ' ' + styles['infoButtonToModal__' + mode] }>
             <Button onClick={ onClickButton }
                     title={ 'Информация' }
+                    isSelectOnTab={ false }
                     rounded
                     colorMode={ 'lightBlue' }>
                 <MaterialIcon icon_name={ 'question_mark' }/>

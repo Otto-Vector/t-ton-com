@@ -58,6 +58,7 @@ export const CustomSelect = ( {
     }, [ options ])
 
     const isError = ( meta.error || meta.submitError ) && meta.touched
+    console.log('isError', isError);
 
     const styleControl: StylesConfigFunction<ControlProps<any, any, GroupBase<any>>> = ( baseStyles ) => ( {
         ...baseStyles,

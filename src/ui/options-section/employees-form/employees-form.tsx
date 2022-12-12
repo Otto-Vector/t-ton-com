@@ -57,8 +57,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const header = 'Сотрудник'
     const isFetching = useSelector(getIsFetchingEmployeesStore)
 
-    const defaultInitialValues = useSelector(getInitialValuesEmployeesStore)
-
     const label = useSelector(getLabelEmployeesStore)
     const maskOn = useSelector(getMaskOnEmployeesStore)
     const validators = useSelector(getValidatorsEmployeesStore)
