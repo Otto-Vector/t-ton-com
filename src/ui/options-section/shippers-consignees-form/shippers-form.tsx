@@ -177,6 +177,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
 
     useEffect(() => {
         if (isFirstRender) {
+            dispatch(shippersStoreActions.setInitialValues({} as ShippersCardType))
             if (isNew) {
                 // зачищаем селектор при первом рендере
                 dispatch(daDataStoreActions.setSuggectionsValues([]))

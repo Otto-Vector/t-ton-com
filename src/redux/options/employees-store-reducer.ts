@@ -315,12 +315,13 @@ export const getOneFiredEmployeeFromAPI = ( idEmployee: string ): EmployeesStore
                     dispatch(employeesStoreActions.setInitialValues(oneEmployee))
                     await dispatch(textAndActionGlobalModal({
                         text: 'Восстановление сотрудника успешно выполнено!',
-                        timeToDeactivate: 3000
+                        timeToDeactivate: 3000,
                     }))
                 } else {
                     await dispatch(textAndActionGlobalModal({
                         text: [
-                            'Сотрудник с данным паспортом приписан к другой оранизации: ' + organization?.organizationName?.toUpperCase(),
+                            'Сотрудник с данным паспортом приписан к другой оранизации: ' +
+                            ( organization?.organizationName ? organization.organizationName.toUpperCase() : '' ),
                             'Необходимо его уволить (УДАЛИТЬ) в другой организации, чтобы приписать к вашей',
                         ],
                         navigateOnOk: options,

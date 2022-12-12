@@ -43,7 +43,7 @@ import {includesTitleValidator} from '../../../utils/validators';
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
-import { getCityFromDispetcherAPI } from '../../../redux/api/avto-dispetcher-response-reducer'
+import {getCityFromDispetcherAPI} from '../../../redux/api/avto-dispetcher-response-reducer'
 
 
 type OwnProps = {}
@@ -177,6 +177,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
 
     useEffect(() => {
         if (isFirstRender) {
+            dispatch(consigneesStoreActions.setInitialValues({} as ConsigneesCardType))
             if (isNew) {
                 // зачищаем селектор при первом рендере
                 dispatch(daDataStoreActions.setSuggectionsValues([]))
