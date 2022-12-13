@@ -71,23 +71,23 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     className={ styles.requestFormDocumentRight__documentsPanel + ' ' + styles.requestFormDocumentRight__documentsPanel_top }>
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <Button colorMode={ !initialValues.proxyWay.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay.proxyFreightLoader?.toString() }
+                        <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
+                                title={ labels.proxyWay?.proxyFreightLoader?.toString() }
                                 disabled={ false }
                                 wordWrap
                         />
                     </div>
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <Button colorMode={ !initialValues.proxyWay.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay.proxyDriver?.toString() }
+                        <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
+                                title={ labels.proxyWay?.proxyDriver?.toString() }
                                 wordWrap
                         />
                     </div>
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <Button colorMode={ !initialValues.proxyWay.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay.waybillDriver?.toString() }
+                        <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
+                                title={ labels.proxyWay?.waybillDriver?.toString() }
                                 wordWrap
                         />
                     </div>
@@ -150,19 +150,19 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     { labels.ttnECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.ttnECP.customerIsSubscribe ? 'grayAlert' : 'blue' }
-                                title={ labels.ttnECP.customerIsSubscribe?.toString() }
+                        <Button colorMode={ !initialValues.ttnECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.ttnECP?.customerIsSubscribe?.toString() }
                                 disabled={ false }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.ttnECP.carrierIsSubscribe ? 'grayAlert' : 'blue' }
-                                title={ labels.ttnECP.carrierIsSubscribe?.toString() }
+                        <Button colorMode={ !initialValues.ttnECP?.carrierIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.ttnECP?.carrierIsSubscribe?.toString() }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.ttnECP.consigneeIsSubscribe ? 'grayAlert' : 'blue' }
-                                title={ labels.ttnECP.consigneeIsSubscribe?.toString() }
+                        <Button colorMode={ !initialValues.ttnECP?.consigneeIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.ttnECP?.consigneeIsSubscribe?.toString() }
                         />
                     </div>
                 </div>
@@ -174,7 +174,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                             disabled={ requestModes.historyMode }
                     >
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
-                                    { labels.ttnECP.documentDownload }</span>
+                                    { labels.ttnECP?.documentDownload }</span>
                         <MaterialIcon icon_name={ 'attach_file' }/>
                         <input type={ 'file' }
                                className={ styles.requestFormDocumentRight__hiddenAttachFile }
@@ -189,17 +189,17 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*/////////Договор оказания транспортных услуг с ЭЦП//////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.contractECP.header }</label>
+                    { labels.contractECP?.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.contractECP.customerIsSubscribe ? 'grayAlert' : 'blue' }
-                                title={ labels.contractECP.customerIsSubscribe?.toString() }
+                        <Button colorMode={ !initialValues.contractECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.contractECP?.customerIsSubscribe?.toString() }
                                 disabled={ false }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.contractECP.carrierIsSubscribe ? 'grayAlert' : 'blue' }
-                                title={ labels.contractECP.carrierIsSubscribe?.toString() }
+                        <Button colorMode={ !initialValues.contractECP?.carrierIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.contractECP?.carrierIsSubscribe?.toString() }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
@@ -207,7 +207,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                 disabled={ requestModes.historyMode }
                         >
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
-                                    { labels.contractECP.documentDownload }</span>
+                                    { labels.contractECP?.documentDownload }</span>
                             <MaterialIcon icon_name={ 'attach_file' }/>
                             <input type={ 'file' }
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
@@ -226,14 +226,14 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     { labels.updECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.updECP.customerIsSubscribe ? 'grayAlert' : 'blue' }
-                                title={ labels.updECP.customerIsSubscribe?.toString() }
+                        <Button colorMode={ !initialValues.updECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.updECP?.customerIsSubscribe?.toString() }
                                 disabled={ false }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <Button colorMode={ !initialValues.updECP.carrierIsSubscribe ? 'grayAlert' : 'blue' }
-                                title={ labels.updECP.carrierIsSubscribe?.toString() }
+                        <Button colorMode={ !initialValues.updECP?.carrierIsSubscribe ? 'grayAlert' : 'blue' }
+                                title={ labels.updECP?.carrierIsSubscribe?.toString() }
                         />
 
                     </div>
@@ -242,7 +242,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                 disabled={ requestModes.historyMode }
                         >
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
-                                    { labels.updECP.documentDownload }</span>
+                                    { labels.updECP?.documentDownload }</span>
                             <MaterialIcon icon_name={ 'attach_file' }/>
                             <input type={ 'file' }
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
@@ -258,19 +258,19 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*//////Документы от Заказчика для Получателя с ЭЦП/////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.customerToConsigneeContractECP.header }</label>
+                    { labels.customerToConsigneeContractECP?.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button
-                            colorMode={ !initialValues.customerToConsigneeContractECP.customerIsSubscribe ? 'grayAlert' : 'blue' }
-                            title={ labels.customerToConsigneeContractECP.customerIsSubscribe?.toString() }
+                            colorMode={ !initialValues.customerToConsigneeContractECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
+                            title={ labels.customerToConsigneeContractECP?.customerIsSubscribe?.toString() }
                             disabled={ false }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button
-                            colorMode={ !initialValues.customerToConsigneeContractECP.consigneeIsSubscribe ? 'grayAlert' : 'blue' }
-                            title={ labels.customerToConsigneeContractECP.consigneeIsSubscribe?.toString() }
+                            colorMode={ !initialValues.customerToConsigneeContractECP?.consigneeIsSubscribe ? 'grayAlert' : 'blue' }
+                            title={ labels.customerToConsigneeContractECP?.consigneeIsSubscribe?.toString() }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
@@ -278,7 +278,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                 disabled={ requestModes.historyMode }
                         >
                                 <span className={ styles.requestFormDocumentRight__inAttachText }>
-                                    { labels.customerToConsigneeContractECP.documentDownload }</span>
+                                    { labels.customerToConsigneeContractECP?.documentDownload }</span>
                             <MaterialIcon icon_name={ 'attach_file' }/>
                             <input type={ 'file' }
                                    className={ styles.requestFormDocumentRight__hiddenAttachFile }
@@ -298,7 +298,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__panelButton }>
                         <Button colorMode={ 'gray' }
                                 wordWrap rounded
-                                title={ labelsR.localStatus.paymentHasBeenReceived }
+                                title={ labelsR.localStatus?.paymentHasBeenReceived }
                                 onClick={ () => {
                                 } }
                         />
@@ -307,7 +307,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         <Button colorMode={ 'gray' }
                                 wordWrap
                                 rounded
-                                title={ labelsR.localStatus.cargoHasBeenReceived }
+                                title={ labelsR.localStatus?.cargoHasBeenReceived }
                                 onClick={ () => {
                                 } }
                         />

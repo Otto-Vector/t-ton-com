@@ -73,8 +73,8 @@ export const oneRequestApi = {
 
     // ДОБАВИТЬ доступ пользователя к Заявке PUT /api/onerequesttypeacceptuser/
     // (изменяет поле acceptedUsers в OneRequestApiType)
-    addOneUserAcceptRequest( responseToRequest: OneRequestApiType ) {
-        return instanceBack.put<InfoResponseType>('/api/onerequesttypeacceptuser/', responseToRequest)
+    addOneUserAcceptRequest( userToRequest: { requestNumber: string, idUser: string } ) {
+        return instanceBack.put<InfoResponseType>('/api/onerequesttypeacceptuser/', userToRequest)
             .then(response => response.data)
         // 1.	Code 200, {'message': 'Error, login please'}
         // 2.	Code 200, {'message': 'Пользователю '+request.data['idUser']+' предоставлен доступ к просмотру заявки ' + request.data['requestNumber']}
@@ -85,8 +85,8 @@ export const oneRequestApi = {
 
     // УДАЛИТЬ доступ пользователя к Заявке DELETE /api/onerequesttypeacceptuser/
     // (изменяет поле acceptedUsers в OneRequestApiType)
-    deleteOneUserAcceptRequest( accessUserToRequest: accessUserToRequestType ) {
-        return instanceBack.delete<InfoResponseType>('/api/onerequesttypeacceptuser/', { data: accessUserToRequest })
+    deleteOneUserAcceptRequest( userDeleteFromRequest: { requestNumber: number, idUser: string } ) {
+        return instanceBack.delete<InfoResponseType>('/api/onerequesttypeacceptuser/', { data: userDeleteFromRequest })
             .then(response => response.data)
         // 1.	Code 200, {'message': 'Error, login please'}
         // 2.	Code 200 {'message': 'Пользователю '+request.data['idUser']+' закрыт доступ к просмотру заявки ' + request.data['requestNumber']}

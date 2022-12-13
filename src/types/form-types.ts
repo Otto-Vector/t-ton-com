@@ -536,7 +536,7 @@ export type OneRequestApiType = {
     requestUserCarrierId?: string
     // id ответа на заявку (перевозчик)
     requestCarrierId?: string
-
+    /* ПЕРЕВОЗЧИК */
     innNumberCarrier?: string
     organizationNameCarrier?: string
     taxModeCarrier?: string
@@ -555,7 +555,7 @@ export type OneRequestApiType = {
     korrAccountCarrier?: string
     mechanicFIOCarrier?: string
     dispatcherFIOCarrier?: string
-
+    /* ЗАКАЗЧИК */
     innNumberCustomer?: string
     organizationNameCustomer?: string
     taxModeCustomer?: string
@@ -574,7 +574,7 @@ export type OneRequestApiType = {
     korrAccountCustomer?: string
     mechanicFIOCustomer?: string
     dispatcherFIOCustomer?: string
-
+    /* ОТПРАВИТЕЛЬ */
     taxModeSender?: string
     okpoSender?: string
     legalAddressSender?: string
@@ -588,7 +588,7 @@ export type OneRequestApiType = {
     korrAccountSender?: string
     mechanicFIOSender?: string
     dispatcherFIOSender?: string
-
+    /* ПОЛУЧАТЕЛЬ */
     taxModeRecipient?: string
     okpoRecipient?: string
     legalAddressRecipient?: string

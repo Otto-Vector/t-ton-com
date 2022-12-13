@@ -5,8 +5,8 @@ import {syncValidators} from '../../utils/validators'
 import {coordsToString, syncParsers} from '../../utils/parsers';
 import {shippersApi} from '../../api/local-api/options/shippers.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {TtonErrorType} from '../../types/other-types';
 import {GetActionsTypes} from '../../types/ts-utils';
+import {TtonErrorType} from '../../api/local-api/back-instance.api';
 
 
 const initialState = {
@@ -118,7 +118,6 @@ export const shippersStoreReducer = ( state = initialState, action: ActionsType 
                 ...state,
                 shippersIsFetching: action.shippersIsFetching,
             }
-
         }
         case 'shippers-store-reducer/SET-COORDINATES': {
             return {

@@ -9,11 +9,11 @@ import {
     globalModalStoreActions,
     textAndActionGlobalModal,
 } from '../utils/global-modal-store-reducer';
-import {TtonErrorType} from '../../types/other-types';
 import {removeResponseToRequestsBzEmployee} from '../forms/add-driver-store-reducer';
 import {GetActionsTypes} from '../../types/ts-utils';
 import {rerenderTransport} from './transport-store-reducer';
 import {rerenderTrailer} from './trailer-store-reducer';
+import {TtonErrorType} from '../../api/local-api/back-instance.api';
 
 const initialState = {
     employeeIsFetching: false,
@@ -181,7 +181,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeeCardType<string>, image: F
                 rating: '-',
             }, image)
             if (response.success) console.log(response.success)
-        } catch (e: TtonErrorType) {
+        } catch (e: TtonErrorType<{idEmployee: string}>) {
             if (e?.response?.data?.failed) { // если сотрудник с данным паспортом уже существует
                 return e?.response?.data?.idEmployee
             }
@@ -190,18 +190,19 @@ export const newEmployeeSaveToAPI = ( values: EmployeeCardType<string>, image: F
         await dispatch(getAllEmployeesAPI())
     }
 
-// изменить одну запись СОТРУДНИКА через АПИ
+// изменить одну запись СОТРУДНИКА через АПИ (с неявным присвоением idUser)
 export const modifyOneEmployeeToAPI = (
     {
         employeeValues,
         image,
         status,
     }: { employeeValues: EmployeeCardType<string>, image?: File, status: EmployeeCardType['status'] } ): EmployeesStoreReducerThunkActionType =>
-    async ( dispatch ) => {
-
+    async ( dispatch, getState ) => {
+        const idUser = getState().authStoreReducer.authID
         try {
             const response = await employeesApi.modifyOneEmployee({
                 ...employeeValues,
+                idUser,
                 status,
             }, image)
             if (response.success) console.log(response.success)
@@ -239,7 +240,7 @@ export const modifyOneEmployeeResetResponsesAndStatus = (
         employeeValues,
         image,
     }: { employeeValues: EmployeeCardType<string>, image?: File } ): EmployeesStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+    async ( dispatch) => {
         // удаляем все ответы на запросы у данного сотрудника
         await dispatch(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
         await dispatch(modifyOneEmployeeToAPI({ employeeValues, image, status: 'свободен' }))

@@ -79,11 +79,18 @@ export const RequestSection: React.FC = React.memo(() => {
                     dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
             }
             if (requestModes.statusMode) { // для прогрузки данных искомого водителя в форму
-                dispatch<any>(getOneEmployeeFromAPI)
+                // dispatch<any>(getOneEmployeeFromAPI)
             }
             setIsFirstRender(false)
         }
     }, [ isFirstRender ])
+
+    // useEffect(()=>{
+    //      if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
+    //             if (initialValues.requestNumber !== +( reqNumber || 0 ))
+    //                 dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
+    //         }
+    // },[])
 
 
     if (!requestModes.createMode && !initialValues.requestNumber) return <div>

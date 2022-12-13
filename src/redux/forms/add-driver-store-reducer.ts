@@ -5,10 +5,10 @@ import {syncValidators} from '../../utils/validators';
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 import {getAllRequestsAPI} from './request-store-reducer';
-import {TtonErrorType} from '../../types/other-types';
 import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer';
 import {GetActionsTypes} from '../../types/ts-utils';
 import {syncParsers} from '../../utils/parsers';
+import {TtonErrorType} from '../../api/local-api/back-instance.api';
 
 
 const initialState = {
@@ -89,14 +89,15 @@ export const setOneResponseToRequest = (
         dispatch(addDriverStoreActions.setIsFetching(true))
         try {
             const requestCarrierId = getState().authStoreReducer.authID
-            const response = await responseToRequestApi.createOneResponseToRequest({
+            await responseToRequestApi.createOneResponseToRequest({
                 ...addDriverValues, requestCarrierId,
             })
 
             // ставим статус водителю
             await dispatch(modifyOneEmployeeSetStatusAddedToResponse({ idEmployee: employeeValues.idEmployee }))
+
             dispatch(getAllRequestsAPI())
-        } catch (e: TtonErrorType) {
+        } catch (e: TtonErrorType<{prevResponseToRequest:string}>) {
             dispatch(addDriverStoreActions.setIsFetching(false))
             if (e?.response?.data?.prevResponseToRequest) {
                 dispatch(globalModalStoreActions.setTextMessage([
@@ -125,7 +126,7 @@ export const modifyOneResponseToRequest = ( {
                                             }: { addDriverValues: ResponseToRequestCardType<string>, responseId: string } ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await responseToRequestApi.modifyOneResponseToRequest({ ...addDriverValues, responseId })
+            await responseToRequestApi.modifyOneResponseToRequest({ ...addDriverValues, responseId })
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
         }
@@ -135,7 +136,7 @@ export const modifyOneResponseToRequest = ( {
 export const getResponseToRequestListByIdEmployee = ( idEmployee: { idEmployee: string } ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await responseToRequestApi.getOneResponseToRequest(idEmployee)
+            await responseToRequestApi.getOneResponseToRequest(idEmployee)
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
         }
@@ -145,7 +146,7 @@ export const getResponseToRequestListByIdEmployee = ( idEmployee: { idEmployee: 
 export const getResponseToRequestListByRequestNumber = ( requestNumber: { requestNumber: string } ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await responseToRequestApi.getOneResponseToRequest(requestNumber)
+            await responseToRequestApi.getOneResponseToRequest(requestNumber)
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
         }
@@ -155,7 +156,7 @@ export const getResponseToRequestListByRequestNumber = ( requestNumber: { reques
 export const getOneResponseToRequestById = ( responseId: { responseId: string } ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await responseToRequestApi.getOneResponseToRequest(responseId)
+            await responseToRequestApi.getOneResponseToRequest(responseId)
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
         }

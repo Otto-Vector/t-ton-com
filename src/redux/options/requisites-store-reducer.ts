@@ -11,7 +11,7 @@ import {
     textAndActionGlobalModal,
 } from '../utils/global-modal-store-reducer';
 import {GetActionsTypes} from '../../types/ts-utils';
-import {TtonErrorType} from '../../types/other-types';
+import {TtonErrorType} from '../../api/local-api/back-instance.api';
 
 
 const initialState = {

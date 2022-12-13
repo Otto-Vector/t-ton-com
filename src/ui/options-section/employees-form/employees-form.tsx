@@ -13,7 +13,6 @@ import {CancelButton} from '../../common/cancel-button/cancel-button'
 import {EmployeeCardType, ParserType, ValidateType} from '../../../types/form-types'
 import {
     getCurrentIdEmployeesStore,
-    getInitialValuesEmployeesStore,
     getIsFetchingEmployeesStore,
     getLabelEmployeesStore,
     getMaskOnEmployeesStore,
@@ -131,7 +130,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                     ...unmaskedValues,
                     rating: placeholder,
                 }, selectedImage))
-                debugger
                 if (idEmployee) {
                     dispatch<any>(textAndActionGlobalModal({
                         text: 'Сотрудник с данным номером паспорта уже есть в системе. Попытаться его восстановить?',
@@ -158,7 +156,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         navigate(options)
     }
 
-    const employeesDeleteHandleClick = ( employeeValues: EmployeeCardType ) => {
+    const employeesDeleteHandleClick = useCallback(( employeeValues: EmployeeCardType ) => {
 
         if (initialValues.status === 'ожидает принятия') {
             dispatch<any>(textAndActionGlobalModal({
@@ -188,7 +186,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                 text: [
                     'Вы собираетесь удалить сотрудника: ' + employeeValues.employeeFIO,
                     'ОК - удалит сотрудника для данной организации',
-                    'Cancel - возврат в редактирование сотрудника',
+                    'Cancel - возврат к редактированию сотрудника',
                 ],
                 action: () => {
                     dispatch<any>(oneEmployeeDeleteSoftToAPI(employeeValues.idEmployee))
@@ -196,7 +194,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                 navigateOnOk: options,
             }))
         }
-    }
+    }, [ options ])
 
     // фильтруем прицепы по значению поля Транспорт
     const setCargoTypeFilter = ( form?: FormApi<EmployeeCardType<string>> ) => async ( idTransport: string ) => {

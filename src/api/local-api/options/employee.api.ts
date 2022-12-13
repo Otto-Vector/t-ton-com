@@ -37,7 +37,11 @@ export const employeesApi = {
         }
         return instanceBack.post<InfoResponseType & { idEmployee?: string }>('/api/employee/', formData)
             .then(response => response.data)
-        // 1.	Code 422, {'failed':'Сотрудник уже создан'}
+        // 1.	Code 422, {
+        //     "failed": "Сотрудник уже создан",
+        //     "idEmployee": "497e957a-431b-4946-b242-33af77eaa177",
+        //     "status": "свободен" | "на заявке" и т.п.
+        // }
         // 2.	Code 200, {"success": "Employees '{}' created successfully".format(new_Employee.idEmployee)}
         // 3.	Code 520, {"message":"Error"}
     },

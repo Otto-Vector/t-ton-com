@@ -7,8 +7,8 @@ import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} f
 import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-reducer';
 import {appActions} from './app-store-reducer';
 import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
-import {TtonErrorType} from '../types/other-types';
 import {GetActionsTypes} from '../types/ts-utils';
+import {TtonErrorType} from '../api/local-api/back-instance.api';
 
 
 const initialValues: PhoneSubmitType = {

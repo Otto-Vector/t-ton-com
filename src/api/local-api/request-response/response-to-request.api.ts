@@ -3,7 +3,7 @@ import {ResponseToRequestCardType} from '../../../types/form-types';
 import {ExactlyOne} from '../../../types/ts-utils';
 
 // одно обязательное поле из трёх
-export type ExatlyOnOfThree = ExactlyOne<{ requestNumber: string , responseId: string , idEmployee: string }>
+export type ExatlyOnOfThree = ExactlyOne<{ requestNumber: string, responseId: string, idEmployee: string }>
 
 export const responseToRequestApi = {
 
@@ -16,7 +16,7 @@ export const responseToRequestApi = {
     },
 
     // запрос на один Ответ на Заявку PATCH /api/responsetorequestcardtype/
-    getOneResponseToRequest( data: ExatlyOnOfThree) {
+    getOneResponseToRequest( data: ExatlyOnOfThree ) {
         // самопроверка на "дурака"
         if (Object.entries(data).length > 1) {
             throw new Error('Должно быть ОДНО поле: requestNumber || responseId || idEmployee')
@@ -29,7 +29,7 @@ export const responseToRequestApi = {
 
     // создать один Ответ на Заявку POST /api/responsetorequestcardtype/
     createOneResponseToRequest( { responseId, ...responseToRequest }: ResponseToRequestCardType ) {
-        return instanceBack.post<InfoResponseType & {prevResponseToRequest: string}>('/api/responsetorequestcardtype/', responseToRequest)
+        return instanceBack.post<InfoResponseType & { prevResponseToRequest: string }>('/api/responsetorequestcardtype/', responseToRequest)
             .then(response => response.data)
         // 1.	Code 200, {"success": "ResponseToRequestCardType '{}' created successfully".format(new_Response.responseId)}
         // 2.	Code 520, {"message":"Error"}

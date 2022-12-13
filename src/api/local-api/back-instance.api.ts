@@ -23,3 +23,5 @@ export type InfoResponseType = {
     message?: string
     error?: string
 }
+// для возвращаемого объекта в cach
+export type TtonErrorType<T extends object = {}> = { response?: { data?: InfoResponseType & T } } | Error | any

@@ -20,9 +20,8 @@ import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
 import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer';
-import {removeResponseToRequestsBzAcceptRequest} from './add-driver-store-reducer';
-import {TtonErrorType} from '../../types/other-types';
 import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils';
+import {TtonErrorType} from '../../api/local-api/back-instance.api';
 
 
 const defaultInitialStateValues = {} as OneRequestType
@@ -500,9 +499,9 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
                 dispatch(requestStoreActions.setInitialValues(parseRequestFromAPI(response[0])))
             } else {
                 dispatch(globalModalStoreActions.setTextMessage(
-                    ['НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber,
-                    ( response.message ? ' Причина' + response.message : '' ),
-                    ]
+                    [ 'НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber,
+                        ( response.message ? ' Причина' + response.message : '' ),
+                    ],
                 ))
             }
         } catch (e) {
@@ -547,15 +546,35 @@ export const addAcceptedResponseToRequestOnCreate = (
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
         const idUser = getState().authStoreReducer.authID
+        const requestCarrierData = getState().requisitesStoreReducer.storedValues
         try {
             const response = await oneRequestApi.modifyOneRequest({
                 requestNumber: addDriverValues.requestNumber,
-
                 globalStatus: 'в работе',
                 responseStavka: addDriverValues.responseStavka,
                 responseTax: addDriverValues.responseId,
                 responsePrice: addDriverValues.responsePrice,
                 requestUserCarrierId: idUser,
+
+                /* ПЕРЕВОЗЧИК */
+                innNumberCarrier: requestCarrierData.innNumber,
+                organizationNameCarrier: requestCarrierData.organizationName,
+                taxModeCarrier: requestCarrierData.taxMode,
+                kppCarrier: requestCarrierData.kpp,
+                ogrnCarrier: requestCarrierData.ogrn,
+                okpoCarrier: requestCarrierData.okpo,
+                legalAddressCarrier: requestCarrierData.legalAddress,
+                descriptionCarrier: requestCarrierData.description,
+                postAddressCarrier: requestCarrierData.postAddress,
+                phoneDirectorCarrier: requestCarrierData.phoneDirector,
+                phoneAccountantCarrier: requestCarrierData.phoneAccountant,
+                emailCarrier: requestCarrierData.email,
+                bikBankCarrier: requestCarrierData.bikBank,
+                nameBankCarrier: requestCarrierData.nameBank,
+                checkingAccountCarrier: requestCarrierData.checkingAccount,
+                korrAccountCarrier: requestCarrierData.korrAccount,
+                mechanicFIOCarrier: requestCarrierData.mechanicFIO,
+                dispatcherFIOCarrier: requestCarrierData.dispatcherFIO,
                 /* СОТРУДНИК */
                 idEmployee: employeeValues.idEmployee,
                 responseEmployeeFIO: employeeValues.employeeFIO,
@@ -587,8 +606,7 @@ export const addAcceptedResponseToRequestOnCreate = (
             })
 
             if (response.success) {
-                // удаляем все ответы, привязанные к данной заявке
-                // await dispatch(removeResponseToRequestsBzAcceptRequest(addDriverValues.requestNumber))
+                await oneRequestApi.addOneUserAcceptRequest({ requestNumber: addDriverValues.requestNumber, idUser })
                 // применяем статус 'на заявке'
                 await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({ idEmployee: employeeValues.idEmployee }))
                 // перезаливаем все заявки
@@ -717,18 +735,31 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
         dispatch(requestStoreActions.setIsFetching(false))
     }
 
-// удаляем заявку по её номеру
-export const deleteCurrentRequestAPI = ( { requestNumber }: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
+// внести незначительные изменения в заявку
+export const changeSomeValuesOnCurrentRequest = (values: Partial<OneRequestApiType> & { requestNumber: string }): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await oneRequestApi.deleteOneRequest({ requestNumber })
+            const response = await oneRequestApi.modifyOneRequest(values)
+            if (response.success) {
+                console.log(response.success)
+            }
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+        }
+    }
+
+// удаляем заявку по её номеру
+export const deleteCurrentRequestAPI = ( requestNumber: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await oneRequestApi.deleteOneRequest(requestNumber)
             console.log(response.message)
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
         }
     }
 
-
+// toDo: убрать в отдельный стэйт редюсер
 // забираем данные селектора из API и выставляем его значение в Initial
 export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
@@ -740,7 +771,7 @@ export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionTyp
             console.log(e)
         }
     }
-
+// toDo: убрать в отдельный стэйт редюсер
 // отправляем изменения селектора и выставляем его значение в Initial (это добавляемый селектор)
 export const setCargoCompositionSelector = ( newCargoCompositionItem: string ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {

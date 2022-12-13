@@ -5,8 +5,8 @@ import {syncValidators} from '../../utils/validators'
 import {coordsToString, syncParsers} from '../../utils/parsers';
 import {consigneesApi} from '../../api/local-api/options/consignees.api';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {TtonErrorType} from '../../types/other-types';
 import {GetActionsTypes} from '../../types/ts-utils';
+import {TtonErrorType} from '../../api/local-api/back-instance.api';
 
 
 const initialState = {
