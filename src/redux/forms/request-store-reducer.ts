@@ -28,8 +28,6 @@ const defaultInitialStateValues = {} as OneRequestType
 
 const initialState = {
     requestIsFetching: false,
-    // список названий грузов (изменяемый при создании заявки) - подгружается из бэка
-    cargoComposition: [] as string[],
     currentRequestNumber: undefined as undefined | number,
     // для отрисовки ожидания построения маршрута при создании заявки
     currentDistanceIsFetching: false,
@@ -205,12 +203,6 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
                 currentDistanceIsFetching: action.isFetching,
             }
         }
-        case 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR': {
-            return {
-                ...state,
-                cargoComposition: action.cargoComposition,
-            }
-        }
         default: {
             return state
         }
@@ -245,11 +237,6 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE',
         requestNumber,
     } as const ),
-    setCargoCompositionSelector: ( cargoComposition: string[] ) => ( {
-        type: 'request-store-reducer/SET-CARGO-COMPOSITION-SELECTOR',
-        cargoComposition,
-    } as const ),
-
 }
 
 const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
@@ -759,33 +746,6 @@ export const deleteCurrentRequestAPI = ( requestNumber: { requestNumber: number 
         }
     }
 
-// toDo: убрать в отдельный стэйт редюсер
-// забираем данные селектора из API и выставляем его значение в Initial
-export const getCargoCompositionSelector = (): RequestStoreReducerThunkActionType =>
-    async ( dispatch ) => {
-        try {
-            const response = await cargoEditableSelectorApi.getCargoComposition()
-            const reparsedResponse = response.map(( { text } ) => text).reverse()
-            dispatch(requestStoreActions.setCargoCompositionSelector(reparsedResponse))
-        } catch (e) {
-            console.log(e)
-        }
-    }
-// toDo: убрать в отдельный стэйт редюсер
-// отправляем изменения селектора и выставляем его значение в Initial (это добавляемый селектор)
-export const setCargoCompositionSelector = ( newCargoCompositionItem: string ): RequestStoreReducerThunkActionType =>
-    async ( dispatch ) => {
-        try {
-            // убираем палки в названии
-            const text = newCargoCompositionItem.replaceAll('|', '')
-            const response = await cargoEditableSelectorApi.addOneCargoComposition(text)
-            if (response.success) {
-                await dispatch(getCargoCompositionSelector())
-            }
-        } catch (e: TtonErrorType) {
-            console.log(JSON.stringify(e?.response?.data))
-        }
-    }
 
 // загрузка километража и прорисовка пути в карту
 export const getRouteFromAPI = ( {

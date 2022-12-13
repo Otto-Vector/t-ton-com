@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useMemo, useState} from 'react'
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './request-form-left.module.scss'
 import {
     getAllShippersSelectFromLocal,
@@ -8,7 +8,6 @@ import {
 import {useDispatch, useSelector} from 'react-redux'
 import {cargoConstType, OneRequestType} from '../../../types/form-types'
 import {
-    getCargoCompositionRequestStore,
     getCurrentDistanceIsFetchingRequestStore,
     getInfoTextModalsRequestValuesStore,
     getLabelRequestStore,
@@ -33,7 +32,6 @@ import {
     changeSomeValuesOnCurrentRequest,
     getRouteFromAPI,
     requestStoreActions,
-    setCargoCompositionSelector,
 } from '../../../redux/forms/request-store-reducer'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
@@ -44,6 +42,8 @@ import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer';
 import {parseFamilyToFIO} from '../../../utils/parsers';
+import {setCargoCompositionSelector} from '../../../redux/api/cargo-composition-response-reducer';
+import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-composition-reselect';
 
 
 type OwnProps = {
@@ -62,7 +62,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const navigate = useNavigate()
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
-    const cargoComposition = useSelector(getCargoCompositionRequestStore)
+    const cargoComposition = useSelector(getCargoCompositionSelectorStore)
     const labels = useSelector(getLabelRequestStore)
     const placeholders = useSelector(getPlaceholderRequestStore)
     const validators = useSelector(getValidatorsRequestStore)
@@ -138,7 +138,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         cargoHasBeenTransferred: ( values: OneRequestType ) => {
             if (!values.localStatus?.cargoHasBeenTransferred) {
                 // меняем одновременно в двух местах, чтобы не переподгружаться
-                dispatch(requestStoreActions.setInitialValues({ ...values, localStatus:{ ...values.localStatus, cargoHasBeenTransferred: true } }))
+                dispatch(requestStoreActions.setInitialValues({
+                    ...values,
+                    localStatus: { ...values.localStatus, cargoHasBeenTransferred: true },
+                }))
                 dispatch<any>(changeSomeValuesOnCurrentRequest({
                     requestNumber: values.requestNumber + '',
                     localStatuscargoHasBeenTransferred: true,
@@ -173,8 +176,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         },
     } ), [ routes ])
 
-    const onCreateCompositionValue = ( newCargoCompositionItem: string ) => {
-        dispatch<any>(setCargoCompositionSelector(newCargoCompositionItem))
+    // добавляем позицию в изменяемый селектор
+    const onCreateCompositionValue = async ( newCargoCompositionItem: string ) => {
+        if (newCargoCompositionItem) {
+            await dispatch<any>(setCargoCompositionSelector(newCargoCompositionItem))
+        }
     }
 
     useEffect(() => { // зачистка & присвоение значений при первом рендере
@@ -403,8 +409,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                             rounded/>
                                     </div>
                                     <div className={ styles.requestFormLeft__panelButton }>
-                                        <Button colorMode={ requestModes.acceptDriverMode ? 'red'
-                                            : values.localStatus?.cargoHasBeenReceived ? 'blue' : 'green' }
+                                        <Button colorMode={
+                                            ( requestModes.createMode && 'blue' ) ||
+                                            ( requestModes.acceptDriverMode && 'red' ) ||
+                                            ( requestModes.statusMode && values.localStatus?.cargoHasBeenReceived ? 'blue' : 'green' )
+                                        }
                                                 type={ hasValidationErrors ? 'submit' : 'button' }
                                                 title={ (
                                                     ( requestModes.createMode && 'Cамовывоз' ) ||
@@ -432,7 +441,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             { requestModes.createMode &&
                                 <FormSpySimple form={ form }
                                                onChange={ exposeValues }
-                                               isOnActiveChange
+                                    // isOnActiveChange
                                 /> }
                         </form>
                     )

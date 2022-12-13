@@ -21,6 +21,7 @@ import {appStoreReducer} from './app-store-reducer';
 import {daDataStoreReducer} from './api/dadata-response-reducer';
 import {globalModalStoreReducer} from './utils/global-modal-store-reducer';
 import {avtoDispetcherStoreReducer} from './api/avto-dispetcher-response-reducer';
+import {cargoCompositionStoreReducer} from './api/cargo-composition-response-reducer';
 
 
 const reducersObject = {
@@ -45,6 +46,7 @@ const reducersObject = {
     daDataStoreReducer,
     avtoDispetcherStoreReducer,
     globalModalStoreReducer,
+    cargoCompositionStoreReducer,
 }
 
 const rootReducer = combineReducers(reducersObject)

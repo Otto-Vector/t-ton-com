@@ -3,13 +3,14 @@ import {AppStateType} from './redux-store';
 import {getListOrganizationRequisites, getPersonalOrganizationRequisites} from './options/requisites-store-reducer';
 import {getAllEmployeesAPI} from './options/employees-store-reducer';
 import {getAllConsigneesAPI} from './options/consignees-store-reducer';
-import {getAllRequestsAPI, getCargoCompositionSelector} from './forms/request-store-reducer';
+import {getAllRequestsAPI} from './forms/request-store-reducer';
 import {getAllShippersAPI} from './options/shippers-store-reducer';
 import {getAllTrailerAPI} from './options/trailer-store-reducer';
 import {getAllTransportAPI} from './options/transport-store-reducer';
 import {geoPositionTake} from './auth-store-reducer';
 import {getInfoMessages} from './info-store-reducer';
 import {GetActionsTypes} from '../types/ts-utils';
+import {getCargoCompositionSelector} from './api/cargo-composition-response-reducer';
 
 const initialState = {
     initialized: false,

@@ -4,9 +4,9 @@ import {createSelector} from 'reselect';
 import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
 
 
-type AuthStoreSelectors<T extends keyof Y, Y = DaDataStoreReducerStateType> = ( state: AppStateType ) => Y[T]
+type daDataStoreSelectors<T extends keyof Y, Y = DaDataStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
-const getSuggestionsDaDataStore: AuthStoreSelectors<'suggestions'> = ( state ) => state.daDataStoreReducer.suggestions
+const getSuggestionsDaDataStore: daDataStoreSelectors<'suggestions'> = ( state ) => state.daDataStoreReducer.suggestions
 
 
 export const getAllKPPSelectFromLocal = createSelector(
