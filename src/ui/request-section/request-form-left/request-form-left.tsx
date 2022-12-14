@@ -11,7 +11,7 @@ import {
     getCurrentDistanceIsFetchingRequestStore,
     getInfoTextModalsRequestValuesStore,
     getLabelRequestStore,
-    getPlaceholderRequestStore,
+    getPlaceholderRequestStore, getPreparedInfoDataRequestStore,
     getValidatorsRequestStore,
 } from '../../../selectors/forms/request-form-reselect'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
@@ -76,60 +76,13 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         dispatch(shippersStoreActions.setCurrentId(searchId || ''))
     }
 
-    // блок присвоения значений при просмотре данных toDo: перекинуть в селектор
-    const [ infoData, setInfoData ] = useState({
-        customerData: [ '' ],
-        shipperSenderData: [ '' ],
-        cosigneeRecipientData: [ '' ],
-        acceptedCarrierData: [ '' ],
-    })
-
+    const infoData = useSelector(getPreparedInfoDataRequestStore)
     const textFromStrArrOrPlaceholder = ( str: string[] ) => str.join(', ') || 'Нет данных'
-
-    useEffect(() => {
-        if (requestModes.historyMode || requestModes.statusMode) setInfoData({
-            customerData: [
-                initialValues.customerUser?.organizationName,
-                initialValues.customerUser?.innNumber && 'ИНН ' + initialValues.customerUser?.innNumber,
-                initialValues.customerUser?.legalAddress && 'Юр.Адрес: ' + initialValues.customerUser?.legalAddress,
-            ].filter(x => x) as string[],
-            shipperSenderData: [
-                initialValues.senderUser?.organizationName || initialValues.sender?.organizationName,
-                ( initialValues.senderUser?.innNumber || initialValues.sender?.innNumber ) && 'ИНН ' + ( initialValues.senderUser?.innNumber || initialValues.sender?.innNumber ),
-                ( initialValues.senderUser?.legalAddress || initialValues.sender?.address ) && 'Юр.Адрес: ' + ( initialValues.senderUser?.legalAddress || initialValues.sender?.address ),
-            ].filter(x => x) as string[],
-            cosigneeRecipientData: [
-                initialValues.recipientUser?.organizationName || initialValues.recipient?.organizationName,
-                ( initialValues.recipientUser?.innNumber || initialValues.recipient?.innNumber ) && 'ИНН ' + ( initialValues.recipientUser?.innNumber || initialValues.recipient?.innNumber ),
-                ( initialValues.recipientUser?.legalAddress || initialValues.recipient?.address ) && 'Юр.Адрес: ' + ( initialValues.recipientUser?.legalAddress || initialValues.sender?.address ),
-            ].filter(x => x) as string[],
-            acceptedCarrierData: [
-                initialValues.requestCarrierUser?.organizationName,
-                initialValues.requestCarrierUser?.innNumber && 'ИНН ' + initialValues.requestCarrierUser?.innNumber,
-                initialValues.requestCarrierUser?.legalAddress && 'Юр.Адрес: ' + initialValues.requestCarrierUser?.legalAddress,
-            ].filter(x => x) as string[],
-        })
-    }, [ initialValues, requestModes.historyMode, requestModes.statusMode ])
-
-
-    // в отображение данных акцептированного водителя
-    const acceptedEmployeeData = ( requestModes.historyMode || requestModes.statusMode ) ?
-        [
-            parseFamilyToFIO(initialValues.responseEmployee?.employeeFIO),
-            initialValues.responseTransport?.transportModel,
-            initialValues.responseTransport?.transportNumber,
-            initialValues.responseTrailer?.trailerModel,
-            ( +( initialValues.responseTransport?.cargoWeight || 0 ) +
-                ( +( initialValues.responseTrailer?.cargoWeight || 0 ) ) ) + ' тн',
-        ].filter(x => x).join(', ') : ''
-
 
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     const setOneConsignee = ( searchId: string | undefined ) => {
         dispatch(consigneesStoreActions.setCurrentId(searchId || ''))
     }
-
-    const oneCustomer = allShippers.find(( { idSender } ) => idSender === initialValues.idCustomer)
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
@@ -397,7 +350,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     { labels.idEmployee }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { acceptedEmployeeData || placeholders.idEmployee }
+                                    { infoData.acceptedEmployeeData.join(', ') || placeholders.idEmployee }
                                 </div>
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>

@@ -5,4 +5,3 @@ import {CargoCopmpositionStoreReducerStateType} from '../../redux/api/cargo-comp
 type CargoCompositionSelectors<T extends keyof Y, Y = CargoCopmpositionStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
 export const getCargoCompositionSelectorStore: CargoCompositionSelectors<'cargoComposition'> = ( state ) => state.cargoCompositionStoreReducer.cargoComposition
-
