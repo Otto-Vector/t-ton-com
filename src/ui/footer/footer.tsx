@@ -2,13 +2,13 @@ import React from 'react';
 import styles from './footer.module.scss';
 import alert from '../../media/alert.svg'
 import {useSelector} from 'react-redux';
-import {getFooterStore} from '../../selectors/base-reselect';
+import {getFooterBaseStore} from '../../selectors/base-reselect';
 import {Ofer} from './ofer/ofer';
 
 type OwnProps = {}
 
 export const Footer: React.FC<OwnProps> = () => {
-    const { linkToOfer } = useSelector(getFooterStore)
+    const { linkToOfer } = useSelector(getFooterBaseStore)
     return (
         <footer className={ styles.footer }>
             <Ofer linkToOfer={ linkToOfer }/>
