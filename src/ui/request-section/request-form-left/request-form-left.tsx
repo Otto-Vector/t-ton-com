@@ -62,27 +62,36 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const navigate = useNavigate()
     const [ isFirstRender, setIsFirstRender ] = useState(true)
 
-    const cargoComposition = useSelector(getCargoCompositionSelectorStore)
+    /* данные из стейта заявки для заполнения и обработки полей */
+    // заголовки
     const labels = useSelector(getLabelRequestStore)
+    // плейсхолдеры
     const placeholders = useSelector(getPlaceholderRequestStore)
+    // валидаторы
     const validators = useSelector(getValidatorsRequestStore)
+    // данные для вспомогательных вопросительных знаков
     const fieldInformation = useSelector(getInfoTextModalsRequestValuesStore)
+    // для отображения данных в режиме статуса/истории
+    const infoData = useSelector(getPreparedInfoDataRequestStore)
 
+    // изменяемый селектор состава груза
+    const cargoComposition = useSelector(getCargoCompositionSelectorStore)
+    // для отображения статуса обработки данных в дистанции
     const currentDistanceIfFetching = useSelector(getCurrentDistanceIsFetchingRequestStore)
 
-    const allShippers = useSelector(getAllShippersStore)
+    // прогруз грузоотправителя для подсчёта маршрута
     const oneShipper = useSelector(getOneShipperFromLocal)
     const setOneShipper = ( searchId: string | undefined ) => {
         dispatch(shippersStoreActions.setCurrentId(searchId || ''))
     }
-
-    const infoData = useSelector(getPreparedInfoDataRequestStore)
-    const textFromStrArrOrPlaceholder = ( str: string[] ) => str.join(', ') || 'Нет данных'
-
+    // прогруз грузополучателя для подсчёта маршрута
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     const setOneConsignee = ( searchId: string | undefined ) => {
         dispatch(consigneesStoreActions.setCurrentId(searchId || ''))
     }
+
+    // преобразователь в строку и placeholder при отсутствии данных
+    const textFromStrArrOrPlaceholder = ( str: string[] ) => str.join(', ') || 'Нет данных'
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
@@ -155,7 +164,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         }
     }
 
-    useEffect(() => { // зачистка & присвоение значений при первом рендере
+    // зачистка & присвоение значений при первом рендере
+    useEffect(() => {
         if (isFirstRender) {
             // зачистка значений при первом рендере
             if (requestModes.createMode) {
@@ -171,7 +181,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         }
     }, [ isFirstRender ])
 
-
+    // подсчёт маршрута, если выбраны оба селектора грузополучателя и грузоотправителя
     useEffect(() => {
         if (requestModes.createMode && !isFirstRender) {
             if (oneShipper.idSender && oneConsignee.idRecipient) {
@@ -181,7 +191,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         }
     }, [ oneShipper, oneConsignee ])
 
-    useEffect(() => { // присваивается первое значение селектора, если поле пустое
+    // присваивается первое значение селектора, если поле пустое
+    useEffect(() => {
         if (!initialValues.idCustomer) {
             dispatch(requestStoreActions.setInitialValues({
                 ...initialValues,

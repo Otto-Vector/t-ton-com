@@ -33,6 +33,7 @@ import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
 import {AppStateType} from '../../redux/redux-store';
 import {
     addAcceptedResponseToRequestOnCreate,
+    deleteCurrentRequestAPI,
     getAllRequestsAPI,
     getOneRequestsAPI,
 } from '../../redux/forms/request-store-reducer';
@@ -45,7 +46,7 @@ import {ddMmYearFormat} from '../../utils/date-formats';
 import {setOneResponseToRequest} from '../../redux/forms/add-driver-store-reducer';
 import {getRoutesStore} from '../../selectors/routes-reselect';
 import {
-    getAllEmployeesSelectWithCargoTypeDisabledWrongCargo
+    getAllEmployeesSelectWithCargoTypeDisabledWrongCargo,
 } from '../../selectors/options/for-selectors/all-selectors-buffer-reselect';
 
 
@@ -82,14 +83,14 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     const distance = requestValues?.distance
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const setLightBoxImage = ( imageURL?: string ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(setImage(imageURL)))
     }
 
+    // список сотрудников для селектора (с доп.данными)
     const employeesSelect = useSelector(getAllEmployeesSelectWithCargoTypeDisabledWrongCargo)
-
-    const navigate = useNavigate()
 
     const oneEmployee = useSelector(getOneEmployeeFromLocal) as EmployeeCardType<string>
     const setOneEmployee = ( searchId: string ) => {
@@ -148,7 +149,26 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     }
 
     const onCancelClick = () => {
-        navigate(-1)
+        if (addDriverModes.selfExportDriver) {
+            dispatch<any>(textAndActionGlobalModal({
+                    title: 'Внимание!',
+                    text: [
+                        'Создание заяки приостановлено. Удалить заявку?',
+                        'ОК - Удалить текущую заявку',
+                        'Cancel - Сохранить заявку для откликов перевозчиками',
+                    ],
+                    action: () => {
+                        dispatch<any>(deleteCurrentRequestAPI({ requestNumber }))
+                    },
+                    navigateOnOk: navRoutes.searchList,
+                    navigateOnCancel: navRoutes.searchList,
+                },
+            ))
+        }
+
+        if (addDriverModes.addDriver) {
+            navigate(-1)
+        }
     }
 
     const onDisableOptionSelectorHandleClick = ( optionValue: SelectOptionsType ) => {
@@ -195,7 +215,8 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
             })
     }, [ oneTrailer, oneTransport ])
 
-    useEffect(() => { // если "по таймингу" или случайно захотелось ответить на заявку, на которую невозможно ответить
+    // если "по таймингу" или случайно захотелось ответить на заявку, на которую невозможно ответить
+    useEffect(() => {
         if (requestValues.globalStatus === 'в работе') {
             dispatch(globalModalStoreActions.setTextMessage('Извините, заявку уже приняли в работу. Обновляем данные...'))
             dispatch(globalModalStoreActions.setTimeToDeactivate(3000))

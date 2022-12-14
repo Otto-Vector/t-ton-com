@@ -714,7 +714,6 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     dispatcherFIORecipient: userRecipient?.dispatcherFIO,
                 },
             )
-
             if (response.success) {
                 await dispatch(getAllRequestsAPI())
             }
@@ -746,6 +745,7 @@ export const deleteCurrentRequestAPI = ( requestNumber: { requestNumber: number 
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
         }
+        await dispatch(getAllRequestsAPI())
     }
 
 

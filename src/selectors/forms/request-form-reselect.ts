@@ -48,8 +48,15 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
           responseTransport,
           responseTrailer,
           requestCarrierUser,
-      } ) => (
-        {
+      } ) => {
+
+        const senderInnNumber = ( senderUser?.innNumber || sender?.innNumber )
+        const senderLegalAddress = ( senderUser?.legalAddress || sender?.address )
+        const recipientInn = ( recipientUser?.innNumber || recipient?.innNumber )
+        const recipientLegalAddress = ( recipientUser?.legalAddress || recipient?.address )
+        const driverCanCargoWeight = ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) )
+
+        return {
             customerData: [
                 customerUser?.organizationName,
                 customerUser?.innNumber && 'ИНН ' + customerUser?.innNumber,
@@ -57,13 +64,13 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
             ].filter(x => x) as string[],
             shipperSenderData: [
                 senderUser?.organizationName || sender?.organizationName,
-                ( senderUser?.innNumber || sender?.innNumber ) && 'ИНН ' + ( senderUser?.innNumber || sender?.innNumber ),
-                ( senderUser?.legalAddress || sender?.address ) && 'Юр.Адрес: ' + ( senderUser?.legalAddress || sender?.address ),
+                senderInnNumber && 'ИНН ' + senderInnNumber,
+                senderLegalAddress && 'Юр.Адрес: ' + senderLegalAddress,
             ].filter(x => x) as string[],
             cosigneeRecipientData: [
                 recipientUser?.organizationName || recipient?.organizationName,
-                ( recipientUser?.innNumber || recipient?.innNumber ) && 'ИНН ' + ( recipientUser?.innNumber || recipient?.innNumber ),
-                ( recipientUser?.legalAddress || recipient?.address ) && 'Юр.Адрес: ' + ( recipientUser?.legalAddress || sender?.address ),
+                recipientInn && 'ИНН ' + recipientInn,
+                recipientLegalAddress && 'Юр.Адрес: ' + recipientLegalAddress,
             ].filter(x => x) as string[],
             acceptedCarrierData: [
                 requestCarrierUser?.organizationName,
@@ -75,8 +82,8 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
                 responseTransport?.transportModel,
                 responseTransport?.transportNumber,
                 responseTrailer?.trailerModel,
-                ( +( responseTransport?.cargoWeight || 0 ) +
-                    ( +( responseTrailer?.cargoWeight || 0 ) ) ) + ' тн',
+                driverCanCargoWeight && +driverCanCargoWeight + ' тн',
             ].filter(x => x) as string[],
-        } ),
+        }
+    },
 )

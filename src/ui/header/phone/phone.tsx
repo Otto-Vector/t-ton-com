@@ -10,10 +10,11 @@ export const Phone: React.FC<OwnProps> = ( { directPhoneNumber } ) => {
 
     return (
         <div className={ styles.phone }>
-            <a href={ `tel:${ directPhoneNumber }` } role={ 'button' }>
-                <div
-                    className={ styles.phone__text + ' ' + ( isActive && styles.phone__text_active ) }>{ directPhoneNumber }</div>
-            </a>
+            {/*<a href={ `tel:${ directPhoneNumber }` } role={ 'button' }>*/ }
+            <div className={ styles.phone__text + ' ' + ( isActive && styles.phone__text_active ) }>
+                { directPhoneNumber }
+            </div>
+            {/*</a>*/ }
             <img className={ styles.phone__img }
                  src={ phone }
                  alt="phone"
