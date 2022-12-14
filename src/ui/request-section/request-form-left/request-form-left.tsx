@@ -1,7 +1,5 @@
-import React, {memo, useEffect, useMemo, useState} from 'react'
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './request-form-left.module.scss'
-import phoneImage from './../../../media/phone-small.svg'
-import info_icon from './../../..//media/info_outline.svg'
 import {getAllShippersSelectFromLocal, getOneShipperFromLocal} from '../../../selectors/options/shippers-reselect'
 import {useDispatch, useSelector} from 'react-redux'
 import {cargoConstType, OneRequestType} from '../../../types/form-types'
@@ -42,44 +40,8 @@ import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-com
 import {Button} from '../../common/button/button';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
-import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
+import {InfoField} from './info-field';
 
-type InfoProps = {
-    textData: string[],
-    phoneData: string[],
-    placeholder: string
-}
-
-const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placeholder } ) => {
-    const dispatch = useDispatch()
-    // преобразователь в строку и placeholder при отсутствии данных
-    const textFromStrArrOrPlaceholder = ( str: string[] ) => str.join(', ') || 'Нет данных'
-    const modalActivator = ( text: string[] ) => {
-        dispatch(globalModalStoreActions.setTextMessage(text))
-    }
-    return <>
-        <div className={ styles.requestFormLeft__info + ' ' +
-            styles.requestFormLeft__info_horizontalPadding }>
-            { placeholder || textFromStrArrOrPlaceholder(textData) }
-        </div>
-        { !placeholder ? <>
-            <img
-                className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_phone }
-                src={ phoneImage } alt={ 'phone' } title={ 'Показать телефон' }
-                onClick={ () => {
-                    modalActivator(phoneData)
-                } }
-            />
-            <img src={ info_icon } alt={ 'info' }
-                 className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_info }
-                 title={ 'Показать информацию' }
-                 onClick={ () => {
-                     modalActivator(textData)
-                 } }
-            />
-        </> : null}
-    </>
-}
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -129,9 +91,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
     const customersSelect = shippersSelect
 
-    const onSubmit = async ( oneRequestValues: OneRequestType ) => {
-        await dispatch<any>(changeCurrentRequestOnCreate(oneRequestValues))
-    }
+    const onSubmit = useCallback(async ( oneRequestValues: OneRequestType ) => {
+        if (requestModes.createMode) {
+            await dispatch<any>(changeCurrentRequestOnCreate(oneRequestValues))
+        }
+    }, [ requestModes.createMode ])
 
     // для сохранения отображаемых данных при переключении вкладок
     const exposeValues = ( values: OneRequestType ) => {
@@ -187,7 +151,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             dispatch<any>(addRequestCashPay())
             navigate(routes.selfExportDriver + values.requestNumber)
         },
-    } ), [ routes ])
+    } ), [ routes, dispatch, navigate, onSubmit ])
 
     // добавляем позицию в изменяемый селектор
     const onCreateCompositionValue = async ( newCargoCompositionItem: string ) => {

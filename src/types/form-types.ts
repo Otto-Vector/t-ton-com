@@ -5,6 +5,70 @@ export type ParserType = undefined | ( ( val: string | undefined ) => string )
 // на поля для форм
 type DefaultFormType = string | undefined
 
+// на установочные данные
+export type GlobalDataType = {
+    /* ЗНАЧИМЫЕ НА БЭКЕ */
+    // максимальное количество активных заявок пользователя
+    maxRequests: 10
+    // тариф на создание заявки
+    tarifCreate: 0
+    // тариф на принятие заявки на короткие расстояния
+    tarifAcceptShortRoute: 100
+    // тариф на принятие заявки на Дальние расстояния
+    tarifAcceptLongRoute: 100
+    // процент на безопасную сделку
+    tarifPaySafeTax: 3
+
+    /* КЛЮЧЕВЫЕ */
+    // ключ на апи авторизации
+    telPhoneKey: string
+    // ключ яндекса
+    yandex: string
+    // ключ dadata
+    dadata: string
+    // ключ автодиспетчера
+    autodispetcher: string
+
+    /* ИНФОРМАЦИОННЫЕ */
+    // телефон на главном экране
+    globalPhone: '+79-500-510-520'
+    // ссылки на сторонние ресурсы справа экрана
+    linkDomainOne: string
+    linkTitleTwo: string
+    linkDomainTwo: string
+    linkTitleThree: string
+    linkDomainThree: string
+    linkTitleFour: string
+    linkDomainFour: string
+    linkTitleFive: string
+    linkDomainFive: string
+    linkTitleSix: string
+    linkDomainSix: string
+    linkTitleSeven: string
+    linkDomainSeven: string
+    linkTitleEight: string
+    linkDomainEight: string
+    linkTitleNine: string
+    linkDomainNine: string
+    linkTitleTen: string
+    linkDomainTen: string
+    linkTitleOne: string
+
+    /* ПОДНАСТРОЕЧНЫЕ */
+    // ссылка на офер
+    linkToOfer: string
+    // путь до сервера
+    serverURL: 'https://server.t-ton.com/',
+    // путь до стандартной страницы
+    baseURL: 'http://t-ton.com',
+    // форматы грузов
+    cargoFormats: 'Бензовоз, Битумовоз, Газовоз, Изотерм, Контейнеровоз, Лесовоз, Самосвал, Тягач, Фургон, Борт, Цементовоз',
+    // форматы прав на собственность
+    propertyRights: 'Собственность, Cовместная собственность супругов, Аренда, Лизинг, Безвозмездное пользование',
+    // процент, на который надо помножить
+    distanceCoefficient: 1.05,
+}
+
 // на форму авторизации
 export type PhoneSubmitType<T = DefaultFormType> = {
     innNumber: T
