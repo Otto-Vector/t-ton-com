@@ -15,7 +15,6 @@ import {
 } from '../../types/form-types'
 import {composeValidators, required} from '../../utils/validators'
 import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
-import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelector.api';
 import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
@@ -613,9 +612,11 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
             const userId = getState().authStoreReducer.authID
             // механика выяснения какому пользователю каокй инн
             const filteredContent = getState().requisitesStoreReducer.filteredContent
-            const innCustomer = getState().shippersStoreReducer.content
-                .find(( { idSender } ) => idSender === submitValues.idCustomer)?.innNumber
-            const userCustomer = filteredContent?.find(( { innNumber } ) => innNumber === innCustomer)
+            // данные из локальной карточки
+            const customerCard = getState().shippersStoreReducer.content
+                .find(( { idSender } ) => idSender === submitValues.idCustomer)
+            // подгрузка данных созданных пользователей
+            const userCustomer = filteredContent?.find(( { innNumber } ) => innNumber === customerCard?.innNumber)
             const userSender = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.sender.innNumber)
             const userRecipient = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.recipient.innNumber)
             const acceptedUsers = [ userCustomer?.idUser || userId, userSender?.idUser, userRecipient?.idUser ].filter(x => x).join(', ')
@@ -634,18 +635,19 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     distance: submitValues.distance?.toString(),
                     route: submitValues.route,
                     note: submitValues.note,
-
+                    /* ЗАКАЗЧИК - ДАННЫЕ ПОЛЬЗОВАТЕЛЯ (ЕСЛИ ЕСТЬ) */
                     idCustomer: submitValues.idCustomer,
                     idUserCustomer: userCustomer?.idUser || userId,
-                    organizationNameCustomer: userCustomer?.organizationName,
+                    innNumberCustomer: userCustomer?.innNumber || customerCard?.innNumber,
+                    organizationNameCustomer: userCustomer?.organizationName || customerCard?.organizationName,
                     taxModeCustomer: userCustomer?.taxMode,
-                    kppCustomer: userCustomer?.kpp,
-                    ogrnCustomer: userCustomer?.ogrn,
+                    kppCustomer: userCustomer?.kpp || customerCard?.kpp,
+                    ogrnCustomer: userCustomer?.ogrn || customerCard?.ogrn,
                     okpoCustomer: userCustomer?.okpo,
-                    legalAddressCustomer: userCustomer?.legalAddress,
-                    descriptionCustomer: userCustomer?.description,
-                    postAddressCustomer: userCustomer?.postAddress,
-                    phoneDirectorCustomer: userCustomer?.phoneDirector,
+                    legalAddressCustomer: userCustomer?.legalAddress || customerCard?.address,
+                    descriptionCustomer: userCustomer?.description || customerCard?.description,
+                    postAddressCustomer: userCustomer?.postAddress || customerCard?.address,
+                    phoneDirectorCustomer: userCustomer?.phoneDirector || customerCard?.shipperTel,
                     phoneAccountantCustomer: userCustomer?.phoneAccountant,
                     emailCustomer: userCustomer?.email,
                     bikBankCustomer: userCustomer?.bikBank,
@@ -654,7 +656,7 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     korrAccountCustomer: userCustomer?.korrAccount,
                     mechanicFIOCustomer: userCustomer?.mechanicFIO,
                     dispatcherFIOCustomer: userCustomer?.dispatcherFIO,
-
+                    /* ГРУЗООТПРАВИТЕЛЬ - КАРТОЧКА */
                     idSender: submitValues.idSender,
                     titleSender: submitValues.sender.title,
                     innNumberSender: submitValues.sender.innNumber,
@@ -667,7 +669,7 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     descriptionSender: submitValues.sender.description,
                     coordinatesSender: submitValues.sender.coordinates,
                     citySender: submitValues.sender.city,
-
+                    /* ГРУЗООТПРАВИТЕЛЬ - ДАННЫЕ ПОЛЬЗОВАТЕЛЯ */
                     idUserSender: userSender?.idUser,
                     taxModeSender: userSender?.taxMode,
                     okpoSender: userSender?.okpo,
@@ -682,7 +684,7 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     korrAccountSender: userSender?.korrAccount,
                     mechanicFIOSender: userSender?.mechanicFIO,
                     dispatcherFIOSender: userSender?.dispatcherFIO,
-
+                    /* ГРУЗОПОЛУЧАТЕЛЬ - КАРТОЧКА */
                     idRecipient: submitValues.idRecipient,
                     titleRecipient: submitValues.recipient.title,
                     innNumberRecipient: submitValues.recipient.innNumber,
@@ -695,7 +697,7 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     descriptionRecipient: submitValues.recipient.description || placeholder,
                     coordinatesRecipient: submitValues.recipient.coordinates,
                     cityRecipient: submitValues.recipient.city,
-
+                    /* ГРУЗОПОЛУЧАТЕЛЬ - ДАННЫЕ ПОЛЬЗОВАТЕЛЯ */
                     idUserRecipient: userRecipient?.idUser,
                     taxModeRecipient: userRecipient?.taxMode,
                     okpoRecipient: userRecipient?.okpo,
@@ -723,7 +725,7 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
     }
 
 // внести незначительные изменения в заявку
-export const changeSomeValuesOnCurrentRequest = (values: Partial<OneRequestApiType> & { requestNumber: string }): RequestStoreReducerThunkActionType =>
+export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiType> & { requestNumber: string } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await oneRequestApi.modifyOneRequest(values)

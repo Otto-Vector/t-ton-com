@@ -122,7 +122,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         <label className={ styles.addDriversForm__label }>
                             { label.responsePrice + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneRequest.responsePrice }
+                            { oneRequest?.responsePrice }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoItem }>

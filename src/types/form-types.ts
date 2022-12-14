@@ -327,7 +327,7 @@ export type OneRequestType = {
     idCustomer?: string
     // id пользователя заказчика
     idUserCustomer?: string
-    //
+    // данные пользователя заказчика
     customerUser?: Partial<CompanyRequisitesType>
 
     // грузоотправитель
@@ -483,7 +483,7 @@ export type OneRequestApiType = {
     cargoComposition?: string
     shipmentDate?: string
     cargoType?: string
-
+    /* ГРУЗООТПРАВИТЕЛЬ ИЗ КАРТОЧКИ */
     idSender?: string
     idUserSender?: string
     titleSender?: string
@@ -497,7 +497,7 @@ export type OneRequestApiType = {
     descriptionSender?: string
     coordinatesSender?: string
     citySender?: string
-
+    /* ГРУЗОПОЛУЧАТЕЛЬ ИЗ КАРТОЧКИ */
     idRecipient?: string
     idUserRecipient?: string
     titleRecipient?: string

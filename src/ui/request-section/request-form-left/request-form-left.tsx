@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react'
+import React, {memo, useEffect, useMemo, useState} from 'react'
 import styles from './request-form-left.module.scss'
 import {
     getAllShippersSelectFromLocal,
@@ -76,6 +76,42 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         dispatch(shippersStoreActions.setCurrentId(searchId || ''))
     }
 
+    // блок присвоения значений при просмотре данных toDo: перекинуть в селектор
+    const [ infoData, setInfoData ] = useState({
+        customerData: [ '' ],
+        shipperSenderData: [ '' ],
+        cosigneeRecipientData: [ '' ],
+        acceptedCarrierData: [ '' ],
+    })
+
+    const textFromStrArrOrPlaceholder = ( str: string[] ) => str.join(', ') || 'Нет данных'
+
+    useEffect(() => {
+        if (requestModes.historyMode || requestModes.statusMode) setInfoData({
+            customerData: [
+                initialValues.customerUser?.organizationName,
+                initialValues.customerUser?.innNumber && 'ИНН ' + initialValues.customerUser?.innNumber,
+                initialValues.customerUser?.legalAddress && 'Юр.Адрес: ' + initialValues.customerUser?.legalAddress,
+            ].filter(x => x) as string[],
+            shipperSenderData: [
+                initialValues.senderUser?.organizationName || initialValues.sender?.organizationName,
+                ( initialValues.senderUser?.innNumber || initialValues.sender?.innNumber ) && 'ИНН ' + ( initialValues.senderUser?.innNumber || initialValues.sender?.innNumber ),
+                ( initialValues.senderUser?.legalAddress || initialValues.sender?.address ) && 'Юр.Адрес: ' + ( initialValues.senderUser?.legalAddress || initialValues.sender?.address ),
+            ].filter(x => x) as string[],
+            cosigneeRecipientData: [
+                initialValues.recipientUser?.organizationName || initialValues.recipient?.organizationName,
+                ( initialValues.recipientUser?.innNumber || initialValues.recipient?.innNumber ) && 'ИНН ' + ( initialValues.recipientUser?.innNumber || initialValues.recipient?.innNumber ),
+                ( initialValues.recipientUser?.legalAddress || initialValues.recipient?.address ) && 'Юр.Адрес: ' + ( initialValues.recipientUser?.legalAddress || initialValues.sender?.address ),
+            ].filter(x => x) as string[],
+            acceptedCarrierData: [
+                initialValues.requestCarrierUser?.organizationName,
+                initialValues.requestCarrierUser?.innNumber && 'ИНН ' + initialValues.requestCarrierUser?.innNumber,
+                initialValues.requestCarrierUser?.legalAddress && 'Юр.Адрес: ' + initialValues.requestCarrierUser?.legalAddress,
+            ].filter(x => x) as string[],
+        })
+    }, [ initialValues, requestModes.historyMode, requestModes.statusMode ])
+
+
     // в отображение данных акцептированного водителя
     const acceptedEmployeeData = ( requestModes.historyMode || requestModes.statusMode ) ?
         [
@@ -87,23 +123,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 ( +( initialValues.responseTrailer?.cargoWeight || 0 ) ) ) + ' тн',
         ].filter(x => x).join(', ') : ''
 
-    const acceptedCarrierData = ( requestModes.historyMode || requestModes.statusMode ) ?
-        [
-            initialValues.requestCarrierUser?.organizationName,
-            initialValues.requestCarrierUser?.legalAddress,
-        ].filter(x => x).join(', ') : ''
-
-    const ShipperSenderDataText = ( requestModes.historyMode || requestModes.statusMode ) ?
-        [
-            initialValues.sender?.organizationName,
-            initialValues.sender?.city,
-        ].filter(x => x).join(', ') : ''
-
-    const CosigneeRecipientDataText = ( requestModes.historyMode || requestModes.statusMode ) ?
-        [
-            initialValues.recipient?.organizationName,
-            initialValues.recipient?.city,
-        ].filter(x => x).join(', ') : ''
 
     const oneConsignee = useSelector(getOneConsigneesFromLocal)
     const setOneConsignee = ( searchId: string | undefined ) => {
@@ -300,6 +319,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     <InfoButtonToModal textToModal={ fieldInformation.cargoType } mode={ 'inForm' }/>
                                 </div>
                             </div>
+                            {/* ЗАКАЗЧИК */ }
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idCustomer }</label>
@@ -312,11 +332,15 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     />
                                     : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
-                                        { requestModes.acceptDriverMode ? acceptDriverModePlaceholder : oneCustomer?.title }
+                                        { requestModes.acceptDriverMode
+                                            ? acceptDriverModePlaceholder
+                                            : textFromStrArrOrPlaceholder(infoData.customerData)
+                                        }
                                     </div>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.customer } mode={ 'inForm' }/>
                             </div>
+                            {/* ГРУЗООТПРАВИТЕЛЬ */ }
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idSender }</label>
@@ -330,11 +354,14 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
-                                        { requestModes.acceptDriverMode ? acceptDriverModePlaceholder : ShipperSenderDataText }
+                                        { requestModes.acceptDriverMode
+                                            ? acceptDriverModePlaceholder
+                                            : textFromStrArrOrPlaceholder(infoData.shipperSenderData) }
                                     </div>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.shipper } mode={ 'inForm' }/>
                             </div>
+                            {/* ГРУЗОПОЛУЧАТЕЛЬ */ }
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idRecipient }</label>
@@ -348,17 +375,20 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isClearable
                                     /> : <div className={ styles.requestFormLeft__info + ' ' +
                                         styles.requestFormLeft__info_leftAlign }>
-                                        { requestModes.acceptDriverMode ? acceptDriverModePlaceholder : CosigneeRecipientDataText }
+                                        { requestModes.acceptDriverMode
+                                            ? acceptDriverModePlaceholder
+                                            : textFromStrArrOrPlaceholder(infoData.cosigneeRecipientData) }
                                     </div>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.consignee } mode={ 'inForm' }/>
                             </div>
+                            {/* ПЕРЕВОЗЧИК */ }
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.requestCarrierId }</label>
                                 <div className={ styles.requestFormLeft__info + ' ' +
                                     styles.requestFormLeft__info_leftAlign }>
-                                    { acceptedCarrierData || placeholders.requestCarrierId }
+                                    { infoData.acceptedCarrierData.join(', ') || placeholders.requestCarrierId }
                                 </div>
                                 <InfoButtonToModal textToModal={ fieldInformation.carrier } mode={ 'inForm' }/>
                             </div>
@@ -441,7 +471,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             { requestModes.createMode &&
                                 <FormSpySimple form={ form }
                                                onChange={ exposeValues }
-                                    // isOnActiveChange
+                                               isOnActiveChange
                                 /> }
                         </form>
                     )
