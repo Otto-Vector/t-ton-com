@@ -26,6 +26,7 @@
 
   &__selector {
     position: relative;
+    color: $accentColor;
     margin-bottom: 10px;
   }
 
@@ -43,7 +44,33 @@
 
     &_leftAlign {
       justify-content: left;
-      padding-left: 14px;
+      padding: 14px;
+    }
+
+    &_horizontalPadding {
+      justify-content: left;
+      padding: 0 35px;
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    cursor: pointer;
+    @include size(20px);
+    bottom: 9px;
+    transform: scale(1);
+    transition: transform .1s ease-out;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &_phone {
+      right: 9px;
+    }
+
+    &_info {
+      left: 9px;
     }
   }
 

@@ -522,17 +522,27 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
 
 // акцептировать текущую заявку и присвоить ей статус "в работе" ПРИ САМОВЫВОЗЕ
 export const addAcceptedResponseToRequestOnCreate = (
-    { addDriverValues, oneEmployee: employeeValues, oneTransport: transportValues, oneTrailer: trailerValues }
+    {
+        addDriverValues,
+        oneEmployee: employeeValues,
+        oneTransport: transportValues,
+        oneTrailer: trailerValues,
+        idCustomer,
+    }
         : {
         addDriverValues: ResponseToRequestCardType<string>,
         oneEmployee: EmployeeCardType<string>
         oneTransport: TransportCardType<string>
         oneTrailer: TrailerCardType<string>
+        idCustomer: string,
     } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
         const idUser = getState().authStoreReducer.authID
         const requestCarrierData = getState().requisitesStoreReducer.storedValues
+        // данные из локальной карточки
+        const customerCardPhone = getState().shippersStoreReducer.content
+            .find(( { idSender } ) => idSender === idCustomer)?.shipperTel
         try {
             const response = await oneRequestApi.modifyOneRequest({
                 requestNumber: addDriverValues.requestNumber,
@@ -550,7 +560,8 @@ export const addAcceptedResponseToRequestOnCreate = (
                 ogrnCarrier: requestCarrierData.ogrn,
                 okpoCarrier: requestCarrierData.okpo,
                 legalAddressCarrier: requestCarrierData.legalAddress,
-                descriptionCarrier: requestCarrierData.description,
+                // сюда запишу номер телефона из карточки заказчика
+                descriptionCarrier: customerCardPhone || requestCarrierData.description,
                 postAddressCarrier: requestCarrierData.postAddress,
                 phoneDirectorCarrier: requestCarrierData.phoneDirector,
                 phoneAccountantCarrier: requestCarrierData.phoneAccountant,
@@ -645,9 +656,9 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     ogrnCustomer: userCustomer?.ogrn || customerCard?.ogrn,
                     okpoCustomer: userCustomer?.okpo,
                     legalAddressCustomer: userCustomer?.legalAddress || customerCard?.address,
-                    descriptionCustomer: userCustomer?.description || customerCard?.description,
+                    descriptionCustomer: customerCard?.shipperTel || customerCard?.description,
                     postAddressCustomer: userCustomer?.postAddress || customerCard?.address,
-                    phoneDirectorCustomer: userCustomer?.phoneDirector || customerCard?.shipperTel,
+                    phoneDirectorCustomer: userCustomer?.phoneDirector,
                     phoneAccountantCustomer: userCustomer?.phoneAccountant,
                     emailCustomer: userCustomer?.email,
                     bikBankCustomer: userCustomer?.bikBank,

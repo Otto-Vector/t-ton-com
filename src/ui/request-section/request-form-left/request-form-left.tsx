@@ -1,17 +1,16 @@
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import styles from './request-form-left.module.scss'
-import {
-    getAllShippersSelectFromLocal,
-    getAllShippersStore,
-    getOneShipperFromLocal,
-} from '../../../selectors/options/shippers-reselect'
+import phoneImage from './../../../media/phone-small.svg'
+import info_icon from './../../..//media/info_outline.svg'
+import {getAllShippersSelectFromLocal, getOneShipperFromLocal} from '../../../selectors/options/shippers-reselect'
 import {useDispatch, useSelector} from 'react-redux'
 import {cargoConstType, OneRequestType} from '../../../types/form-types'
 import {
     getCurrentDistanceIsFetchingRequestStore,
     getInfoTextModalsRequestValuesStore,
     getLabelRequestStore,
-    getPlaceholderRequestStore, getPreparedInfoDataRequestStore,
+    getPlaceholderRequestStore,
+    getPreparedInfoDataRequestStore,
     getValidatorsRequestStore,
 } from '../../../selectors/forms/request-form-reselect'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
@@ -24,7 +23,6 @@ import {
     getAllConsigneesSelectFromLocal,
     getOneConsigneesFromLocal,
 } from '../../../selectors/options/consignees-reselect'
-import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
@@ -38,13 +36,50 @@ import {consigneesStoreActions} from '../../../redux/options/consignees-store-re
 import {Preloader} from '../../common/preloader/preloader';
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
-import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer';
-import {parseFamilyToFIO} from '../../../utils/parsers';
 import {setCargoCompositionSelector} from '../../../redux/api/cargo-composition-response-reducer';
 import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-composition-reselect';
+import {Button} from '../../common/button/button';
+import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 
+type InfoProps = {
+    textData: string[],
+    phoneData: string[],
+    placeholder: string
+}
+
+const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placeholder } ) => {
+    const dispatch = useDispatch()
+    // преобразователь в строку и placeholder при отсутствии данных
+    const textFromStrArrOrPlaceholder = ( str: string[] ) => str.join(', ') || 'Нет данных'
+    const modalActivator = ( text: string[] ) => {
+        dispatch(globalModalStoreActions.setTextMessage(text))
+    }
+    return <>
+        <div className={ styles.requestFormLeft__info + ' ' +
+            styles.requestFormLeft__info_horizontalPadding }>
+            { placeholder || textFromStrArrOrPlaceholder(textData) }
+        </div>
+        { !placeholder ? <>
+            <img
+                className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_phone }
+                src={ phoneImage } alt={ 'phone' } title={ 'Показать телефон' }
+                onClick={ () => {
+                    modalActivator(phoneData)
+                } }
+            />
+            <img src={ info_icon } alt={ 'info' }
+                 className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_info }
+                 title={ 'Показать информацию' }
+                 onClick={ () => {
+                     modalActivator(textData)
+                 } }
+            />
+        </> : null}
+    </>
+}
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -89,9 +124,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const setOneConsignee = ( searchId: string | undefined ) => {
         dispatch(consigneesStoreActions.setCurrentId(searchId || ''))
     }
-
-    // преобразователь в строку и placeholder при отсутствии данных
-    const textFromStrArrOrPlaceholder = ( str: string[] ) => str.join(', ') || 'Нет данных'
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
@@ -211,6 +243,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                     ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting, values } ) => (
                         <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>
                             <div className={ styles.requestFormLeft__inputsPanel }>
+                                {/* ВИД ГРУЗА */ }
                                 <div className={ styles.requestFormLeft__selector }>
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.cargoComposition }</label>
@@ -232,6 +265,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                        mode={ 'inForm' }/>
                                 </div>
                             </div>
+                            {/* ДАТА ПОГРУЗКИ */ }
                             <div className={ styles.requestFormLeft__inputsPanel + ' ' +
                                 styles.requestFormLeft__inputsPanel_trio }>
                                 <div className={ styles.requestFormLeft__inputsItem }>
@@ -254,6 +288,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     }
                                     <InfoButtonToModal textToModal={ fieldInformation.shipmentDate } mode={ 'inForm' }/>
                                 </div>
+                                {/* РАССТОЯНИЕ, ДИСТАНЦИЯ */ }
                                 <div className={ styles.requestFormLeft__inputsItem }>
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.distance }</label>
@@ -266,6 +301,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     </div>
                                     <InfoButtonToModal textToModal={ fieldInformation.distance } mode={ 'inForm' }/>
                                 </div>
+                                {/* ТИП ГРУЗА */ }
                                 <div className={ styles.requestFormLeft__inputsItem }>
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.cargoType }</label>
@@ -294,13 +330,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     validate={ validators.idCustomer }
                                                     isClearable
                                     />
-                                    : <div className={ styles.requestFormLeft__info + ' ' +
-                                        styles.requestFormLeft__info_leftAlign }>
-                                        { requestModes.acceptDriverMode
-                                            ? acceptDriverModePlaceholder
-                                            : textFromStrArrOrPlaceholder(infoData.customerData)
-                                        }
-                                    </div>
+                                    : <InfoField textData={ infoData.customerData }
+                                                 phoneData={ infoData.customerPhoneData }
+                                                 placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : '' }
+                                    />
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.customer } mode={ 'inForm' }/>
                             </div>
@@ -316,12 +349,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     handleChanger={ setOneShipper }
                                                     isSubLabelOnOption
                                                     isClearable
-                                    /> : <div className={ styles.requestFormLeft__info + ' ' +
-                                        styles.requestFormLeft__info_leftAlign }>
-                                        { requestModes.acceptDriverMode
-                                            ? acceptDriverModePlaceholder
-                                            : textFromStrArrOrPlaceholder(infoData.shipperSenderData) }
-                                    </div>
+                                    /> : <InfoField textData={ infoData.shipperSenderData }
+                                                    phoneData={ infoData.shipperSenderPhoneData }
+                                                    placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : '' }
+                                    />
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.shipper } mode={ 'inForm' }/>
                             </div>
@@ -337,12 +368,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     handleChanger={ setOneConsignee }
                                                     isSubLabelOnOption
                                                     isClearable
-                                    /> : <div className={ styles.requestFormLeft__info + ' ' +
-                                        styles.requestFormLeft__info_leftAlign }>
-                                        { requestModes.acceptDriverMode
-                                            ? acceptDriverModePlaceholder
-                                            : textFromStrArrOrPlaceholder(infoData.cosigneeRecipientData) }
-                                    </div>
+                                    /> : <InfoField textData={ infoData.consigneeRecipientData }
+                                                    phoneData={ infoData.consigneeRecipientPhoneData }
+                                                    placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : '' }
+                                    />
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.consignee } mode={ 'inForm' }/>
                             </div>
@@ -350,19 +379,20 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.requestCarrierId }</label>
-                                <div className={ styles.requestFormLeft__info + ' ' +
-                                    styles.requestFormLeft__info_leftAlign }>
-                                    { infoData.acceptedCarrierData.join(', ') || placeholders.requestCarrierId }
-                                </div>
+                                <InfoField textData={ infoData.acceptedCarrierData }
+                                           phoneData={ infoData.acceptedCarrierPhoneData }
+                                           placeholder={ !infoData.acceptedCarrierData.join(', ') ? placeholders.requestCarrierId + '' : '' }
+                                />
                                 <InfoButtonToModal textToModal={ fieldInformation.carrier } mode={ 'inForm' }/>
                             </div>
+                            {/* ВОДИТЕЛЬ */ }
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.idEmployee }</label>
-                                <div className={ styles.requestFormLeft__info + ' ' +
-                                    styles.requestFormLeft__info_leftAlign }>
-                                    { infoData.acceptedEmployeeData.join(', ') || placeholders.idEmployee }
-                                </div>
+                                <InfoField textData={ infoData.acceptedEmployeeData }
+                                           phoneData={ infoData.acceptedEmployeePhoneData }
+                                           placeholder={ !infoData.acceptedEmployeeData.join(', ') ? placeholders.idEmployee + '' : '' }
+                                />
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>

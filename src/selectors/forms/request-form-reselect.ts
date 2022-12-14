@@ -57,32 +57,60 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
         const driverCanCargoWeight = ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) )
 
         return {
+            /* ЗАКАЗЧИК */
             customerData: [
                 customerUser?.organizationName,
-                customerUser?.innNumber && 'ИНН ' + customerUser?.innNumber,
-                customerUser?.legalAddress && 'Юр.Адрес: ' + customerUser?.legalAddress,
+                customerUser?.innNumber && 'ИНН: ' + customerUser.innNumber,
+                customerUser?.legalAddress && 'Юр.Адрес: ' + customerUser.legalAddress,
             ].filter(x => x) as string[],
+            customerPhoneData: [
+                customerUser?.phoneDirector && 'Телефон директора: ' + customerUser.phoneDirector,
+                customerUser?.phoneAccountant && 'Телефон бухгалтера: ' + customerUser.phoneAccountant,
+                customerUser?.description && 'Телефон сотрудника: ' + customerUser.description,
+            ].filter(x => x) as string[],
+            /* ГРУЗООТПРАВИТЕЛЬ */
             shipperSenderData: [
                 senderUser?.organizationName || sender?.organizationName,
-                senderInnNumber && 'ИНН ' + senderInnNumber,
+                senderInnNumber && 'ИНН: ' + senderInnNumber,
                 senderLegalAddress && 'Юр.Адрес: ' + senderLegalAddress,
             ].filter(x => x) as string[],
-            cosigneeRecipientData: [
+            shipperSenderPhoneData: [
+                senderUser?.phoneDirector && 'Телефон директора: ' + senderUser.phoneDirector,
+                senderUser?.phoneAccountant && 'Телефон бухгалтера: ' + senderUser.phoneAccountant,
+                sender?.shipperTel && 'Телефон сотрудника: ' + sender.shipperTel,
+            ].filter(x => x) as string[],
+            /* ГРУЗОПОЛУЧАТЕЛЬ */
+            consigneeRecipientData: [
                 recipientUser?.organizationName || recipient?.organizationName,
-                recipientInn && 'ИНН ' + recipientInn,
+                recipientInn && 'ИНН: ' + recipientInn,
                 recipientLegalAddress && 'Юр.Адрес: ' + recipientLegalAddress,
+            ].filter(x => x) as string[],
+            consigneeRecipientPhoneData: [
+                recipientUser?.phoneDirector && 'Телефон директора: ' + recipientUser.phoneDirector,
+                recipientUser?.phoneAccountant && 'Телефон бухгалтера: ' + recipientUser.phoneAccountant,
+                recipient?.consigneesTel && 'Телефон сотрудника: ' + recipient.consigneesTel,
             ].filter(x => x) as string[],
             acceptedCarrierData: [
                 requestCarrierUser?.organizationName,
-                requestCarrierUser?.innNumber && 'ИНН ' + requestCarrierUser?.innNumber,
+                requestCarrierUser?.innNumber && 'ИНН: ' + requestCarrierUser?.innNumber,
                 requestCarrierUser?.legalAddress && 'Юр.Адрес: ' + requestCarrierUser?.legalAddress,
             ].filter(x => x) as string[],
+            acceptedCarrierPhoneData: [
+                requestCarrierUser?.phoneDirector && 'Телефон директора: ' + requestCarrierUser.phoneDirector,
+                requestCarrierUser?.phoneAccountant && 'Телефон бухгалтера: ' + requestCarrierUser.phoneAccountant,
+                requestCarrierUser?.description && 'Телефон сотрудника: ' + requestCarrierUser.description,
+            ].filter(x => x) as string[],
+            /* ВОДИТЕЛЬ */
             acceptedEmployeeData: [
                 parseFamilyToFIO(responseEmployee?.employeeFIO),
                 responseTransport?.transportModel,
                 responseTransport?.transportNumber,
                 responseTrailer?.trailerModel,
                 driverCanCargoWeight && +driverCanCargoWeight + ' тн',
+            ].filter(x => x) as string[],
+            acceptedEmployeePhoneData: [
+                responseEmployee?.employeeFIO && 'ФИО: ' + responseEmployee.employeeFIO,
+                responseEmployee?.employeePhoneNumber && 'Телефон: ' + responseEmployee.employeePhoneNumber,
             ].filter(x => x) as string[],
         }
     },

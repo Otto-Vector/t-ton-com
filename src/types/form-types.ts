@@ -536,25 +536,6 @@ export type OneRequestApiType = {
     requestUserCarrierId?: string
     // id ответа на заявку (перевозчик)
     requestCarrierId?: string
-    /* ПЕРЕВОЗЧИК */
-    innNumberCarrier?: string
-    organizationNameCarrier?: string
-    taxModeCarrier?: string
-    kppCarrier?: string
-    ogrnCarrier?: string
-    okpoCarrier?: string
-    legalAddressCarrier?: string
-    descriptionCarrier?: string
-    postAddressCarrier?: string
-    phoneDirectorCarrier?: string
-    phoneAccountantCarrier?: string
-    emailCarrier?: string
-    bikBankCarrier?: string
-    nameBankCarrier?: string
-    checkingAccountCarrier?: string
-    korrAccountCarrier?: string
-    mechanicFIOCarrier?: string
-    dispatcherFIOCarrier?: string
     /* ЗАКАЗЧИК */
     innNumberCustomer?: string
     organizationNameCustomer?: string
@@ -602,7 +583,25 @@ export type OneRequestApiType = {
     korrAccountRecipient?: string
     mechanicFIORecipient?: string
     dispatcherFIORecipient?: string
-
+    /* ПЕРЕВОЗЧИК */
+    innNumberCarrier?: string
+    organizationNameCarrier?: string
+    taxModeCarrier?: string
+    kppCarrier?: string
+    ogrnCarrier?: string
+    okpoCarrier?: string
+    legalAddressCarrier?: string
+    descriptionCarrier?: string
+    postAddressCarrier?: string
+    phoneDirectorCarrier?: string
+    phoneAccountantCarrier?: string
+    emailCarrier?: string
+    bikBankCarrier?: string
+    nameBankCarrier?: string
+    checkingAccountCarrier?: string
+    korrAccountCarrier?: string
+    mechanicFIOCarrier?: string
+    dispatcherFIOCarrier?: string
     /* СОТРУДНИК */
     idEmployee?: string
     // ФИО сотрудника

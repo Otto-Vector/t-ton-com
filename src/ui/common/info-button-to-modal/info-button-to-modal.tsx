@@ -8,7 +8,7 @@ import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-r
 
 
 type OwnProps = {
-    textToModal?: string
+    textToModal?: string | string[]
     mode?: 'out' | 'in' | 'inForm' | 'outClose' | 'invisible'
 }
 

@@ -4,11 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {To, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {getRoutesStore} from '../../selectors/routes-reselect';
-import {
-    deleteCurrentRequestAPI,
-    getOneRequestsAPI,
-    setNewRequestAPI,
-} from '../../redux/forms/request-store-reducer';
+import {deleteCurrentRequestAPI, getOneRequestsAPI, setNewRequestAPI} from '../../redux/forms/request-store-reducer';
 import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect';
 import {CancelButton} from '../common/cancel-button/cancel-button';
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
@@ -17,7 +13,6 @@ import {RequestFormLeft} from './request-form-left/request-form-left';
 import {ddMmYearFormat} from '../../utils/date-formats';
 import {SizedPreloader} from '../common/preloader/preloader';
 import {valuesAreEqual} from '../../utils/reactMemoUtils';
-import {getOneEmployeeFromAPI} from '../../redux/options/employees-store-reducer';
 import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect';
 
 // type OwnProps = { }
@@ -76,7 +71,7 @@ export const RequestSection: React.FC = React.memo(() => {
             }
             if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
                 // if (initialValues.requestNumber !== +( reqNumber || 0 ))
-                    dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
+                dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
             }
             if (requestModes.statusMode) { // для прогрузки данных искомого водителя в форму
                 // dispatch<any>(getOneEmployeeFromAPI)

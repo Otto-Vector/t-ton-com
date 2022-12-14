@@ -48,6 +48,7 @@ import {getRoutesStore} from '../../selectors/routes-reselect';
 import {
     getAllEmployeesSelectWithCargoTypeDisabledWrongCargo,
 } from '../../selectors/options/for-selectors/all-selectors-buffer-reselect';
+import {cancelRequestCashReturn} from '../../redux/options/requisites-store-reducer';
 
 
 type OwnProps = {
@@ -137,7 +138,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
         }
         if (addDriverModes.selfExportDriver) {
             await dispatch<any>(addAcceptedResponseToRequestOnCreate({
-                addDriverValues: demaskedValues, oneEmployee, oneTrailer, oneTransport,
+                addDriverValues: demaskedValues, oneEmployee, oneTrailer, oneTransport, idCustomer: requestValues.idCustomer+''
             }))
             navigate(navRoutes.requestsList)
         }
@@ -158,7 +159,10 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                         'Cancel - Сохранить заявку для откликов перевозчиками',
                     ],
                     action: () => {
+                        // удаляем созданную заявку
                         dispatch<any>(deleteCurrentRequestAPI({ requestNumber }))
+                        // так как деньги уже списались при нажатии "Самовывоз"
+                        dispatch<any>(cancelRequestCashReturn())
                     },
                     navigateOnOk: navRoutes.searchList,
                     navigateOnCancel: navRoutes.searchList,
