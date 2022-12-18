@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import styles from './menu-panel.module.scss'
 
 import {useDispatch, useSelector} from 'react-redux'
@@ -83,7 +83,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
             ? styles.menuPanel__item_active : styles.menuPanel__item_unactive }`
 
     // легче редактировать и меньше кода на перебор
-    const menuItems = [
+    const menuItems = useMemo(() => [
         {
             route: routes.login, src: loginSVG, title: `${ !isAuth ? 'Авторизация' : 'Выход' }`,
             buttonText: `${ !isAuth ? 'Вход' : 'Выход' }`, active: !isNewRegistrationRoute,
@@ -127,12 +127,12 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
         {
             // route: routes.test,
             // route: routes.addDriver + '60',
-            route: routes.optionsEdit.employees+'a5e79ad8-b9b0-42ba-8ad3-ba127b22e9c3',
+            route: routes.optionsEdit.employees + 'a5e79ad8-b9b0-42ba-8ad3-ba127b22e9c3',
             src: testPNG, title: 'Для тестов отрисовки компонентов',
             buttonText: 'Тест', active: !isNewRegistrationRoute && isAuth,
             action: null,
         },
-    ]
+    ], [ isAuth, isNewRegistrationRoute, routes ])
 
     return (
         <nav className={ styles.menuPanel }>
