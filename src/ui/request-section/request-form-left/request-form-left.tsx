@@ -17,6 +17,7 @@ import {useNavigate} from 'react-router-dom'
 import {FormSelector} from '../../common/form-selector/form-selector'
 import {RequestModesType} from '../request-section'
 import {Field, Form} from 'react-final-form'
+import {InfoField} from './info-field';
 import {
     getAllConsigneesSelectFromLocal,
     getOneConsigneesFromLocal,
@@ -40,7 +41,6 @@ import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-com
 import {Button} from '../../common/button/button';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
-import {InfoField} from './info-field';
 
 
 type OwnProps = {
