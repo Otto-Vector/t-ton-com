@@ -13,12 +13,12 @@ export type ExactlyOne<T, TKey = keyof T> = TKey extends keyof T
 
 
 // перечисляет все ключи, включая нижние уровни
-export type NestedKeyOf<ObjectType extends object> =
-    {
-        [Key in keyof ObjectType & ( string | number )]: ObjectType[Key] extends object
-        ? `${ Key }` | `${ Key }.${ NestedKeyOf<ObjectType[Key]> }`
-        : `${ Key }`
-    }[keyof ObjectType & ( string | number )];
+// export type NestedKeyOf<ObjectType extends object> =
+//     {
+//         [Key in keyof ObjectType & ( string | number )]: ObjectType[Key] extends object
+//         ? `${ Key }` | `${ Key }.${ NestedKeyOf<ObjectType[Key]> }`
+//         : `${ Key }`
+//     }[keyof ObjectType & ( string | number )];
 
 // ключи определённого типа
 export type KeysOfType<O, T> = {

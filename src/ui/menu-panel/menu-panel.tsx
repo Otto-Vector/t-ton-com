@@ -55,7 +55,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
         await dispatch<any>(textAndActionGlobalModal({
             text: 'ВЫ ДЕЙСТВИТЕЛЬНО ХОТИТЕ ВЫЙТИ?',
             action: () => {
-                dispatch<any>(logoutAuth)
+                dispatch<any>(logoutAuth())
             },
         }))
     }
