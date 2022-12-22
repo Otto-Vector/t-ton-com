@@ -575,8 +575,11 @@ export type OneRequestApiType = {
     descriptionRecipient?: string
     coordinatesRecipient?: string
     cityRecipient?: string
+    // полилиния маршрута (оганичение на сервере 70000 символов)
     route?: string
-    addedPrice?: number,
+    // так как полилиния может быть больше 70000, то остальные данные берём отсюда)
+    routePlus?: string
+    addedPrice?: number
 
     distance?: string
     note?: string

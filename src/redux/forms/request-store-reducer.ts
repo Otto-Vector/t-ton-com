@@ -269,7 +269,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     },
 
     distance: Number(elem.distance),
-    route: elem.route,
+    route: elem?.route || '' + elem?.routePlus || '',
     note: elem.note,
     visible: true,
     marked: false,
@@ -631,7 +631,9 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
             const userSender = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.sender.innNumber)
             const userRecipient = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.recipient.innNumber)
             const acceptedUsers = [ userCustomer?.idUser || userId, userSender?.idUser, userRecipient?.idUser ].filter(x => x).join(', ')
-
+            // делим длинный polyline на две части (ограничения на сервере на 70000 символов
+            const route = submitValues?.route?.substring(0,69999)
+            const routePlus = submitValues?.route?.substring(69999)
             const requestNumber = submitValues.requestNumber?.toString() || '0'
             const placeholder = '-'
 
@@ -644,7 +646,9 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     shipmentDate: yearMmDdFormatISO(submitValues.shipmentDate),
                     cargoType: submitValues.cargoType,
                     distance: submitValues.distance?.toString(),
-                    route: submitValues.route,
+                    // route: submitValues.route,
+                    route,
+                    routePlus,
                     note: submitValues.note,
                     /* ЗАКАЗЧИК - ДАННЫЕ ПОЛЬЗОВАТЕЛЯ (ЕСЛИ ЕСТЬ) */
                     idCustomer: submitValues.idCustomer,
@@ -779,9 +783,11 @@ export const getRouteFromAPI = ( {
             const distance = +( +response.kilometers * getState().appStoreReducer.distanceCoefficient ).toFixed(0)
 
             // максимальное количество символов, которые мы можем у себя сохранить
-            if (response.polyline && response.polyline.length > 49990) {
-                // уходим в ошибку
-                throw new Error(`Слишком длинный маршрут (${ distance }км), выберите другого грузоотправителя или грузополучателя`)
+            if (response.polyline) {
+                if (response.polyline.length > 139990) {
+                    // уходим в ошибку
+                    throw new Error(`Слишком длинный маршрут (${ distance }км), выберите другого грузоотправителя или грузополучателя`)
+                }
             }
 
             // записываем изменения селекторов и прилепляем данные грузоотправителя и грузополучателя
