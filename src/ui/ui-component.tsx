@@ -32,6 +32,7 @@ import {WithAuthRedirect} from './common/redirect/with-auth-redirect/with-auth-r
 import {ТoAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redirect';
 import {getAutologinAuthStore, getIsAuthAuthStore} from '../selectors/auth-reselect';
 import {autoLoginMe} from '../redux/auth-store-reducer';
+import {Page404} from './common/404-page/page-404';
 
 type OwnProps = {}
 
@@ -121,7 +122,8 @@ export const UiComponent: React.FC<OwnProps> = () => {
                                element={ <AddDriversForm mode={'addDriver'}/> }/>
                         {/*element={ <AddDriversView idEmployee={ '0ce2d16f-582e-4d49-ac35-e0c8f9c53b06' }/> }/>*/ }
 
-                        <Route path="*" element={ <h2>This site NOT FOUND. Try another address</h2> }/>
+                        {/*<Route path="*" element={ <h2>This site NOT FOUND. Try another address</h2> }/>*/}
+                        <Route path="*" element={ <Page404/> }/>
                     </Routes>
                 </section>
                 <div className={ styles.ui__sideBarRight }>
