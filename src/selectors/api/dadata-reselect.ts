@@ -11,9 +11,10 @@ const getSuggestionsDaDataStore: daDataStoreSelectors<'suggestions'> = ( state )
 
 export const getAllKPPSelectFromLocal = createSelector(
     getSuggestionsDaDataStore,
-    ( kpp ): SelectOptionsType[] => kpp.map(( { data: { kpp = '-', inn }, value } ) => ( {
+    ( kpp ): SelectOptionsType[] => kpp.map(( { data: { kpp = '-', inn }, value } ,index) => ( {
         key: kpp + inn,
         value: kpp,
         label: `${ kpp }  ${ value }`,
+        isDefault: index === 0
     } )),
 )

@@ -163,7 +163,6 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const innPlusApiValidator = useInnPlusApiValidator<ConsigneesCardType<string>>(
         dispatch, consigneesStoreActions.setInitialValues,
         { organizationName: '', ogrn: '', address: '', kpp: '' } as ConsigneesCardType<string>,
-        true,
     )
 
     // валидатор на одинаковые названия заголовков
@@ -175,6 +174,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
             )
     }
 
+    // зачистка значений при первом рендере
     useEffect(() => {
         if (isFirstRender) {
             dispatch(consigneesStoreActions.setInitialValues({} as ConsigneesCardType))
@@ -193,6 +193,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         }
     }, [])
 
+    // работа с автозаполнением координат
     useEffect(() => {
             if (!isNew) {
                 if (currentId === currentIdFromNavigate) {
@@ -208,6 +209,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
         }, [ currentId, initialValues ],
     )
 
+    // присваивание первого селектора из списка
     useEffect(() => {
         // присваивается автоматически значение из первого селектора
         if (!isFirstRender && kppSelect.length > 0) {
@@ -264,8 +266,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ isNew ? maskOn.innNumber : undefined }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   // validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined }
-                                                   validate={  isNew ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined}
+                                                   validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined }
+                                                   // validate={  isNew ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined}
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />

@@ -5,7 +5,7 @@ import {SelectComponents} from 'react-select/dist/declarations/src/components';
 import {components} from './form-selector-creatable-corrector';
 import {FieldRenderProps} from 'react-final-form';
 import {SelectOptionsType} from './selector-utils';
-import {useCallback, useMemo} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 
 export const CustomSelect = ( {
                                   input,
@@ -55,7 +55,9 @@ export const CustomSelect = ( {
     }, [ options ])
 
     const optionsCurrent = useCallback(( inputValue: string ) => {
-        return options ? options.find(( option: SelectOptionsType ) => option.value === inputValue) || empty : empty
+        return options
+            ? options.find(( option: SelectOptionsType ) => option.value === inputValue) || empty
+            : empty
     }, [ options ])
 
     const isError = ( meta.error || meta.submitError ) && meta.touched

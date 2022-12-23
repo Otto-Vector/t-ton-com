@@ -31,8 +31,6 @@ import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
 import {daDataStoreActions, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer';
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
-import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
 
 
@@ -58,51 +56,60 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     const dispatch = useDispatch()
 
-    // расчищаем значения от лишних символов и пробелов после маски
-    const fromFormUnmaskedValues = ( values: PhoneSubmitType ): PhoneSubmitType => ( {
-        innNumber: parseAllNumbers(values.innNumber) || undefined,
-        kppNumber: values.kppNumber || undefined,
-        phoneNumber: ( parseAllNumbers(values.phoneNumber) === '7' ) ? '' : values.phoneNumber,
-        sms: parseAllNumbers(values.sms) || undefined,
-    } )
+    // // расчищаем значения от лишних символов и пробелов после маски
+    // const fromFormUnmaskedValues = ( values: PhoneSubmitType ): PhoneSubmitType => ( {
+    //     innNumber: parseAllNumbers(values.innNumber) || undefined,
+    //     kppNumber: values.kppNumber || undefined,
+    //     phoneNumber: ( parseAllNumbers(values.phoneNumber) === '7' ) ? '' : values.phoneNumber,
+    //     sms: parseAllNumbers(values.sms) || undefined,
+    // } )
 
-    // сохраняем изменения формы в стейт редакса
-    const formSpyChangeHandlerToLocalInit = ( values: PhoneSubmitType ) => {
-        const [ unmaskedValues, unmaskedInitialValues ] = [ values, localInitialValues ].map(fromFormUnmaskedValues)
-        if (!valuesAreEqual(unmaskedValues, unmaskedInitialValues)) {
-            setLocalInitialValues(unmaskedInitialValues)
-        }
-    }
+    // // сохраняем изменения формы в локальный стейт
+    // const formSpyChangeHandlerToLocalInit = ( values: PhoneSubmitType ) => {
+    //     const [ unmaskedValues, unmaskedInitialValues ] = [ values, absoluteInitialValues ].map(fromFormUnmaskedValues)
+    //     if (!valuesAreEqual(unmaskedValues, unmaskedInitialValues)) {
+    //         // setLocalInitialValues(unmaskedInitialValues)
+    //         dispatch(authStoreActions.setInitialValues(unmaskedInitialValues))
+    //     }
+    // }
 
     // при нажатии кнопки ДАЛЕЕ
     const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: PhoneSubmitType ) => {
         const [ unmaskedInn, unmaskedKpp ] = [ innNumber, kppNumber ].map(parseAllNumbers)
         let innError, phoneError, loginError
 
-        if (isRegisterMode) { // если РЕГИСТРАЦИЯ, то сначала проверяем ИНН на сущестование
-            if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан
+        if (isRegisterMode) { // если РЕГИСТРАЦИЯ,
+            if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан,
+                // то сначала проверяем ИНН на сущестование
                 innError = await dispatch<any>(getOrganizationsByInnKPP({ inn: unmaskedInn, kpp: unmaskedKpp }))
-                if (innError) { // если ошибка, то выводим её в форму
-                    dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
+                if (innError) { // если ошибка, (ИНН не существует, не найден)
+                    // блокируем ввод sms
+                    dispatch(authStoreActions.setIsAvailableSMSRequest(false))
+                    // выводим ошибку в форму
                     return innError
-                } else { // потом отправляем sms на регистрацию
+                } else { // если организация существует, отправляем sms на регистрацию
                     phoneError = await dispatch<any>(sendCodeToPhone({
                         phone: phoneNumber as string,
                         kpp: unmaskedKpp,
                         innNumber: unmaskedInn,
                     }))
-                    if (phoneError) { // если возвращается ошибка по номеру телефона, выводим её в форму
-                        dispatch(authStoreActions.setIsAvailableSMSRequest(false)) // блокируем ввод sms
+                    if (phoneError) { // если возвращается ошибка по номеру телефона,
+                        // блокируем ввод sms,
+                        dispatch(authStoreActions.setIsAvailableSMSRequest(false))
+                        // выводим её в форму
                         return phoneError
                     }
                 }
-            } else { // если SMS отослан
+            } else { // если SMS на авторизацию отослан,
+                // логинимся
                 loginError = await dispatch<any>(
                     loginAuthorization({ phone: phoneNumber as string, password: sms as string }),
                 )
                 if (loginError) {
+                    // выводим ошибку в форму
                     return loginError
                 } else {
+                    // всё ок?, переходим к окну заполнения реквизитов
                     navigate(requisites + 'new')
                 }
             }
@@ -122,15 +129,18 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
         return { [FORM_ERROR]: null }
     }
 
-    const registerHandleClick = async ( form: FormApi<PhoneSubmitType> ) => {
+    // кнопка смены режимов авторизации с зачисткой
+    const registerHandleClick = ( form: FormApi<PhoneSubmitType> ) => {
         setIsRegisterMode(!isRegisterMode)
         dispatch(daDataStoreActions.setSuggectionsValues([]))
-        dispatch(authStoreActions.setInitialValues({
+        setLocalInitialValues({
             innNumber: '',
             kppNumber: '',
             phoneNumber: form.getState().values.phoneNumber,
             sms: '',
-        }))
+        })
+        // перезапускаем форму для обновления значений
+        form.restart()
     }
 
     const newSMSCode = ( phone: string ) => {
@@ -141,21 +151,24 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     // синхронно/асинхронный валидатор на поле ИНН
     const innPlusApiValidator = useInnPlusApiValidator<PhoneSubmitType<string>>(
-        dispatch, setLocalInitialValues, { kppNumber: '' } as PhoneSubmitType<string>,
+        dispatch, authStoreActions.setInitialValues, { kppNumber: '' } as PhoneSubmitType<string>,
     )
 
     useEffect(() => {
         // присваивается автоматически значение из первого селектора
-        if (kppSelect.length > 0) {
-            const preKey = absoluteInitialValues.kppNumber + '' + absoluteInitialValues.innNumber
-            // если предыдущий список селектора не совпадает с выбраным
-            if (!kppSelect.find(( { key } ) => key === preKey)) {
-                setLocalInitialValues({
-                    ...localInitialValues,
-                    kppNumber: kppSelect[0].value,
-                })
-            }
-        }
+        // if (kppSelect.length > 0) {
+        //     const preKey = absoluteInitialValues.kppNumber + '' + absoluteInitialValues.innNumber
+        //     // если предыдущий список селектора не совпадает с выбраным
+        //     if (!kppSelect.find(( { key } ) => key === preKey)) {
+        //         // setLocalInitialValues({
+        //             // ...localInitialValues,
+        //         dispatch(authStoreActions.setInitialValues({
+        //             ...absoluteInitialValues,
+        //             kppNumber: kppSelect[0].value,
+        //         })
+        //         )
+        //     }
+        // }
     }, [ kppSelect ])
 
     return (
@@ -164,6 +177,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
             <Form
                 onSubmit={ onSubmit }
                 initialValues={ localInitialValues }
+                // initialValues={ absoluteInitialValues }
                 render={
                     ( {
                           submitError,
@@ -184,8 +198,8 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                component={ FormInputType }
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
-                                            // validate={ form.getFieldState('innNumber')?.visited ? innPlusApiValidator(values as PhoneSubmitType<string>) : undefined }
-                                               validate={ innPlusApiValidator(values as PhoneSubmitType<string>) }
+                                               validate={ form.getFieldState('innNumber')?.visited ? innPlusApiValidator(values as PhoneSubmitType<string>) : undefined }
+                                            // validate={ innPlusApiValidator(values as PhoneSubmitType<string>) }
                                                disabled={ isAvailableSMS }
                                         />
                                         <FormSelector nameForSelector={ 'kppNumber' }
@@ -245,16 +259,16 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                 <Button type={ 'button' }
                                         title={ !isRegisterMode ? 'Регистрация' : 'Назад' }
                                         colorMode={ 'blue' }
-                                        onClick={ async () => {
-                                            await registerHandleClick(form)
+                                        onClick={ () => {
+                                            registerHandleClick(form)
                                         } }
                                         rounded
                                 />
                             </div>
-                            <FormSpySimple form={ form }
-                                           onChange={ formSpyChangeHandlerToLocalInit }
-                                           isOnActiveChange
-                            />
+                            {/*<FormSpySimple form={ form }*/}
+                            {/*               onChange={ formSpyChangeHandlerToLocalInit }*/}
+                            {/*               // isOnActiveChange*/}
+                            {/*/>*/}
                         </form>
                     )
                 }/>

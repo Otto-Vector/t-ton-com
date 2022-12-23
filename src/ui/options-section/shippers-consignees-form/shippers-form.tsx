@@ -163,7 +163,6 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const innPlusApiValidator = useInnPlusApiValidator<ShippersCardType<string>>(
         dispatch, shippersStoreActions.setInitialValues,
         { organizationName: '', ogrn: '', address: '', kpp: '' } as ShippersCardType<string>,
-        true,
     )
 
     // валидатор на одинаковые названия заголовков
