@@ -141,7 +141,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
 
     // синхронно/асинхронный валидатор на поле ИНН
     const innPlusApiValidator = useInnPlusApiValidator<PhoneSubmitType<string>>(
-        dispatch, setLocalInitialValues, { kppNumber: '' } as PhoneSubmitType<string>
+        dispatch, setLocalInitialValues, { kppNumber: '' } as PhoneSubmitType<string>,
     )
 
     useEffect(() => {
@@ -164,7 +164,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
             <Form
                 onSubmit={ onSubmit }
                 initialValues={ localInitialValues }
-                // subscription={{ submitting: true, pristine: true, validating: true, valid: true }}
                 render={
                     ( {
                           submitError,
@@ -176,9 +175,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                           valid,
                       } ) => (
                         <form onSubmit={ handleSubmit }>
-                            <FormSpySimple form={ form }
-                                           onChange={ formSpyChangeHandlerToLocalInit }
-                            />
                             <span className={ styles.onError }>{ submitError }</span>
                             <div className={ styles.loginForm__inputsPanel }>
                                 { isRegisterMode &&
@@ -188,7 +184,8 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                component={ FormInputType }
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
-                                               validate={ form.getFieldState('innNumber')?.visited ? innPlusApiValidator(values as PhoneSubmitType<string>) : undefined }
+                                            // validate={ form.getFieldState('innNumber')?.visited ? innPlusApiValidator(values as PhoneSubmitType<string>) : undefined }
+                                               validate={ innPlusApiValidator(values as PhoneSubmitType<string>) }
                                                disabled={ isAvailableSMS }
                                         />
                                         <FormSelector nameForSelector={ 'kppNumber' }
@@ -254,6 +251,10 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                         rounded
                                 />
                             </div>
+                            <FormSpySimple form={ form }
+                                           onChange={ formSpyChangeHandlerToLocalInit }
+                                           isOnActiveChange
+                            />
                         </form>
                     )
                 }/>

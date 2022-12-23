@@ -264,7 +264,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    maskFormat={ isNew ? maskOn.innNumber : undefined }
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
-                                                   validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined }
+                                                   // validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined }
+                                                   validate={  isNew ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined}
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />
