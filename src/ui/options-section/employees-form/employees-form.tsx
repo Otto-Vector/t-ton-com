@@ -142,7 +142,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                 dispatch<any>(modifyOneEmployeeToAPI({
                     employeeValues: unmaskedValues,
                     image: selectedImage,
-                    status: unmaskedValues.status,
+                    status: unmaskedValues.status === 'уволен' ? 'свободен' : unmaskedValues.status,
                 }))
                 navigate(options) // и возвращаемся в предыдущее окно
             }
@@ -194,7 +194,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                 navigateOnOk: options,
             }))
         }
-    }, [ options ])
+        debugger
+    }, [ options, initialValues ])
 
     // фильтруем прицепы по значению поля Транспорт
     const setCargoTypeFilter = ( form?: FormApi<EmployeeCardType<string>> ) => async ( idTransport: string ) => {

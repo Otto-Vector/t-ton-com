@@ -5,7 +5,7 @@ import {SelectComponents} from 'react-select/dist/declarations/src/components';
 import {components} from './form-selector-creatable-corrector';
 import {FieldRenderProps} from 'react-final-form';
 import {SelectOptionsType} from './selector-utils';
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useMemo} from 'react';
 
 export const CustomSelect = ( {
                                   input,
@@ -63,7 +63,7 @@ export const CustomSelect = ( {
     const isError = ( meta.error || meta.submitError ) && meta.touched
     // стили для селектора
     const stylesSelect: StylesConfig<SelectOptionsType> = useMemo(() => ( {
-        menu: ( baseStyles ) => ( { ...baseStyles, margin: 0, padding: 0 } ),
+        menu: ( baseStyles ) => ( { ...baseStyles, margin: 0, padding: 0, backgroundColor: 'gray' } ),
         menuList: ( baseStyles ) => ( { ...baseStyles, margin: 0, padding: 0 } ),
         dropdownIndicator: ( baseStyles ) => ( { ...baseStyles, padding: '0 0 0 0' } ),
         indicatorSeparator: ( baseStyles ) => ( { ...baseStyles, display: 'none' } ),
@@ -89,7 +89,8 @@ export const CustomSelect = ( {
             lineHeight: 1.1,
             color: isDisabled
                 ? '#023E8AFF'
-                : '#FFFFFF',
+                : 'white',
+            // textShadow: '.5px .5px blue',
             borderBottom: '.5px solid #92ABC8',
             backgroundColor: isDisabled
                 ? '#023E8A66'
@@ -157,7 +158,7 @@ export const CustomSelect = ( {
                 />
                 : <Select
                     { ...input }
-                    // defaultMenuIsOpen //* для облегчения стилизации при открытом списке*//
+                    defaultMenuIsOpen //* для облегчения стилизации при открытом списке*//
                     styles={ stylesSelect }
                     components={ { Option } }
                     isClearable={ isClearable }
