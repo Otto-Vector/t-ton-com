@@ -7,6 +7,7 @@ const { REACT_APP_DEPLOY_MODE } = process.env
 // Aa123456
 // ssh root@185.46.11.30
 // d%9ViyW=p!?E
+// /etc/nginx/sites-available/default
 
 export const instanceBack = axios.create({
     baseURL: REACT_APP_DEPLOY_MODE === 'true' ? 'https://server.t-ton.com' : undefined,
