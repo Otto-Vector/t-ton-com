@@ -1,5 +1,5 @@
 import styles from './form-selector.module.scss'
-import Select, {GroupBase, StylesConfig} from 'react-select';
+import Select, {ContainerProps, GroupBase, MenuProps, StylesConfig} from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import {SelectComponents} from 'react-select/dist/declarations/src/components';
 import {components} from './form-selector-creatable-corrector';
@@ -44,16 +44,19 @@ export const CustomSelect = ( {
         return context === 'menu' ? option.label : option.value
     }, [])
 
+    // формат отображения пунктов меню при наличии контекста subLabel
     const formatOptionSubLabel = useCallback(( option, { context } ) => {
-        return context === 'menu' ? option.label + ( isSubLabelOnOption ? option.subLabel ? ' - ' + option.subLabel : '' : '' ) : option.label
+        return context === 'menu' ? option.label + ( ( isSubLabelOnOption && option.subLabel ) ? ' - ' + option.subLabel : '' ) : option.label
     }, [ isSubLabelOnOption ])
 
+    // выбор отображения конкретного пункта меню в мульти-селекторе
     const isMultiSelectOptionsCurrent = useCallback(( toFormValue = '' ): SelectOptionsType[] | '' => {
         const input = toFormValue?.split(', ')
         const zzz = input.map(( val = '' ) => options.find(( { value = '' } ) => value === val)) as SelectOptionsType[]
         return ( zzz.length < 1 ) ? '' : zzz
     }, [ options ])
 
+    // выбор отображения конкретного пункта меню в одиночном селекторе
     const optionsCurrent = useCallback(( inputValue: string ) => {
         return options
             ? options.find(( option: SelectOptionsType ) => option.value === inputValue) || empty
@@ -63,7 +66,14 @@ export const CustomSelect = ( {
     const isError = ( meta.error || meta.submitError ) && meta.touched
     // стили для селектора
     const stylesSelect: StylesConfig<SelectOptionsType> = useMemo(() => ( {
-        menu: ( baseStyles ) => ( { ...baseStyles, margin: 0, padding: 0, backgroundColor: 'gray' } ),
+        menu: ( baseStyles ) => ( {
+            ...baseStyles,
+            margin: 0, padding: 0,
+            backgroundColor: 'whitesmoke',
+            width: 'fit-content',
+            minWidth: '-webkit-fill-available',
+            maxWidth: '600px',
+        } ),
         menuList: ( baseStyles ) => ( { ...baseStyles, margin: 0, padding: 0 } ),
         dropdownIndicator: ( baseStyles ) => ( { ...baseStyles, padding: '0 0 0 0' } ),
         indicatorSeparator: ( baseStyles ) => ( { ...baseStyles, display: 'none' } ),
