@@ -780,7 +780,7 @@ export const getRouteFromAPI = ( {
             })
 
             // конвертируем дистанцию с учетом коэффициэнта
-            const distance = +( +response.kilometers * getState().appStoreReducer.distanceCoefficient ).toFixed(0)
+            const distance = +( +response.kilometers * getState().baseStoreReducer.distanceCoefficient ).toFixed(0)
 
             // максимальное количество символов, которые мы можем у себя сохранить
             if (response.polyline) {

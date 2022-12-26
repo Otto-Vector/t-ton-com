@@ -6,18 +6,18 @@ export type ParserType = undefined | ( ( val: string | undefined ) => string )
 type DefaultFormType = string | undefined
 
 // на установочные данные
-export type GlobalDataType = {
+export type PreAuthGlobalDataType = {
     /* ЗНАЧИМЫЕ НА БЭКЕ */
     // максимальное количество активных заявок пользователя
-    maxRequests: 10
+    maxRequests: number
     // тариф на создание заявки
-    tarifCreate: 0
+    tarifCreate: number
     // тариф на принятие заявки на короткие расстояния
-    tarifAcceptShortRoute: 100
+    tarifAcceptShortRoute: number
     // тариф на принятие заявки на Дальние расстояния
-    tarifAcceptLongRoute: 100
+    tarifAcceptLongRoute: number
     // процент на безопасную сделку
-    tarifPaySafeTax: 3
+    tarifPaySafeTax: number
 
     /* КЛЮЧЕВЫЕ */
     // ключ на апи авторизации
@@ -31,7 +31,7 @@ export type GlobalDataType = {
 
     /* ИНФОРМАЦИОННЫЕ */
     // телефон на главном экране
-    globalPhone: '+79-500-510-520'
+    globalPhone: string
     // ссылки на сторонние ресурсы справа экрана
     linkDomainOne: string
     linkTitleTwo: string
@@ -58,15 +58,15 @@ export type GlobalDataType = {
     // ссылка на офер
     linkToOfer: string
     // путь до сервера
-    serverURL: 'https://server.t-ton.com/',
+    serverURL: string,
     // путь до стандартной страницы
-    baseURL: 'http://t-ton.com',
+    baseURL: string,
     // форматы грузов
-    cargoFormats: 'Бензовоз, Битумовоз, Газовоз, Изотерм, Контейнеровоз, Лесовоз, Самосвал, Тягач, Фургон, Борт, Цементовоз',
+    cargoFormats: string,
     // форматы прав на собственность
-    propertyRights: 'Собственность, Cовместная собственность супругов, Аренда, Лизинг, Безвозмездное пользование',
+    propertyRights: string,
     // процент, на который надо помножить
-    distanceCoefficient: 1.05,
+    distanceCoefficient: number,
 }
 
 // на форму авторизации

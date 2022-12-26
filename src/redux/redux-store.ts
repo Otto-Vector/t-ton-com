@@ -56,11 +56,10 @@ export type AppStateType = ReturnType<StateType>
 
 
 // для расширения reduxDevTool в браузере и отслеживания стейта
-// @ts-ignore
+// @ts-ignore-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 // возвращаем стор вместе с санками
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleWare)))
-// let store = createStore(reducers, applyMiddleware(thunkMiddleWare));
 
 export default store

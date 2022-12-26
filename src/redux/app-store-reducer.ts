@@ -14,10 +14,6 @@ import {getCargoCompositionSelector} from './api/cargo-composition-response-redu
 
 const initialState = {
     initialized: false,
-    // КОНСТАНТЫ ИЗ БЭКА
-    // КЛЮЧИ
-    // процент, на который надо помножить
-    distanceCoefficient: 1.05,
 }
 
 export type AppReducerStateType = typeof initialState

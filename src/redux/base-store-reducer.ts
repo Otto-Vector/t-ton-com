@@ -2,13 +2,36 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from './redux-store'
 import {SelectOptionsType} from '../ui/common/form-selector/selector-utils';
 import {GetActionsTypes} from '../types/ts-utils';
+import {PreAuthGlobalDataType} from '../types/form-types';
+import {preAuthApi} from '../api/local-api/pre-auth.api';
+import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
+import {TtonErrorType} from '../api/local-api/back-instance.api';
 
 
 const initialState = {
     serverURL: 'https://server.t-ton.com/',
+
+    // процент, на который надо помножить
+    distanceCoefficient: 1.05,
+    cargoFormats: [ '' ],
+    propertyRights: [ '' ],
+
+    // тарифы на оплату (отображаются в инфо-секции, используются везде, редактируются админом)
+    tariffs: {
+        // тариф на создание заявки (по умолчанию 100)
+        create: 0,
+        // тариф на принятие заявки на короткие расстояния (по умолчанию 100)
+        acceptShortRoute: 100,
+        // тариф на принятие заявки на Дальние расстояния (по умолчанию 100)
+        acceptLongRoute: 100,
+        // процент на безопасную сделку (по умолчанию 3) (будем прикручивать в будущем)
+        paySafeTax: 3,
+    },
+    maxRequests: 10,
+
     header: {
         companyName: 'Транспортно-Логистическая Компания',
-        baseHref: 'http://t-ton.com',
+        baseHref: 'https://t-ton.com',
         directPhoneNumber: '+79-500-510-520',
     },
 
@@ -21,6 +44,8 @@ const initialState = {
         { domain: 'https://github.com', title: 'Хранение' },
         { domain: 'https://google.ru', title: 'Другой поисковик' },
     ],
+
+
     helloDescription: {
         man: [
             '- Подписание документации через ЭДО',
@@ -96,10 +121,36 @@ export const baseStoreReducer = ( state = initialState, action: ActionsType ): B
 
     switch (action.type) {
 
-        case 'base-store-reducer/CHANGE-URL': {
+        case 'base-store-reducer/SET-VALUES': {
             return {
                 ...state,
-                header: { ...state.header, baseHref: action.href },
+                serverURL: action.payload.serverURL,
+                header: {
+                    ...state.header,
+                    baseHref: action.payload.baseURL,
+                    directPhoneNumber: action.payload.globalPhone,
+                },
+                footer: { ...state.footer, linkToOfer: action.payload.linkToOfer },
+                cargoFormats: action.payload.cargoFormats.split(' ,'),
+                propertyRights: action.payload.propertyRights.split(' ,'),
+                links: [
+                    { title: action.payload.linkTitleOne, domain: action.payload.linkDomainOne },
+                    { title: action.payload.linkTitleTwo, domain: action.payload.linkDomainTwo },
+                    { title: action.payload.linkTitleThree, domain: action.payload.linkDomainThree },
+                    { title: action.payload.linkTitleFour, domain: action.payload.linkDomainFour },
+                    { title: action.payload.linkTitleFive, domain: action.payload.linkDomainFive },
+                    { title: action.payload.linkTitleSix, domain: action.payload.linkDomainSix },
+                    { title: action.payload.linkTitleSeven, domain: action.payload.linkDomainSeven },
+                    { title: action.payload.linkTitleEight, domain: action.payload.linkDomainEight },
+                    { title: action.payload.linkTitleNine, domain: action.payload.linkDomainNine },
+                    { title: action.payload.linkTitleTen, domain: action.payload.linkDomainTen },
+                ],
+                tariffs: {
+                    create: action.payload.tarifCreate,
+                    acceptShortRoute: action.payload.tarifAcceptShortRoute,
+                    acceptLongRoute: action.payload.tarifAcceptLongRoute,
+                    paySafeTax: action.payload.tarifPaySafeTax
+                }
             }
         }
         default: {
@@ -112,12 +163,34 @@ export const baseStoreReducer = ( state = initialState, action: ActionsType ): B
 /* ЭКШОНЫ */
 export const baseStoreActions = {
     // установка значения в карточки пользователей одной страницы
-    setHref: ( href: string ) => ( {
-        type: 'base-store-reducer/CHANGE-URL',
-        href,
+    setValues: ( payload: PreAuthGlobalDataType ) => ( {
+        type: 'base-store-reducer/SET-VALUES',
+        payload,
     } as const ),
 }
 
 /* САНКИ */
 
-export type BaseStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+export type BaseStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
+
+
+// запрос и сохранение данных от сервера
+export const preAuthDataSet = (): BaseStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            // запрос на данные
+            const response = await preAuthApi.getGlobalData()
+
+            // сохранение данных
+            if (response.length > 0) {
+                dispatch(baseStoreActions.setValues(response[0]))
+            }
+            // здесь любое сообщение будет ошибкой
+            if (response.message) {
+                dispatch(globalModalStoreActions.setTextMessage(response.message))
+            }
+
+        } catch (error: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+        }
+    }

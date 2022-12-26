@@ -1,5 +1,5 @@
 import styles from './form-selector.module.scss'
-import Select, {ContainerProps, GroupBase, MenuProps, StylesConfig} from 'react-select';
+import Select, {GroupBase, StylesConfig} from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import {SelectComponents} from 'react-select/dist/declarations/src/components';
 import {components} from './form-selector-creatable-corrector';
@@ -100,7 +100,7 @@ export const CustomSelect = ( {
             color: isDisabled
                 ? '#023E8AFF'
                 : 'white',
-            // textShadow: '.5px .5px blue',
+            textShadow: '.5px .5px blue',
             borderBottom: '.5px solid #92ABC8',
             backgroundColor: isDisabled
                 ? '#023E8A66'
@@ -168,7 +168,7 @@ export const CustomSelect = ( {
                 />
                 : <Select
                     { ...input }
-                    // defaultMenuIsOpen //* для облегчения стилизации при открытом списке*//
+                    // defaultMenuIsOpen //* для облегчения стилизации при открытом списке *//
                     styles={ stylesSelect }
                     components={ { Option } }
                     isClearable={ isClearable }
