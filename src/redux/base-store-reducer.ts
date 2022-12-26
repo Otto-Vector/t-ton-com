@@ -47,9 +47,9 @@ const initialState = {
     },
 
     links: [
-        { domain: 'https://yandex.ru', title: 'Поисковик' },
+        { domain: 'https://yandex.ru/maps/', title: 'Карты Яндекса' },
+        { domain: 'https://google.ru/maps/', title: 'Карты Гугла' },
         { domain: 'https://github.com', title: 'Хранение' },
-        { domain: 'https://google.ru', title: 'Другой поисковик' },
     ],
 
 
@@ -151,7 +151,7 @@ export const baseStoreReducer = ( state = initialState, action: ActionsType ): B
                     { title: action.payload.linkTitleEight, domain: action.payload.linkDomainEight },
                     { title: action.payload.linkTitleNine, domain: action.payload.linkDomainNine },
                     { title: action.payload.linkTitleTen, domain: action.payload.linkDomainTen },
-                ],
+                ].filter(({domain})=>domain),
                 tariffs: {
                     create: action.payload.tarifCreate,
                     acceptShortRoute: action.payload.tarifAcceptShortRoute,
