@@ -138,8 +138,8 @@ export const baseStoreReducer = ( state = initialState, action: ActionsType ): B
                     directPhoneNumber: action.payload.globalPhone,
                 },
                 footer: { ...state.footer, linkToOfer: action.payload.linkToOfer },
-                cargoFormats: action.payload.cargoFormats.split(' ,'),
-                propertyRights: action.payload.propertyRights.split(' ,'),
+                cargoFormats: action.payload.cargoFormats.split(', '),
+                propertyRights: action.payload.propertyRights.split(', '),
                 links: [
                     { title: action.payload.linkTitleOne, domain: action.payload.linkDomainOne },
                     { title: action.payload.linkTitleTwo, domain: action.payload.linkDomainTwo },

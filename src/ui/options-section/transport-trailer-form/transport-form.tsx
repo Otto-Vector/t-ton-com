@@ -35,6 +35,7 @@ import {stringArrayToSelectValue} from '../../common/form-selector/selector-util
 import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {syncValidators} from '../../../utils/validators';
 import {getIsBusyTransport} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect';
+import {getCargoTypeBaseStore, getPropertyRightsBaseStore} from '../../../selectors/base-reselect';
 
 
 type OwnProps = {}
@@ -53,6 +54,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnTransportStore)
     const validators = useSelector(getValidatorsTransportStore)
     const parsers = useSelector(getParsersTransportStore)
+    const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
+    const propertyRightsGlobal = useSelector(getPropertyRightsBaseStore) as typeof propertyRights
 
     const currentId = useSelector(getCurrentIdTransportStore)
     const oneTransport = useSelector(getOneTransportFromLocal)
@@ -214,7 +217,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             >
                                                 <FormSelector nameForSelector={ 'cargoType' }
                                                               placeholder={ label.cargoType }
-                                                              values={ stringArrayToSelectValue([ ...cargoConstType ]) }
+                                                              values={ stringArrayToSelectValue([ ...cargoTypes ]) }
                                                               handleChanger={ ( val: string ) => {
                                                                   if (val === 'Тягач') {
                                                                       form.resetFieldState('cargoWeight')
@@ -239,7 +242,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <FormSelector nameForSelector={ 'propertyRights' }
                                                           placeholder={ label.propertyRights }
-                                                          values={ stringArrayToSelectValue(propertyRights.map(x => x)) }
+                                                          values={ stringArrayToSelectValue([ ...propertyRightsGlobal ]) }
                                                           validate={ validators.propertyRights }
                                             />
                                         </div>
@@ -265,7 +268,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                                 </div>
                                                 <div className={ styles.transportTrailerForm__button }>
                                                     <Button type={ 'submit' }
-                                                            disabled={ !isImageChanged && (submitting || pristine) }
+                                                            disabled={ !isImageChanged && ( submitting || pristine ) }
                                                             colorMode={ 'green' }
                                                             title={ 'Cохранить' }
                                                             rounded

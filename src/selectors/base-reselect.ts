@@ -14,6 +14,7 @@ export const getDrivingCategorySelectorBaseStore: BaseStoreSelectors<'drivingCat
 // глобальные переменные
 export const getTariffsBaseStore: BaseStoreSelectors<'tariffs'> = ( state ) => state.baseStoreReducer.tariffs
 export const getCargoTypeBaseStore: BaseStoreSelectors<'cargoFormats'> = ( state ) => state.baseStoreReducer.cargoFormats
+export const getPropertyRightsBaseStore: BaseStoreSelectors<'propertyRights'> = ( state ) => state.baseStoreReducer.propertyRights
 
 
 

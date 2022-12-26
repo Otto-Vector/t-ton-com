@@ -41,6 +41,7 @@ import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-com
 import {Button} from '../../common/button/button';
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {getCargoTypeBaseStore} from '../../../selectors/base-reselect';
 
 
 type OwnProps = {
@@ -70,7 +71,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const fieldInformation = useSelector(getInfoTextModalsRequestValuesStore)
     // для отображения данных в режиме статуса/истории
     const infoData = useSelector(getPreparedInfoDataRequestStore)
-
+    // типы груза
+    const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
     // изменяемый селектор состава груза
     const cargoComposition = useSelector(getCargoCompositionSelectorStore)
     // для отображения статуса обработки данных в дистанции
@@ -272,7 +274,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     { requestModes.createMode
                                         ? <FormSelector nameForSelector={ 'cargoType' }
                                                         placeholder={ labels.cargoType }
-                                                        values={ stringArrayToSelectValue([ ...cargoConstType.filter(x => x !== 'Тягач') ]) }
+                                                        values={ stringArrayToSelectValue([ ...cargoTypes.filter(x => x !== 'Тягач') ]) }
                                                         validate={ validators.cargoType }
                                                         isClearable
                                         />

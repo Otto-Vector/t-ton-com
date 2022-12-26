@@ -91,7 +91,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                             {
                                 ( key === 'cargoFilter' )
                                     ? <JustSelect
-                                        optionItems={ [...cargoTypes.filter(v => v !== 'Тягач')] }
+                                        optionItems={ [ ...cargoTypes.filter(v => v !== 'Тягач') ] }
                                         selectedValue={ cargoFilter }
                                         titleValue={ value.title }
                                         onChange={ filtersAction[key] }

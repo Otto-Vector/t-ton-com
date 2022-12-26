@@ -35,6 +35,7 @@ import {SwitchMask} from '../../common/antd-switch/antd-switch';
 import {syncValidators} from '../../../utils/validators';
 import {syncParsers} from '../../../utils/parsers';
 import {getIsBusyTrailer} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect';
+import {getCargoTypeBaseStore, getPropertyRightsBaseStore} from '../../../selectors/base-reselect';
 
 type OwnProps = {}
 
@@ -52,6 +53,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnTrailerStore)
     const validators = useSelector(getValidatorsTrailerStore)
     const parsers = useSelector(getParsersTrailerStore)
+    const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
+    const propertyRightsGlobal = useSelector(getPropertyRightsBaseStore) as typeof propertyRights
 
     const currentId = useSelector(getCurrentIdTrailerStore)
     const oneTrailer = useSelector(getOneTrailerFromLocal)
@@ -214,7 +217,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             >
                                                 <FormSelector nameForSelector={ 'cargoType' }
                                                               placeholder={ label.cargoType }
-                                                              values={ stringArrayToSelectValue([ ...cargoConstType.filter(x => x !== 'Тягач') ]) }
+                                                              values={ stringArrayToSelectValue([ ...cargoTypes.filter(x => x !== 'Тягач') ]) }
                                                               validate={ validators.cargoType }
                                                               disabled={ !!isBusyTrailer }
                                                 />
@@ -233,7 +236,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <FormSelector nameForSelector={ 'propertyRights' }
                                                           placeholder={ label.propertyRights }
-                                                          values={ stringArrayToSelectValue(propertyRights.map(x => x)) }
+                                                          values={ stringArrayToSelectValue([ ...propertyRightsGlobal ]) }
                                                           validate={ validators.propertyRights }
                                             />
                                         </div>
