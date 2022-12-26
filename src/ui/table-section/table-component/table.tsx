@@ -1,7 +1,7 @@
 import React from 'react';
 import {Column, useFilters, useGlobalFilter, useTable} from 'react-table';
 import styles from './table-component.module.scss'
-import {TableModesType} from '../search-section';
+import {TableModesType} from '../table-section';
 import {useSelector} from 'react-redux';
 import {getRoutesStore} from '../../../selectors/routes-reselect';
 import {useNavigate} from 'react-router-dom';

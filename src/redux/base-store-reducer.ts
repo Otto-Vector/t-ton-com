@@ -2,7 +2,13 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from './redux-store'
 import {SelectOptionsType} from '../ui/common/form-selector/selector-utils';
 import {GetActionsTypes} from '../types/ts-utils';
-import {PreAuthGlobalDataType} from '../types/form-types';
+import {
+    cargoConstType,
+    CargoTypeType,
+    PreAuthGlobalDataType,
+    propertyRights,
+    PropertyRightsType,
+} from '../types/form-types';
 import {preAuthApi} from '../api/local-api/pre-auth.api';
 import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
 import {TtonErrorType} from '../api/local-api/back-instance.api';
@@ -13,8 +19,9 @@ const initialState = {
 
     // процент, на который надо помножить
     distanceCoefficient: 1.05,
-    cargoFormats: [ '' ],
-    propertyRights: [ '' ],
+    cargoFormats: [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
+        'Тягач', 'Фургон, Борт', 'Цементовоз' ] as string[] | typeof cargoConstType,
+    propertyRights: [ '' ] as string[] | typeof propertyRights,
 
     // тарифы на оплату (отображаются в инфо-секции, используются везде, редактируются админом)
     tariffs: {
@@ -181,7 +188,7 @@ export const preAuthDataSet = (): BaseStoreReducerThunkActionType =>
             // запрос на данные
             const response = await preAuthApi.getGlobalData()
 
-            // сохранение данных
+            // сохранение данных в store
             if (response.length > 0) {
                 dispatch(baseStoreActions.setValues(response[0]))
             }

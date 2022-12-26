@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react'
-import styles from './search-section.module.scss'
+import styles from './table-section.module.scss'
 import {Button} from '../common/button/button'
 import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {filtersStoreActions, initialFiltersState} from '../../redux/table/filters-store-reducer'
 import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
-import {cargoConstType} from '../../types/form-types'
 import {JustSelect} from '../common/just-select/just-select';
+import {getCargoTypeBaseStore} from '../../selectors/base-reselect';
+import {cargoConstType} from '../../types/form-types';
 
 
 type OwnProps = {
@@ -15,7 +16,7 @@ type OwnProps = {
 
 export type TableModesType = { searchTblMode: boolean, historyTblMode: boolean, statusTblMode: boolean }
 
-export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
+export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const tableModes: TableModesType = {
         searchTblMode: mode === 'search',
@@ -23,6 +24,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
         statusTblMode: mode === 'status',
     }
     const header = tableModes.searchTblMode ? 'Поиск ' : tableModes.historyTblMode ? 'История' : 'Заявки'
+    const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
     const filterButtons = useSelector(getButtonsFiltersStore)
     const { cargoFilter } = useSelector(getValuesFiltersStore)
     const dispatch = useDispatch()
@@ -85,13 +87,14 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                 <form className={ styles.searchSection__buttonFilters }>
                     { Object.entries(filterButtons).map(( [ key, value ] ) =>
                         <div key={ key } className={ styles.searchSection__buttonItem + ' ' +
-                            ( !!value.mode ? styles.searchSection__buttonItem_active : '' ) }>
+                            ( value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             {
                                 ( key === 'cargoFilter' )
-                                    ? <JustSelect optionItems={ [...cargoConstType.filter(v=>v!=='Тягач')] }
-                                                  selectedValue={ cargoFilter }
-                                                  titleValue={ value.title }
-                                                  onChange={ filtersAction[key] }
+                                    ? <JustSelect
+                                        optionItems={ [...cargoTypes.filter(v => v !== 'Тягач')] }
+                                        selectedValue={ cargoFilter }
+                                        titleValue={ value.title }
+                                        onChange={ filtersAction[key] }
                                     />
                                     : ( // убираем кнопки на разных типах
                                         ( key === 'nearDriverFilter' && ( tableModes.historyTblMode || tableModes.statusTblMode ) )
@@ -103,7 +106,7 @@ export const SearchSection: React.FC<OwnProps> = ( { mode } ) => {
                                                   colorMode={ 'whiteBlue' }
                                                   rounded
                                                   onClick={ () => {
-                                                      // @ts-ignore
+                                                      // @ts-ignore-next-line
                                                       filtersAction[key]()
                                                   } }
                                         /> }

@@ -107,11 +107,11 @@ const initialState = {
             acceptLongRoute: undefined,
             paySafeTax: undefined,
         },
-
     } as CompanyRequisitesType<ParserType>,
 
+    // данные о текущем пользователе
     storedValues: {} as CompanyRequisitesType,
-
+    // необходимые данные о других пользователях для работы с заявками
     filteredContent: [ {} ] as Partial<CompanyRequisitesType>[] | null,
 }
 
@@ -333,7 +333,6 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
                 }
             }
         } catch (error) {
-            // console.error('Ошибка API запроса реквизитов организации: ', error)
             dispatch(globalModalStoreActions.setTextMessage('Ошибка API запроса реквизитов организации: ' + error))
             dispatch(requisitesStoreActions.setIsFetching(false))
         }

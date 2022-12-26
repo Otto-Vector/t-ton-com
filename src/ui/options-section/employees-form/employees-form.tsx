@@ -34,7 +34,7 @@ import {FormSelector} from '../../common/form-selector/form-selector';
 import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers';
 import {ImageViewSet} from '../../common/image-view-set/image-view-set';
 import {yearMmDdFormat} from '../../../utils/date-formats';
-import {getDrivingCategorySelector} from '../../../selectors/base-reselect';
+import {getDrivingCategorySelectorBaseStore} from '../../../selectors/base-reselect';
 import {rerenderTransport} from '../../../redux/options/transport-store-reducer';
 import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer';
 import {syncValidators} from '../../../utils/validators';
@@ -62,7 +62,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const parsers = useSelector(getParsersEmployeesStore)
 
     // селекторы
-    const drivingCategorySelector = useSelector(getDrivingCategorySelector)
+    const drivingCategorySelector = useSelector(getDrivingCategorySelectorBaseStore)
     const transportSelect = useSelector(getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel)
     const trailerSelect = useSelector(getTrailerSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel)
     const [ trailerSelectDisableWrongCargoType, setTrailerSelectDisableWrongCargoType ] = useState<SelectOptionsType[]>([ {

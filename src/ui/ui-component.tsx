@@ -19,7 +19,7 @@ import {ConsigneesForm} from './options-section/shippers-consignees-form/consign
 import {EmployeesForm} from './options-section/employees-form/employees-form';
 import {TransportForm} from './options-section/transport-trailer-form/transport-form';
 import {TrailerForm} from './options-section/transport-trailer-form/trailer-form';
-import {SearchSection} from './search-section/search-section';
+import {TableSection} from './table-section/table-section';
 import {RequestSection} from './request-section/request-section';
 import {AddDriversForm} from './add-drivers-form/add-drivers-form';
 import {InfoSection} from './info-section/info-section';
@@ -81,13 +81,13 @@ export const UiComponent: React.FC<OwnProps> = () => {
                                </ТoAuthRedirect> }/>
 
                         <Route path={ routes.requestsList } element={ <ТoAuthRedirect>
-                            <SearchSection mode={ 'status' }/> {/*таблица статусов по активным заявкам*/ }
+                            <TableSection mode={ 'status' }/> {/*таблица статусов по активным заявкам*/ }
                         </ТoAuthRedirect> }/>
                         <Route path={ routes.searchList } element={ <ТoAuthRedirect>
-                            <SearchSection mode={ 'search' }/> {/*ПОИСК активных заявок*/ }
+                            <TableSection mode={ 'search' }/> {/*ПОИСК активных заявок*/ }
                         </ТoAuthRedirect> }/>
                         <Route path={ routes.historyList } element={ <ТoAuthRedirect>
-                            <SearchSection mode={ 'history' }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
+                            <TableSection mode={ 'history' }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
                         </ТoAuthRedirect> }/>
 
                         <Route path={ routes.map } element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>

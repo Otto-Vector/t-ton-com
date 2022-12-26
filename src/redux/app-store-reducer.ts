@@ -11,6 +11,7 @@ import {geoPositionTake} from './auth-store-reducer';
 import {getInfoMessages} from './info-store-reducer';
 import {GetActionsTypes} from '../types/ts-utils';
 import {getCargoCompositionSelector} from './api/cargo-composition-response-reducer';
+import {preAuthDataSet} from './base-store-reducer';
 
 const initialState = {
     initialized: false,
@@ -54,6 +55,7 @@ export const initializedAll = (): InitializedThunkActionType =>
     async ( dispatch ) => {
         try { // реджектить промисы здесь https://qna.habr.com/q/1060904
             const getPersonal = dispatch(getPersonalOrganizationRequisites())
+            const getBaseData = dispatch(preAuthDataSet())
             const getGeoPosition = dispatch(geoPositionTake())
             const getOrganisationsList = dispatch(getListOrganizationRequisites())
             const getAllShippers = dispatch(getAllShippersAPI())
@@ -68,6 +70,7 @@ export const initializedAll = (): InitializedThunkActionType =>
 
             Promise.all([
                 getPersonal,
+                getBaseData,
                 getGeoPosition,
                 getOrganisationsList,
                 getCargoComposition,

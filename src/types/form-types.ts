@@ -129,13 +129,13 @@ export type CompanyRequisitesType<T = DefaultFormType> = {
     // тарифы на оплату (отображаются в инфо-секции, используются везде, редактируются админом)
     tariffs: {
         // тариф на создание заявки (по умолчанию 100)
-        create: T,
+        create?: number,
         // тариф на принятие заявки на короткие расстояния (по умолчанию 100)
-        acceptShortRoute: T,
+        acceptShortRoute?: number,
         // тариф на принятие заявки на Дальние расстояния (по умолчанию 100)
-        acceptLongRoute: T,
+        acceptLongRoute?: number,
         // процент на безопасную сделку (по умолчанию 3) (будем прикручивать в будущем)
-        paySafeTax: T,
+        paySafeTax?: number,
     },
 }
 // на форму с реквизитами - возврат с бэка
@@ -168,10 +168,10 @@ export type CompanyRequisitesApiType = {
     cash: number,
     requestActiveCount: string
     maxRequests: string
-    tarifCreate: string
-    tarifAcceptShortRoute: string
-    tarifAcceptLongRoute: string
-    tarifPaySafeTax: string
+    tarifCreate: number
+    tarifAcceptShortRoute: number
+    tarifAcceptLongRoute: number
+    tarifPaySafeTax: number
     mechanicFIO?: string
     dispatcherFIO?: string
 }

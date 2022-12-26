@@ -10,7 +10,7 @@ import {getContentTableStoreInWork, getContentTableStoreNew} from '../../../sele
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {TableModesType} from '../search-section'
+import {TableModesType} from '../table-section'
 import {ddMmYearFormat} from '../../../utils/date-formats';
 import {getCashRequisitesStore} from '../../../selectors/options/requisites-reselect';
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';

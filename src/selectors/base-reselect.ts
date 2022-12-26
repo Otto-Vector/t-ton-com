@@ -9,11 +9,11 @@ export const getHelloDescriptionBaseStore: BaseStoreSelectors<'helloDescription'
 
 export const getFooterBaseStore: BaseStoreSelectors<'footer'> = ( state ) => state.baseStoreReducer.footer
 export const getLinksBaseStore: BaseStoreSelectors<'links'> = ( state ) => state.baseStoreReducer.links
-export const getDrivingCategorySelector: BaseStoreSelectors<'drivingCategorySelector'> = ( state ) => state.baseStoreReducer.drivingCategorySelector
+export const getDrivingCategorySelectorBaseStore: BaseStoreSelectors<'drivingCategorySelector'> = ( state ) => state.baseStoreReducer.drivingCategorySelector
+
+// глобальные переменные
+export const getTariffsBaseStore: BaseStoreSelectors<'tariffs'> = ( state ) => state.baseStoreReducer.tariffs
+export const getCargoTypeBaseStore: BaseStoreSelectors<'cargoFormats'> = ( state ) => state.baseStoreReducer.cargoFormats
 
 
-// // выборка из списка загруженных книг (пока отключил) - загружаю каждую книгу напрямую из API
-// export const getOneBookFromLocal = createSelector( getBooksList, getBookToView,
-//     ( booksList, bookToView ): ItemBook['volumeInfo'] | undefined => {
-//         return booksList.filter( ( book ) => book.id === bookToView.bookId )[0]?.volumeInfo
-//     } )
+
