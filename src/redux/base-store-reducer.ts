@@ -19,8 +19,7 @@ const initialState = {
 
     // процент, на который надо помножить
     distanceCoefficient: 1.05,
-    cargoFormats: [ 'Бензовоз', 'Битумовоз', 'Газовоз', 'Изотерм', 'Контейнеровоз', 'Лесовоз', 'Самосвал',
-        'Тягач', 'Фургон, Борт', 'Цементовоз' ] as string[] | typeof cargoConstType,
+    cargoFormats: [ '' ] as string[] | typeof cargoConstType,
     propertyRights: [ '' ] as string[] | typeof propertyRights,
 
     // тарифы на оплату (отображаются в инфо-секции, используются везде, редактируются админом)
