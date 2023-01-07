@@ -2,13 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from './redux-store'
 import {SelectOptionsType} from '../ui/common/form-selector/selector-utils';
 import {GetActionsTypes} from '../types/ts-utils';
-import {
-    cargoConstType,
-    CargoTypeType,
-    PreAuthGlobalDataType,
-    propertyRights,
-    PropertyRightsType,
-} from '../types/form-types';
+import {cargoConstType, PreAuthGlobalDataType, propertyRights} from '../types/form-types';
 import {preAuthApi} from '../api/local-api/pre-auth.api';
 import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
 import {TtonErrorType} from '../api/local-api/back-instance.api';
@@ -19,7 +13,9 @@ const initialState = {
 
     // процент, на который надо помножить
     distanceCoefficient: 1.05,
+    // типы грузов
     cargoFormats: [ '' ] as string[] | typeof cargoConstType,
+    // виды прав собственности
     propertyRights: [ '' ] as string[] | typeof propertyRights,
 
     // тарифы на оплату (отображаются в инфо-секции, используются везде, редактируются админом)
@@ -33,6 +29,7 @@ const initialState = {
         // процент на безопасную сделку (по умолчанию 3) (будем прикручивать в будущем)
         paySafeTax: 3,
     },
+    // максимальное количество заявок, на которые можно ответить
     maxRequests: 10,
 
     header: {
@@ -45,13 +42,13 @@ const initialState = {
         linkToOfer: '#oferIsHere',
     },
 
+    // ссылки на сторонние сайты (панель справа)
     links: [
         { domain: 'https://yandex.ru/maps/', title: 'Карты Яндекса' },
         { domain: 'https://google.ru/maps/', title: 'Карты Гугла' },
         { domain: 'https://github.com', title: 'Хранение' },
     ],
-
-
+    // описание всплывающих окон вкладки hello
     helloDescription: {
         man: [
             '- Подписание документации через ЭДО',
@@ -99,6 +96,7 @@ const initialState = {
             '- Местоположение авто до и после разгрузки',
         ],
     },
+    // водительские категории (для селектора)
     drivingCategorySelector: [
         { key: 'A', value: 'A', label: 'A - Мотоциклы' },
         { key: 'A1', value: 'A1', label: 'A1 - Легкие мотоциклы' },
@@ -150,13 +148,13 @@ export const baseStoreReducer = ( state = initialState, action: ActionsType ): B
                     { title: action.payload.linkTitleEight, domain: action.payload.linkDomainEight },
                     { title: action.payload.linkTitleNine, domain: action.payload.linkDomainNine },
                     { title: action.payload.linkTitleTen, domain: action.payload.linkDomainTen },
-                ].filter(({domain})=>domain),
+                ].filter(( { domain } ) => domain),
                 tariffs: {
                     create: action.payload.tarifCreate,
                     acceptShortRoute: action.payload.tarifAcceptShortRoute,
                     acceptLongRoute: action.payload.tarifAcceptLongRoute,
-                    paySafeTax: action.payload.tarifPaySafeTax
-                }
+                    paySafeTax: action.payload.tarifPaySafeTax,
+                },
             }
         }
         default: {

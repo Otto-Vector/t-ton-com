@@ -59,9 +59,9 @@ export const CustomSelect = ( {
     // выбор отображения конкретного пункта меню в одиночном селекторе
     const optionsCurrent = useCallback(( inputValue: string ) => {
         return options
-            ? options.find(( option: SelectOptionsType ) => option.value === inputValue) || empty
+            ? options.find(( option: SelectOptionsType ) => option.value === ( defaultValue || inputValue )) || empty
             : empty
-    }, [ options ])
+    }, [ options, defaultValue ])
 
     const isError = ( meta.error || meta.submitError ) && meta.touched
     // стили для селектора

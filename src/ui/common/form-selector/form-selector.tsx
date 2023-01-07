@@ -18,7 +18,7 @@ type OwnProps = {
     handleChanger?: Function
     errorTop?: boolean
     disabled?: boolean
-    defaultValue?: SelectOptionsType | SelectOptionsType[]
+    defaultValue?: string
     isMulti?: boolean
     // добавляет отображение поля subLabel
     isSubLabelOnOption?: boolean

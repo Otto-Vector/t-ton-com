@@ -31,7 +31,6 @@ export const useInnPlusApiValidator = <R extends { innNumber: string }>(
             // а также срабатывает при нажатии кнопки зачистки поля
             if (!isValidCurrent && isValidPrev) {
                 const resetValues = { ...preValues, ...blankFields, innNumber: current }
-                // debugger
                 // зачищаем необходимые поля
                 dispatch(setInitValuesAction(resetValues))
                 // зачищаем селектор

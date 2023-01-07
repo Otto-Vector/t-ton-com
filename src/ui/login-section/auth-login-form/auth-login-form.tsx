@@ -32,6 +32,7 @@ import {FormSelector} from '../../common/form-selector/form-selector';
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
 import {daDataStoreActions, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer';
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
+import {SelectOptionsType} from '../../common/form-selector/selector-utils';
 
 
 type OwnProps = {}
@@ -55,23 +56,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
 
     const dispatch = useDispatch()
-
-    // // расчищаем значения от лишних символов и пробелов после маски
-    // const fromFormUnmaskedValues = ( values: PhoneSubmitType ): PhoneSubmitType => ( {
-    //     innNumber: parseAllNumbers(values.innNumber) || undefined,
-    //     kppNumber: values.kppNumber || undefined,
-    //     phoneNumber: ( parseAllNumbers(values.phoneNumber) === '7' ) ? '' : values.phoneNumber,
-    //     sms: parseAllNumbers(values.sms) || undefined,
-    // } )
-
-    // // сохраняем изменения формы в локальный стейт
-    // const formSpyChangeHandlerToLocalInit = ( values: PhoneSubmitType ) => {
-    //     const [ unmaskedValues, unmaskedInitialValues ] = [ values, absoluteInitialValues ].map(fromFormUnmaskedValues)
-    //     if (!valuesAreEqual(unmaskedValues, unmaskedInitialValues)) {
-    //         // setLocalInitialValues(unmaskedInitialValues)
-    //         dispatch(authStoreActions.setInitialValues(unmaskedInitialValues))
-    //     }
-    // }
 
     // при нажатии кнопки ДАЛЕЕ
     const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: PhoneSubmitType ) => {
@@ -154,22 +138,22 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
         dispatch, authStoreActions.setInitialValues, { kppNumber: '' } as PhoneSubmitType<string>,
     )
 
-    useEffect(() => {
-        // присваивается автоматически значение из первого селектора
-        // if (kppSelect.length > 0) {
-        //     const preKey = absoluteInitialValues.kppNumber + '' + absoluteInitialValues.innNumber
-        //     // если предыдущий список селектора не совпадает с выбраным
-        //     if (!kppSelect.find(( { key } ) => key === preKey)) {
-        //         // setLocalInitialValues({
-        //             // ...localInitialValues,
-        //         dispatch(authStoreActions.setInitialValues({
-        //             ...absoluteInitialValues,
-        //             kppNumber: kppSelect[0].value,
-        //         })
-        //         )
-        //     }
-        // }
-    }, [ kppSelect ])
+    // дефолтное значение для селектора
+    const [ defaultSelect, setDefaultSelect ] = useState<string>()
+    // состояние необходимости активации дефолтного значения
+    const [ isDefaultSelect, setIsDefaultSelect ] = useState(true)
+
+    useEffect(() => { // присваивается автоматически значение из первого селектора
+        if (kppSelect.length > 0) {
+            const preKey = absoluteInitialValues.kppNumber + '' + absoluteInitialValues.innNumber
+            // если предыдущий список селектора не совпадает с выбраным
+            if (!kppSelect.find(( { key } ) => key === preKey)) {
+                setDefaultSelect(isDefaultSelect ? kppSelect[0].value : '')
+            }
+        } else { // если список пустой, приготовиться к присвоению дефолтного значения в селектор
+            setIsDefaultSelect(true)
+        }
+    }, [ kppSelect, isDefaultSelect ])
 
     return (
         <div className={ styles.loginForm }>
@@ -177,7 +161,6 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
             <Form
                 onSubmit={ onSubmit }
                 initialValues={ localInitialValues }
-                // initialValues={ absoluteInitialValues }
                 render={
                     ( {
                           submitError,
@@ -199,16 +182,19 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                                resetFieldBy={ form }
                                                maskFormat={ maskOn.innNumber }
                                                validate={ form.getFieldState('innNumber')?.visited ? innPlusApiValidator(values as PhoneSubmitType<string>) : undefined }
-                                            // validate={ innPlusApiValidator(values as PhoneSubmitType<string>) }
                                                disabled={ isAvailableSMS }
                                         />
                                         <FormSelector nameForSelector={ 'kppNumber' }
                                                       placeholder={ label.kppNumber }
                                                       values={ kppSelect }
                                                       validate={ validators.kppNumber }
+                                                      defaultValue={ defaultSelect }
+                                                      handleChanger={ () => {
+                                                          // сброс активности дефолтного селектора при первом же выборе
+                                                          setIsDefaultSelect(false)
+                                                      } }
                                                       disabled={ isAvailableSMS || kppSelect.length < 1 || !form.getFieldState('innNumber')?.valid }
                                                       errorTop
-                                            // isClearable
                                         />
                                     </>
                                 }
@@ -265,10 +251,10 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                         rounded
                                 />
                             </div>
-                            {/*<FormSpySimple form={ form }*/}
-                            {/*               onChange={ formSpyChangeHandlerToLocalInit }*/}
-                            {/*               // isOnActiveChange*/}
-                            {/*/>*/}
+                            {/*<FormSpySimple form={ form }*/ }
+                            {/*               onChange={ formSpyChangeHandlerToLocalInit }*/ }
+                            {/*               // isOnActiveChange*/ }
+                            {/*/>*/ }
                         </form>
                     )
                 }/>
