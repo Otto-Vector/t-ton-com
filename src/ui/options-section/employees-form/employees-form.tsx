@@ -194,7 +194,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                 navigateOnOk: options,
             }))
         }
-        debugger
+
     }, [ options, initialValues ])
 
     // фильтруем прицепы по значению поля Транспорт
@@ -222,10 +222,12 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         }))
     }
 
+    // зачистка полей при первом рендере
     useEffect(() => {
         dispatch(employeesStoreActions.setInitialValues({} as EmployeeCardType))
     }, [])
 
+    // отображение данных пользователя
     useEffect(() => {
             if (currentId === currentIdForShow) {
                 if (oneEmployee?.idUser) {
@@ -259,8 +261,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                             initialValues={ initialValues }
                             render={
                                 ( {
-                                      submitError,
-                                      hasValidationErrors,
                                       handleSubmit,
                                       form,
                                       submitting,
@@ -320,7 +320,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <FormSelector nameForSelector={ 'drivingCategory' }
                                                           placeholder={ label.drivingCategory }
-                                                          values={ drivingCategorySelector }
+                                                          options={ drivingCategorySelector }
                                                           validate={ validators.drivingCategory }
                                                           isMulti
                                                           isClearable
@@ -343,7 +343,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                             <FormSelector nameForSelector={ 'idTransport' }
                                                           placeholder={ label.idTransport }
-                                                          values={ transportSelect }
+                                                          options={ transportSelect }
                                                           validate={ validators.idTransport }
                                                           handleChanger={ setCargoTypeFilter(form) }
                                                           isSubLabelOnOption
@@ -353,7 +353,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                             <FormSelector nameForSelector={ 'idTrailer' }
                                                           placeholder={ label.idTrailer }
-                                                          values={ trailerSelectDisableWrongCargoType }
+                                                          options={ trailerSelectDisableWrongCargoType }
                                                           validate={ validators.idTrailer }
                                                           isSubLabelOnOption
                                                           isClearable

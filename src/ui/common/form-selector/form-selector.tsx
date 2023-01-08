@@ -6,15 +6,15 @@ import {SelectOptionsType} from './selector-utils';
 import {valuesAreEqual} from '../../../utils/reactMemoUtils';
 
 
-type OwnProps = {
+export type FormSelectorProps = {
     nameForSelector: string
-    values: { value: string, label: string, key: string }[]
+    options: SelectOptionsType[]
     label?: string
     placeholder?: string
     validate?: any
     isClearable?: boolean
     isCreatableSelect?: boolean
-    handleCreate?: Function
+    handleCreate?: ((inputValue: string) => void) | undefined
     handleChanger?: Function
     errorTop?: boolean
     disabled?: boolean
@@ -28,9 +28,9 @@ type OwnProps = {
 
 
 // передача в обработчик react-form
-export const FormSelector: React.FC<OwnProps> = React.memo(
+export const FormSelector: React.FC<FormSelectorProps> = React.memo(
     ( {
-          values,
+          options,
           nameForSelector,
           label,
           placeholder,
@@ -58,7 +58,7 @@ export const FormSelector: React.FC<OwnProps> = React.memo(
                 { ( { input, meta, placeholder } ) => (
                     <CustomSelect input={ input }
                                   meta={ meta }
-                                  options={ values }
+                                  options={ options }
                                   placeholder={ placeholder }
                                   isClearable={ isClearable }
                                   isCreatableSelect={ isCreatableSelect }

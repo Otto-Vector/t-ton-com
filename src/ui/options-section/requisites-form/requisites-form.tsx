@@ -147,7 +147,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                             { isNew ?
                                                 <FormSelector nameForSelector={ 'taxMode' }
                                                               placeholder={ label.taxMode }
-                                                              values={ stringArrayToSelectValue([ 'Без НДС', 'НДС 20%' ]) }
+                                                              options={ stringArrayToSelectValue([ 'Без НДС', 'НДС 20%' ]) }
                                                               validate={ validators.taxMode }
                                                               errorTop
                                                               isClearable

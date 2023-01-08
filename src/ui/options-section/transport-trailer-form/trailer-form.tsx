@@ -217,7 +217,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             >
                                                 <FormSelector nameForSelector={ 'cargoType' }
                                                               placeholder={ label.cargoType }
-                                                              values={ stringArrayToSelectValue([ ...cargoTypes.filter(x => x !== 'Тягач') ]) }
+                                                              options={ stringArrayToSelectValue([ ...cargoTypes.filter(x => x !== 'Тягач') ]) }
                                                               validate={ validators.cargoType }
                                                               disabled={ !!isBusyTrailer }
                                                 />
@@ -236,7 +236,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <FormSelector nameForSelector={ 'propertyRights' }
                                                           placeholder={ label.propertyRights }
-                                                          values={ stringArrayToSelectValue([ ...propertyRightsGlobal ]) }
+                                                          options={ stringArrayToSelectValue([ ...propertyRightsGlobal ]) }
                                                           validate={ validators.propertyRights }
                                             />
                                         </div>

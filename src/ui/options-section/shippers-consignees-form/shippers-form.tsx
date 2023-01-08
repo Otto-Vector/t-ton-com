@@ -269,7 +269,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                                 ?
                                                 <FormSelector nameForSelector={ 'kpp' }
                                                               placeholder={ label.kpp }
-                                                              values={ kppSelect }
+                                                              options={ kppSelect }
                                                               validate={ validators.kpp }
                                                               handleChanger={ setDataToForm(form) }
                                                               disabled={ ( kppSelect.length < 1 ) || !form.getFieldState('innNumber')?.valid }

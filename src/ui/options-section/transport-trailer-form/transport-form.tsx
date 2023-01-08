@@ -217,8 +217,9 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             >
                                                 <FormSelector nameForSelector={ 'cargoType' }
                                                               placeholder={ label.cargoType }
-                                                              values={ stringArrayToSelectValue([ ...cargoTypes ]) }
+                                                              options={ stringArrayToSelectValue([ ...cargoTypes ]) }
                                                               handleChanger={ ( val: string ) => {
+                                                                  // сбрасываем значение поля "вес груза" на нули
                                                                   if (val === 'Тягач') {
                                                                       form.resetFieldState('cargoWeight')
                                                                       form.change('cargoWeight', '')
@@ -242,7 +243,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <FormSelector nameForSelector={ 'propertyRights' }
                                                           placeholder={ label.propertyRights }
-                                                          values={ stringArrayToSelectValue([ ...propertyRightsGlobal ]) }
+                                                          options={ stringArrayToSelectValue([ ...propertyRightsGlobal ]) }
                                                           validate={ validators.propertyRights }
                                             />
                                         </div>

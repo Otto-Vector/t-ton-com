@@ -216,7 +216,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     { requestModes.createMode
                                         ? <FormSelector nameForSelector={ 'cargoComposition' }
                                                         placeholder={ placeholders.cargoComposition }
-                                                        values={ stringArrayToSelectValue(cargoComposition) }
+                                                        options={ stringArrayToSelectValue(cargoComposition) }
                                                         validate={ validators.cargoComposition }
                                                         isCreatableSelect
                                                         handleCreate={ onCreateCompositionValue }
@@ -274,7 +274,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     { requestModes.createMode
                                         ? <FormSelector nameForSelector={ 'cargoType' }
                                                         placeholder={ labels.cargoType }
-                                                        values={ stringArrayToSelectValue([ ...cargoTypes.filter(x => x !== 'Тягач') ]) }
+                                                        options={ stringArrayToSelectValue([ ...cargoTypes.filter(x => x !== 'Тягач') ]) }
                                                         validate={ validators.cargoType }
                                                         isClearable
                                         />
@@ -292,7 +292,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 { requestModes.createMode
                                     ? <FormSelector nameForSelector={ 'idCustomer' }
                                                     placeholder={ placeholders.idCustomer }
-                                                    values={ customersSelect }
+                                                    options={ customersSelect }
                                                     validate={ validators.idCustomer }
                                                     isClearable
                                     />
@@ -310,7 +310,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 { requestModes.createMode
                                     ? <FormSelector nameForSelector={ 'idSender' }
                                                     placeholder={ placeholders.idSender }
-                                                    values={ shippersSelect }
+                                                    options={ shippersSelect }
                                                     validate={ validators.idSender }
                                                     handleChanger={ setOneShipper }
                                                     isSubLabelOnOption
@@ -329,7 +329,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 { requestModes.createMode
                                     ? <FormSelector nameForSelector={ 'idRecipient' }
                                                     placeholder={ placeholders.idRecipient }
-                                                    values={ consigneesSelect }
+                                                    options={ consigneesSelect }
                                                     validate={ validators.idRecipient }
                                                     handleChanger={ setOneConsignee }
                                                     isSubLabelOnOption

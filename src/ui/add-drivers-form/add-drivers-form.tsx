@@ -138,7 +138,11 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
         }
         if (addDriverModes.selfExportDriver) {
             await dispatch<any>(addAcceptedResponseToRequestOnCreate({
-                addDriverValues: demaskedValues, oneEmployee, oneTrailer, oneTransport, idCustomer: requestValues.idCustomer+''
+                addDriverValues: demaskedValues,
+                oneEmployee,
+                oneTrailer,
+                oneTransport,
+                idCustomer: requestValues.idCustomer + '',
             }))
             navigate(navRoutes.requestsList)
         }
@@ -261,7 +265,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                                                     { label.idEmployee + ':' }</label>
                                                 <FormSelector nameForSelector={ 'idEmployee' }
                                                               placeholder={ placeholder.idEmployee }
-                                                              values={ employeesSelect }
+                                                              options={ employeesSelect }
                                                               validate={ validators.idEmployee }
                                                               handleChanger={ setOneEmployee }
                                                               isSubLabelOnOption

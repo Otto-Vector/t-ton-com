@@ -186,7 +186,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                         />
                                         <FormSelector nameForSelector={ 'kppNumber' }
                                                       placeholder={ label.kppNumber }
-                                                      values={ kppSelect }
+                                                      options={ kppSelect }
                                                       validate={ validators.kppNumber }
                                                       defaultValue={ defaultSelect }
                                                       handleChanger={ () => {
