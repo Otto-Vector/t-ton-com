@@ -11,6 +11,7 @@
 
   &__subWrapper {
     position: relative;
+    height: 710px;
   }
 
   &__wrapper {
@@ -20,7 +21,7 @@
     border: 1px solid rgba(2, 62, 138, 0.54);
     box-shadow: $cardsShadow;
     width: 500px;
-    height: 663px;
+    height: 670px;
     padding: 0;
     border-radius: 25px;
     display: flex;
@@ -69,7 +70,7 @@
     position: absolute;
     left: 0;
     z-index: 10;
-    bottom: -40px;
+    bottom: 0;
     height: 60px;
     display: flex;
     justify-content: space-between;

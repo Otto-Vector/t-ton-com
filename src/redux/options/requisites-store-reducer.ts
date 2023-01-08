@@ -233,8 +233,7 @@ export const setOrganizationCashRequisites = ( cash: number ): RequisitesStoreRe
             if (setPersonal.success) {
                 await dispatch(getPersonalOrganizationRequisites())
             }
-        } catch (error) {
-            // @ts-ignore
+        } catch (error: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data)))
             dispatch(requisitesStoreActions.setIsFetching(false))
         }

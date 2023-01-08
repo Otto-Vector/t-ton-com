@@ -27,7 +27,7 @@
   &__selector {
     position: relative;
     color: $accentColor;
-    margin-bottom: 10px;
+    margin-bottom: 0;
   }
 
   &__info {
@@ -77,7 +77,7 @@
   &__label {
     font-family: $RalewayFont;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 19px;
     color: #022554;
     margin-left: 3px;

@@ -416,6 +416,9 @@ export type OneRequestType = {
     distance?: number
     // маршрут для карты
     route?: string
+
+    // штампы груза
+    cargoStamps?: string
     // примечание
     note?: string
     // видимость для таблицы (используется только на фронте)
@@ -577,11 +580,12 @@ export type OneRequestApiType = {
     cityRecipient?: string
     // полилиния маршрута (оганичение на сервере 70000 символов)
     route?: string
-    // так как полилиния может быть больше 70000, то остальные данные берём отсюда)
+    // так как полилиния может быть больше 70000, то остальные данные берём отсюда
     routePlus?: string
     addedPrice?: number
 
     distance?: string
+    cargoStamps?: string
     note?: string
     visible?: string
     marked?: string

@@ -32,7 +32,9 @@ export const syncValidators = {
     textMin: composeValidators(maxLength(50)),
     // рекомендовано максимум 120 символов
     textReqMiddle: composeValidators(required, maxLength(120)),
-    // рекомендовано максимум 300 символов
+    // максимум 120 символов
+    textMiddle: composeValidators(maxLength(120)),
+    // максимум 300 символов
     textMax: composeValidators(maxLength(300)),
     // ИНН (юр/физ)
     inn: composeValidators(required, mustBe0_0Numbers(10)(12)),

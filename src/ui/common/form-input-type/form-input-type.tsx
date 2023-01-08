@@ -1,9 +1,10 @@
 import React from 'react'
 import styles from './form-input-type.module.scss'
-import {FieldState, FormApi} from 'final-form'
+import {FormApi} from 'final-form'
 import NumberFormat from 'react-number-format';
 import ReactInputMask from 'react-input-mask';
 import {valuesAreEqualFormInput} from '../../../utils/reactMemoUtils';
+import {FieldMetaState} from 'react-final-form';
 
 
 type OwnProps = {
@@ -12,7 +13,7 @@ type OwnProps = {
     // он же и label внутри поля ввода
     placeholder?: string
     // передаваемые значения из final-form
-    meta: FieldState<any>
+    meta: FieldMetaState<any>
     // input: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>
     input: any
     readOnly: boolean
@@ -117,6 +118,7 @@ export const FormInputType: React.FC<OwnProps> = React.memo((
                              readOnly={ readOnly }
                     />
             }
+            {/*плейсхолдер уходит в заголовок*/ }
             { labelToView &&
                 <label className={ styles.label }>{ placeholder }</label>
             }

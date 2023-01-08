@@ -13,7 +13,7 @@ import {
     TransportCardType,
     ValidateType,
 } from '../../types/form-types'
-import {composeValidators, required} from '../../utils/validators'
+import {syncValidators} from '../../utils/validators'
 import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
 import {oneRequestApi} from '../../api/local-api/request-response/request.api';
 import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
@@ -22,8 +22,6 @@ import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../opti
 import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils';
 import {TtonErrorType} from '../../api/local-api/back-instance.api';
 
-
-const defaultInitialStateValues = {} as OneRequestType
 
 const initialState = {
     requestIsFetching: false,
@@ -44,6 +42,7 @@ const initialState = {
         requestCarrierId: 'Перевозчик',
         idEmployee: 'Водитель',
         note: 'Примечание',
+        cargoStamps: 'Пломбы для груза',
         // поля на вкладку ДОКУМЕНТЫ
         uploadTime: 'Время погрузки',
         cargoWeight: 'Вес груза, в тн.',
@@ -69,30 +68,33 @@ const initialState = {
         requestCarrierId: 'Наименование организации Перевозчика',
         idEmployee: 'ФИО, Марка авто, Марка прицепа, тн',
         note: 'дополнительные данные',
+        cargoStamps: 'Пломбы для груза',
     } as Record<keyof OneRequestType, string | undefined>,
 
     validators: {
         requestNumber: undefined,
-        requestDate: composeValidators(required),
-        cargoComposition: composeValidators(required),
-        shipmentDate: composeValidators(required),
+        requestDate: syncValidators.required,
+        cargoComposition: syncValidators.required,
+        shipmentDate: syncValidators.required,
         distance: undefined,
-        cargoType: composeValidators(required),
-        idCustomer: composeValidators(required),
-        idSender: composeValidators(required),
-        idRecipient: composeValidators(required),
+        cargoType: syncValidators.required,
+        idCustomer: syncValidators.required,
+        idSender: syncValidators.required,
+        idRecipient: syncValidators.required,
         requestCarrierId: undefined,
         idEmployee: undefined,
-        note: undefined,
+        note: syncValidators.textMax,
+        cargoStamps: syncValidators.textMiddle,
     } as Record<keyof OneRequestType, ValidateType>,
 
-    defaultInitialStateValues,
+    defaultInitialStateValues: {} as OneRequestType,
 
     initialValues: {
         requestNumber: 0,
     } as OneRequestType,
 
-    content: [] as OneRequestType[], // создаём тестовые заявки
+    // загружаем сюда заявки
+    content: [] as OneRequestType[],
 
     labelDocumentsRequestValues: {
 
@@ -151,6 +153,7 @@ const initialState = {
         carrier: 'Перевозчики Вашего груза от Отправителя до Получателя. НЕ видит информацию о Заказчике, Грузоотправителе и Грузополучателе, до окончательного принятия Заявки. Требуется проверка Перевозчика до момента передачи груза!',
         driver: 'Сотрудник Перевозчика и данные транспорта. При использовании мобильного приложения, отображается маршрут на карте, может звонить всем сторонам Заявки и предоставлять сканы документов.',
         note: 'Дополнительная информация доступная До принятия Заявки, для указания особенностей транспортировки или погрузочно-разгрузочных работ.',
+        cargoStamps: 'Пломбы для груза, через запятую',
         selfDeliveryButton: 'Использование собственных сотрудников и транспорта, для оказания услуг транспортировки. Услуга оплачивается со счета Перевозчика-Заказчика.',
     },
 
@@ -238,6 +241,7 @@ export const requestStoreActions = {
     } as const ),
 }
 
+// адаптируем заявку от сервера в локальную модель данных
 const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     requestNumber: +elem.requestNumber,
     requestDate: elem.requestDate ? new Date(apiToISODateFormat(elem.requestDate)) : undefined,
@@ -269,8 +273,10 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     },
 
     distance: Number(elem.distance),
-    route: elem?.route || '' + elem?.routePlus || '',
+    // toDo: убрать эту дибильную проверку, когда он исправит поле на необязательне
+    route: elem?.route || '' + ( elem?.routePlus ? ( ( elem.routePlus !== '-' ) ? elem.routePlus : '' ) : '' ),
     note: elem.note,
+    cargoStamps: elem.cargoStamps,
     visible: true,
     marked: false,
 
@@ -514,8 +520,8 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
                     requestDate: new Date(apiToISODateFormat(response.Date)),
                 } as OneRequestType))
             }
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(e as string))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }
@@ -610,8 +616,8 @@ export const addAcceptedResponseToRequestOnCreate = (
                 await dispatch(getAllRequestsAPI())
             }
 
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(e as string))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
         }
     }
 
@@ -632,8 +638,8 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
             const userRecipient = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.recipient.innNumber)
             const acceptedUsers = [ userCustomer?.idUser || userId, userSender?.idUser, userRecipient?.idUser ].filter(x => x).join(', ')
             // делим длинный polyline на две части (ограничения на сервере на 70000 символов
-            const route = submitValues?.route?.substring(0,69999)
-            const routePlus = submitValues?.route?.substring(69999)
+            const route = submitValues?.route?.substring(0, 69999)
+            const routePlus = submitValues?.route?.substring(69999) || '-'
             const requestNumber = submitValues.requestNumber?.toString() || '0'
             const placeholder = '-'
 
@@ -650,6 +656,7 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     route,
                     routePlus,
                     note: submitValues.note,
+                    cargoStamps: submitValues.cargoStamps,
                     /* ЗАКАЗЧИК - ДАННЫЕ ПОЛЬЗОВАТЕЛЯ (ЕСЛИ ЕСТЬ) */
                     idCustomer: submitValues.idCustomer,
                     idUserCustomer: userCustomer?.idUser || userId,
@@ -732,8 +739,8 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
             if (response.success) {
                 await dispatch(getAllRequestsAPI())
             }
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(e as string))
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }
@@ -801,8 +808,7 @@ export const getRouteFromAPI = ( {
                 distance,
             }))
 
-        } catch (e) {
-
+        } catch (e: TtonErrorType) {
             const isSenderChanged = oneShipper.idSender !== initialValues.idSender
             const isConsigneeChanged = oneConsignee.idRecipient !== initialValues.idRecipient
             // зачищаем поле при изменении которого возникли ошибки
@@ -816,7 +822,7 @@ export const getRouteFromAPI = ( {
                 distance: 0,
             }))
             // выводим ошибку
-            dispatch(globalModalStoreActions.setTextMessage(e + ''))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
         }
 
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))

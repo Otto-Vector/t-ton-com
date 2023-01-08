@@ -35,9 +35,7 @@ export const InfoPayContainer: React.FC<OwnProps> = () => {
 
     return (
         <div className={ styles.infoPayContainer }>
-
             <div className={ styles.infoPayContainer__balanceInfo }>
-
                 <h3 className={ styles.infoPayContainer__header + ' ' + styles.balanceInfo__header }>
                     { isFetchingBalance ? <SizedPreloader sizeHW={'28px'}/> : balanceHeader }
                 </h3>
