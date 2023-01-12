@@ -3,7 +3,7 @@ import styles from './menu-panel.module.scss'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {getRoutesStore} from '../../selectors/routes-reselect'
-import {NavLink, useLocation} from 'react-router-dom';
+import {NavLink, useLocation} from 'react-router-dom'
 import loginSVG from './buttonsSVG/login.svg'
 import createSVG from './buttonsSVG/create.svg'
 import searchSVG from './buttonsSVG/search.svg'
@@ -15,16 +15,16 @@ import optionsPNG from './buttonsSVG/options.png'
 import attentionSVG from './buttonsSVG/attention.svg'
 import testPNG from './buttonsSVG/test.png'
 
-import {getIsAuthAuthStore} from '../../selectors/auth-reselect';
-import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect';
+import {getIsAuthAuthStore} from '../../selectors/auth-reselect'
+import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect'
 import {logoutAuth} from '../../redux/auth-store-reducer';
-import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
+import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {
     getCashRequisitesStore,
     getIsReqErrorRequisitesStore,
     getTariffsRequisitesStore,
-} from '../../selectors/options/requisites-reselect';
-import {valuesAreEqual} from '../../utils/reactMemoUtils';
+} from '../../selectors/options/requisites-reselect'
+import {valuesAreEqual} from '../../utils/reactMemoUtils'
 
 
 type OwnProps = {}
@@ -38,7 +38,6 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
     const newRequestRoute = routes.requestInfo.create + 'new'
     const tariffs = useSelector(getTariffsRequisitesStore)
     const cashUser = useSelector(getCashRequisitesStore)
-    const isCorrectCashToCreate = +( cashUser || 0 ) >= +( tariffs?.create || 0 )
 
     // проверка авторизован ли пользователь
     const isAuth = useSelector(getIsAuthAuthStore)
@@ -60,12 +59,19 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
         }))
     }
 
-    const newRequest = async () => {
-        await dispatch<any>(textAndActionGlobalModal({
-            text: isCorrectCashToCreate ? 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?'
-                : 'НЕ ХВАТАТЕ СРЕДСТВ НА СОЗДАНИЕ ЗАЯВКИ, НЕОБХОДИМО ПОПОЛНИТЬ БАЛАНС НА ' + tariffs?.create + 'руб. \n ОК - переход к оплате',
-            navigateOnOk: isCorrectCashToCreate ? newRequestRoute : routes.info,
-        }))
+    const newRequest = () => {
+        const isCorrectCashToCreate = +( cashUser || 0 ) >= +( tariffs?.create || 0 )
+        isCorrectCashToCreate
+            ?
+            dispatch<any>(textAndActionGlobalModal({
+                text: 'СОЗДАТЬ НОВУЮ ЗАЯВКУ?',
+                navigateOnOk: newRequestRoute,
+            }))
+            :
+            dispatch<any>(textAndActionGlobalModal({
+                text: 'НЕ ХВАТАТЕ СРЕДСТВ НА СОЗДАНИЕ ЗАЯВКИ, НЕОБХОДИМО ПОПОЛНИТЬ БАЛАНС НА ' + tariffs?.create + 'руб. \n ОК - переход к оплате',
+                navigateOnOk: routes.info,
+            }))
     }
 
     const requisitesMustBeFilled = async () => {
@@ -132,7 +138,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
             buttonText: 'Тест', active: !isNewRegistrationRoute && isAuth,
             action: null,
         },
-    ], [ isAuth, isNewRegistrationRoute, routes ])
+    ], [ isAuth, isNewRegistrationRoute, routes, newRequest, logout ])
 
     return (
         <nav className={ styles.menuPanel }>
