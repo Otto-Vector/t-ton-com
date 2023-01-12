@@ -46,8 +46,11 @@
   }
 
   &__text {
-    margin: 3px auto;
-    max-width: 70px;
+      margin: 3px auto;
+      max-width: 70px;
+    @media(max-height: 770px) {
+      display: none;
+    }
   }
 
   &__image {

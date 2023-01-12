@@ -362,8 +362,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
-                                {/*<label className={ styles.requestFormLeft__label }>*/ }
-                                {/*    { labels.note }</label>*/ }
+                                <label className={ styles.requestFormLeft__label }>
+                                    { labels.note }</label>
                                 { requestModes.createMode
                                     ? <Field name={ 'note' }
                                              component={ FormInputType }
@@ -375,11 +375,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                         { initialValues.note }
                                     </div>
                                 }
-                                {/*<InfoButtonToModal textToModal={ fieldInformation.note } mode={ 'inForm' }/>*/ }
+                                <InfoButtonToModal textToModal={ fieldInformation.note } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__inputsPanel }>
-                                {/*<label className={ styles.requestFormLeft__label }>*/ }
-                                {/*    { labels.cargoStamps }</label>*/ }
+                                <label className={ styles.requestFormLeft__label }>
+                                    { labels.cargoStamps }</label>
                                 { requestModes.createMode
                                     ? <Field name={ 'cargoStamps' }
                                              component={ FormInputType }
@@ -391,7 +391,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                         { initialValues.cargoStamps }
                                     </div>
                                 }
-                                {/*<InfoButtonToModal textToModal={ fieldInformation?.cargoStamps } mode={ 'inForm' }/>*/ }
+                                <InfoButtonToModal textToModal={ fieldInformation?.cargoStamps } mode={ 'inForm' }/>
                             </div>
                             <div className={ styles.requestFormLeft__buttonsPanel }>
                                 { !requestModes.historyMode ? <>
