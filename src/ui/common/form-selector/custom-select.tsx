@@ -20,7 +20,7 @@ export const CustomSelect: React.FC<Partial<FormSelectorProps> & FormInputType> 
                                                                                         meta,
                                                                                         options,
                                                                                         isClearable,
-                                                                                        isCreatableSelect, //
+                                                                                        isCreatableSelect, // изменяемый селектор
                                                                                         handleCreate, // этот параметр только для creatableSelect
                                                                                         handleChanger,
                                                                                         errorTop,
@@ -73,6 +73,7 @@ export const CustomSelect: React.FC<Partial<FormSelectorProps> & FormInputType> 
     const optionsCurrent = useCallback(( inputValue: string ) =>
             options?.find(( option: SelectOptionsType ) => option.value === ( defaultValue || inputValue )) || empty
         , [ options, defaultValue ])
+
 
     // условие для отображения ошибки
     const isError = ( meta.error || meta.submitError ) && meta.touched
