@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux';
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
 // сейчас они прописаны на ui компоненте
-import 'antd/lib/style/index.css' // используем core стили antd
+// import 'antd/lib/style/index.css' // используем core стили antd
+import './index.css'
 import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфо-окон
 import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
 import {Modal} from 'antd';
@@ -15,13 +16,8 @@ import {
     getTitleGlobalModalStore,
 } from '../../../selectors/utils/global-modal-reselect';
 import {useNavigate} from 'react-router-dom';
+import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from-array-to-paragraph';
 
-
-const textFromArrayToParagraph = ( text: string | string[] ) => {
-    if (typeof text === 'string') return <p>{ text }</p>
-    return text.filter(x => x).map(( line, index, textArr ) =>
-        <p style={ { marginBottom: index + 1 === textArr.length ? '0' : '.5rem' } } key={ line }>{ line }</p>)
-}
 
 export const InfoGlobalToModal: React.FC = () => {
 
@@ -51,12 +47,14 @@ export const InfoGlobalToModal: React.FC = () => {
 
     const onOkHandle = () => {
         onCloseLocal()
+        console.log('ok')
         // выполняем прокинутый экшон (если он есть)
         action && action()
         navToOnOk && navigate(navToOnOk)
     }
 
     const onCancelHandle = () => {
+        console.log('close')
         onCloseLocal()
         navToOnCancel && navigate(navToOnCancel)
     }

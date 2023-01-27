@@ -1,7 +1,6 @@
 import React from 'react'
 
 // сейчас они прописаны на ui компоненте
-import 'antd/lib/style/index.css' // используем core стили antd
 import 'antd/lib/switch/style/index.css'
 import './ants-switch-restyle.scss'
 import {Switch} from 'antd';
@@ -44,7 +43,7 @@ export const SwitchMask: React.FC<SwitchMaskProps> = ( {
                                                            onClick,
                                                        } ) => {
 
-    return <div style={ { width: '40px', transform: 'rotate(90deg)' } }
+    return <div className={ 'rotated-ant-switch' }
                 title={ 'Ввод по форме' }>
         <AntdSwitch
             checkedChildren={ rotatedLabel('ru') }
