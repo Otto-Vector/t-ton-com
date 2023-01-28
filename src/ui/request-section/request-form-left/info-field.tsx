@@ -13,17 +13,19 @@ type InfoProps = {
 
 export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placeholder } ) => {
     const dispatch = useDispatch()
+
     // преобразователь в строку и placeholder при отсутствии данных
-    const textFromStrArrOrPlaceholder = ( str: string[] ) => str.join(', ') || 'Нет данных'
+    const textFromStrArrOrPlaceholder =  textData.join(', ') || placeholder
     const modalActivator = ( text: string[] ) => {
         dispatch(globalModalStoreActions.setTextMessage(text))
     }
     return <>
         <div className={ styles.requestFormLeft__info + ' ' +
-            styles.requestFormLeft__info_horizontalPadding }>
-            { placeholder || textFromStrArrOrPlaceholder(textData) }
+            styles.requestFormLeft__info_horizontalPadding + ' ' +
+            ( textFromStrArrOrPlaceholder.length > 100 ? styles.requestFormLeft__info_scrollable : '' )}>
+            { textFromStrArrOrPlaceholder }
         </div>
-        { !placeholder ? <>
+        { textFromStrArrOrPlaceholder !== placeholder ? <>
             <img
                 className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_phone }
                 src={ phoneImage } alt={ 'phone' } title={ 'Показать телефон' }
