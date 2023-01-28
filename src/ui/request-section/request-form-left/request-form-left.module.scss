@@ -27,7 +27,7 @@
   &__selector {
     position: relative;
     color: $accentColor;
-    margin-bottom: 0;
+    margin-bottom: 4px;
   }
 
   &__info {
@@ -98,7 +98,7 @@
     font-weight: 700;
     font-size: 14px;
     line-height: 16px;
-    margin: 10px;
+    margin: 5px;
   }
 
   &__panelButton {

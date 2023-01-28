@@ -276,7 +276,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                         placeholder={ labels.cargoType }
                                                         options={ stringArrayToSelectValue([ ...cargoTypes.filter(x => x !== 'Тягач') ]) }
                                                         validate={ validators.cargoType }
-                                                        isClearable
+                                                        // isClearable
                                         />
                                         : <div className={ styles.requestFormLeft__info }>
                                             { initialValues.cargoType }

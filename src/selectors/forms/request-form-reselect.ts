@@ -3,7 +3,6 @@ import {RequestStoreReducerStateType} from '../../redux/forms/request-store-redu
 import {createSelector} from 'reselect';
 import {OneRequestType} from '../../types/form-types';
 import {polyline_decode} from '../../utils/polilyne-decode';
-import {parseFamilyToFIO} from '../../utils/parsers';
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 type RequestStoreSelectorsInit<T extends keyof Y, Y = RequestStoreReducerStateType['initialValues']> = ( state: AppStateType ) => Y[T]
@@ -102,11 +101,11 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
             ].filter(x => x) as string[],
             /* ВОДИТЕЛЬ */
             acceptedEmployeeData: [
-                parseFamilyToFIO(responseEmployee?.employeeFIO),
-                responseTransport?.transportModel,
-                responseTransport?.transportNumber,
-                responseTrailer?.trailerModel,
-                driverCanCargoWeight && +driverCanCargoWeight + ' тн',
+                responseEmployee?.employeeFIO && 'ФИО водителя: ' + responseEmployee.employeeFIO,
+                responseTransport?.transportModel && 'Модель транспорта: ' + responseTransport.transportModel,
+                responseTransport?.transportNumber && 'Номер транспорта: ' + responseTransport.transportModel,
+                responseTrailer?.trailerModel && 'Модель прицепа: ' + responseTrailer.trailerModel,
+                driverCanCargoWeight && 'Может перевезти: ' + driverCanCargoWeight + ' тн',
             ].filter(x => x) as string[],
             acceptedEmployeePhoneData: [
                 responseEmployee?.employeeFIO && 'ФИО: ' + responseEmployee.employeeFIO,

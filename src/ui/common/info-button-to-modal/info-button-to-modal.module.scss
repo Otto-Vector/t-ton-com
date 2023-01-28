@@ -5,6 +5,7 @@
   @include size(20px);
   @include flex-center(column);
   font-size: 12px;
+  font-weight: 500;
 
   &__out {
     right: -20px;
@@ -17,7 +18,7 @@
   }
 
   &__inForm {
-    top: 0;
+    top: -2px;
     right: 0;
   }
 

@@ -22,7 +22,7 @@ const initialState = {
         address: 'Юридический адрес',
         consigneesFio: 'ФИО получателя',
         consigneesTel: 'Телефон получателя',
-        description: 'Доп. данные для ТТН',
+        description: 'Доп. данные для ТТН (в т.ч. реальный адрес)',
         coordinates: 'Местоположение в координатах',
     } as ConsigneesCardType<string | undefined>,
 
@@ -61,7 +61,7 @@ const initialState = {
         address: syncValidators.textReqMiddle,
         consigneesFio: syncValidators.textReqMin,
         consigneesTel: syncValidators.phone,
-        description: syncValidators.textMax,
+        description: syncValidators.required,
         coordinates: syncValidators.required,
     } as ConsigneesCardType<ValidateType>,
 
