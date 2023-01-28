@@ -61,7 +61,7 @@ const initialState = {
         address: syncValidators.textReqMiddle,
         consigneesFio: syncValidators.textReqMin,
         consigneesTel: syncValidators.phone,
-        description: syncValidators.required,
+        description: syncValidators.textReqMax,
         coordinates: syncValidators.required,
     } as ConsigneesCardType<ValidateType>,
 

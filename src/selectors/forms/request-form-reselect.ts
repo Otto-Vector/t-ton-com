@@ -75,6 +75,7 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
                     senderUser?.organizationName || sender?.organizationName,
                     senderInnNumber && 'ИНН: ' + senderInnNumber,
                     senderLegalAddress && 'Юр.Адрес: ' + senderLegalAddress,
+                    sender?.description && 'Адрес отправления: ' + sender.description,
                 ],
                 shipperSenderPhoneData: [
                     senderUser?.phoneDirector && 'Телефон директора: ' + senderUser.phoneDirector,
@@ -86,6 +87,7 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
                     recipientUser?.organizationName || recipient?.organizationName,
                     recipientInn && 'ИНН: ' + recipientInn,
                     recipientLegalAddress && 'Юр.Адрес: ' + recipientLegalAddress,
+                    recipient?.description && 'Адрес прибытия: ' + recipient.description,
                 ],
                 consigneeRecipientPhoneData: [
                     recipientUser?.phoneDirector && 'Телефон директора: ' + recipientUser.phoneDirector,
