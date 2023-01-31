@@ -1,4 +1,8 @@
+// рандомные целые числа
 export const randMinMax = ( min: number, max: number ): number => Math.floor(Math.random() * ( max - min + 1 )) + min
+
+// рандомные числа с округлением
+export const getRandomInRange = (from: number, to: number, fixed = 0): number => +(Math.random() * (to - from) + from).toFixed(fixed)
 
 // минимальное значение по умолчанию = 1
 export const randFloorMax = ( max: number, min = 1 ): number => randMinMax(min, max)

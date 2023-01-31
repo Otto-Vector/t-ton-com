@@ -20,7 +20,6 @@ export const LightBoxComponent: React.FC<LightboxType> = () => {
     }
 
     return ( <div>
-
             { isLightBoxOpen ? (
                     <Lightbox
                         mainSrc={ image || noImage }

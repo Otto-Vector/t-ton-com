@@ -27,7 +27,7 @@ import {AppStateType} from '../../redux/redux-store';
 type OwnProps = {
     idEmployee: string,
 }
-
+// для отображения сотрудника на карте
 export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
 
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
@@ -67,7 +67,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     useLayoutEffect(() => {
         // dispatch<any>(getTestAddDriverValues())
         dispatch(employeesStoreActions.setCurrentId(idEmployee))
-        dispatch(requestStoreActions.setCurrentRequestNumber(375))
+        dispatch(requestStoreActions.setCurrentRequestNumber(76))
     })
 
     useEffect(() => {

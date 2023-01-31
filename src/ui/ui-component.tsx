@@ -54,7 +54,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
 
     return (
         <div className={ styles.ui }>
-            <LightBoxComponent/>
+            <LightBoxComponent/> {/*перманентно присутствует здесь для модального отображения картинок*/}
             <Header/>
             <div className={ styles.ui__centerWrapper }>
                 <div className={ styles.ui__sideBarLeft }>
