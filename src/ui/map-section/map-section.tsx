@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react'
+import React, {useLayoutEffect, useState} from 'react'
 import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -22,13 +22,10 @@ export const MapSection: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     useLayoutEffect(() => {
-        console.log(drivers)
+        // console.log(drivers)
         dispatch<any>(setDriversToMap())
     }, [ dispatch ])
 
-    useEffect(() => {
-        console.log('раз')
-    })
 
     const center = useSelector(getGeoPositionAuthStore)
     const zoom = 7
