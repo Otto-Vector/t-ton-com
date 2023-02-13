@@ -151,9 +151,12 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
                          key={ route + src }
                          onClick={ async ( e ) => {
                              if (isRequisitesError) {
-                                 // отключаем переход до выполнения экшона
-                                 e.preventDefault()
-                                 await requisitesMustBeFilled()
+                                 // кроме кнопки вход/выход
+                                 if (route !== routes.login) {
+                                     // отключаем переход до выполнения экшона
+                                     e.preventDefault()
+                                     await requisitesMustBeFilled()
+                                 }
                              } else if (action) {
                                  e.preventDefault()
                                  await action()
