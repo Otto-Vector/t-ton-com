@@ -125,11 +125,11 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         } else {
             if (isNew) {
                 // сохраняем НОВОЕ значение
-                // если такой номер паспорта есть, то возвращает его idEmployee
                 const idEmployee = await dispatch<any>(newEmployeeSaveToAPI({
                     ...unmaskedValues,
                     rating: placeholder,
                 }, selectedImage))
+                // если такой номер паспорта есть, то возвращает его idEmployee
                 if (idEmployee) {
                     dispatch<any>(textAndActionGlobalModal({
                         text: 'Сотрудник с данным номером паспорта уже есть в системе. Попытаться его восстановить?',
@@ -138,14 +138,15 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                     }))
                 }
             } else {
-                // сохраняем измененное значение
+                // сохраняем ИЗМЕНЕННОЕ значение
                 dispatch<any>(modifyOneEmployeeToAPI({
                     employeeValues: unmaskedValues,
                     image: selectedImage,
                     status: unmaskedValues.status === 'уволен' ? 'свободен' : unmaskedValues.status,
                 }))
-                navigate(options) // и возвращаемся в предыдущее окно
             }
+            // и возвращаемся в предыдущее окно
+            navigate(options)
         }
         dispatch<any>(rerenderTransport())
         dispatch<any>(rerenderTrailer())
