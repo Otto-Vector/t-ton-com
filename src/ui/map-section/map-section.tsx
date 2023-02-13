@@ -34,7 +34,6 @@ export const MapSection: React.FC<OwnProps> = () => {
         <div className={ styles.yandexMapComponent }>
             <YandexBigMap center={ center } zoom={ zoom }>
                 { drivers.map(( { id, idEmployee, position, status, fio } ) => {
-                        //toDo: это заглушка для пустых, убрать
                         const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))
                         return <Placemark geometry={ anyPosition }
                             // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }

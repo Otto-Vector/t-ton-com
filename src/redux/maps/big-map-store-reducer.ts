@@ -4,6 +4,7 @@ import {AppStateType} from './../redux-store'
 import {geoPosition} from '../../api/utils-api/geolocation.api';
 import {parseFamilyToFIO, stringToCoords} from '../../utils/parsers';
 import {GetActionsTypes} from '../../types/ts-utils';
+import {getRandomInRange} from '../../utils/random-utils';
 
 export type DriverOnMapType = {
     id: number,
@@ -81,7 +82,7 @@ export const bigMapStoreActions = {
 
 export type BigMapStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-
+// берет данные из апи браузера по геопозиции и сохраняет их в стэйт для центровки карты
 export const geoPositionTake = (): BigMapStoreReducerThunkActionType =>
     async ( dispatch ) => {
         const reparserLonLat: PositionCallback = ( el ) =>
@@ -89,17 +90,20 @@ export const geoPositionTake = (): BigMapStoreReducerThunkActionType =>
                 el.coords.latitude || 0,
                 el.coords.longitude || 0,
             ]))
-
         geoPosition(reparserLonLat)
     }
 
+// берёт данные из загруженного списка водителей и сохраняет их в стэйт
+// (возможно лучше это сделать через "selectors"
 export const setDriversToMap = (): BigMapStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         const drivers: DriverOnMapType[] = getState().employeesStoreReducer.content.map(
             ( { idEmployee, coordinates, status, employeeFIO }, index ) => ( {
                 id: index + 1,
                 idEmployee,
-                position: stringToCoords(coordinates),
+                position: stringToCoords(coordinates)
+                    //toDo: это заглушка для пустых, убрать
+                    .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5)),
                 status: status as string,
                 fio: parseFamilyToFIO(employeeFIO),
             } ))

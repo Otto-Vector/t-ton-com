@@ -11,7 +11,12 @@
   font-family: $RalewayFont;
   font-style: normal;
   color: $mainFontColor;
-
+  h1 {
+    margin-bottom: 0.5em;
+  }
+  p {
+    margin-bottom: 1em;
+  }
   &__title {
     font-weight: 700;
     font-size: 36px;
