@@ -216,7 +216,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                         { labels.cargoComposition }</label>
                                     { requestModes.createMode
                                         ? <FormSelector nameForSelector={ 'cargoComposition' }
-                                                        placeholder={ placeholders.cargoComposition }
+                                                        // placeholder={ placeholders.cargoComposition }
                                                         options={ stringArrayToSelectValue(cargoComposition) }
                                                         validate={ validators.cargoComposition }
                                                         isCreatableSelect
