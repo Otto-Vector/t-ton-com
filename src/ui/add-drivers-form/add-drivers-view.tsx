@@ -53,11 +53,11 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const oneTransport = useSelector(getOneTransportFromLocal)
 
     const transportOneImage = oneTransport.transportImage
-    const transportOneCargoWeight = oneTransport.cargoWeight
+    // const transportOneCargoWeight = oneTransport.cargoWeight
 
     const oneTrailer = useSelector(getOneTrailerFromLocal)
     const trailerOneImage = oneTrailer.trailerImage
-    const trailerOneCargoWeight = oneTrailer.cargoWeight
+    // const trailerOneCargoWeight = oneTrailer.cargoWeight
 
     const clickForTests = () => {
         // dispatch<any>(setOrganizationRequisites())
