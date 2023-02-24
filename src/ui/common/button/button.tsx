@@ -12,6 +12,8 @@ type OwnProps = {
     children?: React.ReactNode
     wordWrap?: boolean
     isSelectOnTab?: boolean
+    // кнопка загружает контент
+    download?: boolean
 }
 
 export const Button: React.FC<OwnProps> = (
@@ -20,6 +22,7 @@ export const Button: React.FC<OwnProps> = (
         colorMode = 'noFill', rounded,
         type = 'button', children, wordWrap,
         isSelectOnTab = true,
+        download
     } ) => {
 
     return <button className={

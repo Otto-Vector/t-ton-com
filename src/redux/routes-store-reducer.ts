@@ -60,8 +60,8 @@ const initialState = {
         requisites: '/requisites/',
         // '/info'
         info: '/info',
-        // '/test'
-        test: '/test',
+        // '/download-sample-file'
+        test: '/download-sample-file',
     },
 }
 

@@ -33,6 +33,7 @@ import {ТoAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redi
 import {getAutologinAuthStore, getIsAuthAuthStore} from '../selectors/auth-reselect';
 import {autoLoginMe} from '../redux/auth-store-reducer';
 import {Page404} from './common/404-page/page-404';
+import {DownloadSampleFile} from './common/download-sample-file/download-sample-file';
 
 type OwnProps = {}
 
@@ -118,10 +119,9 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.options } element={ <ТoAuthRedirect><OptionsSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.requisites + ':newFlag' } element={ <RequisitesForm/> }/>
 
-                        <Route path={ routes.test }
-                               element={ <AddDriversForm mode={'addDriver'}/> }/>
+                        {/*<Route path={ routes.download-sample-file } element={<DownloadSampleFile urlShort={'emploee_image/employeeImage_KbIz0sf.jpg'} label={'Загрузить'}/>}/>*/}
+                            {/* element={ <AddDriversForm mode={'addDriver'}/> }/>*/}
                         {/*element={ <AddDriversView idEmployee={ '0ce2d16f-582e-4d49-ac35-e0c8f9c53b06' }/> }/>*/ }
-
                         {/*<Route path="*" element={ <h2>This site NOT FOUND. Try another address</h2> }/>*/}
                         <Route path="*" element={ <Page404/> }/>
                     </Routes>

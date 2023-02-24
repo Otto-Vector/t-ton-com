@@ -1,20 +1,21 @@
 import React, {ChangeEvent, useEffect} from 'react'
 import styles from './request-form-documents-right.module.scss'
-import {useSelector} from 'react-redux';
+import {useSelector} from 'react-redux'
 import {
     getInfoTextModalsRequestValuesStore,
     getInitialDocumentsRequestValuesStore,
     getInitialValuesRequestStore,
     getLabelDocumentsRequestValuesStore,
     getLabelRequestStore,
-} from '../../../selectors/forms/request-form-reselect';
-import {RequestModesType} from '../request-section';
+} from '../../../selectors/forms/request-form-reselect'
+import {RequestModesType} from '../request-section'
 
-import {Button} from '../../common/button/button';
-import {InfoText} from '../../common/info-text/into-text';
-import {MaterialIcon} from '../../common/material-icon/material-icon';
-import {hhMmDdMmFormat} from '../../../utils/date-formats';
-import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
+import {Button} from '../../common/button/button'
+import {InfoText} from '../../common/info-text/into-text'
+import {MaterialIcon} from '../../common/material-icon/material-icon'
+import {hhMmDdMmFormat} from '../../../utils/date-formats'
+import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
+import {DownloadSampleFile} from '../../common/download-sample-file/download-sample-file'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -56,6 +57,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             // initialValues.contractECP.uploadDocument = event
         },
     }
+    const disabledButtonOnMode = requestModes.acceptDriverMode || requestModes.createMode
 
     useEffect(() => {
     }, [ initialValues ])
@@ -71,25 +73,62 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     className={ styles.requestFormDocumentRight__documentsPanel + ' ' + styles.requestFormDocumentRight__documentsPanel_top }>
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
+                        {/*///////////ДОВЕРЕННОСТЬ ГРУЗОВЛАДЕЛЬЦУ/////////////*/ }
                         <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay?.proxyFreightLoader?.toString() }
-                                disabled={ false }
+                                disabled={ disabledButtonOnMode }
                                 wordWrap
-                        />
+                        >
+                            <DownloadSampleFile
+                                label={ labels.proxyWay?.proxyFreightLoader?.toString() }
+                                // urlShort={ initialValues.proxyWay?.proxyFreightLoader+''}
+                                urlShort={ 'emploee_image/employeeImage_KbIz0sf.jpg' }
+                                disabled={ !initialValues.proxyWay?.proxyFreightLoader }
+                            />
+                        </Button>
                     </div>
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay?.proxyDriver?.toString() }
+                        <Button colorMode={ !initialValues.proxyWay?.proxyDriver ? 'grayAlert' : 'blue' }
+                                disabled={ disabledButtonOnMode }
                                 wordWrap
-                        />
+                        >
+                            <DownloadSampleFile
+                                label={ labels.proxyWay?.proxyDriver?.toString() }
+                                urlShort={ initialValues.proxyWay?.proxyDriver + '' }
+                                disabled={ !initialValues.proxyWay?.proxyDriver }
+                            />
+                        </Button>
                     </div>
+                </div>
+                <div
+                    className={ styles.requestFormDocumentRight__documentsPanel + ' ' + styles.requestFormDocumentRight__documentsPanel_top }>
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
+                        <Button colorMode={ !initialValues.proxyWay?.waybillDriver ? 'grayAlert' : 'blue' }
                                 title={ labels.proxyWay?.waybillDriver?.toString() }
+                                disabled={ disabledButtonOnMode }
                                 wordWrap
-                        />
+                        >
+                            <DownloadSampleFile
+                                label={ labels.proxyWay?.waybillDriver?.toString() }
+                                urlShort={ initialValues.proxyWay?.waybillDriver + '' }
+                                disabled={ !initialValues.proxyWay?.waybillDriver }
+                            />
+                        </Button>
+                    </div>
+                    <div
+                        className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
+                        <Button colorMode={ !initialValues.proxyWay?.itineraryList ? 'grayAlert' : 'blue' }
+                                title={ labels.proxyWay?.itineraryList?.toString() }
+                                disabled={ disabledButtonOnMode }
+                                wordWrap
+                        >
+                            <DownloadSampleFile
+                                label={ labels.proxyWay?.itineraryList?.toString() }
+                                urlShort={ initialValues.proxyWay?.itineraryList + '' }
+                                disabled={ !initialValues.proxyWay?.itineraryList }
+                            />
+                        </Button>
                     </div>
                 </div>
             </div>

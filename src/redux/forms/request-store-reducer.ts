@@ -99,10 +99,11 @@ const initialState = {
     labelDocumentsRequestValues: {
 
         proxyWay: {
-            header: 'Транспортные документы Сторон',
+            header: 'Транспортные документы',
             proxyFreightLoader: 'Доверенность Грузовладельцу',
             proxyDriver: 'Доверенность на Водителя',
             waybillDriver: 'Путевой Лист Водителя',
+            itineraryList: 'Маршрутный Лист Водителя'
         },
 
         cargoDocuments: 'Документы груза',

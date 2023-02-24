@@ -37,7 +37,8 @@
     flex-flow: nowrap row;
     justify-content: space-evenly;
     height: 30px;
-    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
 
     &_top {
       height: 38px;
@@ -56,6 +57,7 @@
 
     &_twoLines {
       max-height: 38px;
+      width: 160px;
     }
   }
 
