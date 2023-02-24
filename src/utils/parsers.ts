@@ -117,5 +117,6 @@ export const syncParsers = {
     parseToNormalMoney,
     parseToUpperCase,
     parseAllNumbers,
-    parseNoSpace
+    parseNoSpace,
+    toConsole
 }
