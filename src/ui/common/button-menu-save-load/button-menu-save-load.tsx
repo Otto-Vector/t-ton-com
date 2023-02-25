@@ -1,31 +1,32 @@
-import React from 'react'
-import styles from './just-select.module.scss'
+import React, {useState} from 'react'
+import styles from './button-menu-save-load.module.scss'
+import {Button} from '../button/button'
+import {MaterialIcon} from '../material-icon/material-icon'
 
 type OwnProps = {
     titleValue: string
-    optionItems: string[]
-    onChange: ( agr: string ) => void
-    selectedValue: string
+    loadUrl: string
+    onUpload: () => void
 }
 
 
-export const ButtonMenuSaveLoad: React.FC<OwnProps> = ( { optionItems, onChange, selectedValue, titleValue } ) => {
+export const ButtonMenuSaveLoad: React.FC<OwnProps> = ( { titleValue, loadUrl, onUpload } ) => {
 
-    return ( <div className={ styles.justSelect }>
-            <select className={ styles.justSelect__select }
-                    name="cargoFilter" id="cargoFilter"
-                    onChange={ ( e ) => {
-                        onChange(e.target.value)
-                    } }
-                    value={ selectedValue }
+    const [ isOpen, setIsOpen ] = useState(false)
+
+    const onClick = () => {
+        setIsOpen(open => !open)
+    }
+
+    return ( <div className={ styles.buttonMenuSaveLoad }>
+            <Button
+                onClick={ onClick }
+                colorMode={ 'blue' }
             >
-                <option className={ styles.justSelect__option }
-                        value={ '' }>{ titleValue }</option>
-                { optionItems.map(( item ) =>
-                    <option className={ styles.justSelect__option }
-                            key={ item } value={ item }>{ item }</option>,
-                ) }
-            </select>
+                <span className={ styles.buttonMenuSaveLoad__text }>{ titleValue }</span>
+                <MaterialIcon style={ { fontWeight: '100' } } icon_name={ 'expand_circle_down' }/>
+            </Button>
+            { isOpen && <p>{ 'open' }</p> }
         </div>
     )
 }

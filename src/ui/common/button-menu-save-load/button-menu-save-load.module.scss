@@ -1,0 +1,12 @@
+@import 'src/styles/mixins';
+@import 'src/styles/variables';
+
+
+.buttonMenuSaveLoad {
+  margin: 50px;
+  width: 270px;
+
+  &__text {
+    padding-right: 10px;
+  }
+}

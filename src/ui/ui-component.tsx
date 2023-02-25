@@ -1,39 +1,40 @@
 import React, {useEffect} from 'react'
-import styles from './ui-component.module.scss';
+import styles from './ui-component.module.scss'
 // import 'antd/lib/style/index.css' // используем core стили antd
 // import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфоокон
 // import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
-import {Header} from './header/header';
-import {Navigate, Route, Routes} from 'react-router-dom';
-import {Footer} from './footer/footer';
+import {Header} from './header/header'
+import {Navigate, Route, Routes} from 'react-router-dom'
+import {Footer} from './footer/footer'
 import {LinksPanel} from './links-panel/links-panel'
-import {MenuPanel} from './menu-panel/menu-panel';
+import {MenuPanel} from './menu-panel/menu-panel'
 import {useDispatch, useSelector} from 'react-redux'
-import {getRoutesStore} from '../selectors/routes-reselect';
-import {HelloSection} from './hello-section/hello-section';
-import {LoginSection} from './login-section/login-section';
-import {OptionsSection} from './options-section/options-section';
-import {RequisitesForm} from './options-section/requisites-form/requisites-form';
-import {ShippersForm} from './options-section/shippers-consignees-form/shippers-form';
-import {ConsigneesForm} from './options-section/shippers-consignees-form/consignees-form';
-import {EmployeesForm} from './options-section/employees-form/employees-form';
-import {TransportForm} from './options-section/transport-trailer-form/transport-form';
-import {TrailerForm} from './options-section/transport-trailer-form/trailer-form';
-import {TableSection} from './table-section/table-section';
-import {RequestSection} from './request-section/request-section';
-import {AddDriversForm} from './add-drivers-form/add-drivers-form';
-import {InfoSection} from './info-section/info-section';
-import {MapSection} from './map-section/map-section';
+import {getRoutesStore} from '../selectors/routes-reselect'
+import {HelloSection} from './hello-section/hello-section'
+import {LoginSection} from './login-section/login-section'
+import {OptionsSection} from './options-section/options-section'
+import {RequisitesForm} from './options-section/requisites-form/requisites-form'
+import {ShippersForm} from './options-section/shippers-consignees-form/shippers-form'
+import {ConsigneesForm} from './options-section/shippers-consignees-form/consignees-form'
+import {EmployeesForm} from './options-section/employees-form/employees-form'
+import {TransportForm} from './options-section/transport-trailer-form/transport-form'
+import {TrailerForm} from './options-section/transport-trailer-form/trailer-form'
+import {TableSection} from './table-section/table-section'
+import {RequestSection} from './request-section/request-section'
+import {AddDriversForm} from './add-drivers-form/add-drivers-form'
+import {InfoSection} from './info-section/info-section'
+import {MapSection} from './map-section/map-section'
 import {LightBoxComponent} from './common/lightbox-component/lightbox-component'
-import {AppStateType} from '../redux/redux-store';
-import {initializedAll} from '../redux/app-store-reducer';
-import {Preloader} from './common/preloader/preloader';
-import {WithAuthRedirect} from './common/redirect/with-auth-redirect/with-auth-redirect';
-import {ТoAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redirect';
-import {getAutologinAuthStore, getIsAuthAuthStore} from '../selectors/auth-reselect';
-import {autoLoginMe} from '../redux/auth-store-reducer';
-import {Page404} from './common/404-page/page-404';
-import {DownloadSampleFile} from './common/download-sample-file/download-sample-file';
+import {AppStateType} from '../redux/redux-store'
+import {initializedAll} from '../redux/app-store-reducer'
+import {Preloader} from './common/preloader/preloader'
+import {WithAuthRedirect} from './common/redirect/with-auth-redirect/with-auth-redirect'
+import {ТoAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redirect'
+import {getAutologinAuthStore, getIsAuthAuthStore} from '../selectors/auth-reselect'
+import {autoLoginMe} from '../redux/auth-store-reducer'
+import {Page404} from './common/404-page/page-404'
+import {DownloadSampleFile} from './common/download-sample-file/download-sample-file'
+import {ButtonMenuSaveLoad} from './common/button-menu-save-load/button-menu-save-load'
 
 type OwnProps = {}
 
@@ -55,7 +56,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
 
     return (
         <div className={ styles.ui }>
-            <LightBoxComponent/> {/*перманентно присутствует здесь для модального отображения картинок*/}
+            <LightBoxComponent/> {/*перманентно присутствует здесь для модального отображения картинок*/ }
             <Header/>
             <div className={ styles.ui__centerWrapper }>
                 <div className={ styles.ui__sideBarLeft }>
@@ -98,11 +99,11 @@ export const UiComponent: React.FC<OwnProps> = () => {
                                    </div>
                                </ТoAuthRedirect> }/>
                         <Route path={ routes.info } element={ <ТoAuthRedirect><InfoSection/></ТoAuthRedirect> }/>
-                        <Route path={ routes.addDriver + ':reqNumber' }                               element={ <ТoAuthRedirect>
-                                   <AddDriversForm mode={'addDriver'}/>
+                        <Route path={ routes.addDriver + ':reqNumber' } element={ <ТoAuthRedirect>
+                            <AddDriversForm mode={ 'addDriver' }/>
                         </ТoAuthRedirect> }/>
                         <Route path={ routes.selfExportDriver + ':reqNumber' } element={ <ТoAuthRedirect>
-                            <AddDriversForm mode={'selfExportDriver'}/>
+                            <AddDriversForm mode={ 'selfExportDriver' }/>
                         </ТoAuthRedirect> }/>
 
                         <Route path={ routes.optionsEdit.shippers + ':id' }
@@ -119,10 +120,13 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.options } element={ <ТoAuthRedirect><OptionsSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.requisites + ':newFlag' } element={ <RequisitesForm/> }/>
 
-                        {/*<Route path={ routes.download-sample-file } element={<DownloadSampleFile urlShort={'emploee_image/employeeImage_KbIz0sf.jpg'} label={'Загрузить'}/>}/>*/}
-                            {/* element={ <AddDriversForm mode={'addDriver'}/> }/>*/}
+                        <Route path={ routes.test } element={
+                            <ButtonMenuSaveLoad titleValue={ 'Документы заказчика' } loadUrl={ '#' } onUpload={ () => {
+                                console.log('upload')
+                            } }/> }/>
+                        {/* element={ <AddDriversForm mode={'addDriver'}/> }/>*/ }
                         {/*element={ <AddDriversView idEmployee={ '0ce2d16f-582e-4d49-ac35-e0c8f9c53b06' }/> }/>*/ }
-                        {/*<Route path="*" element={ <h2>This site NOT FOUND. Try another address</h2> }/>*/}
+
                         <Route path="*" element={ <Page404/> }/>
                     </Routes>
                 </section>
