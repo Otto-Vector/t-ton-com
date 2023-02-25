@@ -53,17 +53,16 @@ export const DownloadSampleFile: React.FC<OwnProps> = ( { urlShort, label, disab
 
     return (
         <>
-            { showAlert && <p style={ { color: 'red' } }> { 'Не получилось загрузить!' } </p> }
             <a href={ url } download={ name } style={ { display: 'none' } } ref={ ref }/>
-            <div onClick={ disabled ? () => null : download }>
+            <span onClick={ disabled ? () => null : download }>
                 { buttonState === ButtonState.Loading
-                    ? <SizedPreloader sizeHW={ '15px' }/>
+                    ? <span><SizedPreloader sizeHW={ '15px' }/></span>
                     : ( showAlert
-                            ? <p style={ { color: 'red' } }> { 'Не получилось загрузить файл!' } </p>
+                            ? <span style={ { color: 'red' } }> { 'Не получилось загрузить файл!' } </span>
                             : label
                     )
                 }
-            </div>
+            </span>
         </>
     )
 }

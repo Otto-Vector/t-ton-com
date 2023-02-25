@@ -1,19 +1,25 @@
-import React from 'react';
-import styles from './ofer.module.scss';
+import React from 'react'
+import styles from './ofer.module.scss'
 import docum from '../../../media/document.svg'
+import {DownloadSampleFile} from '../../common/download-sample-file/download-sample-file'
+import {useSelector} from 'react-redux'
+import {getFooterBaseStore} from '../../../selectors/base-reselect'
 
-type OwnProps = {
-    linkToOfer: string
-}
+type OwnProps = {}
 
-export const Ofer: React.FC<OwnProps> = ( { linkToOfer } ) => {
-
-    const oferText = 'Договор-оферта';
+export const Ofer: React.FC<OwnProps> = () => {
+    const { linkToOfer } = useSelector(getFooterBaseStore)
+    const oferText = 'Договор-оферта'
 
     return (
-        <a href={ linkToOfer } className={ styles.ofer } role={ 'button' }>
+        <div className={ styles.ofer }>
             <img className={ styles.ofer__img } src={ docum } alt={ oferText }/>
-            <span>{ oferText }</span>
-        </a>
+            <span>
+                <DownloadSampleFile
+                    label={ oferText }
+                    urlShort={ linkToOfer }
+                />
+                </span>
+        </div>
     )
 }

@@ -82,7 +82,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                 label={ labels.proxyWay?.proxyFreightLoader?.toString() }
                                 // urlShort={ initialValues.proxyWay?.proxyFreightLoader+''}
                                 urlShort={ 'emploee_image/employeeImage_KbIz0sf.jpg' }
-                                disabled={ !initialValues.proxyWay?.proxyFreightLoader }
+                                // disabled={ !initialValues.proxyWay?.proxyFreightLoader }
                             />
                         </Button>
                     </div>
