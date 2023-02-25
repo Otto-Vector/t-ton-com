@@ -13,7 +13,7 @@
   &__inputsPanel {
     width: 100%;
     color: $accentColor;
-    margin-bottom: 5px;
+    //margin-bottom: 5px;
     text-align: center;
 
     &_trio {
@@ -37,8 +37,8 @@
     flex-flow: nowrap row;
     justify-content: space-evenly;
     height: 30px;
-    margin-top: 5px;
-    margin-bottom: 10px;
+    margin-top: 7px;
+    //margin-bottom: 10px;
 
     &_top {
       height: 38px;
@@ -57,6 +57,9 @@
 
     &_twoLines {
       max-height: 38px;
+      width: 160px;
+    }
+    &_long {
       width: 160px;
     }
   }

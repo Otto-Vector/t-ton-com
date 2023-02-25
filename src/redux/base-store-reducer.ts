@@ -40,7 +40,6 @@ const initialState = {
 
     footer: {
         linkToOfer: 'oferta/oferta.pdf',
-        // linkToOfer: '#3435445',
     },
 
     // ссылки на сторонние сайты (панель справа)

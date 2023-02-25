@@ -30,7 +30,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const labels = useSelector(getLabelDocumentsRequestValuesStore)
     const labelsR = useSelector(getLabelRequestStore)
     const initialValues = useSelector(getInitialDocumentsRequestValuesStore)
-    const initialValuesR = useSelector(getInitialValuesRequestStore)
+    const initialValuesRequest = useSelector(getInitialValuesRequestStore)
     const modalsText = useSelector(getInfoTextModalsRequestValuesStore)
 
     const buttonsAction = {
@@ -132,26 +132,42 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     </div>
                 </div>
             </div>
+            <div className={ styles.requestFormDocumentRight__line }></div>
             {/*/////////ПАНЕЛЬ РАСЧЁТА///1/////////////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
                 + styles.requestFormDocumentRight__inputsPanel_trio }>
-                <div className={ styles.requestFormDocumentRight__inputsItem }>
-                    <label className={ styles.requestFormDocumentRight__label }>
-                        { labelsR.uploadTime }</label>
-                    <div className={ styles.requestFormDocumentRight__info }>
-                        { hhMmDdMmFormat(new Date()) }
-                    </div>
-                </div>
-                <div className={ styles.requestFormDocumentRight__infoBreaker }></div>
-                <div className={ styles.requestFormDocumentRight__inputsItem }>
+                {/* вес груза */ }
+                <div className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long}>
                     <label className={ styles.requestFormDocumentRight__label }>
                         { labelsR.cargoWeight }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
-                        { initialValuesR.cargoWeight }
+                        { initialValuesRequest.cargoWeight }
                     </div>
                 </div>
-                <div className={ styles.requestFormDocumentRight__infoBreaker }></div>
-                <div className={ styles.requestFormDocumentRight__buttonItem }>
+                {/* <-+-> */ }
+                {/*<div className={ styles.requestFormDocumentRight__infoBreaker }></div>*/}
+                {/* цена по заявке */ }
+                <div className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long}>
+                    <label className={ styles.requestFormDocumentRight__label }>
+                        { labelsR.responsePrice }</label>
+                    <div className={ styles.requestFormDocumentRight__info }>
+                        { initialValuesRequest.responsePrice }
+                    </div>
+                </div>
+            </div>
+            <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
+                + styles.requestFormDocumentRight__inputsPanel_trio }>
+                {/* время погрузки */ }
+                <div className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long}>
+                    <label className={ styles.requestFormDocumentRight__label }>
+                        { labelsR.uploadTime }</label>
+                    <div className={ styles.requestFormDocumentRight__info }>
+                        { hhMmDdMmFormat(initialValuesRequest?.shipmentDate) }
+                    </div>
+                </div>
+                {/*<div className={ styles.requestFormDocumentRight__infoBreaker }></div>*/}
+                {/* документы груза */}
+                <div className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines}>
                     <label className={ styles.requestFormDocumentRight__label }>
                         { labels.cargoDocuments }</label>
                     <Button colorMode={ 'whiteBlueDoc' }
@@ -172,14 +188,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*/////////ПАНЕЛЬ РАСЧЁТА///2/////////////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
                 + styles.requestFormDocumentRight__inputsPanel_duo }>
-                <div className={ styles.requestFormDocumentRight__inputsItem }>
-                    <label className={ styles.requestFormDocumentRight__label }>
-                        { labelsR.responsePrice }</label></div>
-                <div className={ styles.requestFormDocumentRight__inputsItem }>
-                    <div className={ styles.requestFormDocumentRight__info }>
-                        { initialValuesR.responsePrice }
-                    </div>
-                </div>
+
 
             </div>
             <div className={ styles.requestFormDocumentRight__line }></div>
