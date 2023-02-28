@@ -14,6 +14,7 @@ type OwnProps = {
     isSelectOnTab?: boolean
     // кнопка загружает контент
     download?: boolean
+    style?: React.CSSProperties
 }
 
 export const Button: React.FC<OwnProps> = (
@@ -22,7 +23,7 @@ export const Button: React.FC<OwnProps> = (
         colorMode = 'noFill', rounded,
         type = 'button', children, wordWrap,
         isSelectOnTab = true,
-        download
+        style,
     } ) => {
 
     return <button className={
@@ -36,6 +37,7 @@ export const Button: React.FC<OwnProps> = (
                    type={ type }
                    title={ title + ( disabled ? ' (кнопка неактивна)' : '' ) }
                    tabIndex={ isSelectOnTab ? 0 : -1 }
+                   style={ style }
     >{ // отображаем то что внутри тега button
         children || title
     }

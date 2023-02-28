@@ -1,15 +1,18 @@
-import React from 'react';
-import styles from './cancel-button.module.scss';
-import {Button} from '../button/button';
-import {MaterialIcon} from '../material-icon/material-icon';
+import React from 'react'
+import styles from './cancel-button.module.scss'
+import {Button} from '../button/button'
+import {MaterialIcon} from '../material-icon/material-icon'
 
 type OwnProps = {
     onCancelClick: () => void
     noAbsolute?: boolean
-    mode?: 'redAlert' | 'white' | 'blueAlert'
+    mode?: 'redAlert' | 'white' | 'blueAlert' | 'noFill'
 }
 
-export const CancelButton: React.FC<OwnProps> = ( { onCancelClick, noAbsolute, mode = 'blueAlert' } ) => {
+export const CancelButton: React.FC<OwnProps> = (
+    {
+        onCancelClick, noAbsolute, mode = 'blueAlert',
+    } ) => {
     return (
         <div className={ styles.cancelButtonn + ' '
             + ( noAbsolute ? styles.cancelButtonn_noAbsolute : '' ) }
@@ -18,8 +21,9 @@ export const CancelButton: React.FC<OwnProps> = ( { onCancelClick, noAbsolute, m
             <Button type={ 'submit' }
                     colorMode={ mode }
                     title={ 'Отменить/вернуться' }
+                    style={ { border: 'none' } }
                     rounded
-            ><MaterialIcon icon_name={ 'close' }/></Button>
+            ><MaterialIcon style={ { lineHeight: 1, fontSize: '29px' } } icon_name={ 'cancel' }/></Button>
         </div>
     )
 }

@@ -27,26 +27,26 @@ import {
     modifyOneEmployeeToAPI,
     newEmployeeSaveToAPI,
     oneEmployeeDeleteSoftToAPI,
-} from '../../../redux/options/employees-store-reducer';
+} from '../../../redux/options/employees-store-reducer'
 
-import {FormSelector} from '../../common/form-selector/form-selector';
+import {FormSelector} from '../../common/form-selector/form-selector'
 
-import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers';
-import {ImageViewSet} from '../../common/image-view-set/image-view-set';
-import {yearMmDdFormat} from '../../../utils/date-formats';
-import {getDrivingCategorySelectorBaseStore} from '../../../selectors/base-reselect';
-import {rerenderTransport} from '../../../redux/options/transport-store-reducer';
-import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer';
-import {syncValidators} from '../../../utils/validators';
-import {SwitchMask} from '../../common/antd-switch/antd-switch';
-import {SelectOptionsType} from '../../common/form-selector/selector-utils';
-import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
-import {FormApi} from 'final-form';
-import {removeResponseToRequestsBzEmployee} from '../../../redux/forms/add-driver-store-reducer';
+import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers'
+import {ImageViewSet} from '../../common/image-view-set/image-view-set'
+import {yearMmDdFormat} from '../../../utils/date-formats'
+import {getDrivingCategorySelectorBaseStore} from '../../../selectors/base-reselect'
+import {rerenderTransport} from '../../../redux/options/transport-store-reducer'
+import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer'
+import {syncValidators} from '../../../utils/validators'
+import {SwitchMask} from '../../common/antd-switch/antd-switch'
+import {SelectOptionsType} from '../../common/form-selector/selector-utils'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {FormApi} from 'final-form'
+import {removeResponseToRequestsBzEmployee} from '../../../redux/forms/add-driver-store-reducer'
 import {
     getTrailerSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
     getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
-} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect';
+} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
 
 
 type OwnProps = {}
@@ -86,8 +86,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     // для манипуляции с картинкой
-    const [ selectedImage, setSelectedImage ] = useState<File>();
-    const [ isImageChanged, setIsImageChanged ] = useState(false);
+    const [ selectedImage, setSelectedImage ] = useState<File>()
+    const [ isImageChanged, setIsImageChanged ] = useState(false)
 
 
     const onSubmit = useCallback(async ( values: EmployeeCardType<string> ) => {

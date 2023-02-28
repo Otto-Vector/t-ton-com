@@ -68,11 +68,11 @@ $input--disabled-font-color: $mainFontColor;
   opacity: .6;
   will-change: transform;
 
-  &:before {
-    top: 0;
-    right: 0;
-    content: 'close';
-  }
+  //&:before {
+  //  top: 0;
+  //  right: 0;
+  //  content: 'close';
+  //}
 
   &:hover {
     transform: scale(1.2);

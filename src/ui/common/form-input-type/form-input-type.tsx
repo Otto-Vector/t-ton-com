@@ -5,6 +5,7 @@ import NumberFormat from 'react-number-format';
 import ReactInputMask from 'react-input-mask';
 import {valuesAreEqualFormInput} from '../../../utils/reactMemoUtils';
 import {FieldMetaState} from 'react-final-form';
+import {MaterialIcon} from '../material-icon/material-icon'
 
 
 type OwnProps = {
@@ -68,7 +69,7 @@ export const FormInputType: React.FC<OwnProps> = React.memo((
                         await resetFieldBy.change(input.name + '', '')
                         await resetFieldBy.resetFieldState(input.name + '')
                     } }
-                />
+                ><MaterialIcon icon_name={'close'}/></div>
                 : null
             }
             { ( ( maskFormat || inputType === 'money' ) && !isInputMask ) ? // если формат отсутствует, то на обычный инпут
