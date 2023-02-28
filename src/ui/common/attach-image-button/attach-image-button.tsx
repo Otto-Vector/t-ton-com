@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler} from 'react'
+import React from 'react'
 import styles from './attach-image-button.module.scss'
 import {MaterialIcon} from '../material-icon/material-icon'
 

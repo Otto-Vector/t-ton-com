@@ -1,10 +1,10 @@
 import React from 'react'
 import styles from './form-input-type.module.scss'
 import {FormApi} from 'final-form'
-import NumberFormat from 'react-number-format';
-import ReactInputMask from 'react-input-mask';
-import {valuesAreEqualFormInput} from '../../../utils/reactMemoUtils';
-import {FieldMetaState} from 'react-final-form';
+import NumberFormat from 'react-number-format'
+import ReactInputMask from 'react-input-mask'
+import {valuesAreEqualFormInput} from '../../../utils/reactMemoUtils'
+import {FieldMetaState} from 'react-final-form'
 import {MaterialIcon} from '../material-icon/material-icon'
 
 
@@ -51,73 +51,71 @@ export const FormInputType: React.FC<OwnProps> = React.memo((
     // если нужно просто текстовое поле
     const InInput = textArea ? 'textarea' : 'input'
 
-    // const isError = ( meta.error || meta.submitError ) && meta.touched
     const isError = ( meta.error || meta.submitError ) && ( meta.active || meta.touched )
     const labelToView = ( input.value || allowEmptyFormatting || ( inputType !== 'text' ) ) && !noLabel
 
     const formatChars = { '#': '[0123456789]', 'A': formatCharsToMaskA || '[a-zA-ZА-Яа-я]' }
 
-
     return ( <div className={ styles.inputWrapper + ' ' + styles.search }>
-            {/*кнопка для сброса параметров поля
-            (проявляется, если переданы методы resetFieldBy={form} в объявленном объекте Field
-            а также при введенных данных*/ }
+            {/*кнопка для сброса параметров поля*/ }
             { ( resetFieldBy && input.value && !disabled && !readOnly )
+                /*(проявляется, если переданы методы resetFieldBy={form}
+                в объявленном объекте Field, а также при введенных данных*/
                 ? <div
                     className={ styles.clearSearch + ' ' + ( !meta.dirty && styles.clearSearch_unfocused ) }
                     onClick={ async () => {
                         await resetFieldBy.change(input.name + '', '')
                         await resetFieldBy.resetFieldState(input.name + '')
                     } }
-                ><MaterialIcon icon_name={'close'}/></div>
+                ><MaterialIcon icon_name={ 'close' }/></div>
                 : null
             }
-            { ( ( maskFormat || inputType === 'money' ) && !isInputMask ) ? // если формат отсутствует, то на обычный инпут
-
-                <NumberFormat
-                    mask={ mask }
-                    format={ maskFormat }
-                    // fixedDecimalScale={true}
-                    // decimalSeparator={','}
-                    decimalScale={ inputType === 'money' ? 2 : 0 }
-                    allowEmptyFormatting={ allowEmptyFormatting } // показывает формат при пустых значениях
-                    displayType="input"
-                    allowNegative={ false }
-                    autoComplete="off"
-                    onBlur={ input.onBlur }
-                    onFocus={ input.onFocus }
-                    onChange={ ( value: React.ChangeEvent<HTMLInputElement> ) => input?.onChange && input.onChange(value) }
-                    // onValueChange={ ( { formattedValue } ) => input?.onChange && input.onChange(formattedValue) }
-                    // @ts-ignore
-                    type={ inputType }
-                    { ...input }
-                    className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
-                    placeholder={ placeholder }
-                    disabled={ disabled || meta.validating }
-                />
-                : isInputMask ?
-                    <ReactInputMask
+            {// если формат отсутствует, то на обычный инпут
+                ( ( maskFormat || inputType === 'money' ) && !isInputMask )
+                    ? <NumberFormat
+                        mask={ mask }
+                        format={ maskFormat }
+                        // fixedDecimalScale={true}
+                        // decimalSeparator={','}
+                        decimalScale={ inputType === 'money' ? 2 : 0 }
+                        allowEmptyFormatting={ allowEmptyFormatting } // показывает формат при пустых значениях
+                        displayType="input"
+                        allowNegative={ false }
+                        autoComplete="off"
+                        onBlur={ input.onBlur }
+                        onFocus={ input.onFocus }
+                        onChange={ ( value: React.ChangeEvent<HTMLInputElement> ) => input?.onChange && input.onChange(value) }
+                        // onValueChange={ ( { formattedValue } ) => input?.onChange && input.onChange(formattedValue) }
+                        // @ts-ignore
+                        type={ inputType }
                         { ...input }
                         className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
-                        mask={ maskFormat || '' }
                         placeholder={ placeholder }
-                        //@ts-ignore
-                        formatChars={ formatChars }
-                        maskChar={ mask }
-                        alwaysShowMask={ allowEmptyFormatting }
                         disabled={ disabled || meta.validating }
-                        readOnly={ readOnly }
                     />
-                    :
-                    <InInput { ...input }
-                             type={ inputType }
-                             min={ inputType === 'date' ? min : undefined }
-                             max={ inputType === 'date' ? max : undefined }
-                             className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
-                             placeholder={ placeholder }
-                             disabled={ disabled || meta.validating }
-                             readOnly={ readOnly }
-                    />
+                    : isInputMask // если прописана доп.маска с буквами, то
+                        ? <ReactInputMask
+                            { ...input }
+                            className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
+                            mask={ maskFormat || '' }
+                            placeholder={ placeholder }
+                            //@ts-ignore
+                            formatChars={ formatChars }
+                            maskChar={ mask }
+                            alwaysShowMask={ allowEmptyFormatting }
+                            disabled={ disabled || meta.validating }
+                            readOnly={ readOnly }
+                        />
+                        // ура, "обычный" инпут
+                        : <InInput { ...input }
+                                   type={ inputType }
+                                   min={ inputType === 'date' ? min : undefined }
+                                   max={ inputType === 'date' ? max : undefined }
+                                   className={ styles.input + ' ' + ( isError ? styles.error : '' ) }
+                                   placeholder={ placeholder }
+                                   disabled={ disabled || meta.validating }
+                                   readOnly={ readOnly }
+                        />
             }
             {/*плейсхолдер уходит в заголовок*/ }
             { labelToView &&
