@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styles from './attach-image-button.module.scss'
 import {MaterialIcon} from '../material-icon/material-icon'
 
@@ -10,9 +10,6 @@ export const AttachImageButton: React.FC<OwnProps> = ( { onChange } ) => {
 
     return (
         <div className={ styles.attachImageButton }>
-            <div className={ styles.attachImageButton_before }>
-                <MaterialIcon icon_name={ 'file_upload' }/>
-            </div>
             <input type={ 'file' }
                    className={ styles.attachImageButton__hiddenInput }
                    accept={ '.png, .jpeg, .jpg, .bmp' }
@@ -20,6 +17,9 @@ export const AttachImageButton: React.FC<OwnProps> = ( { onChange } ) => {
                        onChange(e)
                    } }
             />
+            <div className={ styles.attachImageButton__beforeIconDiv }>
+                <MaterialIcon icon_name={ 'file_upload' }/>
+            </div>
         </div>
     )
 }
