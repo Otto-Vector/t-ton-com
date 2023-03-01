@@ -14,12 +14,11 @@ export enum ButtonState {
 
 type OwnProps = {
     urlShort: string
-    label?: string
     disabled?: boolean
 }
 
 export const DownloadSampleFile: React.FC<OwnProps> = (
-    { children, urlShort, label, disabled = false } ) => {
+    { children, urlShort, disabled = false } ) => {
     const [ buttonState, setButtonState ] = useState<ButtonState>(
         ButtonState.Primary,
     )

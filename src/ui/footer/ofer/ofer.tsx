@@ -12,14 +12,11 @@ export const Ofer: React.FC<OwnProps> = () => {
     const oferText = 'Договор-оферта'
 
     return (
-        <div className={ styles.ofer }>
-            <img className={ styles.ofer__img } src={ docum } alt={ oferText }/>
-            <span>
-                <DownloadSampleFile
-                    label={ oferText }
-                    urlShort={ linkToOfer }
-                />
-                </span>
-        </div>
+        <DownloadSampleFile urlShort={ linkToOfer }>
+            <div className={ styles.ofer }>
+                <img className={ styles.ofer__img } src={ docum } alt={ oferText }/>
+                <span>{ oferText }</span>
+            </div>
+        </DownloadSampleFile>
     )
 }

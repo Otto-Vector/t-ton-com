@@ -74,61 +74,62 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         {/*///////////ДОВЕРЕННОСТЬ ГРУЗОВЛАДЕЛЬЦУ/////////////*/ }
-                        <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                disabled={ disabledButtonOnMode }
-                                wordWrap
+                        <DownloadSampleFile
+                            // urlShort={ initialValues.proxyWay?.proxyFreightLoader+''}
+                            // toDo: Поставить как надо
+                            urlShort={ 'emploee_image/employeeImage_KbIz0sf.jpg' }
+                            // disabled={ !initialValues.proxyWay?.proxyFreightLoader }
                         >
-                            <DownloadSampleFile
-                                label={ labels.proxyWay?.proxyFreightLoader?.toString() }
-                                // urlShort={ initialValues.proxyWay?.proxyFreightLoader+''}
-                                urlShort={ 'emploee_image/employeeImage_KbIz0sf.jpg' }
-                                // disabled={ !initialValues.proxyWay?.proxyFreightLoader }
+                            <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
+                                    disabled={ disabledButtonOnMode }
+                                    wordWrap
                             />
-                        </Button>
+                        </DownloadSampleFile>
                     </div>
+                    {/*///////////ДОВЕРЕННОСТЬ НА ВОДИТЕЛЯ/////////////*/ }
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <Button colorMode={ !initialValues.proxyWay?.proxyDriver ? 'grayAlert' : 'blue' }
-                                disabled={ disabledButtonOnMode }
-                                wordWrap
+                        <DownloadSampleFile
+                            urlShort={ initialValues.proxyWay?.proxyDriver + '' }
+                            disabled={ !initialValues.proxyWay?.proxyDriver }
                         >
-                            <DownloadSampleFile
-                                label={ labels.proxyWay?.proxyDriver?.toString() }
-                                urlShort={ initialValues.proxyWay?.proxyDriver + '' }
-                                disabled={ !initialValues.proxyWay?.proxyDriver }
+                            <Button colorMode={ !initialValues.proxyWay?.proxyDriver ? 'grayAlert' : 'blue' }
+                                    title={ labels.proxyWay?.proxyDriver?.toString() }
+                                    disabled={ disabledButtonOnMode }
+                                    wordWrap
                             />
-                        </Button>
+                        </DownloadSampleFile>
                     </div>
                 </div>
+                {/*///////////ПУТЕВОЙ ЛИСТ/////////////*/ }
                 <div
                     className={ styles.requestFormDocumentRight__documentsPanel + ' ' + styles.requestFormDocumentRight__documentsPanel_top }>
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <Button colorMode={ !initialValues.proxyWay?.waybillDriver ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay?.waybillDriver?.toString() }
-                                disabled={ disabledButtonOnMode }
-                                wordWrap
+                        <DownloadSampleFile
+                            urlShort={ initialValues.proxyWay?.waybillDriver + '' }
+                            disabled={ !initialValues.proxyWay?.waybillDriver }
                         >
-                            <DownloadSampleFile
-                                label={ labels.proxyWay?.waybillDriver?.toString() }
-                                urlShort={ initialValues.proxyWay?.waybillDriver + '' }
-                                disabled={ !initialValues.proxyWay?.waybillDriver }
+                            <Button colorMode={ !initialValues.proxyWay?.waybillDriver ? 'grayAlert' : 'blue' }
+                                    title={ labels.proxyWay?.waybillDriver?.toString() }
+                                    disabled={ disabledButtonOnMode }
+                                    wordWrap
                             />
-                        </Button>
+                        </DownloadSampleFile>
                     </div>
                     <div
                         className={ styles.requestFormDocumentRight__buttonItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <Button colorMode={ !initialValues.proxyWay?.itineraryList ? 'grayAlert' : 'blue' }
-                                title={ labels.proxyWay?.itineraryList?.toString() }
-                                disabled={ disabledButtonOnMode }
-                                wordWrap
+                        <DownloadSampleFile
+                            urlShort={ initialValues.proxyWay?.itineraryList + '' }
+                            disabled={ !initialValues.proxyWay?.itineraryList }
                         >
-                            <DownloadSampleFile
-                                label={ labels.proxyWay?.itineraryList?.toString() }
-                                urlShort={ initialValues.proxyWay?.itineraryList + '' }
-                                disabled={ !initialValues.proxyWay?.itineraryList }
+                            <Button colorMode={ !initialValues.proxyWay?.itineraryList ? 'grayAlert' : 'blue' }
+                                    title={ labels.proxyWay?.itineraryList?.toString() }
+                                    disabled={ disabledButtonOnMode }
+                                    wordWrap
                             />
-                        </Button>
+                        </DownloadSampleFile>
+
                     </div>
                 </div>
             </div>
@@ -137,7 +138,8 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
                 + styles.requestFormDocumentRight__inputsPanel_trio }>
                 {/* вес груза */ }
-                <div className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long}>
+                <div
+                    className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
                         { labelsR.cargoWeight }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
@@ -145,9 +147,10 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     </div>
                 </div>
                 {/* <-+-> */ }
-                {/*<div className={ styles.requestFormDocumentRight__infoBreaker }></div>*/}
+                {/*<div className={ styles.requestFormDocumentRight__infoBreaker }></div>*/ }
                 {/* цена по заявке */ }
-                <div className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long}>
+                <div
+                    className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
                         { labelsR.responsePrice }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
@@ -158,16 +161,18 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
                 + styles.requestFormDocumentRight__inputsPanel_trio }>
                 {/* время погрузки */ }
-                <div className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long}>
+                <div
+                    className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
                         { labelsR.uploadTime }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
                         { hhMmDdMmFormat(initialValuesRequest?.shipmentDate) }
                     </div>
                 </div>
-                {/*<div className={ styles.requestFormDocumentRight__infoBreaker }></div>*/}
-                {/* документы груза */}
-                <div className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines}>
+                {/*<div className={ styles.requestFormDocumentRight__infoBreaker }></div>*/ }
+                {/* документы груза */ }
+                <div
+                    className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
                     <label className={ styles.requestFormDocumentRight__label }>
                         { labels.cargoDocuments }</label>
                     <Button colorMode={ 'whiteBlueDoc' }
