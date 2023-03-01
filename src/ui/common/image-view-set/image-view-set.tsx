@@ -1,13 +1,13 @@
 import React, {ChangeEvent, useState} from 'react'
-import {Preloader} from '../preloader/preloader';
+import {Preloader} from '../preloader/preloader'
 import styles from './image-view-set.module.scss'
-import {AppStateType} from '../../../redux/redux-store';
-import {useDispatch, useSelector} from 'react-redux';
-import {AttachImageButton} from '../attach-image-button/attach-image-button';
+import {AppStateType} from '../../../redux/redux-store'
+import {useDispatch, useSelector} from 'react-redux'
+import {AttachImageButton} from '../attach-image-button/attach-image-button'
 import imageCompression from 'browser-image-compression'
-import {lightBoxStoreActions} from '../../../redux/utils/lightbox-store-reducer';
+import {lightBoxStoreActions} from '../../../redux/utils/lightbox-store-reducer'
 import noImage from '../../../media/logo192.png'
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 
 type OwnProps = {
     imageURL?: string
@@ -15,15 +15,16 @@ type OwnProps = {
     title?: string
 }
 
-export const ImageViewSet: React.FC<OwnProps> = React.memo(( {
-                                                                 imageURL,
-                                                                 onSelectNewImageFileToSend,
-                                                                 title = 'Добавить/изменить фото',
-                                                             } ) => {
+export const ImageViewSet: React.FC<OwnProps> = React.memo((
+    {
+        imageURL,
+        onSelectNewImageFileToSend,
+        title = 'Добавить/изменить фото',
+    } ) => {
 
     const dispatch = useDispatch()
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
-    const [ selectedImage, setSelectedImage ] = useState<File>();
+    const [ selectedImage, setSelectedImage ] = useState<File>()
     const [ fileIsCompressed, setFileIsCompressed ] = useState(false)
 
     const imageURLToShow = ( selectedImage && URL.createObjectURL(selectedImage) )
@@ -37,7 +38,7 @@ export const ImageViewSet: React.FC<OwnProps> = React.memo(( {
     const sendPhotoFile = async ( event: ChangeEvent<HTMLInputElement> ) => {
         setFileIsCompressed(true)
         if (event.target.files && event.target.files.length > 0) {
-            const imageFile = event.target.files[0];
+            const imageFile = event.target.files[0]
             const options = {
                 maxSizeMB: 0.9,
                 maxWidthOrHeight: 1024,

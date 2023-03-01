@@ -27,7 +27,7 @@
   &__menu {
     position: absolute;
     right: 1px;
-        top: 100%;
+    top: 100%;
     width: 140px;
     background-color: whitesmoke;
     border-radius: 0 0 10px 10px;
@@ -37,6 +37,7 @@
   }
 
   &__menuOption {
+    position: relative;
     display: flex;
     justify-content: space-between;
     margin-top: 3px;

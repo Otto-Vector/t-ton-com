@@ -3,6 +3,7 @@ import styles from './button-menu-save-load.module.scss'
 import {Button, CommonButtonColorMode} from '../button/button'
 import {MaterialIcon} from '../material-icon/material-icon'
 import {DownloadSampleFile} from '../download-sample-file/download-sample-file'
+import {AttachDocumentWrapper} from '../attach-document-wrapper/attach-document-wrapper'
 
 
 type OwnProps = {
@@ -27,12 +28,12 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
 
     return (
         <div className={ styles.buttonMenuSaveLoad }
-             onMouseLeave={ () => {
-                 setIsOpen(false)
-             } }
-             onBlur={ () => {
-                 setIsOpen(isMouseOnMenu)
-             } }
+            // onMouseLeave={ () => {
+            //     setIsOpen(false)
+            // } }
+            // onBlur={ () => {
+            //     setIsOpen(isMouseOnMenu)
+            // } }
         >
             <Button onClick={ onClick } colorMode={ buttonColorMode }>
                 <span className={ styles.buttonMenuSaveLoad__text }>{ titleValue }</span>
@@ -46,8 +47,10 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
                      } }
                 >
                     <div className={ styles.buttonMenuSaveLoad__menuOption }>
-                        <span>{ 'Загрузить' }</span>
-                        <MaterialIcon icon_name={ 'attach_file' }/>
+                        <AttachDocumentWrapper onChange={ onUpload }>
+                            <span>{ 'Загрузить' }</span>
+                            <MaterialIcon icon_name={ 'attach_file' }/>
+                        </AttachDocumentWrapper>
                     </div>
                     <DownloadSampleFile urlShort={ loadUrl }>
                         <div className={ styles.buttonMenuSaveLoad__menuOption }>
