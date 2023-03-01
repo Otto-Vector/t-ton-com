@@ -3,10 +3,58 @@
 
 
 .buttonMenuSaveLoad {
+  font-family: $RalewayFont;
+  position: relative;
   margin: 50px;
   width: 270px;
+  z-index: 90;
+
 
   &__text {
     padding-right: 10px;
+  }
+
+  &__lining {
+    position: absolute;
+    right: 1px;
+    top: 50%;
+    height: 55%;
+    width: 140px;
+    box-shadow: 3px 3px 3px gray;
+    z-index: -3;
+  }
+
+  &__menu {
+    position: absolute;
+    right: 1px;
+        top: 100%;
+    width: 140px;
+    background-color: whitesmoke;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 3px 3px 3px gray;
+    z-index: -2;
+    overflow: hidden;
+  }
+
+  &__menuOption {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3px;
+    width: 100%;
+    font-weight: bold;
+    color: $accentColor;
+    background-color: whitesmoke;
+    height: 50%;
+    user-select: none;
+    transition: background-color;
+    transition-duration: .2s;
+    text-align: left;
+    cursor: pointer;
+    padding: 3px 10px 2px;
+
+    &:hover {
+      color: whitesmoke;
+      background-color: $accentColor;
+    }
   }
 }

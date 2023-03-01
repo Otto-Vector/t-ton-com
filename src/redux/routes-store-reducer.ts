@@ -61,7 +61,7 @@ const initialState = {
         // '/info'
         info: '/info',
         // '/download-sample-file'
-        test: '/download-sample-file',
+        test: '/test',
     },
 }
 

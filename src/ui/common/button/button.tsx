@@ -1,11 +1,13 @@
 import React from 'react'
 import classes from './button.module.scss'
 
+export type CommonButtonColorMode = 'orange' | 'blue' | 'lightBlue' | 'pink' | 'gray' | 'white'
+        | 'noFill' | 'green' | 'red' | 'whiteBlue' | 'whiteBlueDoc' | 'redAlert' | 'blueAlert' | 'grayAlert'
+
 type OwnProps = {
     disabled?: boolean,
     onClick?: () => void,
-    colorMode?: 'orange' | 'blue' | 'lightBlue' | 'pink' | 'gray' | 'white'
-        | 'noFill' | 'green' | 'red' | 'whiteBlue' | 'whiteBlueDoc' | 'redAlert' | 'blueAlert' | 'grayAlert'
+    colorMode?: CommonButtonColorMode
     type?: 'button' | 'submit' | 'reset'
     title?: string
     rounded?: boolean
