@@ -1,9 +1,11 @@
 import axios from 'axios'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import styles from './download-sample-file.module.scss'
 import {useDownloadFile} from '../../../use-hooks/useDownloadFile'
 import {SizedPreloader} from '../preloader/preloader'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {AppStateType} from '../../../redux/redux-store'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 
 export enum ButtonState {
     Primary = 'Primary',
@@ -12,17 +14,19 @@ export enum ButtonState {
 
 type OwnProps = {
     urlShort: string
-    label: string
+    label?: string
     disabled?: boolean
 }
 
-export const DownloadSampleFile: React.FC<OwnProps> = ( { urlShort, label, disabled = false } ) => {
+export const DownloadSampleFile: React.FC<OwnProps> = (
+    { children, urlShort, label, disabled = false } ) => {
     const [ buttonState, setButtonState ] = useState<ButtonState>(
         ButtonState.Primary,
     )
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
     const serverPlusUrlShort = currentURL + urlShort
     const [ showAlert, setShowAlert ] = useState<boolean>(false)
+    const dispatch = useDispatch()
 
     const preDownloading = () => setButtonState(ButtonState.Loading)
     const postDownloading = () => setButtonState(ButtonState.Primary)
@@ -51,18 +55,24 @@ export const DownloadSampleFile: React.FC<OwnProps> = ( { urlShort, label, disab
         getFileName: getFileName(urlShort),
     })
 
+    useEffect(() => {
+        if (showAlert) {
+            dispatch<any>(textAndActionGlobalModal({
+                title: 'Внимание!',
+                text: [ 'Не получилось загрузить файл!', 'Файл: ' + getFileName(urlShort)() ],
+            }))
+
+            setShowAlert(false)
+        }
+    }, [ showAlert ])
+
     return (
         <>
             <a href={ url } download={ name } style={ { display: 'none' } } ref={ ref }/>
-            <span onClick={ disabled ? () => null : download }>
-                { buttonState === ButtonState.Loading
-                    ? <span><SizedPreloader sizeHW={ '15px' }/></span>
-                    : ( showAlert
-                            ? <span style={ { color: 'red' } }> { 'Не получилось загрузить файл!' } </span>
-                            : label
-                    )
-                }
-            </span>
+            <div className={ styles.downloadSampleFile }
+                 onClick={ disabled ? () => null : download }>
+                { buttonState === ButtonState.Loading ? <SizedPreloader sizeHW={ '1rem' }/> : children}
+            </div>
         </>
     )
 }

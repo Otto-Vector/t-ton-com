@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import styles from './button-menu-save-load.module.scss'
 import {Button, CommonButtonColorMode} from '../button/button'
 import {MaterialIcon} from '../material-icon/material-icon'
+import {DownloadSampleFile} from '../download-sample-file/download-sample-file'
 
 type OwnProps = {
     titleValue: string
@@ -17,18 +18,20 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
     } ) => {
 
     const [ isOpen, setIsOpen ] = useState(false)
+    const [ isMouseOnMenu, setIsMouseOnMenu ] = useState(false)
 
     const onClick = () => {
         setIsOpen(open => !open)
     }
 
-    return ( <div className={ styles.buttonMenuSaveLoad }
-                  onMouseLeave={ () => {
-                      setIsOpen(false)
-                  } }
-                  onBlur={ () => {
-                      setIsOpen(false)
-                  } }
+    return (
+        <div className={ styles.buttonMenuSaveLoad }
+             onMouseLeave={ () => {
+                 setIsOpen(false)
+             } }
+             onBlur={ () => {
+                 setIsOpen(isMouseOnMenu)
+             } }
         >
             <Button onClick={ onClick } colorMode={ buttonColorMode }>
                 <span className={ styles.buttonMenuSaveLoad__text }>{ titleValue }</span>
@@ -36,15 +39,21 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
             </Button>
             { isOpen && <>
                 <div className={ styles.buttonMenuSaveLoad__lining }/>
-                <div className={ styles.buttonMenuSaveLoad__menu }>
+                <div className={ styles.buttonMenuSaveLoad__menu }
+                     onMouseOver={ () => {
+                         setIsMouseOnMenu(true)
+                     } }
+                >
                     <div className={ styles.buttonMenuSaveLoad__menuOption }>
                         <span>{ 'Загрузить' }</span>
                         <MaterialIcon icon_name={ 'attach_file' }/>
                     </div>
-                    <div className={ styles.buttonMenuSaveLoad__menuOption }>
-                        <span>{ 'Скачать' }</span>
-                        <MaterialIcon icon_name={ 'file_upload' }/>
-                    </div>
+                    <DownloadSampleFile urlShort={ loadUrl }>
+                        <div className={ styles.buttonMenuSaveLoad__menuOption }>
+                            <span>{ 'Скачать' }</span>
+                            <MaterialIcon icon_name={ 'download' }/>
+                        </div>
+                    </DownloadSampleFile>
                 </div>
             </>
             }
