@@ -28,12 +28,12 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
 
     return (
         <div className={ styles.buttonMenuSaveLoad }
-            // onMouseLeave={ () => {
-            //     setIsOpen(false)
-            // } }
-            // onBlur={ () => {
-            //     setIsOpen(isMouseOnMenu)
-            // } }
+            onMouseLeave={ () => {
+                setIsOpen(false)
+            } }
+            onBlur={ () => {
+                setIsOpen(isMouseOnMenu)
+            } }
         >
             <Button onClick={ onClick } colorMode={ buttonColorMode }>
                 <span className={ styles.buttonMenuSaveLoad__text }>{ titleValue }</span>
