@@ -120,10 +120,10 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.options } element={ <ТoAuthRedirect><OptionsSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.requisites + ':newFlag' } element={ <RequisitesForm/> }/>
 
-                        <Route path={ routes.test } element={
-                            <ButtonMenuSaveLoad titleValue={ 'Документы заказчика' } loadUrl={ '#' } onUpload={ () => {
-                                console.log('upload')
-                            } }/> }/>
+                        {/*<Route path={ routes.test } element={*/}
+                        {/*    <ButtonMenuSaveLoad titleValue={ 'Документы заказчика' } loadUrl={ '#' } onUpload={ () => {*/}
+                        {/*        console.log('upload')*/}
+                        {/*    } }/> }/>*/}
                         {/* element={ <AddDriversForm mode={'addDriver'}/> }/>*/ }
                         {/*element={ <AddDriversView idEmployee={ '0ce2d16f-582e-4d49-ac35-e0c8f9c53b06' }/> }/>*/ }
 

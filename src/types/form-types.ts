@@ -499,7 +499,7 @@ export type DocumentsRequestType = {
     },
 
     // Документы груза (содержит строку с путём) (File НА ОТГРУЗ)
-    cargoDocuments?: string | File
+    cargoDocuments?: string
 
     ttnECP: {
         // ТТН или ЭТрН с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)

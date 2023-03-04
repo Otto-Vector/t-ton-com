@@ -106,7 +106,7 @@ const initialState = {
             itineraryList: 'Маршрутный Лист Водителя'
         },
 
-        cargoDocuments: 'Документы груза',
+        cargoDocuments: 'Документы груза+ТН, паспорт, прочее',
 
         ttnECP: {
             header: 'ТТН или ЭТрН с ЭЦП',

@@ -1,41 +1,60 @@
-import React, {useState} from 'react'
+import React, {ChangeEvent, useState} from 'react'
 import styles from './button-menu-save-load.module.scss'
 import {Button, CommonButtonColorMode} from '../button/button'
 import {MaterialIcon} from '../material-icon/material-icon'
 import {DownloadSampleFile} from '../download-sample-file/download-sample-file'
 import {AttachDocumentWrapper} from '../attach-document-wrapper/attach-document-wrapper'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {useDispatch} from 'react-redux'
 
 
 type OwnProps = {
     titleValue: string
-    loadUrl: string
-    onUpload: () => void
+    loadUrl?: string
+    onUpload?: ( event: ChangeEvent<HTMLInputElement> ) => void
     buttonColorMode?: CommonButtonColorMode
+    disabled?: boolean
 }
 
 
 export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
     {
-        titleValue, loadUrl, onUpload, buttonColorMode = 'blue',
+        titleValue, loadUrl, onUpload, buttonColorMode = 'blue', disabled,
     } ) => {
 
     const [ isOpen, setIsOpen ] = useState(false)
     const [ isMouseOnMenu, setIsMouseOnMenu ] = useState(false)
+    const dispatch = useDispatch()
 
     const onClick = () => {
         setIsOpen(open => !open)
     }
 
+    const rewriteAlertOrUpload = ( file: ChangeEvent<HTMLInputElement> ) => {
+        const action = () => {
+            onUpload && onUpload(file)
+        }
+        loadUrl ?
+            dispatch<any>(textAndActionGlobalModal({
+                text: 'Загрузка новых документов, перезатрёт состояние предыдущих, продолжить?',
+                action,
+            }))
+            : action()
+    }
+
     return (
         <div className={ styles.buttonMenuSaveLoad }
-            onMouseLeave={ () => {
-                setIsOpen(false)
-            } }
-            onBlur={ () => {
-                setIsOpen(isMouseOnMenu)
-            } }
+             onMouseLeave={ () => {
+                 setIsOpen(false)
+             } }
+             onBlur={ () => {
+                 setIsOpen(isMouseOnMenu)
+             } }
         >
-            <Button onClick={ onClick } colorMode={ buttonColorMode }>
+            <Button onClick={ onClick }
+                    colorMode={ buttonColorMode }
+                    disabled={ disabled }
+            >
                 <span className={ styles.buttonMenuSaveLoad__text }>{ titleValue }</span>
                 <MaterialIcon style={ { fontWeight: '100' } } icon_name={ 'expand_circle_down' }/>
             </Button>
@@ -46,18 +65,26 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
                          setIsMouseOnMenu(true)
                      } }
                 >
-                    <div className={ styles.buttonMenuSaveLoad__menuOption }>
-                        <AttachDocumentWrapper onChange={ onUpload }>
-                            <span>{ 'Загрузить' }</span>
-                            <MaterialIcon icon_name={ 'attach_file' }/>
-                        </AttachDocumentWrapper>
-                    </div>
-                    <DownloadSampleFile urlShort={ loadUrl }>
+                    { onUpload ?
                         <div className={ styles.buttonMenuSaveLoad__menuOption }>
-                            <span>{ 'Скачать' }</span>
-                            <MaterialIcon icon_name={ 'download' }/>
+                            <AttachDocumentWrapper onChange={
+                                rewriteAlertOrUpload
+                            }>
+                                <span>{ 'Загрузить' }</span>
+                                <MaterialIcon icon_name={ 'attach_file' }/>
+                            </AttachDocumentWrapper>
                         </div>
-                    </DownloadSampleFile>
+                        : null
+                    }
+                    { loadUrl ?
+                        <DownloadSampleFile urlShort={ loadUrl }>
+                            <div className={ styles.buttonMenuSaveLoad__menuOption }>
+                                <span>{ 'Скачать' }</span>
+                                <MaterialIcon icon_name={ 'download' }/>
+                            </div>
+                        </DownloadSampleFile>
+                        : null
+                    }
                 </div>
             </>
             }

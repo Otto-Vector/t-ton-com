@@ -16,6 +16,7 @@ import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {hhMmDdMmFormat} from '../../../utils/date-formats'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {DownloadSampleFile} from '../../common/download-sample-file/download-sample-file'
+import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -81,6 +82,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                             // disabled={ !initialValues.proxyWay?.proxyFreightLoader }
                         >
                             <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
+                                    title={ labels.proxyWay?.proxyFreightLoader }
                                     disabled={ disabledButtonOnMode }
                                     wordWrap
                             />
@@ -169,25 +171,17 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         { hhMmDdMmFormat(initialValuesRequest?.shipmentDate) }
                     </div>
                 </div>
+                {/* <-+-> */ }
                 {/*<div className={ styles.requestFormDocumentRight__infoBreaker }></div>*/ }
                 {/* документы груза */ }
                 <div
                     className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labels.cargoDocuments }</label>
-                    <Button colorMode={ 'whiteBlueDoc' }
-                            disabled={ requestModes.historyMode }
-                    >
-                                <span className={ styles.requestFormDocumentRight__inAttachText }>
-                                    { initialValues.cargoDocuments || 'Загрузить' }</span>
-                        <MaterialIcon icon_name={ 'attach_file' }/>
-                        <input type={ 'file' }
-                               className={ styles.requestFormDocumentRight__hiddenAttachFile }
-                               accept={ '.png, .jpeg, .pdf, .jpg' }
-                               onChange={ buttonsAction.sendUploadDocument }
-                               disabled={ requestModes.historyMode }
-                        />
-                    </Button>
+                        { (labels.cargoDocuments+'').split('+')[0] }</label>
+                    <ButtonMenuSaveLoad titleValue={( labels.cargoDocuments + '' ).split('+').reverse()[0]}
+                                        loadUrl={initialValues.cargoDocuments+'555'}
+                                        onUpload={buttonsAction.sendUploadDocument}
+                    />
                 </div>
             </div>
             {/*/////////ПАНЕЛЬ РАСЧЁТА///2/////////////////////////////*/ }

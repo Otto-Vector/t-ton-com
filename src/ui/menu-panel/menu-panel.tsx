@@ -131,7 +131,8 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
             action: null,
         },
         {
-            route: routes.test,
+            // route: routes.test,
+            route: routes.requestInfo.history + '76',
             // route: routes.addDriver + '60',
             // route: routes.optionsEdit.employees + 'a5e79ad8-b9b0-42ba-8ad3-ba127b22e9c3',
             src: testPNG, title: 'Для тестов отрисовки компонентов',
