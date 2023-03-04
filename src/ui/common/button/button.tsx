@@ -1,21 +1,21 @@
 import React from 'react'
 import classes from './button.module.scss'
 
-export type CommonButtonColorMode = 'orange' | 'blue' | 'lightBlue' | 'pink' | 'gray' | 'white'
+export type CommonButtonColorModeType = 'orange' | 'blue' | 'lightBlue' | 'pink' | 'gray' | 'white'
         | 'noFill' | 'green' | 'red' | 'whiteBlue' | 'whiteBlueDoc' | 'redAlert' | 'blueAlert' | 'grayAlert'
 
 type OwnProps = {
     disabled?: boolean,
     onClick?: () => void,
-    colorMode?: CommonButtonColorMode
+    colorMode?: CommonButtonColorModeType
     type?: 'button' | 'submit' | 'reset'
     title?: string
     rounded?: boolean
-    children?: React.ReactNode
+    // включить перенос слов в кнопке
     wordWrap?: boolean
+    // включить/выключить выбор кнопки при табуляции
     isSelectOnTab?: boolean
-    // кнопка загружает контент
-    download?: boolean
+    // проброс стилей от родительского элемента
     style?: React.CSSProperties
 }
 
@@ -45,4 +45,3 @@ export const Button: React.FC<OwnProps> = (
     }
     </button>
 }
-

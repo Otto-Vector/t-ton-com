@@ -109,27 +109,27 @@ const initialState = {
         cargoDocuments: 'Документы груза + ТН, паспорт, прочее',
 
         ttnECP: {
-            header: 'ТТН или ЭТрН с ЭЦП',
+            header: 'Товарно-Транспортная Накладная',
             customerIsSubscribe: 'Заказчик',
             carrierIsSubscribe: 'Перевозчик',
             consigneeIsSubscribe: 'Грузополучатель',
             documentDownload: 'Загрузить',
         },
         contractECP: {
-            header: 'Договор оказания транспортных услуг с ЭЦП',
+            header: 'Договор оказания транспортных услуг',
             customerIsSubscribe: 'Заказчик',
             carrierIsSubscribe: 'Перевозчик',
             documentDownload: 'Загрузить',
         },
         updECP: {
-            header: 'УПД от Перевозчика для Заказчика с ЭЦП',
+            header: 'УПД от Перевозчика для Заказчика',
             customerIsSubscribe: 'Заказчик',
             carrierIsSubscribe: 'Перевозчик',
             documentDownload: 'Загрузить',
         },
 
         customerToConsigneeContractECP: {
-            header: 'Документы от Заказчика для ГрузоПолучателя с ЭЦП',
+            header: 'Документы от Заказчика для ГрузоПолучателя',
             customerIsSubscribe: 'Заказчик',
             consigneeIsSubscribe: 'Грузополучатель',
             documentDownload: 'Загрузить',

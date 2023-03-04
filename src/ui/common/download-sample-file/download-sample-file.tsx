@@ -70,7 +70,10 @@ export const DownloadSampleFile: React.FC<OwnProps> = (
             <a href={ url } download={ name } style={ { display: 'none' } } ref={ ref }/>
             <div className={ styles.downloadSampleFile }
                  onClick={ disabled ? () => null : download }>
-                { buttonState === ButtonState.Loading ? <SizedPreloader sizeHW={ '1rem' }/> : children}
+                { buttonState === ButtonState.Loading ?
+                    <SizedPreloader sizeHW={ '1em' }/>
+                    : children
+                }
             </div>
         </>
     )

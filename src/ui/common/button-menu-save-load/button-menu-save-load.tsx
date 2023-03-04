@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useState} from 'react'
 import styles from './button-menu-save-load.module.scss'
-import {Button, CommonButtonColorMode} from '../button/button'
+import {Button, CommonButtonColorModeType} from '../button/button'
 import {MaterialIcon} from '../material-icon/material-icon'
 import {DownloadSampleFile} from '../download-sample-file/download-sample-file'
 import {AttachDocumentWrapper} from '../attach-document-wrapper/attach-document-wrapper'
@@ -9,17 +9,17 @@ import {useDispatch} from 'react-redux'
 
 
 type OwnProps = {
-    titleValue: string
+    title: string
     loadUrl?: string
     onUpload?: ( event: ChangeEvent<HTMLInputElement> ) => void
-    buttonColorMode?: CommonButtonColorMode
+    colorMode?: CommonButtonColorModeType
     disabled?: boolean
 }
 
 
 export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
     {
-        titleValue, loadUrl, onUpload, buttonColorMode = 'blue', disabled,
+        title, loadUrl, onUpload, colorMode = 'blue', disabled,
     } ) => {
 
     const [ isOpen, setIsOpen ] = useState(false)
@@ -52,10 +52,10 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
              } }
         >
             <Button onClick={ onClick }
-                    colorMode={ buttonColorMode }
+                    colorMode={ colorMode }
                     disabled={ disabled }
             >
-                <span className={ styles.buttonMenuSaveLoad__text }>{ titleValue }</span>
+                <span className={ styles.buttonMenuSaveLoad__text }>{ title }</span>
                 <MaterialIcon style={ { fontWeight: '100' } } icon_name={ 'expand_circle_down' }/>
             </Button>
             { isOpen && <>
