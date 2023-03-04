@@ -22,7 +22,7 @@ import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from
 export const InfoGlobalToModal: React.FC = () => {
 
     const textToGlobalModal = useSelector(getTextGlobalModalStore)
-    const action = useSelector(getActionGlobalModalStore)
+    const actionOnOk = useSelector(getActionGlobalModalStore)
     const navToOnOk = useSelector(getNavigateToOkGlobalModalStore)
     const navToOnCancel = useSelector(getNavigateToCancelGlobalModalStore)
     const title = useSelector(getTitleGlobalModalStore)
@@ -47,19 +47,17 @@ export const InfoGlobalToModal: React.FC = () => {
 
     const onOkHandle = () => {
         onCloseLocal()
-        console.log('ok')
         // выполняем прокинутый экшон (если он есть)
-        action && action()
+        actionOnOk && actionOnOk()
         navToOnOk && navigate(navToOnOk)
     }
 
     const onCancelHandle = () => {
-        console.log('close')
         onCloseLocal()
         navToOnCancel && navigate(navToOnCancel)
     }
 
-    const titleHere = title || ( ( action || navToOnOk ) ? 'Вопрос' : 'Информация' )
+    const titleHere = title || ( ( actionOnOk || navToOnOk ) ? 'Вопрос' : 'Информация' )
 
     useEffect(() => {
         setVisible(!!textToGlobalModal)

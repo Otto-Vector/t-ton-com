@@ -64,6 +64,9 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
                      onMouseOver={ () => {
                          setIsMouseOnMenu(true)
                      } }
+                     onMouseLeave={ () => {
+                         setIsMouseOnMenu(false)
+                     } }
                 >
                     { onUpload ?
                         <div className={ styles.buttonMenuSaveLoad__menuOption }>

@@ -131,7 +131,6 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                                     wordWrap
                             />
                         </DownloadSampleFile>
-
                     </div>
                 </div>
             </div>
@@ -148,9 +147,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         { initialValuesRequest.cargoWeight }
                     </div>
                 </div>
-                {/* <-+-> */ }
-                {/*<div className={ styles.requestFormDocumentRight__infoBreaker }></div>*/ }
-                {/* цена по заявке */ }
+                {/* Цена по заявке */ }
                 <div
                     className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
@@ -171,30 +168,25 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         { hhMmDdMmFormat(initialValuesRequest?.shipmentDate) }
                     </div>
                 </div>
-                {/* <-+-> */ }
-                {/*<div className={ styles.requestFormDocumentRight__infoBreaker }></div>*/ }
-                {/* документы груза */ }
+                {/* Документы груза */ }
                 <div
                     className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { (labels.cargoDocuments+'').split('+')[0] }</label>
-                    <ButtonMenuSaveLoad titleValue={( labels.cargoDocuments + '' ).split('+').reverse()[0]}
-                                        loadUrl={initialValues.cargoDocuments+'555'}
-                                        onUpload={buttonsAction.sendUploadDocument}
+                        { ( labels.cargoDocuments + '' ).split('+')[0] }</label>
+                    <ButtonMenuSaveLoad titleValue={ ( labels.cargoDocuments + '' ).split('+').reverse()[0] }
+                                        loadUrl={ initialValues.cargoDocuments + '555' }
+                                        onUpload={ buttonsAction.sendUploadDocument }
+                                        disabled={ disabledButtonOnMode }
                     />
                 </div>
             </div>
-            {/*/////////ПАНЕЛЬ РАСЧЁТА///2/////////////////////////////*/ }
-            <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
-                + styles.requestFormDocumentRight__inputsPanel_duo }>
-
-
-            </div>
+            {/*--<->--*/ }
             <div className={ styles.requestFormDocumentRight__line }></div>
             {/*/////////ТТН или ЭТрН с ЭЦП////////////////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
                     { labels.ttnECP.header }</label>
+                <InfoButtonToModal textToModal={ modalsText.ttnECP } mode={'inForm'}/>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
                         <Button colorMode={ !initialValues.ttnECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
@@ -215,24 +207,23 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 </div>
 
             </div>
-            <div className={ styles.requestFormDocumentRight__documentsPanel }>
-                <div className={ styles.requestFormDocumentRight__buttonItem }>
-                    <Button colorMode={ 'whiteBlueDoc' }
-                            disabled={ requestModes.historyMode }
-                    >
-                                <span className={ styles.requestFormDocumentRight__inAttachText }>
-                                    { labels.ttnECP?.documentDownload }</span>
-                        <MaterialIcon icon_name={ 'attach_file' }/>
-                        <input type={ 'file' }
-                               className={ styles.requestFormDocumentRight__hiddenAttachFile }
-                               accept={ '.png, .jpeg, .pdf, .jpg' }
-                               onChange={ buttonsAction.sendTtnECPFile }
-                               disabled={ requestModes.historyMode }
-                        />
-                    </Button>
-                    <InfoButtonToModal textToModal={ modalsText.ttnECP }/>
-                </div>
-            </div>
+            {/*<div className={ styles.requestFormDocumentRight__documentsPanel }>*/ }
+            {/*    <div className={ styles.requestFormDocumentRight__buttonItem }>*/ }
+            {/*        <Button colorMode={ 'whiteBlueDoc' }*/ }
+            {/*                disabled={ requestModes.historyMode }*/ }
+            {/*        >*/ }
+            {/*                    <span className={ styles.requestFormDocumentRight__inAttachText }>*/ }
+            {/*                        { labels.ttnECP?.documentDownload }</span>*/ }
+            {/*            <MaterialIcon icon_name={ 'attach_file' }/>*/ }
+            {/*            <input type={ 'file' }*/ }
+            {/*                   className={ styles.requestFormDocumentRight__hiddenAttachFile }*/ }
+            {/*                   accept={ '.png, .jpeg, .pdf, .jpg' }*/ }
+            {/*                   onChange={ buttonsAction.sendTtnECPFile }*/ }
+            {/*                   disabled={ requestModes.historyMode }*/ }
+            {/*            />*/ }
+            {/*        </Button>*/ }
+            {/*    </div>*/ }
+            {/*</div>*/ }
             {/*/////////Договор оказания транспортных услуг с ЭЦП//////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
