@@ -49,47 +49,30 @@ $input--disabled-font-color: $mainFontColor;
   }
 }
 
-// добавление иконок на оболочку
-.search:after, .clearSearch:before {
-  @include addMaterialAfter('');
-}
-
 // манипуляции с иконкой очистки поля
 .clearSearch {
   position: absolute;
   background-color: transparent;
+  color: gray;
   @include size($input--font-size);
   right: rem(10);
-  top: $input--padding-top+4px; // padding-top +1
-  transition-property: transform;
-  transform: rotate(0);
+  top: calc(50% - .5em);
+  transition-property: transform, opacity;
   transition-duration: .25s;
   cursor: pointer;
   opacity: .6;
-  will-change: transform;
-
-  //&:before {
-  //  top: 0;
-  //  right: 0;
-  //  content: 'close';
-  //}
+  will-change: transform, opacity;
 
   &:hover {
     transform: scale(1.2);
+    opacity: .6;
   }
 
   &_unfocused {
     opacity: .15;
-    //cursor: default;
   }
 }
 
-//// добавление 2-ой иконки со значком справа или слева
-//.search:after {
-//    cursor: unset;
-//    opacity: .5;
-//    content: 'search';
-//}
 
 // обработка самого инпута
 .input {
@@ -176,5 +159,3 @@ $input--disabled-font-color: $mainFontColor;
     bottom: -14px;
   }
 }
-
-

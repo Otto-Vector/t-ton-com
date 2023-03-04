@@ -11,9 +11,10 @@ export const SelectorStyles = ( isError: boolean ): StylesConfig<SelectOptionsTy
         maxWidth: '600px',
     } ),
     menuList: ( baseStyles ) => ( { ...baseStyles, margin: 0, padding: 0 } ),
-    dropdownIndicator: ( baseStyles ) => ( { ...baseStyles, padding: '0' } ),
+    dropdownIndicator: ( baseStyles ) => ( { ...baseStyles, padding: 0 } ),
     indicatorSeparator: ( baseStyles ) => ( { ...baseStyles, display: 'none' } ),
-    indicatorsContainer: ( baseStyles ) => ( { ...baseStyles, padding: '0' } ),
+    indicatorsContainer: ( baseStyles ) => ( { ...baseStyles, padding: 0 } ),
+    clearIndicator:( baseStyles ) => ( { ...baseStyles, padding: 0 } ),
     control: ( baseStyles, { isFocused } ) => ( {
         ...baseStyles,
         boxSizing: 'border-box',
@@ -58,6 +59,7 @@ export const SelectorStyles = ( isError: boolean ): StylesConfig<SelectOptionsTy
     } ),
     singleValue: ( baseStyles, { data } ) => ( {
         ...baseStyles,
+        fontSize: '90%',
         color: data?.isDisabled
             ? 'gray'
             : baseStyles.color,
