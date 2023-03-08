@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, {useEffect, useState} from 'react'
-import styles from './download-sample-file.module.scss'
+import styles from './download-sample-file-wrapper.module.scss'
 import {useDownloadFile} from '../../../use-hooks/useDownloadFile'
 import {SizedPreloader} from '../preloader/preloader'
 import {useDispatch, useSelector} from 'react-redux'
@@ -13,17 +13,17 @@ export enum ButtonState {
 }
 
 type OwnProps = {
-    urlShort: string
+    urlShort?: string
     disabled?: boolean
 }
 
-export const DownloadSampleFile: React.FC<OwnProps> = (
+export const DownloadSampleFileWrapper: React.FC<OwnProps> = (
     { children, urlShort, disabled = false } ) => {
     const [ buttonState, setButtonState ] = useState<ButtonState>(
         ButtonState.Primary,
     )
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
-    const serverPlusUrlShort = currentURL + urlShort
+    const serverPlusUrlShort = urlShort ? currentURL + urlShort : ''
     const [ showAlert, setShowAlert ] = useState<boolean>(false)
     const dispatch = useDispatch()
 
@@ -38,8 +38,8 @@ export const DownloadSampleFile: React.FC<OwnProps> = (
         }, 3000)
     }
 
-    const getFileName = ( urlShort: string ) => () => {
-        return urlShort.split('/').reverse()[0]
+    const getFileName = ( urlShort?: string ) => () => {
+        return urlShort?.split('/').reverse()[0] || ''
     }
 
     const downloadFileAxiosToBlob = ( serverPlusUrlShort: string ) => () => {
@@ -68,10 +68,11 @@ export const DownloadSampleFile: React.FC<OwnProps> = (
     return (
         <>
             <a href={ url } download={ name } style={ { display: 'none' } } ref={ ref }/>
-            <div className={ styles.downloadSampleFile }
-                 onClick={ disabled ? () => null : download }>
+            <div className={ styles.downloadSampleFileWrapper }
+                 // блокируем специально, либо при пустом url
+                 onClick={ (!urlShort || disabled) ? () => null : download }>
                 { buttonState === ButtonState.Loading ?
-                    <SizedPreloader sizeHW={ '1em' }/>
+                    <SizedPreloader sizeHW={ '1rem' }/>
                     : children
                 }
             </div>

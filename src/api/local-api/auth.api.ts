@@ -6,6 +6,7 @@ import {InfoResponseType, instanceBack} from './back-instance.api';
 // +7 (938) 693-77-77' был отправлен пароль. ПАРОЛЬ: 2283
 // +7 (646) 546-46-64' был отправлен пароль. ПАРОЛЬ: 3213
 // +7 (904) 888-89-88' был отправлен пароль. ПАРОЛЬ: 5794
+
 export type AuthRequestType = {
     phone: string,
 }
@@ -74,5 +75,3 @@ export const authApi = {
         // 2.	code 449, "failed": "Code is not sent to '{}'".format(saved_personal.phone)
     },
 }
-
-

@@ -15,7 +15,7 @@ import {InfoText} from '../../common/info-text/into-text'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {hhMmDdMmFormat} from '../../../utils/date-formats'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
-import {DownloadSampleFile} from '../../common/download-sample-file/download-sample-file'
+import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
 
 type OwnProps = {
@@ -63,6 +63,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             // initialValues.contractECP.uploadDocument = event
         },
     }
+    // блокировка кнопок загрузки данных
     const disabledButtonOnMode = requestModes.acceptDriverMode || requestModes.createMode
 
     useEffect(() => {
@@ -80,30 +81,24 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     {/* Доверенность грузовладельцу */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' '
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <DownloadSampleFile
-                            urlShort={ initialValues.proxyWay?.proxyFreightLoader + '' }
-                            disabled={ !initialValues.proxyWay?.proxyFreightLoader && !disabledButtonOnMode }
-                        >
+                        <DownloadSampleFileWrapper urlShort={ initialValues.proxyWay?.proxyFreightLoader }>
                             <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
                                     title={ labels.proxyWay?.proxyFreightLoader }
-                                    disabled={ !initialValues.proxyWay?.proxyFreightLoader && !disabledButtonOnMode }
+                                    disabled={ !initialValues.proxyWay?.proxyFreightLoader }
                                     wordWrap
                             />
-                        </DownloadSampleFile>
+                        </DownloadSampleFileWrapper>
                     </div>
                     {/* Доверенность на водителя */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' '
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <DownloadSampleFile
-                            urlShort={ initialValues.proxyWay?.proxyDriver + '' }
-                            disabled={ !initialValues.proxyWay?.proxyDriver && !disabledButtonOnMode }
-                        >
+                        <DownloadSampleFileWrapper urlShort={ initialValues.proxyWay?.proxyDriver }>
                             <Button colorMode={ !initialValues.proxyWay?.proxyDriver ? 'grayAlert' : 'blue' }
                                     title={ labels.proxyWay?.proxyDriver?.toString() }
-                                    disabled={ !initialValues.proxyWay?.proxyDriver && !disabledButtonOnMode }
+                                    disabled={ !initialValues.proxyWay?.proxyDriver }
                                     wordWrap
                             />
-                        </DownloadSampleFile>
+                        </DownloadSampleFileWrapper>
                     </div>
                 </div>
                 <div className={ styles.requestFormDocumentRight__documentsPanel + ' '
@@ -111,30 +106,24 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     {/* Путевой лист водителя */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' '
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <DownloadSampleFile
-                            urlShort={ initialValues.proxyWay?.waybillDriver + '' }
-                            disabled={ !initialValues.proxyWay?.waybillDriver }
-                        >
+                        <DownloadSampleFileWrapper urlShort={ initialValues.proxyWay?.waybillDriver }>
                             <Button colorMode={ !initialValues.proxyWay?.waybillDriver ? 'grayAlert' : 'blue' }
                                     title={ labels.proxyWay?.waybillDriver?.toString() }
-                                    disabled={ disabledButtonOnMode }
+                                    disabled={ !initialValues.proxyWay?.waybillDriver }
                                     wordWrap
                             />
-                        </DownloadSampleFile>
+                        </DownloadSampleFileWrapper>
                     </div>
                     {/* Маршрутный лист водителя */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' '
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <DownloadSampleFile
-                            urlShort={ initialValues.proxyWay?.itineraryList + '' }
-                            disabled={ !initialValues.proxyWay?.itineraryList }
-                        >
+                        <DownloadSampleFileWrapper urlShort={ initialValues.proxyWay?.itineraryList }>
                             <Button colorMode={ !initialValues.proxyWay?.itineraryList ? 'grayAlert' : 'blue' }
                                     title={ labels.proxyWay?.itineraryList?.toString() }
-                                    disabled={ disabledButtonOnMode }
+                                    disabled={ !initialValues.proxyWay?.itineraryList }
                                     wordWrap
                             />
-                        </DownloadSampleFile>
+                        </DownloadSampleFileWrapper>
                     </div>
                 </div>
             </div>

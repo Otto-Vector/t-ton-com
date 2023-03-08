@@ -2,7 +2,7 @@ import React, {ChangeEvent, useState} from 'react'
 import styles from './button-menu-save-load.module.scss'
 import {Button, CommonButtonColorModeType} from '../button/button'
 import {MaterialIcon} from '../material-icon/material-icon'
-import {DownloadSampleFile} from '../download-sample-file/download-sample-file'
+import {DownloadSampleFileWrapper} from '../download-sample-file/download-sample-file-wrapper'
 import {AttachDocumentWrapper} from '../attach-document-wrapper/attach-document-wrapper'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {useDispatch} from 'react-redux'
@@ -80,12 +80,12 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
                         : null
                     }
                     { loadUrl ?
-                        <DownloadSampleFile urlShort={ loadUrl }>
+                        <DownloadSampleFileWrapper urlShort={ loadUrl }>
                             <div className={ styles.buttonMenuSaveLoad__menuOption }>
                                 <span>{ 'Скачать' }</span>
                                 <MaterialIcon icon_name={ 'download' }/>
                             </div>
-                        </DownloadSampleFile>
+                        </DownloadSampleFileWrapper>
                         : null
                     }
                 </div>

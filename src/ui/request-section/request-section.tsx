@@ -2,18 +2,18 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './request-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {To, useLocation, useNavigate, useParams} from 'react-router-dom';
-import {getRoutesStore} from '../../selectors/routes-reselect';
-import {deleteCurrentRequestAPI, getOneRequestsAPI, setNewRequestAPI} from '../../redux/forms/request-store-reducer';
-import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect';
-import {CancelButton} from '../common/cancel-button/cancel-button';
-import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right';
-import {RequestMapCenter} from './request-map-center/request-map-center';
-import {RequestFormLeft} from './request-form-left/request-form-left';
-import {ddMmYearFormat} from '../../utils/date-formats';
-import {SizedPreloader} from '../common/preloader/preloader';
-import {valuesAreEqual} from '../../utils/reactMemoUtils';
-import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect';
+import {To, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {getRoutesStore} from '../../selectors/routes-reselect'
+import {deleteCurrentRequestAPI, getOneRequestsAPI, setNewRequestAPI} from '../../redux/forms/request-store-reducer'
+import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
+import {CancelButton} from '../common/cancel-button/cancel-button'
+import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right'
+import {RequestMapCenter} from './request-map-center/request-map-center'
+import {RequestFormLeft} from './request-form-left/request-form-left'
+import {ddMmYearFormat} from '../../utils/date-formats'
+import {SizedPreloader} from '../common/preloader/preloader'
+import {valuesAreEqual} from '../../utils/reactMemoUtils'
+import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect'
 
 // type OwnProps = { }
 
@@ -64,28 +64,20 @@ export const RequestSection: React.FC = React.memo(() => {
 
     useEffect(() => {// должен сработать ТОЛЬКО один раз
         if (isFirstRender) {
-            activeTab('left')
+            activeTab('right')
             if (requestModes.createMode) {
                 // создаём пустую и записываем номер заявки
                 dispatch<any>(setNewRequestAPI())
             }
             if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
-                // if (initialValues.requestNumber !== +( reqNumber || 0 ))
+                // прогружаем искомую заявку
                 dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
             }
-            if (requestModes.statusMode) { // для прогрузки данных искомого водителя в форму
-                // dispatch<any>(getOneEmployeeFromAPI)
+            if (requestModes.statusMode) {
             }
             setIsFirstRender(false)
         }
     }, [ isFirstRender ])
-
-    // useEffect(()=>{
-    //      if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
-    //             if (initialValues.requestNumber !== +( reqNumber || 0 ))
-    //                 dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
-    //         }
-    // },[])
 
 
     if (!requestModes.createMode && !initialValues.requestNumber) return <div>

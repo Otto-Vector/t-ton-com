@@ -764,6 +764,7 @@ export type OneRequestApiType = {
     proxyFreightLoader?: string
     proxyDriver?: string
     proxyWaybillDriver?: string
+    proxyItineraryList?: string
     cargoDocuments?: string
     ttnECPdocumentDownload?: string
     ttnECPdocumentUpload?: string

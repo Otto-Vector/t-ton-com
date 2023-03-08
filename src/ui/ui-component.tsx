@@ -33,7 +33,7 @@ import {ТoAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redi
 import {getAutologinAuthStore, getIsAuthAuthStore} from '../selectors/auth-reselect'
 import {autoLoginMe} from '../redux/auth-store-reducer'
 import {Page404} from './common/404-page/page-404'
-import {DownloadSampleFile} from './common/download-sample-file/download-sample-file'
+import {DownloadSampleFileWrapper} from './common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from './common/button-menu-save-load/button-menu-save-load'
 
 type OwnProps = {}
