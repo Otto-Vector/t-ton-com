@@ -128,7 +128,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 </div>
             </div>
             <div className={ styles.requestFormDocumentRight__line }></div>
-            {/*/////////ПАНЕЛЬ РАСЧЁТА///1/////////////////////////////*/ }
+            {/*/////////ПАНЕЛЬ РАСЧЁТА////////////////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
                 + styles.requestFormDocumentRight__inputsPanel_trio }>
                 {/* Вес груза */ }

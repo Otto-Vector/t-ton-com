@@ -53,7 +53,7 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
         >
             <Button onClick={ onClick }
                     colorMode={ colorMode }
-                    disabled={ disabled }
+                    disabled={ disabled || !(onUpload || loadUrl)}
             >
                 <span className={ styles.buttonMenuSaveLoad__text }>{ title }</span>
                 <MaterialIcon style={ { fontWeight: '100' } } icon_name={ 'expand_circle_down' }/>
