@@ -12,7 +12,6 @@ import {RequestModesType} from '../request-section'
 
 import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
-import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {hhMmDdMmFormat} from '../../../utils/date-formats'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
@@ -28,8 +27,8 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
         requestModes,
     } ) => {
 
-    const labels = useSelector(getLabelDocumentsRequestValuesStore)
-    const labelsR = useSelector(getLabelRequestStore)
+    const labelsDocumentsTab = useSelector(getLabelDocumentsRequestValuesStore)
+    const labelsRequestHead = useSelector(getLabelRequestStore)
     const initialValues = useSelector(getInitialDocumentsRequestValuesStore)
     const initialValuesRequest = useSelector(getInitialValuesRequestStore)
     const modalsText = useSelector(getInfoTextModalsRequestValuesStore)
@@ -38,7 +37,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
         acceptRequest: () => {
         },
         sendUploadDocument: ( event: ChangeEvent<HTMLInputElement> ) => {
-            if (event.target.files?.length) console.log(event.target.files[0].name)
+            if (event.target.files?.length) {
+                console.log(event.target.files[0].name)
+            }
             // dispatch( setPassportFile( event.target.files[0] ) )
             // initialValues.contractECP.uploadDocument = event
         },
@@ -75,7 +76,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*////////Транспортные документы Сторон//////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.proxyWay.header }</label>
+                    { labelsDocumentsTab.proxyWay.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel + ' '
                     + styles.requestFormDocumentRight__documentsPanel_top }>
                     {/* Доверенность грузовладельцу */ }
@@ -83,7 +84,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <DownloadSampleFileWrapper urlShort={ initialValues.proxyWay?.proxyFreightLoader }>
                             <Button colorMode={ !initialValues.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
-                                    title={ labels.proxyWay?.proxyFreightLoader }
+                                    title={ labelsDocumentsTab.proxyWay?.proxyFreightLoader }
                                     disabled={ !initialValues.proxyWay?.proxyFreightLoader }
                                     wordWrap
                             />
@@ -94,7 +95,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <DownloadSampleFileWrapper urlShort={ initialValues.proxyWay?.proxyDriver }>
                             <Button colorMode={ !initialValues.proxyWay?.proxyDriver ? 'grayAlert' : 'blue' }
-                                    title={ labels.proxyWay?.proxyDriver?.toString() }
+                                    title={ labelsDocumentsTab.proxyWay?.proxyDriver?.toString() }
                                     disabled={ !initialValues.proxyWay?.proxyDriver }
                                     wordWrap
                             />
@@ -108,7 +109,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <DownloadSampleFileWrapper urlShort={ initialValues.proxyWay?.waybillDriver }>
                             <Button colorMode={ !initialValues.proxyWay?.waybillDriver ? 'grayAlert' : 'blue' }
-                                    title={ labels.proxyWay?.waybillDriver?.toString() }
+                                    title={ labelsDocumentsTab.proxyWay?.waybillDriver?.toString() }
                                     disabled={ !initialValues.proxyWay?.waybillDriver }
                                     wordWrap
                             />
@@ -119,7 +120,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <DownloadSampleFileWrapper urlShort={ initialValues.proxyWay?.itineraryList }>
                             <Button colorMode={ !initialValues.proxyWay?.itineraryList ? 'grayAlert' : 'blue' }
-                                    title={ labels.proxyWay?.itineraryList?.toString() }
+                                    title={ labelsDocumentsTab.proxyWay?.itineraryList?.toString() }
                                     disabled={ !initialValues.proxyWay?.itineraryList }
                                     wordWrap
                             />
@@ -135,7 +136,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labelsR.cargoWeight }</label>
+                        { labelsRequestHead.cargoWeight }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
                         { initialValuesRequest.cargoWeight }
                     </div>
@@ -144,7 +145,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labelsR.responsePrice }</label>
+                        { labelsRequestHead.responsePrice }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
                         { initialValuesRequest.responsePrice }
                     </div>
@@ -156,7 +157,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div
                     className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labelsR.uploadTime }</label>
+                        { labelsRequestHead.uploadTime }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
                         { hhMmDdMmFormat(initialValuesRequest?.shipmentDate) }
                     </div>
@@ -165,8 +166,8 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div
                     className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_twoLines }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { ( labels.cargoDocuments + '' ).split('+')[0] }</label>
-                    <ButtonMenuSaveLoad title={ ( labels.cargoDocuments + '' ).split('+').reverse()[0] }
+                        { ( labelsDocumentsTab.cargoDocuments + '' ).split('+')[0] }</label>
+                    <ButtonMenuSaveLoad title={ ( labelsDocumentsTab.cargoDocuments + '' ).split('+').reverse()[0] }
                                         loadUrl={ initialValues.cargoDocuments }
                                         onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendUploadDocument }
                                         disabled={ disabledButtonOnMode }
@@ -178,12 +179,12 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*/////////ТТН или ЭТрН с ЭЦП////////////////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.ttnECP.header }</label>
+                    { labelsDocumentsTab.ttnECP.header }</label>
                 <InfoButtonToModal textToModal={ modalsText.ttnECP } mode={ 'inForm' }/>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     {/* ЗАКАЗЧИК */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <ButtonMenuSaveLoad title={ labels.ttnECP?.customerIsSubscribe }
+                        <ButtonMenuSaveLoad title={ labelsDocumentsTab.ttnECP?.customerIsSubscribe }
                                             colorMode={ !initialValues.ttnECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
                                             loadUrl={ initialValues.ttnECP?.documentDownload }
                                             onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendTtnECPFile }
@@ -192,7 +193,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     </div>
                     {/* ПЕРЕВОЗЧИК */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <ButtonMenuSaveLoad title={ labels.ttnECP?.carrierIsSubscribe }
+                        <ButtonMenuSaveLoad title={ labelsDocumentsTab.ttnECP?.carrierIsSubscribe }
                                             colorMode={ !initialValues.ttnECP?.carrierIsSubscribe ? 'grayAlert' : 'blue' }
                                             loadUrl={ initialValues.ttnECP?.documentDownload }
                                             onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendTtnECPFile }
@@ -201,7 +202,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     </div>
                     {/* ГРУЗОПОЛУЧАТЕЛЬ */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem }>
-                        <ButtonMenuSaveLoad title={ labels.ttnECP?.consigneeIsSubscribe }
+                        <ButtonMenuSaveLoad title={ labelsDocumentsTab.ttnECP?.consigneeIsSubscribe }
                                             colorMode={ !initialValues.ttnECP?.consigneeIsSubscribe ? 'grayAlert' : 'blue' }
                                             loadUrl={ initialValues.ttnECP?.documentDownload }
                                             onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendTtnECPFile }
@@ -214,12 +215,12 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <InfoButtonToModal textToModal={ modalsText.contractECP } mode={ 'inForm' }/>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.contractECP?.header }</label>
+                    { labelsDocumentsTab.contractECP?.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     {/* ЗАКАЗЧИК */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' ' +
                         styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <ButtonMenuSaveLoad title={ labels.contractECP?.customerIsSubscribe }
+                        <ButtonMenuSaveLoad title={ labelsDocumentsTab.contractECP?.customerIsSubscribe }
                                             colorMode={ !initialValues.contractECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
                                             loadUrl={ initialValues.contractECP?.documentDownload }
                                             onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendContractECPFile }
@@ -229,7 +230,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     {/* ПЕРЕВОЗЧИК */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' ' +
                         styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <ButtonMenuSaveLoad title={ labels.contractECP?.carrierIsSubscribe }
+                        <ButtonMenuSaveLoad title={ labelsDocumentsTab.contractECP?.carrierIsSubscribe }
                                             colorMode={ !initialValues.contractECP?.carrierIsSubscribe ? 'grayAlert' : 'blue' }
                                             loadUrl={ initialValues.contractECP?.documentDownload }
                                             onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendContractECPFile }
@@ -242,12 +243,12 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <InfoButtonToModal textToModal={ modalsText.updECP } mode={ 'inForm' }/>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.updECP.header }</label>
+                    { labelsDocumentsTab.updECP.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     {/* ЗАКАЗЧИК */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' ' +
                         styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <ButtonMenuSaveLoad title={ labels.updECP?.customerIsSubscribe }
+                        <ButtonMenuSaveLoad title={ labelsDocumentsTab.updECP?.customerIsSubscribe }
                                             colorMode={ !initialValues.updECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
                                             loadUrl={ initialValues.updECP?.documentDownload }
                                             onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendUpdECPFile }
@@ -257,7 +258,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     {/* ПЕРЕВОЗЧИК */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' ' +
                         styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <ButtonMenuSaveLoad title={ labels.updECP?.carrierIsSubscribe }
+                        <ButtonMenuSaveLoad title={ labelsDocumentsTab.updECP?.carrierIsSubscribe }
                                             colorMode={ !initialValues.updECP?.carrierIsSubscribe ? 'grayAlert' : 'blue' }
                                             loadUrl={ initialValues.updECP?.documentDownload }
                                             onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendUpdECPFile }
@@ -270,26 +271,28 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__inputsPanel }>
                 <InfoButtonToModal textToModal={ modalsText.customerToConsigneeContractECP } mode={ 'inForm' }/>
                 <label className={ styles.requestFormDocumentRight__label }>
-                    { labels.customerToConsigneeContractECP?.header }</label>
+                    { labelsDocumentsTab.customerToConsigneeContractECP?.header }</label>
                 <div className={ styles.requestFormDocumentRight__documentsPanel }>
                     {/* ЗАКАЗЧИК */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' ' +
                         styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <ButtonMenuSaveLoad title={ labels.customerToConsigneeContractECP?.customerIsSubscribe }
-                                            colorMode={ !initialValues.customerToConsigneeContractECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
-                                            loadUrl={ initialValues.customerToConsigneeContractECP?.documentDownload }
-                                            onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendCustomerToConsigneeECPFile }
-                                            disabled={ disabledButtonOnMode }
+                        <ButtonMenuSaveLoad
+                            title={ labelsDocumentsTab.customerToConsigneeContractECP?.customerIsSubscribe }
+                            colorMode={ !initialValues.customerToConsigneeContractECP?.customerIsSubscribe ? 'grayAlert' : 'blue' }
+                            loadUrl={ initialValues.customerToConsigneeContractECP?.documentDownload }
+                            onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendCustomerToConsigneeECPFile }
+                            disabled={ disabledButtonOnMode }
                         />
                     </div>
                     {/* ПЕРЕВОЗЧИК */ }
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' ' +
                         styles.requestFormDocumentRight__buttonItem_twoLines }>
-                        <ButtonMenuSaveLoad title={ labels.customerToConsigneeContractECP?.consigneeIsSubscribe }
-                                            colorMode={ !initialValues.customerToConsigneeContractECP?.consigneeIsSubscribe ? 'grayAlert' : 'blue' }
-                                            loadUrl={ initialValues.customerToConsigneeContractECP?.documentDownload }
-                                            onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendCustomerToConsigneeECPFile }
-                                            disabled={ disabledButtonOnMode }
+                        <ButtonMenuSaveLoad
+                            title={ labelsDocumentsTab.customerToConsigneeContractECP?.consigneeIsSubscribe }
+                            colorMode={ !initialValues.customerToConsigneeContractECP?.consigneeIsSubscribe ? 'grayAlert' : 'blue' }
+                            loadUrl={ initialValues.customerToConsigneeContractECP?.documentDownload }
+                            onUpload={ requestModes.historyMode ? undefined : buttonsAction.sendCustomerToConsigneeECPFile }
+                            disabled={ disabledButtonOnMode }
                         />
                     </div>
                 </div>
@@ -301,7 +304,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__panelButton }>
                         <Button colorMode={ 'gray' }
                                 wordWrap rounded
-                                title={ labelsR.localStatus?.paymentHasBeenReceived }
+                                title={ labelsRequestHead.localStatus?.paymentHasBeenReceived }
                                 onClick={ () => {
                                 } }
                         />
@@ -310,7 +313,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         <Button colorMode={ 'gray' }
                                 wordWrap
                                 rounded
-                                title={ labelsR.localStatus?.cargoHasBeenReceived }
+                                title={ labelsRequestHead.localStatus?.cargoHasBeenReceived }
                                 onClick={ () => {
                                 } }
                         />

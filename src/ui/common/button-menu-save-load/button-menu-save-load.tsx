@@ -6,6 +6,7 @@ import {DownloadSampleFileWrapper} from '../download-sample-file/download-sample
 import {AttachDocumentWrapper} from '../attach-document-wrapper/attach-document-wrapper'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {useDispatch} from 'react-redux'
+import {parseToNormalMoney} from '../../../utils/parsers'
 
 
 type OwnProps = {
@@ -14,12 +15,15 @@ type OwnProps = {
     onUpload?: ( event: ChangeEvent<HTMLInputElement> ) => void
     colorMode?: CommonButtonColorModeType
     disabled?: boolean
+    maximumSizeUpload?: number
 }
 
 
 export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
     {
-        title, loadUrl, onUpload, colorMode = 'blue', disabled,
+        title, loadUrl, onUpload, disabled,
+        colorMode = 'blue',
+        maximumSizeUpload = 5242880,
     } ) => {
 
     const [ isOpen, setIsOpen ] = useState(false)
@@ -30,16 +34,26 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
         setIsOpen(open => !open)
     }
 
-    const rewriteAlertOrUpload = ( file: ChangeEvent<HTMLInputElement> ) => {
+    const rewriteAlertOrUpload = ( changeEvent: ChangeEvent<HTMLInputElement> ) => {
         const action = () => {
-            onUpload && onUpload(file)
+            onUpload && onUpload(changeEvent)
         }
-        loadUrl ?
+        if (changeEvent.target?.files?.length &&
+            changeEvent.target.files[0].size > maximumSizeUpload) {
             dispatch<any>(textAndActionGlobalModal({
-                text: 'Загрузка новых документов, перезатрёт состояние предыдущих, продолжить?',
-                action,
+                text: [ 'Размер файла больше необходимого минимума для сервера:',
+                    `${ parseToNormalMoney(maximumSizeUpload / 1024) } Kb`,
+                    'Измените размер файла или выберите файл другого размера',
+                ],
             }))
-            : action()
+        } else {
+            loadUrl ?
+                dispatch<any>(textAndActionGlobalModal({
+                    text: 'Загрузка новых документов, перезатрёт состояние предыдущих, продолжить?',
+                    action,
+                }))
+                : action()
+        }
     }
 
     return (
@@ -53,7 +67,7 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
         >
             <Button onClick={ onClick }
                     colorMode={ colorMode }
-                    disabled={ disabled || !(onUpload || loadUrl)}
+                    disabled={ disabled || !( onUpload || loadUrl ) }
             >
                 <span className={ styles.buttonMenuSaveLoad__text }>{ title }</span>
                 <MaterialIcon style={ { fontWeight: '100' } } icon_name={ 'expand_circle_down' }/>

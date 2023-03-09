@@ -11,7 +11,7 @@ export const AttachDocumentWrapper: React.FC<OwnProps> = ( { children, onChange 
             { children }
             <input type={ 'file' }
                    className={ styles.attachDocumentButton__hiddenInput }
-                   accept={ '.png, .jpeg, .jpg, .bmp, .doc, .docx, .xls, .xlsx, .xml' }
+                   accept={ '.png, .jpeg, .jpg, .bmp, .doc, .docx, .xls, .xlsx, .xml, .rar, .zip' }
                    title={''}
                    onChange={ ( e ) => {
                        onChange(e)

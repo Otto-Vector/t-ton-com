@@ -28,7 +28,7 @@
   color: $accentColor !important;
 
   &::after {
-    @include addMaterialAfter('highlight_off', 9px, 9px);
+    //@include addMaterialAfter('highlight_off', 9px, 9px);
   }
 
 }

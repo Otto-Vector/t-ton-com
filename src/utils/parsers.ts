@@ -62,6 +62,7 @@ export const parsePseudoLatinCharsAndNumbers = ( val: parsePropType ) =>
 export const parseLatinCharsToRus = ( val: parsePropType ) =>
     val?.replace(/[ABEKMHOPCTYXabekmhopctyx]/g, enCharToRusChar) || ''
 ////////////////////////////////////////////////////////////////////////
+// отображение денег с разделителем тысяч пробелом
  export const parseToNormalMoney = ( val: number ) =>
      (+val||0).toFixed(1)
          .replace(/\d(?=(\d{3})+\.)/g, '$&,')

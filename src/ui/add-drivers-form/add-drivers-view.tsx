@@ -18,10 +18,11 @@ import {employeesStoreActions} from '../../redux/options/employees-store-reducer
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
-import {Preloader} from '../common/preloader/preloader';
-import {requestStoreActions} from '../../redux/forms/request-store-reducer';
-import {Button} from '../common/button/button';
-import {AppStateType} from '../../redux/redux-store';
+import {Preloader} from '../common/preloader/preloader'
+import {requestStoreActions} from '../../redux/forms/request-store-reducer'
+import {Button} from '../common/button/button'
+import {AppStateType} from '../../redux/redux-store'
+import {MaterialIcon} from '../common/material-icon/material-icon'
 
 
 type OwnProps = {
@@ -80,6 +81,16 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
 
     return (
         <div className={ styles.addDriversForm__wrapper }>
+            {/* иконка под невидимую закрывалку на балуне яндекс карты */}
+            <MaterialIcon icon_name={ 'highlight_off' }
+                          style={ {
+                              position: 'absolute',
+                              top: '7px',
+                              right: '7px',
+                              fontSize: '20px',
+                              color: 'rgb(2, 62, 138)',
+                          } }
+            />
             <h4 className={ styles.addDriversForm__header }>{
                 `Заявка ${ oneRequest?.requestNumber } от ${ ddMmYearFormat(oneRequest?.requestDate) }`
             }</h4>
