@@ -2,10 +2,9 @@ import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
 // сейчас они прописаны на ui компоненте
-// import 'antd/lib/style/modal-animations.css' // используем core стили antd
-import './modal-animations.css'
+// import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
+import './modal-animations.css' // вырезал нужные анимации для модалки
 import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфо-окон
-import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
 import './info-global-to-modal.scss'
 import {Modal} from 'antd'
 import {
@@ -18,8 +17,9 @@ import {
 } from '../../../selectors/utils/global-modal-reselect'
 import {useNavigate} from 'react-router-dom'
 import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from-array-to-paragraph'
-import {Button} from '../button/button'
 import {MaterialIcon} from '../material-icon/material-icon'
+import {ModalFooter} from './modal-footer/modal-footer'
+import {ModalCloseIcon} from './modal-close-icon/modal-close-icon'
 
 
 export const InfoGlobalToModal: React.FC = () => {
@@ -60,23 +60,10 @@ export const InfoGlobalToModal: React.FC = () => {
         navToOnCancel && navigate(navToOnCancel)
     }
 
-    const titleHere = title || ( ( actionOnOk || navToOnOk ) ? 'Вопрос' : 'Информация' )
-
-    const footer =
-        <div style={ { display: 'flex', justifyContent: 'flex-end', height: '30px'} }>
-            { titleHere !== 'Информация' ?
-                <Button title={ 'Отмена' }
-                        colorMode={ 'blueAlert' }
-                        onClick={ onCancelHandle }
-                        style={ { width: '100px', margin: '0 5px' } }/>
-                : null }
-            <Button title={ 'Ok' }
-                    colorMode={ 'blue' }
-                    onClick={ onOkHandle }
-                    style={ { width: '100px', margin: '0 5px' } }/>
-        </div>
+    const titleHere: string | 'Вопрос' | 'Информация' = title || ( ( actionOnOk || navToOnOk ) ? 'Вопрос' : 'Информация' )
 
     useEffect(() => {
+        // активируется при наличии данных
         setVisible(!!textToGlobalModal)
     }, [ textToGlobalModal ])
 
@@ -92,14 +79,17 @@ export const InfoGlobalToModal: React.FC = () => {
 
     return (
         <Modal title={ titleHere }
-               visible={ visible }
-               onOk={ onOkHandle }
-               onCancel={ onCancelHandle }
-               className={ 'modalStyle' }
-               closeIcon={ <MaterialIcon icon_name={ 'highlight_off' }
-                                         style={ { fontSize: '23px', color: '#023e8a' } }/> }
             // centered={ true }
-               footer={ footer }
+               visible={ visible }
+               onCancel={ onCancelHandle }
+            // onOk={ onOkHandle }
+               className={ 'modalStyle' }
+               closeIcon={ ModalCloseIcon }
+               footer={ ModalFooter({
+                   onCancelHandle,
+                   onOkHandle,
+                   isCancelButtonEnable: titleHere !== 'Информация',
+               }) }
         >
             { textFromArrayToParagraph(textToGlobalModal) }
         </Modal>

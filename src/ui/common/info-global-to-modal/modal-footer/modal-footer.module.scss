@@ -1,0 +1,10 @@
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  height: 30px;
+
+  &__button {
+    width: 100px;
+    margin: 0 5px;
+  }
+}
