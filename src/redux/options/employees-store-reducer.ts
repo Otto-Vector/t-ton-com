@@ -322,7 +322,7 @@ export const getOneFiredEmployeeFromAPI = ( idEmployee: string ): EmployeesStore
                     await dispatch(textAndActionGlobalModal({
                         text: [
                             'Сотрудник с данным паспортом приписан к другой оранизации: ' +
-                            ( organization?.organizationName ? organization.organizationName.toUpperCase() : '' ),
+                            `<b>${( organization?.organizationName ? organization.organizationName.toUpperCase() : '' )}</b>`,
                             'Необходимо его уволить (УДАЛИТЬ) в другой организации, чтобы приписать к вашей',
                         ],
                         navigateOnOk: options,

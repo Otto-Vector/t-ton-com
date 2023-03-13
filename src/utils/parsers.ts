@@ -95,6 +95,9 @@ export const stringToCoords = ( coordsString: parsePropType ): [ number, number 
 export const coordsToString = ( coordsNumArray?: [ number, number ] ): string =>
     coordsNumArray?.map(e => e.toFixed(6)).join(', ') || 'неверные входные данные'
 
+// удалить все HTML тэги из строки
+export const removeAllHTMLTags = ( text?: string ): string | undefined =>
+    text?.replace( /<.+?>/g, '' ).replace( /&nbsp;/ig, '' )
 
 export const syncParsers = {
     // parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces

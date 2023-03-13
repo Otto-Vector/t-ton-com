@@ -17,7 +17,6 @@ import {
 } from '../../../selectors/utils/global-modal-reselect'
 import {useNavigate} from 'react-router-dom'
 import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from-array-to-paragraph'
-import {MaterialIcon} from '../material-icon/material-icon'
 import {ModalFooter} from './modal-footer/modal-footer'
 import {ModalCloseIcon} from './modal-close-icon/modal-close-icon'
 
@@ -89,9 +88,10 @@ export const InfoGlobalToModal: React.FC = () => {
                    onCancelHandle,
                    onOkHandle,
                    isCancelButtonEnable: titleHere !== 'Информация',
-               }) }
+               })}
         >
             { textFromArrayToParagraph(textToGlobalModal) }
+            {/*{ textToGlobalModal }*/}
         </Modal>
     )
 }

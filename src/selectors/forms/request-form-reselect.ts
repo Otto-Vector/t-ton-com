@@ -54,7 +54,7 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
         const recipientInn = ( recipientUser?.innNumber || recipient?.innNumber )
         const recipientLegalAddress = ( recipientUser?.legalAddress || recipient?.address )
         const driverCanCargoWeight = ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) )
-
+        const boldWrapper = (text: string): string=> `<b>${text}</b>`
 
         // создаёт новый объект из старого после обработки значений ключа
         return Object.fromEntries(Object
@@ -62,60 +62,60 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
                 /* ЗАКАЗЧИК */
                 customerData: [
                     customerUser?.organizationName,
-                    customerUser?.innNumber && 'ИНН: ' + customerUser.innNumber,
-                    customerUser?.legalAddress && 'Юр.Адрес: ' + customerUser.legalAddress,
+                    customerUser?.innNumber && boldWrapper('ИНН: ') + customerUser.innNumber,
+                    customerUser?.legalAddress && boldWrapper('Юр.Адрес: ') + customerUser.legalAddress,
                 ],
                 customerPhoneData: [
-                    customerUser?.phoneDirector && 'Телефон директора: ' + customerUser.phoneDirector,
-                    customerUser?.phoneAccountant && 'Телефон бухгалтера: ' + customerUser.phoneAccountant,
-                    customerUser?.description && 'Телефон сотрудника: ' + customerUser.description,
+                    customerUser?.phoneDirector && boldWrapper('Телефон директора: ') + customerUser.phoneDirector,
+                    customerUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + customerUser.phoneAccountant,
+                    customerUser?.description && boldWrapper('Телефон сотрудника: ') + customerUser.description,
                 ],
                 /* ГРУЗООТПРАВИТЕЛЬ */
                 shipperSenderData: [
                     senderUser?.organizationName || sender?.organizationName,
-                    senderInnNumber && 'ИНН: ' + senderInnNumber,
-                    senderLegalAddress && 'Юр.Адрес: ' + senderLegalAddress,
-                    sender?.description && 'Адрес отправления: ' + sender.description,
+                    senderInnNumber && boldWrapper('ИНН: ') + senderInnNumber,
+                    senderLegalAddress && boldWrapper('Юр.Адрес: ') + senderLegalAddress,
+                    sender?.description && boldWrapper('Адрес отправления: ') + sender.description,
                 ],
                 shipperSenderPhoneData: [
-                    senderUser?.phoneDirector && 'Телефон директора: ' + senderUser.phoneDirector,
-                    senderUser?.phoneAccountant && 'Телефон бухгалтера: ' + senderUser.phoneAccountant,
-                    sender?.shipperTel && 'Телефон сотрудника: ' + sender.shipperTel,
+                    senderUser?.phoneDirector && boldWrapper('Телефон директора: ') + senderUser.phoneDirector,
+                    senderUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + senderUser.phoneAccountant,
+                    sender?.shipperTel && boldWrapper('Телефон сотрудника: ') + sender.shipperTel,
                 ],
                 /* ГРУЗОПОЛУЧАТЕЛЬ */
                 consigneeRecipientData: [
                     recipientUser?.organizationName || recipient?.organizationName,
-                    recipientInn && 'ИНН: ' + recipientInn,
-                    recipientLegalAddress && 'Юр.Адрес: ' + recipientLegalAddress,
-                    recipient?.description && 'Адрес прибытия: ' + recipient.description,
+                    recipientInn && boldWrapper('ИНН: ') + recipientInn,
+                    recipientLegalAddress && boldWrapper('Юр.Адрес: ') + recipientLegalAddress,
+                    recipient?.description && boldWrapper('Адрес прибытия: ') + recipient.description,
                 ],
                 consigneeRecipientPhoneData: [
-                    recipientUser?.phoneDirector && 'Телефон директора: ' + recipientUser.phoneDirector,
-                    recipientUser?.phoneAccountant && 'Телефон бухгалтера: ' + recipientUser.phoneAccountant,
-                    recipient?.consigneesTel && 'Телефон сотрудника: ' + recipient.consigneesTel,
+                    recipientUser?.phoneDirector && boldWrapper('Телефон директора: ') + recipientUser.phoneDirector,
+                    recipientUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + recipientUser.phoneAccountant,
+                    recipient?.consigneesTel && boldWrapper('Телефон сотрудника: ') + recipient.consigneesTel,
                 ],
                 /* АКЦЕПТИРОВАННЫЙ ПЕРЕВОЗЧИК */
                 acceptedCarrierData: [
                     requestCarrierUser?.organizationName,
-                    requestCarrierUser?.innNumber && 'ИНН: ' + requestCarrierUser?.innNumber,
-                    requestCarrierUser?.legalAddress && 'Юр.Адрес: ' + requestCarrierUser?.legalAddress,
+                    requestCarrierUser?.innNumber && boldWrapper('ИНН: ') + requestCarrierUser?.innNumber,
+                    requestCarrierUser?.legalAddress && boldWrapper('Юр.Адрес: ') + requestCarrierUser?.legalAddress,
                 ],
                 acceptedCarrierPhoneData: [
-                    requestCarrierUser?.phoneDirector && 'Телефон директора: ' + requestCarrierUser.phoneDirector,
-                    requestCarrierUser?.phoneAccountant && 'Телефон бухгалтера: ' + requestCarrierUser.phoneAccountant,
-                    requestCarrierUser?.description && 'Телефон сотрудника: ' + requestCarrierUser.description,
+                    requestCarrierUser?.phoneDirector && boldWrapper('Телефон директора: ') + requestCarrierUser.phoneDirector,
+                    requestCarrierUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + requestCarrierUser.phoneAccountant,
+                    requestCarrierUser?.description && boldWrapper('Телефон сотрудника: ') + requestCarrierUser.description,
                 ],
                 /* ВОДИТЕЛЬ */
                 acceptedEmployeeData: [
-                    responseEmployee?.employeeFIO && 'ФИО водителя: ' + responseEmployee.employeeFIO,
-                    responseTransport?.transportModel && 'Модель транспорта: ' + responseTransport.transportModel,
-                    responseTransport?.transportNumber && 'Номер транспорта: ' + responseTransport.transportNumber,
-                    responseTrailer?.trailerModel && 'Модель прицепа: ' + responseTrailer.trailerModel,
-                    driverCanCargoWeight && 'Может перевезти: ' + driverCanCargoWeight + ' тн',
+                    responseEmployee?.employeeFIO && boldWrapper('ФИО водителя: ') + responseEmployee.employeeFIO,
+                    responseTransport?.transportModel && boldWrapper('Модель транспорта: ') + responseTransport.transportModel,
+                    responseTransport?.transportNumber && boldWrapper('Номер транспорта: ') + responseTransport.transportNumber,
+                    responseTrailer?.trailerModel && boldWrapper('Модель прицепа: ') + responseTrailer.trailerModel,
+                    driverCanCargoWeight && boldWrapper('Может перевезти: ') + driverCanCargoWeight + ' тн',
                 ],
                 acceptedEmployeePhoneData: [
-                    responseEmployee?.employeeFIO && 'ФИО: ' + responseEmployee.employeeFIO,
-                    responseEmployee?.employeePhoneNumber && 'Телефон: ' + responseEmployee.employeePhoneNumber,
+                    responseEmployee?.employeeFIO && boldWrapper('ФИО водителя: ') + responseEmployee.employeeFIO,
+                    responseEmployee?.employeePhoneNumber && boldWrapper('Телефон: ') + responseEmployee.employeePhoneNumber,
                 ],
             })
             // чистим пустые строки массивов

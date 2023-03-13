@@ -2,8 +2,9 @@ import React from 'react'
 import styles from './request-form-left.module.scss'
 import phoneImage from './../../../media/phone-small.svg'
 import info_icon from './../../..//media/info_outline.svg'
-import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
-import {useDispatch} from 'react-redux';
+import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
+import {useDispatch} from 'react-redux'
+import {removeAllHTMLTags} from '../../../utils/parsers'
 
 type InfoProps = {
     textData: string[],
@@ -15,15 +16,15 @@ export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placehold
     const dispatch = useDispatch()
 
     // преобразователь в строку и placeholder при отсутствии данных
-    const textFromStrArrOrPlaceholder =  textData.join(', ') || placeholder
+    const textFromStrArrOrPlaceholder = textData.join(', ') || placeholder
     const modalActivator = ( text: string[] ) => {
         dispatch(globalModalStoreActions.setTextMessage(text))
     }
     return <>
         <div className={ styles.requestFormLeft__info + ' ' +
             styles.requestFormLeft__info_horizontalPadding + ' ' +
-            ( textFromStrArrOrPlaceholder.length > 100 ? styles.requestFormLeft__info_scrollable : '' )}>
-            { textFromStrArrOrPlaceholder }
+            ( textFromStrArrOrPlaceholder.length > 100 ? styles.requestFormLeft__info_scrollable : '' ) }>
+            { removeAllHTMLTags(textFromStrArrOrPlaceholder) }
         </div>
         { textFromStrArrOrPlaceholder !== placeholder ? <>
             <img
@@ -40,6 +41,6 @@ export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placehold
                      modalActivator(textData)
                  } }
             />
-        </> : null}
+        </> : null }
     </>
 }
