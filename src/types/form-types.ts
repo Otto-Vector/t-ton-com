@@ -212,7 +212,7 @@ export type EmployeeCardType<T = DefaultFormType> = {
     // прикреплённый прицеп
     idTrailer: T
     // список ответок, к которым привязан водитель
-    responseToRequest: T
+    addedToResponse: T
 }
 // на сотрудника - ответка из бэка
 export type EmployeesApiType = EmployeeCardType<string>

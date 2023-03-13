@@ -2,18 +2,18 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {syncValidators} from '../../utils/validators'
 import {EmployeeCardType, ParserType, ValidateType} from '../../types/form-types'
-import {syncParsers} from '../../utils/parsers';
-import {employeesApi} from '../../api/local-api/options/employee.api';
+import {syncParsers} from '../../utils/parsers'
+import {employeesApi} from '../../api/local-api/options/employee.api'
 import {
     GlobalModalActionsType,
     globalModalStoreActions,
     textAndActionGlobalModal,
-} from '../utils/global-modal-store-reducer';
-import {removeResponseToRequestsBzEmployee} from '../forms/add-driver-store-reducer';
-import {GetActionsTypes} from '../../types/ts-utils';
-import {rerenderTransport} from './transport-store-reducer';
-import {rerenderTrailer} from './trailer-store-reducer';
-import {TtonErrorType} from '../../api/local-api/back-instance.api';
+} from '../utils/global-modal-store-reducer'
+import {removeResponseToRequestsBzEmployee} from '../forms/add-driver-store-reducer'
+import {GetActionsTypes} from '../../types/ts-utils'
+import {rerenderTransport} from './transport-store-reducer'
+import {rerenderTrailer} from './trailer-store-reducer'
+import {TtonErrorType} from '../../api/local-api/back-instance.api'
 
 const initialState = {
     employeeIsFetching: false,
@@ -181,7 +181,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeeCardType<string>, image: F
                 rating: '-',
             }, image)
             if (response.success) console.log(response.success)
-        } catch (e: TtonErrorType<{idEmployee: string}>) {
+        } catch (e: TtonErrorType<{ idEmployee: string }>) {
             if (e?.response?.data?.failed) { // если сотрудник с данным паспортом уже существует
                 return e?.response?.data?.idEmployee
             }
@@ -220,7 +220,6 @@ export const modifyOneEmployeeToAPI = (
 export const modifyOneEmployeeSoftToAPI = ( employeeData: Partial<Omit<EmployeeCardType, 'idEmployee' | 'photoFace'>> & { idEmployee: string } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            // удаляем (заменяем на "-") привязку пользователя
             const response = await employeesApi.modifyOneEmployeeNoPhoto(employeeData)
             if (response.message) console.log(response.message)
             if (response.success) console.log(response.success)
@@ -240,7 +239,7 @@ export const modifyOneEmployeeResetResponsesAndStatus = (
         employeeValues,
         image,
     }: { employeeValues: EmployeeCardType<string>, image?: File } ): EmployeesStoreReducerThunkActionType =>
-    async ( dispatch) => {
+    async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
         await dispatch(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
         await dispatch(modifyOneEmployeeToAPI({ employeeValues, image, status: 'свободен' }))
@@ -257,9 +256,12 @@ export const modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest = (
 
 // события после добавления пользователя на заявку
 export const modifyOneEmployeeSetStatusAddedToResponse = (
-    { idEmployee }: { idEmployee: string } ): EmployeesStoreReducerThunkActionType =>
+    {
+        idEmployee,
+        addedToResponse,
+    }: { idEmployee: string, addedToResponse?: string } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
-        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, status: 'ожидает принятия' }))
+        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, status: 'ожидает принятия', addedToResponse }))
     }
 
 
@@ -323,7 +325,7 @@ export const getOneFiredEmployeeFromAPI = ( idEmployee: string ): EmployeesStore
                     await dispatch(textAndActionGlobalModal({
                         text: [
                             'Сотрудник с данным паспортом приписан к другой оранизации: ' +
-                            `<b>${( organization?.organizationName ? organization.organizationName.toUpperCase() : '' )}</b>`,
+                            `<b>${ ( organization?.organizationName ? organization.organizationName.toUpperCase() : '' ) }</b>`,
                             'Необходимо его уволить (УДАЛИТЬ) в другой организации, чтобы приписать к вашей',
                         ],
                         navigateOnOk: options,
