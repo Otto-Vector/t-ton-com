@@ -4,7 +4,6 @@ import {GetActionsTypes} from '../../types/ts-utils';
 import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelector.api';
 import {TtonErrorType} from '../../api/local-api/back-instance.api';
 import {requestStoreActions, RequestStoreActionsType} from '../forms/request-store-reducer';
-import {OneRequestType} from '../../types/form-types';
 
 const initialState = {
     // список названий грузов (изменяемый при создании заявки) - подгружается из бэка

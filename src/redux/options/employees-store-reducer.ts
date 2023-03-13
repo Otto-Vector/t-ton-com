@@ -23,7 +23,7 @@ const initialState = {
         employeePhoneNumber: 'Телефон сотрудника',
         passportSerial: 'Серия, № паспорта',
         passportFMS: 'Кем выдан паспорт',
-        passportDate: 'Когда выдан',
+        passportDate: 'Когда выдан паспорт',
         drivingLicenseNumber: 'Номер водительского удостоверения',
         drivingCategory: 'Водительские категории',
         personnelNumber: 'Табельный номер',
@@ -301,6 +301,7 @@ export const getOneEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReduc
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
     }
+
 // запрос на одного сотрудника по idEmployee ДЛЯ ВОССТАНОВЛЕНИЯ
 export const getOneFiredEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {

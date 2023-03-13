@@ -1,5 +1,5 @@
-import {SelectOptionsType} from './selector-utils';
-import {StylesConfig} from 'react-select';
+import {SelectOptionsType} from './selector-utils'
+import {StylesConfig} from 'react-select'
 
 export const SelectorStyles = ( isError: boolean ): StylesConfig<SelectOptionsType> => ( {
     menu: ( baseStyles ) => ( {
@@ -14,7 +14,7 @@ export const SelectorStyles = ( isError: boolean ): StylesConfig<SelectOptionsTy
     dropdownIndicator: ( baseStyles ) => ( { ...baseStyles, padding: 0 } ),
     indicatorSeparator: ( baseStyles ) => ( { ...baseStyles, display: 'none' } ),
     indicatorsContainer: ( baseStyles ) => ( { ...baseStyles, padding: 0 } ),
-    clearIndicator:( baseStyles ) => ( { ...baseStyles, padding: 0 } ),
+    clearIndicator: ( baseStyles ) => ( { ...baseStyles, padding: 0 } ),
     control: ( baseStyles, { isFocused } ) => ( {
         ...baseStyles,
         boxSizing: 'border-box',
@@ -57,11 +57,15 @@ export const SelectorStyles = ( isError: boolean ): StylesConfig<SelectOptionsTy
                 : '#023E8ACC',
         },
     } ),
-    singleValue: ( baseStyles, { data } ) => ( {
+    valueContainer: ( baseStyles ) => ( {
         ...baseStyles,
         fontSize: '90%',
+    } ),
+    singleValue: ( baseStyles, { data } ) => ( {
+        ...baseStyles,
         color: data?.isDisabled
             ? 'gray'
             : baseStyles.color,
     } ),
+
 } )

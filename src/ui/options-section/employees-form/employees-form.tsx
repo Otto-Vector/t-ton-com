@@ -269,8 +269,9 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                       pristine,
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.employeesForm__form }>
-                                        <div
-                                            className={ styles.employeesForm__inputsPanel + ' ' + styles.employeesForm__inputsPanel_titled }>
+                                        {/* ФИО Сотрудника */}
+                                        <div className={ styles.employeesForm__inputsPanel + ' '
+                                            + styles.employeesForm__inputsPanel_titled }>
                                             <Field name={ 'employeeFIO' }
                                                    placeholder={ label.employeeFIO }
                                                    maskFormat={ maskOn.employeeFIO }
@@ -278,11 +279,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    resetFieldBy={ form }
                                                    validate={ validators.employeeFIO }
                                                    parse={ parsers.employeeFIO }
-                                                   allowEmptyFormatting
                                             />
                                         </div>
-
                                         <div className={ styles.employeesForm__inputsPanel }>
+                                        {/* Серия паспорта */ }
                                             <Field name={ 'passportSerial' }
                                                    placeholder={ label.passportSerial }
                                                    maskFormat={ maskOn.passportSerial }
@@ -291,7 +291,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.passportSerial }
                                                    parse={ parsers.passportSerial }
                                             />
-                                            {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
+                                            {/* Кем выдан паспорт */ }
                                             <Field name={ 'passportFMS' }
                                                    placeholder={ label.passportFMS }
                                                    maskFormat={ maskOn.passportFMS }
@@ -300,6 +300,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.passportFMS }
                                                    parse={ parsers.passportFMS }
                                             />
+                                            {/* Номер водительского удостоверения */}
                                             <div className={ styles.employeesForm__inputsPanel_withSwitcher }>
                                                 <Field name={ 'drivingLicenseNumber' }
                                                        placeholder={ label.drivingLicenseNumber }
@@ -319,6 +320,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                     } }
                                                 />
                                             </div>
+                                            {/* Водительские категории */}
                                             <FormSelector nameForSelector={ 'drivingCategory' }
                                                           placeholder={ label.drivingCategory }
                                                           options={ drivingCategorySelector }
@@ -326,6 +328,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           isMulti
                                                           isClearable
                                             />
+                                            {/* Табельный номер */}
                                             <Field name={ 'personnelNumber' }
                                                    placeholder={ label.personnelNumber }
                                                    maskFormat={ maskOn.personnelNumber }
@@ -334,6 +337,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.personnelNumber }
                                                    parse={ parsers.personnelNumber }
                                             />
+                                            {/* Гаражный номер */}
                                             <Field name={ 'garageNumber' }
                                                    placeholder={ label.garageNumber }
                                                    maskFormat={ maskOn.garageNumber }
@@ -342,6 +346,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.garageNumber }
                                                    parse={ parsers.garageNumber }
                                             />
+                                            {/* Прикреплённый транспорт */}
                                             <FormSelector nameForSelector={ 'idTransport' }
                                                           placeholder={ label.idTransport }
                                                           options={ transportSelect }
@@ -352,6 +357,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           onDisableHandleClick={ onDisableOptionSelectorHandleClick }
                                                           disabled={ initialValues.status === 'на заявке' }
                                             />
+                                            {/* Прикрёплённый прицеп */}
                                             <FormSelector nameForSelector={ 'idTrailer' }
                                                           placeholder={ label.idTrailer }
                                                           options={ trailerSelectDisableWrongCargoType }
@@ -363,6 +369,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                         </div>
                                         {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                         <div className={ styles.employeesForm__inputsWithPhoto }>
+                                            {/* Телефон сотрудника */}
                                             <Field name={ 'employeePhoneNumber' }
                                                    placeholder={ label.employeePhoneNumber }
                                                    maskFormat={ maskOn.employeePhoneNumber }
@@ -372,6 +379,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.employeePhoneNumber }
                                                    parse={ oneRenderParser(form, parsers.employeePhoneNumber) }
                                             />
+                                            {/* Когда выдан паспорт */}
                                             <Field name={ 'passportDate' }
                                                    placeholder={ label.passportDate }
                                                    maskFormat={ maskOn.passportDate }
