@@ -1,8 +1,9 @@
 import {AppStateType} from '../../redux/redux-store'
-import {RequestStoreReducerStateType} from '../../redux/forms/request-store-reducer';
-import {createSelector} from 'reselect';
-import {OneRequestType} from '../../types/form-types';
-import {polyline_decode} from '../../utils/polilyne-decode';
+import {RequestStoreReducerStateType} from '../../redux/forms/request-store-reducer'
+import {createSelector} from 'reselect'
+import {OneRequestType} from '../../types/form-types'
+import {polyline_decode} from '../../utils/polilyne-decode'
+import { boldWrapper } from '../../utils/html-rebuilds'
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 type RequestStoreSelectorsInit<T extends keyof Y, Y = RequestStoreReducerStateType['initialValues']> = ( state: AppStateType ) => Y[T]
@@ -54,7 +55,6 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
         const recipientInn = ( recipientUser?.innNumber || recipient?.innNumber )
         const recipientLegalAddress = ( recipientUser?.legalAddress || recipient?.address )
         const driverCanCargoWeight = ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) )
-        const boldWrapper = (text: string): string=> `<b>${text}</b>`
 
         // создаёт новый объект из старого после обработки значений ключа
         return Object.fromEntries(Object

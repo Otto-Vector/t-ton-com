@@ -6,7 +6,7 @@ const boldSeparator = ( line: string ) => {
     // ищем свои болды, плюс небольшая защита от "левого" контента
     const colonNumber = line.length < 1000 ? line.search('<b>') : -1
     if (colonNumber >= 0) {
-        return <span dangerouslySetInnerHTML={ { __html: line } }></span>
+        return <span dangerouslySetInnerHTML={ { __html: line } }/>
     }
     return line
 }

@@ -4,7 +4,6 @@ import phoneImage from './../../../media/phone-small.svg'
 import info_icon from './../../..//media/info_outline.svg'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
 import {useDispatch} from 'react-redux'
-import {removeAllHTMLTags} from '../../../utils/parsers'
 
 type InfoProps = {
     textData: string[],
@@ -23,8 +22,9 @@ export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placehold
     return <>
         <div className={ styles.requestFormLeft__info + ' ' +
             styles.requestFormLeft__info_horizontalPadding + ' ' +
-            ( textFromStrArrOrPlaceholder.length > 100 ? styles.requestFormLeft__info_scrollable : '' ) }>
-            { removeAllHTMLTags(textFromStrArrOrPlaceholder) }
+            ( textFromStrArrOrPlaceholder.length > 100 ? styles.requestFormLeft__info_scrollable : '' ) }
+             dangerouslySetInnerHTML={ { __html: `<p>${textFromStrArrOrPlaceholder}</p>` } }>
+            {/*{ removeAllHTMLTags(textFromStrArrOrPlaceholder) }*/ }
         </div>
         { textFromStrArrOrPlaceholder !== placeholder ? <>
             <img

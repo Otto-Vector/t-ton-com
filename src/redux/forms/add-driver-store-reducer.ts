@@ -9,6 +9,7 @@ import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-st
 import {GetActionsTypes} from '../../types/ts-utils';
 import {syncParsers} from '../../utils/parsers';
 import {TtonErrorType} from '../../api/local-api/back-instance.api';
+import {boldWrapper} from '../../utils/html-rebuilds'
 
 
 const initialState = {
@@ -103,10 +104,10 @@ export const setOneResponseToRequest = (
                 dispatch(globalModalStoreActions.setTextMessage([
                     'Водитель уже был привязан к данной заявке.',
                     'Cтоимость скорректирована с учётом внесённых данных.',
-                    'Водитель: ' + employeeValues.employeeFIO,
-                    'Общий перевозимый вес: ' + addDriverValues.cargoWeight + ' тн.',
-                    'Стоимость тн.км.: ' + addDriverValues.responseStavka + ' руб.',
-                    'Общая цена за заявку: ' + syncParsers.parseToNormalMoney(+addDriverValues.responsePrice) + ' руб.',
+                    boldWrapper('Водитель: ') + employeeValues.employeeFIO,
+                    boldWrapper('Общий перевозимый вес: ') + addDriverValues.cargoWeight + ' тн.',
+                    boldWrapper('Стоимость тн.км.: ') + addDriverValues.responseStavka + ' руб.',
+                    boldWrapper('Общая цена за заявку: ') + syncParsers.parseToNormalMoney(+addDriverValues.responsePrice) + ' руб.',
                 ]))
                 await dispatch(modifyOneResponseToRequest({
                     addDriverValues,
