@@ -1,11 +1,11 @@
-import React from 'react';
-import {Column, useFilters, useGlobalFilter, useTable} from 'react-table';
+import React from 'react'
+import {Column, useFilters, useGlobalFilter, useTable} from 'react-table'
 import styles from './table-component.module.scss'
-import {TableModesType} from '../table-section';
-import {useSelector} from 'react-redux';
-import {getRoutesStore} from '../../../selectors/routes-reselect';
-import {useNavigate} from 'react-router-dom';
-import {OneRequestTableType} from '../../../types/form-types';
+import {TableModesType} from '../table-section'
+import {useSelector} from 'react-redux'
+import {getRoutesStore} from '../../../selectors/routes-reselect'
+import {useNavigate} from 'react-router-dom'
+import {OneRequestTableType} from '../../../types/form-types'
 // import {GlobalFilter} from './filter/global-filter';
 
 
@@ -43,7 +43,7 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
 
 
     return ( <>
-            {/*<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />*/ }
+            {/*<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />*/}
             <table { ...getTableProps() }>
                 <thead>
                 { headerGroups.map(( headerGroup ) => (
@@ -65,7 +65,7 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                     return (
                         <tr { ...row.getRowProps() }
                             className={ (// @ts-ignore-next-line
-                                    data[rowId]?.marked ? styles.selected : '' )
+                                data[rowId]?.marked ? styles.selected : '' )
                             }
                             onDoubleClick={ onDoubleClick(data[rowId]) }
                             onClick={ () => {
@@ -76,10 +76,12 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                                 return <td { ...cell.getCellProps() }
                                 >{ cell.render('Cell', {
                                     // выставляем нужные поля для быстрого доступа здесь #CellProps
-                                    requestNumber: cell.row.values.requestNumber,
-                                    price: cell.row.values.price,
+                                    requestNumber: cell.row.values?.requestNumber,
+                                    price: cell.row.values?.price,
                                     //@ts-ignore-next-line
-                                    marked: cell.row.original.marked,
+                                    answers: cell.row.original?.answers,
+                                    //@ts-ignore-next-line
+                                    marked: cell.row.original?.marked,
                                 }) }</td>
                             }) }
                         </tr>

@@ -46,7 +46,7 @@ export const getContentTableStore = createSelector(
                 // ставим цену в зависимости от расстояния
                 price: ( distance || 0 ) > 100 ? +( acceptLongRoute || 0 ) : +( acceptShortRoute || 0 ),
                 globalStatus,
-                responseEmployee: parseFamilyToFIO(responseEmployee?.employeeFIO),
+                responseEmployee: parseFamilyToFIO(responseEmployee?.employeeFIO) || answers?.length+'' || '0',
                 marked: [ idUserCustomer, idUserRecipient, idUserSender ].includes(authId),
             } )) || [ initial ]
     })

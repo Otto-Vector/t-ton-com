@@ -10,6 +10,7 @@ type OwnProps = {
     colorMode?: CommonButtonColorModeType
     type?: 'button' | 'submit' | 'reset'
     title?: string
+    label?: string
     rounded?: boolean
     // включить перенос слов в кнопке
     wordWrap?: boolean
@@ -25,7 +26,7 @@ export const Button: React.FC<OwnProps> = (
         colorMode = 'noFill', rounded,
         type = 'button', children, wordWrap,
         isSelectOnTab = true,
-        style,
+        style, label
     } ) => {
 
     return <button className={
@@ -37,7 +38,7 @@ export const Button: React.FC<OwnProps> = (
                    disabled={ disabled }
                    onClick={ onClick }
                    type={ type }
-                   title={ title + ( disabled ? ' (кнопка неактивна)' : '' ) }
+                   title={ (label || title) + ( disabled ? ' (кнопка неактивна)' : '' ) }
                    tabIndex={ isSelectOnTab ? 0 : -1 }
                    style={ style }
     >{ // отображаем то что внутри тега button

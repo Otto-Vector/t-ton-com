@@ -109,21 +109,27 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 accessor: 'price',
                 disableFilters: true,
                 // чтобы добавить быстрый доступ к нужным полям ищи метку #CellProps в table.tsx
-                Cell: ( { requestNumber, price, marked }: { requestNumber: number, price: number, marked: boolean } ) =>
+                Cell: ( {
+                            requestNumber,
+                            price,
+                            marked,
+                            answers,
+                        }: { requestNumber: number, price: number, marked: boolean, answers: number } ) =>
                     <Button title={ 'Открыть' }
+                            label={ 'Открыть ' + (( marked || !answers ) ? 'заявку' : 'карту с ответами перевозчиков') }
                             onClick={ () => {
                                 if (tableModes.searchTblMode) {
                                     ( price > authCash )
                                         ? toGlobalModalQuest(price)
                                         : navigate(requestInfo.accept + requestNumber)
                                 }
-                                if (tableModes.statusTblMode) navigate(( marked ? requestInfo.status : maps.answers ) + requestNumber)
+                                if (tableModes.statusTblMode) navigate(( ( marked || !answers ) ? requestInfo.status : maps.answers ) + requestNumber)
                                 if (tableModes.historyTblMode) navigate(requestInfo.history + requestNumber)
                             } }
                             colorMode={
                                 tableModes.searchTblMode ?
                                     price > authCash ? 'gray' : 'blue'
-                                    : tableModes.statusTblMode ? 'green'
+                                    : tableModes.statusTblMode ? ( answers === 0 || marked ) ? 'green' : 'orange'
                                         : tableModes.historyTblMode ? 'pink'
                                             : 'redAlert'
                             }
