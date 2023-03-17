@@ -95,8 +95,8 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.map } element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.maps.answers + ':reqNumber' }
                                element={ <ТoAuthRedirect>
-                                   <div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2>
-                                   </div>
+                                   {/*<div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2></div>*/}
+                                   <MapSection/>
                                </ТoAuthRedirect> }/>
                         <Route path={ routes.info } element={ <ТoAuthRedirect><InfoSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.addDriver + ':reqNumber' } element={ <ТoAuthRedirect>
@@ -120,10 +120,10 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.options } element={ <ТoAuthRedirect><OptionsSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.requisites + ':newFlag' } element={ <RequisitesForm/> }/>
 
-                        {/*<Route path={ routes.test } element={*/}
-                        {/*    <ButtonMenuSaveLoad titleValue={ 'Документы заказчика' } loadUrl={ '#' } onUpload={ () => {*/}
-                        {/*        console.log('upload')*/}
-                        {/*    } }/> }/>*/}
+                        {/*<Route path={ routes.test } element={*/ }
+                        {/*    <ButtonMenuSaveLoad titleValue={ 'Документы заказчика' } loadUrl={ '#' } onUpload={ () => {*/ }
+                        {/*        console.log('upload')*/ }
+                        {/*    } }/> }/>*/ }
                         {/* element={ <AddDriversForm mode={'addDriver'}/> }/>*/ }
                         {/*element={ <AddDriversView idEmployee={ '0ce2d16f-582e-4d49-ac35-e0c8f9c53b06' }/> }/>*/ }
 

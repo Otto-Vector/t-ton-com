@@ -1,10 +1,12 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from './../redux-store'
 
-import {geoPosition} from '../../api/utils-api/geolocation.api';
-import {parseFamilyToFIO, stringToCoords} from '../../utils/parsers';
-import {GetActionsTypes} from '../../types/ts-utils';
-import {getRandomInRange} from '../../utils/random-utils';
+import {geoPosition} from '../../api/utils-api/geolocation.api'
+import {parseFamilyToFIO, stringToCoords} from '../../utils/parsers'
+import {GetActionsTypes} from '../../types/ts-utils'
+import {getRandomInRange} from '../../utils/random-utils'
+import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
+import {employeesApi} from '../../api/local-api/options/employee.api'
 
 export type DriverOnMapType = {
     id: number,
@@ -108,4 +110,34 @@ export const setDriversToMap = (): BigMapStoreReducerThunkActionType =>
                 fio: parseFamilyToFIO(employeeFIO),
             } ))
         dispatch(bigMapStoreActions.setDriversList(drivers))
+    }
+
+// загрузка на карту водителей с ответами перевозчиков
+export const setAnswerDriversToMap = ( requestNumber: string ): BigMapStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        try {
+            const request = await responseToRequestApi.getOneOrMoreResponseToRequest({ requestNumber })
+            console.log(request)
+            // пока грузим ВЕСЬ СПИСОК
+            // toDo: дать бэку задание выгружать водителей по списку айдишек
+            const allDriversList = await employeesApi.getAllEmployees()
+
+            if (request.length && allDriversList.length) {
+                const idEmployeesToSearch = request.map(( { idEmployee } ) => idEmployee)
+                const drivers: DriverOnMapType[] = allDriversList
+                    .filter(( { idEmployee } ) => idEmployeesToSearch.includes(idEmployee))
+                    .map(( { idEmployee, coordinates, status, employeeFIO }, index ) => ( {
+                        id: index + 1,
+                        idEmployee,
+                        position: stringToCoords(coordinates)
+                            //toDo: это заглушка для пустых, убрать
+                            .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5)),
+                        status: status as string,
+                        fio: parseFamilyToFIO(employeeFIO),
+                    } ))
+                dispatch(bigMapStoreActions.setDriversList(drivers))
+            }
+        } catch (e) {
+
+        }
     }

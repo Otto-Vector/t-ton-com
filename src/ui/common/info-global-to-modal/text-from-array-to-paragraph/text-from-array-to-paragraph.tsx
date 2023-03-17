@@ -2,18 +2,16 @@ import React from 'react'
 import styles from './text-from-array-to-paragraph.module.scss'
 
 // если в тексте есть тэг <b>, то вставляем его как HTML элемент
-const boldSeparator = ( line: string ) => {
-    // ищем свои болды, плюс небольшая защита от "левого" контента
-    const colonNumber = line.length < 1000 ? line.search('<b>') : -1
-    if (colonNumber >= 0) {
-        return <span dangerouslySetInnerHTML={ { __html: line } }/>
-    }
-    return line
-}
+const boldSeparator = ( line: string ) =>
+    // ищем <b>, плюс небольшая защита от "левого" контента
+    line.length < 1000 && line.includes('<b>')
+        ? <span dangerouslySetInnerHTML={ { __html: line } }/>
+        : line
 
-const Paragraph = ( line: string ) => {
-    return <p className={ styles.textFromArrayToParagraph } key={ line }>{ boldSeparator(line) }</p>
-}
+// перевод строки в параграф со своим стилем
+const Paragraph = ( line: string ) =>
+    <p className={ styles.textFromArrayToParagraph } key={ line }>{ boldSeparator(line) }</p>
 
+// проверка на массив с передачей в функцию параграфа
 export const textFromArrayToParagraph = ( text: string | string[] ) =>
     Array.isArray(text) ? text.map(Paragraph) : Paragraph(text?.toString())
