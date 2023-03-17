@@ -146,7 +146,7 @@ const initialState = {
 
         cargoComposition: 'Номенклатура груза по документации.',
         shipmentDate: 'Дата погрузки по доверенности',
-        distance: 'Расчет производится автоматически на основании координат мест Погрузки и Разгрузки. Корректировка местоположения изменяет параметры',
+        distance: 'Расчет производится автоматически на основании координат мест Погрузки и Разгрузки. Плюс коэффициэнт:',
         cargoType: 'Укажите тип прицепа или сцепки, для осуществления верного поиска транспорта.',
         customer: 'Ваша организация или сторонняя организация использующая Агентов для оказания собственных услуг перевозки. Получает права владельца Заявки после создания Заявки.',
         shipper: 'Юридические владельцы груза. НЕ получает права на просмотр данной Заявки, предоставляет местоположение и контактный телефон представителя для сбора груза.',
@@ -206,6 +206,17 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
                 currentDistanceIsFetching: action.isFetching,
             }
         }
+        case 'request-store-reducer/SET-KOEFFICIENT-TO-INFO': {
+            return {
+                ...state,
+                infoTextModals: {
+                    ...state.infoTextModals,
+                    distance: state.infoTextModals.distance + (
+                        state.infoTextModals.distance.search('<b>') < 0 ? ` <b>${action.koef*100-100}%</b>` : ''
+                    )
+                }
+            }
+        }
         default: {
             return state
         }
@@ -235,6 +246,10 @@ export const requestStoreActions = {
     setCurrentDistanceIsFetching: ( isFetching: boolean ) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING',
         isFetching,
+    } as const ),
+    setKoefficientToInfo: (koef: number) =>( {
+        type: 'request-store-reducer/SET-KOEFFICIENT-TO-INFO',
+        koef,
     } as const ),
     setToggleRequestVisible: ( requestNumber: number ) => ( {
         type: 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE',
@@ -274,7 +289,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     },
 
     distance: Number(elem.distance),
-    // toDo: убрать эту дибильную проверку, когда он исправит поле на необязательне
+    // toDo: убрать эту дибильную проверку, когда он исправит поле на необязательное
     route: elem?.route || '' + ( elem?.routePlus ? ( ( elem.routePlus !== '-' ) ? elem.routePlus : '' ) : '' ),
     note: elem.note,
     cargoStamps: elem.cargoStamps,
@@ -471,8 +486,9 @@ export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 
 // запрос списка всех заявок из бэка
 export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+    async ( dispatch , getState) => {
         try {
+            dispatch(requestStoreActions.setKoefficientToInfo(getState().baseStoreReducer.distanceCoefficient))
             const response = await oneRequestApi.getAllRequests()
             if (response.length > 0) {
                 dispatch(requestStoreActions.setContent(response.map(parseRequestFromAPI)))

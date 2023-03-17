@@ -137,7 +137,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             },
         ],
         [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT,
-            maps.answers, navigate, requestInfo.driver, requestInfo.history, requestInfo.accept ],
+            maps.answers, navigate, requestInfo.status, requestInfo.history, requestInfo.accept ],
     )
     const tableModesStyle = styles['tableComponent__' + (
         tableModes.searchTblMode ? 'search'
