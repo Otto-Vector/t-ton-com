@@ -100,7 +100,6 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
     const employeeOneImage = oneEmployee.photoFace
     const employeeOneRating = oneEmployee.rating
-    // const employeeOnePhone = oneEmployee.employeePhoneNumber
 
     const oneTransport = useSelector(getOneTransportFromLocal) as TransportCardType<string>
     const setOneTransport = ( searchId: string | undefined ) => {

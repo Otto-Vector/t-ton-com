@@ -16,4 +16,4 @@ const Paragraph = ( line: string ) => {
 }
 
 export const textFromArrayToParagraph = ( text: string | string[] ) =>
-    Array.isArray(text) ? text.map(Paragraph) : Paragraph(text.toString())
+    Array.isArray(text) ? text.map(Paragraph) : Paragraph(text?.toString())

@@ -75,8 +75,11 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                             { row.cells.map(cell => {
                                 return <td { ...cell.getCellProps() }
                                 >{ cell.render('Cell', {
+                                    // выставляем нужные поля для быстрого доступа здесь #CellProps
                                     requestNumber: cell.row.values.requestNumber,
                                     price: cell.row.values.price,
+                                    //@ts-ignore-next-line
+                                    marked: cell.row.original.marked,
                                 }) }</td>
                             }) }
                         </tr>
