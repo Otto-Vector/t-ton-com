@@ -14,13 +14,14 @@ import {
     ValidateType,
 } from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
-import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
-import {oneRequestApi} from '../../api/local-api/request-response/request.api';
-import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats';
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer';
-import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils';
-import {TtonErrorType} from '../../api/local-api/back-instance.api';
+import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api'
+import {oneRequestApi} from '../../api/local-api/request-response/request.api'
+import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats'
+import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer'
+import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer'
+import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils'
+import {TtonErrorType} from '../../api/local-api/back-instance.api'
+import {requestDocumentsApi} from '../../api/local-api/request-response/request-documents.api'
 
 
 const initialState = {
@@ -103,7 +104,7 @@ const initialState = {
             proxyFreightLoader: 'Доверенность Грузовладельцу',
             proxyDriver: 'Доверенность на Водителя',
             waybillDriver: 'Путевой Лист Водителя',
-            itineraryList: 'Маршрутный Лист Водителя'
+            itineraryList: 'Маршрутный Лист Водителя',
         },
 
         cargoDocuments: 'Документы груза + ТН, паспорт, прочее',
@@ -212,9 +213,9 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
                 infoTextModals: {
                     ...state.infoTextModals,
                     distance: state.infoTextModals.distance + (
-                        state.infoTextModals.distance.search('<b>') < 0 ? ` <b>${action.koef*100-100}%</b>` : ''
-                    )
-                }
+                        state.infoTextModals.distance.search('<b>') < 0 ? ` <b>${ action.koef * 100 - 100 }%</b>` : ''
+                    ),
+                },
             }
         }
         default: {
@@ -247,7 +248,7 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING',
         isFetching,
     } as const ),
-    setKoefficientToInfo: (koef: number) =>( {
+    setKoefficientToInfo: ( koef: number ) => ( {
         type: 'request-store-reducer/SET-KOEFFICIENT-TO-INFO',
         koef,
     } as const ),
@@ -486,7 +487,7 @@ export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 
 // запрос списка всех заявок из бэка
 export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
-    async ( dispatch , getState) => {
+    async ( dispatch, getState ) => {
         try {
             dispatch(requestStoreActions.setKoefficientToInfo(getState().baseStoreReducer.distanceCoefficient))
             const response = await oneRequestApi.getAllRequests()
@@ -843,4 +844,18 @@ export const getRouteFromAPI = ( {
         }
 
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
+    }
+
+///////////////////////////РАБОТА С ДОКУМЕНТАМИ//////////////////////////////////////////////
+
+// подгрузка дополнительного документа
+export const addRewriteCargoDocumentRequestAPI = ( props: { requestNumber: number, cargoDocuments: File } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await requestDocumentsApi.getLoadCargo(props)
+            console.log(response.message)
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+        }
+        await dispatch(getOneRequestsAPI(props.requestNumber))
     }

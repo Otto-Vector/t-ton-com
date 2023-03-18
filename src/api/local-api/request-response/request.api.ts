@@ -1,10 +1,6 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
 import {OneRequestApiType} from '../../../types/form-types';
 
-export type accessUserToRequestType = {
-    requestNumber: string
-    idUser: string
-}
 
 export const oneRequestApi = {
 
@@ -95,4 +91,3 @@ export const oneRequestApi = {
 
     },
 }
-
