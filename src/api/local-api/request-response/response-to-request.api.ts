@@ -3,7 +3,7 @@ import {ResponseToRequestCardType} from '../../../types/form-types';
 import {ExactlyOne} from '../../../types/ts-utils';
 
 // одно обязательное поле из трёх
-export type ExactlyOnOfThree = ExactlyOne<{ requestNumber: string, responseId: string, idEmployee: string }>
+export type ExactlyOneOfThree = ExactlyOne<{ requestNumber: string, responseId: string, idEmployee: string }>
 
 export const responseToRequestApi = {
 
@@ -16,7 +16,7 @@ export const responseToRequestApi = {
     },
 
     // запрос на один или несколько Ответов на Заявку PATCH /api/responsetorequestcardtype/
-    getOneOrMoreResponseToRequest( data: ExactlyOnOfThree ) {
+    getOneOrMoreResponseToRequest( data: ExactlyOneOfThree ) {
         // самопроверка на "дурака"
         if (Object.entries(data).length > 1) {
             throw new Error('Должно быть ОДНО поле: requestNumber || responseId || idEmployee')
@@ -45,7 +45,7 @@ export const responseToRequestApi = {
 
     // УДАЛИТЬ один Ответ на Заявку DELETE /api/responsetorequestcardtype/
     // также удаляет все id-шки по списку в поле responseId чз ', '
-    deleteSomeResponseToRequest( data: ExactlyOnOfThree ) {
+    deleteSomeResponseToRequest( data: ExactlyOneOfThree ) {
         // самопроверка на "дурака"
         if (Object.entries(data).length > 1) {
             throw new Error('Должно быть ОДНО поле: requestNumber || responseId || idEmployee')
