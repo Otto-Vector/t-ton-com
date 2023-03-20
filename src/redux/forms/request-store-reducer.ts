@@ -855,7 +855,7 @@ export const addRewriteCargoDocumentRequestAPI = ( props: { requestNumber: numbe
             const response = await requestDocumentsApi.getLoadCargo(props)
             console.log(response.message)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message || e?.response?.data)))
         }
         await dispatch(getOneRequestsAPI(props.requestNumber))
     }

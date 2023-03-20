@@ -4,7 +4,7 @@ import styles from './text-from-array-to-paragraph.module.scss'
 // если в тексте есть тэг <b>, то вставляем его как HTML элемент
 const boldSeparator = ( line: string ) =>
     // ищем <b>, плюс небольшая защита от "левого" контента
-    line.length < 1000 && line.includes('<b>')
+    line?.length && line.length < 1000 && line.includes('<b>')
         ? <span dangerouslySetInnerHTML={ { __html: line } }/>
         : line
 
