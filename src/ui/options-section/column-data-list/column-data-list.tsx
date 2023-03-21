@@ -1,12 +1,12 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
 import styles from './column-data-list.module.scss'
-import {MaterialIcon} from '../../common/material-icon/material-icon';
-import {Button} from '../../common/button/button';
-import {useNavigate} from 'react-router-dom';
-import {parseCharsAndNumbers} from '../../../utils/parsers';
-import {OptionsLabelType} from '../../../redux/options/options-store-reducer';
-import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {MaterialIcon} from '../../common/material-icon/material-icon'
+import {Button} from '../../common/button/button'
+import {useNavigate} from 'react-router-dom'
+import {parseCharsAndNumbers} from '../../../utils/parsers'
+import {OptionsLabelType} from '../../../redux/options/options-store-reducer'
+import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
+import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 
 
 type OwnProps = {
@@ -21,19 +21,21 @@ type OwnProps = {
 }
 
 export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, isPlacemarked } ) => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     const [ content, setContent ] = useState(item.content)
     const [ test, setTest ] = useState<string>('')
 
-
     const onSearch = ( event: ChangeEvent<HTMLInputElement> ) => {
         setTest(parseCharsAndNumbers(event.target?.value))
     }
-
+    // фильтрация поиска через useEffect
     useEffect(() => {
         if (test !== '') {
-            setContent(item.content.filter(( { title } ) => title?.match(new RegExp(test, 'ig'))))
+            setContent(item.content
+                .filter(( { title, subTitle, extendInfo } ) =>
+                    [ title, subTitle, extendInfo ].filter(x => x).join(',')?.match(new RegExp(test, 'ig'))),
+            )
         }
         if (test === '') setContent(item.content)
 
@@ -67,12 +69,12 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
             </header>
             {/*ГЕНЕРИРУЕМЫЙ СПИСОК*/ }
             <div className={ styles.columnDataList__list }>
-                { content.map(( { id, title, subTitle, extendInfo } ) =>
-                    <div className={ styles.columnDataList__item + ' ' + styles.rowItem }
-                         onClick={ () => {
-                             navigate(route + id)
-                         } }
-                         key={ item.label + id + title }
+                { content.map(( { id, title, subTitle, extendInfo } ) => <div
+                        className={ styles.columnDataList__item + ' ' + styles.rowItem }
+                        onClick={ () => {
+                            navigate(route + id)
+                        } }
+                        key={ item.label + id + title }
                     >
                         <div
                             className={ styles.rowItem__label +
@@ -83,8 +85,8 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
                             title={ title + ( subTitle ? ` [${ subTitle }]` : '' ) + ( extendInfo ? ' ' + extendInfo : '' ) }>
                             { title || 'null' }
                         </div>
-                    </div>)
-                }
+                    </div>,
+                ) }
             </div>
             {/*КНОПКА "+" СОЗДАТЬ */ }
             <div className={ styles.columnDataList__button + ' ' + styles.columnDataList__button_left }>

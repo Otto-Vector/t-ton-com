@@ -20,6 +20,7 @@ export const transportApi = {
     },
 
     // запрос на один ТРАНСПОРТ • PATCH /api/transport/
+    // один id или через запятую без пробелов
     getOneTransportById( idTransport: { idTransport: string } ) {
         return instanceBack.patch<InfoResponseType & TransportApiType[]>('/api/transport/', idTransport)
             .then(response => response.data)
@@ -63,4 +64,3 @@ export const transportApi = {
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
     },
 }
-

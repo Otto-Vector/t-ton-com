@@ -22,6 +22,7 @@ import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../opti
 import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils'
 import {TtonErrorType} from '../../api/local-api/back-instance.api'
 import {requestDocumentsApi} from '../../api/local-api/request-response/request-documents.api'
+import {getListOrganizationRequisitesByInn} from '../options/requisites-store-reducer'
 
 
 const initialState = {
@@ -645,11 +646,16 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
         dispatch(requestStoreActions.setIsFetching(true))
         try {
             const userId = getState().authStoreReducer.authID
-            // механика выяснения какому пользователю каокй инн
-            const filteredContent = getState().requisitesStoreReducer.filteredContent
             // данные из локальной карточки
             const customerCard = getState().shippersStoreReducer.content
                 .find(( { idSender } ) => idSender === submitValues.idCustomer)
+            // механика выяснения какому пользователю какой инн
+            await dispatch(getListOrganizationRequisitesByInn([
+                customerCard?.innNumber,
+                submitValues.sender.innNumber,
+                submitValues.recipient.innNumber,
+            ].filter(x => x).join(',')))
+            const filteredContent = await getState().requisitesStoreReducer.filteredContent
             // подгрузка данных созданных пользователей
             const userCustomer = filteredContent?.find(( { innNumber } ) => innNumber === customerCard?.innNumber)
             const userSender = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.sender.innNumber)
@@ -662,7 +668,6 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
             const placeholder = '-'
 
             const response = await oneRequestApi.modifyOneRequest({
-
                     requestNumber,
                     globalStatus: 'новая заявка',
                     acceptedUsers,
@@ -670,7 +675,6 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                     shipmentDate: yearMmDdFormatISO(submitValues.shipmentDate),
                     cargoType: submitValues.cargoType,
                     distance: submitValues.distance?.toString(),
-                    // route: submitValues.route,
                     route,
                     routePlus,
                     note: submitValues.note,

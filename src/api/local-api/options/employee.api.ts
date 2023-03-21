@@ -21,6 +21,7 @@ export const employeesApi = {
     },
 
     // запрос на одного выбранного водителя PATCH /api/employee/
+    // один id или через запятую без пробелов
     getOneEmployeeById( { idEmployee }: { idEmployee: string } ) {
         return instanceBack.patch<InfoResponseType & EmployeesApiType[]>('/api/employee/', { idEmployee })
             .then(response => response.data)

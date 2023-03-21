@@ -1,17 +1,17 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
-import {CompanyRequisitesApiType, CompanyRequisitesType, ParserType, ValidateType} from '../../types/form-types';
-import {syncValidators} from '../../utils/validators';
-import {requisitesApi} from '../../api/local-api/options/requisites.api';
-import {syncParsers} from '../../utils/parsers';
-import {authStoreActions, logoutAuth} from '../auth-store-reducer';
+import {CompanyRequisitesApiType, CompanyRequisitesType, ParserType, ValidateType} from '../../types/form-types'
+import {syncValidators} from '../../utils/validators'
+import {requisitesApi} from '../../api/local-api/options/requisites.api'
+import {syncParsers} from '../../utils/parsers'
+import {authStoreActions, logoutAuth} from '../auth-store-reducer'
 import {
     GlobalModalActionsType,
     globalModalStoreActions,
     textAndActionGlobalModal,
-} from '../utils/global-modal-store-reducer';
-import {GetActionsTypes} from '../../types/ts-utils';
-import {TtonErrorType} from '../../api/local-api/back-instance.api';
+} from '../utils/global-modal-store-reducer'
+import {GetActionsTypes} from '../../types/ts-utils'
+import {TtonErrorType} from '../../api/local-api/back-instance.api'
 
 
 const initialState = {
@@ -354,15 +354,16 @@ export const deletePersonalOrganizationRequisites = (): RequisitesStoreReducerTh
     }
 
 // загрузить список данных для сопоставления в заявках
-export const getListOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
+export const getListOrganizationRequisitesByInn = ( innNumber: string ): RequisitesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(requisitesStoreActions.setFilteredContent(null))
         try {
-            const response = await requisitesApi.getPersonalDataList()
+            const response = await requisitesApi.getPersonalDataFromId({ innNumber })
             if (response.message) {
                 console.log('Сообщение в запросе списка пользователей', JSON.stringify(response.message))
             }
             if (response.length > 0) {
+                console.log('Список пользователей по ИНН:', response)
                 dispatch(requisitesStoreActions.setFilteredContent(response.filter(
                     ( { idUser, nnNumber } ) => idUser && nnNumber)?.map(
                     ( {

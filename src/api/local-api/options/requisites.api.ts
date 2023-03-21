@@ -1,5 +1,6 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api';
 import {CompanyRequisitesApiType} from '../../../types/form-types';
+import {ExactlyOne} from '../../../types/ts-utils'
 
 
 export const requisitesApi = {
@@ -13,7 +14,7 @@ export const requisitesApi = {
     },
 
     // добавление персональных данных • POST/api/personality/
-    // СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ, но он возможно не будет работать ;)
+    // СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ, но он [пользователь] возможно не будет работать ;)
     setPersonalData( requisites: CompanyRequisitesApiType ) {
         return instanceBack.post<InfoResponseType>('/api/personality/', requisites)
             .then(response => response.data)
@@ -23,7 +24,8 @@ export const requisitesApi = {
     },
 
     // запрос данных по Id пользователя • PATCH /api/personality/
-    getPersonalDataFromId( idUser: { idUser: string } ) {
+    // один id или через запятую без пробелов (innNumber - аналогично)
+    getPersonalDataFromId( idUser: ExactlyOne<{ idUser: string , innNumber: string}> ) {
         return instanceBack.patch<InfoResponseType & CompanyRequisitesApiType[]>('/api/personality/', idUser)
             .then(response => response.data)
         // 1.	code 200, models: PersonalResponseType

@@ -21,6 +21,7 @@ export const trailerApi = {
     },
 
     // запрос на один ПРИЦЕП по id • PATCH /api/trailer/
+    // один id или через запятую без пробелов
     getOneTrailerById( idTrailer: { idTrailer: string } ) {
         return instanceBack.patch<InfoResponseType & TrailerApiType[]>('/api/trailer/', idTrailer)
             .then(response => response.data)
@@ -63,4 +64,3 @@ export const trailerApi = {
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
     },
 }
-

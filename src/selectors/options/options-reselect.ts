@@ -1,22 +1,22 @@
 import {AppStateType} from '../../redux/redux-store'
-import {OptionsStoreReducerStateType} from '../../redux/options/options-store-reducer';
+import {OptionsStoreReducerStateType} from '../../redux/options/options-store-reducer'
 import {createSelector} from 'reselect'
-import {getAllShippersStore, getCurrentIdShipperStore} from './shippers-reselect';
+import {getAllShippersStore, getCurrentIdShipperStore} from './shippers-reselect'
 import {
     ConsigneesCardType,
     EmployeeCardType,
     ShippersCardType,
     TrailerCardType,
     TransportCardType,
-} from '../../types/form-types';
-import {getAllConsigneesStore, getCurrentIdConsigneeStore} from './consignees-reselect';
-import {getAllTransportStore} from './transport-reselect';
-import {getAllTrailerStore} from './trailer-reselect';
-import {getAllEmployeesStore} from './employees-reselect';
+} from '../../types/form-types'
+import {getAllConsigneesStore, getCurrentIdConsigneeStore} from './consignees-reselect'
+import {getAllTransportStore} from './transport-reselect'
+import {getAllTrailerStore} from './trailer-reselect'
+import {getAllEmployeesStore} from './employees-reselect'
 import {
     getAllTrailerSelectFromLocal,
     getAllTransportSelectFromLocal,
-} from './for-selectors/all-selectors-buffer-reselect';
+} from './for-selectors/all-selectors-buffer-reselect'
 
 
 type OptionsStoreSelectors<T extends keyof Y, Y = OptionsStoreReducerStateType> = ( state: AppStateType ) => Y[T]
@@ -35,10 +35,16 @@ export const getShippersOptionsStore = createSelector(getAllShippersStore, getSh
     ( shippers: ShippersCardType[], titles ): OptionsStoreReducerStateType['shippers'] => {
         return {
             ...titles,
-            content: shippers.map(( { idSender: id, title = '', city: subTitle } ) => ( {
+            content: shippers.map(( {
+                                        idSender: id,
+                                        title = '',
+                                        city: subTitle,
+                                        innNumber: extendInfo,
+                                    } ) => ( {
                 id,
                 title,
                 subTitle,
+                extendInfo,
             } )),
         }
     })
@@ -54,10 +60,16 @@ export const getConsigneesOptionsStore = createSelector(getAllConsigneesStore, g
     ( consignee: ConsigneesCardType[], titles ): OptionsStoreReducerStateType['consignees'] => {
         return {
             ...titles,
-            content: consignee.map(( { idRecipient: id, title = '', city: subTitle } ) => ( {
+            content: consignee.map(( {
+                                         idRecipient: id,
+                                         title = '',
+                                         city: subTitle,
+                                         innNumber: extendInfo,
+                                     } ) => ( {
                 id,
                 title,
                 subTitle,
+                extendInfo,
             } )),
         }
     })

@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk';
 import {AppStateType} from './redux-store';
-import {getListOrganizationRequisites, getPersonalOrganizationRequisites} from './options/requisites-store-reducer';
+import {getPersonalOrganizationRequisites} from './options/requisites-store-reducer';
 import {getAllEmployeesAPI} from './options/employees-store-reducer';
 import {getAllConsigneesAPI} from './options/consignees-store-reducer';
 import {getAllRequestsAPI} from './forms/request-store-reducer';
@@ -57,7 +57,7 @@ export const initializedAll = (): InitializedThunkActionType =>
             const getPersonal = dispatch(getPersonalOrganizationRequisites())
             const getBaseData = dispatch(preAuthDataSet())
             const getGeoPosition = dispatch(geoPositionTake())
-            const getOrganisationsList = dispatch(getListOrganizationRequisites())
+            // const getOrganisationsList = dispatch(getListOrganizationRequisites())
             const getAllShippers = dispatch(getAllShippersAPI())
             const getAllConsignees = dispatch(getAllConsigneesAPI())
             const getAllTransport = dispatch(getAllTransportAPI())
@@ -72,7 +72,7 @@ export const initializedAll = (): InitializedThunkActionType =>
                 getPersonal,
                 getBaseData,
                 getGeoPosition,
-                getOrganisationsList,
+                // getOrganisationsList,
                 getCargoComposition,
                 getAllShippers,
                 getAllConsignees,
@@ -89,5 +89,3 @@ export const initializedAll = (): InitializedThunkActionType =>
             console.log(e)
         }
     }
-
-
