@@ -7,6 +7,8 @@ import {parseCharsAndNumbers} from '../../../utils/parsers'
 import {OptionsLabelType} from '../../../redux/options/options-store-reducer'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
+import {useSelector} from 'react-redux'
+import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
 
 
 type OwnProps = {
@@ -23,6 +25,7 @@ type OwnProps = {
 export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, isPlacemarked } ) => {
     const navigate = useNavigate()
 
+    const { innNumber } = useSelector(getStoredValuesRequisitesStore)
     const [ content, setContent ] = useState(item.content)
     const [ test, setTest ] = useState<string>('')
 
@@ -77,11 +80,14 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
                         key={ item.label + id + title }
                     >
                         <div
-                            className={ styles.rowItem__label +
-                                ( ( isPlacemarked && subTitle ) ? ' ' + styles.rowItem__label_marked : '' ) +
-                                ( ( isPlacemarked && extendInfo === 'ожидает принятия' ) ? ' ' + styles.rowItem__label_markedAwait : '' ) +
-                                ( ( isPlacemarked && extendInfo === 'на заявке' ) ? ' ' + styles.rowItem__label_markedOnRequest : '' )
-                            }
+                            className={ styles.rowItem__label + (
+                                isPlacemarked ?
+                                    ( subTitle && isNaN(+( extendInfo + '' )) ? ' ' + styles.rowItem__label_marked : '' ) +
+                                    ( extendInfo === 'ожидает принятия' ? ' ' + styles.rowItem__label_markedAwait : '' ) +
+                                    ( extendInfo === 'на заявке' ? ' ' + styles.rowItem__label_markedOnRequest : '' ) +
+                                    ( extendInfo === innNumber ? ' ' + styles.rowItem__label_markedMainInn : '' )
+                                    : ''
+                            ) }
                             title={ title + ( subTitle ? ` [${ subTitle }]` : '' ) + ( extendInfo ? ' ' + extendInfo : '' ) }>
                             { title || 'null' }
                         </div>

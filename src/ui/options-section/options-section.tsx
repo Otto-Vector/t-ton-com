@@ -1,8 +1,8 @@
 import React from 'react'
 import styles from './options-section.module.scss'
-import {getRoutesStore} from '../../selectors/routes-reselect';
-import {useSelector} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
+import {getRoutesStore} from '../../selectors/routes-reselect'
+import {useSelector} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
 import {
     getConsigneesOptionsStore,
     getEmployeesOptionsStore,
@@ -10,17 +10,17 @@ import {
     getShippersOptionsStore,
     getTrailerOptionsStore,
     getTransportOptionsStore,
-} from '../../selectors/options/options-reselect';
-import {getIsFetchingShippersStore} from '../../selectors/options/shippers-reselect';
-import {getIsFetchingConsigneesStore} from '../../selectors/options/consignees-reselect';
+} from '../../selectors/options/options-reselect'
+import {getIsFetchingShippersStore} from '../../selectors/options/shippers-reselect'
+import {getIsFetchingConsigneesStore} from '../../selectors/options/consignees-reselect'
 
-import {Button} from '../common/button/button';
-import {ColumnDataList} from './column-data-list/column-data-list';
-import {SizedPreloader} from '../common/preloader/preloader';
-import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect';
-import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect';
-import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect';
-import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal';
+import {Button} from '../common/button/button'
+import {ColumnDataList} from './column-data-list/column-data-list'
+import {SizedPreloader} from '../common/preloader/preloader'
+import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
+import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect'
+import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect'
+import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal'
 
 
 type OwnProps = {}
@@ -72,7 +72,7 @@ export const OptionsSection: React.FC<OwnProps> = () => {
             {/*СПИСКИ*/ }
             <div className={ styles.optionsSection__table }>
                 { shipperIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
-                    <ColumnDataList item={ shippersList } route={ optionsEdit.shippers }/> }
+                    <ColumnDataList item={ shippersList } route={ optionsEdit.shippers } isPlacemarked/> }
                 { employeeIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
                     <ColumnDataList item={ employeesList } route={ optionsEdit.employees } isPlacemarked/> }
                 { transportIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
@@ -80,7 +80,7 @@ export const OptionsSection: React.FC<OwnProps> = () => {
                 { trailerIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
                     <ColumnDataList item={ trailerList } route={ optionsEdit.trailer } isPlacemarked/> }
                 { consigneeIsFetching ? <SizedPreloader sizeHW={ '260px' }/> :
-                    <ColumnDataList item={ consigneesList } route={ optionsEdit.consignees }/> }
+                    <ColumnDataList item={ consigneesList } route={ optionsEdit.consignees } isPlacemarked/> }
             </div>
         </section>
     )
