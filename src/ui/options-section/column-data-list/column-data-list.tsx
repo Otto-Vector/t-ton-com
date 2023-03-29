@@ -80,13 +80,16 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
                         key={ item.label + id + title }
                     >
                         <div
-                            className={ styles.rowItem__label + (
-                                isPlacemarked ?
-                                    ( subTitle && isNaN(+( extendInfo + '' )) ? ' ' + styles.rowItem__label_marked : '' ) +
-                                    ( extendInfo === 'ожидает принятия' ? ' ' + styles.rowItem__label_markedAwait : '' ) +
-                                    ( extendInfo === 'на заявке' ? ' ' + styles.rowItem__label_markedOnRequest : '' ) +
-                                    ( extendInfo === innNumber ? ' ' + styles.rowItem__label_markedMainInn : '' )
-                                    : ''
+                            className={ styles.rowItem__label + ' ' + (
+                                !isPlacemarked ? '' :
+                                    [
+                                        // extendInfo не содержит ИНН
+                                        subTitle && isNaN(+( extendInfo + '' )) && styles.rowItem__label_marked,
+                                        // extendInfo совпадает с ИНН организации
+                                        extendInfo === innNumber && styles.rowItem__label_markedMainInn,
+                                        extendInfo === 'ожидает принятия' && styles.rowItem__label_markedAwait,
+                                        extendInfo === 'на заявке' && styles.rowItem__label_markedOnRequest,
+                                    ].filter(x => x).join(' ')
                             ) }
                             title={ title + ( subTitle ? ` [${ subTitle }]` : '' ) + ( extendInfo ? ' ' + extendInfo : '' ) }>
                             { title || 'null' }

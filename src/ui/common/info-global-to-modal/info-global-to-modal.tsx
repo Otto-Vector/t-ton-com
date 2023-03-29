@@ -14,7 +14,7 @@ import {
     getTextGlobalModalStore,
     getTimeToDeactivateGlobalModalStore,
     getTitleGlobalModalStore,
-} from '../../../selectors/utils/global-modal-reselect'
+} from '../../../selectors/utilites/global-modal-reselect'
 import {useNavigate} from 'react-router-dom'
 import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from-array-to-paragraph'
 import {ModalFooter} from './modal-footer/modal-footer'
