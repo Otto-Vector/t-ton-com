@@ -6,7 +6,7 @@ import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
 import {getDriversBigMapStore} from '../../selectors/maps/big-map-reselect'
 import {Placemark} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
-import {setAnswerDriversToMap, setDriversToMap} from '../../redux/maps/big-map-store-reducer'
+import {setAnswerDriversToMap, setAllMyDriversToMap} from '../../redux/maps/big-map-store-reducer'
 
 import {AddDriversView} from '../add-drivers-form/add-drivers-view'
 import {Portal} from '../common/portals/Portal'
@@ -36,7 +36,7 @@ export const MapSection: React.FC<OwnProps> = () => {
         if (mapModes.answersMode) {
             dispatch<any>(setAnswerDriversToMap(reqNumber || ''))
         } else {
-            dispatch<any>(setDriversToMap())
+            dispatch<any>(setAllMyDriversToMap())
         }
     }, [ dispatch, reqNumber ])
 

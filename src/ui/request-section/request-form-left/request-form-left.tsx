@@ -17,7 +17,7 @@ import {useNavigate} from 'react-router-dom'
 import {FormSelector} from '../../common/form-selector/form-selector'
 import {RequestModesType} from '../request-section'
 import {Field, Form} from 'react-final-form'
-import {InfoField} from './info-field';
+import {InfoField} from './info-field'
 import {
     getAllConsigneesSelectFromLocal,
     getOneConsigneesFromLocal,
@@ -32,17 +32,18 @@ import {
 } from '../../../redux/forms/request-store-reducer'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
-import {Preloader} from '../../common/preloader/preloader';
-import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal';
-import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
-import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer';
-import {setCargoCompositionSelector} from '../../../redux/api/cargo-composition-response-reducer';
-import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-composition-reselect';
-import {Button} from '../../common/button/button';
-import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
-import {getCargoTypeBaseStore} from '../../../selectors/base-reselect';
+import {Preloader} from '../../common/preloader/preloader'
+import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
+import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
+import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer'
+import {setCargoCompositionSelector} from '../../../redux/api/cargo-composition-response-reducer'
+import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-composition-reselect'
+import {Button} from '../../common/button/button'
+import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple'
+import {valuesAreEqual} from '../../../utils/reactMemoUtils'
+import {getCargoTypeBaseStore} from '../../../selectors/base-reselect'
 import {getAuthIdAuthStore} from '../../../selectors/auth-reselect'
+import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
 
 
 type OwnProps = {
@@ -61,7 +62,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [ isFirstRender, setIsFirstRender ] = useState(true)
-    const isMyRequestAndNew = (initialValues.idUserCustomer === useSelector(getAuthIdAuthStore)) && initialValues.globalStatus === 'новая заявка'
+    const isMyRequestAndNew = ( initialValues.idUserCustomer === useSelector(getAuthIdAuthStore) ) && initialValues.globalStatus === 'новая заявка'
     /* данные из стейта заявки для заполнения и обработки полей */
     // заголовки
     const labels = useSelector(getLabelRequestStore)
@@ -80,6 +81,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     // для отображения статуса обработки данных в дистанции
     const currentDistanceIfFetching = useSelector(getCurrentDistanceIsFetchingRequestStore)
 
+    const { innNumber } = useSelector(getStoredValuesRequisitesStore)
+
     // прогруз грузоотправителя для подсчёта маршрута
     const oneShipper = useSelector(getOneShipperFromLocal)
     const setOneShipper = ( searchId: string | undefined ) => {
@@ -93,7 +96,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
 
     const shippersSelect = useSelector(getAllShippersSelectFromLocal)
     const consigneesSelect = useSelector(getAllConsigneesSelectFromLocal)
-    const customersSelect = shippersSelect
+    // заказчик не должен быть левым, иначе капут докам
+    const customersSelect = shippersSelect.map(( { extendInfo, ...props } ) => ( {
+        ...props,
+        isDisabled: extendInfo !== innNumber
+    } ))
 
     const onSubmit = useCallback(async ( oneRequestValues: OneRequestType ) => {
         if (requestModes.createMode) {
@@ -217,7 +224,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                         { labels.cargoComposition }</label>
                                     { requestModes.createMode
                                         ? <FormSelector nameForSelector={ 'cargoComposition' }
-                                                        // placeholder={ placeholders.cargoComposition }
+                                            // placeholder={ placeholders.cargoComposition }
                                                         options={ stringArrayToSelectValue(cargoComposition) }
                                                         validate={ validators.cargoComposition }
                                                         isCreatableSelect
@@ -403,8 +410,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                             type={ hasValidationErrors ? 'submit' : 'button' }
                                             title={ (
                                                 ( requestModes.createMode && 'Поиск исполнителя' ) ||
-                                                ( (requestModes.acceptDriverMode ||
-                                                    (requestModes.statusMode && isMyRequestAndNew)
+                                                ( ( requestModes.acceptDriverMode ||
+                                                    ( requestModes.statusMode && isMyRequestAndNew )
                                                 ) && 'Принять заявку' ) ||
                                                 ( requestModes.statusMode && 'Груз у водителя' ) ) + ''
                                             }
@@ -420,24 +427,24 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     </div>
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={
-                                            ( (requestModes.createMode || isMyRequestAndNew) && 'blue' ) ||
+                                            ( ( requestModes.createMode || isMyRequestAndNew ) && 'blue' ) ||
                                             ( requestModes.acceptDriverMode && 'red' ) ||
                                             ( requestModes.statusMode && values.localStatus?.cargoHasBeenReceived ? 'blue' : 'green' )
                                         }
                                                 type={ hasValidationErrors ? 'submit' : 'button' }
                                                 title={ (
-                                                    ( (requestModes.createMode || isMyRequestAndNew) && 'Cамовывоз' ) ||
+                                                    ( ( requestModes.createMode || isMyRequestAndNew ) && 'Cамовывоз' ) ||
                                                     ( requestModes.acceptDriverMode && 'Отказаться' ) ||
                                                     ( requestModes.statusMode && 'Груз у получателя' ) ) + ''
                                                 }
                                                 onClick={ () => {
                                                     if (!hasValidationErrors) {
-                                                        (requestModes.createMode || isMyRequestAndNew) && buttonsAction.submitRequestAndDrive(values)
+                                                        ( requestModes.createMode || isMyRequestAndNew ) && buttonsAction.submitRequestAndDrive(values)
                                                         requestModes.acceptDriverMode && buttonsAction.cancelRequest()
                                                         requestModes.statusMode && buttonsAction.cargoHasBeenReceived(values)
                                                     }
                                                 } }
-                                                disabled={ requestModes.statusMode ? (!isMyRequestAndNew && !values.localStatus?.cargoHasBeenTransferred) : submitting || submitError }
+                                                disabled={ requestModes.statusMode ? ( !isMyRequestAndNew && !values.localStatus?.cargoHasBeenTransferred ) : submitting || submitError }
                                                 rounded/>
                                         { requestModes.createMode &&
                                             <InfoButtonToModal textToModal={ fieldInformation.selfDeliveryButton }

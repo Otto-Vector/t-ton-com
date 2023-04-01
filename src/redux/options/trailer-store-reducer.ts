@@ -200,7 +200,7 @@ export const getOneTrailerFromAPI = ( idTrailer: string ): TrailerStoreReducerTh
         dispatch(trailerStoreActions.setInitialValues({} as TrailerCardType))
         try {
             if (idTrailer) {
-                const response = await trailerApi.getOneTrailerById({ idTrailer })
+                const response = await trailerApi.getOneOrMoreTrailerById({ idTrailer })
                 if (response.message) console.log(response.message)
                 if (response.length > 0) {
                     const oneTrailer = response[0]

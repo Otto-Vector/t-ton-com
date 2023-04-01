@@ -208,7 +208,7 @@ export const oneTransportDeleteToAPI = ( idTransport: string ): TransportStoreRe
 export const getOneTransportFromAPI = ( idTransport: string ): TransportStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await transportApi.getOneTransportById({ idTransport })
+            const response = await transportApi.getOneOrMoreTransportById({ idTransport })
             if (response.message) console.log(response.message)
             if (response.length > 0) {
                 const oneTransport = response[0]

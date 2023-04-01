@@ -293,7 +293,7 @@ export const oneEmployeeDeleteHardToAPI = ( idEmployee: string ): EmployeesStore
 export const getOneEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await employeesApi.getOneEmployeeById({ idEmployee })
+            const response = await employeesApi.getOneOrMoreEmployeeById({ idEmployee })
             if (response.message) console.log(response.message)
             if (response.length > 0) {
                 const oneEmployee = response[0]
@@ -309,7 +309,7 @@ export const getOneFiredEmployeeFromAPI = ( idEmployee: string ): EmployeesStore
     async ( dispatch, getState ) => {
         dispatch(employeesStoreActions.setInitialValues({} as EmployeeCardType))
         try {
-            const response = await employeesApi.getOneEmployeeById({ idEmployee })
+            const response = await employeesApi.getOneOrMoreEmployeeById({ idEmployee })
             if (response.message) console.log(response.message)
             if (response.length > 0) {
                 const oneEmployee = response[0]

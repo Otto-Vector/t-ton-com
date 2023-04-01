@@ -21,7 +21,7 @@ export const transportApi = {
 
     // запрос на один ТРАНСПОРТ • PATCH /api/transport/
     // один id или через запятую без пробелов
-    getOneTransportById( idTransport: { idTransport: string } ) {
+    getOneOrMoreTransportById( idTransport: { idTransport: string } ) {
         return instanceBack.patch<InfoResponseType & TransportApiType[]>('/api/transport/', idTransport)
             .then(response => response.data)
         // 1.	Code 200, Models: TransportApiType[]

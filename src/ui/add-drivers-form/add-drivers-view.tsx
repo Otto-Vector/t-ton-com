@@ -23,6 +23,11 @@ import {requestStoreActions} from '../../redux/forms/request-store-reducer'
 import {Button} from '../common/button/button'
 import {AppStateType} from '../../redux/redux-store'
 import {MaterialIcon} from '../common/material-icon/material-icon'
+import {
+    getFilteredDriversBigMapStore,
+    getFilteredTrailersBigMapStore,
+    getFilteredTransportBigMapStore,
+} from '../../selectors/maps/big-map-reselect'
 
 
 type OwnProps = {
@@ -36,7 +41,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const initialValues = useSelector(getOneEmployeeFromLocal)
+    const employee = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
     const label = useSelector(getLabelAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
     const oneRequest = useSelector(getOneRequestStore)
@@ -49,15 +54,15 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
 
     // const oneEmployee = useSelector(getOneEmployeesFromLocal)
     // const employeeOneImage = oneEmployee.photoFace
-    const employeeOnePhone = initialValues.employeePhoneNumber
+    const employeeOnePhone = employee?.employeePhoneNumber
 
-    const oneTransport = useSelector(getOneTransportFromLocal)
+    const oneTransport = useSelector(getFilteredTransportBigMapStore).find(( { idTransport } ) => idTransport === employee?.idTransport)
 
-    const transportOneImage = oneTransport.transportImage
+    const transportOneImage = oneTransport?.transportImage
     // const transportOneCargoWeight = oneTransport.cargoWeight
 
-    const oneTrailer = useSelector(getOneTrailerFromLocal)
-    const trailerOneImage = oneTrailer.trailerImage
+    const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === employee?.idTrailer)
+    const trailerOneImage = oneTrailer?.trailerImage
     // const trailerOneCargoWeight = oneTrailer.cargoWeight
 
     const clickForTests = () => {
@@ -72,16 +77,16 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     })
 
     useEffect(() => {
-        // dispatch(employeesStoreActions.setCurrentId(initialValues.employeeFIO || ''))
-        dispatch(transportStoreActions.setCurrentId(initialValues.idTransport || ''))
-        dispatch(trailerStoreActions.setCurrentId(initialValues.idTrailer || ''))
-    }, [ initialValues ])
+        // dispatch(employeesStoreActions.setCurrentId(employee.employeeFIO || ''))
+        dispatch(transportStoreActions.setCurrentId(employee?.idTransport || ''))
+        dispatch(trailerStoreActions.setCurrentId(employee?.idTrailer || ''))
+    }, [ employee ])
 
     if (isFetching) return <Preloader/>
 
     return (
         <div className={ styles.addDriversForm__wrapper }>
-            {/* иконка под невидимую закрывалку на балуне яндекс карты */}
+            {/* иконка под невидимую закрывалку на балуне яндекс карты */ }
             <MaterialIcon icon_name={ 'highlight_off' }
                           style={ {
                               position: 'absolute',
@@ -102,21 +107,21 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         <label
                             className={ styles.addDriversForm__label }>{ label.idEmployee + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { initialValues.employeeFIO }
+                            { employee?.employeeFIO }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__selector }>
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneTransport.transportModel }
+                            { oneTransport?.transportModel }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__selector }>
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneTrailer.trailerModel }
+                            { oneTrailer?.trailerModel }
                         </div>
                     </div>
                 </div>
@@ -125,7 +130,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         <label className={ styles.addDriversForm__label }>
                             { label.responseStavka + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { initialValues.rating }
+                            { employee?.rating }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoItem }
@@ -140,7 +145,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         <label className={ styles.addDriversForm__label }>
                             { 'Рейсы шт.:' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { initialValues.rating || '-' }
+                            { employee?.rating || '-' }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoItem }>
@@ -155,9 +160,9 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                 <div className={ styles.addDriversForm__photoPanel }>
                     <div className={ styles.addDriversForm__photo }>
                         <img
-                            src={ setImage(initialValues.photoFace) }
+                            src={ setImage(employee?.photoFace) }
                             alt="driverPhoto"
-                            onClick={ () => setLightBoxImage(setImage(initialValues.photoFace)) }
+                            onClick={ () => setLightBoxImage(setImage(employee?.photoFace)) }
                         />
                     </div>
                     <div className={ styles.addDriversForm__photo }>

@@ -7,6 +7,9 @@ import {GetActionsTypes} from '../../types/ts-utils'
 import {getRandomInRange} from '../../utils/random-utils'
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
 import {employeesApi} from '../../api/local-api/options/employee.api'
+import {EmployeeCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
+import {trailerApi} from '../../api/local-api/options/trailer.api'
+import {transportApi} from '../../api/local-api/options/transport.api'
 
 export type DriverOnMapType = {
     id: number,
@@ -20,14 +23,9 @@ export type DriverOnMapType = {
 const initialState = {
     isFetching: true,
     center: [ 0, 0 ] as [ number, number ],
-    drivers: [
-        {
-            id: 2 as number,
-            position: [ 0, 0 ] as number[],
-            status: 'empty' as 'empty' | 'full' | 'unknown',
-            fio: '',
-        },
-    ] as DriverOnMapType[],
+    driversOnMap: [] as EmployeeCardType[],
+    transportOnMap: [] as TransportCardType[],
+    trailersOnMap: [] as TrailerCardType[],
     requests: [ {} ] as number[],
 }
 
@@ -54,7 +52,19 @@ export const bigMapStoreReducer = ( state = initialState, action: ActionsType ):
         case 'big-map-store-reducer/SET-DRIVERS-LIST': {
             return {
                 ...state,
-                drivers: action.drivers,
+                driversOnMap: action.driversOnMap,
+            }
+        }
+        case 'big-map-store-reducer/SET-TRANSPORT-LIST': {
+            return {
+                ...state,
+                transportOnMap: action.transportOnMap,
+            }
+        }
+        case 'big-map-store-reducer/SET-TRAILERS-LIST': {
+            return {
+                ...state,
+                trailersOnMap: action.trailersOnMap,
             }
         }
         default: {
@@ -74,9 +84,17 @@ export const bigMapStoreActions = {
         type: 'big-map-store-reducer/SET-IS-FETCHING',
         isFetching,
     } as const ),
-    setDriversList: ( drivers: DriverOnMapType[] ) => ( {
+    setDriversList: ( driversOnMap: EmployeeCardType[] ) => ( {
         type: 'big-map-store-reducer/SET-DRIVERS-LIST',
-        drivers,
+        driversOnMap,
+    } as const ),
+    setTransportList: ( transportOnMap: TransportCardType[] ) => ( {
+        type: 'big-map-store-reducer/SET-TRANSPORT-LIST',
+        transportOnMap,
+    } as const ),
+    setTrailersList: ( trailersOnMap: TrailerCardType[] ) => ( {
+        type: 'big-map-store-reducer/SET-TRAILERS-LIST',
+        trailersOnMap,
     } as const ),
 }
 
@@ -95,49 +113,44 @@ export const geoPositionTake = (): BigMapStoreReducerThunkActionType =>
         geoPosition(reparserLonLat)
     }
 
+
 // берёт данные из загруженного списка водителей и сохраняет их в стэйт
 // (возможно лучше это сделать через "selectors"
-export const setDriversToMap = (): BigMapStoreReducerThunkActionType =>
+export const setAllMyDriversToMap = (): BigMapStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        const drivers: DriverOnMapType[] = getState().employeesStoreReducer.content.map(
-            ( { idEmployee, coordinates, status, employeeFIO }, index ) => ( {
-                id: index + 1,
-                idEmployee,
-                position: stringToCoords(coordinates)
-                    //toDo: это заглушка для пустых, убрать
-                    .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5)),
-                status: status as string,
-                fio: parseFamilyToFIO(employeeFIO),
-            } ))
-        dispatch(bigMapStoreActions.setDriversList(drivers))
+        const myDriversList = getState().employeesStoreReducer.content
+        const myTransport = getState().transportStoreReducer.content
+        const myTrailers = getState().trailerStoreReducer.content
+        dispatch(bigMapStoreActions.setDriversList(myDriversList))
+        dispatch(bigMapStoreActions.setTransportList(myTransport))
+        dispatch(bigMapStoreActions.setTrailersList(myTrailers))
     }
 
 // загрузка на карту водителей с ответами перевозчиков
 export const setAnswerDriversToMap = ( requestNumber: string ): BigMapStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
+    async ( dispatch ) => {
         try {
-            const request = await responseToRequestApi.getOneOrMoreResponseToRequest({ requestNumber })
-            console.log(request)
-            // пока грузим ВЕСЬ СПИСОК
-            // toDo: дать бэку задание выгружать водителей по списку айдишек
-            const allDriversList = await employeesApi.getAllEmployees()
-
-            if (request.length && allDriversList.length) {
-                const idEmployeesToSearch = request.map(( { idEmployee } ) => idEmployee)
-                const drivers: DriverOnMapType[] = allDriversList
-                    .filter(( { idEmployee } ) => idEmployeesToSearch.includes(idEmployee))
-                    .map(( { idEmployee, coordinates, status, employeeFIO }, index ) => ( {
-                        id: index + 1,
-                        idEmployee,
-                        position: stringToCoords(coordinates)
-                            //toDo: это заглушка для пустых, убрать
-                            .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5)),
-                        status: status as string,
-                        fio: parseFamilyToFIO(employeeFIO),
-                    } ))
-                dispatch(bigMapStoreActions.setDriversList(drivers))
+            // список ответов на заявку
+            const responseToRequest = await responseToRequestApi.getOneOrMoreResponseToRequest({ requestNumber })
+            // console.log(responseToRequest)
+            if (responseToRequest.length) {
+                const idEmployee = responseToRequest.map(( { idEmployee } ) => idEmployee).join()
+                const idTransport = responseToRequest.map(( { idTransport } ) => idTransport).join()
+                const idTrailer = responseToRequest.map(( { idTrailer } ) => idTrailer).join()
+                const allDriversList = await employeesApi.getOneOrMoreEmployeeById({ idEmployee })
+                if (allDriversList.length) {
+                    dispatch(bigMapStoreActions.setDriversList(allDriversList))
+                    const allTransportList = await transportApi.getOneOrMoreTransportById({idTransport})
+                    const allTrailersList = await trailerApi.getOneOrMoreTrailerById({ idTrailer })
+                    if (Array.isArray(allTransportList)) {
+                        dispatch(bigMapStoreActions.setTransportList(allTransportList))
+                    }
+                    if (Array.isArray(allTrailersList)) {
+                        dispatch(bigMapStoreActions.setTrailersList(allTrailersList))
+                    }
+                }
             }
         } catch (e) {
-
+            console.log('Ошибка при загрузке данных водителей, которые привязаны к ответам на заявку: ', e)
         }
     }
