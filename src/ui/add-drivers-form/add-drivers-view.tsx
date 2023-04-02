@@ -14,7 +14,11 @@ import {getOneEmployeeFromLocal} from '../../selectors/options/employees-reselec
 import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
 
 import {getOneTrailerFromLocal} from '../../selectors/options/trailer-reselect'
-import {employeesStoreActions} from '../../redux/options/employees-store-reducer'
+import {
+    employeesStoreActions,
+    getAllEmployeesAPI, modifyOneEmployeeStatusToAPI,
+    modifyOneEmployeeToAPI,
+} from '../../redux/options/employees-store-reducer'
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
@@ -33,6 +37,7 @@ import {getRoutesStore} from '../../selectors/routes-reselect'
 import {removeResponseToRequestsBzRemoveThisDriverFromRequest} from '../../redux/forms/add-driver-store-reducer'
 import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
+import {EmployeeCardType} from '../../types/form-types'
 
 
 type OwnProps = {
@@ -81,17 +86,24 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const onDecline = async () => {
         await dispatch<any>(removeResponseToRequestsBzRemoveThisDriverFromRequest(oneResponse?.responseId + ''))
         await dispatch<any>(setAnswerDriversToMap(oneRequest?.requestNumber + ''))
+        // зачистка статуса, если сотрудник всего на одной заявке
+        if (oneEmployee?.addedToResponse && oneEmployee.addedToResponse.split(', ').length === 1 && oneEmployee?.status === 'ожидает принятия') {
+            await dispatch<any>(modifyOneEmployeeStatusToAPI(idEmployee, 'свободен'))
+        } else {
+            dispatch<any>(getAllEmployeesAPI())
+        }
         if (oneRequest?.answers?.length && oneRequest.answers.length > 1) {
             await dispatch<any>(textAndActionGlobalModal({
-                text: 'Сотруднику <b>' + oneEmployee?.employeeFIO + '</b> отказано в участии в заявке'
+                text: 'Сотруднику <b>' + oneEmployee?.employeeFIO + '</b> отказано в участии в заявке',
             }))
         } else {
-            dispatch<any>(textAndActionGlobalModal({
+            await dispatch<any>(textAndActionGlobalModal({
                 text: 'На заявке <b>' + oneRequest.requestNumber + '</b> больше нет ответов',
                 navigateOnOk: routes.requestsList,
                 navigateOnCancel: routes.requestsList,
             }))
         }
+
     }
 
     if (isFetching) return <Preloader/>

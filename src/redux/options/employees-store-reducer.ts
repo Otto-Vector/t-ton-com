@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {syncValidators} from '../../utils/validators'
-import {EmployeeCardType, ParserType, ValidateType} from '../../types/form-types'
+import {EmployeeCardType, EmployeeStatusType, ParserType, ValidateType} from '../../types/form-types'
 import {syncParsers} from '../../utils/parsers'
 import {employeesApi} from '../../api/local-api/options/employee.api'
 import {
@@ -186,6 +186,18 @@ export const newEmployeeSaveToAPI = ( values: EmployeeCardType<string>, image: F
                 return e?.response?.data?.idEmployee
             }
             console.log(JSON.stringify(e?.response?.data))
+        }
+        await dispatch(getAllEmployeesAPI())
+    }
+
+// изменить статус у конкретного сотрудника
+export const modifyOneEmployeeStatusToAPI = ( idEmployee: string, status: EmployeeStatusType ): EmployeesStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await employeesApi.modifyOneEmployeeNoPhoto({ idEmployee, status })
+            console.log(response)
+        } catch (e: TtonErrorType) {
+            console.error(JSON.stringify(e?.response?.data))
         }
         await dispatch(getAllEmployeesAPI())
     }
