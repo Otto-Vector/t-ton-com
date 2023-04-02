@@ -3,16 +3,20 @@ import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
-import {getDriversBigMapStore, getIsFetchingBigMapStore} from '../../selectors/maps/big-map-reselect'
+import {
+    getDriversBigMapStore,
+    getFilteredResponsesBigMapStore,
+    getIsFetchingBigMapStore,
+} from '../../selectors/maps/big-map-reselect'
 import {Placemark, Polyline} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
-import {setAnswerDriversToMap, setAllMyDriversToMap} from '../../redux/maps/big-map-store-reducer'
+import {setAllMyDriversToMap, setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 
 import {AddDriversView} from '../add-drivers-form/add-drivers-view'
 import {Portal} from '../common/portals/Portal'
 import {getRandomInRange} from '../../utils/random-utils'
 import {getRoutesStore} from '../../selectors/routes-reselect'
-import {useLocation, useNavigate, useParams} from 'react-router-dom'
+import {useLocation, useParams} from 'react-router-dom'
 import {SizedPreloader} from '../common/preloader/preloader'
 import {
     getInitialValuesRequestStore,
@@ -34,6 +38,7 @@ export const MapSection: React.FC<OwnProps> = () => {
     // const navigate = useNavigate()
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const { pathname } = useLocation()
+    const responses = useSelector(getFilteredResponsesBigMapStore).length
 
     const mapModes = useMemo(() => ( {
         answersMode: pathname.includes(routes.maps.answers),
@@ -58,37 +63,40 @@ export const MapSection: React.FC<OwnProps> = () => {
                 <div className={ styles.yandexMapComponent__preloader }><SizedPreloader sizeHW={ '200px' }/></div> }
             <YandexBigMap center={ center } zoom={ zoom }>
                 { mapModes.answersMode && polyline && <>
-                <Polyline geometry={ polyline }
-                                                                options={ {
-                                                                    strokeColor: '#023E8A',
-                                                                    strokeWidth: 4,
-                                                                    opacity: 0.8,
-                                                                } }
-                />
+                    {/* ДОРОГА */}
+                    <Polyline geometry={ polyline }
+                              options={ {
+                                  strokeColor: '#023E8A',
+                                  strokeWidth: 4,
+                                  opacity: 0.8,
+                              } }
+                    />
+                    {/* ТОЧКА ПОГРУЗКИ */}
                     <Placemark geometry={ polyline[0] }
-                                          options={
-                                              {
-                                                  preset: 'islands#nightStretchyIcon',
-                                              } }
-                                          properties={
-                                              {
-                                                  iconContent: `из ${currentRequest?.sender?.city}`,
-                                                  hintContent: `Грузоотправитель`,
-                                              }
-                                          }
-                        />
-                    <Placemark geometry={ polyline[polyline.length-1] }
-                                          options={
-                                              {
-                                                  preset: 'islands#nightStretchyIcon',
-                                              } }
-                                          properties={
-                                              {
-                                                  iconContent: `в ${currentRequest?.recipient?.city}`,
-                                                  hintContent: `Грузополучатель`,
-                                              }
-                                          }
-                        />
+                               options={
+                                   {
+                                       preset: 'islands#nightStretchyIcon',
+                                   } }
+                               properties={
+                                   {
+                                       iconContent: `из ${ currentRequest?.sender?.city }`,
+                                       hintContent: `Грузоотправитель`,
+                                   }
+                               }
+                    />
+                    {/* ТОЧКА РАЗГРУЗКИ */}
+                    <Placemark geometry={ polyline[polyline.length - 1] }
+                               options={
+                                   {
+                                       preset: 'islands#nightStretchyIcon',
+                                   } }
+                               properties={
+                                   {
+                                       iconContent: `в ${ currentRequest?.recipient?.city }`,
+                                       hintContent: `Грузополучатель`,
+                                   }
+                               }
+                    />
                 </>
                 }
                 { drivers.map(( { id, idEmployee, position, status, fio } ) => {

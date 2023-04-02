@@ -174,6 +174,16 @@ export const removeResponseToRequestsBzAcceptRequest = ( requestNumber: string )
         }
     }
 
+export const removeResponseToRequestsBzRemoveThisDriverFromRequest = ( responseId: string ): AddDriverStoreReducerThunkActionType =>
+    async (dispatch) => {
+        try {
+            const response = await responseToRequestApi.deleteSomeResponseToRequest({ responseId })
+            dispatch(getAllRequestsAPI())
+            console.log(response)
+        } catch (e: TtonErrorType) {
+            console.log(JSON.stringify(e?.response?.data))
+        }
+    }
 // удаление ответов на заявки, привязанных к сотруднику
 export const removeResponseToRequestsBzEmployee = ( idEmployee: string ): AddDriverStoreReducerThunkActionType =>
     async () => {

@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect} from 'react'
+import React, {useEffect, useLayoutEffect, useMemo} from 'react'
 import styles from './add-drivers-form.module.scss'
 import noImage from '../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
@@ -28,6 +28,11 @@ import {
     getFilteredTrailersBigMapStore,
     getFilteredTransportBigMapStore,
 } from '../../selectors/maps/big-map-reselect'
+import {useLocation} from 'react-router-dom'
+import {getRoutesStore} from '../../selectors/routes-reselect'
+import {removeResponseToRequestsBzRemoveThisDriverFromRequest} from '../../redux/forms/add-driver-store-reducer'
+import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
+import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 
 
 type OwnProps = {
@@ -47,41 +52,47 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const oneRequest = useSelector(getInitialValuesRequestStore)
     const distance = oneRequest?.distance
     const dispatch = useDispatch()
+    const { pathname } = useLocation()
+    const routes = useSelector(getRoutesStore)
+
+    const mapModes = useMemo(() => ( {
+        answersMode: pathname.includes(routes.maps.answers),
+        routesMode: pathname.includes(routes.maps.routes),
+    } ), [ pathname ])
 
     const setLightBoxImage = ( image?: string | null ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
-    const employee = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
-    const employeeOnePhone = employee?.employeePhoneNumber
+    const oneEmployee = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
+    const employeeOnePhone = oneEmployee?.employeePhoneNumber
 
-    const oneResponse = useSelector(getFilteredResponsesBigMapStore).find(( { idTransport } ) => idTransport === employee?.idTransport)
+    const oneResponse = useSelector(getFilteredResponsesBigMapStore).find(( { idTransport } ) => idTransport === oneEmployee?.idTransport)
 
-    const oneTransport = useSelector(getFilteredTransportBigMapStore).find(( { idTransport } ) => idTransport === employee?.idTransport)
-
+    const oneTransport = useSelector(getFilteredTransportBigMapStore).find(( { idTransport } ) => idTransport === oneEmployee?.idTransport)
     const transportOneImage = oneTransport?.transportImage
-    // const transportOneCargoWeight = oneTransport.cargoWeight
 
-    const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === employee?.idTrailer)
+    const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const trailerOneImage = oneTrailer?.trailerImage
-    // const trailerOneCargoWeight = oneTrailer.cargoWeight
 
-    const clickForTests = () => {
-        // dispatch<any>(setOrganizationRequisites())
-        // dispatch<any>(getAllShippersAPI())
+    const onSubmit = () => {
     }
 
-    useLayoutEffect(() => {
-        // dispatch<any>(getTestAddDriverValues())
-        dispatch(employeesStoreActions.setCurrentId(idEmployee))
-        dispatch(requestStoreActions.setCurrentRequestNumber(76))
-    })
-
-    useEffect(() => {
-        // dispatch(employeesStoreActions.setCurrentId(employee.employeeFIO || ''))
-        dispatch(transportStoreActions.setCurrentId(employee?.idTransport || ''))
-        dispatch(trailerStoreActions.setCurrentId(employee?.idTrailer || ''))
-    }, [ employee ])
+    const onDecline = async () => {
+        await dispatch<any>(removeResponseToRequestsBzRemoveThisDriverFromRequest(oneResponse?.responseId + ''))
+        await dispatch<any>(setAnswerDriversToMap(oneRequest?.requestNumber + ''))
+        if (oneRequest?.answers?.length && oneRequest.answers.length > 1) {
+            await dispatch<any>(textAndActionGlobalModal({
+                text: 'Сотруднику <b>' + oneEmployee?.employeeFIO + '</b> отказано в участии в заявке'
+            }))
+        } else {
+            dispatch<any>(textAndActionGlobalModal({
+                text: 'На заявке <b>' + oneRequest.requestNumber + '</b> больше нет ответов',
+                navigateOnOk: routes.requestsList,
+                navigateOnCancel: routes.requestsList,
+            }))
+        }
+    }
 
     if (isFetching) return <Preloader/>
 
@@ -108,7 +119,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         <label
                             className={ styles.addDriversForm__label }>{ label.idEmployee + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { employee?.employeeFIO }
+                            { oneEmployee?.employeeFIO }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__selector }>
@@ -128,7 +139,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                 </div>
                 <div className={ styles.addDriversForm__infoPanel }>
                     <div className={ styles.addDriversForm__infoItem }
-                         title={ 'Вес груза: ' + oneResponse?.cargoWeight +'т.' }
+                         title={ 'Вес груза: ' + oneResponse?.cargoWeight + 'т.' }
                     >
                         <label className={ styles.addDriversForm__label }>
                             { label.responseStavka + ':' }</label>
@@ -148,7 +159,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         <label className={ styles.addDriversForm__label }>
                             { 'Рейсы шт.:' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { employee?.rating || '-' }
+                            { oneEmployee?.rating || '-' }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoItem }>
@@ -163,9 +174,9 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                 <div className={ styles.addDriversForm__photoPanel }>
                     <div className={ styles.addDriversForm__photo }>
                         <img
-                            src={ setImage(employee?.photoFace) }
+                            src={ setImage(oneEmployee?.photoFace) }
                             alt="driverPhoto"
-                            onClick={ () => setLightBoxImage(setImage(employee?.photoFace)) }
+                            onClick={ () => setLightBoxImage(setImage(oneEmployee?.photoFace)) }
                         />
                     </div>
                     <div className={ styles.addDriversForm__photo }>
@@ -184,19 +195,30 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                     </div>
                 </div>
                 <div className={ styles.addDriversForm__buttonsPanel }>
-                    <a role="button"
-                       href={ `tel:${ employeeOnePhone }` }
-                       className={ styles.addDriversForm__buttonHrefWrapper }>
-                        <Button type={ 'button' }
-                                disabled={ !employeeOnePhone }
-                                colorMode={ 'blue' }
-                                onClick={ () => {
-                                    clickForTests()
-                                } }
-                                title={ employeeOnePhone + '' }
-                                rounded
-                        />
-                    </a>
+                    { mapModes.answersMode
+                        ? <>
+                            <Button colorMode={ 'blue' } title={ 'Принять' }
+                                    onClick={ onSubmit }
+                            />
+                            <span style={ { paddingLeft: '10px' } }/>
+                            <Button colorMode={ 'red' } title={ 'Отказать' }
+                                    onClick={ onDecline }
+                            />
+                        </>
+                        :
+                        <a role="button"
+                           href={ `tel:${ employeeOnePhone }` }
+                           className={ styles.addDriversForm__buttonHrefWrapper }>
+                            <Button type={ 'button' }
+                                    disabled={ !employeeOnePhone }
+                                    colorMode={ 'blue' }
+                                    onClick={ () => {
+                                        console.log('нажали кнопку')
+                                    } }
+                                    title={ employeeOnePhone + '' }
+                                    rounded
+                            />
+                        </a> }
                 </div>
             </div>
 
