@@ -193,6 +193,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeeCardType<string>, image: F
 // изменить статус у конкретного сотрудника
 export const modifyOneEmployeeStatusToAPI = ( idEmployee: string, status: EmployeeStatusType ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
+    debugger
         try {
             const response = await employeesApi.modifyOneEmployeeNoPhoto({ idEmployee, status })
             console.log(response)

@@ -87,7 +87,11 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
         await dispatch<any>(removeResponseToRequestsBzRemoveThisDriverFromRequest(oneResponse?.responseId + ''))
         await dispatch<any>(setAnswerDriversToMap(oneRequest?.requestNumber + ''))
         // зачистка статуса, если сотрудник всего на одной заявке
-        if (oneEmployee?.addedToResponse && oneEmployee.addedToResponse.split(', ').length === 1 && oneEmployee?.status === 'ожидает принятия') {
+        if (oneEmployee?.addedToResponse
+            // если привязан всего к одной заявке и она сейчас "отвалится"
+            && oneEmployee.addedToResponse.split(', ').filter(x => x).length === 1
+            // на всякий случай доп. проверка
+            && oneEmployee?.status === 'ожидает принятия') {
             await dispatch<any>(modifyOneEmployeeStatusToAPI(idEmployee, 'свободен'))
         } else {
             dispatch<any>(getAllEmployeesAPI())
