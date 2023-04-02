@@ -7,15 +7,16 @@ import {GetActionsTypes} from '../../types/ts-utils'
 import {getRandomInRange} from '../../utils/random-utils'
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
 import {employeesApi} from '../../api/local-api/options/employee.api'
-import {EmployeeCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
+import {EmployeeCardType, EmployeeStatusType, TrailerCardType, TransportCardType} from '../../types/form-types'
 import {trailerApi} from '../../api/local-api/options/trailer.api'
 import {transportApi} from '../../api/local-api/options/transport.api'
+import {getOneRequestsAPI} from '../forms/request-store-reducer'
 
 export type DriverOnMapType = {
     id: number,
     idEmployee: string,
     position: number[],
-    status: string,
+    status?: EmployeeStatusType,
     fio: string
 }
 
@@ -140,7 +141,7 @@ export const setAnswerDriversToMap = ( requestNumber: string ): BigMapStoreReduc
         try {
             // список ответов на заявку
             const responseToRequest = await responseToRequestApi.getOneOrMoreResponseToRequest({ requestNumber })
-            // console.log(responseToRequest)
+            dispatch(getOneRequestsAPI(+requestNumber))
             if (responseToRequest.length) {
                 const idEmployee = responseToRequest.map(( { idEmployee } ) => idEmployee).join()
                 const idTransport = responseToRequest.map(( { idTransport } ) => idTransport).join()

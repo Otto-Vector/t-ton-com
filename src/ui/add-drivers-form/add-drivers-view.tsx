@@ -8,7 +8,7 @@ import {
 } from '../../selectors/options/requisites-reselect'
 
 import {getLabelAddDriverStore} from '../../selectors/forms/add-driver-reselect'
-import {getOneRequestStore} from '../../selectors/forms/request-form-reselect'
+import {getInitialValuesRequestStore, getOneRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
 import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
@@ -44,7 +44,8 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const employee = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
     const label = useSelector(getLabelAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
-    const oneRequest = useSelector(getOneRequestStore)
+    // const oneRequest = useSelector(getOneRequestStore)
+    const oneRequest = useSelector(getInitialValuesRequestStore)
     const distance = oneRequest?.distance
     const dispatch = useDispatch()
 

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
 import {getDriversBigMapStore, getIsFetchingBigMapStore} from '../../selectors/maps/big-map-reselect'
-import {Placemark} from 'react-yandex-maps'
+import {Placemark, Polyline} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
 import {setAnswerDriversToMap, setAllMyDriversToMap} from '../../redux/maps/big-map-store-reducer'
 
@@ -14,6 +14,10 @@ import {getRandomInRange} from '../../utils/random-utils'
 import {getRoutesStore} from '../../selectors/routes-reselect'
 import {useLocation, useNavigate, useParams} from 'react-router-dom'
 import {SizedPreloader} from '../common/preloader/preloader'
+import {
+    getInitialValuesRequestStore,
+    getRoutesParsedFromPolylineRequestStore,
+} from '../../selectors/forms/request-form-reselect'
 
 
 type OwnProps = {}
@@ -25,6 +29,8 @@ export const MapSection: React.FC<OwnProps> = () => {
     const [ idToPortal, setIdToPortal ] = useState({ idEmployee: '', flag: false })
     const dispatch = useDispatch()
     const routes = useSelector(getRoutesStore)
+    const polyline = useSelector(getRoutesParsedFromPolylineRequestStore)
+    const currentRequest = useSelector(getInitialValuesRequestStore)
     // const navigate = useNavigate()
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const { pathname } = useLocation()
@@ -48,8 +54,43 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     return (
         <div className={ styles.yandexMapComponent }>
-            {isFetching && <div className={styles.yandexMapComponent__preloader}><SizedPreloader sizeHW={'200px'}/></div>}
+            { isFetching &&
+                <div className={ styles.yandexMapComponent__preloader }><SizedPreloader sizeHW={ '200px' }/></div> }
             <YandexBigMap center={ center } zoom={ zoom }>
+                { mapModes.answersMode && polyline && <>
+                <Polyline geometry={ polyline }
+                                                                options={ {
+                                                                    strokeColor: '#023E8A',
+                                                                    strokeWidth: 4,
+                                                                    opacity: 0.8,
+                                                                } }
+                />
+                    <Placemark geometry={ polyline[0] }
+                                          options={
+                                              {
+                                                  preset: 'islands#nightStretchyIcon',
+                                              } }
+                                          properties={
+                                              {
+                                                  iconContent: `из ${currentRequest?.sender?.city}`,
+                                                  hintContent: `Грузоотправитель`,
+                                              }
+                                          }
+                        />
+                    <Placemark geometry={ polyline[polyline.length-1] }
+                                          options={
+                                              {
+                                                  preset: 'islands#nightStretchyIcon',
+                                              } }
+                                          properties={
+                                              {
+                                                  iconContent: `в ${currentRequest?.recipient?.city}`,
+                                                  hintContent: `Грузополучатель`,
+                                              }
+                                          }
+                        />
+                </>
+                }
                 { drivers.map(( { id, idEmployee, position, status, fio } ) => {
                         const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))
                         return <Placemark geometry={ anyPosition }
@@ -57,7 +98,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                           options={
                                               {
                                                   preset: 'islands#circleIcon',
-                                                  iconColor: status === 'empty' ? 'red' : 'green',
+                                                  iconColor: status === 'свободен' ? 'red' : 'green',
                                                   hasBalloon: true,
                                               } }
                                           properties={

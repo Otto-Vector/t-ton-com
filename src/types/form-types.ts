@@ -176,6 +176,7 @@ export type CompanyRequisitesApiType = {
     dispatcherFIO?: string
 }
 ///////////////////////////////////////////////////////////
+export type EmployeeStatusType = 'на заявке' | 'свободен' | 'ожидает принятия' | 'в отпуске' | 'уволен'
 // на сотрудника
 export type EmployeeCardType<T = DefaultFormType> = {
     idUser: T
@@ -206,7 +207,7 @@ export type EmployeeCardType<T = DefaultFormType> = {
     // координаты местоположения водителя
     coordinates: T
     // статус водителя
-    status?: 'на заявке' | 'свободен' | 'ожидает принятия' | 'в отпуске' | 'уволен'
+    status?: EmployeeStatusType
     // прикреплённый транспорт
     idTransport: T
     // прикреплённый прицеп
