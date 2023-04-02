@@ -3,7 +3,7 @@ import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
-import {getDriversBigMapStore} from '../../selectors/maps/big-map-reselect'
+import {getDriversBigMapStore, getIsFetchingBigMapStore} from '../../selectors/maps/big-map-reselect'
 import {Placemark} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
 import {setAnswerDriversToMap, setAllMyDriversToMap} from '../../redux/maps/big-map-store-reducer'
@@ -13,6 +13,7 @@ import {Portal} from '../common/portals/Portal'
 import {getRandomInRange} from '../../utils/random-utils'
 import {getRoutesStore} from '../../selectors/routes-reselect'
 import {useLocation, useNavigate, useParams} from 'react-router-dom'
+import {SizedPreloader} from '../common/preloader/preloader'
 
 
 type OwnProps = {}
@@ -20,6 +21,7 @@ type OwnProps = {}
 export const MapSection: React.FC<OwnProps> = () => {
 
     const drivers = useSelector(getDriversBigMapStore)
+    const isFetching = useSelector(getIsFetchingBigMapStore)
     const [ idToPortal, setIdToPortal ] = useState({ idEmployee: '', flag: false })
     const dispatch = useDispatch()
     const routes = useSelector(getRoutesStore)
@@ -46,6 +48,7 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     return (
         <div className={ styles.yandexMapComponent }>
+            {isFetching && <div className={styles.yandexMapComponent__preloader}><SizedPreloader sizeHW={'200px'}/></div>}
             <YandexBigMap center={ center } zoom={ zoom }>
                 { drivers.map(( { id, idEmployee, position, status, fio } ) => {
                         const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))

@@ -4,12 +4,21 @@
 .yandexMapComponent {
   width: 100%;
   height: 100%;
+  position: relative;
   border-radius: 30px;
   overflow: hidden;
 
   &__wrapper {
     position: relative;
     padding: 10px;
+  }
+  &__preloader {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    //margin: calc(50vh - 100px) calc(50vw - 150px);
+    @include flex-center();
+    z-index: 100;
   }
 
 }

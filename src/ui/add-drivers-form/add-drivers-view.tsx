@@ -114,14 +114,14 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneTransport?.transportModel }
+                            { oneTransport?.transportModel || '-'}
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__selector }>
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneTrailer?.trailerModel }
+                            { oneTrailer?.trailerModel || '-'}
                         </div>
                     </div>
                 </div>

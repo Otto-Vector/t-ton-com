@@ -35,7 +35,6 @@ export const useDownloadFile = ( {
             const { data } = await apiDefinition()
             const url = URL.createObjectURL(new Blob([ data ]))
             setFileUrl(url)
-            // setFileName(url)
             setFileName(getFileName())
             ref.current?.click()
             postDownloading()

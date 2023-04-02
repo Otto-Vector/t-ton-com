@@ -118,6 +118,9 @@ export const geoPositionTake = (): BigMapStoreReducerThunkActionType =>
 // (возможно лучше это сделать через "selectors"
 export const setAllMyDriversToMap = (): BigMapStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
+        dispatch(bigMapStoreActions.setDriversList([]))
+        dispatch(bigMapStoreActions.setTransportList([]))
+        dispatch(bigMapStoreActions.setTrailersList([]))
         const myDriversList = getState().employeesStoreReducer.content
         const myTransport = getState().transportStoreReducer.content
         const myTrailers = getState().trailerStoreReducer.content
@@ -129,6 +132,11 @@ export const setAllMyDriversToMap = (): BigMapStoreReducerThunkActionType =>
 // загрузка на карту водителей с ответами перевозчиков
 export const setAnswerDriversToMap = ( requestNumber: string ): BigMapStoreReducerThunkActionType =>
     async ( dispatch ) => {
+        // зачищаем списки
+        dispatch(bigMapStoreActions.setDriversList([]))
+        dispatch(bigMapStoreActions.setTransportList([]))
+        dispatch(bigMapStoreActions.setTrailersList([]))
+        dispatch(bigMapStoreActions.setIsFetching(true))
         try {
             // список ответов на заявку
             const responseToRequest = await responseToRequestApi.getOneOrMoreResponseToRequest({ requestNumber })
@@ -140,7 +148,7 @@ export const setAnswerDriversToMap = ( requestNumber: string ): BigMapStoreReduc
                 const allDriversList = await employeesApi.getOneOrMoreEmployeeById({ idEmployee })
                 if (allDriversList.length) {
                     dispatch(bigMapStoreActions.setDriversList(allDriversList))
-                    const allTransportList = await transportApi.getOneOrMoreTransportById({idTransport})
+                    const allTransportList = await transportApi.getOneOrMoreTransportById({ idTransport })
                     const allTrailersList = await trailerApi.getOneOrMoreTrailerById({ idTrailer })
                     if (Array.isArray(allTransportList)) {
                         dispatch(bigMapStoreActions.setTransportList(allTransportList))
@@ -150,6 +158,7 @@ export const setAnswerDriversToMap = ( requestNumber: string ): BigMapStoreReduc
                     }
                 }
             }
+            dispatch(bigMapStoreActions.setIsFetching(false))
         } catch (e) {
             console.log('Ошибка при загрузке данных водителей, которые привязаны к ответам на заявку: ', e)
         }

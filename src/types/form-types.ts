@@ -618,9 +618,13 @@ export type OneRequestApiType = {
     marked?: string
 
     globalStatus?: RequestGlobalStatusType
+    // деньги переданы
     localStatuspaymentHasBeenTransferred?: boolean
+    // груз у водителя
     localStatuscargoHasBeenTransferred?: boolean
+    // деньги получены
     localStatuspaymentHasBeenReceived?: boolean
+    // груз доставлен
     localStatuscargoHasBeenReceived?: boolean
 
     // ответы на заявки от перевозчиков (псевдо-массив строка id чз ', ')
