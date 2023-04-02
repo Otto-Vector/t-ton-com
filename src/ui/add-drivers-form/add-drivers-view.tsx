@@ -24,7 +24,7 @@ import {Button} from '../common/button/button'
 import {AppStateType} from '../../redux/redux-store'
 import {MaterialIcon} from '../common/material-icon/material-icon'
 import {
-    getFilteredDriversBigMapStore,
+    getFilteredDriversBigMapStore, getFilteredResponsesBigMapStore,
     getFilteredTrailersBigMapStore,
     getFilteredTransportBigMapStore,
 } from '../../selectors/maps/big-map-reselect'
@@ -41,7 +41,6 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
 
-    const employee = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
     const label = useSelector(getLabelAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
     // const oneRequest = useSelector(getOneRequestStore)
@@ -53,9 +52,10 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
-    // const oneEmployee = useSelector(getOneEmployeesFromLocal)
-    // const employeeOneImage = oneEmployee.photoFace
+    const employee = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
     const employeeOnePhone = employee?.employeePhoneNumber
+
+    const oneResponse = useSelector(getFilteredResponsesBigMapStore).find(( { idTransport } ) => idTransport === employee?.idTransport)
 
     const oneTransport = useSelector(getFilteredTransportBigMapStore).find(( { idTransport } ) => idTransport === employee?.idTransport)
 
@@ -115,23 +115,25 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneTransport?.transportModel || '-'}
+                            { oneTransport?.transportModel || '-' }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__selector }>
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneTrailer?.trailerModel || '-'}
+                            { oneTrailer?.trailerModel || '-' }
                         </div>
                     </div>
                 </div>
                 <div className={ styles.addDriversForm__infoPanel }>
-                    <div className={ styles.addDriversForm__infoItem }>
+                    <div className={ styles.addDriversForm__infoItem }
+                         title={ 'Вес груза: ' + oneResponse?.cargoWeight +'т.' }
+                    >
                         <label className={ styles.addDriversForm__label }>
                             { label.responseStavka + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { employee?.rating }
+                            { oneResponse?.responseStavka }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoItem }
@@ -139,7 +141,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         <label className={ styles.addDriversForm__label }>
                             { label.responsePrice + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneRequest?.responsePrice }
+                            { oneResponse?.responsePrice }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoItem }>

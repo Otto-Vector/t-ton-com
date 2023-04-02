@@ -7,7 +7,13 @@ import {GetActionsTypes} from '../../types/ts-utils'
 import {getRandomInRange} from '../../utils/random-utils'
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
 import {employeesApi} from '../../api/local-api/options/employee.api'
-import {EmployeeCardType, EmployeeStatusType, TrailerCardType, TransportCardType} from '../../types/form-types'
+import {
+    EmployeeCardType,
+    EmployeeStatusType,
+    ResponseToRequestCardType,
+    TrailerCardType,
+    TransportCardType,
+} from '../../types/form-types'
 import {trailerApi} from '../../api/local-api/options/trailer.api'
 import {transportApi} from '../../api/local-api/options/transport.api'
 import {getOneRequestsAPI} from '../forms/request-store-reducer'
@@ -27,6 +33,7 @@ const initialState = {
     driversOnMap: [] as EmployeeCardType[],
     transportOnMap: [] as TransportCardType[],
     trailersOnMap: [] as TrailerCardType[],
+    responsesOnMap: [] as ResponseToRequestCardType[],
     requests: [ {} ] as number[],
 }
 
@@ -48,6 +55,12 @@ export const bigMapStoreReducer = ( state = initialState, action: ActionsType ):
             return {
                 ...state,
                 isFetching: action.isFetching,
+            }
+        }
+        case 'big-map-store-reducer/SET-RESPONSES-LIST': {
+            return {
+                ...state,
+                responsesOnMap: action.responsesOnMap,
             }
         }
         case 'big-map-store-reducer/SET-DRIVERS-LIST': {
@@ -84,6 +97,10 @@ export const bigMapStoreActions = {
     setIsFetching: ( isFetching: boolean ) => ( {
         type: 'big-map-store-reducer/SET-IS-FETCHING',
         isFetching,
+    } as const ),
+    setResponsesList: ( responsesOnMap: ResponseToRequestCardType[] ) => ( {
+        type: 'big-map-store-reducer/SET-RESPONSES-LIST',
+        responsesOnMap,
     } as const ),
     setDriversList: ( driversOnMap: EmployeeCardType[] ) => ( {
         type: 'big-map-store-reducer/SET-DRIVERS-LIST',
@@ -122,12 +139,14 @@ export const setAllMyDriversToMap = (): BigMapStoreReducerThunkActionType =>
         dispatch(bigMapStoreActions.setDriversList([]))
         dispatch(bigMapStoreActions.setTransportList([]))
         dispatch(bigMapStoreActions.setTrailersList([]))
+        dispatch(bigMapStoreActions.setResponsesList([]))
         const myDriversList = getState().employeesStoreReducer.content
         const myTransport = getState().transportStoreReducer.content
         const myTrailers = getState().trailerStoreReducer.content
         dispatch(bigMapStoreActions.setDriversList(myDriversList))
         dispatch(bigMapStoreActions.setTransportList(myTransport))
         dispatch(bigMapStoreActions.setTrailersList(myTrailers))
+        dispatch(bigMapStoreActions.setIsFetching(false))
     }
 
 // загрузка на карту водителей с ответами перевозчиков
@@ -137,12 +156,14 @@ export const setAnswerDriversToMap = ( requestNumber: string ): BigMapStoreReduc
         dispatch(bigMapStoreActions.setDriversList([]))
         dispatch(bigMapStoreActions.setTransportList([]))
         dispatch(bigMapStoreActions.setTrailersList([]))
+        dispatch(bigMapStoreActions.setResponsesList([]))
         dispatch(bigMapStoreActions.setIsFetching(true))
         try {
             // список ответов на заявку
             const responseToRequest = await responseToRequestApi.getOneOrMoreResponseToRequest({ requestNumber })
             dispatch(getOneRequestsAPI(+requestNumber))
             if (responseToRequest.length) {
+                dispatch(bigMapStoreActions.setResponsesList(responseToRequest))
                 const idEmployee = responseToRequest.map(( { idEmployee } ) => idEmployee).join()
                 const idTransport = responseToRequest.map(( { idTransport } ) => idTransport).join()
                 const idTrailer = responseToRequest.map(( { idTrailer } ) => idTrailer).join()
