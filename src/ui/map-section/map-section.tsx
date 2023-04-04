@@ -3,11 +3,7 @@ import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
-import {
-    getDriversBigMapStore,
-    getFilteredResponsesBigMapStore,
-    getIsFetchingBigMapStore,
-} from '../../selectors/maps/big-map-reselect'
+import {getDriversBigMapStore, getIsFetchingBigMapStore} from '../../selectors/maps/big-map-reselect'
 import {Placemark, Polyline} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
 import {setAllMyDriversToMap, setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
@@ -22,9 +18,11 @@ import {
     getInitialValuesRequestStore,
     getRoutesParsedFromPolylineRequestStore,
 } from '../../selectors/forms/request-form-reselect'
+import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 
 
 type OwnProps = {}
+export type coordinatesFromTarget = { originalEvent: { target: { geometry: { _coordinates: number[] } } } }
 
 export const MapSection: React.FC<OwnProps> = () => {
 
@@ -35,10 +33,8 @@ export const MapSection: React.FC<OwnProps> = () => {
     const routes = useSelector(getRoutesStore)
     const polyline = useSelector(getRoutesParsedFromPolylineRequestStore)
     const currentRequest = useSelector(getInitialValuesRequestStore)
-    // const navigate = useNavigate()
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const { pathname } = useLocation()
-    const responses = useSelector(getFilteredResponsesBigMapStore).length
 
     const mapModes = useMemo(() => ( {
         answersMode: pathname.includes(routes.maps.answers),
@@ -53,6 +49,15 @@ export const MapSection: React.FC<OwnProps> = () => {
         }
     }, [ dispatch, reqNumber ])
 
+    const coordinatesToModal = ( coordinates: number[] ) => {
+        dispatch<any>(textAndActionGlobalModal({
+            text: `Координаты: <b>${ coordinates.join(', ') }</b>`,
+        }))
+    }
+
+    const extractCoordinatesToModal = ( e: coordinatesFromTarget ) => {
+        coordinatesToModal(e.originalEvent.target.geometry._coordinates)
+    }
 
     const center = useSelector(getGeoPositionAuthStore)
     const zoom = 7
@@ -61,9 +66,9 @@ export const MapSection: React.FC<OwnProps> = () => {
         <div className={ styles.yandexMapComponent }>
             { isFetching &&
                 <div className={ styles.yandexMapComponent__preloader }><SizedPreloader sizeHW={ '200px' }/></div> }
-            <YandexBigMap center={ center } zoom={ zoom }>
+            <YandexBigMap center={ mapModes.answersMode ? polyline?.shift() || center : center } zoom={ zoom }>
                 { mapModes.answersMode && polyline && <>
-                    {/* ДОРОГА */}
+                    {/* ДОРОГА */ }
                     <Polyline geometry={ polyline }
                               options={ {
                                   strokeColor: '#023E8A',
@@ -71,8 +76,8 @@ export const MapSection: React.FC<OwnProps> = () => {
                                   opacity: 0.8,
                               } }
                     />
-                    {/* ТОЧКА ПОГРУЗКИ */}
-                    <Placemark geometry={ polyline[0] }
+                    {/* ТОЧКА ПОГРУЗКИ */ }
+                    <Placemark geometry={ polyline?.shift() }
                                options={
                                    {
                                        preset: 'islands#nightStretchyIcon',
@@ -83,9 +88,10 @@ export const MapSection: React.FC<OwnProps> = () => {
                                        hintContent: `Грузоотправитель`,
                                    }
                                }
+                               onContextMenu={ extractCoordinatesToModal }
                     />
-                    {/* ТОЧКА РАЗГРУЗКИ */}
-                    <Placemark geometry={ polyline[polyline.length - 1] }
+                    {/* ТОЧКА РАЗГРУЗКИ */ }
+                    <Placemark geometry={ polyline?.pop() }
                                options={
                                    {
                                        preset: 'islands#nightStretchyIcon',
@@ -96,6 +102,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                        hintContent: `Грузополучатель`,
                                    }
                                }
+                               onContextMenu={ extractCoordinatesToModal }
                     />
                 </>
                 }
@@ -125,6 +132,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                   setIdToPortal(( val ) => ( { idEmployee, flag: !val.flag } ))
                                               }, 0)
                                           } }
+                                          onContextMenu={ extractCoordinatesToModal }
                         />
                     },
                 )
