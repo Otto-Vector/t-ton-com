@@ -36,8 +36,8 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
     useEffect(() => {
         if (test !== '') {
             setContent(item.content
-                .filter(( { title, subTitle, extendInfo } ) =>
-                    [ title, subTitle, extendInfo ].filter(x => x).join(',')?.match(new RegExp(test, 'ig'))),
+                .filter(( { title, subTitle, extendInfo, moreDataForSearch } ) =>
+                    [ title, subTitle, extendInfo, moreDataForSearch ].filter(x => x).join(' ')?.match(new RegExp(test, 'ig'))),
             )
         }
         if (test === '') setContent(item.content)

@@ -86,11 +86,12 @@ export const getTransportOptionsStore = createSelector(getAllTransportStore, get
     ( transport: TransportCardType[], titles, transportHasEmployee ): OptionsStoreReducerStateType['transport'] => {
         return {
             ...titles, content: transport.map(
-                ( { idTransport: id, transportTrademark, transportNumber }, index ) =>
+                ( { idTransport: id, transportTrademark, transportNumber, cargoType }, index ) =>
                     ( {
                         id,
                         title: transportTrademark + ', ' + transportNumber,
                         subTitle: transportHasEmployee[index].subLabel,
+                        moreDataForSearch: cargoType,
                     } )),
         }
     })
@@ -101,11 +102,12 @@ export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrai
 
         return {
             ...titles, content: trailer.map(
-                ( { idTrailer: id, trailerTrademark, trailerNumber }, index ) =>
+                ( { idTrailer: id, trailerTrademark, trailerNumber, cargoType }, index ) =>
                     ( {
                         id,
                         title: trailerTrademark + ', ' + trailerNumber,
                         subTitle: trailersHasEmployee[index].subLabel,
+                        moreDataForSearch: cargoType,
                     } )),
         }
     })

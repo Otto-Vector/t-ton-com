@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {GetActionsTypes} from '../../types/ts-utils';
 
-export type OptionsLabelType = { id: string, title: string, subTitle?: string, extendInfo?:string }
+export type OptionsLabelType = { id: string, title: string, subTitle?: string, extendInfo?:string, moreDataForSearch?: string }
 
 
 const initialState = {
@@ -75,5 +75,3 @@ export const optionsStoreActions = {}
 /* САНКИ */
 
 export type OptionsStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
-
-
