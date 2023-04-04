@@ -100,6 +100,9 @@ export const RequestSection: React.FC = React.memo(() => {
                                 /> }
                                 { tabModes.center && <RequestMapCenter requestModes={ requestModes }
                                                                        driverCoords={ oneEmployee.coordinates }
+                                                                       fromCity={ initialValues?.sender?.city }
+                                                                       toCity={ initialValues?.recipient?.city }
+
                                 /> }
                                 { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
                             </div>

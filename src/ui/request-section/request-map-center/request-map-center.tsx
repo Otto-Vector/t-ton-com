@@ -1,22 +1,24 @@
 import React, {memo} from 'react'
 import styles from './request-map-center.module.scss'
 
-import {RequestModesType} from '../request-section';
-import {YandexMapWithRoute} from '../../common/yandex-map-component/yandex-map-component';
-import {useSelector} from 'react-redux';
+import {RequestModesType} from '../request-section'
+import {YandexMapWithRoute} from '../../common/yandex-map-component/yandex-map-component'
+import {useSelector} from 'react-redux'
 import {
     getInitialDistanceRequestStore,
     getRoutesParsedFromPolylineRequestStore,
-} from '../../../selectors/forms/request-form-reselect';
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
-import {stringToCoords} from '../../../utils/parsers';
+} from '../../../selectors/forms/request-form-reselect'
+import {valuesAreEqual} from '../../../utils/reactMemoUtils'
+import {stringToCoords} from '../../../utils/parsers'
 
 type OwnProps = {
     requestModes: RequestModesType,
     driverCoords?: string
+    fromCity?: string
+    toCity?: string
 }
 
-export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, driverCoords } ) => {
+export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, driverCoords, fromCity, toCity } ) => {
 
     let testCenter: [ number, number ] = [ 55.5907807700034, 84.09127066601563 ]
     let testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]
@@ -40,6 +42,9 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
                                     zoom={ zoom }
                                     maxZoom={ maxZoom }
                                     driverHere={ driverHere }
+                                    fromCity={ fromCity }
+                                    toCity={ toCity }
+                                    isEnableCoordsClick={!requestModes.acceptDriverMode}
                     // bounds={zoomCoords}
                 />
             </div>

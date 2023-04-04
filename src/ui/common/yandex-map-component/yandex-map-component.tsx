@@ -3,7 +3,10 @@ import styles from './yandex-map-component.module.scss'
 import './yandex-map-restyle-ballon.scss'
 
 import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps'
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+import {valuesAreEqual} from '../../../utils/reactMemoUtils'
+import {coordinatesFromTarget} from '../../map-section/map-section'
+import {useDispatch} from 'react-redux'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 
 
 type OwnProps = {
@@ -122,19 +125,30 @@ type ToRouteMap = {
     bounds?: MapState['bounds']
     zoom?: number
     maxZoom?: number
+    fromCity?: string
+    toCity?: string
+    isEnableCoordsClick?: boolean
 }
 
 
 // карта с отрисованным маршрутом
-export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( {
-                                                                         driverHere,
-                                                                         center,
-                                                                         polyline,
-                                                                         zoom = 5,
-                                                                         bounds,
-                                                                         maxZoom,
-                                                                     } ) => {
-
+export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
+    {
+        driverHere,
+        center,
+        polyline,
+        zoom = 5,
+        bounds,
+        maxZoom,
+        fromCity, toCity,
+        isEnableCoordsClick,
+    } ) => {
+    const dispatch = useDispatch()
+    const extractCoordinatesToModal = ( e: coordinatesFromTarget ) => {
+        dispatch<any>(textAndActionGlobalModal({
+            text: `Координаты: <b>${ e.originalEvent.target.geometry._coordinates?.join(', ') }</b>`,
+        }))
+    }
     return (
         <YandexMapComponent
             maxZoom={ maxZoom }
@@ -147,6 +161,34 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo(( {
             { driverHere && <Placemark geometry={ driverHere }/> }
             <Polyline geometry={ polyline }
                       options={ { strokeColor: '#023E8A', strokeWidth: 4, opacity: 0.8 } }
+            />
+            {/* ТОЧКА ПОГРУЗКИ */ }
+            <Placemark geometry={ polyline?.shift() }
+                       options={
+                           {
+                               preset: 'islands#nightStretchyIcon',
+                           } }
+                       properties={
+                           {
+                               iconContent: `из ${ fromCity }`,
+                               hintContent: `Грузоотправитель`,
+                           }
+                       }
+                       onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : null }
+            />
+            {/* ТОЧКА РАЗГРУЗКИ */ }
+            <Placemark geometry={ polyline?.pop() }
+                       options={
+                           {
+                               preset: 'islands#nightStretchyIcon',
+                           } }
+                       properties={
+                           {
+                               iconContent: `в ${ toCity }`,
+                               hintContent: `Грузополучатель`,
+                           }
+                       }
+                       onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : null }
             />
         </YandexMapComponent>
     )

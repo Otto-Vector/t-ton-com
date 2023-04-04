@@ -49,14 +49,11 @@ export const MapSection: React.FC<OwnProps> = () => {
         }
     }, [ dispatch, reqNumber ])
 
-    const coordinatesToModal = ( coordinates: number[] ) => {
-        dispatch<any>(textAndActionGlobalModal({
-            text: `Координаты: <b>${ coordinates.join(', ') }</b>`,
-        }))
-    }
 
     const extractCoordinatesToModal = ( e: coordinatesFromTarget ) => {
-        coordinatesToModal(e.originalEvent.target.geometry._coordinates)
+        dispatch<any>(textAndActionGlobalModal({
+            text: `Координаты: <b>${ e.originalEvent.target.geometry._coordinates?.join(', ') }</b>`,
+        }))
     }
 
     const center = useSelector(getGeoPositionAuthStore)
