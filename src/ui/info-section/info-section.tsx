@@ -1,18 +1,15 @@
 import React, {useEffect} from 'react'
 import styles from './info-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
-import {getContentInfoStore, getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect';
-import {NavLink} from 'react-router-dom';
-import {getRoutesStore} from '../../selectors/routes-reselect';
-import {MessageItem} from './message-item/message-item';
-import {getInfoMessages, infoStoreActions} from '../../redux/info-store-reducer';
-import {InfoPayContainer} from './info-pay-container/info-pay-container';
+import {getContentInfoStore, getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect'
+import {MessageItem} from './message-item/message-item'
+import {getInfoMessages, infoStoreActions} from '../../redux/info-store-reducer'
+import {InfoPayContainer} from './info-pay-container/info-pay-container'
 
 type OwnProps = {}
 
 export const InfoSection: React.FC<OwnProps> = () => {
     const messages = useSelector(getContentInfoStore)
-    const { requestInfo } = useSelector(getRoutesStore)
     const unreadCount = useSelector(getUnreadMessagesCountInfoStore)
     const dispatch = useDispatch()
 
@@ -35,12 +32,7 @@ export const InfoSection: React.FC<OwnProps> = () => {
                 { [ ...messages ].reverse().map(( item ) =>
                     <div className={ styles.messagesContainer__item }
                          key={ item.idLog }>
-                        { item.mode !== 'gray' ?
-                            <NavLink to={ requestInfo.status + item.idObject }>
-                                <MessageItem oneInfoItem={ item }/>
-                            </NavLink>
-                            : <MessageItem oneInfoItem={ item }/>
-                        }
+                        <MessageItem oneInfoItem={ item }/>
                     </div>)
                 }
             </div>

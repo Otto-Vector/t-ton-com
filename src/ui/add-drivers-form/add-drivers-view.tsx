@@ -195,21 +195,24 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                 </div>
                 {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                 <div className={ styles.addDriversForm__photoPanel }>
-                    <div className={ styles.addDriversForm__photo }>
+                    <div className={ styles.addDriversForm__photo }
+                         title={ 'Фото водителя' }>
                         <img
                             src={ setImage(oneEmployee?.photoFace) }
                             alt="driverPhoto"
                             onClick={ () => setLightBoxImage(setImage(oneEmployee?.photoFace)) }
                         />
                     </div>
-                    <div className={ styles.addDriversForm__photo }>
+                    <div className={ styles.addDriversForm__photo }
+                         title={ 'Фото транспорта' }>
                         <img
                             src={ setImage(transportOneImage) }
                             alt="driverTransportPhoto"
                             onClick={ () => setLightBoxImage(setImage(transportOneImage)) }
                         />
                     </div>
-                    <div className={ styles.addDriversForm__photo }>
+                    <div className={ styles.addDriversForm__photo }
+                         title={ 'Фото прицепа' }>
                         <img
                             src={ setImage(trailerOneImage) }
                             alt="driverTrailerPhoto"

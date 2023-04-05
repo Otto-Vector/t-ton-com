@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from './redux-store'
-import {logInfoApi} from '../api/local-api/logInfo.api';
-import {GetActionsTypes} from '../types/ts-utils';
+import {logInfoApi} from '../api/local-api/logInfo.api'
+import {GetActionsTypes} from '../types/ts-utils'
 
 
 export type OneInfoItem = {
@@ -104,7 +104,9 @@ export const getInfoMessages = (): InfoStoreReducerThunkActionType =>
                 dispatch(infoStoreActions.setValuesContent(
                     request.map(( values ) => ( {
                         ...values,
-                        mode: values.Message.includes('Заявка') ? 'blue' : 'gray',
+                        // если idObject числовой, то уведомление про заявку
+                        mode: isNaN(+values?.idObject) ? 'gray' : 'blue',
+                        // mode: values.Message.includes('Заявка') ? 'blue' : 'gray',
                         viewed: false,
                     } ))))
             }
@@ -114,5 +116,3 @@ export const getInfoMessages = (): InfoStoreReducerThunkActionType =>
 
         dispatch(infoStoreActions.setIsFetching(false))
     }
-
-

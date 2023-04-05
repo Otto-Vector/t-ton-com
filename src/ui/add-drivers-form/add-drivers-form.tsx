@@ -342,21 +342,24 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                                         </div>
                                         {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                         <div className={ styles.addDriversForm__photoPanel }>
-                                            <div className={ styles.addDriversForm__photo }>
+                                            <div className={ styles.addDriversForm__photo }
+                                                 title={ 'Фото водителя' }>
                                                 <img
                                                     src={ setImage(employeeOneImage as string) }
                                                     alt="driverPhoto"
                                                     onClick={ () => setLightBoxImage(employeeOneImage) }
                                                 />
                                             </div>
-                                            <div className={ styles.addDriversForm__photo }>
+                                            <div className={ styles.addDriversForm__photo }
+                                                 title={ 'Фото транспорта' }>
                                                 <img
                                                     src={ setImage(transportOneImage as string) }
                                                     alt="transportPhoto"
                                                     onClick={ () => setLightBoxImage(transportOneImage) }
                                                 />
                                             </div>
-                                            <div className={ styles.addDriversForm__photo }>
+                                            <div className={ styles.addDriversForm__photo }
+                                                 title={ 'Фото прицепа' }>
                                                 <img
                                                     src={ setImage(trailerOneImage as string) }
                                                     alt="driverTrailerPhoto"
