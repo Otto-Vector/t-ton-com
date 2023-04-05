@@ -30,25 +30,25 @@ import {employeesStoreActions} from '../../redux/options/employees-store-reducer
 import {transportStoreActions} from '../../redux/options/transport-store-reducer'
 import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
-import {AppStateType} from '../../redux/redux-store';
+import {AppStateType} from '../../redux/redux-store'
 import {
     addAcceptedResponseToRequestOnCreate,
     deleteCurrentRequestAPI,
     getAllRequestsAPI,
     getOneRequestsAPI,
-} from '../../redux/forms/request-store-reducer';
-import {syncParsers} from '../../utils/parsers';
-import {FormApi} from 'final-form';
-import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple';
-import {SelectOptionsType} from '../common/form-selector/selector-utils';
-import {globalModalStoreActions, textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer';
-import {ddMmYearFormat} from '../../utils/date-formats';
-import {setOneResponseToRequest} from '../../redux/forms/add-driver-store-reducer';
-import {getRoutesStore} from '../../selectors/routes-reselect';
+} from '../../redux/forms/request-store-reducer'
+import {syncParsers} from '../../utils/parsers'
+import {FormApi} from 'final-form'
+import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple'
+import {SelectOptionsType} from '../common/form-selector/selector-utils'
+import {globalModalStoreActions, textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
+import {ddMmYearFormat} from '../../utils/date-formats'
+import {setOneResponseToRequest} from '../../redux/forms/add-driver-store-reducer'
+import {getRoutesStore} from '../../selectors/routes-reselect'
 import {
     getAllEmployeesSelectWithCargoTypeDisabledWrongCargo,
-} from '../../selectors/options/for-selectors/all-selectors-buffer-reselect';
-import {cancelRequestCashReturn} from '../../redux/options/requisites-store-reducer';
+} from '../../selectors/options/for-selectors/all-selectors-buffer-reselect'
+import {cancelRequestCashReturn} from '../../redux/options/requisites-store-reducer'
 
 
 type OwnProps = {
@@ -106,15 +106,19 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
         dispatch(transportStoreActions.setCurrentId(searchId || ''))
     }
     const transportOneImage = oneTransport.transportImage
-    const transportOneCargoWeight = +( oneTransport.cargoWeight || 0 )
 
     const oneTrailer = useSelector(getOneTrailerFromLocal) as TrailerCardType<string>
     const setOneTrailer = ( searchId: string | undefined ) => {
         dispatch(trailerStoreActions.setCurrentId(searchId || ''))
     }
-
     const trailerOneImage = oneTrailer.trailerImage
-    const trailerOneCargoWeight = +( oneTrailer.cargoWeight || 0 )
+
+    // перевозимый вес транспорта
+    const transportOneCargoWeight = +( oneTransport?.cargoWeight || 0 )
+    // перевозимый вес прицепа
+    const trailerOneCargoWeight = +( oneTrailer?.cargoWeight || 0 )
+    // общий вес перевозимого груза
+    const cargoWeight = ( trailerOneCargoWeight + transportOneCargoWeight ).toString()
 
     // подсчёт стоимости в зависимости от расстояния, ставки и веса груза
     // (встроен в валидатор ввода цены тн за км)
@@ -217,7 +221,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                 idTransport: oneTransport.idTransport,
                 idTrailer: oneTrailer.idTrailer,
                 // под шумок втыкаем общий вес перевозимого груза
-                cargoWeight: ( trailerOneCargoWeight + transportOneCargoWeight ).toString(),
+                cargoWeight,
                 responseTax: taxMode,
             })
     }, [ oneTrailer, oneTransport ])
@@ -297,7 +301,8 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                                             </div>
                                         </div>
                                         <div className={ styles.addDriversForm__infoPanel }>
-                                            <div className={ styles.addDriversForm__infoItem }>
+                                            <div className={ styles.addDriversForm__infoItem }
+                                                 title={ 'Общий вес: ' + cargoWeight + 'тн.' }>
                                                 <label className={ styles.addDriversForm__label }>
                                                     { label.responseStavka + ':' }</label>
                                                 <Field name={ 'responseStavka' }

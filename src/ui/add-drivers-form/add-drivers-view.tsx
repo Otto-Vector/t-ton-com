@@ -80,9 +80,17 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const trailerOneImage = oneTrailer?.trailerImage
 
+    // перевозимый вес транспорта
+    const transportOneCargoWeight = +( oneTransport?.cargoWeight || 0 )
+    // перевозимый вес прицепа
+    const trailerOneCargoWeight = +( oneTrailer?.cargoWeight || 0 )
+    // общий вес перевозимого груза
+    const cargoWeight = ( trailerOneCargoWeight + transportOneCargoWeight ).toString()
+
     const onSubmit = () => {
     }
 
+    // при отмене (отвязке) от заявки водителя
     const onDecline = async () => {
         await dispatch<any>(removeResponseToRequestsBzRemoveThisDriverFromRequest(oneResponse?.responseId + ''))
         await dispatch<any>(setAnswerDriversToMap(oneRequest?.requestNumber + ''))
@@ -107,7 +115,6 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                 navigateOnCancel: routes.requestsList,
             }))
         }
-
     }
 
     if (isFetching) return <Preloader/>
