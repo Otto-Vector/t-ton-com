@@ -20,17 +20,18 @@ export const MessageItem: React.FC<OwnProps> = (
     const date = new Date(Time)
 
     return (
-        <NavLink to={ requestInfo.status + idObject }>
-            <div className={ styles.messageItem + ' ' + styles['messageItem_' + mode] }>
-                { mode === 'gray' ? null :
-                    <div className={ styles.messageItem__number }>{ ( idObject || '---' ) }</div>
-                }
-                <div className={ styles.messageItem__text + ' ' + styles['messageItem__text_' + mode] }>
+        <NavLink to={ requestInfo.status + idObject }
+                 // отключаем линк
+                 className={ mode === 'gray' ? styles.messageItem__inactiveLink : '' }>
+            <div className={ styles.messageItem + ' ' + styles['messageItem_' + mode] }
+                 title={ Message }>
+                <span className={ styles.messageItem__number }>{ mode === 'gray' ? '---' : idObject }</span>
+                <span className={ styles.messageItem__text + ' ' + styles['messageItem__text_' + mode] }>
                     { Message }
-                </div>
-                <div className={ styles.messageItem__date }>
+                </span>
+                <span className={ styles.messageItem__date }>
                     { isToday(date) ? hhMmFormat(date) : ddDotMmFormat(date) }
-                </div>
+                </span>
             </div>
         </NavLink>
     )

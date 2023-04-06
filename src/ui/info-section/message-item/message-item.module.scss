@@ -8,6 +8,11 @@
   border-top: 1px solid $accentColor;
   color: $accentColor;
 
+  // отключаем срабатывание линка
+  &__inactiveLink {
+    pointer-events: none;
+  }
+
   &_gray {
     color: $grayFontColor;
   }
@@ -35,4 +40,5 @@
     text-align: center;
     width: 70px;
   }
+
 }
