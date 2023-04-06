@@ -142,13 +142,16 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
         maxZoom,
         fromCity, toCity,
         isEnableCoordsClick,
+        children,
     } ) => {
+
     const dispatch = useDispatch()
     const extractCoordinatesToModal = ( e: coordinatesFromTarget ) => {
         dispatch<any>(textAndActionGlobalModal({
             text: `Координаты: <b>${ e.originalEvent.target.geometry._coordinates?.join(', ') }</b>`,
         }))
     }
+
     return (
         <YandexMapComponent
             maxZoom={ maxZoom }
@@ -156,9 +159,20 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
                 center,
                 zoom,
                 bounds: bounds as undefined,
-            } }
-        >
-            { driverHere && <Placemark geometry={ driverHere }/> }
+            } }        >
+
+            { driverHere && <Placemark geometry={ driverHere }
+                                       options={
+                                           {
+                                               preset: 'islands#circleIcon',
+                                               iconColor: 'green',
+                                           } }
+                                       properties={
+                                           {
+                                               hintContent: `Водитель здесь`,
+                                           } }
+                                       onContextMenu={ extractCoordinatesToModal }
+            /> }
             <Polyline geometry={ polyline }
                       options={ { strokeColor: '#023E8A', strokeWidth: 4, opacity: 0.8 } }
             />

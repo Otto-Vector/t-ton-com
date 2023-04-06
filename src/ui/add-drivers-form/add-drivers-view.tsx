@@ -80,13 +80,6 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const trailerOneImage = oneTrailer?.trailerImage
 
-    // перевозимый вес транспорта
-    const transportOneCargoWeight = +( oneTransport?.cargoWeight || 0 )
-    // перевозимый вес прицепа
-    const trailerOneCargoWeight = +( oneTrailer?.cargoWeight || 0 )
-    // общий вес перевозимого груза
-    const cargoWeight = ( trailerOneCargoWeight + transportOneCargoWeight ).toString()
-
     const onSubmit = () => {
     }
 
