@@ -99,7 +99,7 @@ export const RequestSection: React.FC = React.memo(() => {
                                                                     initialValues={ initialValues }
                                 /> }
                                 { tabModes.center && <RequestMapCenter requestModes={ requestModes }
-                                                                       driverCoords={ oneEmployee.coordinates }
+                                                                       driverCoords={ oneEmployee?.coordinates }
                                                                        fromCity={ initialValues?.sender?.city }
                                                                        toCity={ initialValues?.recipient?.city }
 

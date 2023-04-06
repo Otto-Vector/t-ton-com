@@ -99,7 +99,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     // заказчик не должен быть левым, иначе капут докам
     const customersSelect = shippersSelect.map(( { extendInfo, ...props } ) => ( {
         ...props,
-        isDisabled: extendInfo !== innNumber
+        isDisabled: extendInfo !== innNumber,
     } ))
 
     const onSubmit = useCallback(async ( oneRequestValues: OneRequestType ) => {
@@ -157,11 +157,14 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             navigate(routes.searchList)
         },
         submitRequestAndDrive: async ( values: OneRequestType ) => {
-            await onSubmit(values)
-            // оплата за создание заявки
-            dispatch<any>(addRequestCashPay())
+                await onSubmit(values)
+                // оплата за создание заявки
+                dispatch<any>(addRequestCashPay())
             navigate(routes.selfExportDriver + values.requestNumber)
         },
+        toSelfExportDriver: async ( values: OneRequestType ) => {
+            navigate(routes.selfExportDriver + values.requestNumber)
+        }
     } ), [ routes, dispatch, navigate, onSubmit ])
 
     // добавляем позицию в изменяемый селектор
@@ -439,8 +442,12 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                 }
                                                 onClick={ () => {
                                                     if (!hasValidationErrors) {
-                                                        ( requestModes.createMode || isMyRequestAndNew ) && buttonsAction.submitRequestAndDrive(values)
-                                                        requestModes.acceptDriverMode && buttonsAction.cancelRequest()
+                                                        requestModes.createMode && buttonsAction.submitRequestAndDrive(values)
+                                                        if (requestModes.acceptDriverMode) {
+                                                            isMyRequestAndNew
+                                                                ? buttonsAction.toSelfExportDriver(values)
+                                                                : buttonsAction.cancelRequest()
+                                                        }
                                                         requestModes.statusMode && buttonsAction.cargoHasBeenReceived(values)
                                                     }
                                                 } }
