@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useMemo} from 'react'
+import React, {useCallback, useMemo} from 'react'
 import styles from './add-drivers-form.module.scss'
 import noImage from '../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
@@ -8,27 +8,18 @@ import {
 } from '../../selectors/options/requisites-reselect'
 
 import {getLabelAddDriverStore} from '../../selectors/forms/add-driver-reselect'
-import {getInitialValuesRequestStore, getOneRequestStore} from '../../selectors/forms/request-form-reselect'
+import {getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
-import {getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
-import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
-
-import {getOneTrailerFromLocal} from '../../selectors/options/trailer-reselect'
-import {
-    employeesStoreActions,
-    getAllEmployeesAPI, modifyOneEmployeeStatusToAPI,
-    modifyOneEmployeeToAPI,
-} from '../../redux/options/employees-store-reducer'
-import {transportStoreActions} from '../../redux/options/transport-store-reducer'
-import {trailerStoreActions} from '../../redux/options/trailer-store-reducer'
+import {getAllEmployeesAPI, modifyOneEmployeeStatusToAPI} from '../../redux/options/employees-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
 import {Preloader} from '../common/preloader/preloader'
-import {requestStoreActions} from '../../redux/forms/request-store-reducer'
+import {addAcceptedResponseToRequestOnAcceptDriver} from '../../redux/forms/request-store-reducer'
 import {Button} from '../common/button/button'
 import {AppStateType} from '../../redux/redux-store'
 import {MaterialIcon} from '../common/material-icon/material-icon'
 import {
-    getFilteredDriversBigMapStore, getFilteredResponsesBigMapStore,
+    getFilteredDriversBigMapStore,
+    getFilteredResponsesBigMapStore,
     getFilteredTrailersBigMapStore,
     getFilteredTransportBigMapStore,
 } from '../../selectors/maps/big-map-reselect'
@@ -37,7 +28,6 @@ import {getRoutesStore} from '../../selectors/routes-reselect'
 import {removeResponseToRequestsBzRemoveThisDriverFromRequest} from '../../redux/forms/add-driver-store-reducer'
 import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
-import {EmployeeCardType} from '../../types/form-types'
 
 
 type OwnProps = {
@@ -80,8 +70,27 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const trailerOneImage = oneTrailer?.trailerImage
 
-    const onSubmit = () => {
-    }
+    // при выборе водителя на заявку
+    const onSubmit = useCallback(async () => {
+        console.log(mapModes.answersMode,oneResponse,oneEmployee,oneTrailer,oneTransport)
+        if (mapModes.answersMode && oneResponse && oneEmployee && oneTransport) {
+            await dispatch<any>(addAcceptedResponseToRequestOnAcceptDriver({
+                oneResponse,
+                oneEmployee,
+                oneTransport,
+                oneTrailer,
+            }))
+            await dispatch<any>(textAndActionGlobalModal({
+                text: 'Водитель <b>' + oneEmployee?.employeeFIO + '</b> принят на заявку № ' + oneResponse.requestNumber,
+                navigateOnCancel: routes.requestsList,
+                navigateOnOk: routes.requestsList,
+            }))
+        } else {
+            await dispatch<any>(textAndActionGlobalModal({
+                text: 'Не хватает данных для принятия данного водителя',
+            }))
+        }
+    }, [ oneResponse, oneEmployee, oneTrailer, oneTransport, routes ])
 
     // при отмене (отвязке) от заявки водителя
     const onDecline = async () => {
@@ -97,6 +106,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
         } else {
             dispatch<any>(getAllEmployeesAPI())
         }
+        // если на заявке ещё останутся ответы
         if (oneRequest?.answers?.length && oneRequest.answers.length > 1) {
             await dispatch<any>(textAndActionGlobalModal({
                 text: 'Сотруднику <b>' + oneEmployee?.employeeFIO + '</b> отказано в участии в заявке',

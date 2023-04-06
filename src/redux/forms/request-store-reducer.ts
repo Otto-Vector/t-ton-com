@@ -23,6 +23,7 @@ import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils'
 import {TtonErrorType} from '../../api/local-api/back-instance.api'
 import {requestDocumentsApi} from '../../api/local-api/request-response/request-documents.api'
 import {getListOrganizationRequisitesByInn} from '../options/requisites-store-reducer'
+import {requisitesApi} from '../../api/local-api/options/requisites.api'
 
 
 const initialState = {
@@ -634,6 +635,102 @@ export const addAcceptedResponseToRequestOnCreate = (
                 // перезаливаем все заявки
                 await dispatch(getAllRequestsAPI())
             }
+
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
+        }
+    }
+
+// акцептировать текущую заявку и присвоить ей статус "в работе" ПРИ ВЫБОРЕ ВОДИТЕЛЯ
+export const addAcceptedResponseToRequestOnAcceptDriver = (
+    {
+        oneResponse,
+        oneEmployee: employeeValues,
+        oneTransport: transportValues,
+        oneTrailer: trailerValues,
+    }
+        : {
+        oneResponse: ResponseToRequestCardType<string>,
+        oneEmployee: EmployeeCardType<string>
+        oneTransport: TransportCardType<string>
+        oneTrailer?: TrailerCardType<string>
+    } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+
+        try {
+            // Загружаем данные пользователя, ответчика по заявке
+            const requestCarrierDataFromApi = await requisitesApi.getPersonalDataFromId({ idUser: oneResponse.requestCarrierId })
+            if (Array.isArray(requestCarrierDataFromApi)) {
+                const requestCarrierData = requestCarrierDataFromApi[0]
+                const response = await oneRequestApi.modifyOneRequest({
+                    requestNumber: oneResponse.requestNumber,
+                    globalStatus: 'в работе',
+                    responseStavka: oneResponse.responseStavka,
+                    responseTax: oneResponse.responseId,
+                    responsePrice: oneResponse.responsePrice,
+                    requestUserCarrierId: oneResponse.requestCarrierId,
+
+                    /* ПЕРЕВОЗЧИК */
+                    innNumberCarrier: requestCarrierData?.nnNumber || '-',
+                    organizationNameCarrier: requestCarrierData?.organizationName || '-',
+                    taxModeCarrier: requestCarrierData?.taxMode || '-',
+                    kppCarrier: requestCarrierData?.kpp || '-',
+                    ogrnCarrier: requestCarrierData?.ogrn || '-',
+                    okpoCarrier: requestCarrierData?.okpo || '-',
+                    legalAddressCarrier: requestCarrierData?.legalAddress || '-',
+                    // сюда запишу номер телефона из карточки заказчика
+                    descriptionCarrier: requestCarrierData?.description || '-',
+                    postAddressCarrier: requestCarrierData?.postAddress || '-',
+                    phoneDirectorCarrier: requestCarrierData?.phoneDirector || '-',
+                    phoneAccountantCarrier: requestCarrierData?.phoneAccountant || '-',
+                    emailCarrier: requestCarrierData?.email || '-',
+                    bikBankCarrier: requestCarrierData?.bikBank || '-',
+                    nameBankCarrier: requestCarrierData?.nameBank || '-',
+                    checkingAccountCarrier: requestCarrierData?.checkingAccount || '-',
+                    korrAccountCarrier: requestCarrierData?.korrAccount || '-',
+                    mechanicFIOCarrier: requestCarrierData?.mechanicFIO || '-',
+                    dispatcherFIOCarrier: requestCarrierData?.dispatcherFIO || '-',
+                    /* СОТРУДНИК */
+                    idEmployee: employeeValues.idEmployee,
+                    responseEmployeeFIO: employeeValues.employeeFIO,
+                    responseEmployeePhoneNumber: employeeValues.employeePhoneNumber,
+                    responseEmployeepassportSerial: employeeValues.passportSerial,
+                    responseEmployeepassportFMS: employeeValues.passportFMS,
+                    responseEmployeepassportDate: employeeValues.passportDate as string,
+                    responseEmployeedrivingLicenseNumber: employeeValues.drivingLicenseNumber,
+                    /* ТРАНСПОРТ */
+                    idTransport: transportValues.idTransport,
+                    responseTransportNumber: transportValues.transportNumber,
+                    responseTransportTrademark: transportValues.transportTrademark,
+                    responseTransportModel: transportValues.transportModel,
+                    responseTransportPts: transportValues.pts,
+                    responseTransportDopog: transportValues.dopog,
+                    responseTransportCargoType: transportValues.cargoType,
+                    responseTransportCargoWeight: transportValues.cargoWeight,
+                    responseTransportPropertyRights: transportValues.propertyRights,
+                    /* ПРИЦЕП */
+                    idTrailer: trailerValues?.idTrailer || '-',
+                    responseTrailertrailerNumber: trailerValues?.trailerNumber || '-',
+                    responseTrailerTrademark: trailerValues?.trailerTrademark || '-',
+                    responseTrailerModel: trailerValues?.trailerModel || '-',
+                    responseTrailerPts: trailerValues?.pts || '-',
+                    responseTrailerDopog: trailerValues?.dopog || '-',
+                    responseTrailerCargoType: trailerValues?.cargoType,
+                    responseTrailerCargoWeight: trailerValues?.cargoWeight || '-',
+                    responseTrailerPropertyRights: trailerValues?.propertyRights,
+                })
+                if (response.success) {
+                    await oneRequestApi.addOneUserAcceptRequest({
+                        requestNumber: oneResponse.requestNumber,
+                        idUser: oneResponse.requestCarrierId,
+                    })
+                    // применяем статус 'на заявке' для водителя
+                    await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({ idEmployee: employeeValues.idEmployee }))
+                    // перезаливаем все заявки
+                    await dispatch(getAllRequestsAPI())
+                }
+            }
+
 
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))

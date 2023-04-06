@@ -30,10 +30,10 @@ export type DriverOnMapType = {
 const initialState = {
     isFetching: true,
     center: [ 0, 0 ] as [ number, number ],
-    driversOnMap: [] as EmployeeCardType[],
-    transportOnMap: [] as TransportCardType[],
-    trailersOnMap: [] as TrailerCardType[],
-    responsesOnMap: [] as ResponseToRequestCardType[],
+    driversOnMap: [] as EmployeeCardType<string>[],
+    transportOnMap: [] as TransportCardType<string>[],
+    trailersOnMap: [] as TrailerCardType<string>[],
+    responsesOnMap: [] as ResponseToRequestCardType<string>[],
     requests: [ {} ] as number[],
 }
 
@@ -98,19 +98,19 @@ export const bigMapStoreActions = {
         type: 'big-map-store-reducer/SET-IS-FETCHING',
         isFetching,
     } as const ),
-    setResponsesList: ( responsesOnMap: ResponseToRequestCardType[] ) => ( {
+    setResponsesList: ( responsesOnMap: ResponseToRequestCardType<string>[] ) => ( {
         type: 'big-map-store-reducer/SET-RESPONSES-LIST',
         responsesOnMap,
     } as const ),
-    setDriversList: ( driversOnMap: EmployeeCardType[] ) => ( {
+    setDriversList: ( driversOnMap: EmployeeCardType<string>[] ) => ( {
         type: 'big-map-store-reducer/SET-DRIVERS-LIST',
         driversOnMap,
     } as const ),
-    setTransportList: ( transportOnMap: TransportCardType[] ) => ( {
+    setTransportList: ( transportOnMap: TransportCardType<string>[] ) => ( {
         type: 'big-map-store-reducer/SET-TRANSPORT-LIST',
         transportOnMap,
     } as const ),
-    setTrailersList: ( trailersOnMap: TrailerCardType[] ) => ( {
+    setTrailersList: ( trailersOnMap: TrailerCardType<string>[] ) => ( {
         type: 'big-map-store-reducer/SET-TRAILERS-LIST',
         trailersOnMap,
     } as const ),
@@ -140,10 +140,10 @@ export const setAllMyDriversToMap = (): BigMapStoreReducerThunkActionType =>
         dispatch(bigMapStoreActions.setTransportList([]))
         dispatch(bigMapStoreActions.setTrailersList([]))
         dispatch(bigMapStoreActions.setResponsesList([]))
-        const myDriversList = getState().employeesStoreReducer.content
-        const myTransport = getState().transportStoreReducer.content
-        const myTrailers = getState().trailerStoreReducer.content
-        dispatch(bigMapStoreActions.setDriversList(myDriversList))
+        const myDriversList = getState().employeesStoreReducer.content as EmployeeCardType<string>[]
+        const myTransport = getState().transportStoreReducer.content as TransportCardType<string>[]
+        const myTrailers = getState().trailerStoreReducer.content as TrailerCardType<string>[]
+        dispatch(bigMapStoreActions.setDriversList(myDriversList ))
         dispatch(bigMapStoreActions.setTransportList(myTransport))
         dispatch(bigMapStoreActions.setTrailersList(myTrailers))
         dispatch(bigMapStoreActions.setIsFetching(false))
@@ -163,7 +163,7 @@ export const setAnswerDriversToMap = ( requestNumber: string ): BigMapStoreReduc
             const responseToRequest = await responseToRequestApi.getOneOrMoreResponseToRequest({ requestNumber })
             dispatch(getOneRequestsAPI(+requestNumber))
             if (responseToRequest.length) {
-                dispatch(bigMapStoreActions.setResponsesList(responseToRequest))
+                dispatch(bigMapStoreActions.setResponsesList(responseToRequest as ResponseToRequestCardType<string>[]))
                 const idEmployee = responseToRequest.map(( { idEmployee } ) => idEmployee).join()
                 const idTransport = responseToRequest.map(( { idTransport } ) => idTransport).join()
                 const idTrailer = responseToRequest.map(( { idTrailer } ) => idTrailer).join()

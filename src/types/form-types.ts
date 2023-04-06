@@ -369,7 +369,7 @@ export type ResponseToRequestCardType<T = DefaultFormType> = {
     responseTax: T,
 }
 
-export type RequestGlobalStatusType = 'новая заявка' | 'в работе' | 'завершена' | 'отменена'
+export type RequestGlobalStatusType = 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | 'ожидает ответа водителя'
 
 // ЗАЯВКА
 export type OneRequestType = {
