@@ -29,12 +29,14 @@ export const getContentTableStore = createSelector(
                 idUserCustomer,
                 idUserRecipient,
                 idUserSender,
+                requestUserCarrierId,
                 sender: { city: cityShipper },
                 recipient: { city: cityConsignee },
                 distance,
                 answers,
                 globalStatus,
                 responseEmployee,
+                acceptedUsers,
             } ) =>
             ( {
                 requestNumber,
@@ -47,7 +49,9 @@ export const getContentTableStore = createSelector(
                 price: ( distance || 0 ) > 100 ? +( acceptLongRoute || 0 ) : +( acceptShortRoute || 0 ),
                 globalStatus,
                 responseEmployee: parseFamilyToFIO(responseEmployee?.employeeFIO) || answers?.length+'' || '0',
-                marked: [ idUserCustomer, idUserRecipient, idUserSender ].includes(authId),
+                // Отмечаем причастных к заявкам
+                marked: [ idUserCustomer, idUserRecipient, idUserSender, requestUserCarrierId ].includes(authId)
+                    || (acceptedUsers?.includes(authId))
             } )) || [ initial ]
     })
 
