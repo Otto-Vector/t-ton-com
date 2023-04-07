@@ -14,3 +14,7 @@
   }
 
 }
+// добавил тумана на задний фон
+.ant-modal-wrap {
+  box-shadow: inset 128px 124px 64px rgba(255, 255, 255, 0.4), inset -107px -107px 76px rgba(255, 255, 255, 0.4);
+}
