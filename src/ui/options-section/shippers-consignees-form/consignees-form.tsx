@@ -44,10 +44,10 @@ import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate'
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {getCityFromDispetcherAPI} from '../../../redux/api/avto-dispetcher-response-reducer'
+import createDecorator from 'final-form-focus'
 
 
 type OwnProps = {}
-
 
 export const ConsigneesForm: React.FC<OwnProps> = () => {
 
@@ -67,6 +67,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnConsigneesStore)
     const validators = useSelector(getValidatorsConsigneesStore)
     const parsers = useSelector(getParsersConsigneesStore)
+    //фокусировка на проблемном поле при вводе
+    const focusOnError = createDecorator()
 
     const localCoords = useSelector(getGeoPositionAuthStore)
     const currentId = useSelector(getCurrentIdConsigneeStore)
@@ -234,6 +236,8 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
+                            //@ts-ignore-next-line
+                            decorators={ [ focusOnError ] }
                             render={
                                 ( {
                                       submitError,

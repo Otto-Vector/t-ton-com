@@ -44,6 +44,7 @@ import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {getCargoTypeBaseStore} from '../../../selectors/base-reselect'
 import {getAuthIdAuthStore} from '../../../selectors/auth-reselect'
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
+import createDecorator from 'final-form-focus'
 
 
 type OwnProps = {
@@ -63,6 +64,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const navigate = useNavigate()
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     const isMyRequestAndNew = ( initialValues.idUserCustomer === useSelector(getAuthIdAuthStore) ) && initialValues.globalStatus === 'новая заявка'
+
+        //фокусировка на проблемном поле при вводе
+    const focusOnError = createDecorator()
+
     /* данные из стейта заявки для заполнения и обработки полей */
     // заголовки
     const labels = useSelector(getLabelRequestStore)
@@ -217,6 +222,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             <Form
                 onSubmit={ onSubmit }
                 initialValues={ initialValues }
+                //@ts-ignore-next-line
+                decorators={ [ focusOnError ] }
                 render={
                     ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting, values } ) => (
                         <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>

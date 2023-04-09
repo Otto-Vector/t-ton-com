@@ -37,6 +37,7 @@ import {syncValidators} from '../../../utils/validators'
 import {getIsBusyTransport} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
 import {getCargoTypeBaseStore, getPropertyRightsBaseStore} from '../../../selectors/base-reselect'
 
+import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
 
@@ -54,6 +55,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnTransportStore)
     const validators = useSelector(getValidatorsTransportStore)
     const parsers = useSelector(getParsersTransportStore)
+    const focusOnError = createDecorator()
 
     const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
     const propertyRightsGlobal = useSelector(getPropertyRightsBaseStore) as typeof propertyRights
@@ -140,6 +142,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
+                            //@ts-ignore-next-line
+                            decorators={ [ focusOnError ] }
                             render={
                                 ( {
                                       handleSubmit,

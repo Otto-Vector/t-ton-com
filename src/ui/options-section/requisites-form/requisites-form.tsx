@@ -33,7 +33,7 @@ import {newShipperSaveToAPI} from '../../../redux/options/shippers-store-reducer
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect'
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
 
-// @ts-ignore
+
 import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
@@ -117,6 +117,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
+                            //@ts-ignore-next-line
                             decorators={ [ focusOnError ] }
                             render={
                                 ( {
