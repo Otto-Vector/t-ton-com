@@ -2,11 +2,11 @@ import React from 'react'
 import styles from './requisites-form.module.scss'
 import {Field, Form} from 'react-final-form'
 
-import {Button} from '../../common/button/button';
-import {FormInputType} from '../../common/form-input-type/form-input-type';
+import {Button} from '../../common/button/button'
+import {FormInputType} from '../../common/form-input-type/form-input-type'
 
-import {useDispatch, useSelector} from 'react-redux';
-import {Preloader, SizedPreloader} from '../../common/preloader/preloader';
+import {useDispatch, useSelector} from 'react-redux'
+import {Preloader, SizedPreloader} from '../../common/preloader/preloader'
 import {
     getIsFetchingRequisitesStore,
     getLabelRequisitesStore,
@@ -14,25 +14,27 @@ import {
     getParsersRequisitesStore,
     getStoredValuesRequisitesStore,
     getValidatorsRequisitesStore,
-} from '../../../selectors/options/requisites-reselect';
-import {CompanyRequisitesType, ShippersCardType} from '../../../types/form-types';
-import {CancelButton} from '../../common/cancel-button/cancel-button';
-import {useNavigate, useParams} from 'react-router-dom';
-import {InfoText} from '../../common/info-text/into-text';
+} from '../../../selectors/options/requisites-reselect'
+import {CompanyRequisitesType, ShippersCardType} from '../../../types/form-types'
+import {CancelButton} from '../../common/cancel-button/cancel-button'
+import {useNavigate, useParams} from 'react-router-dom'
+import {InfoText} from '../../common/info-text/into-text'
 import {
     deletePersonalOrganizationRequisites,
     requisitesStoreActions,
     setOrganizationRequisites,
-} from '../../../redux/options/requisites-store-reducer';
-import {coordsToString, parseAllNumbers} from '../../../utils/parsers';
-import {FormSelector} from '../../common/form-selector/form-selector';
-import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer';
-import {getRoutesStore} from '../../../selectors/routes-reselect';
-import {FORM_ERROR} from 'final-form';
-import {newShipperSaveToAPI} from '../../../redux/options/shippers-store-reducer';
-import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
-import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
+} from '../../../redux/options/requisites-store-reducer'
+import {coordsToString, parseAllNumbers} from '../../../utils/parsers'
+import {FormSelector} from '../../common/form-selector/form-selector'
+import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {getRoutesStore} from '../../../selectors/routes-reselect'
+import {FORM_ERROR} from 'final-form'
+import {newShipperSaveToAPI} from '../../../redux/options/shippers-store-reducer'
+import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect'
+import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
 
+// @ts-ignore
+import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
 
@@ -45,7 +47,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     const initialValues = useSelector(getStoredValuesRequisitesStore)
-
+    const focusOnError = createDecorator()
     const label = useSelector(getLabelRequisitesStore)
     const maskOn = useSelector(getMaskOnRequisitesStore)
     const validators = useSelector(getValidatorsRequisitesStore)
@@ -115,6 +117,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
+                            decorators={ [ focusOnError ] }
                             render={
                                 ( {
                                       pristine,

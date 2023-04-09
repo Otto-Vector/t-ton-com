@@ -48,6 +48,8 @@ import {
     getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
 } from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
 
+// @ts-ignore
+import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
 
@@ -60,6 +62,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnEmployeesStore)
     const validators = useSelector(getValidatorsEmployeesStore)
     const parsers = useSelector(getParsersEmployeesStore)
+    //фокусировка на проблемном поле при вводе
+    const focusOnError = createDecorator()
 
     // селекторы
     const drivingCategorySelector = useSelector(getDrivingCategorySelectorBaseStore)
@@ -259,6 +263,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                         <h4 className={ styles.employeesForm__header }>{ header }</h4>
                         <Form
                             onSubmit={ onSubmit }
+                            decorators={ [ focusOnError ] }
                             initialValues={ initialValues }
                             render={
                                 ( {
@@ -268,8 +273,11 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                       values,
                                       pristine,
                                   } ) => (
-                                    <form onSubmit={ handleSubmit } className={ styles.employeesForm__form }>
-                                        {/* ФИО Сотрудника */}
+                                    <form onSubmit={ ( e ) => {
+                                        console.log(e)
+                                        handleSubmit(e)
+                                    } } className={ styles.employeesForm__form }>
+                                        {/* ФИО Сотрудника */ }
                                         <div className={ styles.employeesForm__inputsPanel + ' '
                                             + styles.employeesForm__inputsPanel_titled }>
                                             <Field name={ 'employeeFIO' }
@@ -282,7 +290,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             />
                                         </div>
                                         <div className={ styles.employeesForm__inputsPanel }>
-                                        {/* Серия паспорта */ }
+                                            {/* Серия паспорта */ }
                                             <Field name={ 'passportSerial' }
                                                    placeholder={ label.passportSerial }
                                                    maskFormat={ maskOn.passportSerial }
@@ -300,7 +308,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.passportFMS }
                                                    parse={ parsers.passportFMS }
                                             />
-                                            {/* Номер водительского удостоверения */}
+                                            {/* Номер водительского удостоверения */ }
                                             <div className={ styles.employeesForm__inputsPanel_withSwitcher }>
                                                 <Field name={ 'drivingLicenseNumber' }
                                                        placeholder={ label.drivingLicenseNumber }
@@ -320,7 +328,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                     } }
                                                 />
                                             </div>
-                                            {/* Водительские категории */}
+                                            {/* Водительские категории */ }
                                             <FormSelector nameForSelector={ 'drivingCategory' }
                                                           placeholder={ label.drivingCategory }
                                                           options={ drivingCategorySelector }
@@ -328,7 +336,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           isMulti
                                                           isClearable
                                             />
-                                            {/* Табельный номер */}
+                                            {/* Табельный номер */ }
                                             <Field name={ 'personnelNumber' }
                                                    placeholder={ label.personnelNumber }
                                                    maskFormat={ maskOn.personnelNumber }
@@ -337,7 +345,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.personnelNumber }
                                                    parse={ parsers.personnelNumber }
                                             />
-                                            {/* Гаражный номер */}
+                                            {/* Гаражный номер */ }
                                             <Field name={ 'garageNumber' }
                                                    placeholder={ label.garageNumber }
                                                    maskFormat={ maskOn.garageNumber }
@@ -346,7 +354,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.garageNumber }
                                                    parse={ parsers.garageNumber }
                                             />
-                                            {/* Прикреплённый транспорт */}
+                                            {/* Прикреплённый транспорт */ }
                                             <FormSelector nameForSelector={ 'idTransport' }
                                                           placeholder={ label.idTransport }
                                                           options={ transportSelect }
@@ -357,7 +365,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                           onDisableHandleClick={ onDisableOptionSelectorHandleClick }
                                                           disabled={ initialValues.status === 'на заявке' }
                                             />
-                                            {/* Прикрёплённый прицеп */}
+                                            {/* Прикрёплённый прицеп */ }
                                             <FormSelector nameForSelector={ 'idTrailer' }
                                                           placeholder={ label.idTrailer }
                                                           options={ trailerSelectDisableWrongCargoType }
@@ -369,7 +377,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                         </div>
                                         {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
                                         <div className={ styles.employeesForm__inputsWithPhoto }>
-                                            {/* Телефон сотрудника */}
+                                            {/* Телефон сотрудника */ }
                                             <Field name={ 'employeePhoneNumber' }
                                                    placeholder={ label.employeePhoneNumber }
                                                    maskFormat={ maskOn.employeePhoneNumber }
@@ -379,7 +387,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                                    validate={ validators.employeePhoneNumber }
                                                    parse={ oneRenderParser(form, parsers.employeePhoneNumber) }
                                             />
-                                            {/* Когда выдан паспорт */}
+                                            {/* Когда выдан паспорт */ }
                                             <Field name={ 'passportDate' }
                                                    placeholder={ label.passportDate }
                                                    maskFormat={ maskOn.passportDate }

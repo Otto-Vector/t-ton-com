@@ -30,21 +30,25 @@ import {
     shippersStoreActions,
 } from '../../../redux/options/shippers-store-reducer'
 import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
-import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
-import {FormSelector} from '../../common/form-selector/form-selector';
-import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
-import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer';
-import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
-import {FormApi} from 'final-form';
+import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
+import {FormSelector} from '../../common/form-selector/form-selector'
+import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
+import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer'
+import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect'
+import {FormApi} from 'final-form'
 import {
     getShippersAllNamesListOptionsStore,
     getShippersNamesListOptionsStore,
-} from '../../../selectors/options/options-reselect';
-import {includesTitleValidator} from '../../../utils/validators';
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
-import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
-import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
+} from '../../../selectors/options/options-reselect'
+import {includesTitleValidator} from '../../../utils/validators'
+import {valuesAreEqual} from '../../../utils/reactMemoUtils'
+import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple'
+import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate'
 import {getCityFromDispetcherAPI} from '../../../redux/api/avto-dispetcher-response-reducer'
+
+// @ts-ignore
+import createDecorator from 'final-form-focus'
+
 
 type OwnProps = {
     // onSubmit: (requisites: shippersCardType) => void
@@ -67,6 +71,8 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnShippersStore)
     const validators = useSelector(getValidatorsShippersStore)
     const parsers = useSelector(getParsersShippersStore)
+    //фокусировка на проблемном поле при вводе
+    const focusOnError = createDecorator()
 
     const localCoords = useSelector(getGeoPositionAuthStore)
     const currentId = useSelector(getCurrentIdShipperStore)
@@ -228,15 +234,14 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
+                            decorators={ [ focusOnError ] }
                             render={
                                 ( {
                                       submitError,
-                                      hasValidationErrors,
                                       handleSubmit,
                                       form,
                                       submitting,
                                       values,
-                                      pristine,
                                   } ) => (
                                     <form onSubmit={ handleSubmit } className={ styles.shippersConsigneesForm__form }>
                                         {/*отслеживаем и отправляем данные в локальный инит*/ }

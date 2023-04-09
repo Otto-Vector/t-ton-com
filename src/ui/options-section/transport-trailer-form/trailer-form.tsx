@@ -27,15 +27,18 @@ import {
     newTrailerSaveToAPI,
     oneTrailerDeleteToAPI,
     trailerStoreActions,
-} from '../../../redux/options/trailer-store-reducer';
+} from '../../../redux/options/trailer-store-reducer'
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
-import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
-import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
-import {SwitchMask} from '../../common/antd-switch/antd-switch';
-import {syncValidators} from '../../../utils/validators';
-import {syncParsers} from '../../../utils/parsers';
-import {getIsBusyTrailer} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect';
-import {getCargoTypeBaseStore, getPropertyRightsBaseStore} from '../../../selectors/base-reselect';
+import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
+import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
+import {SwitchMask} from '../../common/antd-switch/antd-switch'
+import {syncValidators} from '../../../utils/validators'
+import {syncParsers} from '../../../utils/parsers'
+import {getIsBusyTrailer} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
+import {getCargoTypeBaseStore, getPropertyRightsBaseStore} from '../../../selectors/base-reselect'
+
+// @ts-ignore
+import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
 
@@ -53,6 +56,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnTrailerStore)
     const validators = useSelector(getValidatorsTrailerStore)
     const parsers = useSelector(getParsersTrailerStore)
+    const focusOnError = createDecorator()
+
     const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
     const propertyRightsGlobal = useSelector(getPropertyRightsBaseStore) as typeof propertyRights
 
@@ -86,8 +91,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     // для манипуляции с картинкой
-    const [ selectedImage, setSelectedImage ] = useState<File>();
-    const [ isImageChanged, setIsImageChanged ] = useState(false);
+    const [ selectedImage, setSelectedImage ] = useState<File>()
+    const [ isImageChanged, setIsImageChanged ] = useState(false)
 
     const onSubmit = useCallback(( values: TrailerCardType<string> ) => {
 
@@ -138,9 +143,9 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
+                            decorators={ [ focusOnError ] }
                             render={
                                 ( {
-                                      hasValidationErrors,
                                       handleSubmit,
                                       form,
                                       submitting,

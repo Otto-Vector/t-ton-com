@@ -27,16 +27,18 @@ import {
     newTransportSaveToAPI,
     oneTransportDeleteToAPI,
     transportStoreActions,
-} from '../../../redux/options/transport-store-reducer';
-import {syncParsers} from '../../../utils/parsers';
+} from '../../../redux/options/transport-store-reducer'
+import {syncParsers} from '../../../utils/parsers'
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
-import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
-import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils';
-import {SwitchMask} from '../../common/antd-switch/antd-switch';
-import {syncValidators} from '../../../utils/validators';
-import {getIsBusyTransport} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect';
-import {getCargoTypeBaseStore, getPropertyRightsBaseStore} from '../../../selectors/base-reselect';
+import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
+import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
+import {SwitchMask} from '../../common/antd-switch/antd-switch'
+import {syncValidators} from '../../../utils/validators'
+import {getIsBusyTransport} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
+import {getCargoTypeBaseStore, getPropertyRightsBaseStore} from '../../../selectors/base-reselect'
 
+// @ts-ignore
+import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
 
@@ -54,6 +56,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnTransportStore)
     const validators = useSelector(getValidatorsTransportStore)
     const parsers = useSelector(getParsersTransportStore)
+    const focusOnError = createDecorator()
+
     const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
     const propertyRightsGlobal = useSelector(getPropertyRightsBaseStore) as typeof propertyRights
 
@@ -88,8 +92,8 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     // для манипуляции с картинкой
-    const [ selectedImage, setSelectedImage ] = useState<File>();
-    const [ isImageChanged, setIsImageChanged ] = useState(false);
+    const [ selectedImage, setSelectedImage ] = useState<File>()
+    const [ isImageChanged, setIsImageChanged ] = useState(false)
 
     const onSubmit = useCallback(( values: TransportCardType<string> ) => {
 
@@ -139,9 +143,9 @@ export const TransportForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
+                            decorators={ [ focusOnError ] }
                             render={
                                 ( {
-                                      hasValidationErrors,
                                       handleSubmit,
                                       form,
                                       submitting,
