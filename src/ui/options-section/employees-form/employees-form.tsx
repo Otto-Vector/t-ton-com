@@ -48,8 +48,6 @@ import {
     getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
 } from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
 
-// @ts-ignore
-import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
 
@@ -62,8 +60,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnEmployeesStore)
     const validators = useSelector(getValidatorsEmployeesStore)
     const parsers = useSelector(getParsersEmployeesStore)
-    //фокусировка на проблемном поле при вводе
-    const focusOnError = createDecorator()
 
     // селекторы
     const drivingCategorySelector = useSelector(getDrivingCategorySelectorBaseStore)
@@ -263,7 +259,6 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                         <h4 className={ styles.employeesForm__header }>{ header }</h4>
                         <Form
                             onSubmit={ onSubmit }
-                            decorators={ [ focusOnError ] }
                             initialValues={ initialValues }
                             render={
                                 ( {
@@ -273,10 +268,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                       values,
                                       pristine,
                                   } ) => (
-                                    <form onSubmit={ ( e ) => {
-                                        console.log(e)
-                                        handleSubmit(e)
-                                    } } className={ styles.employeesForm__form }>
+                                    <form onSubmit={ handleSubmit } className={ styles.employeesForm__form }>
                                         {/* ФИО Сотрудника */ }
                                         <div className={ styles.employeesForm__inputsPanel + ' '
                                             + styles.employeesForm__inputsPanel_titled }>

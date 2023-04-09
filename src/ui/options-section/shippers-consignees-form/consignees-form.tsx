@@ -27,29 +27,27 @@ import {
     newConsigneeSaveToAPI,
     oneConsigneeDeleteToAPI,
     setOrganizationByInnKppConsignees,
-} from '../../../redux/options/consignees-store-reducer';
-import {parseAllNumbers, stringToCoords} from '../../../utils/parsers';
-import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component';
-import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
-import {FormSelector} from '../../common/form-selector/form-selector';
-import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer';
-import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect';
-import {FormApi} from 'final-form';
+} from '../../../redux/options/consignees-store-reducer'
+import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
+import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
+import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
+import {FormSelector} from '../../common/form-selector/form-selector'
+import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer'
+import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect'
+import {FormApi} from 'final-form'
 import {
     getConsigneesAllNamesListOptionsStore,
     getConsigneesNamesListOptionsStore,
-} from '../../../selectors/options/options-reselect';
-import {includesTitleValidator} from '../../../utils/validators';
-import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
-import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple';
-import {valuesAreEqual} from '../../../utils/reactMemoUtils';
+} from '../../../selectors/options/options-reselect'
+import {includesTitleValidator} from '../../../utils/validators'
+import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate'
+import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple'
+import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {getCityFromDispetcherAPI} from '../../../redux/api/avto-dispetcher-response-reducer'
-
-// @ts-ignore
-import createDecorator from 'final-form-focus'
 
 
 type OwnProps = {}
+
 
 export const ConsigneesForm: React.FC<OwnProps> = () => {
 
@@ -69,8 +67,6 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnConsigneesStore)
     const validators = useSelector(getValidatorsConsigneesStore)
     const parsers = useSelector(getParsersConsigneesStore)
-    //фокусировка на проблемном поле при вводе
-    const focusOnError = createDecorator()
 
     const localCoords = useSelector(getGeoPositionAuthStore)
     const currentId = useSelector(getCurrentIdConsigneeStore)
@@ -238,7 +234,6 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
-                            decorators={ [ focusOnError ] }
                             render={
                                 ( {
                                       submitError,
@@ -271,7 +266,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ ( isNew && form.getFieldState('innNumber')?.visited ) ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined }
-                                                   // validate={  isNew ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined}
+                                                // validate={  isNew ? innPlusApiValidator(values as ConsigneesCardType<string>) : undefined}
                                                    parse={ parsers.innNumber }
                                                    disabled={ !isNew }
                                             />

@@ -37,8 +37,6 @@ import {syncParsers} from '../../../utils/parsers'
 import {getIsBusyTrailer} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
 import {getCargoTypeBaseStore, getPropertyRightsBaseStore} from '../../../selectors/base-reselect'
 
-// @ts-ignore
-import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
 
@@ -56,7 +54,6 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnTrailerStore)
     const validators = useSelector(getValidatorsTrailerStore)
     const parsers = useSelector(getParsersTrailerStore)
-    const focusOnError = createDecorator()
 
     const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
     const propertyRightsGlobal = useSelector(getPropertyRightsBaseStore) as typeof propertyRights
@@ -143,7 +140,6 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                         <Form
                             onSubmit={ onSubmit }
                             initialValues={ initialValues }
-                            decorators={ [ focusOnError ] }
                             render={
                                 ( {
                                       handleSubmit,
