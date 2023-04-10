@@ -9,11 +9,11 @@ type OwnProps = {
     onChange: ( agr: string ) => void
 }
 
-// самодельный селектор для фильтра в таблице
+// самодельный input для фильтра в таблице
 export const JustInput: React.FC<OwnProps> = ( { value, onChange } ) => {
 
     const onChangeDebounce = useAsyncDebounce(value => {
-        onChange(value || '')
+        onChange(value?.slice(0, 20) || '')
     }, 100)
 
     return (
@@ -21,10 +21,10 @@ export const JustInput: React.FC<OwnProps> = ( { value, onChange } ) => {
             <span className={ styles.justInput_after }><MaterialIcon icon_name={ 'search' }/></span>
             <input className={ styles.justInput__input }
                    name="globalFilter" id="globalFilter"
+                   value={ value }
                    onChange={ ( e ) => {
                        onChangeDebounce(e?.target?.value)
                    } }
-                   value={ value }
             />
         </div>
     )

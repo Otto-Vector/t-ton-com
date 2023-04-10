@@ -101,21 +101,21 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                                         onChange={ filtersAction[key] }
                                     />
                                     : key === 'globalFilter'
-                                        ? <JustInput value={globalFilterValue} onChange={
-                                            filtersAction[key]
-                                        }/>
-                                    :( // убираем кнопки на разных типах
-                                        ( key === 'todayFilter' || key === 'tomorrowFilter' ) && tableModes.historyTblMode )
-                                        ? null
-                                        : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
-                                                  title={ value.title }
-                                                  colorMode={ 'whiteBlue' }
-                                                  rounded
-                                                  onClick={ () => {
-                                                      // @ts-ignore-next-line
-                                                      filtersAction[key]()
-                                                  } }
-                                        /> }
+                                        ? <JustInput value={ globalFilterValue }
+                                                     onChange={ filtersAction[key] }
+                                        />
+                                        : ( // убираем кнопки на разных типах
+                                            ( key === 'todayFilter' || key === 'tomorrowFilter' ) && tableModes.historyTblMode )
+                                            ? null
+                                            : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
+                                                      title={ value.title }
+                                                      colorMode={ 'whiteBlue' }
+                                                      rounded
+                                                      onClick={ () => {
+                                                          // @ts-ignore-next-line
+                                                          filtersAction[key]()
+                                                      } }
+                                            /> }
                         </div>,
                     )
                     }
