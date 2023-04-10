@@ -45,6 +45,7 @@ import {getCargoTypeBaseStore} from '../../../selectors/base-reselect'
 import {getAuthIdAuthStore} from '../../../selectors/auth-reselect'
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import createDecorator from 'final-form-focus'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 
 
 type OwnProps = {
@@ -65,7 +66,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     const isMyRequestAndNew = ( initialValues.idUserCustomer === useSelector(getAuthIdAuthStore) ) && initialValues.globalStatus === 'новая заявка'
 
-        //фокусировка на проблемном поле при вводе
+    //фокусировка на проблемном поле при вводе
     const focusOnError = createDecorator()
 
     /* данные из стейта заявки для заполнения и обработки полей */
@@ -162,14 +163,14 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             navigate(routes.searchList)
         },
         submitRequestAndDrive: async ( values: OneRequestType ) => {
-                await onSubmit(values)
-                // оплата за создание заявки
-                dispatch<any>(addRequestCashPay())
+            await onSubmit(values)
+            // оплата за создание заявки
+            dispatch<any>(addRequestCashPay())
             navigate(routes.selfExportDriver + values.requestNumber)
         },
         toSelfExportDriver: async ( values: OneRequestType ) => {
             navigate(routes.selfExportDriver + values.requestNumber)
-        }
+        },
     } ), [ routes, dispatch, navigate, onSubmit ])
 
     // добавляем позицию в изменяемый селектор
@@ -211,11 +212,18 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         if (!initialValues.idCustomer) {
             dispatch(requestStoreActions.setInitialValues({
                 ...initialValues,
-                idCustomer: customersSelect.length > 0 ? customersSelect[0].value : undefined,
+                // выставляется первый по списку допустимый вариант
+                idCustomer: customersSelect?.find(( { isDisabled } ) => !isDisabled)?.value,
             }))
         }
     }, [ customersSelect ])
 
+    // при клике на выбор отключенного элемента селектора Заказчика
+    const onDisableOptionIdCustomerSelectorHandleClick = () => {
+        dispatch<any>(textAndActionGlobalModal({
+            text: `Нельзя добавить, данный элемент НЕ соответствует ИНН заказчика: <b>${ innNumber }</b>`,
+        }))
+    }
 
     return (
         <div className={ styles.requestFormLeft }>
@@ -313,6 +321,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     placeholder={ placeholders.idCustomer }
                                                     options={ customersSelect }
                                                     validate={ validators.idCustomer }
+                                                    onDisableHandleClick={ onDisableOptionIdCustomerSelectorHandleClick }
                                                     isClearable
                                     />
                                     : <InfoField textData={ infoData.customerData }
