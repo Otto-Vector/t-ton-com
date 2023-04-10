@@ -55,6 +55,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             {
                 Header: '№',
                 accessor: 'requestNumber',
+                Filter: ColumnInputFilter,
                 disableFilters: true,
             },
             {
@@ -107,6 +108,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             {
                 Header: '',
                 accessor: 'price',
+                Filter: ColumnInputFilter,
                 disableFilters: true,
                 // чтобы добавить быстрый доступ к нужным полям ищи метку #CellProps в table.tsx
                 Cell: ( {

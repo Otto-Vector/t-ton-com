@@ -4,10 +4,15 @@ import {Button} from '../common/button/button'
 import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {filtersStoreActions, initialFiltersState} from '../../redux/table/filters-store-reducer'
-import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
-import {JustSelect} from '../common/just-select/just-select';
-import {getCargoTypeBaseStore} from '../../selectors/base-reselect';
-import {cargoConstType} from '../../types/form-types';
+import {
+    getButtonsFiltersStore,
+    getGlobalValueFiltersStore,
+    getValuesFiltersStore,
+} from '../../selectors/table/filters-reselect'
+import {JustSelect} from '../common/just-select/just-select'
+import {getCargoTypeBaseStore} from '../../selectors/base-reselect'
+import {cargoConstType} from '../../types/form-types'
+import {JustInput} from '../common/just-input/just-input'
 
 
 type OwnProps = {
@@ -23,10 +28,12 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
         historyTblMode: mode === 'history',
         statusTblMode: mode === 'status',
     }
+
     const header = tableModes.searchTblMode ? 'Поиск ' : tableModes.historyTblMode ? 'История' : 'Заявки'
     const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
     const filterButtons = useSelector(getButtonsFiltersStore)
     const { cargoFilter } = useSelector(getValuesFiltersStore)
+    const globalFilterValue = useSelector(getGlobalValueFiltersStore)
     const dispatch = useDispatch()
 
     const filtersAction: Record<keyof typeof filterButtons, ( value?: string ) => void> = {
@@ -50,11 +57,8 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
             dispatch(filtersStoreActions.setLongRouteMode(!filterButtons.longRouteFilter.mode))
             dispatch(filtersStoreActions.setLongRouteFilter())
         },
-        nearDriverFilter: () => {
-            dispatch(filtersStoreActions.setLongRouteMode(false))
-            dispatch(filtersStoreActions.setShortRouteMode(false))
-            dispatch(filtersStoreActions.setLongRouteFilter())
-            dispatch(filtersStoreActions.setNearDriverMode(!filterButtons.nearDriverFilter.mode))
+        globalFilter: ( value ) => {
+            dispatch(filtersStoreActions.setGlobalFilter(value || ''))
         },
         cargoFilter: ( value ) => {
             dispatch(filtersStoreActions.setCargoFilterValue(value || ''))
@@ -89,17 +93,19 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                         <div key={ key } className={ styles.searchSection__buttonItem + ' ' +
                             ( value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             {
-                                ( key === 'cargoFilter' )
+                                key === 'cargoFilter'
                                     ? <JustSelect
                                         optionItems={ [ ...cargoTypes.filter(v => v !== 'Тягач') ] }
                                         selectedValue={ cargoFilter }
                                         titleValue={ value.title }
                                         onChange={ filtersAction[key] }
                                     />
-                                    : ( // убираем кнопки на разных типах
-                                        ( key === 'nearDriverFilter' && ( tableModes.historyTblMode || tableModes.statusTblMode ) )
-                                        ||
-                                        ( ( key === 'todayFilter' || key === 'tomorrowFilter' ) && tableModes.historyTblMode ) )
+                                    : key === 'globalFilter'
+                                        ? <JustInput value={globalFilterValue} onChange={
+                                            filtersAction[key]
+                                        }/>
+                                    :( // убираем кнопки на разных типах
+                                        ( key === 'todayFilter' || key === 'tomorrowFilter' ) && tableModes.historyTblMode )
                                         ? null
                                         : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
                                                   title={ value.title }

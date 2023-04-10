@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
-import {addOneDay, ddMmFormat} from '../../utils/date-formats';
-import {GetActionsTypes} from '../../types/ts-utils';
+import {addOneDay, ddMmFormat} from '../../utils/date-formats'
+import {GetActionsTypes} from '../../types/ts-utils'
 
 
 const date = new Date()
@@ -29,15 +29,16 @@ export const initialFiltersState = {
             title: 'Дальние > 100',
             mode: false,
         },
-        nearDriverFilter: {
-            title: 'Рядом с авто',
-            mode: false,
+        globalFilter: {
+            title: 'Глобальный Фильтр',
+            mode: true,
         },
         clearFilters: {
             title: 'Без Фильтра',
             mode: true,
         },
     },
+    globalFilterValue: '',
     values: {
         dayFilter: undefined as undefined | Date,
         routeFilter: [ 0, 99999 ],
@@ -53,6 +54,12 @@ export const filtersStoreReducer = ( state = initialFiltersState, action: Action
 
     switch (action.type) {
 
+        case 'filters-store-reducer/SET-GLOBAL-FILTER': {
+            return {
+                ...state,
+                globalFilterValue: action.value,
+            }
+        }
         case 'filters-store-reducer/SET-TODAY-FILTER': {
             return {
                 ...state,
@@ -126,12 +133,12 @@ export const filtersStoreReducer = ( state = initialFiltersState, action: Action
                 },
             }
         }
-        case 'filters-store-reducer/SET-NEAR-DRIVER-MODE': {
+        case 'filters-store-reducer/SET-GLOBAL-FILTER-MODE': {
             return {
                 ...state,
                 buttons: {
                     ...state.buttons,
-                    nearDriverFilter: { ...state.buttons.nearDriverFilter, mode: action.mode },
+                    globalFilter: { ...state.buttons.globalFilter, mode: action.mode },
                 },
             }
         }
@@ -176,7 +183,14 @@ export const filtersStoreReducer = ( state = initialFiltersState, action: Action
 
 /* ЭКШОНЫ */
 export const filtersStoreActions = {
-    // установка значения в карточки пользователей одной страницы
+    setGlobalFilter: ( value: string ) => ( {
+        type: 'filters-store-reducer/SET-GLOBAL-FILTER',
+        value,
+    } as const ),
+    setGlobalFilterMode: ( mode: boolean ) => ( {
+        type: 'filters-store-reducer/SET-GLOBAL-FILTER-MODE',
+        mode,
+    } as const ),
     setTodayFilter: () => ( {
         type: 'filters-store-reducer/SET-TODAY-FILTER',
     } as const ),
@@ -213,10 +227,6 @@ export const filtersStoreActions = {
         type: 'filters-store-reducer/SET-CARGO-FILTER-MODE',
         mode,
     } as const ),
-    setNearDriverMode: ( mode: boolean ) => ( {
-        type: 'filters-store-reducer/SET-NEAR-DRIVER-MODE',
-        mode,
-    } as const ),
     setClearFilter: ( initial: FiltersStoreReducerStateType ) => ( {
         type: 'filters-store-reducer/SET-CLEAR-FILTER',
         initial,
@@ -245,4 +255,3 @@ export type FiltersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 //         }
 //
 //     }
-

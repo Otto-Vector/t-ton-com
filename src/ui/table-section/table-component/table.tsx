@@ -6,20 +6,21 @@ import {useSelector} from 'react-redux'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
 import {OneRequestTableType} from '../../../types/form-types'
+import {GlobalFilter} from './filter/global-filter'
+import {getGlobalValueFiltersStore} from '../../../selectors/table/filters-reselect'
 // import {GlobalFilter} from './filter/global-filter';
 
 
 type OwnProps = {
     columns: readonly Column[],
     data: readonly {}[],
-    // data:  OneRequestTableType[],
     tableModes: TableModesType
 }
 
 export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
     const navRoutes = useSelector(getRoutesStore)
     const navigate = useNavigate()
-
+    const globalFilterValue = useSelector(getGlobalValueFiltersStore)
     const onDoubleClick = ( rowData: OneRequestTableType ) => () => {
         tableModes.statusTblMode && navigate(navRoutes.requestInfo.status + rowData.requestNumber)
     }
@@ -31,19 +32,21 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
         headerGroups,
         rows,
         prepareRow,
-        // state,
-        // setGlobalFilter,
+        state,
+        //@ts-ignore-next-line
+        setGlobalFilter,
     } = useTable({
             columns,
             data,
         },
         useFilters,
         useGlobalFilter)
-    // const {globalFilter} = state
 
+    // @ts-ignore-next-line
+    const { globalFilter } = state
 
     return ( <>
-            {/*<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />*/}
+            <GlobalFilter filter={ globalFilter } setFilter={ setGlobalFilter } value={globalFilterValue}/>
             <table { ...getTableProps() }>
                 <thead>
                 { headerGroups.map(( headerGroup ) => (
@@ -51,8 +54,9 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                         { headerGroup.headers.map(( column ) => (
                             <th { ...column.getHeaderProps() }>{ column.render('Header') }
                                 { // @ts-ignore-next-line
-                                    column.canFilter
-                                        ? column.render('Filter') : null
+                                    column?.canFilter
+                                        ? column?.render('Filter') : <></>
+                                        // ? <>F</> : <></>
                                 }
                             </th>
                         )) }
