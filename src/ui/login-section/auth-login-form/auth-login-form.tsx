@@ -33,6 +33,7 @@ import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
 import {daDataStoreActions, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer';
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
 import {SelectOptionsType} from '../../common/form-selector/selector-utils';
+import createDecorator from 'final-form-focus'
 
 
 type OwnProps = {}
@@ -54,6 +55,8 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnAuthStore)
     const validators = useSelector(getValidatorsAuthStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
+    //фокусировка на проблемном поле при вводе
+    const focusOnError = createDecorator()
 
     const dispatch = useDispatch()
 
@@ -161,6 +164,8 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
             <Form
                 onSubmit={ onSubmit }
                 initialValues={ localInitialValues }
+                //@ts-ignore-next-line
+                decorators={ [ focusOnError ] }
                 render={
                     ( {
                           submitError,
@@ -231,7 +236,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                             </div>
                             <div className={ styles.loginForm__buttonsPanel }>
                                 <Button type={ 'submit' }
-                                        disabled={ submitting || hasValidationErrors || isFetching ||
+                                        disabled={ submitting || isFetching ||
                                             ( !isRegisterMode && !form.getFieldState('phoneNumber')?.valid && !form.getFieldState('sms')?.valid ) }
                                         colorMode={ 'green' }
                                         title={ 'Далее' }

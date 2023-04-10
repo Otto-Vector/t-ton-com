@@ -260,6 +260,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             <div className={ styles.employeesForm__wrapper }>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
+                        <span className={styles.employeesForm__status}>{ initialValues.status }</span>
                         <h4 className={ styles.employeesForm__header }>{ header }</h4>
                         <Form
                             onSubmit={ onSubmit }
