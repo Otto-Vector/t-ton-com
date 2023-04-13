@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -55,7 +55,8 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const maskOn = useSelector(getMaskOnTrailerStore)
     const validators = useSelector(getValidatorsTrailerStore)
     const parsers = useSelector(getParsersTrailerStore)
-    const focusOnError = createDecorator()
+    //фокусировка на проблемном поле при вводе
+    const focusOnError = useMemo(() => createDecorator(), [])
 
     const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
     const propertyRightsGlobal = useSelector(getPropertyRightsBaseStore) as typeof propertyRights

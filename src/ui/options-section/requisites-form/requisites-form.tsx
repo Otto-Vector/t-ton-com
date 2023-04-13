@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import styles from './requisites-form.module.scss'
 import {Field, Form} from 'react-final-form'
 
@@ -47,7 +47,8 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
 
     const initialValues = useSelector(getStoredValuesRequisitesStore)
-    const focusOnError = createDecorator()
+    //фокусировка на проблемном поле при вводе
+    const focusOnError = useMemo(() => createDecorator(), [])
     const label = useSelector(getLabelRequisitesStore)
     const maskOn = useSelector(getMaskOnRequisitesStore)
     const validators = useSelector(getValidatorsRequisitesStore)

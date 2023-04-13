@@ -23,6 +23,7 @@ export const JustInput: React.FC<OwnProps> = ( { value, onChange } ) => {
                    name="globalFilter" id="globalFilter"
                    value={ value }
                    onChange={ ( e ) => {
+                       console.log(e)
                        onChangeDebounce(e?.target?.value)
                    } }
             />

@@ -45,7 +45,7 @@ import {getCargoTypeBaseStore} from '../../../selectors/base-reselect'
 import {getAuthIdAuthStore} from '../../../selectors/auth-reselect'
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import createDecorator from 'final-form-focus'
-import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {JustInput} from '../../common/just-input/just-input'
 
 
@@ -68,7 +68,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const isMyRequestAndNew = ( initialValues.idUserCustomer === useSelector(getAuthIdAuthStore) ) && initialValues.globalStatus === 'новая заявка'
 
     //фокусировка на проблемном поле при вводе
-    const focusOnError = createDecorator()
+    const focusOnError = useMemo(() => createDecorator(), [])
 
     /* данные из стейта заявки для заполнения и обработки полей */
     // заголовки
@@ -121,6 +121,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     }
     const [ cargoWeight, cargoWeightChange ] = useState(initialValues.cargoWeight)
 
+    const cargoChange = ( value: string ) => {
+        console.log(value)
+        cargoWeightChange(value)
+    }
+
     const buttonsAction = useMemo(() => ( {
         acceptRequest: async ( values: OneRequestType ) => {
             // оплата за принятие заявки в работу
@@ -136,12 +141,14 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
             if (!values.localStatus?.cargoHasBeenTransferred) {
                 dispatch<any>(textAndActionGlobalModal({
                     title: 'Вопрос',
-                    reactChildren: <JustInput value={ values?.cargoWeight + '' } onChange={ (e)=>{cargoWeightChange(e)} }/>,
+                    reactChildren: <JustInput value={ values?.cargoWeight + '' } onChange={ ( e ) => {
+                        cargoChange(e)
+                    } }/>,
                     action: () => {
                         dispatch<any>(changeSomeValuesOnCurrentRequest({
                             requestNumber: values.requestNumber + '',
                             cargoWeight: cargoWeight + '',
-                            addedPrice: +(values?.responseStavka || 1) * +(values?.distance||1) * +(values?.cargoWeight ||1),
+                            addedPrice: +( values?.responseStavka || 1 ) * +( values?.distance || 1 ) * +( values?.cargoWeight || 1 ),
                             localStatuscargoHasBeenTransferred: true,
                         }))
                     },

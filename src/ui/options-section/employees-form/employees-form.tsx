@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -63,7 +63,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsEmployeesStore)
     const parsers = useSelector(getParsersEmployeesStore)
     //фокусировка на проблемном поле при вводе
-    const focusOnError = createDecorator()
+    const focusOnError = useMemo(() => createDecorator(), [])
 
     // селекторы
     const drivingCategorySelector = useSelector(getDrivingCategorySelectorBaseStore)

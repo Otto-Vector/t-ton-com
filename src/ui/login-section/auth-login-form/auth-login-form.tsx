@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import styles from './auth-login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {FORM_ERROR, FormApi} from 'final-form'
@@ -56,7 +56,7 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsAuthStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
     //фокусировка на проблемном поле при вводе
-    const focusOnError = createDecorator()
+    const focusOnError = useMemo(() => createDecorator(), [])
 
     const dispatch = useDispatch()
 

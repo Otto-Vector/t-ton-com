@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {Button} from '../../common/button/button'
@@ -68,7 +68,7 @@ export const ConsigneesForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsConsigneesStore)
     const parsers = useSelector(getParsersConsigneesStore)
     //фокусировка на проблемном поле при вводе
-    const focusOnError = createDecorator()
+    const focusOnError = useMemo(() => createDecorator(), [])
 
     const localCoords = useSelector(getGeoPositionAuthStore)
     const currentId = useSelector(getCurrentIdConsigneeStore)

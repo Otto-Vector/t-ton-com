@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 
@@ -68,7 +68,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
     const validators = useSelector(getValidatorsShippersStore)
     const parsers = useSelector(getParsersShippersStore)
     //фокусировка на проблемном поле при вводе
-    const focusOnError = createDecorator()
+    const focusOnError = useMemo(() => createDecorator(), [])
 
     const localCoords = useSelector(getGeoPositionAuthStore)
     const currentId = useSelector(getCurrentIdShipperStore)
