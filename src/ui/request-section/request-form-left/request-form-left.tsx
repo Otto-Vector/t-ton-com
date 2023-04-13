@@ -4,8 +4,9 @@ import {getAllShippersSelectFromLocal, getOneShipperFromLocal} from '../../../se
 import {useDispatch, useSelector} from 'react-redux'
 import {cargoConstType, OneRequestType} from '../../../types/form-types'
 import {
+    getCurrentCargoWeightRequestStore,
     getCurrentDistanceIsFetchingRequestStore,
-    getInfoTextModalsRequestValuesStore,
+    getInfoTextModalsRequestValuesStore, getInitialCargoWeightRequestStore,
     getLabelRequestStore,
     getPlaceholderRequestStore,
     getPreparedInfoDataRequestStore,
@@ -25,6 +26,7 @@ import {
 import {InfoText} from '../../common/info-text/into-text'
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
+    changeCargoWeightValuesOnCurrentRequest,
     changeCurrentRequestOnCreate,
     changeSomeValuesOnCurrentRequest,
     getRouteFromAPI,
@@ -45,13 +47,60 @@ import {getCargoTypeBaseStore} from '../../../selectors/base-reselect'
 import {getAuthIdAuthStore} from '../../../selectors/auth-reselect'
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import createDecorator from 'final-form-focus'
-import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
-import {JustInput} from '../../common/just-input/just-input'
+import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {syncValidators} from '../../../utils/validators'
 
 
 type OwnProps = {
     requestModes: RequestModesType,
     initialValues: OneRequestType,
+}
+
+const CargoWeightInput: React.FC = () => {
+    const cargoWeight = useSelector(getInitialCargoWeightRequestStore)
+    const dispatch = useDispatch()
+    const onSubmit = ( value: any ) => {
+        console.log(value)
+    }
+
+    const onChange = ( e: { cargoWeight: string } ) => {
+        const cargoWeight = +( e.cargoWeight || 0 )
+        console.log(cargoWeight)
+        dispatch(requestStoreActions.setCurrentCargoWeight(cargoWeight))
+    }
+
+    useEffect(() => {
+        dispatch(requestStoreActions.setCurrentCargoWeight(+( cargoWeight || 0 )))
+    }, [])
+
+    return ( <Form
+        onSubmit={ onSubmit }
+        initialValues={ { cargoWeight } }
+        render={
+            ( { handleSubmit, form } ) => (
+                <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>
+                    <div className={ styles.requestFormLeft__inputsItem_halfCenter }>
+                        <label className={ styles.requestFormLeft__label }
+                               style={ { fontWeight: 'bold' } }
+                        >{ 'Груз у водителя?' }</label>
+                        <div><label
+                            className={ styles.requestFormLeft__label }>{ 'Фактический вес при погрузке:' }</label>
+                        </div>
+                        <Field name={ 'cargoWeight' }
+                               placeholder={ 'Вес груза (тонн)' }
+                               component={ FormInputType }
+                               inputType={ 'money' }
+                               validate={ syncValidators.cargoWeight }
+                               resetFieldBy={ form }
+                               errorBottom
+                        />
+                    </div>
+                    <FormSpySimple form={ form }
+                                   onChange={ onChange }
+                    />
+                </form> )
+        }
+    /> )
 }
 
 
@@ -119,72 +168,65 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const exposeValues = ( values: OneRequestType ) => {
         dispatch(requestStoreActions.setInitialValues(values))
     }
-    const [ cargoWeight, cargoWeightChange ] = useState(initialValues.cargoWeight)
 
-    const cargoChange = ( value: string ) => {
-        console.log(value)
-        cargoWeightChange(value)
-    }
+    // данные по грузу, изменяемые в модалке
+    const currentCargoWeight = useSelector(getCurrentCargoWeightRequestStore)
 
-    const buttonsAction = useMemo(() => ( {
-        acceptRequest: async ( values: OneRequestType ) => {
-            // оплата за принятие заявки в работу
-            // dispatch<any>(+( values.distance || 0 ) <= 100 ? acceptShorRoutePay() : acceptLongRoutePay())
-            navigate(routes.addDriver + values.requestNumber)
-        },
-        cancelRequest: () => {
-            navigate(-1)
-        },
-        // груз передан
-        cargoHasBeenTransferred: ( values: OneRequestType ) => {
+    const buttonsAction =
+        useMemo(() => (
+            {
+                acceptRequest: async ( values: OneRequestType ) => {
+                    // оплата за принятие заявки в работу
+                    // dispatch<any>(+( values.distance || 0 ) <= 100 ? acceptShorRoutePay() : acceptLongRoutePay())
+                    navigate(routes.addDriver + values.requestNumber)
+                },
+                cancelRequest: () => {
+                    navigate(-1)
+                },
+                // груз передан
+                cargoHasBeenTransferred: ( values: OneRequestType ) => {
 
-            if (!values.localStatus?.cargoHasBeenTransferred) {
-                dispatch<any>(textAndActionGlobalModal({
-                    title: 'Вопрос',
-                    reactChildren: <JustInput value={ values?.cargoWeight + '' } onChange={ ( e ) => {
-                        cargoChange(e)
-                    } }/>,
-                    action: () => {
+                    if (!values.localStatus?.cargoHasBeenTransferred) {
+                        dispatch<any>(textAndActionGlobalModal({
+                            title: 'Вопрос',
+                            reactChildren: <CargoWeightInput/>,
+                            action: () => {
+                                dispatch<any>(changeCargoWeightValuesOnCurrentRequest())
+                            },
+                        }))
+                    }
+                },
+                // груз получен
+                cargoHasBeenReceived: ( values: OneRequestType ) => {
+                    if (!values.localStatus?.cargoHasBeenReceived) {
+                        // меняем одновременно в двух местах, чтобы не переподгружаться
+                        dispatch(requestStoreActions.setInitialValues({
+                            ...values,
+                            localStatus: { ...values.localStatus, cargoHasBeenReceived: true },
+                        }))
                         dispatch<any>(changeSomeValuesOnCurrentRequest({
                             requestNumber: values.requestNumber + '',
-                            cargoWeight: cargoWeight + '',
-                            addedPrice: +( values?.responseStavka || 1 ) * +( values?.distance || 1 ) * +( values?.cargoWeight || 1 ),
-                            localStatuscargoHasBeenTransferred: true,
+                            localStatuscargoHasBeenReceived: true,
                         }))
-                    },
-                }))
+                    }
+                },
+                submitRequestAndSearch: async ( values: OneRequestType ) => {
+                    await onSubmit(values)
+                    // оплата за создание заявки
+                    dispatch<any>(addRequestCashPay())
+                    navigate(routes.searchList)
+                },
+                submitRequestAndDrive: async ( values: OneRequestType ) => {
+                    await onSubmit(values)
+                    // оплата за создание заявки
+                    dispatch<any>(addRequestCashPay())
+                    navigate(routes.selfExportDriver + values.requestNumber)
+                },
+                toSelfExportDriver: async ( values: OneRequestType ) => {
+                    navigate(routes.selfExportDriver + values.requestNumber)
+                },
             }
-        },
-        // груз получен
-        cargoHasBeenReceived: ( values: OneRequestType ) => {
-            if (!values.localStatus?.cargoHasBeenReceived) {
-                // меняем одновременно в двух местах, чтобы не переподгружаться
-                dispatch(requestStoreActions.setInitialValues({
-                    ...values,
-                    localStatus: { ...values.localStatus, cargoHasBeenReceived: true },
-                }))
-                dispatch<any>(changeSomeValuesOnCurrentRequest({
-                    requestNumber: values.requestNumber + '',
-                    localStatuscargoHasBeenReceived: true,
-                }))
-            }
-        },
-        submitRequestAndSearch: async ( values: OneRequestType ) => {
-            await onSubmit(values)
-            // оплата за создание заявки
-            dispatch<any>(addRequestCashPay())
-            navigate(routes.searchList)
-        },
-        submitRequestAndDrive: async ( values: OneRequestType ) => {
-            await onSubmit(values)
-            // оплата за создание заявки
-            dispatch<any>(addRequestCashPay())
-            navigate(routes.selfExportDriver + values.requestNumber)
-        },
-        toSelfExportDriver: async ( values: OneRequestType ) => {
-            navigate(routes.selfExportDriver + values.requestNumber)
-        },
-    } ), [ routes, dispatch, navigate, onSubmit, cargoWeight ])
+        ), [ routes, dispatch, navigate, onSubmit, currentCargoWeight ])
 
     // добавляем позицию в изменяемый селектор
     const onCreateCompositionValue = async ( newCargoCompositionItem: string ) => {

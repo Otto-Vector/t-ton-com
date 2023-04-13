@@ -22,6 +22,11 @@
   &__inputsItem {
     position: relative;
     width: 32%;
+
+    &_halfCenter {
+      width: 50%;
+      margin: 0 auto;
+    }
   }
 
   &__selector {
@@ -113,4 +118,3 @@
   }
 
 }
-

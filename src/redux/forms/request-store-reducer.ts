@@ -31,7 +31,7 @@ const initialState = {
     currentRequestNumber: undefined as undefined | number,
     // для отрисовки ожидания построения маршрута при создании заявки
     currentDistanceIsFetching: false,
-
+    currentCargoWeight: null as null | number,
     label: {
         requestNumber: 'Номер заявки',
         requestDate: 'Дата создания заявки',
@@ -189,10 +189,10 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
                 content: action.content,
             }
         }
-        case 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW': {
+        case 'request-store-reducer/SET-CURRENT-CARGO-WEIGHT': {
             return {
                 ...state,
-                currentRequestNumber: action.currentRequestNumber,
+                currentRequestNumber: action.currentCargoWeight,
             }
         }
         case 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE': {
@@ -215,7 +215,7 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
                 infoTextModals: {
                     ...state.infoTextModals,
                     distance: state.infoTextModals.distance + (
-                        state.infoTextModals.distance.search('<b>') < 0 ? ` <b>${ action.koef * 100 - 100 }%</b>` : ''
+                        !state.infoTextModals?.distance?.includes('<b>') ? ` <b>${ action.koef * 100 - 100 }%</b>` : ''
                     ),
                 },
             }
@@ -249,6 +249,10 @@ export const requestStoreActions = {
     setCurrentDistanceIsFetching: ( isFetching: boolean ) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING',
         isFetching,
+    } as const ),
+    setCurrentCargoWeight: ( currentCargoWeight: number ) => ( {
+        type: 'request-store-reducer/SET-CURRENT-CARGO-WEIGHT',
+        currentCargoWeight,
     } as const ),
     setKoefficientToInfo: ( koef: number ) => ( {
         type: 'request-store-reducer/SET-KOEFFICIENT-TO-INFO',
@@ -554,7 +558,7 @@ export const addAcceptedResponseToRequestOnCreate = (
         oneTransport: transportValues,
         oneTrailer: trailerValues,
         idCustomer,
-        cargoWeight
+        cargoWeight,
     }
         : {
         addDriverValues: ResponseToRequestCardType<string>,
@@ -881,6 +885,24 @@ export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiT
         }
     }
 
+// скорректировать вес груза и пересчитать стоимость
+export const changeCargoWeightValuesOnCurrentRequest = (): RequestStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        const currentCargoWeight = getState().requestStoreReducer.currentCargoWeight
+        const { distance, responseStavka, requestNumber } = getState().requestStoreReducer.initialValues
+        console.log({
+            requestNumber: requestNumber+'',
+            cargoWeight: currentCargoWeight + '',
+            addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( currentCargoWeight || 1 ),
+            localStatuscargoHasBeenTransferred: true,}
+        )
+        // dispatch(changeSomeValuesOnCurrentRequest({
+        //     requestNumber: requestNumber+'',
+        //     cargoWeight: currentCargoWeight + '',
+        //     addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( currentCargoWeight || 1 ),
+        //     localStatuscargoHasBeenTransferred: true,
+        // }))
+    }
 // удаляем заявку по её номеру
 export const deleteCurrentRequestAPI = ( requestNumber: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {

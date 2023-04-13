@@ -1,8 +1,5 @@
 import React, {useEffect} from 'react'
 import styles from './ui-component.module.scss'
-// import 'antd/lib/style/modal-animations.css' // используем core стили antd
-// import 'antd/lib/modal/style/modal-animations.css' // используем стили antd для модальных инфоокон
-// import 'antd/lib/button/style/modal-animations.css' // используем стили antd для кнопок
 import {Header} from './header/header'
 import {Navigate, Route, Routes} from 'react-router-dom'
 import {Footer} from './footer/footer'
@@ -33,8 +30,6 @@ import {ТoAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redi
 import {getAutologinAuthStore, getIsAuthAuthStore} from '../selectors/auth-reselect'
 import {autoLoginMe} from '../redux/auth-store-reducer'
 import {Page404} from './common/404-page/page-404'
-import {DownloadSampleFileWrapper} from './common/download-sample-file/download-sample-file-wrapper'
-import {ButtonMenuSaveLoad} from './common/button-menu-save-load/button-menu-save-load'
 
 type OwnProps = {}
 
