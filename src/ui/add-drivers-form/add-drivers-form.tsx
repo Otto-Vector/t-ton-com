@@ -146,10 +146,11 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                 oneTrailer,
                 oneTransport,
                 idCustomer: requestValues.idCustomer + '',
+                cargoWeight,
             }))
             navigate(navRoutes.requestsList)
         }
-    }, [ oneEmployee, oneTransport, oneTrailer ])
+    }, [ oneEmployee, oneTransport, oneTrailer, cargoWeight ])
 
     // перезаписываем состояние в стейт для перерасчёта калькулятора
     const spyChanger = ( values: ResponseToRequestCardType ) => {
@@ -163,7 +164,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                     text: [
                         'Создание заяки приостановлено. Удалить заявку?',
                         'ОК - Удалить текущую заявку',
-                        'Cancel - Сохранить заявку для откликов перевозчиками',
+                        'Отмена - Сохранить заявку для откликов перевозчиками',
                     ],
                     action: () => {
                         // удаляем созданную заявку

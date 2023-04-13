@@ -3,7 +3,6 @@ import styles from './request-form-documents-right.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 import {
     getInfoTextModalsRequestValuesStore,
-    getInitialDocumentsRequestValuesStore,
     getInitialValuesRequestStore,
     getLabelDocumentsRequestValuesStore,
     getLabelRequestStore,

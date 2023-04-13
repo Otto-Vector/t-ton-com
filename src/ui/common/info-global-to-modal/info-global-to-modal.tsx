@@ -1,14 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
-// сейчас они прописаны на ui компоненте
-// import 'antd/lib/button/style/index.css' // используем стили antd для кнопок
 import './modal-animations.css' // вырезал нужные анимации для модалки
 import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфо-окон
-import './info-global-to-modal.scss'
+import './info-global-to-modal.scss' // перезапись стилей
 import {Modal} from 'antd'
 import {
-    getActionGlobalModalStore,
+    getActionGlobalModalStore, getChildrenGlobalModalStore,
     getNavigateToCancelGlobalModalStore,
     getNavigateToOkGlobalModalStore,
     getTextGlobalModalStore,
@@ -24,6 +22,7 @@ import {ModalCloseIcon} from './modal-close-icon/modal-close-icon'
 export const InfoGlobalToModal: React.FC = () => {
 
     const textToGlobalModal = useSelector(getTextGlobalModalStore)
+    const reactChildren = useSelector(getChildrenGlobalModalStore)
     const actionOnOk = useSelector(getActionGlobalModalStore)
     const navToOnOk = useSelector(getNavigateToOkGlobalModalStore)
     const navToOnCancel = useSelector(getNavigateToCancelGlobalModalStore)
@@ -62,9 +61,10 @@ export const InfoGlobalToModal: React.FC = () => {
     const titleHere: string | 'Вопрос' | 'Информация' = title || ( ( actionOnOk || navToOnOk ) ? 'Вопрос' : 'Информация' )
 
     useEffect(() => {
-        // активируется при наличии данных
-        setVisible(!!textToGlobalModal)
-    }, [ textToGlobalModal ])
+            // активируется при наличии данных
+            setVisible(!!textToGlobalModal || !!reactChildren)
+        },
+        [ textToGlobalModal, reactChildren ])
 
     useEffect(() => {
         // активируем один раз
@@ -76,9 +76,11 @@ export const InfoGlobalToModal: React.FC = () => {
         }
     }, [ timeToDeactivate ])
 
+    const isCentered = !!reactChildren
+
     return (
         <Modal title={ titleHere }
-            // centered={ true }
+            centered={ isCentered }
                visible={ visible }
                onCancel={ onCancelHandle }
             // onOk={ onOkHandle }
@@ -90,8 +92,8 @@ export const InfoGlobalToModal: React.FC = () => {
                    isCancelButtonEnable: titleHere !== 'Информация',
                })}
         >
-            { textFromArrayToParagraph(textToGlobalModal) }
-            {/*{ textToGlobalModal }*/}
+            { textToGlobalModal && textFromArrayToParagraph(textToGlobalModal) }
+            { reactChildren }
         </Modal>
     )
 }

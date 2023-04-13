@@ -82,6 +82,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
             }))
             await dispatch<any>(textAndActionGlobalModal({
                 text: 'Водитель <b>' + oneEmployee?.employeeFIO + '</b> принят на заявку № ' + oneResponse.requestNumber,
+                title: 'Информация',
                 navigateOnCancel: routes.requestsList,
                 navigateOnOk: routes.requestsList,
             }))

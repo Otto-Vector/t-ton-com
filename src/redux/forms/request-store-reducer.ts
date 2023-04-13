@@ -554,6 +554,7 @@ export const addAcceptedResponseToRequestOnCreate = (
         oneTransport: transportValues,
         oneTrailer: trailerValues,
         idCustomer,
+        cargoWeight
     }
         : {
         addDriverValues: ResponseToRequestCardType<string>,
@@ -561,6 +562,7 @@ export const addAcceptedResponseToRequestOnCreate = (
         oneTransport: TransportCardType<string>
         oneTrailer: TrailerCardType<string>
         idCustomer: string,
+        cargoWeight: string,
     } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
@@ -576,6 +578,7 @@ export const addAcceptedResponseToRequestOnCreate = (
                 responseStavka: addDriverValues.responseStavka,
                 responseTax: addDriverValues.responseId,
                 responsePrice: addDriverValues.responsePrice,
+                cargoWeight,
                 requestUserCarrierId: idUser,
 
                 /* ПЕРЕВОЗЧИК */
@@ -669,6 +672,7 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                     responseTax: oneResponse.responseId,
                     responsePrice: oneResponse.responsePrice,
                     requestUserCarrierId: oneResponse.requestCarrierId,
+                    cargoWeight: oneResponse.cargoWeight,
 
                     /* ПЕРЕВОЗЧИК */
                     innNumberCarrier: requestCarrierData?.nnNumber || '-',

@@ -45,7 +45,8 @@ import {getCargoTypeBaseStore} from '../../../selectors/base-reselect'
 import {getAuthIdAuthStore} from '../../../selectors/auth-reselect'
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import createDecorator from 'final-form-focus'
-import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {JustInput} from '../../common/just-input/just-input'
 
 
 type OwnProps = {
@@ -118,6 +119,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const exposeValues = ( values: OneRequestType ) => {
         dispatch(requestStoreActions.setInitialValues(values))
     }
+    const [ cargoWeight, cargoWeightChange ] = useState(initialValues.cargoWeight)
 
     const buttonsAction = useMemo(() => ( {
         acceptRequest: async ( values: OneRequestType ) => {
@@ -130,15 +132,19 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         },
         // груз передан
         cargoHasBeenTransferred: ( values: OneRequestType ) => {
+
             if (!values.localStatus?.cargoHasBeenTransferred) {
-                // меняем одновременно в двух местах, чтобы не переподгружаться
-                dispatch(requestStoreActions.setInitialValues({
-                    ...values,
-                    localStatus: { ...values.localStatus, cargoHasBeenTransferred: true },
-                }))
-                dispatch<any>(changeSomeValuesOnCurrentRequest({
-                    requestNumber: values.requestNumber + '',
-                    localStatuscargoHasBeenTransferred: true,
+                dispatch<any>(textAndActionGlobalModal({
+                    title: 'Вопрос',
+                    reactChildren: <JustInput value={ values?.cargoWeight + '' } onChange={ (e)=>{cargoWeightChange(e)} }/>,
+                    action: () => {
+                        dispatch<any>(changeSomeValuesOnCurrentRequest({
+                            requestNumber: values.requestNumber + '',
+                            cargoWeight: cargoWeight + '',
+                            addedPrice: +(values?.responseStavka || 1) * +(values?.distance||1) * +(values?.cargoWeight ||1),
+                            localStatuscargoHasBeenTransferred: true,
+                        }))
+                    },
                 }))
             }
         },
@@ -171,7 +177,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         toSelfExportDriver: async ( values: OneRequestType ) => {
             navigate(routes.selfExportDriver + values.requestNumber)
         },
-    } ), [ routes, dispatch, navigate, onSubmit ])
+    } ), [ routes, dispatch, navigate, onSubmit, cargoWeight ])
 
     // добавляем позицию в изменяемый селектор
     const onCreateCompositionValue = async ( newCargoCompositionItem: string ) => {

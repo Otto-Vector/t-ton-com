@@ -1,14 +1,14 @@
 import {AppStateType} from '../redux-store'
-import {ThunkAction} from 'redux-thunk';
-import {To} from 'react-router-dom';
-import {GetActionsTypes} from '../../types/ts-utils';
+import {ThunkAction} from 'redux-thunk'
+import {To} from 'react-router-dom'
+import {GetActionsTypes} from '../../types/ts-utils'
 
 const initialState = {
     modalGlobalTextMessage: '' as string | string[],
-    titleText: undefined as string | undefined,
+    reactChildren: null as null | JSX.Element,
+    titleText: undefined as undefined | string,
     navigateToOk: undefined as undefined | To,
     navigateToCancel: undefined as undefined | To,
-    isOkHandle: false,
     action: null as null | ( () => void ),
     timeToDeactivate: null as null | number,
 }
@@ -25,6 +25,7 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
             return {
                 ...state,
                 modalGlobalTextMessage: action.modalGlobalTextMessage,
+                reactChildren: null,
             }
         }
         case 'global-modal-reducer/SET-NAVIGATE-TO-OK': {
@@ -39,10 +40,11 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 navigateToCancel: action.navigateToCancel,
             }
         }
-        case 'global-modal-reducer/SET-IS-OK-HANDLE': {
+        case 'global-modal-reducer/SET-CHILDREN': {
             return {
                 ...state,
-                isOkHandle: action.isOkHandle,
+                reactChildren: action.reactChildren,
+                modalGlobalTextMessage: action.reactChildren ? '' : state.modalGlobalTextMessage,
             }
         }
         case 'global-modal-reducer/SET-ACTION': {
@@ -70,7 +72,7 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 titleText: undefined,
                 navigateToOk: undefined,
                 navigateToCancel: undefined,
-                isOkHandle: false,
+                reactChildren: null,
                 action: null,
                 timeToDeactivate: null,
             }
@@ -102,9 +104,9 @@ export const globalModalStoreActions = {
     resetAllValues: () => ( {
         type: 'global-modal-reducer/RESET-ALL-VALUES',
     } as const ),
-    setIsOkHandle: ( isOkHandle: boolean ) => ( {
-        type: 'global-modal-reducer/SET-IS-OK-HANDLE',
-        isOkHandle,
+    setChildren: ( reactChildren: null | JSX.Element ) => ( {
+        type: 'global-modal-reducer/SET-CHILDREN',
+        reactChildren,
     } as const ),
     setAction: ( action: null | ( () => void ) ) => ( {
         type: 'global-modal-reducer/SET-ACTION',
@@ -122,7 +124,8 @@ export type GlobalModalStoreReducerThunkActionType<R = void> = ThunkAction<Promi
 
 
 type GlobalModalType = {
-    text: string | string[]
+    text?: string | string[]
+    reactChildren?: null | JSX.Element
     // заворачиваем диспатч внутрь анонимной функции: ()=>{dispatch(выполняйтся)}
     action?: () => void
     navigateOnOk?: To
@@ -140,12 +143,14 @@ export const textAndActionGlobalModal = ( {
                                               navigateOnCancel,
                                               title,
                                               timeToDeactivate,
+                                              reactChildren,
                                           }: GlobalModalType ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(globalModalStoreActions.setAction(action || null))
         dispatch(globalModalStoreActions.setNavigateToOk(navigateOnOk))
         dispatch(globalModalStoreActions.setNavigateToCancel(navigateOnCancel))
         dispatch(globalModalStoreActions.setTitle(title))
-        dispatch(globalModalStoreActions.setTextMessage(text))
+        dispatch(globalModalStoreActions.setTextMessage(text|| ''))
+        dispatch(globalModalStoreActions.setChildren(reactChildren || null))
         dispatch(globalModalStoreActions.setTimeToDeactivate(timeToDeactivate || null))
     }
