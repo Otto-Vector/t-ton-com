@@ -271,7 +271,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     cargoComposition: elem.cargoComposition,
     shipmentDate: elem.shipmentDate ? new Date(elem.shipmentDate) : undefined,
     cargoType: elem.cargoType as CargoTypeType,
-
+    addedPrice: elem.addedPrice,
     idUserCustomer: elem.idUserCustomer,
     idCustomer: elem.idCustomer,
     customerUser: {
@@ -379,7 +379,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         cargoHasBeenTransferred: elem.localStatuscargoHasBeenTransferred,
         cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
     },
-
+    // ПЕРЕВОЗЧИК
     requestUserCarrierId: elem.requestUserCarrierId,
     requestCarrierId: elem.requestCarrierId,
     requestCarrierUser: {
@@ -402,7 +402,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         mechanicFIO: elem.mechanicFIOCarrier,
         dispatcherFIO: elem.dispatcherFIOCarrier,
     },
-
+    // ВОДИТЕЛЬ
     idEmployee: elem.idEmployee,
     responseEmployee: {
         idEmployee: elem.idEmployee,
@@ -413,7 +413,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         passportDate: elem.responseEmployeepassportDate,
         drivingLicenseNumber: elem.responseEmployeedrivingLicenseNumber,
     },
-
+    // ТРАНСПОРТ
     idTransport: elem.idTransport,
     responseTransport: {
         idTransport: elem.idTransport,
@@ -426,7 +426,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         cargoWeight: elem.responseTransportCargoWeight,
         propertyRights: elem.responseTransportPropertyRights,
     },
-
+    // ПРИЦЕП
     idTrailer: elem.idTrailer,
     responseTrailer: {
         idTrailer: elem.idTrailer,
@@ -886,22 +886,27 @@ export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiT
     }
 
 // скорректировать вес груза и пересчитать стоимость
-export const changeCargoWeightValuesOnCurrentRequest = (): RequestStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
-        const currentCargoWeight = getState().requestStoreReducer.currentCargoWeight
-        const { distance, responseStavka, requestNumber } = getState().requestStoreReducer.initialValues
-        console.log({
+export const changeCargoWeightValuesOnCurrentRequest = ( {
+                                                             values,
+                                                             cargoWeight,
+                                                         }: { values: OneRequestType, cargoWeight: number } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        // const currentCargoWeight = getState().requestStoreReducer.currentCargoWeight
+        const { distance, responseStavka, requestNumber } = values
+        dispatch(requestStoreActions.setInitialValues({
+                ...values,
+                cargoWeight: cargoWeight + '',
+                addedPrice: ( +( responseStavka || 1 ) * +( distance || 1 ) * cargoWeight ),
+            },
+            // localStatuscargoHasBeenTransferred: true,
+        ))
+        await dispatch(changeSomeValuesOnCurrentRequest({
             requestNumber: requestNumber+'',
-            cargoWeight: currentCargoWeight + '',
-            addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( currentCargoWeight || 1 ),
-            localStatuscargoHasBeenTransferred: true,}
-        )
-        // dispatch(changeSomeValuesOnCurrentRequest({
-        //     requestNumber: requestNumber+'',
-        //     cargoWeight: currentCargoWeight + '',
-        //     addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( currentCargoWeight || 1 ),
-        //     localStatuscargoHasBeenTransferred: true,
-        // }))
+            cargoWeight: cargoWeight + '',
+            addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( cargoWeight || 1 ),
+            localStatuscargoHasBeenTransferred: true,
+        }))
+        await dispatch(getOneRequestsAPI(requestNumber))
     }
 // удаляем заявку по её номеру
 export const deleteCurrentRequestAPI = ( requestNumber: { requestNumber: number } ): RequestStoreReducerThunkActionType =>

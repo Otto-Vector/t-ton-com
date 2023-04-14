@@ -56,26 +56,31 @@ type OwnProps = {
     initialValues: OneRequestType,
 }
 
-const CargoWeightInput: React.FC = () => {
-    const cargoWeight = useSelector(getInitialCargoWeightRequestStore)
+const CargoWeightInput: React.FC<{ values: OneRequestType }> = ( { values } ) => {
+    const initCargoWeight = +( values.cargoWeight || 0 )
     const dispatch = useDispatch()
-    const onSubmit = ( value: any ) => {
-        console.log(value)
+
+    const onSubmit = ( submitValue: { initCargoWeight: number, cargoWeight: string } ) => {
+        const cargoWeight = +( submitValue.cargoWeight || 0 )
+        dispatch<any>(changeCargoWeightValuesOnCurrentRequest({ values, cargoWeight }))
+        // dispatch(globalModalStoreActions.resetAllValues())
     }
 
-    const onChange = ( e: { cargoWeight: string } ) => {
+    const onChange = ( e: { initCargoWeight: number, cargoWeight: string } ) => {
         const cargoWeight = +( e.cargoWeight || 0 )
-        console.log(cargoWeight)
         dispatch(requestStoreActions.setCurrentCargoWeight(cargoWeight))
+        dispatch(globalModalStoreActions.setAction(() => {
+                dispatch<any>(
+                    changeCargoWeightValuesOnCurrentRequest({ values, cargoWeight }),
+                )
+            },
+        ))
     }
-
-    useEffect(() => {
-        dispatch(requestStoreActions.setCurrentCargoWeight(+( cargoWeight || 0 )))
-    }, [])
 
     return ( <Form
         onSubmit={ onSubmit }
-        initialValues={ { cargoWeight } }
+        initialValues={ { initCargoWeight, cargoWeight: values.cargoWeight } }
+        key={ Math.random() }
         render={
             ( { handleSubmit, form } ) => (
                 <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>
@@ -90,7 +95,7 @@ const CargoWeightInput: React.FC = () => {
                                placeholder={ 'Вес груза (тонн)' }
                                component={ FormInputType }
                                inputType={ 'money' }
-                               validate={ syncValidators.cargoWeight }
+                               validate={ syncValidators.cargoWeightInModal }
                                resetFieldBy={ form }
                                errorBottom
                         />
@@ -169,8 +174,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
         dispatch(requestStoreActions.setInitialValues(values))
     }
 
-    // данные по грузу, изменяемые в модалке
-    const currentCargoWeight = useSelector(getCurrentCargoWeightRequestStore)
 
     const buttonsAction =
         useMemo(() => (
@@ -185,13 +188,16 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 },
                 // груз передан
                 cargoHasBeenTransferred: ( values: OneRequestType ) => {
-
                     if (!values.localStatus?.cargoHasBeenTransferred) {
                         dispatch<any>(textAndActionGlobalModal({
                             title: 'Вопрос',
-                            reactChildren: <CargoWeightInput/>,
+                            reactChildren: <CargoWeightInput values={ values }/>,
                             action: () => {
-                                dispatch<any>(changeCargoWeightValuesOnCurrentRequest())
+                                dispatch<any>(changeCargoWeightValuesOnCurrentRequest({
+                                        values,
+                                        cargoWeight: +( values.cargoWeight || 0 ),
+                                    }),
+                                )
                             },
                         }))
                     }
@@ -226,7 +232,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                     navigate(routes.selfExportDriver + values.requestNumber)
                 },
             }
-        ), [ routes, dispatch, navigate, onSubmit, currentCargoWeight ])
+        ), [ routes, dispatch, navigate, onSubmit ])
 
     // добавляем позицию в изменяемый селектор
     const onCreateCompositionValue = async ( newCargoCompositionItem: string ) => {

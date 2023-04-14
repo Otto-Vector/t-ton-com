@@ -68,6 +68,8 @@ export const syncValidators = {
     dopog: composeValidators(required, maxLength(10)),
     // максимальный вес груза
     cargoWeight: composeValidators(maxRangeNumber(50)),
+    // фактический вес груза при погрузке
+    cargoWeightInModal: composeValidators(required, mustNotBeOnlyNull, maxRangeNumber(50)),
     // почта
     email: composeValidators(required, mustBeMail),
     // БИК банка

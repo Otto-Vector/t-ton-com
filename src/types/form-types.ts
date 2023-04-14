@@ -417,7 +417,8 @@ export type OneRequestType = {
     distance?: number
     // маршрут для карты
     route?: string
-
+    // окночательная цена
+    addedPrice?: number
     // штампы груза
     cargoStamps?: string
     // примечание
@@ -609,7 +610,7 @@ export type OneRequestApiType = {
     route?: string
     // так как полилиния может быть больше 70000, то остальные данные берём отсюда
     routePlus?: string
-
+    // окончательная цена
     addedPrice?: number
 
     distance?: string
@@ -760,6 +761,7 @@ export type OneRequestApiType = {
 
     responseStavka?: string
     responseTax?: string
+    // цена в ответе на заявку
     responsePrice?: string
     /* Привязанные данные из карточки ответа на заявку =КОНЕЦ= */
 

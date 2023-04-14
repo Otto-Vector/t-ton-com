@@ -16,6 +16,7 @@ import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-t
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
 import {addRewriteCargoDocumentRequestAPI} from '../../../redux/forms/request-store-reducer'
+import {parseToNormalMoney} from '../../../utils/parsers'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -35,7 +36,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const initialValuesDocuments = initialValuesRequest.documents
     const modalsText = useSelector(getInfoTextModalsRequestValuesStore)
     const dispatch = useDispatch()
-
+    const price = parseToNormalMoney(+( initialValuesRequest?.addedPrice || 0 ) || +( initialValuesRequest?.responsePrice || 0 ))
     const buttonsAction = {
         acceptRequest: () => {
         },
@@ -151,7 +152,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <label className={ styles.requestFormDocumentRight__label }>
                         { labelsRequestHead.responsePrice }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
-                        { initialValuesRequest.responsePrice }
+                        { price }
                     </div>
                 </div>
             </div>
