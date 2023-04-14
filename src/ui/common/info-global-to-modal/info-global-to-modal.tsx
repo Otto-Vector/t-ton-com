@@ -6,7 +6,7 @@ import 'antd/lib/modal/style/index.css' // используем стили antd 
 import './info-global-to-modal.scss' // перезапись стилей
 import {Modal} from 'antd'
 import {
-    getActionGlobalModalStore, getChildrenGlobalModalStore,
+    getActionGlobalModalStore, getChildrenGlobalModalStore, getIsFooterVisibleGlobalModalStore,
     getNavigateToCancelGlobalModalStore,
     getNavigateToOkGlobalModalStore,
     getTextGlobalModalStore,
@@ -28,6 +28,7 @@ export const InfoGlobalToModal: React.FC = () => {
     const navToOnCancel = useSelector(getNavigateToCancelGlobalModalStore)
     const title = useSelector(getTitleGlobalModalStore)
     const timeToDeactivate = useSelector(getTimeToDeactivateGlobalModalStore)
+    const isFooterEnable = useSelector(getIsFooterVisibleGlobalModalStore)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -80,17 +81,19 @@ export const InfoGlobalToModal: React.FC = () => {
 
     return (
         <Modal title={ titleHere }
-            centered={ isCentered }
+               centered={ isCentered }
                visible={ visible }
                onCancel={ onCancelHandle }
             // onOk={ onOkHandle }
                className={ 'modalStyle' }
                closeIcon={ ModalCloseIcon }
-               footer={ ModalFooter({
-                   onCancelHandle,
-                   onOkHandle,
-                   isCancelButtonEnable: titleHere !== 'Информация',
-               })}
+               footer={ isFooterEnable ? ModalFooter({
+                       onCancelHandle,
+                       onOkHandle,
+                       isCancelButtonEnable: titleHere !== 'Информация',
+                   })
+                   : null
+               }
         >
             { textToGlobalModal && textFromArrayToParagraph(textToGlobalModal) }
             { reactChildren }

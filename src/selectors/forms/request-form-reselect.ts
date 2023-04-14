@@ -21,18 +21,10 @@ export const getValidatorsRequestStore: RequestStoreSelectors<'validators'> = ( 
 export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state ) => state.requestStoreReducer.content
 export const getCurrentDistanceIsFetchingRequestStore: RequestStoreSelectors<'currentDistanceIsFetching'> = ( state ) => state.requestStoreReducer.currentDistanceIsFetching
 export const getPolylineRouteRequestStore: RequestStoreSelectorsInit<'route'> = ( state: AppStateType ) => state.requestStoreReducer.initialValues.route
-export const getCurrentRequestNumberStore: RequestStoreSelectors<'currentRequestNumber'> = ( state ) => state.requestStoreReducer.currentRequestNumber
-export const getCurrentCargoWeightRequestStore : RequestStoreSelectors<'currentCargoWeight'> = ( state ) => state.requestStoreReducer.currentCargoWeight
 
 // дистанция. пока непонятно почему в селекторе, но лучше оставлю
 export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
-export const getInitialCargoWeightRequestStore = createSelector(getInitialValuesRequestStore, ( { cargoWeight } ) => cargoWeight)
 
-// забираем данные о конкретной заявке из загруженного списка заявок
-export const getOneRequestStore = createSelector(getAllRequestStore, getCurrentRequestNumberStore,
-    ( content, numberValue ): OneRequestType => {
-        return content?.filter(( { requestNumber } ) => requestNumber === numberValue)[0]
-    })
 
 // декодированный путь для отрисовки на карте заявки
 export const getRoutesParsedFromPolylineRequestStore = createSelector(getPolylineRouteRequestStore,

@@ -6,14 +6,16 @@ type OwnProps = {
     onCancelHandle?: () => void,
     onOkHandle?: () => void,
     isCancelButtonEnable?: boolean
+    isOkButtonEnable?: boolean
 }
 
-export const ModalFooter = (
+export const ModalFooter: React.FC<OwnProps> = (
     {
         onOkHandle,
         onCancelHandle,
+        isOkButtonEnable = true,
         isCancelButtonEnable = false,
-    }: OwnProps ): React.ReactNode =>
+    } ) =>
     <footer className={ styles.modalFooter }>
         { isCancelButtonEnable ?
             <div className={ styles.modalFooter__button }>
@@ -23,10 +25,13 @@ export const ModalFooter = (
                 />
             </div>
             : null }
-        <div className={ styles.modalFooter__button }>
-            <Button title={ 'Ok' }
-                    colorMode={ 'blue' }
-                    onClick={ onOkHandle }
-            />
-        </div>
+        { isOkButtonEnable ?
+            <div className={ styles.modalFooter__button }>
+                <Button title={ 'Ok' }
+                        colorMode={ 'blue' }
+                        onClick={ onOkHandle }
+                />
+            </div>
+            : null
+        }
     </footer>

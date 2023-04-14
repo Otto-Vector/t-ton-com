@@ -28,10 +28,8 @@ import {requisitesApi} from '../../api/local-api/options/requisites.api'
 
 const initialState = {
     requestIsFetching: false,
-    currentRequestNumber: undefined as undefined | number,
     // для отрисовки ожидания построения маршрута при создании заявки
     currentDistanceIsFetching: false,
-    currentCargoWeight: null as null | number,
     label: {
         requestNumber: 'Номер заявки',
         requestDate: 'Дата создания заявки',
@@ -189,12 +187,6 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
                 content: action.content,
             }
         }
-        case 'request-store-reducer/SET-CURRENT-CARGO-WEIGHT': {
-            return {
-                ...state,
-                currentRequestNumber: action.currentCargoWeight,
-            }
-        }
         case 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE': {
             return {
                 ...state,
@@ -242,17 +234,9 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-CONTENT',
         content,
     } as const ),
-    setCurrentRequestNumber: ( currentRequestNumber: number | undefined ) => ( {
-        type: 'request-store-reducer/SET-REQUEST-NUMBER-TO-VIEW',
-        currentRequestNumber,
-    } as const ),
     setCurrentDistanceIsFetching: ( isFetching: boolean ) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING',
         isFetching,
-    } as const ),
-    setCurrentCargoWeight: ( currentCargoWeight: number ) => ( {
-        type: 'request-store-reducer/SET-CURRENT-CARGO-WEIGHT',
-        currentCargoWeight,
     } as const ),
     setKoefficientToInfo: ( koef: number ) => ( {
         type: 'request-store-reducer/SET-KOEFFICIENT-TO-INFO',
@@ -891,15 +875,8 @@ export const changeCargoWeightValuesOnCurrentRequest = ( {
                                                              cargoWeight,
                                                          }: { values: OneRequestType, cargoWeight: number } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
-        // const currentCargoWeight = getState().requestStoreReducer.currentCargoWeight
         const { distance, responseStavka, requestNumber } = values
-        dispatch(requestStoreActions.setInitialValues({
-                ...values,
-                cargoWeight: cargoWeight + '',
-                addedPrice: ( +( responseStavka || 1 ) * +( distance || 1 ) * cargoWeight ),
-            },
-            // localStatuscargoHasBeenTransferred: true,
-        ))
+
         await dispatch(changeSomeValuesOnCurrentRequest({
             requestNumber: requestNumber+'',
             cargoWeight: cargoWeight + '',
@@ -908,6 +885,7 @@ export const changeCargoWeightValuesOnCurrentRequest = ( {
         }))
         await dispatch(getOneRequestsAPI(requestNumber))
     }
+
 // удаляем заявку по её номеру
 export const deleteCurrentRequestAPI = ( requestNumber: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {

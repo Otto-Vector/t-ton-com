@@ -6,6 +6,7 @@ import {GetActionsTypes} from '../../types/ts-utils'
 const initialState = {
     modalGlobalTextMessage: '' as string | string[],
     reactChildren: null as null | JSX.Element,
+    isFooterVisible: false,
     titleText: undefined as undefined | string,
     navigateToOk: undefined as undefined | To,
     navigateToCancel: undefined as undefined | To,
@@ -65,6 +66,12 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 timeToDeactivate: action.timeToDeactivate,
             }
         }
+        case 'global-modal-reducer/SET-FOOTER-VISIBLE':{
+            return {
+                ...state,
+                isFooterVisible: action.isFooterVisible
+            }
+        }
         case 'global-modal-reducer/RESET-ALL-VALUES': {
             return {
                 ...state,
@@ -116,6 +123,10 @@ export const globalModalStoreActions = {
         type: 'global-modal-reducer/SET-TIME-TO-DEACTIVATE',
         timeToDeactivate,
     } as const ),
+    setFooterVisible: ( isFooterVisible: boolean ) => ( {
+        type: 'global-modal-reducer/SET-FOOTER-VISIBLE',
+        isFooterVisible,
+    } as const ),
 }
 
 
@@ -133,6 +144,7 @@ type GlobalModalType = {
     title?: 'Вопрос' | 'Сообщение' | 'Внимание!' | 'Информация'
     // в миллисекундах
     timeToDeactivate?: number
+    isFooterVisible?: boolean
 }
 
 // для создания диалогового окна с переданной функцией
@@ -144,6 +156,7 @@ export const textAndActionGlobalModal = ( {
                                               title,
                                               timeToDeactivate,
                                               reactChildren,
+                                              isFooterVisible = true
                                           }: GlobalModalType ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(globalModalStoreActions.setAction(action || null))
@@ -153,4 +166,5 @@ export const textAndActionGlobalModal = ( {
         dispatch(globalModalStoreActions.setTextMessage(text|| ''))
         dispatch(globalModalStoreActions.setChildren(reactChildren || null))
         dispatch(globalModalStoreActions.setTimeToDeactivate(timeToDeactivate || null))
+        dispatch(globalModalStoreActions.setFooterVisible(isFooterVisible))
     }

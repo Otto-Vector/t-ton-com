@@ -4,9 +4,8 @@ import {getAllShippersSelectFromLocal, getOneShipperFromLocal} from '../../../se
 import {useDispatch, useSelector} from 'react-redux'
 import {cargoConstType, OneRequestType} from '../../../types/form-types'
 import {
-    getCurrentCargoWeightRequestStore,
     getCurrentDistanceIsFetchingRequestStore,
-    getInfoTextModalsRequestValuesStore, getInitialCargoWeightRequestStore,
+    getInfoTextModalsRequestValuesStore,
     getLabelRequestStore,
     getPlaceholderRequestStore,
     getPreparedInfoDataRequestStore,
@@ -26,7 +25,6 @@ import {
 import {InfoText} from '../../common/info-text/into-text'
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
-    changeCargoWeightValuesOnCurrentRequest,
     changeCurrentRequestOnCreate,
     changeSomeValuesOnCurrentRequest,
     getRouteFromAPI,
@@ -47,8 +45,8 @@ import {getCargoTypeBaseStore} from '../../../selectors/base-reselect'
 import {getAuthIdAuthStore} from '../../../selectors/auth-reselect'
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import createDecorator from 'final-form-focus'
-import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
-import {syncValidators} from '../../../utils/validators'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {CargoWeightInputToModal} from '../cargo-weight-input-to-modal/cargo-weight-input-to-modal'
 
 
 type OwnProps = {
@@ -56,57 +54,7 @@ type OwnProps = {
     initialValues: OneRequestType,
 }
 
-const CargoWeightInput: React.FC<{ values: OneRequestType }> = ( { values } ) => {
-    const initCargoWeight = +( values.cargoWeight || 0 )
-    const dispatch = useDispatch()
 
-    const onSubmit = ( submitValue: { initCargoWeight: number, cargoWeight: string } ) => {
-        const cargoWeight = +( submitValue.cargoWeight || 0 )
-        dispatch<any>(changeCargoWeightValuesOnCurrentRequest({ values, cargoWeight }))
-        // dispatch(globalModalStoreActions.resetAllValues())
-    }
-
-    const onChange = ( e: { initCargoWeight: number, cargoWeight: string } ) => {
-        const cargoWeight = +( e.cargoWeight || 0 )
-        dispatch(requestStoreActions.setCurrentCargoWeight(cargoWeight))
-        dispatch(globalModalStoreActions.setAction(() => {
-                dispatch<any>(
-                    changeCargoWeightValuesOnCurrentRequest({ values, cargoWeight }),
-                )
-            },
-        ))
-    }
-
-    return ( <Form
-        onSubmit={ onSubmit }
-        initialValues={ { initCargoWeight, cargoWeight: values.cargoWeight } }
-        key={ Math.random() }
-        render={
-            ( { handleSubmit, form } ) => (
-                <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>
-                    <div className={ styles.requestFormLeft__inputsItem_halfCenter }>
-                        <label className={ styles.requestFormLeft__label }
-                               style={ { fontWeight: 'bold' } }
-                        >{ 'Груз у водителя?' }</label>
-                        <div><label
-                            className={ styles.requestFormLeft__label }>{ 'Фактический вес при погрузке:' }</label>
-                        </div>
-                        <Field name={ 'cargoWeight' }
-                               placeholder={ 'Вес груза (тонн)' }
-                               component={ FormInputType }
-                               inputType={ 'money' }
-                               validate={ syncValidators.cargoWeightInModal }
-                               resetFieldBy={ form }
-                               errorBottom
-                        />
-                    </div>
-                    <FormSpySimple form={ form }
-                                   onChange={ onChange }
-                    />
-                </form> )
-        }
-    /> )
-}
 
 
 export const RequestFormLeft: React.FC<OwnProps> = memo((
@@ -191,14 +139,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                     if (!values.localStatus?.cargoHasBeenTransferred) {
                         dispatch<any>(textAndActionGlobalModal({
                             title: 'Вопрос',
-                            reactChildren: <CargoWeightInput values={ values }/>,
-                            action: () => {
-                                dispatch<any>(changeCargoWeightValuesOnCurrentRequest({
-                                        values,
-                                        cargoWeight: +( values.cargoWeight || 0 ),
-                                    }),
-                                )
-                            },
+                            reactChildren: <CargoWeightInputToModal values={ values }/>,
+                            isFooterVisible: false,
                         }))
                     }
                 },

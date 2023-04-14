@@ -10,3 +10,4 @@ export const getNavigateToCancelGlobalModalStore: GlobalModalStoreSelectors<'nav
 export const getTitleGlobalModalStore: GlobalModalStoreSelectors<'titleText'> = ( state ) => state.globalModalStoreReducer.titleText
 export const getTimeToDeactivateGlobalModalStore: GlobalModalStoreSelectors<'timeToDeactivate'> = ( state ) => state.globalModalStoreReducer.timeToDeactivate
 export const getActionGlobalModalStore: GlobalModalStoreSelectors<'action'> = ( state ) => state.globalModalStoreReducer.action
+export const getIsFooterVisibleGlobalModalStore: GlobalModalStoreSelectors<'isFooterVisible'> = ( state ) => state.globalModalStoreReducer.isFooterVisible
