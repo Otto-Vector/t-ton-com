@@ -11,7 +11,7 @@ import {RequestModesType} from '../request-section'
 
 import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
-import {hhMmDdMmFormat} from '../../../utils/date-formats'
+import {hhMmDdMmFormat, hhmmDdMmYyFormat} from '../../../utils/date-formats'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
@@ -164,7 +164,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <label className={ styles.requestFormDocumentRight__label }>
                         { labelsRequestHead.uploadTime }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
-                        { hhMmDdMmFormat(initialValuesRequest?.shipmentDate) }
+                        { hhmmDdMmYyFormat(initialValuesRequest?.shipmentDate) }
                     </div>
                 </div>
                 {/* Документы груза */ }

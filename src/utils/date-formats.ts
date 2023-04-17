@@ -12,6 +12,8 @@ export const ddMmYearFormat = ( date: Date | undefined ): string | undefined => 
 export const yearMmDdFormat = ( date: Date | undefined ): string | undefined => date ? format(date, 'YYYY-MM-DD') : undefined;
 // output string HH:mm DD-MM
 export const hhMmDdMmFormat = ( date: Date | undefined ): string | undefined => date ? format(date, 'HH:mm DD-MM') : undefined;
+// output string HH:mm DD-MM-YYYY
+export const hhmmDdMmYyFormat = ( date: Date | undefined ): string | undefined => date ? format(date, 'HH:mm DD-MM-YYYY') : undefined;
 
 // output string HH:mm DD-MM
 export const yearMmDdFormatISO = ( date: Date | undefined ): string | undefined => date ? format(date, 'YYYY-MM-DDTHH:mm') : undefined;

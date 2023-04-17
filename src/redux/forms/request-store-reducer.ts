@@ -870,20 +870,33 @@ export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiT
     }
 
 // скорректировать вес груза и пересчитать стоимость
-export const changeCargoWeightValuesOnCurrentRequest = ( {
-                                                             values,
-                                                             cargoWeight,
-                                                         }: { values: OneRequestType, cargoWeight: number } ): RequestStoreReducerThunkActionType =>
+export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
+                                                                            values,
+                                                                            cargoWeight,
+                                                                        }: { values: OneRequestType, cargoWeight: number } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         const { distance, responseStavka, requestNumber } = values
-
         await dispatch(changeSomeValuesOnCurrentRequest({
-            requestNumber: requestNumber+'',
+            requestNumber: requestNumber + '',
             cargoWeight: cargoWeight + '',
+            // пока думаю создать ли новое поле фактического получения груза или редактировать shipmentDate
+            shipmentDate: yearMmDdFormatISO(new Date()),
             addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( cargoWeight || 1 ),
             localStatuscargoHasBeenTransferred: true,
         }))
+        await dispatch(createDriverListApi({ requestNumber }))
         await dispatch(getOneRequestsAPI(requestNumber))
+    }
+
+// создать ДОВЕРЕННОСТЬ НА ВОДИТЕЛЯ
+export const createDriverListApi = ( props: { requestNumber: number, validUntil?: number } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await requestDocumentsApi.createDriverList(props)
+            console.log(response.message)
+        } catch (e: TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage('<b>Ошибка создания документа ДОВЕРЕННОСТЬ ВОДИТЕЛЮ: </b><br/>'+JSON.stringify(e?.response?.data?.message)))
+        }
     }
 
 // удаляем заявку по её номеру

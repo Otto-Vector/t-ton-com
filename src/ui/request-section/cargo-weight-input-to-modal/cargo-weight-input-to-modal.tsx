@@ -7,7 +7,7 @@ import {OneRequestType} from '../../../types/form-types'
 import {Field, Form} from 'react-final-form'
 import styles from './cargo-weight-input-to-modal.module.scss'
 import {Button} from '../../common/button/button'
-import {changeCargoWeightValuesOnCurrentRequest} from '../../../redux/forms/request-store-reducer'
+import {changeCargoWeightValuesOnCurrentRequestAndActivateDocs} from '../../../redux/forms/request-store-reducer'
 
 
 export const CargoWeightInputToModal: React.FC<{ values: OneRequestType }> = ( { values } ) => {
@@ -16,8 +16,7 @@ export const CargoWeightInputToModal: React.FC<{ values: OneRequestType }> = ( {
 
     const onSubmit = ( submitValue: { initCargoWeight: number, cargoWeight: string } ) => {
         const cargoWeight = +( submitValue.cargoWeight || 0 )
-        console.log(cargoWeight)
-        dispatch<any>(changeCargoWeightValuesOnCurrentRequest({ values, cargoWeight }))
+        dispatch<any>(changeCargoWeightValuesOnCurrentRequestAndActivateDocs({ values, cargoWeight }))
         dispatch(globalModalStoreActions.resetAllValues())
     }
 
