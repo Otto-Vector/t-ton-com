@@ -1,11 +1,12 @@
 import axios from 'axios'
 import React, {useEffect, useState} from 'react'
 import styles from './download-sample-file-wrapper.module.scss'
-import {useDownloadFile} from '../../../use-hooks/useDownloadFile'
+import {useDownloadFile} from './use-hook/useDownloadFile'
 import {SizedPreloader} from '../preloader/preloader'
 import {useDispatch, useSelector} from 'react-redux'
 import {AppStateType} from '../../../redux/redux-store'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {getFileNameFromUrl} from '../../../utils/parsers'
 
 export enum ButtonState {
     Primary = 'Primary',
@@ -38,9 +39,8 @@ export const DownloadSampleFileWrapper: React.FC<OwnProps> = (
         }, 3000)
     }
 
-    const getFileName = ( urlShort?: string ) => () => {
-        return urlShort?.split('/').reverse()[0] || ''
-    }
+    const getFileName = () =>
+        getFileNameFromUrl(urlShort?.split('/').pop() || '')
 
     const downloadFileAxiosToBlob = ( serverPlusUrlShort: string ) => () => {
         return axios.get(serverPlusUrlShort, { responseType: 'blob' })
@@ -51,16 +51,15 @@ export const DownloadSampleFileWrapper: React.FC<OwnProps> = (
         preDownloading,
         postDownloading,
         onError: onErrorDownloadFile,
-        getFileName: getFileName(urlShort),
+        getFileName,
     })
 
     useEffect(() => {
         if (showAlert) {
             dispatch<any>(textAndActionGlobalModal({
                 title: 'Внимание!',
-                text: [ 'Не получилось загрузить файл!', 'Файл: ' + getFileName(urlShort)() ],
+                text: [ 'Не получилось загрузить файл!', 'Файл: <b>' + getFileNameFromUrl(urlShort) ],
             }))
-
             setShowAlert(false)
         }
     }, [ showAlert ])

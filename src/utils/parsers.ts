@@ -95,6 +95,10 @@ export const stringToCoords = ( coordsString: parsePropType ): [ number, number 
 export const coordsToString = ( coordsNumArray?: [ number, number ] ): string =>
     coordsNumArray?.map(e => e.toFixed(6)).join(', ') || 'неверные входные данные'
 
+export const getFileNameFromUrl = ( URLWithFilname?: string ) =>
+        URLWithFilname?.split('/').pop() || ''
+
+
 export const syncParsers = {
     // parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces
     title: composeParsers(parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces),

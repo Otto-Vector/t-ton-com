@@ -6,7 +6,7 @@ import {DownloadSampleFileWrapper} from '../download-sample-file/download-sample
 import {AttachDocumentWrapper} from '../attach-document-wrapper/attach-document-wrapper'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {useDispatch} from 'react-redux'
-import {parseToNormalMoney} from '../../../utils/parsers'
+import {getFileNameFromUrl, parseToNormalMoney} from '../../../utils/parsers'
 
 
 type OwnProps = {
@@ -95,7 +95,9 @@ export const ButtonMenuSaveLoad: React.FC<OwnProps> = (
                     }
                     { loadUrl ?
                         <DownloadSampleFileWrapper urlShort={ loadUrl }>
-                            <div className={ styles.buttonMenuSaveLoad__menuOption }>
+                            <div className={ styles.buttonMenuSaveLoad__menuOption }
+                                 title={getFileNameFromUrl(loadUrl)}
+                            >
                                 <span>{ 'Скачать' }</span>
                                 <MaterialIcon icon_name={ 'download' }/>
                             </div>
