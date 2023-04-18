@@ -46,7 +46,7 @@ const initialState = {
         pts: syncValidators.pts,
         dopog: syncValidators.dopog,
         cargoType: syncValidators.required,
-        cargoWeight: syncValidators.cargoWeight,
+        cargoWeight: syncValidators.cargoWeightTrailer,
         propertyRights: syncValidators.required,
         trailerImage: undefined,
     } as Record<keyof TrailerCardType, ValidateType>,

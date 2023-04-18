@@ -67,7 +67,9 @@ export const syncValidators = {
     // ДОПОГ
     dopog: composeValidators(required, maxLength(10)),
     // максимальный вес груза
-    cargoWeight: composeValidators(maxRangeNumber(50)),
+    cargoWeightTransport: composeValidators(maxRangeNumber(50)),
+    // максимальный вес груза
+    cargoWeightTrailer: composeValidators(required, mustNotBeOnlyNull, maxRangeNumber(50)),
     // фактический вес груза при погрузке
     cargoWeightInModal: ( weight: number ) => composeValidators(required, mustNotBeOnlyNull, maxRangeNumber(weight)),
     // почта

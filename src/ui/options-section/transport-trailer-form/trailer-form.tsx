@@ -236,7 +236,7 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                                        maskFormat={ maskOn.cargoWeight }
                                                        component={ FormInputType }
                                                        resetFieldBy={ form }
-                                                       validate={ validators.cargoWeight }
+                                                       validate={ values.cargoType === 'Тягач' ? validators.cargoWeight : syncValidators.cargoWeightTrailer }
                                                        disabled={ values.cargoType === 'Тягач' || !!isBusyTrailer }
                                                 />
                                             </div>
