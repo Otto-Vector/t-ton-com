@@ -113,13 +113,22 @@ export const getTrailerOptionsStore = createSelector(getAllTrailerStore, getTrai
     })
 
 // выборка из списка загруженных сотрудников в список отображения "Настройки"
-export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, getEmployeesTitleOptionsStore, getAllTransportStore,
-    ( employees: EmployeeCardType[], titles, transports ): OptionsStoreReducerStateType['employees'] => {
+export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, getEmployeesTitleOptionsStore, getAllTransportStore, getAllTrailerStore,
+    ( employees: EmployeeCardType[], titles, transports, trailers ): OptionsStoreReducerStateType['employees'] => {
         return {
             ...titles, content: employees.map(
-                ( { idEmployee: id, employeeFIO: title = '', idTransport, status } ) => {
-                    const subTitleFind = transports.find(( { idTransport: trId } ) => idTransport === trId)
-                    return { id, title, subTitle: subTitleFind?.transportTrademark, extendInfo: status }
+                ( { idEmployee: id, employeeFIO: title = '', idTransport, idTrailer, status } ) => {
+                    const transportOfCurrentEmployee = transports.find(( { idTransport: trId } ) => idTransport === trId)
+                    const cargoType = transportOfCurrentEmployee?.cargoType !== 'Тягач'
+                        ? transportOfCurrentEmployee?.cargoType
+                        : trailers.find(( { idTrailer: trId } ) => idTrailer === trId)?.cargoType
+                    return {
+                        id,
+                        title,
+                        subTitle: transportOfCurrentEmployee?.transportTrademark,
+                        extendInfo: status,
+                        moreDataForSearch: cargoType || '',
+                    }
                 },
             ),
         }
