@@ -1,22 +1,23 @@
 import React from 'react'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
 import {syncValidators} from '../../../utils/validators'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
-import {OneRequestType} from '../../../types/form-types'
 import {Field, Form} from 'react-final-form'
 import styles from './cargo-weight-input-to-modal.module.scss'
 import {Button} from '../../common/button/button'
 import {changeCargoWeightValuesOnCurrentRequestAndActivateDocs} from '../../../redux/forms/request-store-reducer'
+import {getInitialCargoWeightRequestStore} from '../../../selectors/forms/request-form-reselect'
 
 
-export const CargoWeightInputToModal: React.FC<{ values: OneRequestType }> = ( { values } ) => {
-    const initCargoWeight = +( values.cargoWeight || 0 )
+export const CargoWeightInputToModal: React.FC = () => {
+
+    const initCargoWeightCurrentRequest = useSelector(getInitialCargoWeightRequestStore)
     const dispatch = useDispatch()
 
-    const onSubmit = ( submitValue: { initCargoWeight: number, cargoWeight: string } ) => {
+    const onSubmit = ( submitValue: { cargoWeight: string } ) => {
         const cargoWeight = +( submitValue.cargoWeight || 0 )
-        dispatch<any>(changeCargoWeightValuesOnCurrentRequestAndActivateDocs({ values, cargoWeight }))
+        dispatch<any>(changeCargoWeightValuesOnCurrentRequestAndActivateDocs(cargoWeight))
         dispatch(globalModalStoreActions.resetAllValues())
     }
 
@@ -26,8 +27,8 @@ export const CargoWeightInputToModal: React.FC<{ values: OneRequestType }> = ( {
 
     return ( <Form
         onSubmit={ onSubmit }
-        initialValues={ { initCargoWeight, cargoWeight: values.cargoWeight } }
-        key={ Math.random() }
+        initialValues={ { cargoWeight: initCargoWeightCurrentRequest } }
+        // key={ Math.random() }
         render={
             ( { handleSubmit, form, values } ) => (
                 <form onSubmit={ handleSubmit }>
@@ -42,7 +43,7 @@ export const CargoWeightInputToModal: React.FC<{ values: OneRequestType }> = ( {
                                placeholder={ 'Вес груза (тонн)' }
                                component={ FormInputType }
                                inputType={ 'money' }
-                               validate={ syncValidators.cargoWeightInModal }
+                               validate={ syncValidators.cargoWeightInModal(+values.cargoWeight + 1) }
                                resetFieldBy={ form }
                                errorBottom
                         />
@@ -56,7 +57,7 @@ export const CargoWeightInputToModal: React.FC<{ values: OneRequestType }> = ( {
                         </div>
                         <div className={ styles.cargoWeightInputToModal__button }>
                             <Button title={ 'Ok' }
-                                    type={'submit'}
+                                    type={ 'submit' }
                                     colorMode={ 'blue' }
                             />
                         </div>

@@ -69,7 +69,7 @@ export const syncValidators = {
     // максимальный вес груза
     cargoWeight: composeValidators(maxRangeNumber(50)),
     // фактический вес груза при погрузке
-    cargoWeightInModal: composeValidators(required, mustNotBeOnlyNull, maxRangeNumber(50)),
+    cargoWeightInModal: ( weight: number ) => composeValidators(required, mustNotBeOnlyNull, maxRangeNumber(weight)),
     // почта
     email: composeValidators(required, mustBeMail),
     // БИК банка

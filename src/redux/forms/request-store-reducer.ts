@@ -870,12 +870,9 @@ export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiT
     }
 
 // скорректировать вес груза и пересчитать стоимость
-export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
-                                                                            values,
-                                                                            cargoWeight,
-                                                                        }: { values: OneRequestType, cargoWeight: number } ): RequestStoreReducerThunkActionType =>
-    async ( dispatch ) => {
-        const { distance, responseStavka, requestNumber } = values
+export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( cargoWeight: number ): RequestStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        const { distance, responseStavka, requestNumber } = getState().requestStoreReducer.initialValues
         await dispatch(changeSomeValuesOnCurrentRequest({
             requestNumber: requestNumber + '',
             cargoWeight: cargoWeight + '',

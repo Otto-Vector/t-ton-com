@@ -10,7 +10,6 @@ type RequestStoreSelectorsInit<T extends keyof Y, Y = RequestStoreReducerStateTy
 
 export const getIsFetchingRequestStore: RequestStoreSelectors<'requestIsFetching'> = ( state ) => state.requestStoreReducer.requestIsFetching
 export const getInitialValuesRequestStore: RequestStoreSelectors<'initialValues'> = ( state ) => state.requestStoreReducer.initialValues
-export const getInitialDocumentsRequestValuesStore: RequestStoreSelectors<'initialDocumentsRequestValues'> = ( state ) => state.requestStoreReducer.initialDocumentsRequestValues
 export const getLabelDocumentsRequestValuesStore: RequestStoreSelectors<'labelDocumentsRequestValues'> = ( state ) => state.requestStoreReducer.labelDocumentsRequestValues
 export const getInfoTextModalsRequestValuesStore: RequestStoreSelectors<'infoTextModals'> = ( state ) => state.requestStoreReducer.infoTextModals
 
@@ -24,6 +23,7 @@ export const getPolylineRouteRequestStore: RequestStoreSelectorsInit<'route'> = 
 
 // дистанция. пока непонятно почему в селекторе, но лучше оставлю
 export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
+export const getInitialCargoWeightRequestStore = createSelector(getInitialValuesRequestStore, ( { cargoWeight } ) => cargoWeight)
 
 
 // декодированный путь для отрисовки на карте заявки

@@ -55,8 +55,6 @@ type OwnProps = {
 }
 
 
-
-
 export const RequestFormLeft: React.FC<OwnProps> = memo((
     {
         requestModes, initialValues,
@@ -139,7 +137,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                     if (!values.localStatus?.cargoHasBeenTransferred) {
                         dispatch<any>(textAndActionGlobalModal({
                             title: 'Вопрос',
-                            reactChildren: <CargoWeightInputToModal values={ values }/>,
+                            reactChildren: <CargoWeightInputToModal/>,
                             isFooterVisible: false,
                         }))
                     }
