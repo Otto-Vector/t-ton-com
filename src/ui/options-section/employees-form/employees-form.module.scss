@@ -33,6 +33,11 @@
     font-size: 70%;
     font-weight: bold;
     color: gray;
+
+    &_cargoType {
+      top: 30px;
+      color: $accentColor;
+    }
   }
 
   &__header {

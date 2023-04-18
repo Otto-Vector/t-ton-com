@@ -48,6 +48,7 @@ import {
     getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
 } from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
 import createDecorator from 'final-form-focus'
+import {getConsigneesOptionsStore, getCurrentEmployeeCargoType} from '../../../selectors/options/options-reselect'
 
 
 type OwnProps = {}
@@ -64,6 +65,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     const parsers = useSelector(getParsersEmployeesStore)
     //фокусировка на проблемном поле при вводе
     const focusOnError = useMemo(() => createDecorator(), [])
+    // для быстрого поиска cargoType из селектора
+    const cargoType = useSelector(getCurrentEmployeeCargoType)
 
     // селекторы
     const drivingCategorySelector = useSelector(getDrivingCategorySelectorBaseStore)
@@ -232,6 +235,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
         dispatch(employeesStoreActions.setInitialValues({} as EmployeeCardType))
     }, [])
 
+
     // отображение данных пользователя
     useEffect(() => {
             if (currentId === currentIdForShow) {
@@ -260,7 +264,16 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             <div className={ styles.employeesForm__wrapper }>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
-                        <span className={styles.employeesForm__status}>{ initialValues.status }</span>
+                        {
+                            !isNew && <>
+                                {/* статус водителя в верхнем левом углу */ }
+                                <span className={ styles.employeesForm__status }>{ initialValues.status }</span>
+                                {/* тип груза*/ }
+                                <span
+                                    className={ styles.employeesForm__status + ' ' + styles.employeesForm__status_cargoType }
+                                >{ cargoType }</span>
+                            </>
+                        }
                         <h4 className={ styles.employeesForm__header }>{ header }</h4>
                         <Form
                             onSubmit={ onSubmit }

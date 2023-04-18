@@ -12,7 +12,7 @@ import {
 import {getAllConsigneesStore, getCurrentIdConsigneeStore} from './consignees-reselect'
 import {getAllTransportStore} from './transport-reselect'
 import {getAllTrailerStore} from './trailer-reselect'
-import {getAllEmployeesStore} from './employees-reselect'
+import {getAllEmployeesStore, getCurrentIdEmployeesStore} from './employees-reselect'
 import {
     getAllTrailerSelectFromLocal,
     getAllTransportSelectFromLocal,
@@ -132,4 +132,10 @@ export const getEmployeesOptionsStore = createSelector(getAllEmployeesStore, get
                 },
             ),
         }
+    })
+
+// тип груза на редактируемом пользователе
+export const getCurrentEmployeeCargoType = createSelector(getEmployeesOptionsStore, getCurrentIdEmployeesStore,
+    ( { content }, idEmployee ) => {
+        return content.find(( { id } ) => id === idEmployee)?.moreDataForSearch
     })
