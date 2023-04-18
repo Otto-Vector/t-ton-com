@@ -25,12 +25,13 @@ export const CargoWeightInputToModal: React.FC = () => {
         dispatch(globalModalStoreActions.resetAllValues())
     }
 
+
     return ( <Form
         onSubmit={ onSubmit }
         initialValues={ { cargoWeight: initCargoWeightCurrentRequest } }
-        // key={ Math.random() }
+        key={ Math.random() }
         render={
-            ( { handleSubmit, form, values } ) => (
+            ( { handleSubmit, form } ) => (
                 <form onSubmit={ handleSubmit }>
                     <div className={ styles.cargoWeightInputToModal__inputsItem }>
                         <label className={ styles.cargoWeightInputToModal__label }
@@ -43,7 +44,7 @@ export const CargoWeightInputToModal: React.FC = () => {
                                placeholder={ 'Вес груза (тонн)' }
                                component={ FormInputType }
                                inputType={ 'money' }
-                               validate={ syncValidators.cargoWeightInModal(+values.cargoWeight + 1) }
+                               validate={ syncValidators.cargoWeightInModal(+( initCargoWeightCurrentRequest || 0 ) + 1) }
                                resetFieldBy={ form }
                                errorBottom
                         />
