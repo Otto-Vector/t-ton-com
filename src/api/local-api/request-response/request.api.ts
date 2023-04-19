@@ -1,5 +1,5 @@
-import {InfoResponseType, instanceBack} from '../back-instance.api';
-import {OneRequestApiType} from '../../../types/form-types';
+import {InfoResponseType, instanceBack} from '../back-instance.api'
+import {OneRequestApiType} from '../../../types/form-types'
 
 
 export const oneRequestApi = {
@@ -14,7 +14,7 @@ export const oneRequestApi = {
 
     // запрос списка всех заявок созданных данным пользователем PATCH /api/onerequesttypeuser/
     getAllRequestByUser( idUserCustomer: { idUserCustomer: string } ) {
-        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypedate/', idUserCustomer)
+        return instanceBack.patch<OneRequestApiType[]>('/api/onerequesttypeuser/', idUserCustomer)
             .then(response => response.data)
         // 1.	Code 200, Models: OneRequestApiType[]
         // 2.	Code 520, {"message":"Error"}

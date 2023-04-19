@@ -17,7 +17,8 @@ export const getLabelRequestStore: RequestStoreSelectors<'label'> = ( state ) =>
 export const getPlaceholderRequestStore: RequestStoreSelectors<'placeholder'> = ( state ) => state.requestStoreReducer.placeholder
 export const getValidatorsRequestStore: RequestStoreSelectors<'validators'> = ( state ) => state.requestStoreReducer.validators
 
-export const getAllRequestStore: RequestStoreSelectors<'content'> = ( state ) => state.requestStoreReducer.content
+export const getAllByDateRequestStore: RequestStoreSelectors<'contentByDate'> = ( state ) => state.requestStoreReducer.contentByDate
+export const getAllByUserRequestStore: RequestStoreSelectors<'contentByUser'> = ( state ) => state.requestStoreReducer.contentByUser
 export const getCurrentDistanceIsFetchingRequestStore: RequestStoreSelectors<'currentDistanceIsFetching'> = ( state ) => state.requestStoreReducer.currentDistanceIsFetching
 export const getPolylineRouteRequestStore: RequestStoreSelectorsInit<'route'> = ( state: AppStateType ) => state.requestStoreReducer.initialValues.route
 

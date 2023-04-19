@@ -16,7 +16,7 @@ import {
 import {syncValidators} from '../../utils/validators'
 import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api'
 import {oneRequestApi} from '../../api/local-api/request-response/request.api'
-import {apiToISODateFormat, yearMmDdFormatISO} from '../../utils/date-formats'
+import {apiToISODateFormat, yearMmDdFormat, yearMmDdFormatISO} from '../../utils/date-formats'
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer'
 import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer'
 import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils'
@@ -95,7 +95,8 @@ const initialState = {
     } as OneRequestType,
 
     // загружаем сюда заявки
-    content: [] as OneRequestType[],
+    contentByDate: [] as OneRequestType[],
+    contentByUser: [] as OneRequestType[],
 
     labelDocumentsRequestValues: {
 
@@ -181,16 +182,22 @@ export const requestStoreReducer = ( state = initialState, action: RequestStoreA
                 initialValues: action.initialValues,
             }
         }
-        case 'request-store-reducer/SET-CONTENT': {
+        case 'request-store-reducer/SET-CONTENT-BY-DATE': {
             return {
                 ...state,
-                content: action.content,
+                contentByDate: action.contentByDate,
             }
         }
-        case 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE': {
+        case 'request-store-reducer/SET-CONTENT-BY-USER': {
             return {
                 ...state,
-                content: [ ...state.content.map(( oneRequest ) =>
+                contentByUser: action.contentByUser,
+            }
+        }
+        case 'request-store-reducer/SET-TOGGLE-REQUEST-BY-DATE-VISIBLE': {
+            return {
+                ...state,
+                contentByDate: [ ...state.contentByDate.map(( oneRequest ) =>
                     oneRequest.requestNumber === action.requestNumber
                         ? { ...oneRequest, visible: !oneRequest.visible } : oneRequest) ],
             }
@@ -230,9 +237,13 @@ export const requestStoreActions = {
         type: 'request-store-reducer/SET-INITIAL-VALUES',
         initialValues,
     } as const ),
-    setContent: ( content: OneRequestType[] ) => ( {
-        type: 'request-store-reducer/SET-CONTENT',
-        content,
+    setContentByDate: ( contentByDate: OneRequestType[] ) => ( {
+        type: 'request-store-reducer/SET-CONTENT-BY-DATE',
+        contentByDate,
+    } as const ),
+    setContentByUser: ( contentByUser: OneRequestType[] ) => ( {
+        type: 'request-store-reducer/SET-CONTENT-BY-USER',
+        contentByUser,
     } as const ),
     setCurrentDistanceIsFetching: ( isFetching: boolean ) => ( {
         type: 'request-store-reducer/SET-CURRENT-DISTANCE-IS-FETCHING',
@@ -243,7 +254,7 @@ export const requestStoreActions = {
         koef,
     } as const ),
     setToggleRequestVisible: ( requestNumber: number ) => ( {
-        type: 'request-store-reducer/SET-TOGGLE-REQUEST-VISIBLE',
+        type: 'request-store-reducer/SET-TOGGLE-REQUEST-BY-DATE-VISIBLE',
         requestNumber,
     } as const ),
 }
@@ -480,10 +491,21 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
             dispatch(requestStoreActions.setKoefficientToInfo(getState().baseStoreReducer.distanceCoefficient))
-            const response = await oneRequestApi.getAllRequests()
-            if (response.length > 0) {
-                dispatch(requestStoreActions.setContent(response.map(parseRequestFromAPI)))
+            // const responseAllRequests = await oneRequestApi.getAllRequests()
+            // const shipmentDate = yearMmDdFormat(new Date(''))+'T00:00'
+            const shipmentDate = yearMmDdFormat(new Date('2023-01-26')) + 'T00:00'
+            const responseAllRequestsByDate = await oneRequestApi.getAllRequestByDate({ shipmentDate })
+            if (responseAllRequestsByDate.length > 0) {
+                dispatch(requestStoreActions.setContentByDate(responseAllRequestsByDate.map(parseRequestFromAPI)))
             }
+
+            const idUserCustomer = getState().authStoreReducer.authID
+            console.log('idUserCustomer: ', idUserCustomer)
+            const responseAllRequestsByUser = await oneRequestApi.getAllRequestByUser({ idUserCustomer })
+            if (responseAllRequestsByUser.length > 0) {
+                dispatch(requestStoreActions.setContentByUser(responseAllRequestsByUser.map(parseRequestFromAPI)))
+            }
+
         } catch (e) {
             dispatch(globalModalStoreActions.setTextMessage(e as string))
         }
@@ -892,7 +914,7 @@ export const createDriverListApi = ( props: { requestNumber: number, validUntil?
             const response = await requestDocumentsApi.createDriverList(props)
             console.log(response.message)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage('<b>Ошибка создания документа ДОВЕРЕННОСТЬ ВОДИТЕЛЮ: </b><br/>'+JSON.stringify(e?.response?.data?.message)))
+            dispatch(globalModalStoreActions.setTextMessage('<b>Ошибка создания документа ДОВЕРЕННОСТЬ ВОДИТЕЛЮ: </b><br/>' + JSON.stringify(e?.response?.data?.message)))
         }
     }
 
