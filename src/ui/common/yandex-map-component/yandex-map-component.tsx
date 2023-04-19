@@ -41,6 +41,12 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                      minZoom: 4,
                  } }
                  onClick={ onClick }
+                 // onLoad={(e)=>{
+                 //     console.log('load: ', e)
+                 // }}
+                 // onBoundsChange={ ( e: any ) => {
+                 //     console.log(e.originalEvent.newBounds)
+                 // } }
             >
                 { children }
                 <TypeSelector
@@ -76,6 +82,7 @@ export const YandexMapToForm: React.FC<ToFormProps> =
                     onClick={ ( e ) => {
                         getCoordinates(e.get('coords'))
                     } }
+
                 >
                     <Placemark geometry={ center }
                                options={
@@ -159,7 +166,7 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
                 center,
                 zoom,
                 bounds: bounds as undefined,
-            } }        >
+            } }>
 
             { driverHere && <Placemark geometry={ driverHere }
                                        options={

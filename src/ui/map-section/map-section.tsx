@@ -78,6 +78,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                options={
                                    {
                                        preset: 'islands#nightStretchyIcon',
+                                       visible: true,
                                    } }
                                properties={
                                    {
