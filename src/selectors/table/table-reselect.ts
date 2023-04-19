@@ -52,9 +52,9 @@ const parseRequestToTable = ( {
             || ( acceptedUsers?.includes(authId) ),
     } )
 
-// адаптация заявок в таблицу (список на ответы)
-export const getContentByDateTableStore = createSelector(
-    getAllByDateRequestStore,
+// для реализации контента по списку заявок из разных источников
+export const getContentTableStore = ( getContent: ( state: AppStateType ) => OneRequestType[] ) => createSelector(
+    getContent,
     geInitialValuesTableStore,
     getTariffsRequisitesStore,
     getAuthIdAuthStore,
@@ -63,16 +63,12 @@ export const getContentByDateTableStore = createSelector(
             .map(parseRequestToTable({ acceptLongRoute, acceptShortRoute, authId })) || [ initial ]
     })
 
+
+// адаптация заявок в таблицу (список на ответы)
+export const getContentByDateTableStore = getContentTableStore(getAllByDateRequestStore)
+
 // адаптация заявок в таблицу (список своих заявок || список истории)
-export const getContentByUserTableStore = createSelector(
-    getAllByUserRequestStore,
-    geInitialValuesTableStore,
-    getTariffsRequisitesStore,
-    getAuthIdAuthStore,
-    ( requests, initial, { acceptShortRoute, acceptLongRoute }, authId ): OneRequestTableType[] => {
-        return requests.filter(( { visible } ) => visible)
-            .map(parseRequestToTable({ acceptLongRoute, acceptShortRoute, authId })) || [ initial ]
-    })
+export const getContentByUserTableStore = getContentTableStore(getAllByUserRequestStore)
 
 export const getContentTableStoreNew = createSelector(getContentByDateTableStore,
     ( requests ) => requests.filter(( { globalStatus } ) => globalStatus === 'новая заявка'))
