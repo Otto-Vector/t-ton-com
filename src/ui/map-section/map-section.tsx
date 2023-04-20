@@ -84,6 +84,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                    {
                                        iconContent: `из ${ currentRequest?.sender?.city }`,
                                        hintContent: `Грузоотправитель`,
+
                                    }
                                }
                                onContextMenu={ extractCoordinatesToModal }

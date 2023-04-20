@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import styles from './yandex-map-component.module.scss'
 import './yandex-map-restyle-ballon.scss'
 
-import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps'
+import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, YMapsApi, ZoomControl} from 'react-yandex-maps'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {coordinatesFromTarget} from '../../map-section/map-section'
 import {useDispatch} from 'react-redux'
@@ -27,11 +27,14 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                                                             maxZoom = 18,
                                                         } ) => {
 
+    const ymaps = useRef({})
+
     return (
         <div className={ styles.yandexMapComponent }>
             <Map className={ styles.yandexMapComponent }
                  instanceRef={ instance }
-                 modules={ modules }
+                modules={ modules }
+                //  modules={ [ 'util.bounds' ] }
                  state={ state }
                  options={ {
                      suppressMapOpenBlock: true,
@@ -41,12 +44,17 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                      minZoom: 4,
                  } }
                  onClick={ onClick }
-                 // onLoad={(e)=>{
-                 //     console.log('load: ', e)
-                 // }}
-                 // onBoundsChange={ ( e: any ) => {
-                 //     console.log(e.originalEvent.newBounds)
-                 // } }
+                 onLoad={ ymapsInstance => {
+                     // Также способ сохранить ymaps в переменную
+                     ymaps.current = ymapsInstance
+                 } }
+                 onBoundsChange={ ( e: any ) => {
+                     // @ts-ignore-next-line
+                     if (ymaps?.util?.bounds?.containsPoint(e.originalEvent.newBounds, [ 45.12345, 45.12345 ])) {
+                         console.log('вижу')
+                     }
+                     // console.log(e.originalEvent.newBounds)
+                 } }
             >
                 { children }
                 <TypeSelector
@@ -118,7 +126,7 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center, zoom, chi
                 center,
                 zoom,
             } }
-            modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
+            modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint', 'util.bounds' ] }
         >
             { children }
         </YandexMapComponent>
