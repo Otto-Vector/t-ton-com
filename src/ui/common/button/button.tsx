@@ -11,6 +11,8 @@ type OwnProps = {
     type?: 'button' | 'submit' | 'reset'
     title?: string
     label?: string
+    // id формы для привязки кнопки submit вне тега <form>
+    form?: string
     rounded?: boolean
     // включить перенос слов в кнопке
     wordWrap?: boolean
@@ -26,20 +28,21 @@ export const Button: React.FC<OwnProps> = (
         colorMode = 'noFill', rounded,
         type = 'button', children, wordWrap,
         isSelectOnTab = true,
-        style, label
+        style, label, form
     } ) => {
 
     return <button className={
         `${ classes.button } 
         ${ classes['button_' + colorMode] } 
-        ${ rounded && classes.button_rounded } 
-        ${ wordWrap && classes.button_wrap }`
+        ${ rounded ? classes.button_rounded : ''} 
+        ${ wordWrap ? classes.button_wrap : ''}`
     }
                    disabled={ disabled }
                    onClick={ onClick }
                    type={ type }
                    title={ (label || title) + ( disabled ? ' (кнопка неактивна)' : '' ) }
                    tabIndex={ isSelectOnTab ? 0 : -1 }
+                   form={form}
                    style={ style }
     >{ // отображаем то что внутри тега button
         children || title
