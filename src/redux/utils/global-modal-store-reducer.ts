@@ -80,6 +80,7 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 navigateToOk: undefined,
                 navigateToCancel: undefined,
                 reactChildren: null,
+                isFooterVisible: true,
                 action: null,
                 timeToDeactivate: null,
             }
