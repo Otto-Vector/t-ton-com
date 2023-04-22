@@ -19,7 +19,9 @@ const initialValues: PhoneSubmitType = {
 }
 
 const initialState = {
+    // для срабатывания автологина только один раз
     isAutoLoginTry: false,
+
     isAuth: false,
     authID: '',
     authPhone: '',
@@ -274,9 +276,9 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
         try {
             const phone = getState().authStoreReducer.authPhone
             const response = await authApi.logout({ phone })
-            dispatch(authStoreActions.setIsAuth(false))
-            dispatch(authStoreActions.setAuthId(''))
             if (response.status) {
+                dispatch(authStoreActions.setIsAuth(false))
+                dispatch(authStoreActions.setAuthId(''))
                 console.log(response.status)
             }
         } catch (error) {

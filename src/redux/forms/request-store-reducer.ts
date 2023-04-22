@@ -491,7 +491,9 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         try {
             dispatch(requestStoreActions.setKoefficientToInfo(getState().baseStoreReducer.distanceCoefficient))
+            // получить список ВООБЩЕ ВСЕХ заявок
             // const responseAllRequests = await oneRequestApi.getAllRequests()
+            // toDo: вернуть эту строку, убрать следующую
             // const shipmentDate = yearMmDdFormat(new Date(''))+'T00:00'
             const shipmentDate = yearMmDdFormat(new Date('2023-01-26')) + 'T00:00'
             const responseAllRequestsByDate = await oneRequestApi.getAllRequestByDate({ shipmentDate })
@@ -500,7 +502,7 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             }
 
             const idUserCustomer = getState().authStoreReducer.authID
-            console.log('idUserCustomer: ', idUserCustomer)
+            // console.log('idUserCustomer: ', idUserCustomer)
             const responseAllRequestsByUser = await oneRequestApi.getAllRequestByUser({ idUserCustomer })
             if (responseAllRequestsByUser.length > 0) {
                 dispatch(requestStoreActions.setContentByUser(responseAllRequestsByUser.map(parseRequestFromAPI)))
