@@ -227,6 +227,9 @@ $btnRedDisabledBorderColor: #6C6C6C;
       border: 2px solid $btnBlueBorderColor;
       color: $btnRedFontColor;
     }
+    &:focus {
+      box-shadow: inset 1px 1px 5px $btnBlueBorderColor;
+    }
   }
 
   &_rounded {

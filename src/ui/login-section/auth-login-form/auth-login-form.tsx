@@ -26,13 +26,12 @@ import {
 import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers'
 import {PhoneSubmitType} from '../../../types/form-types'
 
-import {useNavigate} from 'react-router-dom';
-import {getRoutesStore} from '../../../selectors/routes-reselect';
-import {FormSelector} from '../../common/form-selector/form-selector';
-import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect';
-import {daDataStoreActions, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer';
-import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate';
-import {SelectOptionsType} from '../../common/form-selector/selector-utils';
+import {useNavigate} from 'react-router-dom'
+import {getRoutesStore} from '../../../selectors/routes-reselect'
+import {FormSelector} from '../../common/form-selector/form-selector'
+import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
+import {daDataStoreActions, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer'
+import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate'
 import createDecorator from 'final-form-focus'
 
 

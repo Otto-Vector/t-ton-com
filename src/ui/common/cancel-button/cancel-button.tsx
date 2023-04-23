@@ -23,7 +23,9 @@ export const CancelButton: React.FC<OwnProps> = (
                     title={ 'Отменить/вернуться' }
                     style={ { border: 'none' } }
                     rounded
-            ><MaterialIcon style={ { lineHeight: 1, fontSize: '29px' } } icon_name={ 'cancel' }/></Button>
+            >
+                <MaterialIcon style={ { lineHeight: 1, fontSize: '29px' } } icon_name={ 'cancel' }/>
+                    </Button>
         </div>
     )
 }

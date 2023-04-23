@@ -1,19 +1,21 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
 import {syncValidators} from '../../../utils/validators'
 import {useDispatch, useSelector} from 'react-redux'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Field, Form} from 'react-final-form'
+import createDecorator from 'final-form-focus'
 import styles from './cargo-weight-input-to-modal.module.scss'
 import {Button} from '../../common/button/button'
 import {changeCargoWeightValuesOnCurrentRequestAndActivateDocs} from '../../../redux/forms/request-store-reducer'
 import {getInitialCargoWeightRequestStore} from '../../../selectors/forms/request-form-reselect'
 
-
 export const CargoWeightInputToModal: React.FC = () => {
 
     const initCargoWeightCurrentRequest = useSelector(getInitialCargoWeightRequestStore)
     const dispatch = useDispatch()
+    //фокусировка на проблемном поле при вводе
+    const focusOnError = createDecorator<{ cargoWeight: string }>()
 
     const onCancelHandle = () => {
         dispatch(globalModalStoreActions.resetAllValues())
@@ -28,6 +30,7 @@ export const CargoWeightInputToModal: React.FC = () => {
 
     return ( <Form
         onSubmit={ onSubmit }
+        decorators={ [ focusOnError ] }
         initialValues={ { cargoWeight: initCargoWeightCurrentRequest } }
         key={ Math.random() }
         render={

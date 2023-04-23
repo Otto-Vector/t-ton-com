@@ -76,7 +76,7 @@ export const FormInputType: React.FC<OwnProps> = React.memo((
                         mask={ mask }
                         format={ maskFormat }
                         // fixedDecimalScale={true}
-                        // decimalSeparator={','}
+                        decimalSeparator={ ',' }
                         decimalScale={ inputType === 'money' ? 2 : 0 }
                         allowEmptyFormatting={ allowEmptyFormatting } // показывает формат при пустых значениях
                         displayType="input"
