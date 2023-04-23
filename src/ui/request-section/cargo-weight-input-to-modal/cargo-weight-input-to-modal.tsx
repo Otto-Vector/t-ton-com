@@ -15,14 +15,14 @@ export const CargoWeightInputToModal: React.FC = () => {
     const initCargoWeightCurrentRequest = useSelector(getInitialCargoWeightRequestStore)
     const dispatch = useDispatch()
 
-    const onSubmit = ( submitValue: { cargoWeight: string } ) => {
-        const cargoWeight = +( submitValue.cargoWeight || 0 )
-        dispatch<any>(changeCargoWeightValuesOnCurrentRequestAndActivateDocs(cargoWeight))
+    const onCancelHandle = () => {
         dispatch(globalModalStoreActions.resetAllValues())
     }
 
-    const onCancelHandle = () => {
-        dispatch(globalModalStoreActions.resetAllValues())
+    const onSubmit = ( submitValue: { cargoWeight: string } ) => {
+        const cargoWeight = +( submitValue.cargoWeight || 0 )
+        dispatch<any>(changeCargoWeightValuesOnCurrentRequestAndActivateDocs(cargoWeight))
+        onCancelHandle()
     }
 
 
@@ -44,7 +44,7 @@ export const CargoWeightInputToModal: React.FC = () => {
                                placeholder={ 'Вес груза (тонн)' }
                                component={ FormInputType }
                                inputType={ 'money' }
-                               validate={ syncValidators.cargoWeightInModal(+( initCargoWeightCurrentRequest || 0 ) + 1) }
+                               validate={ syncValidators.cargoWeightInModal(+( initCargoWeightCurrentRequest ? initCargoWeightCurrentRequest : 50 ) + 1) }
                                resetFieldBy={ form }
                                errorBottom
                         />

@@ -57,14 +57,13 @@ export const initializedAll = (): InitializedThunkActionType =>
             const getPersonal = dispatch(getPersonalOrganizationRequisites())
             const getBaseData = dispatch(preAuthDataSet())
             const getGeoPosition = dispatch(geoPositionTake())
-            // const getOrganisationsList = dispatch(getListOrganizationRequisites())
             const getAllShippers = dispatch(getAllShippersAPI())
             const getAllConsignees = dispatch(getAllConsigneesAPI())
             const getAllTransport = dispatch(getAllTransportAPI())
             const getAllTrailer = dispatch(getAllTrailerAPI())
             const getAllEmployees = dispatch(getAllEmployeesAPI())
             const getCargoComposition = dispatch(getCargoCompositionSelector())
-
+            // debugger
             const getAllRequests = dispatch(getAllRequestsAPI())
             const getAllInfoMessages = dispatch(getInfoMessages())
 

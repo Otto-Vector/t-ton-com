@@ -42,10 +42,15 @@ export const UiComponent: React.FC<OwnProps> = () => {
 
     const dispatch = useDispatch()
 
+    // инициализация данных пользователя (запросы к серверу на списки и т.п.)
+    useEffect(() => {
+        if (isAuth && !initialazed) dispatch<any>(initializedAll())
+    }, [ isAuth, initialazed, dispatch ])
+
+    // автоматическая авторизация (одна попытка)
     useEffect(() => {
         if (!isAuth && !authTry) dispatch<any>(autoLoginMe())
-        if (isAuth && !initialazed) dispatch<any>(initializedAll())
-    }, [ initialazed, authTry, isAuth, dispatch ])
+    }, [ authTry, isAuth, dispatch ])
 
     if (isAuth && !initialazed) return <div className={ styles.ui__preloader }><Preloader/></div>
 
@@ -90,7 +95,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.map } element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.maps.answers + ':reqNumber' }
                                element={ <ТoAuthRedirect>
-                                   {/*<div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2></div>*/}
+                                   {/*<div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2></div>*/ }
                                    <MapSection/>
                                </ТoAuthRedirect> }/>
                         <Route path={ routes.info } element={ <ТoAuthRedirect><InfoSection/></ТoAuthRedirect> }/>
