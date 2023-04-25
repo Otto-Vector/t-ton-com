@@ -35,7 +35,11 @@ import {consigneesStoreActions} from '../../../redux/options/consignees-store-re
 import {Preloader} from '../../common/preloader/preloader'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
-import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer'
+import {
+    acceptLongRoutePay,
+    acceptShorRoutePay,
+    addRequestCashPay,
+} from '../../../redux/options/requisites-store-reducer'
 import {setCargoCompositionSelector} from '../../../redux/api/cargo-composition-response-reducer'
 import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-composition-reselect'
 import {Button} from '../../common/button/button'
@@ -65,6 +69,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [ isFirstRender, setIsFirstRender ] = useState(true)
+    // заявка создана данной организацией и находится в статусе "новая заявка"
     const isMyRequestAndNew = ( initialValues.idUserCustomer === useSelector(getAuthIdAuthStore) ) && initialValues.globalStatus === 'новая заявка'
 
     //фокусировка на проблемном поле при вводе
@@ -124,9 +129,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const buttonsAction =
         useMemo(() => (
             {
-                acceptRequest: async ( values: OneRequestType ) => {
-                    // оплата за принятие заявки в работу
-                    // dispatch<any>(+( values.distance || 0 ) <= 100 ? acceptShorRoutePay() : acceptLongRoutePay())
+                acceptRequest: ( values: OneRequestType ) => {
                     navigate(routes.addDriver + values.requestNumber)
                 },
                 cancelRequest: () => {
@@ -144,16 +147,17 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 },
                 // груз получен
                 cargoHasBeenReceived: ( values: OneRequestType ) => {
+                    console.log('груз получен')
                     if (!values.localStatus?.cargoHasBeenReceived) {
                         // меняем одновременно в двух местах, чтобы не переподгружаться
-                        dispatch(requestStoreActions.setInitialValues({
-                            ...values,
-                            localStatus: { ...values.localStatus, cargoHasBeenReceived: true },
-                        }))
-                        dispatch<any>(changeSomeValuesOnCurrentRequest({
-                            requestNumber: values.requestNumber + '',
-                            localStatuscargoHasBeenReceived: true,
-                        }))
+                        // dispatch(requestStoreActions.setInitialValues({
+                        //     ...values,
+                        //     localStatus: { ...values.localStatus, cargoHasBeenReceived: true },
+                        // }))
+                        // dispatch<any>(changeSomeValuesOnCurrentRequest({
+                        //     requestNumber: values.requestNumber + '',
+                        //     localStatuscargoHasBeenReceived: true,
+                        // }))
                     }
                 },
                 submitRequestAndSearch: async ( values: OneRequestType ) => {
@@ -170,6 +174,9 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 },
                 toSelfExportDriver: async ( values: OneRequestType ) => {
                     navigate(routes.selfExportDriver + values.requestNumber)
+                },
+                toSelfExportDriverFromStatus: async ( values: OneRequestType ) => {
+                    navigate(routes.selfExportDriverFromStatus + values.requestNumber)
                 },
             }
         ), [ routes, dispatch, navigate, onSubmit ])
@@ -437,9 +444,18 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                             }
                                             onClick={ () => {
                                                 if (!hasValidationErrors) {
-                                                    requestModes.createMode && buttonsAction.submitRequestAndSearch(values)
-                                                    requestModes.acceptDriverMode && buttonsAction.acceptRequest(values)
-                                                    requestModes.statusMode && buttonsAction.cargoHasBeenTransferred(values)
+                                                    if (requestModes.createMode) {
+                                                        buttonsAction.submitRequestAndSearch(values)
+                                                    }
+                                                    if (requestModes.acceptDriverMode) {
+                                                        buttonsAction.acceptRequest(values)
+                                                    }
+                                                    if (requestModes.statusMode) {
+                                                        isMyRequestAndNew
+                                                            ? buttonsAction.acceptRequest(values)
+                                                            : buttonsAction.cargoHasBeenTransferred(values)
+                                                    }
+
                                                 }
                                             } }
                                             disabled={ submitting || submitError }
@@ -465,7 +481,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                                 ? buttonsAction.toSelfExportDriver(values)
                                                                 : buttonsAction.cancelRequest()
                                                         }
-                                                        requestModes.statusMode && buttonsAction.cargoHasBeenReceived(values)
+                                                        if (requestModes.statusMode) {
+                                                            isMyRequestAndNew
+                                                                ? buttonsAction.toSelfExportDriverFromStatus(values)
+                                                                : buttonsAction.cargoHasBeenReceived(values)
+                                                        }
                                                     }
                                                 } }
                                                 disabled={ requestModes.statusMode ? ( !isMyRequestAndNew && !values.localStatus?.cargoHasBeenTransferred ) : submitting || submitError }

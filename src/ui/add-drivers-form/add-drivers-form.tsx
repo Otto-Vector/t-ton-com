@@ -52,7 +52,7 @@ import {cancelRequestCashReturn} from '../../redux/options/requisites-store-redu
 
 
 type OwnProps = {
-    mode: 'addDriver' | 'selfExportDriver'
+    mode: 'addDriver' | 'selfExportDriver' | 'selfExportDriverFromStatus'
 }
 
 
@@ -64,6 +64,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     const addDriverModes = {
         addDriver: mode === 'addDriver',
         selfExportDriver: mode === 'selfExportDriver',
+        selfExportDriverFromStatus: mode === 'selfExportDriverFromStatus'
     }
 
     const navRoutes = useSelector(getRoutesStore)
@@ -139,7 +140,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
             await dispatch<any>(setOneResponseToRequest({ addDriverValues: demaskedValues, oneEmployee }))
             navigate(navRoutes.searchList)
         }
-        if (addDriverModes.selfExportDriver) {
+        if (addDriverModes.selfExportDriver || addDriverModes.selfExportDriverFromStatus) {
             await dispatch<any>(addAcceptedResponseToRequestOnCreate({
                 addDriverValues: demaskedValues,
                 oneEmployee,
@@ -178,7 +179,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
             ))
         }
 
-        if (addDriverModes.addDriver) {
+        if (addDriverModes.addDriver || addDriverModes.selfExportDriverFromStatus) {
             navigate(-1)
         }
     }

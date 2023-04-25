@@ -2,7 +2,7 @@ import React from 'react'
 import classes from './button.module.scss'
 
 export type CommonButtonColorModeType = 'orange' | 'blue' | 'lightBlue' | 'pink' | 'gray' | 'white'
-        | 'noFill' | 'green' | 'red' | 'whiteBlue' | 'whiteBlueDoc' | 'redAlert' | 'blueAlert' | 'grayAlert'
+    | 'noFill' | 'green' | 'red' | 'whiteBlue' | 'whiteBlueDoc' | 'redAlert' | 'blueAlert' | 'grayAlert'
 
 type OwnProps = {
     disabled?: boolean,
@@ -28,21 +28,21 @@ export const Button: React.FC<OwnProps> = (
         colorMode = 'noFill', rounded,
         type = 'button', children, wordWrap,
         isSelectOnTab = true,
-        style, label, form
+        style, label, form,
     } ) => {
 
     return <button className={
         `${ classes.button } 
         ${ classes['button_' + colorMode] } 
-        ${ rounded ? classes.button_rounded : ''} 
-        ${ wordWrap ? classes.button_wrap : ''}`
+        ${ rounded ? classes.button_rounded : '' } 
+        ${ wordWrap ? classes.button_wrap : '' }`
     }
                    disabled={ disabled }
                    onClick={ onClick }
                    type={ type }
-                   title={ (label || title) + ( disabled ? ' (кнопка неактивна)' : '' ) }
+                   title={ ( label || title ) + ( disabled ? ' (кнопка неактивна)' : '' ) }
                    tabIndex={ isSelectOnTab ? 0 : -1 }
-                   form={form}
+                   form={ form }
                    style={ style }
     >{ // отображаем то что внутри тега button
         children || title

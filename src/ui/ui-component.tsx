@@ -105,6 +105,9 @@ export const UiComponent: React.FC<OwnProps> = () => {
                         <Route path={ routes.selfExportDriver + ':reqNumber' } element={ <ТoAuthRedirect>
                             <AddDriversForm mode={ 'selfExportDriver' }/>
                         </ТoAuthRedirect> }/>
+                        <Route path={ routes.selfExportDriverFromStatus + ':reqNumber' } element={ <ТoAuthRedirect>
+                            <AddDriversForm mode={ 'selfExportDriverFromStatus' }/>
+                        </ТoAuthRedirect> }/>
 
                         <Route path={ routes.optionsEdit.shippers + ':id' }
                                element={ <ТoAuthRedirect><ShippersForm/></ТoAuthRedirect> }/>

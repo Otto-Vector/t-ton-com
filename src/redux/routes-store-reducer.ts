@@ -15,6 +15,9 @@ const initialState = {
         // добавление водителя при создании заявки "самовывоз"
         // '/request/selfExportDriverForm/'
         selfExportDriver: '/request/selfExportDriverForm/',
+        // добавление водителя при создании заявки "самовывоз"
+        // '/request/selfExportDriverForm/'
+        selfExportDriverFromStatus: '/request/selfExportDriverFromStatusForm/',
         // добавление водителя при отклике на заявку
         // '/request/addDriversForm/'
         addDriver: '/request/addDriversForm/',
