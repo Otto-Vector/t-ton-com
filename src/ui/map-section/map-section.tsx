@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useMemo, useState} from 'react'
+import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -36,6 +36,9 @@ export const MapSection: React.FC<OwnProps> = () => {
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const { pathname } = useLocation()
 
+    const map = useRef<any>({})
+    const ymap = useRef<any>({})
+
     const mapModes = useMemo(() => ( {
         answersMode: pathname.includes(routes.maps.answers),
         routesMode: pathname.includes(routes.maps.routes),
@@ -52,9 +55,25 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     const extractCoordinatesToModal = ( e: coordinatesFromTarget ) => {
         dispatch<any>(textAndActionGlobalModal({
-            text: `Координаты: <b>${ e.originalEvent.target.geometry._coordinates?.join(', ') }</b>`,
+            text: `Координаты: <b>${ e?.originalEvent?.target?.geometry?._coordinates?.join(', ') }</b>`,
         }))
     }
+
+    const driversOutOfBounds = useMemo(() => ( e: any ) => {
+        let outDrivers
+        if (ymap?.current) {
+            outDrivers = drivers.map(( { position, idEmployee, id } ) => {
+                if (!!position[0] && !ymap?.current?.util?.bounds?.containsPoint(
+                    map.current.getBounds(),
+                    position)
+                ) {
+                    return idEmployee + ' - ' + position
+                }
+            }).filter(x => x)
+            console.log(outDrivers)
+        }
+
+    }, [ map?.current, ymap?.current, drivers ])
 
     const center = useSelector(getGeoPositionAuthStore)
     const zoom = 7
@@ -63,7 +82,12 @@ export const MapSection: React.FC<OwnProps> = () => {
         <div className={ styles.yandexMapComponent }>
             { isFetching &&
                 <div className={ styles.yandexMapComponent__preloader }><SizedPreloader sizeHW={ '200px' }/></div> }
-            <YandexBigMap center={ mapModes.answersMode ? polyline?.shift() || center : center } zoom={ zoom }>
+            <YandexBigMap center={ mapModes.answersMode ? polyline?.shift() || center : center }
+                          zoom={ zoom }
+                          instanceMap={ map }
+                          instanceYMap={ ymap }
+                          onBoundsChange={ driversOutOfBounds }
+            >
                 { mapModes.answersMode && polyline && <>
                     {/* ДОРОГА */ }
                     <Polyline geometry={ polyline }
@@ -106,33 +130,34 @@ export const MapSection: React.FC<OwnProps> = () => {
                 </>
                 }
                 { drivers.map(( { id, idEmployee, position, status, fio } ) => {
-                        const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))
-                        return <Placemark geometry={ anyPosition }
-                            // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
-                                          options={
-                                              {
-                                                  preset: 'islands#circleIcon',
-                                                  iconColor: status === 'свободен' ? 'red' : 'green',
-                                                  hasBalloon: true,
-                                              } }
-                                          properties={
-                                              {
-                                                  iconContent: id,
-                                                  hintContent: `<b>${ fio }</b>`,
-                                                  balloonContent: `<div id="driver-${ idEmployee }" class="driver-card"></div>`,
+                        // const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))
+                        if (!!position[0])
+                            return <Placemark geometry={ position }
+                                // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
+                                              options={
+                                                  {
+                                                      preset: 'islands#circleIcon',
+                                                      iconColor: status === 'свободен' ? 'red' : 'green',
+                                                      hasBalloon: true,
+                                                  } }
+                                              properties={
+                                                  {
+                                                      iconContent: id,
+                                                      hintContent: `<b>${ fio }</b>`,
+                                                      balloonContent: `<div id="driver-${ idEmployee }" class="driver-card"></div>`,
+                                                  }
                                               }
-                                          }
-                                          key={ id + idEmployee }
-                                          onClick={ () => {
-                                              // ставим в очередь промисов, чтобы сработало после отрисовки балуна
-                                              setTimeout(() => {
-                                                  // flag нужен, чтобы каждый раз возвращалось новое значение,
-                                                  // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
-                                                  setIdToPortal(( val ) => ( { idEmployee, flag: !val.flag } ))
-                                              }, 0)
-                                          } }
-                                          onContextMenu={ extractCoordinatesToModal }
-                        />
+                                              key={ id + idEmployee }
+                                              onClick={ () => {
+                                                  // ставим в очередь промисов, чтобы сработало после отрисовки балуна
+                                                  setTimeout(() => {
+                                                      // flag нужен, чтобы каждый раз возвращалось новое значение,
+                                                      // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
+                                                      setIdToPortal(( val ) => ( { idEmployee, flag: !val.flag } ))
+                                                  }, 0)
+                                              } }
+                                              onContextMenu={ extractCoordinatesToModal }
+                            />
                     },
                 )
                 }

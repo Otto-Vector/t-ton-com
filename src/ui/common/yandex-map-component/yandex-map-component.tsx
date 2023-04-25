@@ -2,7 +2,7 @@ import React, {useRef} from 'react'
 import styles from './yandex-map-component.module.scss'
 import './yandex-map-restyle-ballon.scss'
 
-import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, YMapsApi, ZoomControl} from 'react-yandex-maps'
+import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {coordinatesFromTarget} from '../../map-section/map-section'
 import {useDispatch} from 'react-redux'
@@ -12,7 +12,9 @@ import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-
 type OwnProps = {
     state?: MapState
     modules?: string[]
-    instance?: ( instance: React.Ref<any> ) => void
+    instanceMap?: React.MutableRefObject<any>
+    instanceYMap?: React.MutableRefObject<any>
+    onBoundsChange?: ( e: any ) => void
     onClick?: ( e: any ) => void
     maxZoom?: number
 }
@@ -22,19 +24,21 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                                                             state,
                                                             modules,
                                                             children,
-                                                            instance,
+                                                            instanceMap,
+                                                            instanceYMap,
                                                             onClick,
+                                                            onBoundsChange,
                                                             maxZoom = 18,
                                                         } ) => {
 
-    const ymaps = useRef({})
 
     return (
         <div className={ styles.yandexMapComponent }>
             <Map className={ styles.yandexMapComponent }
-                 instanceRef={ instance }
-                modules={ modules }
-                //  modules={ [ 'util.bounds' ] }
+                 instanceRef={ ( map ) => {
+                     if (instanceMap) instanceMap.current = map
+                 } }
+                 modules={ modules }
                  state={ state }
                  options={ {
                      suppressMapOpenBlock: true,
@@ -46,15 +50,11 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                  onClick={ onClick }
                  onLoad={ ymapsInstance => {
                      // Также способ сохранить ymaps в переменную
-                     ymaps.current = ymapsInstance
-                 } }
-                 onBoundsChange={ ( e: any ) => {
-                     // @ts-ignore-next-line
-                     if (ymaps?.util?.bounds?.containsPoint(e.originalEvent.newBounds, [ 45.12345, 45.12345 ])) {
-                         console.log('вижу')
+                     if (instanceYMap) {
+                         instanceYMap.current = ymapsInstance
                      }
-                     // console.log(e.originalEvent.newBounds)
                  } }
+                 onBoundsChange={ onBoundsChange }
             >
                 { children }
                 <TypeSelector
@@ -115,11 +115,21 @@ export const YandexMapToForm: React.FC<ToFormProps> =
 
 
 type ToBigMap = {
-    center: number[],
+    center: number[]
     zoom: number
+    instanceMap?: React.MutableRefObject<any>
+    instanceYMap?: React.MutableRefObject<any>
+    onBoundsChange?: ( e: any ) => void
 }
 
-export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center, zoom, children } ) => {
+export const YandexBigMap: React.FC<ToBigMap> = React.memo(( {
+                                                                 center,
+                                                                 zoom,
+                                                                 children,
+                                                                 instanceMap,
+                                                                 instanceYMap,
+                                                                 onBoundsChange,
+                                                             } ) => {
     return (
         <YandexMapComponent
             state={ {
@@ -127,6 +137,9 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( { center, zoom, chi
                 zoom,
             } }
             modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint', 'util.bounds' ] }
+            instanceMap={ instanceMap }
+            instanceYMap={ instanceYMap }
+            onBoundsChange={ onBoundsChange }
         >
             { children }
         </YandexMapComponent>

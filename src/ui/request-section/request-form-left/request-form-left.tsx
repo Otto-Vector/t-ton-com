@@ -172,10 +172,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                     dispatch<any>(addRequestCashPay())
                     navigate(routes.selfExportDriver + values.requestNumber)
                 },
-                toSelfExportDriver: async ( values: OneRequestType ) => {
+                toSelfExportDriver: ( values: OneRequestType ) => {
                     navigate(routes.selfExportDriver + values.requestNumber)
                 },
-                toSelfExportDriverFromStatus: async ( values: OneRequestType ) => {
+                toSelfExportDriverFromStatus: ( values: OneRequestType ) => {
                     navigate(routes.selfExportDriverFromStatus + values.requestNumber)
                 },
             }
