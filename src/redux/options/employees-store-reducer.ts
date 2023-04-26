@@ -11,8 +11,6 @@ import {
 } from '../utils/global-modal-store-reducer'
 import {removeResponseToRequestsBzEmployee} from '../forms/add-driver-store-reducer'
 import {GetActionsTypes} from '../../types/ts-utils'
-import {rerenderTransport} from './transport-store-reducer'
-import {rerenderTrailer} from './trailer-store-reducer'
 import {TtonErrorType} from '../../api/local-api/back-instance.api'
 
 const initialState = {
@@ -187,7 +185,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeeCardType<string>, image: F
             }
             console.log(JSON.stringify(e?.response?.data))
         }
-        await dispatch(getAllEmployeesAPI())
+        // await dispatch(getAllEmployeesAPI())
     }
 
 // изменить статус у конкретного сотрудника
@@ -220,13 +218,10 @@ export const modifyOneEmployeeToAPI = (
             }, image)
             if (response.success) console.log(response.success)
             if (response.message) console.log(response.message)
-            // перерисовываем список транспорт/прицеп при любом изменении сотрудника
-            // dispatch(rerenderTransport())
-            // dispatch(rerenderTrailer())
         } catch (e: TtonErrorType) {
             console.error(JSON.stringify(e?.response?.data))
         }
-        await dispatch(getAllEmployeesAPI())
+        // await dispatch(getAllEmployeesAPI())
     }
 
 // частичное изменение данных сотрудника
@@ -236,13 +231,10 @@ export const modifyOneEmployeeSoftToAPI = ( employeeData: Partial<Omit<EmployeeC
             const response = await employeesApi.modifyOneEmployeeNoPhoto(employeeData)
             if (response.message) console.log(response.message)
             if (response.success) console.log(response.success)
-            // перерисовываем список транспорт/прицеп при любом изменении сотрудника
-            // dispatch(rerenderTransport())
-            // dispatch(rerenderTrailer())
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
-        await dispatch(getAllEmployeesAPI())
+        // await dispatch(getAllEmployeesAPI())
     }
 
 // события после изменения данных пользователя, ведущих к удалению ответов на заявки, в которых он учавстовал
@@ -305,7 +297,7 @@ export const oneEmployeeDeleteHardToAPI = ( idEmployee: string ): EmployeesStore
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
-        await dispatch(getAllEmployeesAPI())
+        // await dispatch(getAllEmployeesAPI())
     }
 
 // простой запрос на одного сотрудника по idEmployee

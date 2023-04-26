@@ -32,10 +32,10 @@ export const OptionsSection: React.FC<OwnProps> = () => {
     const titleHeader = 'Настройки'
     const dispatch = useDispatch()
 
-    useLayoutEffect(()=>{
+    useLayoutEffect(() => {
         // переподгрузка данных для обновления индикации на списках
         dispatch<any>(initializedAllOptionsList())
-    },[])
+    }, [])
 
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
     const navigate = useNavigate()
