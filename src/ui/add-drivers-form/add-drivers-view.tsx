@@ -243,7 +243,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                                     disabled={ !employeeOnePhone }
                                     colorMode={ 'blue' }
                                     onClick={ () => {
-                                        console.log('нажали кнопку')
+                                        console.log('нажали кнопку с номером телефона')
                                     } }
                                     title={ employeeOnePhone + '' }
                                     rounded

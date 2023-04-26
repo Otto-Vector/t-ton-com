@@ -193,7 +193,7 @@ export const newEmployeeSaveToAPI = ( values: EmployeeCardType<string>, image: F
 // изменить статус у конкретного сотрудника
 export const modifyOneEmployeeStatusToAPI = ( idEmployee: string, status: EmployeeStatusType ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
-    debugger
+        debugger
         try {
             const response = await employeesApi.modifyOneEmployeeNoPhoto({ idEmployee, status })
             console.log(response)
@@ -254,16 +254,19 @@ export const modifyOneEmployeeResetResponsesAndStatus = (
     }: { employeeValues: EmployeeCardType<string>, image?: File } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
-        await dispatch(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
+        await dispatch(removeResponseToRequestsBzEmployee({ responseId: employeeValues.addedToResponse }))
         await dispatch(modifyOneEmployeeToAPI({ employeeValues, image, status: 'свободен' }))
     }
 
 // события после утверждения пользователя на заявке
 export const modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest = (
-    { idEmployee }: { idEmployee: string } ): EmployeesStoreReducerThunkActionType =>
+    {
+        idEmployee,
+        addedToResponses,
+    }: { idEmployee: string, addedToResponses: string } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
-        await dispatch(removeResponseToRequestsBzEmployee(idEmployee))
+        await dispatch(removeResponseToRequestsBzEmployee({ responseId: addedToResponses }))
         await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, status: 'на заявке' }))
     }
 
@@ -362,7 +365,7 @@ export const addResponseIdToEmployee = ( data: { idEmployee: string, addedToResp
         }
     }
 
-// удалить данные пользователя
+// удалить список ответов на заявку из данных пользователя
 export const removeResponseIdFromEmployee = ( data: { idEmployee: string, addedToResponse: string | 'all' } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {

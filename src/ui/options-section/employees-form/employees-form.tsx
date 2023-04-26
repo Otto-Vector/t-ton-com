@@ -175,7 +175,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                     '- "Cancel" отменит запрос на удаление, вернёт к карточке водителя',
                 ],
                 action: () => {
-                    dispatch<any>(removeResponseToRequestsBzEmployee(employeeValues.idEmployee))
+                    dispatch<any>(removeResponseToRequestsBzEmployee({ responseId: employeeValues.addedToResponse as string }))
                     dispatch<any>(oneEmployeeDeleteSoftToAPI(employeeValues.idEmployee))
                 },
                 navigateOnOk: options,
@@ -226,7 +226,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     // диалоговое окно, при неверном выборе транспорта
     const onDisableOptionSelectorHandleClick = ( optionValue: SelectOptionsType ) => {
         dispatch<any>(textAndActionGlobalModal({
-            text: 'Нельзя добавить, данный элемент УЖЕ привязан к сотруднику: ' + optionValue.subLabel,
+            text: 'Нельзя добавить, данный элемент УЖЕ привязан к ДРУГОМУ сотруднику: ' + optionValue.subLabel,
         }))
     }
 

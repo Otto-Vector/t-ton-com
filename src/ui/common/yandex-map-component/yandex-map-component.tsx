@@ -4,7 +4,7 @@ import './yandex-map-restyle-ballon.scss'
 
 import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
-import {coordinatesFromTarget} from '../../map-section/map-section'
+import {coordinatesFromTargetType} from '../../map-section/map-section'
 import {useDispatch} from 'react-redux'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 
@@ -174,7 +174,7 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
     } ) => {
 
     const dispatch = useDispatch()
-    const extractCoordinatesToModal = ( e: coordinatesFromTarget ) => {
+    const extractCoordinatesToModal = ( e: coordinatesFromTargetType ) => {
         dispatch<any>(textAndActionGlobalModal({
             text: `Координаты: <b>${ e.originalEvent.target.geometry._coordinates?.join(', ') }</b>`,
         }))

@@ -646,7 +646,10 @@ export const addAcceptedResponseToRequestOnCreate = (
             if (response.success) {
                 await oneRequestApi.addOneUserAcceptRequest({ requestNumber: addDriverValues.requestNumber, idUser })
                 // применяем статус 'на заявке'
-                await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({ idEmployee: employeeValues.idEmployee }))
+                await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({
+                    idEmployee: employeeValues.idEmployee,
+                    addedToResponses: employeeValues.addedToResponse,
+                }))
                 // перезаливаем все заявки
                 await dispatch(getAllRequestsAPI())
             }
@@ -741,7 +744,10 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                         idUser: oneResponse.requestCarrierId,
                     })
                     // применяем статус 'на заявке' для водителя
-                    await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({ idEmployee: employeeValues.idEmployee }))
+                    await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({
+                        idEmployee: employeeValues.idEmployee,
+                        addedToResponses: employeeValues.addedToResponse,
+                    }))
                     // перезаливаем все заявки
                     await dispatch(getAllRequestsAPI())
                 }

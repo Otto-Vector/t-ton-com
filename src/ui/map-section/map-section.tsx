@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import React, {useLayoutEffect, useMemo, useRef, useState} from 'react'
 import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -10,7 +10,6 @@ import {setAllMyDriversToMap, setAnswerDriversToMap} from '../../redux/maps/big-
 
 import {AddDriversView} from '../add-drivers-form/add-drivers-view'
 import {Portal} from '../common/portals/Portal'
-import {getRandomInRange} from '../../utils/random-utils'
 import {getRoutesStore} from '../../selectors/routes-reselect'
 import {useLocation, useParams} from 'react-router-dom'
 import {SizedPreloader} from '../common/preloader/preloader'
@@ -22,7 +21,7 @@ import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-red
 
 
 type OwnProps = {}
-export type coordinatesFromTarget = { originalEvent: { target: { geometry: { _coordinates: number[] } } } }
+export type coordinatesFromTargetType = { originalEvent: { target: { geometry: { _coordinates: number[] } } } }
 
 export const MapSection: React.FC<OwnProps> = () => {
 
@@ -53,7 +52,7 @@ export const MapSection: React.FC<OwnProps> = () => {
     }, [ dispatch, reqNumber ])
 
 
-    const extractCoordinatesToModal = ( e: coordinatesFromTarget ) => {
+    const extractCoordinatesToModal = ( e: coordinatesFromTargetType ) => {
         dispatch<any>(textAndActionGlobalModal({
             text: `Координаты: <b>${ e?.originalEvent?.target?.geometry?._coordinates?.join(', ') }</b>`,
         }))
@@ -70,6 +69,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                     return idEmployee + ' - ' + position
                 }
             }).filter(x => x)
+            console.log(map.current.getBounds())
             console.log(outDrivers)
         }
 

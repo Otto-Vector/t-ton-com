@@ -1,14 +1,14 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
-import {EmployeeCardType, ResponseToRequestCardType, ValidateType} from '../../types/form-types';
-import {syncValidators} from '../../utils/validators';
-import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api';
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {getAllRequestsAPI} from './request-store-reducer';
-import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer';
-import {GetActionsTypes} from '../../types/ts-utils';
-import {syncParsers} from '../../utils/parsers';
-import {TtonErrorType} from '../../api/local-api/back-instance.api';
+import {EmployeeCardType, ResponseToRequestCardType, ValidateType} from '../../types/form-types'
+import {syncValidators} from '../../utils/validators'
+import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
+import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer'
+import {getAllRequestsAPI, requestStoreActions} from './request-store-reducer'
+import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer'
+import {GetActionsTypes} from '../../types/ts-utils'
+import {syncParsers} from '../../utils/parsers'
+import {TtonErrorType} from '../../api/local-api/back-instance.api'
 import {boldWrapper} from '../../utils/html-rebuilds'
 
 
@@ -98,7 +98,7 @@ export const setOneResponseToRequest = (
             await dispatch(modifyOneEmployeeSetStatusAddedToResponse({ idEmployee: employeeValues.idEmployee }))
 
             dispatch(getAllRequestsAPI())
-        } catch (e: TtonErrorType<{prevResponseToRequest:string}>) {
+        } catch (e: TtonErrorType<{ prevResponseToRequest: string }>) {
             dispatch(addDriverStoreActions.setIsFetching(false))
             if (e?.response?.data?.prevResponseToRequest) {
                 dispatch(globalModalStoreActions.setTextMessage([
@@ -175,22 +175,24 @@ export const removeResponseToRequestsBzAcceptRequest = ( requestNumber: string )
     }
 
 export const removeResponseToRequestsBzRemoveThisDriverFromRequest = ( responseId: string ): AddDriverStoreReducerThunkActionType =>
-    async (dispatch) => {
+    async ( dispatch ) => {
         try {
-            const response = await responseToRequestApi.deleteSomeResponseToRequest({ responseId })
+            await responseToRequestApi.deleteSomeResponseToRequest({ responseId })
             dispatch(getAllRequestsAPI())
-            console.log(response)
         } catch (e: TtonErrorType) {
-            console.log(JSON.stringify(e?.response?.data))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
     }
+
 // удаление ответов на заявки, привязанных к сотруднику
-export const removeResponseToRequestsBzEmployee = ( idEmployee: string ): AddDriverStoreReducerThunkActionType =>
-    async () => {
+// *по idEmployee работает некорректно, удаляю по списку из addedToResponses*
+export const removeResponseToRequestsBzEmployee = ( addedToResponses: { responseId: string } ): AddDriverStoreReducerThunkActionType =>
+    async ( dispatch ) => {
         try {
-            const response = await responseToRequestApi.deleteSomeResponseToRequest({ idEmployee })
-            console.log(response)
+            await responseToRequestApi.deleteSomeResponseToRequest(addedToResponses)
+            await dispatch(getAllRequestsAPI())
+            // console.log(response)
         } catch (e: TtonErrorType) {
-            console.log(JSON.stringify(e?.response?.data))
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
     }
