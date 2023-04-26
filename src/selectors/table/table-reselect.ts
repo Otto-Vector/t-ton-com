@@ -74,7 +74,7 @@ export const getContentTableStoreNew = createSelector(getContentByDateTableStore
     ( requests ) => requests.filter(( { globalStatus } ) => globalStatus === 'новая заявка'))
 
 export const getContentTableStoreInWork = createSelector(getContentByUserTableStore,
-    ( requests ) => requests.filter(( { marked, globalStatus } ) => marked && globalStatus)
+    ( requests ) => requests.filter(( { marked, globalStatus } ) => marked && globalStatus && globalStatus !== 'завершена')
         .map(( request ) => ( { ...request, marked: request.globalStatus === 'в работе' } )),
 )
 
