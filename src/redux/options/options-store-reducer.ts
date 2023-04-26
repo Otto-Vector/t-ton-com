@@ -1,8 +1,12 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
-import {GetActionsTypes} from '../../types/ts-utils';
+import {GetActionsTypes} from '../../types/ts-utils'
+import {getAllConsigneesAPI} from './consignees-store-reducer'
+import {getAllShippersAPI} from './shippers-store-reducer'
+import {getAllTrailerAPI} from './trailer-store-reducer'
+import {getAllTransportAPI} from './transport-store-reducer'
 
-export type OptionsLabelType = { id: string, title: string, subTitle?: string, extendInfo?:string, moreDataForSearch?: string }
+export type OptionsLabelType = { id: string, title: string, subTitle?: string, extendInfo?: string, moreDataForSearch?: string }
 
 
 const initialState = {
@@ -75,3 +79,15 @@ export const optionsStoreActions = {}
 /* САНКИ */
 
 export type OptionsStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
+
+export const initializedAllOptionsList = (): OptionsStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try { // реджектить про
+            await dispatch(getAllShippersAPI())
+            await dispatch(getAllConsigneesAPI())
+            await dispatch(getAllTransportAPI())
+            await dispatch(getAllTrailerAPI())
+        } catch (e) {
+            console.log(e)
+        }
+    }

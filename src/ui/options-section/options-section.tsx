@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {useLayoutEffect} from 'react'
 import styles from './options-section.module.scss'
 import {getRoutesStore} from '../../selectors/routes-reselect'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {
     getConsigneesOptionsStore,
@@ -21,6 +21,7 @@ import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-res
 import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect'
 import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect'
 import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal'
+import {initializedAllOptionsList} from '../../redux/options/options-store-reducer'
 
 
 type OwnProps = {}
@@ -29,6 +30,12 @@ type OwnProps = {}
 export const OptionsSection: React.FC<OwnProps> = () => {
 
     const titleHeader = 'Настройки'
+    const dispatch = useDispatch()
+
+    useLayoutEffect(()=>{
+        // переподгрузка данных для обновления индикации на списках
+        dispatch<any>(initializedAllOptionsList())
+    },[])
 
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
     const navigate = useNavigate()

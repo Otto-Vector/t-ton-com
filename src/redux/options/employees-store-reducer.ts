@@ -221,8 +221,8 @@ export const modifyOneEmployeeToAPI = (
             if (response.success) console.log(response.success)
             if (response.message) console.log(response.message)
             // перерисовываем список транспорт/прицеп при любом изменении сотрудника
-            dispatch(rerenderTransport())
-            dispatch(rerenderTrailer())
+            // dispatch(rerenderTransport())
+            // dispatch(rerenderTrailer())
         } catch (e: TtonErrorType) {
             console.error(JSON.stringify(e?.response?.data))
         }
@@ -237,8 +237,8 @@ export const modifyOneEmployeeSoftToAPI = ( employeeData: Partial<Omit<EmployeeC
             if (response.message) console.log(response.message)
             if (response.success) console.log(response.success)
             // перерисовываем список транспорт/прицеп при любом изменении сотрудника
-            dispatch(rerenderTransport())
-            dispatch(rerenderTrailer())
+            // dispatch(rerenderTransport())
+            // dispatch(rerenderTrailer())
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }

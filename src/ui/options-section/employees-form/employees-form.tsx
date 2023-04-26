@@ -155,8 +155,8 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             // и возвращаемся в предыдущее окно
             navigate(options)
         }
-        dispatch<any>(rerenderTransport())
-        dispatch<any>(rerenderTrailer())
+        // dispatch<any>(rerenderTransport())
+        // dispatch<any>(rerenderTrailer())
     }, [ oneEmployee?.idTransport, oneEmployee?.idTrailer, selectedImage ])
 
 
