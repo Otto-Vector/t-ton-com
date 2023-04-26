@@ -48,7 +48,7 @@ import {
     getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel,
 } from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
 import createDecorator from 'final-form-focus'
-import {getConsigneesOptionsStore, getCurrentEmployeeCargoType} from '../../../selectors/options/options-reselect'
+import {getCurrentEmployeeCargoType} from '../../../selectors/options/options-reselect'
 
 
 type OwnProps = {}
@@ -175,7 +175,10 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                     '- "Cancel" отменит запрос на удаление, вернёт к карточке водителя',
                 ],
                 action: () => {
-                    dispatch<any>(removeResponseToRequestsBzEmployee({ responseId: employeeValues.addedToResponse as string }))
+                    dispatch<any>(removeResponseToRequestsBzEmployee({
+                        idEmployee: employeeValues.idEmployee,
+                        responseId: employeeValues.addedToResponse as string,
+                    }))
                     dispatch<any>(oneEmployeeDeleteSoftToAPI(employeeValues.idEmployee))
                 },
                 navigateOnOk: options,
@@ -203,7 +206,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
             }))
         }
 
-    }, [ options, initialValues ])
+    }, [ options, initialValues.idEmployee ])
 
     // фильтруем прицепы по значению поля Транспорт
     const setCargoTypeFilter = ( form?: FormApi<EmployeeCardType<string>> ) => async ( idTransport: string ) => {

@@ -254,7 +254,10 @@ export const modifyOneEmployeeResetResponsesAndStatus = (
     }: { employeeValues: EmployeeCardType<string>, image?: File } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
-        await dispatch(removeResponseToRequestsBzEmployee({ responseId: employeeValues.addedToResponse }))
+        await dispatch(removeResponseToRequestsBzEmployee({
+            idEmployee: employeeValues.idEmployee,
+            responseId: employeeValues.addedToResponse,
+        }))
         await dispatch(modifyOneEmployeeToAPI({ employeeValues, image, status: 'свободен' }))
     }
 
@@ -266,7 +269,7 @@ export const modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest = (
     }: { idEmployee: string, addedToResponses: string } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
-        await dispatch(removeResponseToRequestsBzEmployee({ responseId: addedToResponses }))
+        await dispatch(removeResponseToRequestsBzEmployee({ idEmployee, responseId: addedToResponses }))
         await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, status: 'на заявке' }))
     }
 

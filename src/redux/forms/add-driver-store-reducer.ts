@@ -10,6 +10,7 @@ import {GetActionsTypes} from '../../types/ts-utils'
 import {syncParsers} from '../../utils/parsers'
 import {TtonErrorType} from '../../api/local-api/back-instance.api'
 import {boldWrapper} from '../../utils/html-rebuilds'
+import {employeesApi} from '../../api/local-api/options/employee.api'
 
 
 const initialState = {
@@ -186,10 +187,15 @@ export const removeResponseToRequestsBzRemoveThisDriverFromRequest = ( responseI
 
 // удаление ответов на заявки, привязанных к сотруднику
 // *по idEmployee работает некорректно, удаляю по списку из addedToResponses*
-export const removeResponseToRequestsBzEmployee = ( addedToResponses: { responseId: string } ): AddDriverStoreReducerThunkActionType =>
+export const removeResponseToRequestsBzEmployee = ( {
+                                                        responseId,
+                                                        idEmployee,
+                                                    }: { responseId: string, idEmployee: string } ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            await responseToRequestApi.deleteSomeResponseToRequest(addedToResponses)
+            await responseToRequestApi.deleteSomeResponseToRequest({ responseId })
+            // дополнительная зачистка из-за предыдущих глюков удаления в этом поле
+            await employeesApi.removeResponseToRequestFromEmployee({ idEmployee, addedToResponse: 'all' })
             await dispatch(getAllRequestsAPI())
             // console.log(response)
         } catch (e: TtonErrorType) {
