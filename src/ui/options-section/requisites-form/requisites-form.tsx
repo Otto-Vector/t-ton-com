@@ -16,7 +16,7 @@ import {
     getValidatorsRequisitesStore,
 } from '../../../selectors/options/requisites-reselect'
 import {CompanyRequisitesType, ShippersCardType} from '../../../types/form-types'
-import {CancelButton} from '../../common/cancel-button/cancel-button'
+import {CancelXButton} from '../../common/cancel-button/cancel-x-button'
 import {useNavigate, useParams} from 'react-router-dom'
 import {InfoText} from '../../common/info-text/into-text'
 import {
@@ -302,7 +302,7 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                             }/>
                         <InfoText/>
                     </> }
-                <CancelButton onCancelClick={ onCancelClick }/>
+                <CancelXButton onCancelClick={ onCancelClick }/>
             </div>
         </div>
     )

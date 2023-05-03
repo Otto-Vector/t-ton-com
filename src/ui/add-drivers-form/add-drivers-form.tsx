@@ -10,7 +10,7 @@ import {
     getStoredValuesRequisitesStore,
 } from '../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
-import {CancelButton} from '../common/cancel-button/cancel-button'
+import {CancelXButton} from '../common/cancel-button/cancel-x-button'
 import {EmployeeCardType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
 
 import {
@@ -393,7 +393,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                                     </form>
                                 ) }/>
                     </> }
-                <CancelButton onCancelClick={ onCancelClick }/>
+                <CancelXButton onCancelClick={ onCancelClick }/>
             </div>
         </div>
     )

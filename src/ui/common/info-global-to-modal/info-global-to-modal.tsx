@@ -17,7 +17,7 @@ import {useNavigate} from 'react-router-dom'
 import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from-array-to-paragraph'
 import {ModalFooter} from './modal-footer/modal-footer'
 import {ModalCloseIcon} from './modal-close-icon/modal-close-icon'
-import {CancelButton} from '../cancel-button/cancel-button'
+import {CancelXButton} from '../cancel-button/cancel-x-button'
 
 
 export const InfoGlobalToModal: React.FC = () => {
@@ -88,7 +88,7 @@ export const InfoGlobalToModal: React.FC = () => {
             // onOk={ onOkHandle }
                className={ 'modalStyle' }
             // closeIcon={ ModalCloseIcon }
-               closeIcon={ CancelButton({ onCancelClick: onCancelHandle }) }
+               closeIcon={ CancelXButton({ onCancelClick: onCancelHandle }) }
                footer={ isFooterEnable ? ModalFooter({
                        onCancelHandle,
                        onOkHandle,

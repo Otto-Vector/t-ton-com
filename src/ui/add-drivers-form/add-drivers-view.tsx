@@ -29,6 +29,8 @@ import {removeResponseToRequestsBzRemoveThisDriverFromRequest} from '../../redux
 import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
+import {CancelXButton} from '../common/cancel-button/cancel-x-button'
+import {CancelXButtonDriverView} from './cancel-x-button-driver-view/cancel-x-button-driver-view'
 
 
 type OwnProps = {
@@ -80,6 +82,12 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const trailerOneImage = oneTrailer?.trailerImage
     const oneTralerCagoWeigth = +( oneTrailer?.cargoWeight || 0 )
 
+    const answerModeTitle = `Заявка ${ currentOneRequest?.requestNumber } от ${ ddMmYearFormat(currentOneRequest?.requestDate) }`
+    const isTnKmEnable = mapModes.answersMode || ( mapModes.statusMode && oneEmployeeStatus === 'на заявке' && oneEmployeeOnRequestNumber )
+    const title = isTnKmEnable ? answerModeTitle : oneEmployeeStatus
+    const tnKmLabel = `Тонн${ isTnKmEnable ? ' / км' : '' }:`
+    const tnKmData = `${ oneResponse?.cargoWeight || oneTransportCargoWeight + oneTralerCagoWeigth }т${
+        isTnKmEnable ? '/ ' + distance + 'км' : '' }`
 
     useEffect(() => {
         if (mapModes.statusMode && oneEmployeeOnRequestNumber && oneEmployeeStatus === 'на заявке' && ( oneEmployeeOnRequestNumber !== currentOneRequest.requestNumber )) {
@@ -137,29 +145,14 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
             }))
         }
     }
-    const answerModeTitle = `Заявка ${ currentOneRequest?.requestNumber } от ${ ddMmYearFormat(currentOneRequest?.requestDate) }`
-    const isTnKmEnable = mapModes.answersMode || ( mapModes.statusMode && oneEmployeeStatus === 'на заявке' && oneEmployeeOnRequestNumber )
-    const title = isTnKmEnable ? answerModeTitle : oneEmployeeStatus
-    const tnKmLabel = `тонн${ isTnKmEnable ? ' / км' : '' }:`
-    const tnKmData = `${ oneResponse?.cargoWeight || oneTransportCargoWeight + oneTralerCagoWeigth }т${
-        isTnKmEnable ? '/ ' + distance + 'км' : '' }`
 
     if (isFetching) return <Preloader/>
 
     return (
         <div className={ styles.addDriversForm__wrapper }>
             {/* иконка под невидимую закрывалку на балуне яндекс карты */ }
-            <MaterialIcon icon_name={ 'highlight_off' }
-                          style={ {
-                              position: 'absolute',
-                              top: '7px',
-                              right: '7px',
-                              fontSize: '20px',
-                              color: 'rgb(2, 62, 138)',
-                          } }
-            />
+            <CancelXButtonDriverView/>
             <h4 className={ styles.addDriversForm__header }>{ title }</h4>
-
             <div className={ styles.addDriversForm__form }>
                 <div
                     className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
@@ -186,7 +179,9 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                     </div>
                 </div>
                 <div className={ styles.addDriversForm__infoPanel }>
-                    { isTnKmEnable ? <>
+                    <div className={ styles.addDriversForm__infoRow
+                        + ` ${ !isTnKmEnable ? styles.addDriversForm__infoRow_fog : '' }`
+                    }>
                         <div className={ styles.addDriversForm__infoItem }
                              title={ 'Вес груза: ' + oneResponse?.cargoWeight + 'т.' }
                         >
@@ -204,22 +199,21 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                                 { oneResponse?.responsePrice }
                             </div>
                         </div>
-                    </> : <>
-                        <div className={ styles.addDriversForm__infoItem }></div>
-                        <div className={ styles.addDriversForm__infoItem }></div>
-                    </> }
-                    <div className={ styles.addDriversForm__infoItem }>
-                        <label className={ styles.addDriversForm__label }>
-                            { tnKmLabel }</label>
-                        <div className={ styles.addDriversForm__info }>
-                            { tnKmData }
-                        </div>
                     </div>
-                    <div className={ styles.addDriversForm__infoItem }>
-                        <label className={ styles.addDriversForm__label }>
-                            { label.responseTax + ':' }</label>
-                        <div className={ styles.addDriversForm__info }>
-                            { taxMode }
+                    <div className={ styles.addDriversForm__infoRow }>
+                        <div className={ styles.addDriversForm__infoItem }>
+                            <label className={ styles.addDriversForm__label }>
+                                { tnKmLabel }</label>
+                            <div className={ styles.addDriversForm__info }>
+                                { tnKmData }
+                            </div>
+                        </div>
+                        <div className={ styles.addDriversForm__infoItem }>
+                            <label className={ styles.addDriversForm__label }>
+                                { label.responseTax + ':' }</label>
+                            <div className={ styles.addDriversForm__info }>
+                                { taxMode }
+                            </div>
                         </div>
                     </div>
                 </div>

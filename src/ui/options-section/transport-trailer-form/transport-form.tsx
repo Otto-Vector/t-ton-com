@@ -9,7 +9,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector} from '../../common/form-selector/form-selector'
 import {InfoText} from '../../common/info-text/into-text'
-import {CancelButton} from '../../common/cancel-button/cancel-button'
+import {CancelXButton} from '../../common/cancel-button/cancel-x-button'
 import {cargoConstType, propertyRights, TransportCardType} from '../../../types/form-types'
 import {
     getCurrentIdTransportStore,
@@ -287,7 +287,7 @@ export const TransportForm: React.FC<OwnProps> = () => {
                             }/>
                     </>
                 }
-                <CancelButton onCancelClick={ onCancelClick }/>
+                <CancelXButton onCancelClick={ onCancelClick }/>
                 <InfoText/>
             </div>
         </div>

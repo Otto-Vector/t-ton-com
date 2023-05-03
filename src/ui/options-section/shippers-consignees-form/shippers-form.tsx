@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {InfoText} from '../../common/info-text/into-text'
-import {CancelButton} from '../../common/cancel-button/cancel-button'
+import {CancelXButton} from '../../common/cancel-button/cancel-x-button'
 import {ShippersCardType} from '../../../types/form-types'
 import {
     getCurrentIdShipperStore,
@@ -383,7 +383,7 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                 )
                             }/>
                     </> }
-                <CancelButton onCancelClick={ onCancelClick }/>
+                <CancelXButton onCancelClick={ onCancelClick }/>
                 <InfoText/>
             </div>
         </div>

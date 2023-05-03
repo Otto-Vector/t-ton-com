@@ -59,12 +59,22 @@
   }
 
   &__infoPanel {
-    display: flex;
-    flex-flow: wrap;
-    justify-content: space-around;
+    width: 100%;
 
     &_invis {
       opacity: 0;
+    }
+  }
+
+  &__infoRow {
+    display: flex;
+    justify-content: space-around;
+
+    &_fog {
+      opacity: .35;
+    }
+    &_none {
+      display: none;
     }
   }
 

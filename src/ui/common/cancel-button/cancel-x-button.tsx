@@ -9,7 +9,7 @@ type OwnProps = {
     mode?: 'redAlert' | 'white' | 'blueAlert' | 'noFill'
 }
 
-export const CancelButton: React.FC<OwnProps> = (
+export const CancelXButton: React.FC<OwnProps> = (
     {
         onCancelClick, noAbsolute, mode = 'blueAlert',
     } ) => {
@@ -18,7 +18,7 @@ export const CancelButton: React.FC<OwnProps> = (
             + ( noAbsolute ? styles.cancelButtonn_noAbsolute : '' ) }
              onClick={ onCancelClick }
         >
-            <Button type={ 'submit' }
+            <Button type={ 'button' }
                     colorMode={ mode }
                     title={ 'Отменить/вернуться' }
                     style={ { border: 'none' } }

@@ -6,7 +6,7 @@ import {To, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../selectors/routes-reselect'
 import {deleteCurrentRequestAPI, getOneRequestsAPI, setNewRequestAPI} from '../../redux/forms/request-store-reducer'
 import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
-import {CancelButton} from '../common/cancel-button/cancel-button'
+import {CancelXButton} from '../common/cancel-button/cancel-x-button'
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right'
 import {RequestMapCenter} from './request-map-center/request-map-center'
 import {RequestFormLeft} from './request-form-left/request-form-left'
@@ -107,7 +107,7 @@ export const RequestSection: React.FC = React.memo(() => {
                                 { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
                             </div>
 
-                            <CancelButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/>
+                            <CancelXButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/>
                         </> }
                 </div>
                 <div className={ styles.requestSection__bottomTabsPanel }>
