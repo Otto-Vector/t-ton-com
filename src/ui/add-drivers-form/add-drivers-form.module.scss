@@ -62,10 +62,18 @@
     display: flex;
     flex-flow: wrap;
     justify-content: space-around;
+
+    &_invis {
+      opacity: 0;
+    }
   }
 
   &__infoItem {
     width: 47%;
+
+    &_invis {
+      opacity: 0;
+    }
   }
 
   &__info {

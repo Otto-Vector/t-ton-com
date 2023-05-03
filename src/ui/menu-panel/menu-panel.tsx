@@ -116,7 +116,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
             action: null,
         },
         {
-            route: routes.map, src: mapSVG, title: 'Карта маршрутов',
+            route: routes.maps.status, src: mapSVG, title: 'Карта маршрутов',
             buttonText: 'Карта', active: !isNewRegistrationRoute && isAuth,
             action: null,
         },

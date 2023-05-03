@@ -92,7 +92,7 @@ export const UiComponent: React.FC<OwnProps> = () => {
                             <TableSection mode={ 'history' }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
                         </ТoAuthRedirect> }/>
 
-                        <Route path={ routes.map } element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>
+                        <Route path={ routes.maps.status } element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>
                         <Route path={ routes.maps.answers + ':reqNumber' }
                                element={ <ТoAuthRedirect>
                                    {/*<div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2></div>*/ }

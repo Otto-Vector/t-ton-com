@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import React, {useCallback, useEffect, useLayoutEffect, useMemo} from 'react'
 import styles from './add-drivers-form.module.scss'
 import noImage from '../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
@@ -8,12 +8,12 @@ import {
 } from '../../selectors/options/requisites-reselect'
 
 import {getLabelAddDriverStore} from '../../selectors/forms/add-driver-reselect'
-import {getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
+import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {getAllEmployeesAPI, modifyOneEmployeeStatusToAPI} from '../../redux/options/employees-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
 import {Preloader} from '../common/preloader/preloader'
-import {addAcceptedResponseToRequestOnAcceptDriver} from '../../redux/forms/request-store-reducer'
+import {addAcceptedResponseToRequestOnAcceptDriver, getOneRequestsAPI} from '../../redux/forms/request-store-reducer'
 import {Button} from '../common/button/button'
 import {AppStateType} from '../../redux/redux-store'
 import {MaterialIcon} from '../common/material-icon/material-icon'
@@ -28,6 +28,7 @@ import {getRoutesStore} from '../../selectors/routes-reselect'
 import {removeResponseToRequestsBzRemoveThisDriverFromRequest} from '../../redux/forms/add-driver-store-reducer'
 import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
+import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
 
 
 type OwnProps = {
@@ -39,13 +40,13 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
     const setImage = ( urlImage?: string | null ): string => urlImage ? currentURL + urlImage : noImage
 
-    const isFetching = useSelector(getIsFetchingRequisitesStore)
+    const isFetchingEmployee = useSelector(getIsFetchingEmployeesStore)
+    const isFetchingRequest = useSelector(getIsFetchingRequestStore)
+    const isFetching = isFetchingEmployee && isFetchingRequest
 
     const label = useSelector(getLabelAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
-    // const oneRequest = useSelector(getOneRequestStore)
-    const oneRequest = useSelector(getInitialValuesRequestStore)
-    const distance = oneRequest?.distance
+
     const dispatch = useDispatch()
     const { pathname } = useLocation()
     const routes = useSelector(getRoutesStore)
@@ -53,26 +54,42 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const mapModes = useMemo(() => ( {
         answersMode: pathname.includes(routes.maps.answers),
         routesMode: pathname.includes(routes.maps.routes),
+        statusMode: pathname.includes(routes.maps.status),
     } ), [ pathname ])
 
+    const currentOneRequest = useSelector(getInitialValuesRequestStore)
+    const distance = currentOneRequest?.distance
+
+    // для модульного окна с просмотром картинки
     const setLightBoxImage = ( image?: string | null ) => {
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
     const oneEmployee = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
     const employeeOnePhone = oneEmployee?.employeePhoneNumber
+    const oneEmployeeOnRequestNumber = +( oneEmployee?.rating || 0 )
+    const oneEmployeeStatus = oneEmployee?.status
 
-    const oneResponse = useSelector(getFilteredResponsesBigMapStore).find(( { idTransport } ) => idTransport === oneEmployee?.idTransport)
+    const oneResponse = useSelector(getFilteredResponsesBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
 
     const oneTransport = useSelector(getFilteredTransportBigMapStore).find(( { idTransport } ) => idTransport === oneEmployee?.idTransport)
     const transportOneImage = oneTransport?.transportImage
+    const oneTransportCargoWeight = +( oneTransport?.cargoWeight || 0 )
 
     const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const trailerOneImage = oneTrailer?.trailerImage
+    const oneTralerCagoWeigth = +( oneTrailer?.cargoWeight || 0 )
+
+
+    useEffect(() => {
+        if (mapModes.statusMode && oneEmployeeOnRequestNumber && oneEmployeeStatus === 'на заявке' && ( oneEmployeeOnRequestNumber !== currentOneRequest.requestNumber )) {
+            dispatch<any>(getOneRequestsAPI(oneEmployeeOnRequestNumber))
+        }
+    }, [ currentOneRequest.requestNumber, oneEmployeeOnRequestNumber, mapModes.answersMode, oneEmployeeStatus ])
 
     // при выборе водителя на заявку
     const onSubmit = useCallback(async () => {
-        console.log(mapModes.answersMode,oneResponse,oneEmployee,oneTrailer,oneTransport)
+
         if (mapModes.answersMode && oneResponse && oneEmployee && oneTransport) {
             await dispatch<any>(addAcceptedResponseToRequestOnAcceptDriver({
                 oneResponse,
@@ -96,7 +113,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     // при отмене (отвязке) от заявки водителя
     const onDecline = async () => {
         await dispatch<any>(removeResponseToRequestsBzRemoveThisDriverFromRequest(oneResponse?.responseId + ''))
-        await dispatch<any>(setAnswerDriversToMap(oneRequest?.requestNumber + ''))
+        await dispatch<any>(setAnswerDriversToMap(currentOneRequest?.requestNumber + ''))
         // зачистка статуса, если сотрудник всего на одной заявке
         if (oneEmployee?.addedToResponse
             // если привязан всего к одной заявке и она сейчас "отвалится"
@@ -108,18 +125,24 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
             dispatch<any>(getAllEmployeesAPI())
         }
         // если на заявке ещё останутся ответы
-        if (oneRequest?.answers?.length && oneRequest.answers.length > 1) {
+        if (currentOneRequest?.answers?.length && currentOneRequest.answers.length > 1) {
             await dispatch<any>(textAndActionGlobalModal({
                 text: 'Сотруднику <b>' + oneEmployee?.employeeFIO + '</b> отказано в участии в заявке',
             }))
         } else {
             await dispatch<any>(textAndActionGlobalModal({
-                text: 'На заявке <b>' + oneRequest.requestNumber + '</b> больше нет ответов',
+                text: 'На заявке <b>' + currentOneRequest.requestNumber + '</b> больше нет ответов',
                 navigateOnOk: routes.requestsList,
                 navigateOnCancel: routes.requestsList,
             }))
         }
     }
+    const answerModeTitle = `Заявка ${ currentOneRequest?.requestNumber } от ${ ddMmYearFormat(currentOneRequest?.requestDate) }`
+    const isTnKmEnable = mapModes.answersMode || ( mapModes.statusMode && oneEmployeeStatus === 'на заявке' && oneEmployeeOnRequestNumber )
+    const title = isTnKmEnable ? answerModeTitle : oneEmployeeStatus
+    const tnKmLabel = `тонн${ isTnKmEnable ? ' / км' : '' }:`
+    const tnKmData = `${ oneResponse?.cargoWeight || oneTransportCargoWeight + oneTralerCagoWeigth }т${
+        isTnKmEnable ? '/ ' + distance + 'км' : '' }`
 
     if (isFetching) return <Preloader/>
 
@@ -135,9 +158,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                               color: 'rgb(2, 62, 138)',
                           } }
             />
-            <h4 className={ styles.addDriversForm__header }>{
-                `Заявка ${ oneRequest?.requestNumber } от ${ ddMmYearFormat(oneRequest?.requestDate) }`
-            }</h4>
+            <h4 className={ styles.addDriversForm__header }>{ title }</h4>
 
             <div className={ styles.addDriversForm__form }>
                 <div
@@ -165,28 +186,33 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                     </div>
                 </div>
                 <div className={ styles.addDriversForm__infoPanel }>
-                    <div className={ styles.addDriversForm__infoItem }
-                         title={ 'Вес груза: ' + oneResponse?.cargoWeight + 'т.' }
-                    >
-                        <label className={ styles.addDriversForm__label }>
-                            { label.responseStavka + ':' }</label>
-                        <div className={ styles.addDriversForm__info }>
-                            { oneResponse?.responseStavka }
+                    { isTnKmEnable ? <>
+                        <div className={ styles.addDriversForm__infoItem }
+                             title={ 'Вес груза: ' + oneResponse?.cargoWeight + 'т.' }
+                        >
+                            <label className={ styles.addDriversForm__label }>
+                                { label.responseStavka + ':' }</label>
+                            <div className={ styles.addDriversForm__info }>
+                                { oneResponse?.responseStavka }
+                            </div>
                         </div>
-                    </div>
-                    <div className={ styles.addDriversForm__infoItem }
-                         title={ 'Расстояние: ' + distance + 'км.' }>
-                        <label className={ styles.addDriversForm__label }>
-                            { label.responsePrice + ':' }</label>
-                        <div className={ styles.addDriversForm__info }>
-                            { oneResponse?.responsePrice }
+                        <div className={ styles.addDriversForm__infoItem }
+                             title={ 'Расстояние: ' + distance + 'км.' }>
+                            <label className={ styles.addDriversForm__label }>
+                                { label.responsePrice + ':' }</label>
+                            <div className={ styles.addDriversForm__info }>
+                                { oneResponse?.responsePrice }
+                            </div>
                         </div>
-                    </div>
+                    </> : <>
+                        <div className={ styles.addDriversForm__infoItem }></div>
+                        <div className={ styles.addDriversForm__infoItem }></div>
+                    </> }
                     <div className={ styles.addDriversForm__infoItem }>
                         <label className={ styles.addDriversForm__label }>
-                            { 'Рейсы шт.:' }</label>
+                            { tnKmLabel }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneEmployee?.rating || '-' }
+                            { tnKmData }
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoItem }>

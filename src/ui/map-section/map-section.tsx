@@ -41,6 +41,7 @@ export const MapSection: React.FC<OwnProps> = () => {
     const mapModes = useMemo(() => ( {
         answersMode: pathname.includes(routes.maps.answers),
         routesMode: pathname.includes(routes.maps.routes),
+        statusMode: pathname.includes(routes.maps.status)
     } ), [ pathname ])
 
     useLayoutEffect(() => {

@@ -175,7 +175,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 toSelfExportDriver: ( values: OneRequestType ) => {
                     navigate(routes.selfExportDriver + values.requestNumber)
                 },
-                toSelfExportDriverFromStatus: ( values: OneRequestType ) => {
+                toSelfExportDriverFromStatusAndAccept: ( values: OneRequestType ) => {
                     navigate(routes.selfExportDriverFromStatus + values.requestNumber)
                 },
             }
@@ -478,12 +478,12 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                         requestModes.createMode && buttonsAction.submitRequestAndDrive(values)
                                                         if (requestModes.acceptDriverMode) {
                                                             isMyRequestAndNew
-                                                                ? buttonsAction.toSelfExportDriver(values)
+                                                                ? buttonsAction.toSelfExportDriverFromStatusAndAccept(values)
                                                                 : buttonsAction.cancelRequest()
                                                         }
                                                         if (requestModes.statusMode) {
                                                             isMyRequestAndNew
-                                                                ? buttonsAction.toSelfExportDriverFromStatus(values)
+                                                                ? buttonsAction.toSelfExportDriverFromStatusAndAccept(values)
                                                                 : buttonsAction.cargoHasBeenReceived(values)
                                                         }
                                                     }

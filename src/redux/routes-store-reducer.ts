@@ -17,7 +17,7 @@ const initialState = {
         selfExportDriver: '/request/selfExportDriverForm/',
         // добавление водителя при создании заявки "самовывоз"
         // '/request/selfExportDriverForm/'
-        selfExportDriverFromStatus: '/request/selfExportDriverFromStatusForm/',
+        selfExportDriverFromStatus: '/request/selfExportDriverFromStatus/',
         // добавление водителя при отклике на заявку
         // '/request/addDriversForm/'
         addDriver: '/request/addDriversForm/',
@@ -37,7 +37,7 @@ const initialState = {
         map: '/maps',
         maps: {
             // '/maps/address/'
-            address: '/maps/address/',
+            status: '/maps/status/',
             // '/maps/answers/'
             answers: '/maps/answers/',
             // '/maps/routes/'
