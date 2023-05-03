@@ -1,11 +1,8 @@
-import React, {useCallback, useEffect, useLayoutEffect, useMemo} from 'react'
+import React, {useCallback, useEffect, useMemo} from 'react'
 import styles from './add-drivers-form.module.scss'
 import noImage from '../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
-import {
-    getIsFetchingRequisitesStore,
-    getStoredValuesRequisitesStore,
-} from '../../selectors/options/requisites-reselect'
+import {getStoredValuesRequisitesStore} from '../../selectors/options/requisites-reselect'
 
 import {getLabelAddDriverStore} from '../../selectors/forms/add-driver-reselect'
 import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
@@ -16,7 +13,6 @@ import {Preloader} from '../common/preloader/preloader'
 import {addAcceptedResponseToRequestOnAcceptDriver, getOneRequestsAPI} from '../../redux/forms/request-store-reducer'
 import {Button} from '../common/button/button'
 import {AppStateType} from '../../redux/redux-store'
-import {MaterialIcon} from '../common/material-icon/material-icon'
 import {
     getFilteredDriversBigMapStore,
     getFilteredResponsesBigMapStore,
@@ -29,7 +25,6 @@ import {removeResponseToRequestsBzRemoveThisDriverFromRequest} from '../../redux
 import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
-import {CancelXButton} from '../common/cancel-button/cancel-x-button'
 import {CancelXButtonDriverView} from './cancel-x-button-driver-view/cancel-x-button-driver-view'
 
 
