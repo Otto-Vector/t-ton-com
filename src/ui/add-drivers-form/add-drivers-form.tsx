@@ -64,7 +64,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     const addDriverModes = {
         addDriver: mode === 'addDriver',
         selfExportDriver: mode === 'selfExportDriver',
-        selfExportDriverFromStatus: mode === 'selfExportDriverFromStatus'
+        selfExportDriverFromStatus: mode === 'selfExportDriverFromStatus',
     }
 
     const navRoutes = useSelector(getRoutesStore)
@@ -81,8 +81,8 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     const placeholder = useSelector(getPlaceholderAddDriverStore)
     const validators = useSelector(getValidatorsAddDriverStore)
     const { taxMode } = useSelector(getStoredValuesRequisitesStore)
-    const requestValues = useSelector(getInitialValuesRequestStore)
-    const distance = requestValues?.distance
+    const currentRequestValues = useSelector(getInitialValuesRequestStore)
+    const distance = currentRequestValues?.distance
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -100,7 +100,6 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     }
 
     const employeeOneImage = oneEmployee.photoFace
-    const employeeOneRating = oneEmployee.rating
 
     const oneTransport = useSelector(getOneTransportFromLocal) as TransportCardType<string>
     const setOneTransport = ( searchId: string | undefined ) => {
@@ -147,7 +146,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                 oneEmployee,
                 oneTrailer,
                 oneTransport,
-                idCustomer: requestValues.idCustomer + '',
+                idCustomer: currentRequestValues.idCustomer + '',
                 cargoWeight,
             }))
             navigate(navRoutes.requestsList)
@@ -189,7 +188,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
         dispatch<any>(textAndActionGlobalModal({
             text: [
                 'Нельзя добавить, причина: ' + optionValue.extendInfo?.toUpperCase(),
-                'На заявке нужен: ' + requestValues.cargoType?.toUpperCase(),
+                'На заявке нужен: ' + currentRequestValues.cargoType?.toUpperCase(),
             ],
         }))
     }
@@ -231,7 +230,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
     // если "по таймингу" или случайно захотелось ответить на заявку, на которую невозможно ответить
     useEffect(() => {
-        if (requestValues.globalStatus === 'в работе') {
+        if (currentRequestValues.globalStatus === 'в работе') {
             dispatch(globalModalStoreActions.setTextMessage('Извините, заявку уже приняли в работу. Обновляем данные...'))
             dispatch(globalModalStoreActions.setTimeToDeactivate(3000))
             dispatch<any>(getAllRequestsAPI())
@@ -245,7 +244,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
                         <h4 className={ styles.addDriversForm__header }>{
-                            `Заявка ${ requestValues.requestNumber } от ${ ddMmYearFormat(requestValues.requestDate) }` }
+                            `Заявка ${ currentRequestValues.requestNumber } от ${ ddMmYearFormat(currentRequestValues.requestDate) }` }
                         </h4>
                         <Form
                             onSubmit={ onSubmit }
@@ -315,6 +314,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                                                        pattern={ '/d*.' }
                                                        resetFieldBy={ form }
                                                        validate={ resultDistanceCost(form) }
+                                                       disabled={ !values.idEmployee }
                                                        noLabel
                                                        errorBottom
                                                 />
@@ -330,9 +330,9 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>
                                                 <label className={ styles.addDriversForm__label }>
-                                                    { 'Вып. заказов:' }</label>
+                                                    { 'Тонн / км:' }</label>
                                                 <div className={ styles.addDriversForm__info }>
-                                                    { employeeOneRating || '-' }
+                                                    { cargoWeight + '/' + distance }
                                                 </div>
                                             </div>
                                             <div className={ styles.addDriversForm__infoItem }>

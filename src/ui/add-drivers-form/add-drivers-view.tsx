@@ -95,7 +95,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
         isDriverOnActiveRequest ? '/' + distance + 'км' : '' }`
 
     const transportTitle = oneTransportCargoWeight ? oneTransportCargoWeight + 'тн / ' + oneTransport?.cargoType : 'тягач'
-    const trailerTitle = oneTransportCargoWeight ? oneTransportCargoWeight + 'тн / ' + oneTrailer?.cargoType : ''
+    const trailerTitle = oneTralerCagoWeigth ? oneTralerCagoWeigth + 'тн / ' + oneTrailer?.cargoType : ''
 
 
     useEffect(() => {
@@ -106,7 +106,6 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
 
     // при выборе водителя на заявку
     const onSubmit = useCallback(async () => {
-
         if (mapModes.answersMode && oneResponse && oneEmployee && oneTransport) {
             await dispatch<any>(addAcceptedResponseToRequestOnAcceptDriver({
                 oneResponse,
