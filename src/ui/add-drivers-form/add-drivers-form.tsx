@@ -123,12 +123,13 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
     // подсчёт стоимости в зависимости от расстояния, ставки и веса груза
     // (встроен в валидатор ввода цены тн за км)
-    const resultDistanceCost = useCallback(( form: FormApi<ResponseToRequestCardType<string>> ) => ( stavka: string ): string => {
-        const [ stavkaNum, cargoWeight, distanceNum ] = [ stavka, form.getState().values.cargoWeight, distance ]
+    const resultDistanceCost = useCallback(( form: FormApi<ResponseToRequestCardType<string>> ) => ( stavka: string ): string | undefined => {
+        const parsedStavka = syncParsers.parseCommaToDot(stavka)
+        const [ stavkaNum, cargoWeight, distanceNum ] = [ parsedStavka, form.getState().values.cargoWeight, distance ]
             .map(( v ) => +( v || 0 ))
         form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * cargoWeight * distanceNum )))
         return validators.responseStavka ? ( validators.responseStavka(stavka) || '' ) : ''
-    }, [ distance, validators ])
+    }, [ distance, validators?.responseStavka ])
 
 
     const onSubmit = useCallback(async ( addDriverValues: ResponseToRequestCardType<string> ) => {

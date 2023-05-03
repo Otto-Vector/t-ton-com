@@ -76,13 +76,27 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const trailerOneImage = oneTrailer?.trailerImage
     const oneTralerCagoWeigth = +( oneTrailer?.cargoWeight || 0 )
+    //
+    const isDriverOnActiveRequest = mapModes.answersMode || ( mapModes.statusMode && oneEmployeeStatus === 'на заявке' && oneEmployeeOnRequestNumber )
 
+    const responseStavka = mapModes.answersMode ? oneResponse?.responseStavka
+        : !!isDriverOnActiveRequest ? currentOneRequest?.responseStavka || '' : ''
+    const responsePrice = mapModes.answersMode ? oneResponse?.responsePrice
+        : !!isDriverOnActiveRequest ? currentOneRequest?.responsePrice || '' : ''
+    const cargoWeight = mapModes.answersMode
+        ? oneResponse?.cargoWeight
+        : !!isDriverOnActiveRequest ? currentOneRequest?.cargoWeight : oneTransportCargoWeight + oneTralerCagoWeigth
+
+    // блок для изменения отображения информационных данных в зависимости от статуса водителя и т.п.
     const answerModeTitle = `Заявка ${ currentOneRequest?.requestNumber } от ${ ddMmYearFormat(currentOneRequest?.requestDate) }`
-    const isTnKmEnable = mapModes.answersMode || ( mapModes.statusMode && oneEmployeeStatus === 'на заявке' && oneEmployeeOnRequestNumber )
-    const title = isTnKmEnable ? answerModeTitle : oneEmployeeStatus
-    const tnKmLabel = `Тонн${ isTnKmEnable ? ' / км' : '' }:`
-    const tnKmData = `${ oneResponse?.cargoWeight || oneTransportCargoWeight + oneTralerCagoWeigth }т${
-        isTnKmEnable ? '/ ' + distance + 'км' : '' }`
+    const title = isDriverOnActiveRequest ? answerModeTitle : oneEmployeeStatus
+    const tnKmLabel = `Тонн${ isDriverOnActiveRequest ? ' / км' : '' }:`
+    const tnKmData = `${ cargoWeight }т${
+        isDriverOnActiveRequest ? '/' + distance + 'км' : '' }`
+
+    const transportTitle = oneTransportCargoWeight ? oneTransportCargoWeight + 'тн / ' + oneTransport?.cargoType : 'тягач'
+    const trailerTitle = oneTransportCargoWeight ? oneTransportCargoWeight + 'тн / ' + oneTrailer?.cargoType : ''
+
 
     useEffect(() => {
         if (mapModes.statusMode && oneEmployeeOnRequestNumber && oneEmployeeStatus === 'на заявке' && ( oneEmployeeOnRequestNumber !== currentOneRequest.requestNumber )) {
@@ -158,14 +172,18 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                             { oneEmployee?.employeeFIO }
                         </div>
                     </div>
-                    <div className={ styles.addDriversForm__selector }>
+                    <div className={ styles.addDriversForm__selector }
+                         title={ transportTitle }
+                    >
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
                             { oneTransport?.transportModel || '-' }
                         </div>
                     </div>
-                    <div className={ styles.addDriversForm__selector }>
+                    <div className={ styles.addDriversForm__selector }
+                         title={ trailerTitle }
+                    >
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
@@ -175,23 +193,23 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                 </div>
                 <div className={ styles.addDriversForm__infoPanel }>
                     <div className={ styles.addDriversForm__infoRow
-                        + ` ${ !isTnKmEnable ? styles.addDriversForm__infoRow_fog : '' }`
+                        + ` ${ !isDriverOnActiveRequest ? styles.addDriversForm__infoRow_fog : '' }`
                     }>
                         <div className={ styles.addDriversForm__infoItem }
-                             title={ 'Вес груза: ' + oneResponse?.cargoWeight + 'т.' }
+                             title={ !!isDriverOnActiveRequest ? 'Вес груза: ' + cargoWeight + 'т.' : '' }
                         >
                             <label className={ styles.addDriversForm__label }>
                                 { label.responseStavka + ':' }</label>
                             <div className={ styles.addDriversForm__info }>
-                                { oneResponse?.responseStavka }
+                                { responseStavka }
                             </div>
                         </div>
                         <div className={ styles.addDriversForm__infoItem }
-                             title={ 'Расстояние: ' + distance + 'км.' }>
+                             title={ !!isDriverOnActiveRequest ? 'Расстояние: ' + distance + 'км.' : '' }>
                             <label className={ styles.addDriversForm__label }>
                                 { label.responsePrice + ':' }</label>
                             <div className={ styles.addDriversForm__info }>
-                                { oneResponse?.responsePrice }
+                                { responsePrice }
                             </div>
                         </div>
                     </div>

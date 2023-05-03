@@ -1,15 +1,14 @@
-
 export const oneRenderParser = ( form: any, parser?: ( value: string ) => string ) => ( value: string, name: string ): string =>
     value !== form.getFieldState(name)?.value ? parser ? parser(value) : value : value
 
 export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] ) => ( value: string ): string =>
-    parsers.reduce(( val, validator ) => validator(val), value);
+    parsers.reduce(( val, validator ) => validator(val), value)
 
 type parsePropType = string | undefined | null
 
 // только цифры
 export const parseAllNumbers = ( val: parsePropType ) =>
-    (''+val).replace(/\D/g, '') || ''
+    ( '' + val ).replace(/\D/g, '') || ''
 
 export const removeFirstSevenOrEight = ( val: parsePropType ) =>
     val?.replace(/^(\+7\s\([78])/, '+7 (') || ''
@@ -23,6 +22,10 @@ const toConsole = ( val: parsePropType ) => {
 // только координаты
 export const parseAllCoords = ( val: parsePropType ) =>
     val?.replace(/[^\d.,\s]/, '') || ''
+
+// запятую в точку (для цифр)
+export const parseCommaToDot = ( val: parsePropType ) =>
+    val?.replace(',', '.') || ''
 
 // только буквы, знак тире точка и пробел
 export const parseFIO = ( val: parsePropType ) =>
@@ -63,10 +66,10 @@ export const parseLatinCharsToRus = ( val: parsePropType ) =>
     val?.replace(/[ABEKMHOPCTYXabekmhopctyx]/g, enCharToRusChar) || ''
 ////////////////////////////////////////////////////////////////////////
 // отображение денег с разделителем тысяч пробелом
- export const parseToNormalMoney = ( val: number ) =>
-     (+val||0).toFixed(1)
-         .replace(/\d(?=(\d{3})+\.)/g, '$&,')
-         .replace(',', ' ') || ''
+export const parseToNormalMoney = ( val: number ) =>
+    ( +val || 0 ).toFixed(1)
+        .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+        .replace(',', ' ') || ''
 export const parseClearAllMaskPlaceholders = ( val: parsePropType ) =>
     val?.replaceAll(/[#_]/g, '') || ''
 
@@ -96,7 +99,7 @@ export const coordsToString = ( coordsNumArray?: [ number, number ] ): string =>
     coordsNumArray?.map(e => e.toFixed(6)).join(', ') || 'неверные входные данные'
 
 export const getFileNameFromUrl = ( URLWithFilname?: string ) =>
-        URLWithFilname?.split('/').pop() || ''
+    URLWithFilname?.split('/').pop() || ''
 
 
 export const syncParsers = {
@@ -122,5 +125,6 @@ export const syncParsers = {
     parseToUpperCase,
     parseAllNumbers,
     parseNoSpace,
-    toConsole
+    parseCommaToDot,
+    toConsole,
 }
