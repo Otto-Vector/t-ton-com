@@ -3,7 +3,7 @@ import {RequestStoreReducerStateType} from '../../redux/forms/request-store-redu
 import {createSelector} from 'reselect'
 import {OneRequestType} from '../../types/form-types'
 import {polyline_decode} from '../../utils/polilyne-decode'
-import { boldWrapper } from '../../utils/html-rebuilds'
+import {boldWrapper} from '../../utils/html-rebuilds'
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 type RequestStoreSelectorsInit<T extends keyof Y, Y = RequestStoreReducerStateType['initialValues']> = ( state: AppStateType ) => Y[T]
@@ -24,8 +24,19 @@ export const getPolylineRouteRequestStore: RequestStoreSelectorsInit<'route'> = 
 
 // дистанция. пока непонятно почему в селекторе, но лучше оставлю
 export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
-export const getInitialCargoWeightRequestStore = createSelector(getInitialValuesRequestStore, ( { cargoWeight } ) => cargoWeight)
+// export const getInitialCargoWeightRequestStore = createSelector(getInitialValuesRequestStore, ( { cargoWeight } ) => cargoWeight)
+// export const getInitialAddedPriceRequestStore = createSelector(getInitialValuesRequestStore, ( { addedPrice } ) => addedPrice)
+// export const getInitialStavkaRequestStore = createSelector(getInitialValuesRequestStore, ( { responseStavka } ) => responseStavka)
 
+export const getInitialDataToModalCalcRequestStore = createSelector(getInitialValuesRequestStore, (
+        { distance, cargoWeight, addedPrice, responseStavka, responseTransport, responseTrailer } ) => ( {
+        distance: +( distance || 0 ),
+        cargoWeight: +( cargoWeight || 0 ),
+        addedPrice: +( addedPrice || 0 ),
+        responseStavka: +( responseStavka || 0 ),
+        driverCanCargoWeight: ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) ),
+    } ),
+)
 
 // декодированный путь для отрисовки на карте заявки
 export const getRoutesParsedFromPolylineRequestStore = createSelector(getPolylineRouteRequestStore,

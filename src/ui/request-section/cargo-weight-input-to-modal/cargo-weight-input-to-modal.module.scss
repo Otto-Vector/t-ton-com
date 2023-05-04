@@ -3,10 +3,24 @@
 
 .cargoWeightInputToModal {
 
+  &__formContainer {
+    display: flex;
+  }
+
+  &__infoPanel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    width: 24.5%;
+    font-family: $PTSansFont;
+  }
+
   &__inputsItem {
-    position: relative;
+    //position: relative;
     width: 50%;
-    margin: 0 auto;
+    //margin: 0 auto;
   }
 
   &__label {

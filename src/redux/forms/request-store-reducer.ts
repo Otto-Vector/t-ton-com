@@ -900,15 +900,19 @@ export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiT
     }
 
 // скорректировать вес груза и пересчитать стоимость
-export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( cargoWeight: number ): RequestStoreReducerThunkActionType =>
+export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
+                                                                            cargoWeight,
+                                                                            addedPrice,
+                                                                        }: { cargoWeight: number, addedPrice: number } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        const { distance, responseStavka, requestNumber } = getState().requestStoreReducer.initialValues
+        const { requestNumber } = getState().requestStoreReducer.initialValues
         await dispatch(changeSomeValuesOnCurrentRequest({
             requestNumber: requestNumber + '',
             cargoWeight: cargoWeight + '',
-            // пока думаю создать ли новое поле фактического получения груза или редактировать shipmentDate
+            // toDo: пока думаю создать ли новое поле фактического получения груза или редактировать shipmentDate
             shipmentDate: yearMmDdFormatISO(new Date()),
-            addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( cargoWeight || 1 ),
+            // addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( cargoWeight || 1 ),
+            addedPrice,
             localStatuscargoHasBeenTransferred: true,
         }))
         await dispatch(createDriverListApi({ requestNumber }))
