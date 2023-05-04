@@ -41,7 +41,7 @@ export const MapSection: React.FC<OwnProps> = () => {
     const mapModes = useMemo(() => ( {
         answersMode: pathname.includes(routes.maps.answers),
         routesMode: pathname.includes(routes.maps.routes),
-        statusMode: pathname.includes(routes.maps.status)
+        statusMode: pathname.includes(routes.maps.status),
     } ), [ pathname ])
 
     useLayoutEffect(() => {
@@ -59,31 +59,32 @@ export const MapSection: React.FC<OwnProps> = () => {
         }))
     }
 
-    const driversOutOfBounds = useMemo(() => ( e: any ) => {
-        let outDrivers
-        if (ymap?.current) {
-            outDrivers = drivers.map(( { position, idEmployee, id } ) => {
+    // возвращает массив водителей вне зоны видимости активной карты
+    const driversOutOfBounds = useMemo(() => ( e: any ): string[] | undefined => {
+        return ymap?.current && drivers?.map(
+            ( { position, idEmployee, id } ) => {
                 if (!!position[0] && !ymap?.current?.util?.bounds?.containsPoint(
                     map.current.getBounds(),
                     position)
                 ) {
                     return idEmployee + ' - ' + position
                 }
-            }).filter(x => x)
-            console.log(map.current.getBounds())
-            console.log(outDrivers)
-        }
-
+            })?.filter(x => x)
+        // console.log('Bounds: ',map.current.getBounds())
+        // console.log(outDrivers)
     }, [ map?.current, ymap?.current, drivers ])
 
-    const center = useSelector(getGeoPositionAuthStore)
+    const authGeoPositionAsCenter = useSelector(getGeoPositionAuthStore)
     const zoom = 7
+    const polylineFirstPointAsCenter = polyline?.shift()
+    const center = useMemo(() => ( mapModes.answersMode && polylineFirstPointAsCenter ) || authGeoPositionAsCenter,
+        [ polylineFirstPointAsCenter, authGeoPositionAsCenter ])
 
     return (
         <div className={ styles.yandexMapComponent }>
             { isFetching &&
                 <div className={ styles.yandexMapComponent__preloader }><SizedPreloader sizeHW={ '200px' }/></div> }
-            <YandexBigMap center={ mapModes.answersMode ? polyline?.shift() || center : center }
+            <YandexBigMap center={ center }
                           zoom={ zoom }
                           instanceMap={ map }
                           instanceYMap={ ymap }

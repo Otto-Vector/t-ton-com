@@ -127,7 +127,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
         const [ stavkaNum, cargoWeight, distanceNum ] = [ parsedStavka, form.getState().values.cargoWeight, distance ]
             .map(( v ) => +( v || 0 ))
         form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * cargoWeight * distanceNum )))
-        return validators.responseStavka ? ( validators.responseStavka(stavka) || '' ) : ''
+        return (validators.responseStavka &&  validators.responseStavka(stavka)) || ''
     }, [ distance, validators?.responseStavka ])
 
 
@@ -237,6 +237,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
             navigate(navRoutes.searchList)
         }
     })
+
 
     return (
         <div className={ styles.addDriversForm }>

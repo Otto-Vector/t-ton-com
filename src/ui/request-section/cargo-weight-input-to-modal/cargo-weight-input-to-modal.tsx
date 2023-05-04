@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
 import {syncValidators} from '../../../utils/validators'
 import {useDispatch, useSelector} from 'react-redux'
@@ -9,22 +9,39 @@ import styles from './cargo-weight-input-to-modal.module.scss'
 import {Button} from '../../common/button/button'
 import {changeCargoWeightValuesOnCurrentRequestAndActivateDocs} from '../../../redux/forms/request-store-reducer'
 import {getInitialCargoWeightRequestStore} from '../../../selectors/forms/request-form-reselect'
+import {parseToNormalMoney, syncParsers} from '../../../utils/parsers'
+import {FormApi} from 'final-form'
+
+type ToSmallCalcFormType = { cargoWeight: string, addedPrice: string, distance: string }
 
 export const CargoWeightInputToModal: React.FC = () => {
 
     const initCargoWeightCurrentRequest = useSelector(getInitialCargoWeightRequestStore)
+    const distance = 555
     const dispatch = useDispatch()
     //фокусировка на проблемном поле при вводе
-    const focusOnError = createDecorator<{ cargoWeight: string }>()
+    const focusOnError = createDecorator<ToSmallCalcFormType>()
+
+    const cargoValidate = syncValidators.cargoWeightInModal(+( initCargoWeightCurrentRequest ? initCargoWeightCurrentRequest : 50 ) + 1)
 
     const onCancelHandle = () => {
         dispatch(globalModalStoreActions.resetAllValues())
     }
 
-    const onSubmit = ( submitValue: { cargoWeight: string } ) => {
-        const cargoWeight = +( submitValue.cargoWeight || 0 )
+    const onSubmit = ( submitValue: ToSmallCalcFormType ) => {
+        const cargoWeight = +( syncParsers.parseCommaToDot(submitValue.cargoWeight) || 0 )
         dispatch<any>(changeCargoWeightValuesOnCurrentRequestAndActivateDocs(cargoWeight))
         onCancelHandle()
+    }
+
+    // подсчёт стоимости в зависимости от расстояния, ставки и веса груза
+    // (встроен в валидатор ввода цены тн за км)
+    const resultWeightCostValidate = ( form: FormApi<ToSmallCalcFormType> ) => ( cargoW: string ): string | undefined => {
+        const parsedStavka = syncParsers.parseCommaToDot(cargoW)
+        const [ stavkaNum, cargoWNum, distanceNum ] = [ parsedStavka, form.getState().values.cargoWeight, distance ]
+            .map(( v ) => +( v || 0 ))
+        form.change('addedPrice',  parseToNormalMoney(stavkaNum * cargoWNum * distanceNum) )
+        return cargoValidate(cargoW)
     }
 
 
@@ -47,7 +64,7 @@ export const CargoWeightInputToModal: React.FC = () => {
                                placeholder={ 'Вес груза (тонн)' }
                                component={ FormInputType }
                                inputType={ 'money' }
-                               validate={ syncValidators.cargoWeightInModal(+( initCargoWeightCurrentRequest ? initCargoWeightCurrentRequest : 50 ) + 1) }
+                               validate={ resultWeightCostValidate(form) }
                                resetFieldBy={ form }
                                errorBottom
                         />
