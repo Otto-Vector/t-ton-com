@@ -258,11 +258,16 @@ export const modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest = (
     {
         idEmployee,
         addedToResponses,
-    }: { idEmployee: string, addedToResponses: string } ): EmployeesStoreReducerThunkActionType =>
+        requestNumber,
+    }: { idEmployee: string,
+        // для добавления данных об активной заявке у водителя
+        requestNumber: string,
+        // для удаления всех привязанных к водителю ответов на заявки
+        addedToResponses: string } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
         await dispatch(removeResponseToRequestsBzEmployee({ idEmployee, responseId: addedToResponses }))
-        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, status: 'на заявке' }))
+        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, rating: requestNumber, status: 'на заявке' }))
     }
 
 // события после добавления пользователя на заявку

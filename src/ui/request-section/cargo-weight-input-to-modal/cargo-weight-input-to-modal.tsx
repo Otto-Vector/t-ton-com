@@ -40,14 +40,14 @@ export const CargoWeightInputToModal: React.FC = () => {
 
     const onSubmit = ( submitValue: ToSmallCalcFormType ) => {
         const { cargoWeight, addedPrice } = reparseValuesToNumber(submitValue)
-        dispatch<any>(changeCargoWeightValuesOnCurrentRequestAndActivateDocs({ cargoWeight,addedPrice }))
+        dispatch<any>(changeCargoWeightValuesOnCurrentRequestAndActivateDocs({ cargoWeight, addedPrice }))
         onCancelHandle()
     }
 
     // подсчёт стоимости в зависимости от расстояния, ставки и веса груза
     // (встроен в валидатор ввода цены тн за км)
     const resultWeightCostValidate = ( form: FormApi<ToSmallCalcFormType> ) => ( cargoW: string ): string | undefined => {
-        const { cargoWeight } = reparseValuesToNumber({ cargoWeight: cargoW+'', addedPrice: '0' })
+        const { cargoWeight } = reparseValuesToNumber({ cargoWeight: cargoW + '', addedPrice: '0' })
         form.change('addedPrice', parseToNormalMoney(responseStavka * cargoWeight * distance))
         return cargoValidate(cargoWeight + '')
     }
@@ -85,7 +85,7 @@ export const CargoWeightInputToModal: React.FC = () => {
                         </div>
                         <div className={ styles.cargoWeightInputToModal__infoPanel }>
                             <p><strong>{ 'После изменения:' }</strong></p>
-                            <p>{ parseCommaToDot(values.cargoWeight+'') + ' тн.' }</p>
+                            <p>{ parseCommaToDot(values.cargoWeight + ' тн.') }</p>
                             <p>{ values.addedPrice + ' руб.' }</p>
                         </div>
                     </div>

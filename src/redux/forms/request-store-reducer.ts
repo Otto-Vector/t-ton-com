@@ -649,6 +649,7 @@ export const addAcceptedResponseToRequestOnCreate = (
                 await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({
                     idEmployee: employeeValues.idEmployee,
                     addedToResponses: employeeValues.addedToResponse,
+                    requestNumber: addDriverValues.requestNumber,
                 }))
                 // перезаливаем все заявки
                 await dispatch(getAllRequestsAPI())
@@ -747,6 +748,7 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                     await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({
                         idEmployee: employeeValues.idEmployee,
                         addedToResponses: employeeValues.addedToResponse,
+                        requestNumber: oneResponse.requestNumber
                     }))
                     // перезаливаем все заявки
                     await dispatch(getAllRequestsAPI())
