@@ -223,9 +223,10 @@ export const modifyOneEmployeeToAPI = (
         }
         // await dispatch(getAllEmployeesAPI())
     }
-
+// любые поля водителя, исключая фото, id обязательно
+export type OneEmployeeNoPhotoIdReq = Partial<Omit<EmployeeCardType, 'idEmployee' | 'photoFace'>> & { idEmployee: string }
 // частичное изменение данных сотрудника
-export const modifyOneEmployeeSoftToAPI = ( employeeData: Partial<Omit<EmployeeCardType, 'idEmployee' | 'photoFace'>> & { idEmployee: string } ): EmployeesStoreReducerThunkActionType =>
+export const modifyOneEmployeeSoftToAPI = ( employeeData: OneEmployeeNoPhotoIdReq ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await employeesApi.modifyOneEmployeeNoPhoto(employeeData)
