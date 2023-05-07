@@ -1,6 +1,8 @@
-import {EmployeesApiType} from '../../../types/form-types';
-import {InfoResponseType, instanceBack} from '../back-instance.api';
+import {EmployeesApiType} from '../../../types/form-types'
+import {InfoResponseType, instanceBack} from '../back-instance.api'
 
+// любые поля водителя, исключая фото, id обязательно
+export type OneEmployeeNoPhotoIdReq = Partial<Omit<EmployeesApiType, 'photoFace'>> & { idEmployee: string }
 
 export const employeesApi = {
 
@@ -13,8 +15,8 @@ export const employeesApi = {
     },
 
     // запрос списка всех водителей созданных данным пользователем PATCH /api/emploeeuser/
-    getAllEmployeesByUserId( { idUser }: { idUser: string } ) {
-        return instanceBack.patch<InfoResponseType & EmployeesApiType[]>('/api/emploeeuser/', { idUser })
+    getAllEmployeesByUserId( idUser: { idUser: string } ) {
+        return instanceBack.patch<InfoResponseType & EmployeesApiType[]>('/api/emploeeuser/', idUser)
             .then(response => response.data)
         // 1.	Code 200, Models: EmployeesApiType[]
         // 2.	Code 520, {"message":"Error"}
@@ -22,8 +24,8 @@ export const employeesApi = {
 
     // запрос на одного выбранного водителя PATCH /api/employee/
     // один id или через запятую без пробелов
-    getOneOrMoreEmployeeById( { idEmployee }: { idEmployee: string } ) {
-        return instanceBack.patch<InfoResponseType & EmployeesApiType[]>('/api/employee/', { idEmployee })
+    getOneOrMoreEmployeeById( idEmployee: { idEmployee: string } ) {
+        return instanceBack.patch<InfoResponseType & EmployeesApiType[]>('/api/employee/', idEmployee)
             .then(response => response.data)
         // 1.	Code 200, Models: EmployeesApiType[]
         // 2.	Code 520, {"message":"Error"}
@@ -61,7 +63,7 @@ export const employeesApi = {
     },
 
     // ИЗМЕНИТЬ одного водителя ЧАСТИЧНО PUT /api/employee/
-    modifyOneEmployeeNoPhoto( employeeData: Partial<Omit<EmployeesApiType, 'idEmployee' | 'photoFace'>> & { idEmployee: string } ) {
+    modifyOneEmployeeNoPhoto( employeeData: OneEmployeeNoPhotoIdReq ) {
         return instanceBack.put<InfoResponseType>('/api/employee/', employeeData)
             .then(response => response.data)
         // 1.	Code 449, {'failed': "Employee is not updated"}
@@ -69,8 +71,8 @@ export const employeesApi = {
     },
 
     // УДАЛИТЬ одного водителя DELETE /api/employee/
-    deleteOneEmployee( idEmployee: { idEmployee: string } ) {
-        return instanceBack.delete<InfoResponseType>('/api/employee/', { data: idEmployee })
+    deleteOneEmployee( data: { idEmployee: string } ) {
+        return instanceBack.delete<InfoResponseType>('/api/employee/', { data })
             .then(response => response.data)
         // 1.	Code 200, {"message": "Employee with id `{}` has been deleted.".format(request.data['idEmployee']}
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}

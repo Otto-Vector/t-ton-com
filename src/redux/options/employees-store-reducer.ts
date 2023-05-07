@@ -3,7 +3,7 @@ import {AppStateType} from '../redux-store'
 import {syncValidators} from '../../utils/validators'
 import {EmployeeCardType, EmployeeStatusType, ParserType, ValidateType} from '../../types/form-types'
 import {syncParsers} from '../../utils/parsers'
-import {employeesApi} from '../../api/local-api/options/employee.api'
+import {employeesApi, OneEmployeeNoPhotoIdReq} from '../../api/local-api/options/employee.api'
 import {
     GlobalModalActionsType,
     globalModalStoreActions,
@@ -223,8 +223,7 @@ export const modifyOneEmployeeToAPI = (
         }
         // await dispatch(getAllEmployeesAPI())
     }
-// любые поля водителя, исключая фото, id обязательно
-export type OneEmployeeNoPhotoIdReq = Partial<Omit<EmployeeCardType, 'idEmployee' | 'photoFace'>> & { idEmployee: string }
+
 // частичное изменение данных сотрудника
 export const modifyOneEmployeeSoftToAPI = ( employeeData: OneEmployeeNoPhotoIdReq ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
@@ -260,11 +259,13 @@ export const modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest = (
         idEmployee,
         addedToResponses,
         requestNumber,
-    }: { idEmployee: string,
+    }: {
+        idEmployee: string,
         // для добавления данных об активной заявке у водителя
         requestNumber: string,
         // для удаления всех привязанных к водителю ответов на заявки
-        addedToResponses: string } ): EmployeesStoreReducerThunkActionType =>
+        addedToResponses: string
+    } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
         await dispatch(removeResponseToRequestsBzEmployee({ idEmployee, responseId: addedToResponses }))
