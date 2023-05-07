@@ -24,6 +24,8 @@ export type DriverOnMapType = {
     position: number[],
     status?: EmployeeStatusType,
     fio: string
+    isOutOfBounds: boolean
+    positionToBounds: number[]
 }
 
 

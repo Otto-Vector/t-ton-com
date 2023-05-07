@@ -14,7 +14,7 @@ type OwnProps = {
     modules?: string[]
     instanceMap?: React.MutableRefObject<any>
     instanceYMap?: React.MutableRefObject<any>
-    onBoundsChange?: ( e: any ) => void
+    onBoundsChange?: ( e?: any ) => void
     onClick?: ( e: any ) => void
     maxZoom?: number
 }
@@ -53,6 +53,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                      if (instanceYMap) {
                          instanceYMap.current = ymapsInstance
                      }
+                     onBoundsChange && onBoundsChange()
                  } }
                  onBoundsChange={ onBoundsChange }
             >
@@ -62,7 +63,9 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                     options={ {
                         float: 'left',
                         maxWidth: [ 25 ],
+                        // position: { left: 25, top: 25 },
                         panoramasItemMode: 'off',
+
                     } }/>
                 <ZoomControl/>
             </Map>
@@ -119,7 +122,7 @@ type ToBigMap = {
     zoom: number
     instanceMap?: React.MutableRefObject<any>
     instanceYMap?: React.MutableRefObject<any>
-    onBoundsChange?: ( e: any ) => void
+    onBoundsChange?: ( e?: any ) => void
 }
 
 export const YandexBigMap: React.FC<ToBigMap> = React.memo(( {

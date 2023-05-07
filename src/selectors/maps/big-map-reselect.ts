@@ -23,4 +23,6 @@ export const getDriversBigMapStore = createSelector(getFilteredDriversBigMapStor
             .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5)),
         status,
         fio: parseFamilyToFIO(employeeFIO),
+        isOutOfBounds: false,
+        positionToBounds: stringToCoords(coordinates),
     } )))

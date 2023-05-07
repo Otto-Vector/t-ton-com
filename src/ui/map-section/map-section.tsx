@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useMemo, useRef, useState} from 'react'
+import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -6,7 +6,7 @@ import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
 import {getDriversBigMapStore, getIsFetchingBigMapStore} from '../../selectors/maps/big-map-reselect'
 import {Placemark, Polyline} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
-import {setAllMyDriversToMap, setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
+import {DriverOnMapType, setAllMyDriversToMap, setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 
 import {AddDriversView} from '../add-drivers-form/add-drivers-view'
 import {Portal} from '../common/portals/Portal'
@@ -59,26 +59,41 @@ export const MapSection: React.FC<OwnProps> = () => {
         }))
     }
 
-    // возвращает массив водителей вне зоны видимости активной карты
-    const driversOutOfBounds = useMemo(() => ( e: any ): string[] | undefined => {
-        return ymap?.current && drivers?.map(
-            ( { position, idEmployee, id } ) => {
-                if (!!position[0] && !ymap?.current?.util?.bounds?.containsPoint(
-                    map.current.getBounds(),
-                    position)
-                ) {
-                    return idEmployee + ' - ' + position
-                }
-            })?.filter(x => x)
-        // console.log('Bounds: ',map.current.getBounds())
-        // console.log(outDrivers)
-    }, [ map?.current, ymap?.current, drivers ])
-
     const authGeoPositionAsCenter = useSelector(getGeoPositionAuthStore)
     const zoom = 7
     const polylineFirstPointAsCenter = polyline?.shift()
-    const center = useMemo(() => ( mapModes.answersMode && polylineFirstPointAsCenter ) || authGeoPositionAsCenter,
-        [ polylineFirstPointAsCenter, authGeoPositionAsCenter ])
+
+    const [ center, setCenter ] = useState(( mapModes.answersMode && polylineFirstPointAsCenter ) || authGeoPositionAsCenter)
+
+    // возвращает массив водителей вне зоны видимости активной карты
+    const driversOutOfBounds = useMemo(() => ( e?: any ): DriverOnMapType[] =>
+            drivers?.map(
+                ( { position, ...props } ) => ( {
+                    ...props, position,
+                    isOutOfBounds: !ymap?.current?.util?.bounds?.containsPoint(
+                        map?.current?.getBounds(), position),
+                } ),
+            )
+        , [ map?.current, ymap?.current, drivers ])
+
+    const [ boundsDrivers, setBoundsDrivers ] = useState(drivers)
+    // псевдо-перерисовка маркеров, ушедших за край видимости карты
+    const PlacemarkersReWriter = () => {
+        const bounds = map?.current?.getBounds()
+        const positionToBounds = ( pos: number[] ) => {
+            const up = Math.min(pos[0], bounds[1][0])
+            const down = Math.max(pos[0], bounds[0][0])
+            const right = Math.min(pos[1], bounds[1][1])
+            const left = Math.max(pos[1], bounds[0][1])
+            return [ pos[0] !== up ? up : down, pos[1] !== right ? right : left ]
+        }
+        setBoundsDrivers(driversOutOfBounds(
+        )?.filter(el => el.isOutOfBounds,
+        )?.map(el => ( {
+            ...el, positionToBounds: positionToBounds(el.position),
+        } )))
+    }
+
 
     return (
         <div className={ styles.yandexMapComponent }>
@@ -88,7 +103,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                           zoom={ zoom }
                           instanceMap={ map }
                           instanceYMap={ ymap }
-                          onBoundsChange={ driversOutOfBounds }
+                          onBoundsChange={ PlacemarkersReWriter }
             >
                 { mapModes.answersMode && polyline && <>
                     {/* ДОРОГА */ }
@@ -130,6 +145,25 @@ export const MapSection: React.FC<OwnProps> = () => {
                                onContextMenu={ extractCoordinatesToModal }
                     />
                 </>
+                }
+                {/* отрисовка водителей вне видимости активной карты */ }
+                { boundsDrivers.map(( { id, idEmployee, position, status, positionToBounds, fio } ) => {
+                    return <Placemark geometry={ positionToBounds }
+                                      options={
+                                          {
+                                              preset: 'islands#blueDeliveryCircleIcon',
+                                              iconColor: status === 'свободен' ? 'red' : 'green',
+                                              hasBalloon: true,
+                                          } }
+                                      properties={ { hintContent: `<b>${ fio }</b>` } }
+                                      onClick={ () => {
+                                          // для вариантов при повторном нажатии
+                                          setCenter([position[0]-0.1, position[1]+0.1])
+                                          setCenter(position)
+                                      } }
+                                      key={ idEmployee + id }
+                    ></Placemark>
+                })
                 }
                 { drivers.map(( { id, idEmployee, position, status, fio } ) => {
                         // const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))
