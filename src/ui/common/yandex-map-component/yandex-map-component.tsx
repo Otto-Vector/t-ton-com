@@ -1,8 +1,17 @@
-import React, {useRef} from 'react'
+import React from 'react'
 import styles from './yandex-map-component.module.scss'
 import './yandex-map-restyle-ballon.scss'
 
-import {Map, MapState, Placemark, Polyline, SearchControl, TypeSelector, ZoomControl} from 'react-yandex-maps'
+import {
+    FullscreenControl,
+    Map,
+    MapState,
+    Placemark,
+    Polyline,
+    SearchControl,
+    TypeSelector,
+    ZoomControl,
+} from 'react-yandex-maps'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {coordinatesFromTargetType} from '../../map-section/map-section'
 import {useDispatch} from 'react-redux'
@@ -17,6 +26,7 @@ type OwnProps = {
     onBoundsChange?: ( e?: any ) => void
     onClick?: ( e: any ) => void
     maxZoom?: number
+    isFullscreenContolActive?: boolean
 }
 
 
@@ -29,6 +39,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                                                             onClick,
                                                             onBoundsChange,
                                                             maxZoom = 18,
+                                                            isFullscreenContolActive = false,
                                                         } ) => {
 
 
@@ -69,6 +80,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
 
                     } }/>
                 <ZoomControl/>
+                { isFullscreenContolActive && <FullscreenControl/> }
             </Map>
         </div>
     )
@@ -94,7 +106,7 @@ export const YandexMapToForm: React.FC<ToFormProps> =
                     onClick={ ( e ) => {
                         getCoordinates(e.get('coords'))
                     } }
-
+                    isFullscreenContolActive
                 >
                     <Placemark geometry={ center }
                                options={
