@@ -12,6 +12,19 @@
     position: relative;
     padding: 10px;
   }
+
+  &__menuItem {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+    padding: 0 15px;
+    height: 26px;
+    font-family: $mainFontColor;
+  }
+  &__menuItemLeft {
+    padding-right: 10px;
+  }
+
   &__preloader {
     position: absolute;
     height: 100%;

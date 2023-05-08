@@ -3,8 +3,12 @@ import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
-import {getDriversBigMapStore, getIsFetchingBigMapStore} from '../../selectors/maps/big-map-reselect'
-import {Placemark, Polyline} from 'react-yandex-maps'
+import {
+    getDriversBigMapStore,
+    getFilteredResponsesBigMapStore,
+    getIsFetchingBigMapStore,
+} from '../../selectors/maps/big-map-reselect'
+import {ListBox, ListBoxItem, Placemark, Polyline} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
 import {
     bigMapStoreActions,
@@ -23,6 +27,9 @@ import {
     getRoutesParsedFromPolylineRequestStore,
 } from '../../selectors/forms/request-form-reselect'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
+import {EmployeeStatusType} from '../../types/form-types'
+import {syncParsers} from '../../utils/parsers'
+import {renderToString} from 'react-dom/server'
 
 
 type OwnProps = {}
@@ -31,6 +38,8 @@ export type coordinatesFromTargetType = { originalEvent: { target: { geometry: {
 export const MapSection: React.FC<OwnProps> = () => {
 
     const drivers = useSelector(getDriversBigMapStore)
+    const responses = useSelector(getFilteredResponsesBigMapStore)
+
     const isFetching = useSelector(getIsFetchingBigMapStore)
     const [ idToPortal, setIdToPortal ] = useState({ idEmployee: '', flag: false })
     const dispatch = useDispatch()
@@ -65,13 +74,13 @@ export const MapSection: React.FC<OwnProps> = () => {
     }, [ dispatch, reqNumber ])
 
     // один раз сдвигаем чуть-чуть карту, чтобы сработал getBounds
-    const [ isOneTimeRenger, setIsOneTimeRender ] = useState(false)
+    const [ isOneTimeRender, setIsOneTimeRender ] = useState(false)
     useEffect(() => {
-        if (!isOneTimeRenger && map?.current?.panTo) {
+        if (!isOneTimeRender && map?.current?.panTo) {
             map.current.panTo([ center[0] - 0.001, center[1] + 0.001 ], { flying: 1 })
             setIsOneTimeRender(true)
         }
-    }, [ map?.current?.panTo, isOneTimeRenger, setIsOneTimeRender, center ])
+    }, [ map?.current?.panTo, isOneTimeRender, setIsOneTimeRender, center ])
 
     // маркировка активного водителя
     const setSelectedDriver = useMemo(() => ( selectedIdEmployee: string ) => {
@@ -127,8 +136,21 @@ export const MapSection: React.FC<OwnProps> = () => {
         'box-shadow: 0 0 15px black' +
         '">'
 
+    const colorOfStatus = ( stat: EmployeeStatusType ): string =>
+        stat === 'свободен'
+            ? 'red'
+            : stat === 'на заявке'
+                ? 'green'
+                : 'orange'
+
+    const contentOfListboxItem = ( idEmployee: string ): string => {
+        const finded = responses?.find(( { idEmployee: id } ) => id === idEmployee)
+        return finded ? ( ' ' + finded?.cargoWeight + 'тн. | ' + finded?.responsePrice + ' руб.' ) : ''
+    }
+
     return (
         <div className={ styles.yandexMapComponent }>
+
             { isFetching &&
                 <div className={ styles.yandexMapComponent__preloader }><SizedPreloader sizeHW={ '200px' }/></div> }
             <YandexBigMap center={ center }
@@ -137,6 +159,50 @@ export const MapSection: React.FC<OwnProps> = () => {
                           instanceYMap={ ymap }
                           onBoundsChange={ PlacemarkersReWriter }
             >
+                { <ListBox
+                    // state={ { expanded: false } }
+                    data={ {
+                        content: 'Выберите водителя',
+                    } }>
+                    { drivers.map(( { fio, status, position, idEmployee } ) =>
+                        <ListBoxItem
+                            options={ {
+                                selectOnClick: false,
+                                layout: 'islands#listBoxItemLayout',
+                            } }
+                            data={ {
+                                content: renderToString(
+                                    <span className={ styles.yandexMapComponent__menuItem }>
+                                        { mapModes.answersMode
+                                            ? <>
+                                            <span className={ styles.yandexMapComponent__menuItemLeft }>
+                                                { fio + ' ' }
+                                            </span>
+                                                <span className={ styles.yandexMapComponent__menuItemRight }>
+                                                { contentOfListboxItem(idEmployee) }
+                                            </span>
+                                            </>
+                                            : <>
+                                            <span className={ styles.yandexMapComponent__menuItemLeft }>
+                                                { fio + ' ' }
+                                            </span>
+                                                <b className={ styles.yandexMapComponent__menuItemRight }
+                                                   style={ { color: colorOfStatus(status) } }>
+                                                    { status }
+                                                </b>
+                                            </>
+                                        }
+                                    </span>),
+                            } }
+                            key={ fio + status }
+                            onClick={ () => {
+                                map?.current?.panTo(position, { flying: 1 })
+                                setSelectedDriver(idEmployee)
+                            } }
+                        />)
+                    }
+                </ListBox>
+                }
                 { mapModes.answersMode && polyline && <>
                     {/* ДОРОГА */ }
                     <Polyline geometry={ polyline }
@@ -164,29 +230,25 @@ export const MapSection: React.FC<OwnProps> = () => {
                     />
                     {/* ТОЧКА РАЗГРУЗКИ */ }
                     <Placemark geometry={ polyline?.pop() }
-                               options={
-                                   {
-                                       preset: 'islands#nightStretchyIcon',
-                                   } }
-                               properties={
-                                   {
-                                       iconContent: `в ${ currentRequest?.recipient?.city }`,
-                                       hintContent: `Грузополучатель`,
-                                   }
+                               options={ {
+                                   preset: 'islands#nightStretchyIcon',
+                               } }
+                               properties={ {
+                                   iconContent: `в ${ currentRequest?.recipient?.city }`,
+                                   hintContent: `Грузополучатель`,
+                               }
                                }
                                onContextMenu={ extractCoordinatesToModal }
                     />
-                </>
-                }
+                </> }
                 {/* отрисовка водителей вне видимости активной карты */ }
                 { boundsDrivers.map(( { id, idEmployee, position, status, positionToBounds, fio } ) => {
                     return <Placemark geometry={ positionToBounds }
-                                      options={
-                                          {
-                                              preset: 'islands#blueDeliveryCircleIcon',
-                                              iconColor: status === 'свободен' ? 'red' : 'green',
-                                              hasBalloon: true,
-                                          } }
+                                      options={ {
+                                          preset: 'islands#blueDeliveryCircleIcon',
+                                          iconColor: colorOfStatus(status),
+                                          hasBalloon: true,
+                                      } }
                                       properties={ { hintContent: `<b>${ fio }</b>` } }
                                       onClick={ () => {
                                           // плавное перемещение к указанной точке
@@ -202,19 +264,16 @@ export const MapSection: React.FC<OwnProps> = () => {
                         if (!!position[0])
                             return <Placemark geometry={ position }
                                 // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
-                                              options={
-                                                  {
-                                                      preset: 'islands#circleIcon',
-                                                      iconColor: status === 'свободен' ? 'red' : 'green',
-                                                      hasBalloon: true,
-                                                  } }
-                                              properties={
-                                                  {
-                                                      iconContent: `${ isSelected ? placemarkIsSelectedStyle : '' }` + id + '</b>',
-                                                      hintContent: `<b>${ fio }</b>`,
-                                                      balloonContent: `<div id="driver-${ idEmployee }" class="driver-card"></div>`,
-                                                  }
-                                              }
+                                              options={ {
+                                                  preset: 'islands#circleIcon',
+                                                  iconColor: colorOfStatus(status),
+                                                  hasBalloon: true,
+                                              } }
+                                              properties={ {
+                                                  iconContent: `${ isSelected ? placemarkIsSelectedStyle : '' }` + id + '</b>',
+                                                  hintContent: `<b>${ fio }</b>`,
+                                                  balloonContent: `<div id="driver-${ idEmployee }" class="driver-card"></div>`,
+                                              } }
                                               key={ id + idEmployee }
                                               onClick={ () => {
                                                   // ставим в очередь промисов, чтобы сработало после отрисовки балуна

@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './yandex-map-component.module.scss'
 import './yandex-map-restyle-ballon.scss'
+import './yandex-map-restyle-drop-box.scss'
 
 import {
     FullscreenControl,

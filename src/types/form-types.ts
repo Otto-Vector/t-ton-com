@@ -207,7 +207,7 @@ export type EmployeeCardType<T = DefaultFormType> = {
     // координаты местоположения водителя
     coordinates: T
     // статус водителя
-    status?: EmployeeStatusType
+    status: EmployeeStatusType
     // прикреплённый транспорт
     idTransport: T
     // прикреплённый прицеп
