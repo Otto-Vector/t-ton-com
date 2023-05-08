@@ -53,6 +53,7 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                      if (instanceYMap) {
                          instanceYMap.current = ymapsInstance
                      }
+                     // оставляем. это важно, оно убирает глюк
                      onBoundsChange && onBoundsChange()
                  } }
                  onBoundsChange={ onBoundsChange }

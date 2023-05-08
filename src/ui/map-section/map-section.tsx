@@ -6,7 +6,12 @@ import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
 import {getDriversBigMapStore, getIsFetchingBigMapStore} from '../../selectors/maps/big-map-reselect'
 import {Placemark, Polyline} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
-import {DriverOnMapType, setAllMyDriversToMap, setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
+import {
+    bigMapStoreActions,
+    DriverOnMapType,
+    setAllMyDriversToMap,
+    setAnswerDriversToMap,
+} from '../../redux/maps/big-map-store-reducer'
 
 import {AddDriversView} from '../add-drivers-form/add-drivers-view'
 import {Portal} from '../common/portals/Portal'
@@ -31,6 +36,11 @@ export const MapSection: React.FC<OwnProps> = () => {
     const dispatch = useDispatch()
     const routes = useSelector(getRoutesStore)
     const polyline = useSelector(getRoutesParsedFromPolylineRequestStore)
+    const authGeoPositionAsCenter = useSelector(getGeoPositionAuthStore)
+    const zoom = 7
+    const polylineFirstPointAsCenter = polyline?.shift()
+
+
     const currentRequest = useSelector(getInitialValuesRequestStore)
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const { pathname } = useLocation()
@@ -44,6 +54,8 @@ export const MapSection: React.FC<OwnProps> = () => {
         statusMode: pathname.includes(routes.maps.status),
     } ), [ pathname ])
 
+    const [ center, setCenter ] = useState(( mapModes.answersMode && polylineFirstPointAsCenter ) || authGeoPositionAsCenter)
+
     useLayoutEffect(() => {
         if (mapModes.answersMode) {
             dispatch<any>(setAnswerDriversToMap(reqNumber || ''))
@@ -52,18 +64,31 @@ export const MapSection: React.FC<OwnProps> = () => {
         }
     }, [ dispatch, reqNumber ])
 
+    // один раз сдвигаем чуть-чуть карту, чтобы сработал getBounds
+    const [ isOneTimeRenger, setIsOneTimeRender ] = useState(false)
+    useEffect(() => {
+        if (!isOneTimeRenger && map?.current?.panTo) {
+            map.current.panTo([ center[0] - 0.001, center[1] + 0.001 ], { flying: 1 })
+            setIsOneTimeRender(true)
+        }
+    }, [ map?.current?.panTo, isOneTimeRenger, setIsOneTimeRender, center ])
 
+    // маркировка активного водителя
+    const setSelectedDriver = useMemo(() => ( selectedIdEmployee: string ) => {
+        dispatch(bigMapStoreActions.setDriversList(drivers.map(( { idEmployee, ...props } ) => ( {
+            ...props,
+            idEmployee,
+            isSelected: idEmployee === selectedIdEmployee,
+        } ))))
+    }, [ dispatch, JSON.stringify(drivers) ])
+
+    // координаты в модальное окно при нажатии правой кнопкой мыши
     const extractCoordinatesToModal = ( e: coordinatesFromTargetType ) => {
         dispatch<any>(textAndActionGlobalModal({
             text: `Координаты: <b>${ e?.originalEvent?.target?.geometry?._coordinates?.join(', ') }</b>`,
         }))
     }
 
-    const authGeoPositionAsCenter = useSelector(getGeoPositionAuthStore)
-    const zoom = 7
-    const polylineFirstPointAsCenter = polyline?.shift()
-
-    const [ center, setCenter ] = useState(( mapModes.answersMode && polylineFirstPointAsCenter ) || authGeoPositionAsCenter)
 
     // возвращает массив водителей вне зоны видимости активной карты
     const driversOutOfBounds = useMemo(() => ( e?: any ): DriverOnMapType[] =>
@@ -74,10 +99,11 @@ export const MapSection: React.FC<OwnProps> = () => {
                         map?.current?.getBounds(), position),
                 } ),
             )
-        , [ map?.current, ymap?.current, drivers ])
+        , [ map?.current, ymap?.current, JSON.stringify(drivers) ])
 
     const [ boundsDrivers, setBoundsDrivers ] = useState(drivers)
-    // псевдо-перерисовка маркеров, ушедших за край видимости карты
+
+    // псевдо-перерисовка маркеров, ушедших за край видимости карты, на край карты
     const PlacemarkersReWriter = () => {
         const bounds = map?.current?.getBounds()
         const positionToBounds = ( pos: number[] ) => {
@@ -94,6 +120,12 @@ export const MapSection: React.FC<OwnProps> = () => {
         } )))
     }
 
+    // стиль выделенного маркера в центре круга
+    const placemarkIsSelectedStyle = '<b style="display: flex;' +
+        ' justify-content: center; text-align: center;' +
+        'background: #81b5e1; border-radius: 50%; width: 100%;' +
+        'box-shadow: 0 0 15px black' +
+        '">'
 
     return (
         <div className={ styles.yandexMapComponent }>
@@ -157,15 +189,15 @@ export const MapSection: React.FC<OwnProps> = () => {
                                           } }
                                       properties={ { hintContent: `<b>${ fio }</b>` } }
                                       onClick={ () => {
-                                          // для вариантов при повторном нажатии
-                                          setCenter([position[0]-0.1, position[1]+0.1])
-                                          setCenter(position)
+                                          // плавное перемещение к указанной точке
+                                          map?.current?.panTo(position, { flying: 1 })
+                                          setSelectedDriver(idEmployee)
                                       } }
                                       key={ idEmployee + id }
                     ></Placemark>
                 })
                 }
-                { drivers.map(( { id, idEmployee, position, status, fio } ) => {
+                { drivers.map(( { id, idEmployee, position, status, fio, isSelected } ) => {
                         // const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))
                         if (!!position[0])
                             return <Placemark geometry={ position }
@@ -178,7 +210,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                   } }
                                               properties={
                                                   {
-                                                      iconContent: id,
+                                                      iconContent: `${ isSelected ? placemarkIsSelectedStyle : '' }` + id + '</b>',
                                                       hintContent: `<b>${ fio }</b>`,
                                                       balloonContent: `<div id="driver-${ idEmployee }" class="driver-card"></div>`,
                                                   }
@@ -190,6 +222,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                       // flag нужен, чтобы каждый раз возвращалось новое значение,
                                                       // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
                                                       setIdToPortal(( val ) => ( { idEmployee, flag: !val.flag } ))
+                                                      setSelectedDriver(idEmployee)
                                                   }, 0)
                                               } }
                                               onContextMenu={ extractCoordinatesToModal }

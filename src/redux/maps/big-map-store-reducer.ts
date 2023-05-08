@@ -7,32 +7,26 @@ import {GetActionsTypes} from '../../types/ts-utils'
 import {getRandomInRange} from '../../utils/random-utils'
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
 import {employeesApi} from '../../api/local-api/options/employee.api'
-import {
-    EmployeeCardType,
-    EmployeeStatusType,
-    ResponseToRequestCardType,
-    TrailerCardType,
-    TransportCardType,
-} from '../../types/form-types'
+import {EmployeesApiType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
 import {trailerApi} from '../../api/local-api/options/trailer.api'
 import {transportApi} from '../../api/local-api/options/transport.api'
 import {getOneRequestsAPI} from '../forms/request-store-reducer'
+import {TtonErrorType} from '../../api/local-api/back-instance.api'
 
-export type DriverOnMapType = {
-    id: number,
-    idEmployee: string,
-    position: number[],
-    status?: EmployeeStatusType,
+export type DriverOnMapType = EmployeesApiType & {
+    id: number
+    position: number[]
     fio: string
     isOutOfBounds: boolean
     positionToBounds: number[]
+    isSelected: boolean
 }
 
 
 const initialState = {
     isFetching: true,
     center: [ 0, 0 ] as [ number, number ],
-    driversOnMap: [] as EmployeeCardType<string>[],
+    driversOnMap: [] as DriverOnMapType[],
     transportOnMap: [] as TransportCardType<string>[],
     trailersOnMap: [] as TrailerCardType<string>[],
     responsesOnMap: [] as ResponseToRequestCardType<string>[],
@@ -104,7 +98,7 @@ export const bigMapStoreActions = {
         type: 'big-map-store-reducer/SET-RESPONSES-LIST',
         responsesOnMap,
     } as const ),
-    setDriversList: ( driversOnMap: EmployeeCardType<string>[] ) => ( {
+    setDriversList: ( driversOnMap: DriverOnMapType[] ) => ( {
         type: 'big-map-store-reducer/SET-DRIVERS-LIST',
         driversOnMap,
     } as const ),
@@ -133,21 +127,47 @@ export const geoPositionTake = (): BigMapStoreReducerThunkActionType =>
         geoPosition(reparserLonLat)
     }
 
+// преобразование данных для карты
+const myDriversToMapConverter = ( myDriversList: EmployeesApiType[] ): DriverOnMapType[] => myDriversList.map(
+    ( {
+          coordinates,
+          employeeFIO,
+          ...props
+      }, index ) => ( {
+        ...props, coordinates, employeeFIO,
+        id: index + 1,
+        position: stringToCoords(coordinates)
+            //toDo: это заглушка для пустых, убрать
+            .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5)),
+        fio: parseFamilyToFIO(employeeFIO),
+        isOutOfBounds: false,
+        positionToBounds: stringToCoords(coordinates),
+        isSelected: false,
+    } ))
 
-// берёт данные из загруженного списка водителей и сохраняет их в стэйт
-// (возможно лучше это сделать через "selectors"
+// берёт данные списка водителей от сервера и сохраняет их в стэйт
 export const setAllMyDriversToMap = (): BigMapStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(bigMapStoreActions.setDriversList([]))
         dispatch(bigMapStoreActions.setTransportList([]))
         dispatch(bigMapStoreActions.setTrailersList([]))
         dispatch(bigMapStoreActions.setResponsesList([]))
-        const myDriversList = getState().employeesStoreReducer.content as EmployeeCardType<string>[]
-        const myTransport = getState().transportStoreReducer.content as TransportCardType<string>[]
-        const myTrailers = getState().trailerStoreReducer.content as TrailerCardType<string>[]
-        dispatch(bigMapStoreActions.setDriversList(myDriversList ))
-        dispatch(bigMapStoreActions.setTransportList(myTransport))
-        dispatch(bigMapStoreActions.setTrailersList(myTrailers))
+        dispatch(bigMapStoreActions.setIsFetching(true))
+        const idUser = getState().authStoreReducer.authID
+        try {
+            // const myDriversList = getState().employeesStoreReducer.content
+            const myDriversList = await employeesApi.getAllEmployeesByUserId({ idUser })
+            // const myTransport = getState().transportStoreReducer.content
+            const myTransport = await transportApi.getAllTransportByUserId({ idUser })
+            // const myTrailers = getState().trailerStoreReducer.content
+            const myTrailers = await trailerApi.getAllTrailerByUserId({ idUser })
+
+            dispatch(bigMapStoreActions.setDriversList(myDriversToMapConverter(myDriversList)))
+            dispatch(bigMapStoreActions.setTransportList(myTransport))
+            dispatch(bigMapStoreActions.setTrailersList(myTrailers))
+        } catch (e: TtonErrorType) {
+            console.log('Ошибка при загрузке данных водителей на карту: ', e)
+        }
         dispatch(bigMapStoreActions.setIsFetching(false))
     }
 
@@ -171,7 +191,7 @@ export const setAnswerDriversToMap = ( requestNumber: string ): BigMapStoreReduc
                 const idTrailer = responseToRequest.map(( { idTrailer } ) => idTrailer).join()
                 const allDriversList = await employeesApi.getOneOrMoreEmployeeById({ idEmployee })
                 if (allDriversList.length) {
-                    dispatch(bigMapStoreActions.setDriversList(allDriversList))
+                    dispatch(bigMapStoreActions.setDriversList(myDriversToMapConverter(allDriversList)))
                     const allTransportList = await transportApi.getOneOrMoreTransportById({ idTransport })
                     const allTrailersList = await trailerApi.getOneOrMoreTrailerById({ idTrailer })
                     if (Array.isArray(allTransportList)) {
