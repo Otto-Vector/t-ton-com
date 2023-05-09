@@ -28,7 +28,6 @@ import {
 } from '../../selectors/forms/request-form-reselect'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {EmployeeStatusType} from '../../types/form-types'
-import {syncParsers} from '../../utils/parsers'
 import {renderToString} from 'react-dom/server'
 
 
@@ -38,21 +37,22 @@ export type coordinatesFromTargetType = { originalEvent: { target: { geometry: {
 export const MapSection: React.FC<OwnProps> = () => {
 
     const drivers = useSelector(getDriversBigMapStore)
+    const [ boundsDrivers, setBoundsDrivers ] = useState(drivers)
     const responses = useSelector(getFilteredResponsesBigMapStore)
+    const currentRequest = useSelector(getInitialValuesRequestStore)
 
     const isFetching = useSelector(getIsFetchingBigMapStore)
     const [ idToPortal, setIdToPortal ] = useState({ idEmployee: '', flag: false })
-    const dispatch = useDispatch()
     const routes = useSelector(getRoutesStore)
+
     const polyline = useSelector(getRoutesParsedFromPolylineRequestStore)
     const authGeoPositionAsCenter = useSelector(getGeoPositionAuthStore)
-    const zoom = 7
     const polylineFirstPointAsCenter = polyline?.shift()
+    const zoom = 7
 
-
-    const currentRequest = useSelector(getInitialValuesRequestStore)
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const { pathname } = useLocation()
+    const dispatch = useDispatch()
 
     const map = useRef<any>({})
     const ymap = useRef<any>({})
@@ -77,7 +77,7 @@ export const MapSection: React.FC<OwnProps> = () => {
     const [ isOneTimeRender, setIsOneTimeRender ] = useState(false)
     useEffect(() => {
         if (!isOneTimeRender && map?.current?.panTo) {
-            map.current.panTo([ center[0] - 0.001, center[1] + 0.001 ], { flying: 1 })
+            map.current.panTo(center.map(x => x - 0.001), { flying: 1 })
             setIsOneTimeRender(true)
         }
     }, [ map?.current?.panTo, isOneTimeRender, setIsOneTimeRender, center ])
@@ -98,7 +98,6 @@ export const MapSection: React.FC<OwnProps> = () => {
         }))
     }
 
-
     // возвращает массив водителей вне зоны видимости активной карты
     const driversOutOfBounds = useMemo(() => ( e?: any ): DriverOnMapType[] =>
             drivers?.map(
@@ -110,20 +109,19 @@ export const MapSection: React.FC<OwnProps> = () => {
             )
         , [ map?.current, ymap?.current, JSON.stringify(drivers) ])
 
-    const [ boundsDrivers, setBoundsDrivers ] = useState(drivers)
 
     // псевдо-перерисовка маркеров, ушедших за край видимости карты, на край карты
     const PlacemarkersReWriter = () => {
-        const bounds = map?.current?.getBounds()
-        const positionToBounds = ( pos: number[] ) => {
-            const up = Math.min(pos[0], bounds[1][0])
-            const down = Math.max(pos[0], bounds[0][0])
-            const right = Math.min(pos[1], bounds[1][1])
-            const left = Math.max(pos[1], bounds[0][1])
-            return [ pos[0] !== up ? up : down, pos[1] !== right ? right : left ]
+        const [ [ x1, y1 ], [ x2, y2 ] ]: number[][] = map?.current?.getBounds()
+        const positionToBounds = ( [ x, y ]: number[] ): number[] => {
+            const up = Math.min(x, x2)
+            const down = Math.max(x, x1)
+            const right = Math.min(y, y2)
+            const left = Math.max(y, y1)
+            return [ x !== up ? up : down, y !== right ? right : left ]
         }
         setBoundsDrivers(driversOutOfBounds(
-        )?.filter(el => el.isOutOfBounds,
+        )?.filter(el => el?.isOutOfBounds,
         )?.map(el => ( {
             ...el, positionToBounds: positionToBounds(el.position),
         } )))
