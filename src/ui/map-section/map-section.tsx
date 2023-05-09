@@ -12,7 +12,6 @@ import {ListBox, ListBoxItem, Placemark, Polyline} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
 import {
     bigMapStoreActions,
-    DriverOnMapType,
     setAllMyDriversToMap,
     setAnswerDriversToMap,
 } from '../../redux/maps/big-map-store-reducer'
@@ -38,7 +37,7 @@ export type coordinatesFromTargetType = { originalEvent: { target: { geometry: {
 export const MapSection: React.FC<OwnProps> = () => {
 
     const drivers = useSelector(getDriversBigMapStore)
-    const [ boundsDrivers, setBoundsDrivers ] = useState(drivers)
+    // const [ boundsDrivers, setBoundsDrivers ] = useState(drivers)
     const responses = useSelector(getFilteredResponsesBigMapStore)
     const currentRequest = useSelector(getInitialValuesRequestStore)
 
@@ -100,16 +99,17 @@ export const MapSection: React.FC<OwnProps> = () => {
     }
 
     // псевдо-перерисовка маркеров, ушедших за край видимости карты, на край карты
-    const PlacemarkersReWriter = () => {
+    const PlacemarkersReWriter = useMemo(() => () => {
         const bounds: number[][] = map?.current?.getBounds()
-        setBoundsDrivers(driversPre => driversPre
+        dispatch(bigMapStoreActions.setDriversList(drivers
             .map(( { position, ...props } ) => ( {
                 ...props, position,
                 isOutOfBounds: isOutOfBounds({ bounds, position }),
                 positionToBounds: positionToBounds({ position, bounds }),
             } )),
-        )
-    }
+        ))
+    }, [ JSON.stringify(drivers) ])
+
 
     // стиль выделенного маркера в центре круга
     const placemarkIsSelectedStyle = '<b style="display: flex;' +
@@ -224,23 +224,22 @@ export const MapSection: React.FC<OwnProps> = () => {
                     />
                 </> }
                 {/* отрисовка водителей вне видимости активной карты */ }
-                { boundsDrivers.map(( { id, idEmployee, position, status, positionToBounds, fio, isOutOfBounds } ) => {
-                    return isOutOfBounds && <Placemark geometry={ positionToBounds }
-                                                       options={ {
-                                                           preset: 'islands#blueDeliveryCircleIcon',
-                                                           iconColor: colorOfStatus(status),
-                                                           hasBalloon: true,
-                                                       } }
-                                                       properties={ { hintContent: `<b>${ fio }</b>` } }
-                                                       onClick={ () => {
-                                                           // плавное перемещение к указанной точке
-                                                           map?.current?.panTo(position, { flying: 1 })
-                                                           setSelectedDriver(idEmployee)
-                                                       } }
-                                                       key={ idEmployee + id }
-                    />
-                })
-                }
+                { drivers.map(( { id, idEmployee, position, status, positionToBounds, fio, isOutOfBounds } ) =>
+                    isOutOfBounds && <Placemark geometry={ positionToBounds }
+                                                options={ {
+                                                    preset: 'islands#blueDeliveryCircleIcon',
+                                                    iconColor: colorOfStatus(status),
+                                                    hasBalloon: true,
+                                                } }
+                                                properties={ { hintContent: `<b>${ fio }</b>` } }
+                                                onClick={ () => {
+                                                    // плавное перемещение к указанной точке
+                                                    map?.current?.panTo(position, { flying: 1 })
+                                                    setSelectedDriver(idEmployee)
+                                                } }
+                                                key={ idEmployee + id }
+                    />)
+                }\
                 { drivers.map(( { id, idEmployee, position, status, fio, isSelected } ) => {
                         // const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))
                         if (!!position[0])

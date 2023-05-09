@@ -138,7 +138,9 @@ const myDriversToMapConverter = ( myDriversList: EmployeesApiType[] ): DriverOnM
         id: index + 1,
         position: stringToCoords(coordinates)
             //toDo: это заглушка для пустых, убрать
-            .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5)),
+            .map(( el, idx ) => el
+                // || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5)
+            ),
         fio: parseFamilyToFIO(employeeFIO),
         isOutOfBounds: false,
         positionToBounds: stringToCoords(coordinates),
