@@ -99,24 +99,16 @@ export const MapSection: React.FC<OwnProps> = () => {
         }))
     }
 
-    // возвращает массив водителей вне зоны видимости активной карты
-    const driversOutOfBounds = useMemo(() => ( bounds: number[][] ): DriverOnMapType[] =>
-            drivers?.map(( { position, ...props } ) => ( {
-                ...props, position,
-                isOutOfBounds: isOutOfBounds({ bounds, position }),
-            } ))
-        , [ JSON.stringify(drivers) ])
-
-
     // псевдо-перерисовка маркеров, ушедших за край видимости карты, на край карты
     const PlacemarkersReWriter = () => {
         const bounds: number[][] = map?.current?.getBounds()
-        setBoundsDrivers(driversPre=>driversOutOfBounds(bounds,
-        )?.filter(el => el?.isOutOfBounds,
-        )?.map(( { position, ...el } ) => ( {
-            ...el, position,
-            positionToBounds: positionToBounds({ position, bounds }),
-        } )))
+        setBoundsDrivers(driversPre => driversPre
+            .map(( { position, ...props } ) => ( {
+                ...props, position,
+                isOutOfBounds: isOutOfBounds({ bounds, position }),
+                positionToBounds: positionToBounds({ position, bounds }),
+            } )),
+        )
     }
 
     // стиль выделенного маркера в центре круга
@@ -232,21 +224,21 @@ export const MapSection: React.FC<OwnProps> = () => {
                     />
                 </> }
                 {/* отрисовка водителей вне видимости активной карты */ }
-                { boundsDrivers.map(( { id, idEmployee, position, status, positionToBounds, fio } ) => {
-                    return <Placemark geometry={ positionToBounds }
-                                      options={ {
-                                          preset: 'islands#blueDeliveryCircleIcon',
-                                          iconColor: colorOfStatus(status),
-                                          hasBalloon: true,
-                                      } }
-                                      properties={ { hintContent: `<b>${ fio }</b>` } }
-                                      onClick={ () => {
-                                          // плавное перемещение к указанной точке
-                                          map?.current?.panTo(position, { flying: 1 })
-                                          setSelectedDriver(idEmployee)
-                                      } }
-                                      key={ idEmployee + id }
-                    ></Placemark>
+                { boundsDrivers.map(( { id, idEmployee, position, status, positionToBounds, fio, isOutOfBounds } ) => {
+                    return isOutOfBounds && <Placemark geometry={ positionToBounds }
+                                                       options={ {
+                                                           preset: 'islands#blueDeliveryCircleIcon',
+                                                           iconColor: colorOfStatus(status),
+                                                           hasBalloon: true,
+                                                       } }
+                                                       properties={ { hintContent: `<b>${ fio }</b>` } }
+                                                       onClick={ () => {
+                                                           // плавное перемещение к указанной точке
+                                                           map?.current?.panTo(position, { flying: 1 })
+                                                           setSelectedDriver(idEmployee)
+                                                       } }
+                                                       key={ idEmployee + id }
+                    />
                 })
                 }
                 { drivers.map(( { id, idEmployee, position, status, fio, isSelected } ) => {
