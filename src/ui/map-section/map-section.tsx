@@ -112,7 +112,8 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     // псевдо-перерисовка маркеров, ушедших за край видимости карты, на край карты
     const PlacemarkersReWriter = () => {
-        const [ [ x1, y1 ], [ x2, y2 ] ]: number[][] = map?.current?.getBounds()
+        const empty = [ 0, 0 ]
+        const [ [ x1, y1 ], [ x2, y2 ] ]: number[][] = map?.current?.getBounds() || [ empty, empty ]
         const positionToBounds = ( [ x, y ]: number[] ): number[] => {
             const up = Math.min(x, x2)
             const down = Math.max(x, x1)
@@ -123,7 +124,7 @@ export const MapSection: React.FC<OwnProps> = () => {
         setBoundsDrivers(driversOutOfBounds(
         )?.filter(el => el?.isOutOfBounds,
         )?.map(el => ( {
-            ...el, positionToBounds: positionToBounds(el.position),
+            ...el, positionToBounds: positionToBounds(el?.position || empty),
         } )))
     }
 
