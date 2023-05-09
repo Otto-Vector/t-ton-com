@@ -2,7 +2,7 @@ import {AppStateType} from '../../redux/redux-store'
 import {RequestStoreReducerStateType} from '../../redux/forms/request-store-reducer'
 import {createSelector} from 'reselect'
 import {OneRequestType} from '../../types/form-types'
-import {polyline_decode} from '../../utils/polilyne-decode'
+import {polyline_decode} from '../../utils/map-utils'
 import {boldWrapper} from '../../utils/html-rebuilds'
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = ( state: AppStateType ) => Y[T]

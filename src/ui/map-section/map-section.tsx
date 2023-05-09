@@ -29,6 +29,7 @@ import {
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {EmployeeStatusType} from '../../types/form-types'
 import {renderToString} from 'react-dom/server'
+import {isOutOfBounds, positionToBounds} from '../../utils/map-utils'
 
 
 type OwnProps = {}
@@ -99,32 +100,22 @@ export const MapSection: React.FC<OwnProps> = () => {
     }
 
     // возвращает массив водителей вне зоны видимости активной карты
-    const driversOutOfBounds = useMemo(() => ( e?: any ): DriverOnMapType[] =>
-            drivers?.map(
-                ( { position, ...props } ) => ( {
-                    ...props, position,
-                    isOutOfBounds: !ymap?.current?.util?.bounds?.containsPoint(
-                        map?.current?.getBounds(), position),
-                } ),
-            )
-        , [ map?.current, ymap?.current, JSON.stringify(drivers) ])
+    const driversOutOfBounds = useMemo(() => ( bounds: number[][] ): DriverOnMapType[] =>
+            drivers?.map(( { position, ...props } ) => ( {
+                ...props, position,
+                isOutOfBounds: isOutOfBounds({ bounds, position }),
+            } ))
+        , [ JSON.stringify(drivers) ])
 
 
     // псевдо-перерисовка маркеров, ушедших за край видимости карты, на край карты
     const PlacemarkersReWriter = () => {
-        const empty = [ 0, 0 ]
-        const [ [ x1, y1 ], [ x2, y2 ] ]: number[][] = map?.current?.getBounds() || [ empty, empty ]
-        const positionToBounds = ( [ x, y ]: number[] ): number[] => {
-            const up = Math.min(x, x2)
-            const down = Math.max(x, x1)
-            const right = Math.min(y, y2)
-            const left = Math.max(y, y1)
-            return [ x !== up ? up : down, y !== right ? right : left ]
-        }
-        setBoundsDrivers(driversOutOfBounds(
+        const bounds: number[][] = map?.current?.getBounds()
+        setBoundsDrivers(driversPre=>driversOutOfBounds(bounds,
         )?.filter(el => el?.isOutOfBounds,
-        )?.map(el => ( {
-            ...el, positionToBounds: positionToBounds(el?.position || empty),
+        )?.map(( { position, ...el } ) => ( {
+            ...el, position,
+            positionToBounds: positionToBounds({ position, bounds }),
         } )))
     }
 
