@@ -62,74 +62,82 @@ export const UiComponent: React.FC<OwnProps> = () => {
                 <div className={ styles.ui__sideBarLeft }>
                     <MenuPanel/>
                 </div>
-                <section className={ styles.ui__content + ' ' + styles.grow }>
+                <section className={ styles.ui__content }>
                     <Routes>
                         <Route path="/" element={ <Navigate to={ routes.hello }/> }/>
 
-                        <Route path={ routes.hello } element={ <HelloSection/> }/> {/*ОКНО ПРИВЕТСТВИЯ*/ }
+                        {/*ОКНО ПРИВЕТСТВИЯ*/ }
+                        <Route path={ routes.hello } element={ <HelloSection/> }/>
+                        {/*ОКНО АВТОРИЗАЦИИ*/ }
                         <Route path={ routes.login } element={
-                            <WithAuthRedirect><LoginSection/></WithAuthRedirect> }/> {/*ОКНО АВТОРИЗАЦИИ*/ }
+                            <WithAuthRedirect> <LoginSection/> </WithAuthRedirect> }/>
+                        {/*СОЗДАНИЕ ЗАЯВКИ*/ }
                         <Route path={ routes.requestInfo.create + ':reqNumber' }
-                               element={ <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*СОЗДАНИЕ ЗАЯВКИ*/ }
+                               element={ <ТoAuthRedirect> <RequestSection/> </ТoAuthRedirect> }/>
+                        {/*ПРОСМОТР активных заявок того кто их создал или участвует в ней*/ }
                         <Route path={ routes.requestInfo.status + ':reqNumber' }
-                               element={
-                                   <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*ПРОСМОТР активных заявок того кто их создал или участвует в ней*/ }
+                               element={ <ТoAuthRedirect> <RequestSection/> </ТoAuthRedirect> }/>
+                        {/*ПРОСМОТР ЗАЯВКИ закрытой своей без возможности изменения*/ }
                         <Route path={ routes.requestInfo.history + ':reqNumber' }
-                               element={
-                                   <ТoAuthRedirect><RequestSection/></ТoAuthRedirect> }/> {/*ПРОСМОТР ЗАЯВКИ без возможности изменения*/ }
+                               element={ <ТoAuthRedirect> <RequestSection/> </ТoAuthRedirect> }/>
+                        {/*ПРОСМОТР ЗАЯВКИ с возможностью её принять или отказаться*/ }
                         <Route path={ routes.requestInfo.accept + ':reqNumber' }
-                               element={ <ТoAuthRedirect>
-                                   <RequestSection/> {/*ПРОСМОТР ЗАЯВКИ с возможностью её принять или отказаться*/ }
-                               </ТoAuthRedirect> }/>
+                               element={ <ТoAuthRedirect> <RequestSection/> </ТoAuthRedirect> }/>
 
-                        <Route path={ routes.requestsList } element={ <ТoAuthRedirect>
-                            <TableSection mode={ 'status' }/> {/*таблица статусов по активным заявкам*/ }
-                        </ТoAuthRedirect> }/>
-                        <Route path={ routes.searchList } element={ <ТoAuthRedirect>
-                            <TableSection mode={ 'search' }/> {/*ПОИСК активных заявок*/ }
-                        </ТoAuthRedirect> }/>
-                        <Route path={ routes.historyList } element={ <ТoAuthRedirect>
-                            <TableSection mode={ 'history' }/> {/*АРХИВ ЗАКРЫТЫХ ЗАЯВОК*/ }
-                        </ТoAuthRedirect> }/>
+                        {/*ТАБЛИЦА ПОИСК активных заявок ОБЩЕЕ*/ }
+                        <Route path={ routes.searchList }
+                               element={ <ТoAuthRedirect> <TableSection mode={ 'search' }/> </ТoAuthRedirect> }/>
+                        {/*ТАБЛИЦА статусов по СВОИМ заявкам*/ }
+                        <Route path={ routes.requestsList }
+                               element={ <ТoAuthRedirect> <TableSection mode={ 'status' }/> </ТoAuthRedirect> }/>
+                        {/*АРХИВ ЗАКРЫТЫХ СВОИХ ЗАЯВОК*/ }
+                        <Route path={ routes.historyList }
+                               element={ <ТoAuthRedirect> <TableSection mode={ 'history' }/> </ТoAuthRedirect> }/>
 
-                        <Route path={ routes.maps.status } element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>
+                        {/*КАРТА со своими водителями и иной информацией*/ }
+                        <Route path={ routes.maps.status }
+                               element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>
+                        {/*КАРТА с ответами по заявке*/ }
                         <Route path={ routes.maps.answers + ':reqNumber' }
-                               element={ <ТoAuthRedirect>
-                                   {/*<div className={ styles.ui__fake }><h2>КАРТА С ОТВЕТАМИ ПЕРЕВОЗЧИКОВ</h2></div>*/ }
-                                   <MapSection/>
-                               </ТoAuthRedirect> }/>
-                        <Route path={ routes.info } element={ <ТoAuthRedirect><InfoSection/></ТoAuthRedirect> }/>
-                        <Route path={ routes.addDriver + ':reqNumber' } element={ <ТoAuthRedirect>
-                            <AddDriversForm mode={ 'addDriver' }/>
-                        </ТoAuthRedirect> }/>
-                        <Route path={ routes.selfExportDriver + ':reqNumber' } element={ <ТoAuthRedirect>
-                            <AddDriversForm mode={ 'selfExportDriver' }/>
-                        </ТoAuthRedirect> }/>
-                        <Route path={ routes.selfExportDriverFromStatus + ':reqNumber' } element={ <ТoAuthRedirect>
-                            <AddDriversForm mode={ 'selfExportDriverFromStatus' }/>
-                        </ТoAuthRedirect> }/>
+                               element={ <ТoAuthRedirect><MapSection/></ТoAuthRedirect> }/>
 
+                        {/*НАСТРОЙКИ водители, транспорт, прицепы и т.п.*/ }
+                        <Route path={ routes.options } element={ <ТoAuthRedirect><OptionsSection/></ТoAuthRedirect> }/>
+
+                        {/*ИНФО с ответами по заявке*/ }
+                        <Route path={ routes.info } element={ <ТoAuthRedirect><InfoSection/></ТoAuthRedirect> }/>
+
+                        {/*КАРТОЧКА ОТВЕТА НА ЗАЯВКУ выбор водителя и стоимости*/ }
+                        <Route path={ routes.addDriver + ':reqNumber' }
+                               element={ <ТoAuthRedirect> <AddDriversForm mode={ 'addDriver' }/> </ТoAuthRedirect> }/>
+                        {/*КАРТОЧКА ОТВЕТА НА ЗАЯВКУ =САМОВЫВОЗ ПРИ СОЗДАНИИ= выбор водителя и стоимости */ }
+                        <Route path={ routes.selfExportDriver + ':reqNumber' }
+                               element={ <ТoAuthRedirect> <AddDriversForm mode={ 'selfExportDriver' }/>
+                               </ТoAuthRedirect> }/>
+                        {/*КАРТОЧКА ОТВЕТА НА ЗАЯВКУ =САМОВЫВОЗ ПРИ ПОВТОРНОМ ПРОСМОТРЕ= выбор водителя и стоимости */ }
+                        <Route path={ routes.selfExportDriverFromStatus + ':reqNumber' }
+                               element={ <ТoAuthRedirect> <AddDriversForm mode={ 'selfExportDriverFromStatus' }/>
+                               </ТoAuthRedirect> }/>
+
+                        {/* РЕКВИЗИТЫ ОРГАНИЗАЦИИ с флагом редактирования данных при создании */ }
+                        <Route path={ routes.requisites + ':newFlag' } element={ <RequisitesForm/> }/>
+                        {/*КАРТОЧКА ГРУЗООТПРАВИТЕЛЬ*/ }
                         <Route path={ routes.optionsEdit.shippers + ':id' }
                                element={ <ТoAuthRedirect><ShippersForm/></ТoAuthRedirect> }/>
+                        {/*КАРТОЧКА СОТРУДНИК*/ }
                         <Route path={ routes.optionsEdit.employees + ':id' }
                                element={ <ТoAuthRedirect><EmployeesForm/></ТoAuthRedirect> }/>
+                        {/*КАРТОЧКА ТРАНСПОРТ*/ }
                         <Route path={ routes.optionsEdit.transport + ':id' }
                                element={ <ТoAuthRedirect><TransportForm/></ТoAuthRedirect> }/>
+                        {/*КАРТОЧКА ПРИЦЕП*/ }
                         <Route path={ routes.optionsEdit.trailer + ':id' }
                                element={ <ТoAuthRedirect><TrailerForm/></ТoAuthRedirect> }/>
+                        {/*КАРТОЧКА ГРУЗОПОЛУЧАТЕЛЬ*/ }
                         <Route path={ routes.optionsEdit.consignees + ':id' }
                                element={ <ТoAuthRedirect><ConsigneesForm/></ТoAuthRedirect> }/>
 
-                        <Route path={ routes.options } element={ <ТoAuthRedirect><OptionsSection/></ТoAuthRedirect> }/>
-                        <Route path={ routes.requisites + ':newFlag' } element={ <RequisitesForm/> }/>
-
-                        {/*<Route path={ routes.test } element={*/ }
-                        {/*    <ButtonMenuSaveLoad titleValue={ 'Документы заказчика' } loadUrl={ '#' } onUpload={ () => {*/ }
-                        {/*        console.log('upload')*/ }
-                        {/*    } }/> }/>*/ }
-                        {/* element={ <AddDriversForm mode={'addDriver'}/> }/>*/ }
-                        {/*element={ <AddDriversView idEmployee={ '0ce2d16f-582e-4d49-ac35-e0c8f9c53b06' }/> }/>*/ }
-
+                        {/*404*/ }
                         <Route path="*" element={ <Page404/> }/>
                     </Routes>
                 </section>

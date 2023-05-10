@@ -131,10 +131,10 @@ export const MapSection: React.FC<OwnProps> = () => {
     }
 
     return (
-        <div className={ styles.yandexMapComponent }>
-
+        <section className={ styles.yandexMapComponent }>
             { isFetching &&
                 <div className={ styles.yandexMapComponent__preloader }><SizedPreloader sizeHW={ '200px' }/></div> }
+
             <YandexBigMap center={ center }
                           zoom={ zoom }
                           instanceMap={ map }
@@ -239,7 +239,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                 } }
                                                 key={ idEmployee + id }
                     />)
-                }\
+                }
                 { drivers.map(( { id, idEmployee, position, status, fio, isSelected } ) => {
                         // const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))
                         if (!!position[0])
@@ -274,6 +274,6 @@ export const MapSection: React.FC<OwnProps> = () => {
             {/*ждём, когда появится балун с нужным ID*/ }
             <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }><AddDriversView
                 idEmployee={ idToPortal.idEmployee }/></Portal>
-        </div>
+        </section>
     )
 }

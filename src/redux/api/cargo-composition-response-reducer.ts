@@ -50,7 +50,7 @@ export const getCargoCompositionSelector = (): CargoCopmositionThunkActionType =
             const response = await cargoEditableSelectorApi.getCargoComposition()
             const reparsedResponse = response.map(( { text } ) => text).reverse()
             dispatch(cargoCompositionStoreActions.setValues(reparsedResponse))
-        } catch (e: TtonErrorType) {
+        } catch (e : TtonErrorType) {
             console.log(e)
         }
     }

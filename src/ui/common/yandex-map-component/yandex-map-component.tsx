@@ -187,7 +187,6 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
         maxZoom,
         fromCity, toCity,
         isEnableCoordsClick,
-        children,
     } ) => {
 
     const dispatch = useDispatch()
