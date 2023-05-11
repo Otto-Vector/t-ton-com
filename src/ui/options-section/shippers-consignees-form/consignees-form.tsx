@@ -28,7 +28,7 @@ import {
     oneConsigneeDeleteToAPI,
     setOrganizationByInnKppConsignees,
 } from '../../../redux/options/consignees-store-reducer'
-import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
+import {parseAllNumbers} from '../../../utils/parsers'
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
 import {FormSelector} from '../../common/form-selector/form-selector'
@@ -45,6 +45,7 @@ import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {getCityFromDispetcherAPI} from '../../../redux/api/avto-dispetcher-response-reducer'
 import createDecorator from 'final-form-focus'
+import {stringToCoords} from '../../../utils/map-utils'
 
 
 type OwnProps = {}

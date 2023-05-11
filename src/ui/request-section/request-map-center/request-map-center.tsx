@@ -9,7 +9,7 @@ import {
     getRoutesParsedFromPolylineRequestStore,
 } from '../../../selectors/forms/request-form-reselect'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
-import {stringToCoords} from '../../../utils/parsers'
+import {stringToCoords} from '../../../utils/map-utils'
 
 type OwnProps = {
     requestModes: RequestModesType,

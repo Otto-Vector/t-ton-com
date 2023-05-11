@@ -1,3 +1,9 @@
+// из координат в строке "10.1235, 11.6548" в массив из двух элементов [10.1235, 11.6548]
+export const stringToCoords = ( coordsString?: string ): [ number, number ] => {
+    const [ latitude = 0, longitude = 0 ] = coordsString?.split(', ').map(Number) || []
+    return [ latitude, longitude ]
+}
+
 // если позиция выходит за рамки, возвращает координаты у рамки
 export const positionToBounds = ( {
                                       position: [ x, y ] = [ 0, 0 ],

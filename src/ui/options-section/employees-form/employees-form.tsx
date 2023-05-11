@@ -49,6 +49,7 @@ import {
 } from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
 import createDecorator from 'final-form-focus'
 import {getCurrentEmployeeCargoType} from '../../../selectors/options/options-reselect'
+import {boldWrapper} from '../../../utils/html-rebuilds'
 
 
 type OwnProps = {}
@@ -229,7 +230,7 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
     // диалоговое окно, при неверном выборе транспорта
     const onDisableOptionSelectorHandleClick = ( optionValue: SelectOptionsType ) => {
         dispatch<any>(textAndActionGlobalModal({
-            text: 'Нельзя добавить, данный элемент УЖЕ привязан к ДРУГОМУ сотруднику: ' + optionValue.subLabel,
+            text: 'Нельзя добавить, данный элемент УЖЕ привязан к ДРУГОМУ сотруднику: ' + boldWrapper(optionValue.subLabel),
         }))
     }
 

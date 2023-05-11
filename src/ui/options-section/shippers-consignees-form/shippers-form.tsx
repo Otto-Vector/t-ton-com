@@ -29,7 +29,7 @@ import {
     setOrganizationByInnKppShippers,
     shippersStoreActions,
 } from '../../../redux/options/shippers-store-reducer'
-import {parseAllNumbers, stringToCoords} from '../../../utils/parsers'
+import {parseAllNumbers} from '../../../utils/parsers'
 import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
 import {FormSelector} from '../../common/form-selector/form-selector'
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
@@ -46,6 +46,7 @@ import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple'
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate'
 import {getCityFromDispetcherAPI} from '../../../redux/api/avto-dispetcher-response-reducer'
 import createDecorator from 'final-form-focus'
+import {stringToCoords} from '../../../utils/map-utils'
 
 
 type OwnProps = {}

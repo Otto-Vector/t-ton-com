@@ -88,11 +88,6 @@ export const parseFamilyToFIO = ( val: parsePropType ) =>
         .join(' ')
     || ''
 
-// из координат в строке "10.1235, 11.6548" в массив из двух элементов [10.1235, 11.6548]
-export const stringToCoords = ( coordsString: parsePropType ): [ number, number ] => {
-    const [ latitude = 0, longitude = 0 ] = coordsString?.split(', ').map(Number) || []
-    return [ latitude, longitude ]
-}
 
 // из массива координат в стороковое значение с обрезанием мегаточности
 export const coordsToString = ( coordsNumArray?: [ number, number ] ): string =>

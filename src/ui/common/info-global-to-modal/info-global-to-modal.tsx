@@ -16,7 +16,6 @@ import {
 import {useNavigate} from 'react-router-dom'
 import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from-array-to-paragraph'
 import {ModalFooter} from './modal-footer/modal-footer'
-import {ModalCloseIcon} from './modal-close-icon/modal-close-icon'
 import {CancelXButton} from '../cancel-button/cancel-x-button'
 
 

@@ -20,6 +20,7 @@ export const employeesApi = {
             .then(response => response.data)
         // 1.	Code 200, Models: EmployeesApiType[]
         // 2.	Code 520, {"message":"Error"}
+        // 3.   Code 404, {'detail': "not found"}
     },
 
     // запрос на одного выбранного водителя PATCH /api/employee/
@@ -29,6 +30,7 @@ export const employeesApi = {
             .then(response => response.data)
         // 1.	Code 200, Models: EmployeesApiType[]
         // 2.	Code 520, {"message":"Error"}
+        // 3.   Code 404, {'detail': "not found"}
     },
 
     // СОЗДАТЬ одного водителя POST /api/employee/
@@ -69,6 +71,7 @@ export const employeesApi = {
             .then(response => response.data)
         // 1.	Code 449, {'failed': "Employee is not updated"}
         // 2.	Code 200, "success": "Employee'{}' updated successfully".format(Employee_saved.idEmployee)
+        // 3.   Code 404, {'detail': "not found"}
     },
 
     // УДАЛИТЬ одного водителя DELETE /api/employee/

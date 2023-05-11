@@ -127,7 +127,7 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     const contentOfListboxItem = ( idEmployee: string ): string => {
         const finded = responses?.find(( { idEmployee: id } ) => id === idEmployee)
-        return finded ? ( ' ' + finded?.cargoWeight + 'тн. | ' + finded?.responsePrice + ' руб.' ) : ''
+        return finded ? ( ' ' + finded?.cargoWeight + 'тн. | ' + finded?.responsePrice + ' руб.' ) : '-'
     }
 
     return (
@@ -141,8 +141,8 @@ export const MapSection: React.FC<OwnProps> = () => {
                           instanceYMap={ ymap }
                           onBoundsChange={ PlacemarkersReWriter }
             >
-                { <ListBox
-                    // state={ { expanded: false } }
+                <ListBox
+                    state={ { expanded: false } }
                     data={ {
                         content: 'Выберите водителя',
                     } }>
@@ -155,36 +155,31 @@ export const MapSection: React.FC<OwnProps> = () => {
                             data={ {
                                 content: renderToString(
                                     <span className={ styles.yandexMapComponent__menuItem }>
-                                        { mapModes.answersMode
-                                            ? <>
-                                            <span className={ styles.yandexMapComponent__menuItemLeft }>
-                                                { fio + ' ' }
-                                            </span>
-                                                <span className={ styles.yandexMapComponent__menuItemRight }>
-                                                { contentOfListboxItem(idEmployee) }
-                                            </span>
+                                            <>
+                                                <span className={ styles.yandexMapComponent__menuItemLeft }>
+                                                    { fio + ' ' }
+                                                </span>
+                                                { mapModes.answersMode ?
+                                                    <span className={ styles.yandexMapComponent__menuItemRight }>
+                                                        { contentOfListboxItem(idEmployee) }
+                                                    </span>
+                                                    :
+                                                    <b className={ styles.yandexMapComponent__menuItemRight }
+                                                       style={ { color: colorOfStatus(status) } }>
+                                                        { status }
+                                                    </b>
+                                                }
                                             </>
-                                            : <>
-                                            <span className={ styles.yandexMapComponent__menuItemLeft }>
-                                                { fio + ' ' }
-                                            </span>
-                                                <b className={ styles.yandexMapComponent__menuItemRight }
-                                                   style={ { color: colorOfStatus(status) } }>
-                                                    { status }
-                                                </b>
-                                            </>
-                                        }
                                     </span>),
                             } }
                             key={ fio + status }
                             onClick={ () => {
-                                map?.current?.panTo(position, { flying: 1 })
+                                position[0] && map?.current?.panTo(position, { flying: 1 })
                                 setSelectedDriver(idEmployee)
                             } }
                         />)
                     }
                 </ListBox>
-                }
                 { mapModes.answersMode && polyline && <>
                     {/* ДОРОГА */ }
                     <Polyline geometry={ polyline }
@@ -241,7 +236,6 @@ export const MapSection: React.FC<OwnProps> = () => {
                     />)
                 }
                 { drivers.map(( { id, idEmployee, position, status, fio, isSelected } ) => {
-                        // const anyPosition = position.map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5))
                         if (!!position[0])
                             return <Placemark geometry={ position }
                                 // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
