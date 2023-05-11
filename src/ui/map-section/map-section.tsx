@@ -29,6 +29,7 @@ import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-red
 import {EmployeeStatusType} from '../../types/form-types'
 import {renderToString} from 'react-dom/server'
 import {isOutOfBounds, positionToBounds} from '../../utils/map-utils'
+import {MaterialIcon} from '../common/material-icon/material-icon'
 
 
 type OwnProps = {}
@@ -129,9 +130,9 @@ export const MapSection: React.FC<OwnProps> = () => {
         return finded ? ( ' ' + finded?.cargoWeight + 'тн. | ' + finded?.responsePrice + ' руб.' ) : '-'
     }
 
-    const activateDriverCard= ( idEmployee: string ) => {
+    const activateDriverCard = ( idEmployee: string ) => {
         dispatch<any>(textAndActionGlobalModal({
-            reactChildren: <AddDriversView idEmployee={idEmployee}/>
+            reactChildren: <AddDriversView idEmployee={ idEmployee }/>,
         }))
     }
 
@@ -161,8 +162,17 @@ export const MapSection: React.FC<OwnProps> = () => {
                                 content: renderToString(
                                     <span className={ styles.yandexMapComponent__menuItem }>
                                             <>
-                                                <span className={ styles.yandexMapComponent__menuItemLeft }>
-                                                    { fio + ' ' }
+
+                                                <span className={ styles.yandexMapComponent__menuItemLeft + ' '
+                                                    + ( position[0] === 0 ? styles.yandexMapComponent__menuItemLeft_noPosition : '' )
+                                                }>
+                                                    <MaterialIcon
+                                                        style={ {
+                                                            fontSize: '20px', paddingRight: '5px',
+                                                            color: position[0] !== 0 ? 'inherit' : 'gray',
+                                                        } }
+                                                        icon_name={ position[0] !== 0 ? 'location_on' : 'wrong_location' }/>
+                                                    { ' ' + fio + ' ' }
                                                 </span>
                                                 { mapModes.answersMode ?
                                                     <span className={ styles.yandexMapComponent__menuItemRight }>
