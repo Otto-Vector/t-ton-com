@@ -59,7 +59,8 @@ export const employeesApi = {
         return instanceBack.put<InfoResponseType>('/api/employee/', formData)
             .then(response => response.data)
         // 1.	Code 449, {'failed': "Employee is not updated"}
-        // 2.	Code 200, "success": "Employee'{}' updated successfully".format(Employee_saved.idEmployee)
+        // 2.   Code 404, {'detail': "not found"}
+        // 3.	Code 200, "success": "Employee'{}' updated successfully".format(Employee_saved.idEmployee)
     },
 
     // ИЗМЕНИТЬ одного водителя ЧАСТИЧНО PUT /api/employee/

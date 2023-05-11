@@ -52,7 +52,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
         answersMode: pathname.includes(routes.maps.answers),
         routesMode: pathname.includes(routes.maps.routes),
         statusMode: pathname.includes(routes.maps.status),
-    } ), [ pathname ])
+    } ), [ pathname, routes ])
 
     const currentOneRequest = useSelector(getInitialValuesRequestStore)
     const distance = currentOneRequest?.distance
@@ -76,23 +76,22 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const trailerOneImage = oneTrailer?.trailerImage
     const oneTralerCagoWeigth = +( oneTrailer?.cargoWeight || 0 )
-    //
-    const isDriverOnActiveRequest = mapModes.answersMode || ( mapModes.statusMode && oneEmployeeStatus === 'на заявке' && oneEmployeeOnRequestNumber )
+    // водитель на заявке
+    const isDriverOnActiveRequest = mapModes.answersMode || ( mapModes.statusMode && oneEmployeeStatus === 'на заявке' && !!oneEmployeeOnRequestNumber )
 
     const responseStavka = mapModes.answersMode ? oneResponse?.responseStavka
-        : !!isDriverOnActiveRequest ? currentOneRequest?.responseStavka || '' : ''
+        : isDriverOnActiveRequest && currentOneRequest?.responseStavka
     const responsePrice = mapModes.answersMode ? oneResponse?.responsePrice
-        : !!isDriverOnActiveRequest ? currentOneRequest?.responsePrice || '' : ''
+        : isDriverOnActiveRequest ? currentOneRequest?.responsePrice || '' : ''
     const cargoWeight = mapModes.answersMode
         ? oneResponse?.cargoWeight
-        : !!isDriverOnActiveRequest ? currentOneRequest?.cargoWeight : oneTransportCargoWeight + oneTralerCagoWeigth
+        : isDriverOnActiveRequest ? currentOneRequest?.cargoWeight : oneTransportCargoWeight + oneTralerCagoWeigth
 
     // блок для изменения отображения информационных данных в зависимости от статуса водителя и т.п.
     const answerModeTitle = `Заявка ${ currentOneRequest?.requestNumber } от ${ ddMmYearFormat(currentOneRequest?.requestDate) }`
     const title = isDriverOnActiveRequest ? answerModeTitle : oneEmployeeStatus
     const tnKmLabel = `Тонн${ isDriverOnActiveRequest ? ' / км' : '' }:`
-    const tnKmData = `${ cargoWeight }т${
-        isDriverOnActiveRequest ? '/' + distance + 'км' : '' }`
+    const tnKmData = `${ cargoWeight }т${ isDriverOnActiveRequest ? '/' + distance + 'км' : '' }`
 
     const transportTitle = oneTransportCargoWeight ? oneTransportCargoWeight + 'тн / ' + oneTransport?.cargoType : 'тягач'
     const trailerTitle = oneTralerCagoWeigth ? oneTralerCagoWeigth + 'тн / ' + oneTrailer?.cargoType : ''
@@ -195,7 +194,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                         + ` ${ !isDriverOnActiveRequest ? styles.addDriversForm__infoRow_fog : '' }`
                     }>
                         <div className={ styles.addDriversForm__infoItem }
-                             title={ !!isDriverOnActiveRequest ? 'Вес груза: ' + cargoWeight + 'т.' : '' }
+                             title={ isDriverOnActiveRequest ? 'Вес груза: ' + cargoWeight + 'т.' : '' }
                         >
                             <label className={ styles.addDriversForm__label }>
                                 { label.responseStavka + ':' }</label>
@@ -204,7 +203,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                             </div>
                         </div>
                         <div className={ styles.addDriversForm__infoItem }
-                             title={ !!isDriverOnActiveRequest ? 'Расстояние: ' + distance + 'км.' : '' }>
+                             title={ isDriverOnActiveRequest ? 'Расстояние: ' + distance + 'км.' : '' }>
                             <label className={ styles.addDriversForm__label }>
                                 { label.responsePrice + ':' }</label>
                             <div className={ styles.addDriversForm__info }>
