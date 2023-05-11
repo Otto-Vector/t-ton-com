@@ -1,4 +1,3 @@
-export const geoPosition = ( success: PositionCallback ) => navigator.geolocation.getCurrentPosition(success)
 
 // подгрузка миникартинки по координатам из Яндекс-карт с флагом посередине
 export const toYandexMapSreenshoot = ( coordinates: string | undefined ) =>

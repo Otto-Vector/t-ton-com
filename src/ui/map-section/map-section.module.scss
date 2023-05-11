@@ -23,6 +23,11 @@
   }
   &__menuItemLeft {
     padding-right: 10px;
+
+    &_noPosition {
+      border-radius: 3px;
+      background-color: #40a9ff;
+    }
   }
 
   &__preloader {

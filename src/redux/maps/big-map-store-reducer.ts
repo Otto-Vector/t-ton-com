@@ -1,10 +1,8 @@
 import {ThunkAction} from 'redux-thunk'
-import {AppStateType} from './../redux-store'
+import {AppStateType} from '../redux-store'
 
-import {geoPosition} from '../../api/utils-api/geolocation.api'
 import {parseFamilyToFIO} from '../../utils/parsers'
 import {GetActionsTypes} from '../../types/ts-utils'
-import {getRandomInRange} from '../../utils/random-utils'
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
 import {employeesApi} from '../../api/local-api/options/employee.api'
 import {EmployeesApiType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
@@ -117,17 +115,6 @@ export const bigMapStoreActions = {
 
 export type BigMapStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-// берет данные из апи браузера по геопозиции и сохраняет их в стэйт для центровки карты
-export const geoPositionTake = (): BigMapStoreReducerThunkActionType =>
-    async ( dispatch ) => {
-        const reparserLonLat: PositionCallback = ( el ) =>
-            dispatch(bigMapStoreActions.setCenter([
-                el.coords.latitude || 0,
-                el.coords.longitude || 0,
-            ]))
-        geoPosition(reparserLonLat)
-    }
-
 // преобразование данных для карты
 const myDriversToMapConverter = ( myDriversList: EmployeesApiType[] ): DriverOnMapType[] => myDriversList.map(
     ( {
@@ -138,8 +125,7 @@ const myDriversToMapConverter = ( myDriversList: EmployeesApiType[] ): DriverOnM
         ...props, coordinates, employeeFIO,
         id: index + 1,
         position: stringToCoords(coordinates),
-            //toDo: это заглушка для пустых, убрать
-
+            // toDo: это заглушка для пустых, убрать
             // .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5) ),
         fio: parseFamilyToFIO(employeeFIO),
         isOutOfBounds: false,
@@ -157,11 +143,8 @@ export const setAllMyDriversToMap = (): BigMapStoreReducerThunkActionType =>
         dispatch(bigMapStoreActions.setIsFetching(true))
         const idUser = getState().authStoreReducer.authID
         try {
-            // const myDriversList = getState().employeesStoreReducer.content
             const myDriversList = await employeesApi.getAllEmployeesByUserId({ idUser })
-            // const myTransport = getState().transportStoreReducer.content
             const myTransport = await transportApi.getAllTransportByUserId({ idUser })
-            // const myTrailers = getState().trailerStoreReducer.content
             const myTrailers = await trailerApi.getAllTrailerByUserId({ idUser })
 
             dispatch(bigMapStoreActions.setDriversList(myDriversToMapConverter(myDriversList)))

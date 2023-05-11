@@ -37,7 +37,6 @@ export type coordinatesFromTargetType = { originalEvent: { target: { geometry: {
 export const MapSection: React.FC<OwnProps> = () => {
 
     const drivers = useSelector(getDriversBigMapStore)
-    // const [ boundsDrivers, setBoundsDrivers ] = useState(drivers)
     const responses = useSelector(getFilteredResponsesBigMapStore)
     const currentRequest = useSelector(getInitialValuesRequestStore)
 
@@ -104,7 +103,7 @@ export const MapSection: React.FC<OwnProps> = () => {
         dispatch(bigMapStoreActions.setDriversList(drivers
             .map(( { position, ...props } ) => ( {
                 ...props, position,
-                isOutOfBounds: isOutOfBounds({ bounds, position }),
+                isOutOfBounds: position[0] !== 0 && isOutOfBounds({ bounds, position }),
                 positionToBounds: positionToBounds({ position, bounds }),
             } )),
         ))
@@ -128,6 +127,12 @@ export const MapSection: React.FC<OwnProps> = () => {
     const contentOfListboxItem = ( idEmployee: string ): string => {
         const finded = responses?.find(( { idEmployee: id } ) => id === idEmployee)
         return finded ? ( ' ' + finded?.cargoWeight + 'тн. | ' + finded?.responsePrice + ' руб.' ) : '-'
+    }
+
+    const activateDriverCard= ( idEmployee: string ) => {
+        dispatch<any>(textAndActionGlobalModal({
+            reactChildren: <AddDriversView idEmployee={idEmployee}/>
+        }))
     }
 
     return (
@@ -174,8 +179,12 @@ export const MapSection: React.FC<OwnProps> = () => {
                             } }
                             key={ fio + status }
                             onClick={ () => {
-                                position[0] && map?.current?.panTo(position, { flying: 1 })
-                                setSelectedDriver(idEmployee)
+                                if (position[0] !== 0) {
+                                    map?.current?.panTo(position, { flying: 1 })
+                                    setSelectedDriver(idEmployee)
+                                } else {
+                                    activateDriverCard(idEmployee)
+                                }
                             } }
                         />)
                     }

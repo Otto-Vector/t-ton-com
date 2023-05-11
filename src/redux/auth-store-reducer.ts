@@ -2,13 +2,13 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from './redux-store'
 import {PhoneSubmitType, ValidateType} from '../types/form-types'
 import {syncValidators} from '../utils/validators'
-import {geoPosition} from '../api/utils-api/geolocation.api';
 import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/local-api/auth.api';
 import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-reducer';
 import {appActions} from './app-store-reducer';
 import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
 import {GetActionsTypes} from '../types/ts-utils';
 import {TtonErrorType} from '../api/local-api/back-instance.api';
+import {geoPosition} from '../utils/map-utils'
 
 
 const initialValues: PhoneSubmitType = {

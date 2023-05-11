@@ -1,6 +1,9 @@
-// из координат в строке "10.1235, 11.6548" в массив из двух элементов [10.1235, 11.6548]
+// забирает геопозицию из данных браузера
+export const geoPosition = ( success: PositionCallback ) => navigator.geolocation.getCurrentPosition(success)
+
+// из координат в строке "10.1235, 11.6548" в массив из двух элементов [10.1235, 11.6548] || [0,0]
 export const stringToCoords = ( coordsString?: string ): [ number, number ] => {
-    const [ latitude = 0, longitude = 0 ] = coordsString?.split(', ').map(Number) || []
+    const [ latitude = 0, longitude = 0 ] = coordsString?.split(', ')?.map(Number) || []
     return [ latitude, longitude ]
 }
 
