@@ -3,7 +3,7 @@ import {AppStateType} from '../redux-store'
 import {syncValidators} from '../../utils/validators'
 import {EmployeeCardType, EmployeeStatusType, ParserType, ValidateType} from '../../types/form-types'
 import {syncParsers} from '../../utils/parsers'
-import {employeesApi, OneEmployeeNoPhotoIdReq} from '../../api/local-api/options/employee.api'
+import {employeesApi, OneEmployeeNoPhotoIdReqType} from '../../api/local-api/options/employee.api'
 import {
     GlobalModalActionsType,
     globalModalStoreActions,
@@ -185,20 +185,17 @@ export const newEmployeeSaveToAPI = ( values: EmployeeCardType<string>, image: F
             }
             console.log(JSON.stringify(e?.response?.data))
         }
-        // await dispatch(getAllEmployeesAPI())
     }
 
 // изменить статус у конкретного сотрудника
 export const modifyOneEmployeeStatusToAPI = ( idEmployee: string, status: EmployeeStatusType ): EmployeesStoreReducerThunkActionType =>
-    async ( dispatch ) => {
-        debugger
+    async () => {
         try {
             const response = await employeesApi.modifyOneEmployeeNoPhoto({ idEmployee, status })
             console.log(response)
         } catch (e: TtonErrorType) {
             console.error(JSON.stringify(e?.response?.data))
         }
-        await dispatch(getAllEmployeesAPI())
     }
 
 // изменить одну запись СОТРУДНИКА через АПИ (с неявным присвоением idUser)
@@ -221,11 +218,10 @@ export const modifyOneEmployeeToAPI = (
         } catch (e: TtonErrorType) {
             console.error(JSON.stringify(e?.response?.data))
         }
-        // await dispatch(getAllEmployeesAPI())
     }
 
 // частичное изменение данных сотрудника
-export const modifyOneEmployeeSoftToAPI = ( employeeData: OneEmployeeNoPhotoIdReq ): EmployeesStoreReducerThunkActionType =>
+export const modifyOneEmployeeSoftToAPI = ( employeeData: OneEmployeeNoPhotoIdReqType ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             const response = await employeesApi.modifyOneEmployeeNoPhoto(employeeData)
@@ -234,7 +230,6 @@ export const modifyOneEmployeeSoftToAPI = ( employeeData: OneEmployeeNoPhotoIdRe
         } catch (e: TtonErrorType) {
             dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
         }
-        // await dispatch(getAllEmployeesAPI())
     }
 
 // события после изменения данных пользователя, ведущих к удалению ответов на заявки, в которых он учавстовал
@@ -250,7 +245,14 @@ export const modifyOneEmployeeResetResponsesAndStatus = (
             idEmployee: employeeValues.idEmployee,
             responseId: employeeValues.addedToResponse,
         }))
-        await dispatch(modifyOneEmployeeToAPI({ employeeValues, image, status: 'свободен' }))
+        await dispatch(modifyOneEmployeeToAPI({
+            employeeValues: {
+                ...employeeValues,
+                onCurrentRequest: '-',
+                onNextRequest: '-',
+            },
+            image, status: 'свободен',
+        }))
     }
 
 // события после утверждения пользователя на заявке
@@ -269,17 +271,13 @@ export const modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest = (
     async ( dispatch ) => {
         // удаляем все ответы на запросы у данного сотрудника
         await dispatch(removeResponseToRequestsBzEmployee({ idEmployee, responseId: addedToResponses }))
-        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, rating: requestNumber, status: 'на заявке' }))
+        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, onCurrentRequest: requestNumber, status: 'на заявке' }))
     }
 
 // события после добавления пользователя на заявку
-export const modifyOneEmployeeSetStatusAddedToResponse = (
-    {
-        idEmployee,
-        addedToResponse,
-    }: { idEmployee: string, addedToResponse?: string } ): EmployeesStoreReducerThunkActionType =>
+export const modifyOneEmployeeSetStatusAddedToResponse = ( { idEmployee }: { idEmployee: string } ): EmployeesStoreReducerThunkActionType =>
     async ( dispatch ) => {
-        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, status: 'ожидает принятия', addedToResponse }))
+        await dispatch(modifyOneEmployeeSoftToAPI({ idEmployee, status: 'ожидает принятия' }))
     }
 
 

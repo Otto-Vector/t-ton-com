@@ -64,7 +64,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
 
     const oneEmployee = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
     const employeeOnePhone = oneEmployee?.employeePhoneNumber
-    const oneEmployeeOnRequestNumber = +( oneEmployee?.rating || 0 )
+    const oneEmployeeOnRequestNumber = +( oneEmployee?.onCurrentRequest || 0 )
     const oneEmployeeStatus = oneEmployee?.status
 
     const oneResponse = useSelector(getFilteredResponsesBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)

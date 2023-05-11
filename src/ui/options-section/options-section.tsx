@@ -22,6 +22,7 @@ import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselec
 import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect'
 import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal'
 import {initializedAllOptionsList} from '../../redux/options/options-store-reducer'
+import {AppStateType} from '../../redux/redux-store'
 
 
 type OwnProps = {}
@@ -30,12 +31,15 @@ type OwnProps = {}
 export const OptionsSection: React.FC<OwnProps> = () => {
 
     const titleHeader = 'Настройки'
+    const initialazed = useSelector(( state: AppStateType ) => state.appStoreReducer.initialized)
     const dispatch = useDispatch()
 
+    // переподгрузка данных для обновления индикации на списках
     useLayoutEffect(() => {
-        // переподгрузка данных для обновления индикации на списках
-        dispatch<any>(initializedAllOptionsList())
-    }, [])
+        // минус одна подгрузка при инициализации
+        if (initialazed)
+            dispatch<any>(initializedAllOptionsList())
+    }, [ initialazed ])
 
     const { requisites, optionsEdit } = useSelector(getRoutesStore)
     const navigate = useNavigate()

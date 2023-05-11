@@ -202,7 +202,7 @@ export type EmployeeCardType<T = DefaultFormType> = {
     garageNumber: T
     // Добавить фотографию сотрудника
     photoFace: T
-    // номер активной заявки, на которой сейчас работает водитель
+    // Рэйтинг (рудимент) Integer
     rating: T
     // координаты местоположения водителя
     coordinates: T
@@ -214,6 +214,10 @@ export type EmployeeCardType<T = DefaultFormType> = {
     idTrailer: T
     // список ответок, к которым привязан водитель
     addedToResponse: T
+    // номер активной заявки, на которой сейчас данный водитель
+    onCurrentRequest: T
+    // номер следующей активной заявки, на которой акцептирован данный водитель (пока он заканчивает с предыдущей)
+    onNextRequest: T
 }
 // на сотрудника - ответка из бэка
 export type EmployeesApiType = EmployeeCardType<string>

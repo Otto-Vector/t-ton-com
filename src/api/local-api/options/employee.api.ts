@@ -2,7 +2,7 @@ import {EmployeesApiType} from '../../../types/form-types'
 import {InfoResponseType, instanceBack} from '../back-instance.api'
 
 // любые поля водителя, исключая фото, id обязательно
-export type OneEmployeeNoPhotoIdReq = Partial<Omit<EmployeesApiType, 'photoFace'>> & { idEmployee: string }
+export type OneEmployeeNoPhotoIdReqType = Partial<Omit<EmployeesApiType, 'photoFace'>> & { idEmployee: string }
 
 export const employeesApi = {
 
@@ -43,7 +43,7 @@ export const employeesApi = {
         // 1.	Code 422, {
         //     "failed": "Сотрудник уже создан",
         //     "idEmployee": "497e957a-431b-4946-b242-33af77eaa177",
-        //     "status": "свободен" | "на заявке" и т.п.
+        //     "status": "свободен" | "на заявке" и т.п. (для восстановления сотрудника, если он был уволен)
         // }
         // 2.	Code 200, {"success": "Employees '{}' created successfully".format(new_Employee.idEmployee)}
         // 3.	Code 520, {"message":"Error"}
@@ -63,7 +63,7 @@ export const employeesApi = {
     },
 
     // ИЗМЕНИТЬ одного водителя ЧАСТИЧНО PUT /api/employee/
-    modifyOneEmployeeNoPhoto( employeeData: OneEmployeeNoPhotoIdReq ) {
+    modifyOneEmployeeNoPhoto( employeeData: OneEmployeeNoPhotoIdReqType ) {
         return instanceBack.put<InfoResponseType>('/api/employee/', employeeData)
             .then(response => response.data)
         // 1.	Code 449, {'failed': "Employee is not updated"}

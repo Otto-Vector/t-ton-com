@@ -5,6 +5,7 @@ import {getAllConsigneesAPI} from './consignees-store-reducer'
 import {getAllShippersAPI} from './shippers-store-reducer'
 import {getAllTrailerAPI} from './trailer-store-reducer'
 import {getAllTransportAPI} from './transport-store-reducer'
+import {getAllEmployeesAPI} from './employees-store-reducer'
 
 export type OptionsLabelType = { id: string, title: string, subTitle?: string, extendInfo?: string, moreDataForSearch?: string }
 
@@ -82,9 +83,10 @@ export type OptionsStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 
 export const initializedAllOptionsList = (): OptionsStoreReducerThunkActionType =>
     async ( dispatch ) => {
-        try { // реджектить про
+        try {
             await dispatch(getAllShippersAPI())
             await dispatch(getAllConsigneesAPI())
+            await dispatch(getAllEmployeesAPI())
             await dispatch(getAllTransportAPI())
             await dispatch(getAllTrailerAPI())
         } catch (e) {
