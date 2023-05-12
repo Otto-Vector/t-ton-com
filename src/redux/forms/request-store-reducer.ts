@@ -489,6 +489,7 @@ export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 // запрос списка всех заявок из бэка
 export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
+        dispatch(requestStoreActions.setIsFetching(true))
         try {
             dispatch(requestStoreActions.setKoefficientToInfo(getState().baseStoreReducer.distanceCoefficient))
             // получить список ВООБЩЕ ВСЕХ заявок
@@ -496,21 +497,24 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             // toDo: вернуть эту строку, убрать следующую
             // const shipmentDate = yearMmDdFormat(new Date(''))+'T00:00'
             const shipmentDate = yearMmDdFormat(new Date('2023-01-26')) + 'T00:00'
+            // список заявок по дате
             const responseAllRequestsByDate = await oneRequestApi.getAllRequestByDate({ shipmentDate })
             if (responseAllRequestsByDate.length > 0) {
                 dispatch(requestStoreActions.setContentByDate(responseAllRequestsByDate.map(parseRequestFromAPI)))
             }
 
             const idUserCustomer = getState().authStoreReducer.authID
-            // console.log('idUserCustomer: ', idUserCustomer)
+            // списко заявок, где пользователь является создателем заявки
             const responseAllRequestsByUser = await oneRequestApi.getAllRequestByUser({ idUserCustomer })
             if (responseAllRequestsByUser.length > 0) {
                 dispatch(requestStoreActions.setContentByUser(responseAllRequestsByUser.map(parseRequestFromAPI)))
             }
 
         } catch (e) {
+            dispatch(requestStoreActions.setIsFetching(false))
             dispatch(globalModalStoreActions.setTextMessage(e as string))
         }
+        dispatch(requestStoreActions.setIsFetching(false))
     }
 
 // забрать данные одной СОЗДАННОЙ заявки от сервера
@@ -749,7 +753,7 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                     await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({
                         idEmployee: employeeValues.idEmployee,
                         addedToResponses: employeeValues.addedToResponse,
-                        requestNumber: oneResponse.requestNumber
+                        requestNumber: oneResponse.requestNumber,
                     }))
                     // перезаливаем все заявки
                     await dispatch(getAllRequestsAPI())

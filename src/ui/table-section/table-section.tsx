@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useLayoutEffect, useState} from 'react'
 import styles from './table-section.module.scss'
 import {Button} from '../common/button/button'
 import {TableComponent} from './table-component/table-component'
@@ -13,6 +13,10 @@ import {JustSelect} from '../common/just-select/just-select'
 import {getCargoTypeBaseStore} from '../../selectors/base-reselect'
 import {cargoConstType} from '../../types/form-types'
 import {JustInput} from '../common/just-input/just-input'
+import {Preloader} from '../common/preloader/preloader'
+import {getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
+import {getAllRequestsAPI} from '../../redux/forms/request-store-reducer'
+import {AppStateType} from '../../redux/redux-store'
 
 
 type OwnProps = {
@@ -34,6 +38,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
     const filterButtons = useSelector(getButtonsFiltersStore)
     const { cargoFilter } = useSelector(getValuesFiltersStore)
     const globalFilterValue = useSelector(getGlobalValueFiltersStore)
+    const isFetchingTable = useSelector(getIsFetchingRequestStore)
     const dispatch = useDispatch()
 
     const filtersAction: Record<keyof typeof filterButtons, ( value?: string ) => void> = {
@@ -69,6 +74,11 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
         },
     }
 
+    // подгружаем список заявок при переходе
+    useLayoutEffect(() => {
+        dispatch<any>(getAllRequestsAPI())
+    }, [])
+
     useEffect(() => {
         dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
     }, [ mode, dispatch ])
@@ -87,7 +97,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
     return (
         <section className={ styles.searchSection }>
             <header className={ styles.searchSection__header }>
-                <h3>{ header }</h3>
+                { isFetchingTable ? <Preloader/> : <h3>{ header }</h3> }
                 <form className={ styles.searchSection__buttonFilters }>
                     { Object.entries(filterButtons).map(( [ key, value ] ) =>
                         <div key={ key } className={ styles.searchSection__buttonItem + ' ' +

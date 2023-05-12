@@ -58,10 +58,11 @@ export const getContentTableStore = ( getContent: ( state: AppStateType ) => One
     geInitialValuesTableStore,
     getTariffsRequisitesStore,
     getAuthIdAuthStore,
-    ( requests, initial, { acceptShortRoute, acceptLongRoute }, authId ): OneRequestTableType[] => {
-        return requests.filter(( { visible } ) => visible)
-            .map(parseRequestToTable({ acceptLongRoute, acceptShortRoute, authId })) || [ initial ]
-    })
+    ( requests, initial, { acceptShortRoute, acceptLongRoute }, authId ): OneRequestTableType[] => requests
+            .filter(( { visible } ) => visible)
+            .map(parseRequestToTable({ acceptLongRoute, acceptShortRoute, authId }))
+        || [ initial ],
+)
 
 
 // адаптация заявок в таблицу (список на ответы)
@@ -74,7 +75,10 @@ export const getContentTableStoreNew = createSelector(getContentByDateTableStore
     ( requests ) => requests.filter(( { globalStatus } ) => globalStatus === 'новая заявка'))
 
 export const getContentTableStoreInWork = createSelector(getContentByUserTableStore,
-    ( requests ) => requests.filter(( { marked, globalStatus } ) => marked && globalStatus && globalStatus !== 'завершена')
+    ( requests ) => requests.filter(( {
+                                          marked,
+                                          globalStatus,
+                                      } ) => marked && globalStatus && globalStatus !== 'завершена')
         .map(( request ) => ( { ...request, marked: request.globalStatus === 'в работе' } )),
 )
 
