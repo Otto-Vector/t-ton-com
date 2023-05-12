@@ -133,7 +133,7 @@ const myDriversToMapConverter = ( myDriversList: EmployeesApiType[] ): DriverOnM
         isSelected: false,
     } ))
 
-// берёт данные списка водителей от сервера и сохраняет их в стэйт
+// берёт данные списка водителей от сервера и сохраняет их в стэйт карты
 export const setAllMyDriversToMap = (): BigMapStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(bigMapStoreActions.setDriversList([]))

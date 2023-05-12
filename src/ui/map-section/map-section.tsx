@@ -63,8 +63,10 @@ export const MapSection: React.FC<OwnProps> = () => {
         statusMode: pathname.includes(routes.maps.status),
     } ), [ pathname ])
 
+    // этот способ присвоения избавляет от бесконечной перерисовки карты
     const [ center, setCenter ] = useState(( mapModes.answersMode && polylineFirstPointAsCenter ) || authGeoPositionAsCenter)
 
+    // обновление контента
     useLayoutEffect(() => {
         if (mapModes.answersMode) {
             dispatch<any>(setAnswerDriversToMap(reqNumber || ''))
@@ -162,7 +164,6 @@ export const MapSection: React.FC<OwnProps> = () => {
                                 content: renderToString(
                                     <span className={ styles.yandexMapComponent__menuItem }>
                                             <>
-
                                                 <span className={ styles.yandexMapComponent__menuItemLeft + ' '
                                                     + ( position[0] === 0 ? styles.yandexMapComponent__menuItemLeft_noPosition : '' )
                                                 }>
