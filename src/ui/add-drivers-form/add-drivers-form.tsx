@@ -49,6 +49,7 @@ import {
     getAllEmployeesSelectWithCargoTypeDisabledWrongCargo,
 } from '../../selectors/options/for-selectors/all-selectors-buffer-reselect'
 import {cancelRequestCashReturn} from '../../redux/options/requisites-store-reducer'
+import {boldWrapper} from '../../utils/html-rebuilds'
 
 
 type OwnProps = {
@@ -127,7 +128,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
         const [ stavkaNum, cargoWeight, distanceNum ] = [ parsedStavka, form.getState().values.cargoWeight, distance ]
             .map(( v ) => +( v || 0 ))
         form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * cargoWeight * distanceNum )))
-        return (validators.responseStavka &&  validators.responseStavka(stavka)) || ''
+        return ( validators.responseStavka && validators.responseStavka(stavka) ) || ''
     }, [ distance, validators?.responseStavka ])
 
 
@@ -184,11 +185,12 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
         }
     }
 
+    // при клике на неактивный пункт селектора
     const onDisableOptionSelectorHandleClick = ( optionValue: SelectOptionsType ) => {
         dispatch<any>(textAndActionGlobalModal({
             text: [
-                'Нельзя добавить, причина: ' + optionValue.extendInfo?.toUpperCase(),
-                'На заявке нужен: ' + currentRequestValues.cargoType?.toUpperCase(),
+                'Нельзя добавить, причина: ' + boldWrapper(optionValue.extendInfo?.toUpperCase()),
+                'На заявке нужен: ' + boldWrapper(currentRequestValues.cargoType?.toUpperCase()),
             ],
         }))
     }
@@ -205,16 +207,16 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
         }
     }, [])
 
+    // подгружаем данные водителя и транспорта
     useEffect(() => {
-        // подгружаем данные водителя и транспорта
         if (!isFirstRender && oneEmployee) {
             setOneTransport(oneEmployee.idTransport)
             setOneTrailer(oneEmployee.idTrailer)
         }
     }, [ oneEmployee ])
 
+    // подгружаем данные в стейт формы для перерасчёта калькулятора суммы при изменении водителя в селекторе
     useEffect(() => {
-        // подгружаем данные в стейт формы для перерасчёта калькулятора суммы при изменении водителя в селекторе
         if (oneTrailer.idTrailer !== initialValues.idTrailer || oneTransport.idTransport !== initialValues.idTransport)
             setInitialValues({
                 ...initialValues,
@@ -236,7 +238,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
             dispatch<any>(getAllRequestsAPI())
             navigate(navRoutes.searchList)
         }
-    })
+    }, [currentRequestValues.globalStatus, navRoutes,dispatch])
 
 
     return (

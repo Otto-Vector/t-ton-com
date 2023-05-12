@@ -644,6 +644,7 @@ export const addAcceptedResponseToRequestOnCreate = (
             })
 
             if (response.success) {
+                // добавляем Id пользователя к заявке (возможно это излишне)
                 await oneRequestApi.addOneUserAcceptRequest({ requestNumber: addDriverValues.requestNumber, idUser })
                 // применяем статус 'на заявке'
                 await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({
