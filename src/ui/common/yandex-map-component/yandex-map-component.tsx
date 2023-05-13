@@ -14,10 +14,10 @@ import {
     ZoomControl,
 } from 'react-yandex-maps'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
-import {coordinatesFromTargetType} from '../../map-section/map-section'
 import {useDispatch} from 'react-redux'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type OwnProps = {
     state?: MapState
@@ -29,7 +29,6 @@ type OwnProps = {
     maxZoom?: number
     isFullscreenContolActive?: boolean
 }
-
 
 export const YandexMapComponent: React.FC<OwnProps> = ( {
                                                             state,
@@ -87,12 +86,14 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
     )
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type ToFormProps = {
     center: [ number, number ]
     getCoordinates: ( coords: [ number, number ] ) => void
 }
 
+// в маленькое окошко формы
 export const YandexMapToForm: React.FC<ToFormProps> =
     React.memo(
         ( { center, getCoordinates } ) => {
@@ -130,6 +131,7 @@ export const YandexMapToForm: React.FC<ToFormProps> =
         }
         , valuesAreEqual)
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type ToBigMap = {
     center: number[]
@@ -139,6 +141,7 @@ type ToBigMap = {
     onBoundsChange?: ( e?: any ) => void
 }
 
+// компонента-прокладка на большую карту
 export const YandexBigMap: React.FC<ToBigMap> = React.memo(( {
                                                                  center,
                                                                  zoom,
@@ -163,6 +166,57 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( {
     )
 })
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type coordinatesFromTargetType = { originalEvent: { target: { geometry: { _coordinates: number[] } } } }
+
+type MapRequestRoadType = {
+    polyline: number[][]
+    onContextMenu?: ( a: coordinatesFromTargetType ) => void
+    senderCity: string
+    recipientCity: string
+}
+
+// отрисовка дороги И точки погрузки/разгрузки с контекстом
+export const MapRequestRoad: React.FC<MapRequestRoadType> = ( {
+                                                                  polyline,
+                                                                  recipientCity,
+                                                                  senderCity,
+                                                                  onContextMenu,
+                                                              } ) => {
+    const placemarkOptions = { preset: 'islands#nightStretchyIcon' }
+    const polylineOptions = {
+        strokeColor: '#023E8A',
+        strokeWidth: 4,
+        opacity: 0.8,
+    }
+    return ( <>
+        {/* ДОРОГА */ }
+        <Polyline geometry={ polyline }
+                  options={ polylineOptions }/>
+        {/* ТОЧКА ПОГРУЗКИ */ }
+        <Placemark geometry={ polyline[0] }
+                   options={ placemarkOptions }
+                   properties={ {
+                       iconContent: `из ${ senderCity }`,
+                       hintContent: `Грузоотправитель`,
+                   } }
+                   onContextMenu={ onContextMenu }
+        />
+        {/* ТОЧКА РАЗГРУЗКИ */ }
+        <Placemark geometry={ polyline[polyline.length - 1] }
+                   options={ placemarkOptions }
+                   properties={ {
+                       iconContent: `в ${ recipientCity }`,
+                       hintContent: `Грузополучатель`,
+                   } }
+                   onContextMenu={ onContextMenu }
+        />
+    </> )
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 type ToRouteMap = {
     center: [ number, number ]
     driverHere?: [ number, number ]
@@ -174,7 +228,6 @@ type ToRouteMap = {
     toCity?: string
     isEnableCoordsClick?: boolean
 }
-
 
 // карта с отрисованным маршрутом
 export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
@@ -203,50 +256,25 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
                 center,
                 zoom,
                 bounds: bounds as undefined,
-            } }>
-
-            { driverHere && <Placemark geometry={ driverHere }
-                                       options={
-                                           {
-                                               preset: 'islands#circleIcon',
-                                               iconColor: 'green',
-                                           } }
-                                       properties={
-                                           {
-                                               hintContent: `Водитель здесь`,
-                                           } }
-                                       onContextMenu={ extractCoordinatesToModal }
-            /> }
-            <Polyline geometry={ polyline }
-                      options={ { strokeColor: '#023E8A', strokeWidth: 4, opacity: 0.8 } }
-            />
-            {/* ТОЧКА ПОГРУЗКИ */ }
-            <Placemark geometry={ polyline?.shift() }
-                       options={
-                           {
-                               preset: 'islands#nightStretchyIcon',
+            } }
+        >
+            {/*отрисовка водителя (при наличии корректных координат) */ }
+            { driverHere && driverHere[0] !== 0 &&
+                <Placemark geometry={ driverHere }
+                           options={ {
+                               preset: 'islands#circleIcon',
+                               iconColor: 'green',
                            } }
-                       properties={
-                           {
-                               iconContent: `из ${ fromCity }`,
-                               hintContent: `Грузоотправитель`,
-                           }
-                       }
-                       onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : null }
-            />
-            {/* ТОЧКА РАЗГРУЗКИ */ }
-            <Placemark geometry={ polyline?.pop() }
-                       options={
-                           {
-                               preset: 'islands#nightStretchyIcon',
+                           properties={ {
+                               hintContent: `Водитель здесь`,
                            } }
-                       properties={
-                           {
-                               iconContent: `в ${ toCity }`,
-                               hintContent: `Грузополучатель`,
-                           }
-                       }
-                       onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : null }
+                           onContextMenu={ extractCoordinatesToModal }
+                />
+            }
+            <MapRequestRoad polyline={ polyline }
+                            senderCity={ fromCity + '' }
+                            recipientCity={ toCity + '' }
+                            onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : undefined }
             />
         </YandexMapComponent>
     )

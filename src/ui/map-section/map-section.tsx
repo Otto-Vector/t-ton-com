@@ -2,19 +2,19 @@ import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'reac
 import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
+import {
+    coordinatesFromTargetType,
+    MapRequestRoad,
+    YandexBigMap,
+} from '../common/yandex-map-component/yandex-map-component'
 import {
     getDriversBigMapStore,
     getFilteredResponsesBigMapStore,
     getIsFetchingBigMapStore,
 } from '../../selectors/maps/big-map-reselect'
-import {ListBox, ListBoxItem, Placemark, Polyline} from 'react-yandex-maps'
+import {ListBox, ListBoxItem, Placemark} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
-import {
-    bigMapStoreActions,
-    setAllMyDriversToMap,
-    setAnswerDriversToMap,
-} from '../../redux/maps/big-map-store-reducer'
+import {bigMapStoreActions, setAllMyDriversToMap, setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 
 import {AddDriversView} from '../add-drivers-form/add-drivers-view'
 import {Portal} from '../common/portals/Portal'
@@ -30,10 +30,10 @@ import {EmployeeStatusType} from '../../types/form-types'
 import {renderToString} from 'react-dom/server'
 import {isOutOfBounds, positionToBounds} from '../../utils/map-utils'
 import {MaterialIcon} from '../common/material-icon/material-icon'
+import {boldWrapper} from '../../utils/html-rebuilds'
 
 
 type OwnProps = {}
-export type coordinatesFromTargetType = { originalEvent: { target: { geometry: { _coordinates: number[] } } } }
 
 export const MapSection: React.FC<OwnProps> = () => {
 
@@ -47,7 +47,7 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     const polyline = useSelector(getRoutesParsedFromPolylineRequestStore)
     const authGeoPositionAsCenter = useSelector(getGeoPositionAuthStore)
-    const polylineFirstPointAsCenter = polyline?.shift()
+    const polylineFirstPointAsCenter = polyline && polyline[0]
     const zoom = 7
 
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
@@ -96,7 +96,7 @@ export const MapSection: React.FC<OwnProps> = () => {
     // координаты в модальное окно при нажатии правой кнопкой мыши
     const extractCoordinatesToModal = ( e: coordinatesFromTargetType ) => {
         dispatch<any>(textAndActionGlobalModal({
-            text: `Координаты: <b>${ e?.originalEvent?.target?.geometry?._coordinates?.join(', ') }</b>`,
+            text: 'Координаты: ' + boldWrapper(e?.originalEvent?.target?.geometry?._coordinates?.join(', ')),
         }))
     }
 
@@ -132,6 +132,7 @@ export const MapSection: React.FC<OwnProps> = () => {
         return finded ? ( ' ' + finded?.cargoWeight + 'тн. | ' + finded?.responsePrice + ' руб.' ) : '-'
     }
 
+    // прогрузка водителя в модальное окно
     const activateDriverCard = ( idEmployee: string ) => {
         dispatch<any>(textAndActionGlobalModal({
             reactChildren: <AddDriversView idEmployee={ idEmployee }/>,
@@ -192,52 +193,20 @@ export const MapSection: React.FC<OwnProps> = () => {
                             onClick={ () => {
                                 if (position[0] !== 0) {
                                     map?.current?.panTo(position, { flying: 1 })
-                                    setSelectedDriver(idEmployee)
                                 } else {
                                     activateDriverCard(idEmployee)
                                 }
+                                setSelectedDriver(idEmployee)
                             } }
                         />)
                     }
                 </ListBox>
-                { mapModes.answersMode && polyline && <>
-                    {/* ДОРОГА */ }
-                    <Polyline geometry={ polyline }
-                              options={ {
-                                  strokeColor: '#023E8A',
-                                  strokeWidth: 4,
-                                  opacity: 0.8,
-                              } }
-                    />
-                    {/* ТОЧКА ПОГРУЗКИ */ }
-                    <Placemark geometry={ polyline?.shift() }
-                               options={
-                                   {
-                                       preset: 'islands#nightStretchyIcon',
-                                       visible: true,
-                                   } }
-                               properties={
-                                   {
-                                       iconContent: `из ${ currentRequest?.sender?.city }`,
-                                       hintContent: `Грузоотправитель`,
-
-                                   }
-                               }
-                               onContextMenu={ extractCoordinatesToModal }
-                    />
-                    {/* ТОЧКА РАЗГРУЗКИ */ }
-                    <Placemark geometry={ polyline?.pop() }
-                               options={ {
-                                   preset: 'islands#nightStretchyIcon',
-                               } }
-                               properties={ {
-                                   iconContent: `в ${ currentRequest?.recipient?.city }`,
-                                   hintContent: `Грузополучатель`,
-                               }
-                               }
-                               onContextMenu={ extractCoordinatesToModal }
-                    />
-                </> }
+                { mapModes.answersMode && polyline &&
+                    <MapRequestRoad polyline={ polyline }
+                                    onContextMenu={ extractCoordinatesToModal }
+                                    senderCity={ currentRequest?.sender?.city + '' }
+                                    recipientCity={ currentRequest?.recipient?.city + '' }
+                    /> }
                 {/* отрисовка водителей вне видимости активной карты */ }
                 { drivers.map(( { id, idEmployee, position, status, positionToBounds, fio, isOutOfBounds } ) =>
                     isOutOfBounds && <Placemark geometry={ positionToBounds }
@@ -276,6 +245,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                       // flag нужен, чтобы каждый раз возвращалось новое значение,
                                                       // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
                                                       setIdToPortal(( val ) => ( { idEmployee, flag: !val.flag } ))
+                                                      // пометка нажатого водителя
                                                       setSelectedDriver(idEmployee)
                                                   }, 0)
                                               } }

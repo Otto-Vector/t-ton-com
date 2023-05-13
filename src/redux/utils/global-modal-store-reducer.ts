@@ -66,10 +66,10 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 timeToDeactivate: action.timeToDeactivate,
             }
         }
-        case 'global-modal-reducer/SET-FOOTER-VISIBLE':{
+        case 'global-modal-reducer/SET-FOOTER-VISIBLE': {
             return {
                 ...state,
-                isFooterVisible: action.isFooterVisible
+                isFooterVisible: action.isFooterVisible,
             }
         }
         case 'global-modal-reducer/RESET-ALL-VALUES': {
@@ -157,14 +157,14 @@ export const textAndActionGlobalModal = ( {
                                               title,
                                               timeToDeactivate,
                                               reactChildren,
-                                              isFooterVisible = true
+                                              isFooterVisible = true,
                                           }: GlobalModalType ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(globalModalStoreActions.setAction(action || null))
         dispatch(globalModalStoreActions.setNavigateToOk(navigateOnOk))
         dispatch(globalModalStoreActions.setNavigateToCancel(navigateOnCancel))
         dispatch(globalModalStoreActions.setTitle(title))
-        dispatch(globalModalStoreActions.setTextMessage(text|| ''))
+        dispatch(globalModalStoreActions.setTextMessage(text || ''))
         dispatch(globalModalStoreActions.setChildren(reactChildren || null))
         dispatch(globalModalStoreActions.setTimeToDeactivate(timeToDeactivate || null))
         dispatch(globalModalStoreActions.setFooterVisible(isFooterVisible))
