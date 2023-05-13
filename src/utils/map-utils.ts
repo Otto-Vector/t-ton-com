@@ -8,21 +8,34 @@ export const stringToCoords = ( coordsString?: string ): [ number, number ] => {
 }
 
 // если позиция выходит за рамки, возвращает координаты у рамки
-export const positionToBounds = ( {
-                                      position: [ x, y ] = [ 0, 0 ],
-                                      bounds: [ [ x1, y1 ], [ x2, y2 ] ] = [ [ 0, 0 ], [ 0, 0 ] ],
-                                  }: { position: number[], bounds: number[][] } ): number[] => {
+export const positionToBoundsLine = ( {
+                                          position: [ x, y ] = [ 0, 0 ],
+                                          bounds: [ [ x1, y1 ], [ x2, y2 ] ] = [ [ 0, 0 ], [ 0, 0 ] ],
+                                      }: { position: number[], bounds: number[][] } ): number[] => {
     const up = Math.min(x, x2)
     const down = Math.max(x, x1)
     const right = Math.min(y, y2)
     const left = Math.max(y, y1)
     return [ x !== up ? up : down, y !== right ? right : left ]
 }
+
 // возвращает true, если координаты выходят за рамки
 export const isOutOfBounds = ( data: { position: number[], bounds: number[][] } ): boolean => {
     const { position: [ xo, yo ] = [ 0, 0 ] } = data
-    const [ x, y ] = positionToBounds(data)
+    const [ x, y ] = positionToBoundsLine(data)
     return x !== xo || y !== yo
+}
+
+// назначает координаты крайних точек в нужном для bounds формате
+export const positionsToCorrectBounds = ( {
+                                              start: [ x1, y1 ] = [ 0, 0 ],
+                                              finish: [ x2, y2 ] = [ 0, 0 ],
+                                          }: { start: number[], finish: number[] } ): number[][] => {
+    const up = Math.max(x1, x2)
+    const down = Math.min(x1, x2)
+    const right = Math.max(y1, y2)
+    const left = Math.min(y1, y2)
+    return [ [ down, left ], [ up, right ] ]
 }
 
 // для перевода зашифрованной полилинии автодиспетчера в набор координат

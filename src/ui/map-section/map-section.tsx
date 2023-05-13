@@ -28,7 +28,7 @@ import {
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {EmployeeStatusType} from '../../types/form-types'
 import {renderToString} from 'react-dom/server'
-import {isOutOfBounds, positionToBounds} from '../../utils/map-utils'
+import {isOutOfBounds, positionToBoundsLine} from '../../utils/map-utils'
 import {MaterialIcon} from '../common/material-icon/material-icon'
 import {boldWrapper} from '../../utils/html-rebuilds'
 
@@ -107,7 +107,7 @@ export const MapSection: React.FC<OwnProps> = () => {
             .map(( { position, ...props } ) => ( {
                 ...props, position,
                 isOutOfBounds: position[0] !== 0 && isOutOfBounds({ bounds, position }),
-                positionToBounds: positionToBounds({ position, bounds }),
+                positionToBounds: positionToBoundsLine({ position, bounds }),
             } )),
         ))
     }, [ JSON.stringify(drivers) ])

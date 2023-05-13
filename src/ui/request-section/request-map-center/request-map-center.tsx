@@ -9,7 +9,7 @@ import {
     getRoutesParsedFromPolylineRequestStore,
 } from '../../../selectors/forms/request-form-reselect'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
-import {stringToCoords} from '../../../utils/map-utils'
+import {positionsToCorrectBounds, stringToCoords} from '../../../utils/map-utils'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -20,33 +20,37 @@ type OwnProps = {
 
 export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, driverCoords, fromCity, toCity } ) => {
 
-    let testCenter: [ number, number ] = [ 55.5907807700034, 84.09127066601563 ]
-    let testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]
+    const testCenter: [ number, number ] = [ 55.5907807700034, 84.09127066601563 ]
+    const testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]
 
-    const distance = useSelector(getInitialDistanceRequestStore) || 0
     const route = useSelector(getRoutesParsedFromPolylineRequestStore) || testLine
     const routeCenterIndex = route ? Math.ceil(route.length / 2) : 0
     const center = route !== testLine ? route[routeCenterIndex] as [ number, number ] : testCenter
 
-    // bounds почему-то не всегда отрабатывает поставил зум вручную
-    // const zoomCoords: number[][] = [ route?.shift() || testLine[0], route?.pop() || testLine[1] ]
+    console.log(driverCoords)
+
+    // автоматический зум по размеру маршрута
+    const zoomCoords: number[][] = positionsToCorrectBounds({
+        start: route[0],
+        finish: route[route.length - 1],
+    })
     const maxZoom = requestModes.acceptDriverMode ? 10 : undefined
     const driverHere = requestModes.statusMode && driverCoords ? stringToCoords(driverCoords) : undefined
-    const zoom = ( distance < 200 ) ? 9 : ( distance > 2000 ) ? 4 : 6
+    // const zoom = ( distance < 200 ) ? 9 : ( distance > 2000 ) ? 4 : 6
 
     return (
         <div className={ styles.requestMapCenter }>
             <div className={ styles.requestMapCenter__wrapper }>
                 <YandexMapWithRoute center={ center }
                                     polyline={ route || testLine }
-                                    zoom={ zoom }
+                    // zoom={ zoom }
                                     maxZoom={ maxZoom }
                                     driverHere={ driverHere }
                     // driverHere={ route[0] as [ number, number ]}
                                     fromCity={ fromCity }
                                     toCity={ toCity }
                                     isEnableCoordsClick={ !requestModes.acceptDriverMode }
-                    // bounds={ zoomCoords }
+                                    bounds={ zoomCoords }
                 />
             </div>
         </div>
