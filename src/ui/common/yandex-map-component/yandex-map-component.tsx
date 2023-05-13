@@ -301,7 +301,7 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
                            properties={ {
                                hintContent: `Водитель здесь`,
                            } }
-                           onContextMenu={ extractCoordinatesToModal }
+                           onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : undefined }
                            onClick={ () => {
                                modalActivator(driverData || [])
                            } }
