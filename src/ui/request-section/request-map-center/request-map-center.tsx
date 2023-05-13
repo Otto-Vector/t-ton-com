@@ -4,10 +4,7 @@ import styles from './request-map-center.module.scss'
 import {RequestModesType} from '../request-section'
 import {YandexMapWithRoute} from '../../common/yandex-map-component/yandex-map-component'
 import {useSelector} from 'react-redux'
-import {
-    getInitialDistanceRequestStore,
-    getRoutesParsedFromPolylineRequestStore,
-} from '../../../selectors/forms/request-form-reselect'
+import {getRoutesParsedFromPolylineRequestStore} from '../../../selectors/forms/request-form-reselect'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {positionsToCorrectBounds, stringToCoords} from '../../../utils/map-utils'
 
@@ -27,8 +24,6 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
     const routeCenterIndex = route ? Math.ceil(route.length / 2) : 0
     const center = route !== testLine ? route[routeCenterIndex] as [ number, number ] : testCenter
 
-    console.log(driverCoords)
-
     // автоматический зум по размеру маршрута
     const zoomCoords: number[][] = positionsToCorrectBounds({
         start: route[0],
@@ -36,7 +31,6 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
     })
     const maxZoom = requestModes.acceptDriverMode ? 10 : undefined
     const driverHere = requestModes.statusMode && driverCoords ? stringToCoords(driverCoords) : undefined
-    // const zoom = ( distance < 200 ) ? 9 : ( distance > 2000 ) ? 4 : 6
 
     return (
         <div className={ styles.requestMapCenter }>
@@ -46,7 +40,6 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
                     // zoom={ zoom }
                                     maxZoom={ maxZoom }
                                     driverHere={ driverHere }
-                    // driverHere={ route[0] as [ number, number ]}
                                     fromCity={ fromCity }
                                     toCity={ toCity }
                                     isEnableCoordsClick={ !requestModes.acceptDriverMode }

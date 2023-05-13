@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
 import styles from './yandex-map-component.module.scss'
 import './yandex-map-restyle-ballon.scss'
 import './yandex-map-restyle-drop-box.scss'
@@ -16,6 +16,7 @@ import {
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {useDispatch} from 'react-redux'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {isOutOfBounds, positionToBoundsLine} from '../../../utils/map-utils'
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +31,7 @@ type OwnProps = {
     isFullscreenContolActive?: boolean
 }
 
+// главная компомнента карты, куда все стремятся
 export const YandexMapComponent: React.FC<OwnProps> = ( {
                                                             state,
                                                             modules,
@@ -248,6 +250,27 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
             text: `Координаты: <b>${ e.originalEvent.target.geometry._coordinates?.join(', ') }</b>`,
         }))
     }
+    const map = useRef<any>({})
+    const [ boundsDriver, setBoundsDriver ] = useState(driverHere)
+    // псевдо-перерисовка маркера водителя, ушедшего за край видимости карты, на край карты
+    const PlacemarkerReWriter = useMemo(() => ( e: any ) => {
+        const bounds: number[][] = e?.originalEvent?.newBounds
+        if (boundsDriver && driverHere && isOutOfBounds({ bounds, position: driverHere })) {
+            setBoundsDriver(positionToBoundsLine({ position: driverHere, bounds }) as typeof driverHere)
+        } else {
+            setBoundsDriver([ 0, 0 ])
+        }
+    }, [ driverHere, boundsDriver ])
+
+    // один раз сдвигаем чуть-чуть карту, чтобы сработал getBounds
+    const [ isOneTimeRendr, setIsOneTimeRendr ] = useState(false)
+    useEffect(() => {
+        if (!isOneTimeRendr && map?.current?.panTo) {
+            const currentCenter: number[] = map?.current?.getCenter() || [ 0, 0 ]
+            map.current.panTo(currentCenter.map(x => x - 0.0001), { flying: 1 })
+            setIsOneTimeRendr(true)
+        }
+    }, [ map?.current?.panTo, isOneTimeRendr, setIsOneTimeRendr ])
 
     return (
         <YandexMapComponent
@@ -257,18 +280,36 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
                 zoom,
                 bounds: bounds as undefined,
             } }
+            onBoundsChange={ PlacemarkerReWriter }
+            instanceMap={ map }
         >
             {/*отрисовка водителя (при наличии корректных координат) */ }
             { driverHere && driverHere[0] !== 0 &&
                 <Placemark geometry={ driverHere }
                            options={ {
-                               preset: 'islands#circleIcon',
+                               preset: 'islands#blueDeliveryCircleIcon',
                                iconColor: 'green',
                            } }
                            properties={ {
                                hintContent: `Водитель здесь`,
                            } }
                            onContextMenu={ extractCoordinatesToModal }
+                />
+            }
+            {/*отрисовка маркера у края карты (если водитель за пределами границ видимости)*/ }
+            { boundsDriver && boundsDriver[0] !== 0 &&
+                <Placemark geometry={ boundsDriver }
+                           options={ {
+                               preset: 'islands#blueDeliveryCircleIcon',
+                               iconColor: 'green',
+                           } }
+                           properties={ {
+                               hintContent: `<--.-->`,
+                           } }
+                           onClick={ () => {
+                               // плавное перемещение к указанной точке
+                               map?.current?.panTo(driverHere, { flying: 1 })
+                           } }
                 />
             }
             <MapRequestRoad polyline={ polyline }

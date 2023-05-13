@@ -79,10 +79,11 @@ export const MapSection: React.FC<OwnProps> = () => {
     const [ isOneTimeRender, setIsOneTimeRender ] = useState(false)
     useEffect(() => {
         if (!isOneTimeRender && map?.current?.panTo) {
-            map.current.panTo(center.map(x => x - 0.001), { flying: 1 })
+            const currentCenter: number[] = map?.current?.getCenter() || [ 0, 0 ]
+            map.current.panTo(currentCenter.map(x => x - 0.0001), { flying: 1 })
             setIsOneTimeRender(true)
         }
-    }, [ map?.current?.panTo, isOneTimeRender, setIsOneTimeRender, center ])
+    }, [ map?.current?.panTo, isOneTimeRender, setIsOneTimeRender ])
 
     // маркировка активного водителя
     const setSelectedDriver = useMemo(() => ( selectedIdEmployee: string ) => {
