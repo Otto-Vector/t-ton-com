@@ -18,7 +18,10 @@ import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetch
 import {oneRequestApi} from '../../api/local-api/request-response/request.api'
 import {apiToISODateFormat, yearMmDdFormat, yearMmDdFormatISO} from '../../utils/date-formats'
 import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer'
-import {modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest} from '../options/employees-store-reducer'
+import {
+    getOneEmployeeFromAPI,
+    modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest,
+} from '../options/employees-store-reducer'
 import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils'
 import {TtonErrorType} from '../../api/local-api/back-instance.api'
 import {requestDocumentsApi} from '../../api/local-api/request-response/request-documents.api'
@@ -518,13 +521,16 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
     }
 
 // забрать данные одной СОЗДАННОЙ заявки от сервера
-export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerThunkActionType =>
+export const getOneRequestsAPI = ( requestNumber: number, giveMeDriver = false ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         dispatch(requestStoreActions.setIsFetching(true))
         try {
             const response = await oneRequestApi.getOneRequestById({ requestNumber })
             if (response.length > 0) {
                 dispatch(requestStoreActions.setInitialValues(parseRequestFromAPI(response[0])))
+                if (giveMeDriver && response[0].idEmployee) {
+                    await dispatch(getOneEmployeeFromAPI(response[0].idEmployee))
+                }
             } else {
                 dispatch(globalModalStoreActions.setTextMessage(
                     [ 'НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber,
@@ -532,8 +538,8 @@ export const getOneRequestsAPI = ( requestNumber: number ): RequestStoreReducerT
                     ],
                 ))
             }
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(e as string))
+        } catch (e:TtonErrorType) {
+            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
             dispatch(requestStoreActions.setIsFetching(false))
         }
         dispatch(requestStoreActions.setIsFetching(false))

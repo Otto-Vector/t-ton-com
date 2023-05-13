@@ -14,6 +14,7 @@ import {ddMmYearFormat} from '../../utils/date-formats'
 import {SizedPreloader} from '../common/preloader/preloader'
 import {valuesAreEqual} from '../../utils/reactMemoUtils'
 import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect'
+import {getOneEmployeeFromAPI} from '../../redux/options/employees-store-reducer'
 
 // type OwnProps = { }
 
@@ -71,7 +72,7 @@ export const RequestSection: React.FC = React.memo(() => {
             }
             if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
                 // прогружаем искомую заявку
-                dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 )))
+                dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 ),true))
             }
             if (requestModes.statusMode) {
             }
