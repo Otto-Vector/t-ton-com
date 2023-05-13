@@ -397,6 +397,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 />
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>
+                            {/* ПРИМЕЧАНИЕ */}
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.note }</label>
@@ -413,6 +414,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.note } mode={ 'inForm' }/>
                             </div>
+                            {/* ПЛОМБЫ ДЛЯ ГРУЗА */}
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.cargoStamps }</label>

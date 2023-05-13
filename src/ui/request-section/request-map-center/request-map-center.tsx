@@ -4,7 +4,10 @@ import styles from './request-map-center.module.scss'
 import {RequestModesType} from '../request-section'
 import {YandexMapWithRoute} from '../../common/yandex-map-component/yandex-map-component'
 import {useSelector} from 'react-redux'
-import {getRoutesParsedFromPolylineRequestStore} from '../../../selectors/forms/request-form-reselect'
+import {
+    getPreparedInfoDataRequestStore,
+    getRoutesParsedFromPolylineRequestStore,
+} from '../../../selectors/forms/request-form-reselect'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {positionsToCorrectBounds, stringToCoords} from '../../../utils/map-utils'
 
@@ -19,6 +22,8 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
 
     const testCenter: [ number, number ] = [ 55.5907807700034, 84.09127066601563 ]
     const testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]
+    // для отображения данных водителя в режиме статуса/истории
+    const { acceptedEmployeeData } = useSelector(getPreparedInfoDataRequestStore)
 
     const route = useSelector(getRoutesParsedFromPolylineRequestStore) || testLine
     const routeCenterIndex = route ? Math.ceil(route.length / 2) : 0
@@ -40,6 +45,7 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
                     // zoom={ zoom }
                                     maxZoom={ maxZoom }
                                     driverHere={ driverHere }
+                                    driverData={ acceptedEmployeeData }
                                     fromCity={ fromCity }
                                     toCity={ toCity }
                                     isEnableCoordsClick={ !requestModes.acceptDriverMode }

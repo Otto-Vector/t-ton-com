@@ -1,7 +1,8 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react'
 import styles from './yandex-map-component.module.scss'
 import './yandex-map-restyle-ballon.scss'
-import './yandex-map-restyle-drop-box.scss'
+// import './yandex-map-restyle-drop-box.scss'
+import './yandex-map-restyle-copyright.scss'
 
 import {
     FullscreenControl,
@@ -15,7 +16,7 @@ import {
 } from 'react-yandex-maps'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {useDispatch} from 'react-redux'
-import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {isOutOfBounds, positionToBoundsLine} from '../../../utils/map-utils'
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,6 +229,7 @@ type ToRouteMap = {
     maxZoom?: number
     fromCity?: string
     toCity?: string
+    driverData: string[]
     isEnableCoordsClick?: boolean
 }
 
@@ -240,7 +242,7 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
         zoom = 5,
         bounds,
         maxZoom,
-        fromCity, toCity,
+        fromCity, toCity, driverData,
         isEnableCoordsClick,
     } ) => {
 
@@ -250,9 +252,11 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
             text: `Координаты: <b>${ e.originalEvent.target.geometry._coordinates?.join(', ') }</b>`,
         }))
     }
+
     const map = useRef<any>({})
-    const [ boundsDriver, setBoundsDriver ] = useState(driverHere)
+
     // псевдо-перерисовка маркера водителя, ушедшего за край видимости карты, на край карты
+    const [ boundsDriver, setBoundsDriver ] = useState(driverHere)
     const PlacemarkerReWriter = useMemo(() => ( e: any ) => {
         const bounds: number[][] = e?.originalEvent?.newBounds
         if (boundsDriver && driverHere && isOutOfBounds({ bounds, position: driverHere })) {
@@ -271,6 +275,10 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
             setIsOneTimeRendr(true)
         }
     }, [ map?.current?.panTo, isOneTimeRendr, setIsOneTimeRendr ])
+
+    const modalActivator = ( text: string[] ) => {
+        dispatch(globalModalStoreActions.setTextMessage(text))
+    }
 
     return (
         <YandexMapComponent
@@ -294,6 +302,9 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
                                hintContent: `Водитель здесь`,
                            } }
                            onContextMenu={ extractCoordinatesToModal }
+                           onClick={ () => {
+                               modalActivator(driverData || [])
+                           } }
                 />
             }
             {/*отрисовка маркера у края карты (если водитель за пределами границ видимости)*/ }
@@ -301,7 +312,7 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
                 <Placemark geometry={ boundsDriver }
                            options={ {
                                preset: 'islands#blueDeliveryCircleIcon',
-                               iconColor: 'green',
+                               iconColor: 'black',
                            } }
                            properties={ {
                                hintContent: `<--.-->`,

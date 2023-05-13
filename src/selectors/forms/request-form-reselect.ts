@@ -4,6 +4,7 @@ import {createSelector} from 'reselect'
 import {OneRequestType} from '../../types/form-types'
 import {polyline_decode} from '../../utils/map-utils'
 import {boldWrapper} from '../../utils/html-rebuilds'
+import {AllNestedKeysToType} from '../../types/ts-utils'
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 type RequestStoreSelectorsInit<T extends keyof Y, Y = RequestStoreReducerStateType['initialValues']> = ( state: AppStateType ) => Y[T]
@@ -61,70 +62,70 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
         const recipientInn = ( recipientUser?.innNumber || recipient?.innNumber )
         const recipientLegalAddress = ( recipientUser?.legalAddress || recipient?.address )
         const driverCanCargoWeight = ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) )
+        const returnObject = {
+            /* ЗАКАЗЧИК */
+            customerData: [
+                customerUser?.organizationName,
+                customerUser?.innNumber && boldWrapper('ИНН: ') + customerUser.innNumber,
+                customerUser?.legalAddress && boldWrapper('Юр.Адрес: ') + customerUser.legalAddress,
+            ],
+            customerPhoneData: [
+                customerUser?.phoneDirector && boldWrapper('Телефон директора: ') + customerUser.phoneDirector,
+                customerUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + customerUser.phoneAccountant,
+                customerUser?.description && boldWrapper('Телефон сотрудника: ') + customerUser.description,
+            ],
+            /* ГРУЗООТПРАВИТЕЛЬ */
+            shipperSenderData: [
+                senderUser?.organizationName || sender?.organizationName,
+                senderInnNumber && boldWrapper('ИНН: ') + senderInnNumber,
+                senderLegalAddress && boldWrapper('Юр.Адрес: ') + senderLegalAddress,
+                sender?.description && boldWrapper('Адрес отправления: ') + sender.description,
+            ],
+            shipperSenderPhoneData: [
+                senderUser?.phoneDirector && boldWrapper('Телефон директора: ') + senderUser.phoneDirector,
+                senderUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + senderUser.phoneAccountant,
+                sender?.shipperTel && boldWrapper('Телефон сотрудника: ') + sender.shipperTel,
+            ],
+            /* ГРУЗОПОЛУЧАТЕЛЬ */
+            consigneeRecipientData: [
+                recipientUser?.organizationName || recipient?.organizationName,
+                recipientInn && boldWrapper('ИНН: ') + recipientInn,
+                recipientLegalAddress && boldWrapper('Юр.Адрес: ') + recipientLegalAddress,
+                recipient?.description && boldWrapper('Адрес прибытия: ') + recipient.description,
+            ],
+            consigneeRecipientPhoneData: [
+                recipientUser?.phoneDirector && boldWrapper('Телефон директора: ') + recipientUser.phoneDirector,
+                recipientUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + recipientUser.phoneAccountant,
+                recipient?.consigneesTel && boldWrapper('Телефон сотрудника: ') + recipient.consigneesTel,
+            ],
+            /* АКЦЕПТИРОВАННЫЙ ПЕРЕВОЗЧИК */
+            acceptedCarrierData: [
+                requestCarrierUser?.organizationName,
+                requestCarrierUser?.innNumber && boldWrapper('ИНН: ') + requestCarrierUser?.innNumber,
+                requestCarrierUser?.legalAddress && boldWrapper('Юр.Адрес: ') + requestCarrierUser?.legalAddress,
+            ],
+            acceptedCarrierPhoneData: [
+                requestCarrierUser?.phoneDirector && boldWrapper('Телефон директора: ') + requestCarrierUser.phoneDirector,
+                requestCarrierUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + requestCarrierUser.phoneAccountant,
+                requestCarrierUser?.description && boldWrapper('Телефон сотрудника: ') + requestCarrierUser.description,
+            ],
+            /* ВОДИТЕЛЬ */
+            acceptedEmployeeData: [
+                responseEmployee?.employeeFIO && boldWrapper('ФИО водителя: ') + responseEmployee.employeeFIO,
+                responseTransport?.transportModel && boldWrapper('Модель транспорта: ') + responseTransport.transportModel,
+                responseTransport?.transportNumber && boldWrapper('Номер транспорта: ') + responseTransport.transportNumber,
+                responseTrailer?.trailerModel && boldWrapper('Модель прицепа: ') + responseTrailer.trailerModel,
+                driverCanCargoWeight && boldWrapper('Может перевезти: ') + driverCanCargoWeight + ' тн',
+            ],
+            acceptedEmployeePhoneData: [
+                responseEmployee?.employeeFIO && boldWrapper('ФИО водителя: ') + responseEmployee.employeeFIO,
+                responseEmployee?.employeePhoneNumber && boldWrapper('Телефон: ') + responseEmployee.employeePhoneNumber,
+            ],
+        }
 
         // создаёт новый объект из старого после обработки значений ключа
-        return Object.fromEntries(Object
-            .entries({
-                /* ЗАКАЗЧИК */
-                customerData: [
-                    customerUser?.organizationName,
-                    customerUser?.innNumber && boldWrapper('ИНН: ') + customerUser.innNumber,
-                    customerUser?.legalAddress && boldWrapper('Юр.Адрес: ') + customerUser.legalAddress,
-                ],
-                customerPhoneData: [
-                    customerUser?.phoneDirector && boldWrapper('Телефон директора: ') + customerUser.phoneDirector,
-                    customerUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + customerUser.phoneAccountant,
-                    customerUser?.description && boldWrapper('Телефон сотрудника: ') + customerUser.description,
-                ],
-                /* ГРУЗООТПРАВИТЕЛЬ */
-                shipperSenderData: [
-                    senderUser?.organizationName || sender?.organizationName,
-                    senderInnNumber && boldWrapper('ИНН: ') + senderInnNumber,
-                    senderLegalAddress && boldWrapper('Юр.Адрес: ') + senderLegalAddress,
-                    sender?.description && boldWrapper('Адрес отправления: ') + sender.description,
-                ],
-                shipperSenderPhoneData: [
-                    senderUser?.phoneDirector && boldWrapper('Телефон директора: ') + senderUser.phoneDirector,
-                    senderUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + senderUser.phoneAccountant,
-                    sender?.shipperTel && boldWrapper('Телефон сотрудника: ') + sender.shipperTel,
-                ],
-                /* ГРУЗОПОЛУЧАТЕЛЬ */
-                consigneeRecipientData: [
-                    recipientUser?.organizationName || recipient?.organizationName,
-                    recipientInn && boldWrapper('ИНН: ') + recipientInn,
-                    recipientLegalAddress && boldWrapper('Юр.Адрес: ') + recipientLegalAddress,
-                    recipient?.description && boldWrapper('Адрес прибытия: ') + recipient.description,
-                ],
-                consigneeRecipientPhoneData: [
-                    recipientUser?.phoneDirector && boldWrapper('Телефон директора: ') + recipientUser.phoneDirector,
-                    recipientUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + recipientUser.phoneAccountant,
-                    recipient?.consigneesTel && boldWrapper('Телефон сотрудника: ') + recipient.consigneesTel,
-                ],
-                /* АКЦЕПТИРОВАННЫЙ ПЕРЕВОЗЧИК */
-                acceptedCarrierData: [
-                    requestCarrierUser?.organizationName,
-                    requestCarrierUser?.innNumber && boldWrapper('ИНН: ') + requestCarrierUser?.innNumber,
-                    requestCarrierUser?.legalAddress && boldWrapper('Юр.Адрес: ') + requestCarrierUser?.legalAddress,
-                ],
-                acceptedCarrierPhoneData: [
-                    requestCarrierUser?.phoneDirector && boldWrapper('Телефон директора: ') + requestCarrierUser.phoneDirector,
-                    requestCarrierUser?.phoneAccountant && boldWrapper('Телефон бухгалтера: ') + requestCarrierUser.phoneAccountant,
-                    requestCarrierUser?.description && boldWrapper('Телефон сотрудника: ') + requestCarrierUser.description,
-                ],
-                /* ВОДИТЕЛЬ */
-                acceptedEmployeeData: [
-                    responseEmployee?.employeeFIO && boldWrapper('ФИО водителя: ') + responseEmployee.employeeFIO,
-                    responseTransport?.transportModel && boldWrapper('Модель транспорта: ') + responseTransport.transportModel,
-                    responseTransport?.transportNumber && boldWrapper('Номер транспорта: ') + responseTransport.transportNumber,
-                    responseTrailer?.trailerModel && boldWrapper('Модель прицепа: ') + responseTrailer.trailerModel,
-                    driverCanCargoWeight && boldWrapper('Может перевезти: ') + driverCanCargoWeight + ' тн',
-                ],
-                acceptedEmployeePhoneData: [
-                    responseEmployee?.employeeFIO && boldWrapper('ФИО водителя: ') + responseEmployee.employeeFIO,
-                    responseEmployee?.employeePhoneNumber && boldWrapper('Телефон: ') + responseEmployee.employeePhoneNumber,
-                ],
-            })
+        return Object.fromEntries(Object.entries(returnObject)
             // чистим пустые строки массивов
-            .map(n => [ n[0], n[1].filter(x => x) as string[] ]))
+            .map(n => [ n[0], n[1].filter(x => x) as string[] ])) as { [key in keyof typeof returnObject]: string[] }
     },
 )
