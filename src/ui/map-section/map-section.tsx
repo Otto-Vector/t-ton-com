@@ -185,6 +185,7 @@ export const MapSection: React.FC<OwnProps> = () => {
 
                     />
                 }
+                {/* СПИСОК ВОДИТЕЛЕЙ В СЕЛЕКТОРЕ КАРТЫ */ }
                 <ListBox
                     state={ { expanded: false } }
                     data={ {
@@ -237,7 +238,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                         />)
                     }
                 </ListBox>
-
+                {/* МАРШРУТ/ДОРОГА */ }
                 { mapModes.answersMode && polyline &&
                     <MapRequestRoad polyline={ polyline }
                                     onContextMenu={ extractCoordinatesToModal }
@@ -260,6 +261,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                 key={ idEmployee + id }
                     />)
                 }
+                {/* ВОДИТЕЛИ НА КАРТЕ */ }
                 { drivers.map(( { id, idEmployee, position, status, fio, isSelected } ) => {
                         if (!!position[0])
                             return <Placemark geometry={ position }
@@ -291,7 +293,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                 )
                 }
             </YandexBigMap>
-            {/*ждём, когда появится балун с нужным ID*/ }
+            {/* ждём, когда появится балун с нужным ID */ }
             <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }><AddDriversView
                 idEmployee={ idToPortal.idEmployee }/></Portal>
         </section>
