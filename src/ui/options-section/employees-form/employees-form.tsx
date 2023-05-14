@@ -35,8 +35,6 @@ import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/pars
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
 import {yearMmDdFormat} from '../../../utils/date-formats'
 import {getDrivingCategorySelectorBaseStore} from '../../../selectors/base-reselect'
-import {rerenderTransport} from '../../../redux/options/transport-store-reducer'
-import {rerenderTrailer} from '../../../redux/options/trailer-store-reducer'
 import {syncValidators} from '../../../utils/validators'
 import {SwitchMask} from '../../common/antd-switch/antd-switch'
 import {SelectOptionsType} from '../../common/form-selector/selector-utils'

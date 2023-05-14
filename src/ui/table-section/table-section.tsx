@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react'
+import React, {useEffect, useLayoutEffect} from 'react'
 import styles from './table-section.module.scss'
 import {Button} from '../common/button/button'
 import {TableComponent} from './table-component/table-component'
@@ -16,7 +16,6 @@ import {JustInput} from '../common/just-input/just-input'
 import {Preloader} from '../common/preloader/preloader'
 import {getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
 import {getAllRequestsAPI} from '../../redux/forms/request-store-reducer'
-import {AppStateType} from '../../redux/redux-store'
 
 
 type OwnProps = {

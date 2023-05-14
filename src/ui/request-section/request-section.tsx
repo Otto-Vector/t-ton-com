@@ -14,7 +14,6 @@ import {ddMmYearFormat} from '../../utils/date-formats'
 import {SizedPreloader} from '../common/preloader/preloader'
 import {valuesAreEqual} from '../../utils/reactMemoUtils'
 import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect'
-import {getOneEmployeeFromAPI} from '../../redux/options/employees-store-reducer'
 
 // type OwnProps = { }
 

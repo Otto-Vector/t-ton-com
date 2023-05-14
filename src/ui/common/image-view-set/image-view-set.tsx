@@ -15,6 +15,7 @@ type OwnProps = {
     title?: string
 }
 
+// загрузка, просмотр, упаковка и отправка картинки
 export const ImageViewSet: React.FC<OwnProps> = React.memo((
     {
         imageURL,
