@@ -64,7 +64,7 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     // этот способ присвоения избавляет от бесконечной перерисовки карты
     const [ center, setCenter ] = useState(authGeoPositionAsCenter)
-
+    // корректное отображение цетровки карты по нарисованному маршруту
     const answerRouteBounds = useMemo(() => ( mapModes.answersMode && polyline )
         ? positionsToCorrectBounds({
             start: polyline[0],

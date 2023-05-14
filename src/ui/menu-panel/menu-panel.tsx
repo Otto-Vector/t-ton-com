@@ -3,7 +3,7 @@ import styles from './menu-panel.module.scss'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {getRoutesStore} from '../../selectors/routes-reselect'
-import {NavLink, useLocation} from 'react-router-dom'
+import {NavLink, useLocation, useParams} from 'react-router-dom'
 import loginSVG from './buttonsSVG/login.svg'
 import createSVG from './buttonsSVG/create.svg'
 import searchSVG from './buttonsSVG/search.svg'
@@ -14,10 +14,11 @@ import infoSVG from './buttonsSVG/info.svg'
 import optionsPNG from './buttonsSVG/options.png'
 import attentionSVG from './buttonsSVG/attention.svg'
 import testPNG from './buttonsSVG/test.png'
+import undoSVG from './buttonsSVG/undo.svg'
 
 import {getIsAuthAuthStore} from '../../selectors/auth-reselect'
 import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect'
-import {logoutAuth} from '../../redux/auth-store-reducer';
+import {logoutAuth} from '../../redux/auth-store-reducer'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {
     getCashRequisitesStore,
@@ -25,6 +26,7 @@ import {
     getTariffsRequisitesStore,
 } from '../../selectors/options/requisites-reselect'
 import {valuesAreEqual} from '../../utils/reactMemoUtils'
+import {syncParsers} from '../../utils/parsers'
 
 
 type OwnProps = {}
@@ -46,6 +48,8 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
     const isRequisitesError = useSelector(getIsReqErrorRequisitesStore)
     const newRequisitesRoute = routes.requisites + 'new'
     const isNewRegistrationRoute = pathname === newRequisitesRoute
+    const isOnAnswersMap = pathname.includes(routes.maps.answers)
+    const reqNumber = isOnAnswersMap ? syncParsers.parseAllNumbers(pathname) : 0
     // проверка на непрочитанные сообщения
     const unreadMessagesCount = useSelector(getUnreadMessagesCountInfoStore)
 
@@ -116,8 +120,11 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
             action: null,
         },
         {
-            route: routes.maps.status, src: mapSVG, title: 'Карта маршрутов',
-            buttonText: 'Карта', active: !isNewRegistrationRoute && isAuth,
+            route: isOnAnswersMap ? routes.requestInfo.status + reqNumber : routes.maps.status,
+            src: isOnAnswersMap ? undoSVG : mapSVG,
+            title: isOnAnswersMap ? 'Назад к просмотру активной заявки № ' + reqNumber : 'Карта маршрутов',
+            buttonText: isOnAnswersMap ? 'К заявкe' : 'Карта',
+            active: !isNewRegistrationRoute && isAuth,
             action: null,
         },
         {
@@ -139,7 +146,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
             buttonText: 'Тест', active: !isNewRegistrationRoute && isAuth,
             action: null,
         },
-    ], [ isAuth, isNewRegistrationRoute, routes, newRequest, logout ])
+    ], [ isAuth, isNewRegistrationRoute, routes, newRequest, logout, isOnAnswersMap, reqNumber, pathname ])
 
     return (
         <nav className={ styles.menuPanel }>
