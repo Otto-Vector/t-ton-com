@@ -80,7 +80,6 @@ export const YandexMapComponent: React.FC<OwnProps> = ( {
                         maxWidth: [ 25 ],
                         // position: { left: 25, top: 25 },
                         panoramasItemMode: 'off',
-
                     } }/>
                 <ZoomControl/>
                 { isFullscreenContolActive && <FullscreenControl/> }

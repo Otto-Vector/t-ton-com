@@ -7,6 +7,8 @@ const initialState = {
     modalGlobalTextMessage: '' as string | string[],
     reactChildren: null as null | JSX.Element,
     isFooterVisible: false,
+    isTitleVisible: false,
+    isBodyPadding: true,
     titleText: undefined as undefined | string,
     navigateToOk: undefined as undefined | To,
     navigateToCancel: undefined as undefined | To,
@@ -72,6 +74,18 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 isFooterVisible: action.isFooterVisible,
             }
         }
+        case 'global-modal-reducer/SET-TITLE-VISIBLE': {
+            return {
+                ...state,
+                isTitleVisible: action.isTitleVisible,
+            }
+        }
+        case 'global-modal-reducer/SET-BODY-PADDING-VISIBLE': {
+            return {
+                ...state,
+                isBodyPadding: action.isBodyPadding
+            }
+        }
         case 'global-modal-reducer/RESET-ALL-VALUES': {
             return {
                 ...state,
@@ -81,6 +95,8 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
                 navigateToCancel: undefined,
                 reactChildren: null,
                 isFooterVisible: true,
+                isTitleVisible: true,
+                isBodyPadding: true,
                 action: null,
                 timeToDeactivate: null,
             }
@@ -128,6 +144,14 @@ export const globalModalStoreActions = {
         type: 'global-modal-reducer/SET-FOOTER-VISIBLE',
         isFooterVisible,
     } as const ),
+    setTitleVisible: ( isTitleVisible: boolean ) => ( {
+        type: 'global-modal-reducer/SET-TITLE-VISIBLE',
+        isTitleVisible,
+    } as const ),
+    setBodyPaddingVisible: ( isBodyPadding: boolean ) => ( {
+        type: 'global-modal-reducer/SET-BODY-PADDING-VISIBLE',
+        isBodyPadding,
+    } as const ),
 }
 
 
@@ -146,6 +170,9 @@ type GlobalModalType = {
     // в миллисекундах
     timeToDeactivate?: number
     isFooterVisible?: boolean
+    isTitleVisible?: boolean
+    // подстройка под компоненту, убирает отступы и ставит ширину 'auto'
+    isBodyPadding?: boolean
 }
 
 // для создания диалогового окна с переданной функцией
@@ -158,8 +185,11 @@ export const textAndActionGlobalModal = ( {
                                               timeToDeactivate,
                                               reactChildren,
                                               isFooterVisible = true,
+                                              isTitleVisible = true,
+                                              isBodyPadding = true,
                                           }: GlobalModalType ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
+        dispatch(globalModalStoreActions.setBodyPaddingVisible(isBodyPadding))
         dispatch(globalModalStoreActions.setAction(action || null))
         dispatch(globalModalStoreActions.setNavigateToOk(navigateOnOk))
         dispatch(globalModalStoreActions.setNavigateToCancel(navigateOnCancel))
@@ -168,4 +198,5 @@ export const textAndActionGlobalModal = ( {
         dispatch(globalModalStoreActions.setChildren(reactChildren || null))
         dispatch(globalModalStoreActions.setTimeToDeactivate(timeToDeactivate || null))
         dispatch(globalModalStoreActions.setFooterVisible(isFooterVisible))
+        dispatch(globalModalStoreActions.setTitleVisible(isTitleVisible))
     }

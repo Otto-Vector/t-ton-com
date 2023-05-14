@@ -31,6 +31,7 @@ import {renderToString} from 'react-dom/server'
 import {isOutOfBounds, positionToBoundsLine} from '../../utils/map-utils'
 import {MaterialIcon} from '../common/material-icon/material-icon'
 import {boldWrapper} from '../../utils/html-rebuilds'
+import {AddDriversForm} from '../add-drivers-form/add-drivers-form'
 
 
 type OwnProps = {}
@@ -136,7 +137,10 @@ export const MapSection: React.FC<OwnProps> = () => {
     // прогрузка водителя в модальное окно
     const activateDriverCard = ( idEmployee: string ) => {
         dispatch<any>(textAndActionGlobalModal({
-            reactChildren: <AddDriversView idEmployee={ idEmployee }/>,
+            reactChildren: <AddDriversView idEmployee={ idEmployee } isModal={ true }/>,
+            isFooterVisible: false,
+            isTitleVisible: false,
+            isBodyPadding: false
         }))
     }
 
@@ -172,9 +176,9 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                     <MaterialIcon
                                                         style={ {
                                                             fontSize: '20px', paddingRight: '5px',
-                                                            color: position[0] !== 0 ? 'inherit' : 'gray',
+                                                            color: !!position[0] ? 'inherit' : 'gray',
                                                         } }
-                                                        icon_name={ position[0] !== 0 ? 'location_on' : 'wrong_location' }/>
+                                                        icon_name={ !!position[0] ? 'location_on' : 'wrong_location' }/>
                                                     { ' ' + fio + ' ' }
                                                 </span>
                                                 { mapModes.answersMode ?
@@ -214,7 +218,6 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                 options={ {
                                                     preset: 'islands#blueDeliveryCircleIcon',
                                                     iconColor: colorOfStatus(status),
-                                                    hasBalloon: true,
                                                 } }
                                                 properties={ { hintContent: `<b>${ fio }</b>` } }
                                                 onClick={ () => {

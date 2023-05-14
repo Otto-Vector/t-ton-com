@@ -23,16 +23,17 @@ import {useLocation} from 'react-router-dom'
 import {getRoutesStore} from '../../selectors/routes-reselect'
 import {removeResponseToRequestsBzRemoveThisDriverFromRequest} from '../../redux/forms/add-driver-store-reducer'
 import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
-import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
+import {globalModalStoreActions, textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
 import {CancelXButtonDriverView} from './cancel-x-button-driver-view/cancel-x-button-driver-view'
 
 
 type OwnProps = {
     idEmployee: string,
+    isModal?: boolean
 }
 // для отображения сотрудника на карте
-export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
+export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = false } ) => {
 
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
     const setImage = ( urlImage?: string | null ): string => urlImage ? currentURL + urlImage : noImage
@@ -123,7 +124,9 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
                 text: 'Не хватает данных для принятия данного водителя',
             }))
         }
-    }, [ oneResponse, oneEmployee, oneTrailer, oneTransport, routes ])
+        // закрываем модальное окно, если прорисовка в модалке
+        isModal && dispatch(globalModalStoreActions.resetAllValues())
+    }, [ oneResponse, oneEmployee, oneTrailer, oneTransport, routes, isModal ])
 
     // при отмене (отвязке) от заявки водителя
     const onDecline = async () => {
@@ -139,6 +142,9 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
         } else {
             dispatch<any>(getAllEmployeesAPI())
         }
+        // закрываем модальное окно, если прорисовка в модалке
+        isModal && dispatch(globalModalStoreActions.resetAllValues())
+
         // если на заявке ещё останутся ответы
         if (currentOneRequest?.answers?.length && currentOneRequest.answers.length > 1) {
             await dispatch<any>(textAndActionGlobalModal({
@@ -158,7 +164,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee } ) => {
     return (
         <div className={ styles.addDriversForm__wrapper }>
             {/* иконка под невидимую закрывалку на балуне яндекс карты */ }
-            <CancelXButtonDriverView/>
+            { !isModal && <CancelXButtonDriverView/> }
             <h4 className={ styles.addDriversForm__header }>{ title }</h4>
             <div className={ styles.addDriversForm__form }>
                 <div

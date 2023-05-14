@@ -6,7 +6,10 @@ import 'antd/lib/modal/style/index.css' // используем стили antd 
 import './info-global-to-modal.scss' // перезапись стилей
 import {Modal} from 'antd'
 import {
-    getActionGlobalModalStore, getChildrenGlobalModalStore, getIsFooterVisibleGlobalModalStore,
+    getActionGlobalModalStore,
+    getChildrenGlobalModalStore, getIsBodyPaddingVisibleGlobalModalStore,
+    getIsFooterVisibleGlobalModalStore,
+    getIsTitleVisibleGlobalModalStore,
     getNavigateToCancelGlobalModalStore,
     getNavigateToOkGlobalModalStore,
     getTextGlobalModalStore,
@@ -29,6 +32,8 @@ export const InfoGlobalToModal: React.FC = () => {
     const title = useSelector(getTitleGlobalModalStore)
     const timeToDeactivate = useSelector(getTimeToDeactivateGlobalModalStore)
     const isFooterEnable = useSelector(getIsFooterVisibleGlobalModalStore)
+    const isTitleEnable = useSelector(getIsTitleVisibleGlobalModalStore)
+    const isBodyPadding = useSelector(getIsBodyPaddingVisibleGlobalModalStore)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -59,7 +64,9 @@ export const InfoGlobalToModal: React.FC = () => {
         navToOnCancel && navigate(navToOnCancel)
     }
 
-    const titleHere: string | 'Вопрос' | 'Информация' = title || ( ( actionOnOk || navToOnOk ) ? 'Вопрос' : 'Информация' )
+    const titleHere: string | 'Вопрос' | 'Информация' | undefined = isTitleEnable
+        ? ( title || ( ( actionOnOk || navToOnOk ) ? 'Вопрос' : 'Информация' ) )
+        : undefined
 
     useEffect(() => {
             // активируется при наличии данных
@@ -84,10 +91,12 @@ export const InfoGlobalToModal: React.FC = () => {
                centered={ isCentered }
                visible={ visible }
                onCancel={ onCancelHandle }
+               bodyStyle={ !isBodyPadding ? { padding: 0 } : undefined }
+               width={ !isBodyPadding ? 'auto' : undefined }
             // onOk={ onOkHandle }
                className={ 'modalStyle' }
-            // closeIcon={ ModalCloseIcon }
                closeIcon={ CancelXButton({ onCancelClick: onCancelHandle }) }
+               // destroyOnClose={ true }
                footer={ isFooterEnable ? ModalFooter({
                        onCancelHandle,
                        onOkHandle,
