@@ -107,12 +107,12 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
     // при выборе водителя на заявку
     const onSubmit = useCallback(async () => {
         if (mapModes.answersMode && oneResponse && oneEmployee && oneTransport) {
-            await dispatch<any>(addAcceptedResponseToRequestOnAcceptDriver({
-                oneResponse,
-                oneEmployee,
-                oneTransport,
-                oneTrailer,
-            }))
+            // await dispatch<any>(addAcceptedResponseToRequestOnAcceptDriver({
+            //     oneResponse,
+            //     oneEmployee,
+            //     oneTransport,
+            //     oneTrailer,
+            // }))
             await dispatch<any>(textAndActionGlobalModal({
                 text: 'Водитель <b>' + oneEmployee?.employeeFIO + '</b> принят на заявку № ' + oneResponse.requestNumber,
                 title: 'Информация',
@@ -133,15 +133,15 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
         await dispatch<any>(removeResponseToRequestsBzRemoveThisDriverFromRequest(oneResponse?.responseId + ''))
         await dispatch<any>(setAnswerDriversToMap(currentOneRequest?.requestNumber + ''))
         // зачистка статуса, если сотрудник всего на одной заявке
-        if (oneEmployee?.addedToResponse
-            // если привязан всего к одной заявке и она сейчас "отвалится"
-            && oneEmployee.addedToResponse.split(', ').filter(x => x).length === 1
-            // на всякий случай доп. проверка
-            && oneEmployee?.status === 'ожидает принятия') {
-            await dispatch<any>(modifyOneEmployeeStatusToAPI(idEmployee, 'свободен'))
-        } else {
-            dispatch<any>(getAllEmployeesAPI())
-        }
+        // if (oneEmployee?.addedToResponse
+        //     // если привязан всего к одной заявке и она сейчас "отвалится"
+        //     && oneEmployee.addedToResponse.split(', ').filter(x => x).length === 1
+        //     // на всякий случай доп. проверка
+        //     && oneEmployee?.status === 'ожидает принятия') {
+        //     await dispatch<any>(modifyOneEmployeeStatusToAPI(idEmployee, 'свободен'))
+        // } else {
+        //     dispatch<any>(getAllEmployeesAPI())
+        // }
         // закрываем модальное окно, если прорисовка в модалке
         isModal && dispatch(globalModalStoreActions.resetAllValues())
 
@@ -169,6 +169,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
             <div className={ styles.addDriversForm__form }>
                 <div
                     className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
+                    {/* ВОДИТЕЛЬ */}
                     <div className={ styles.addDriversForm__selector }>
                         <label
                             className={ styles.addDriversForm__label }>{ label.idEmployee + ':' }</label>
@@ -176,6 +177,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                             { oneEmployee?.employeeFIO }
                         </div>
                     </div>
+                    {/* ТЯГАЧ/ТРАНСПОРТ */}
                     <div className={ styles.addDriversForm__selector }
                          title={ transportTitle }
                     >
@@ -185,6 +187,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                             { oneTransport?.transportModel || '-' }
                         </div>
                     </div>
+                    {/* ПРИЦЕП */}
                     <div className={ styles.addDriversForm__selector }
                          title={ trailerTitle }
                     >
@@ -199,6 +202,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                     <div className={ styles.addDriversForm__infoRow
                         + ` ${ !isDriverOnActiveRequest ? styles.addDriversForm__infoRow_fog : '' }`
                     }>
+                        {/* СТАВКА ТН.КМ. */}
                         <div className={ styles.addDriversForm__infoItem }
                              title={ isDriverOnActiveRequest ? 'Вес груза: ' + cargoWeight + 'т.' : '' }
                         >
@@ -208,6 +212,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                                 { responseStavka }
                             </div>
                         </div>
+                        {/* СУММА */}
                         <div className={ styles.addDriversForm__infoItem }
                              title={ isDriverOnActiveRequest ? 'Расстояние: ' + distance + 'км.' : '' }>
                             <label className={ styles.addDriversForm__label }>
@@ -218,6 +223,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                         </div>
                     </div>
                     <div className={ styles.addDriversForm__infoRow }>
+                        {/* ТОНН/КМ */}
                         <div className={ styles.addDriversForm__infoItem }>
                             <label className={ styles.addDriversForm__label }>
                                 { tnKmLabel }</label>
@@ -225,6 +231,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                                 { tnKmData }
                             </div>
                         </div>
+                        {/* НАЛОГ */}
                         <div className={ styles.addDriversForm__infoItem }>
                             <label className={ styles.addDriversForm__label }>
                                 { label.responseTax + ':' }</label>
@@ -234,7 +241,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                         </div>
                     </div>
                 </div>
-                {/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/ }
+                {/*\\\\\\\\\ ФОТО ПАНЕЛЬ /////////*/ }
                 <div className={ styles.addDriversForm__photoPanel }>
                     <div className={ styles.addDriversForm__photo }
                          title={ 'Фото водителя' }>

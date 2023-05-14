@@ -141,6 +141,7 @@ type ToBigMap = {
     instanceMap?: React.MutableRefObject<any>
     instanceYMap?: React.MutableRefObject<any>
     onBoundsChange?: ( e?: any ) => void
+    bounds?: number[][]
 }
 
 // компонента-прокладка на большую карту
@@ -148,6 +149,7 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( {
                                                                  center,
                                                                  zoom,
                                                                  children,
+                                                                 bounds,
                                                                  instanceMap,
                                                                  instanceYMap,
                                                                  onBoundsChange,
@@ -157,6 +159,7 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( {
             state={ {
                 center,
                 zoom,
+                bounds: bounds as undefined,
             } }
             modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint', 'util.bounds' ] }
             instanceMap={ instanceMap }
@@ -232,7 +235,7 @@ type ToRouteMap = {
     isEnableCoordsClick?: boolean
 }
 
-// карта с отрисованным маршрутом
+// карта с отрисованным маршрутом в центральной части заявки
 export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
     {
         driverHere,
@@ -256,7 +259,7 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
 
     // псевдо-перерисовка маркера водителя, ушедшего за край видимости карты, на край карты
     const [ boundsDriver, setBoundsDriver ] = useState(driverHere)
-    const PlacemarkerReWriter = useMemo(() => ( e: any ) => {
+    const placemarkerReWriter = useMemo(() => ( e: any ) => {
         const bounds: number[][] = e?.originalEvent?.newBounds
         if (boundsDriver && driverHere && isOutOfBounds({ bounds, position: driverHere })) {
             setBoundsDriver(positionToBoundsLine({ position: driverHere, bounds }) as typeof driverHere)
@@ -287,7 +290,7 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
                 zoom,
                 bounds: bounds as undefined,
             } }
-            onBoundsChange={ PlacemarkerReWriter }
+            onBoundsChange={ placemarkerReWriter }
             instanceMap={ map }
         >
             {/*отрисовка водителя (при наличии корректных координат) */ }

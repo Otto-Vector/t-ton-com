@@ -28,7 +28,7 @@ import {
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {EmployeeStatusType} from '../../types/form-types'
 import {renderToString} from 'react-dom/server'
-import {isOutOfBounds, positionToBoundsLine} from '../../utils/map-utils'
+import {isOutOfBounds, positionsToCorrectBounds, positionToBoundsLine} from '../../utils/map-utils'
 import {MaterialIcon} from '../common/material-icon/material-icon'
 import {boldWrapper} from '../../utils/html-rebuilds'
 
@@ -47,7 +47,6 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     const polyline = useSelector(getRoutesParsedFromPolylineRequestStore)
     const authGeoPositionAsCenter = useSelector(getGeoPositionAuthStore)
-    const polylineFirstPointAsCenter = polyline && polyline[0]
     const zoom = 7
 
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
@@ -64,8 +63,14 @@ export const MapSection: React.FC<OwnProps> = () => {
     } ), [ pathname ])
 
     // этот способ присвоения избавляет от бесконечной перерисовки карты
-    const [ center, setCenter ] = useState(( mapModes.answersMode && polylineFirstPointAsCenter ) || authGeoPositionAsCenter)
+    const [ center, setCenter ] = useState(authGeoPositionAsCenter)
 
+    const answerRouteBounds = useMemo(() => ( mapModes.answersMode && polyline )
+        ? positionsToCorrectBounds({
+            start: polyline[0],
+            finish: polyline[polyline.length - 1],
+        })
+        : undefined, [ polyline?.length, mapModes.answersMode ])
     // обновление контента
     useLayoutEffect(() => {
         if (mapModes.answersMode) {
@@ -102,7 +107,7 @@ export const MapSection: React.FC<OwnProps> = () => {
     }
 
     // псевдо-перерисовка маркеров, ушедших за край видимости карты, на край карты
-    const PlacemarkersReWriter = useMemo(() => () => {
+    const placemarkersReWriter = useMemo(() => () => {
         const bounds: number[][] = map?.current?.getBounds()
         dispatch(bigMapStoreActions.setDriversList(drivers
             .map(( { position, ...props } ) => ( {
@@ -139,7 +144,7 @@ export const MapSection: React.FC<OwnProps> = () => {
             reactChildren: <AddDriversView idEmployee={ idEmployee } isModal={ true }/>,
             isFooterVisible: false,
             isTitleVisible: false,
-            isBodyPadding: false
+            isBodyPadding: false,
         }))
     }
 
@@ -150,9 +155,10 @@ export const MapSection: React.FC<OwnProps> = () => {
 
             <YandexBigMap center={ center }
                           zoom={ zoom }
+                          bounds={ answerRouteBounds }
                           instanceMap={ map }
                           instanceYMap={ ymap }
-                          onBoundsChange={ PlacemarkersReWriter }
+                          onBoundsChange={ placemarkersReWriter }
             >
                 <ListBox
                     state={ { expanded: false } }
