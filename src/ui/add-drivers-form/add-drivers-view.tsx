@@ -26,6 +26,7 @@ import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 import {globalModalStoreActions, textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
 import {CancelXButtonDriverView} from './cancel-x-button-driver-view/cancel-x-button-driver-view'
+import {parseToNormalMoney} from '../../utils/parsers'
 
 
 type OwnProps = {
@@ -216,7 +217,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                             <label className={ styles.addDriversForm__label }>
                                 { label.responsePrice + ':' }</label>
                             <div className={ styles.addDriversForm__info }>
-                                { responsePrice }
+                                { parseToNormalMoney(+( responsePrice || 0 )) }
                             </div>
                         </div>
                     </div>

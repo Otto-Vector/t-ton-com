@@ -31,6 +31,7 @@ import {renderToString} from 'react-dom/server'
 import {isOutOfBounds, positionsToCorrectBounds, positionToBoundsLine} from '../../utils/map-utils'
 import {MaterialIcon} from '../common/material-icon/material-icon'
 import {boldWrapper} from '../../utils/html-rebuilds'
+import {parseToNormalMoney} from '../../utils/parsers'
 
 
 type OwnProps = {}
@@ -137,7 +138,10 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     const contentOfListboxItem = ( idEmployee: string ): string => {
         const finded = responses?.find(( { idEmployee: id } ) => id === idEmployee)
-        return finded ? ( ' ' + finded?.cargoWeight + 'тн. | ' + finded?.responsePrice + ' руб.' ) : '-'
+        return finded
+            ? ( ' ' + finded?.cargoWeight + 'тн. | '
+                + parseToNormalMoney(+( finded?.responsePrice || 0 )) + 'руб.' )
+            : '-'
     }
 
     // прогрузка водителя в модальное окно
