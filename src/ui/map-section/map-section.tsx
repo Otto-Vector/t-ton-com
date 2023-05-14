@@ -12,7 +12,7 @@ import {
     getFilteredResponsesBigMapStore,
     getIsFetchingBigMapStore,
 } from '../../selectors/maps/big-map-reselect'
-import {ListBox, ListBoxItem, Placemark} from 'react-yandex-maps'
+import {Button, ListBox, ListBoxItem, Placemark} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
 import {bigMapStoreActions, setAllMyDriversToMap, setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 
@@ -64,6 +64,7 @@ export const MapSection: React.FC<OwnProps> = () => {
 
     // этот способ присвоения избавляет от бесконечной перерисовки карты
     const [ center, setCenter ] = useState(authGeoPositionAsCenter)
+
     // корректное отображение цетровки карты по нарисованному маршруту
     const answerRouteBounds = useMemo(() => ( mapModes.answersMode && polyline )
         ? positionsToCorrectBounds({
@@ -71,6 +72,7 @@ export const MapSection: React.FC<OwnProps> = () => {
             finish: polyline[polyline.length - 1],
         })
         : undefined, [ polyline?.length, mapModes.answersMode ])
+
     // обновление контента
     useLayoutEffect(() => {
         if (mapModes.answersMode) {
@@ -160,11 +162,31 @@ export const MapSection: React.FC<OwnProps> = () => {
                           instanceYMap={ ymap }
                           onBoundsChange={ placemarkersReWriter }
             >
+                {/* КНОПКА ЦЕНТРОВКИ НА МАРШРУТ */ }
+                { mapModes.answersMode && polyline &&
+                    <Button data={ {
+                        content: renderToString(<div
+                            title={ 'Центрирование на маршруте (начало/конец)' }
+                            style={ {
+                                backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNiIgaGVpZ2h0PSIyNiI+PGcgZmlsbD0iIzZCNkI2QiI+PHBhdGggZD0iTTEwIDE0aDQuNWEzLjUgMy41IDAgMCAwIDAtN0gxMHYyaDQuNWExLjUgMS41IDAgMSAxIDAgM0gxMHYyem0wIDAiLz48cGF0aCBkPSJNMTUgMTJoLTQuNWEzLjUgMy41IDAgMCAwIDAgN0gxNXYtMmgtNC41YTEuNSAxLjUgMCAxIDEgMC0zSDE1di0yem0wIDBNMTkgMjBhMiAyIDAgMSAwIDAtNCAyIDIgMCAwIDAgMCA0em0wLTFhMSAxIDAgMSAwIDAtMiAxIDEgMCAwIDAgMCAyem0wIDBNOSAxMGEyIDIgMCAxIDAgMC00IDIgMiAwIDAgMCAwIDR6bTAtMWExIDEgMCAxIDAgMC0yIDEgMSAwIDAgMCAwIDJ6bTAgMCIvPjxwYXRoIGQ9Ik0xMy41NyAyMC44bDIuODMtMi44Mi0uNzEtLjctMi44MyAyLjgyLjcuN3ptMS40MS0yLjgybC43LS43LTIuMTEtMi4xMy0uNy43IDIuMTEgMi4xM3ptMCAwIi8+PC9nPjwvc3ZnPg==)',
+                                width: '25px',
+                                height: '25px',
+                            } }/>),
+                    } }
+                            onClick={ ( e: any ) => {
+                                map.current.panTo(e?.originalEvent?.target?._selected
+                                    ? polyline[0] : polyline[polyline.length - 1])
+                            }
+                            }
+
+                    />
+                }
                 <ListBox
                     state={ { expanded: false } }
                     data={ {
                         content: 'Выберите водителя',
                     } }>
+
                     { drivers.map(( { fio, status, position, idEmployee } ) =>
                         <ListBoxItem
                             options={ {
@@ -174,30 +196,30 @@ export const MapSection: React.FC<OwnProps> = () => {
                             data={ {
                                 content: renderToString(
                                     <span className={ styles.yandexMapComponent__menuItem }>
-                                            <>
-                                                <span className={ styles.yandexMapComponent__menuItemLeft + ' '
-                                                    + ( position[0] === 0 ? styles.yandexMapComponent__menuItemLeft_noPosition : '' )
-                                                }>
-                                                    <MaterialIcon
-                                                        style={ {
-                                                            fontSize: '20px', paddingRight: '5px',
-                                                            color: !!position[0] ? 'inherit' : 'gray',
-                                                        } }
-                                                        icon_name={ !!position[0] ? 'location_on' : 'wrong_location' }/>
-                                                    { ' ' + fio + ' ' }
-                                                </span>
-                                                { mapModes.answersMode ?
-                                                    <span className={ styles.yandexMapComponent__menuItemRight }>
-                                                        { contentOfListboxItem(idEmployee) }
-                                                    </span>
-                                                    :
-                                                    <b className={ styles.yandexMapComponent__menuItemRight }
-                                                       style={ { color: colorOfStatus(status) } }>
-                                                        { status }
-                                                    </b>
-                                                }
-                                            </>
-                                    </span>),
+                    <>
+                    <span className={ styles.yandexMapComponent__menuItemLeft + ' '
+                        + ( position[0] === 0 ? styles.yandexMapComponent__menuItemLeft_noPosition : '' )
+                    }>
+                    <MaterialIcon
+                        style={ {
+                            fontSize: '20px', paddingRight: '5px',
+                            color: !!position[0] ? 'inherit' : 'gray',
+                        } }
+                        icon_name={ !!position[0] ? 'location_on' : 'wrong_location' }/>
+                        { ' ' + fio + ' ' }
+                    </span>
+                        { mapModes.answersMode ?
+                            <span className={ styles.yandexMapComponent__menuItemRight }>
+                { contentOfListboxItem(idEmployee) }
+                    </span>
+                            :
+                            <b className={ styles.yandexMapComponent__menuItemRight }
+                               style={ { color: colorOfStatus(status) } }>
+                                { status }
+                            </b>
+                        }
+                    </>
+                    </span>),
                             } }
                             key={ fio + status }
                             onClick={ () => {
@@ -211,6 +233,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                         />)
                     }
                 </ListBox>
+
                 { mapModes.answersMode && polyline &&
                     <MapRequestRoad polyline={ polyline }
                                     onContextMenu={ extractCoordinatesToModal }
