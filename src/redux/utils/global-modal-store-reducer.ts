@@ -108,7 +108,7 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
 }
 
 /* ЭКШОНЫ */
-export const globalModalStoreActions = {
+const globalModalStoreActions = {
     setTextMessage: ( modalGlobalTextMessage: string | string[] ) => ( {
         type: 'global-modal-reducer/SET-TEXT-MESSAGE',
         modalGlobalTextMessage,
@@ -201,3 +201,9 @@ export const textAndActionGlobalModal = ( {
         dispatch(globalModalStoreActions.setFooterVisible(isFooterVisible))
         dispatch(globalModalStoreActions.setTitleVisible(isTitleVisible))
     }
+
+// принудительное закрытие окна
+export const globalModalDestroy = (): GlobalModalStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        dispatch(globalModalStoreActions.resetAllValues())
+}

@@ -5,8 +5,6 @@ import {EmployeeCardType, EmployeeStatusType, ParserType, ValidateType} from '..
 import {syncParsers} from '../../utils/parsers'
 import {employeesApi, OneEmployeeNoPhotoIdReqType} from '../../api/local-api/options/employee.api'
 import {
-    GlobalModalActionsType,
-    globalModalStoreActions,
     textAndActionGlobalModal,
 } from '../utils/global-modal-store-reducer'
 import {removeResponseToRequestsBzEmployee} from '../forms/add-driver-store-reducer'
@@ -142,7 +140,7 @@ export const employeesStoreActions = {
 
 /* САНКИ */
 
-export type EmployeesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
+export type EmployeesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 
 // запрос всех водителей принадлежащих организации
@@ -228,7 +226,9 @@ export const modifyOneEmployeeSoftToAPI = ( employeeData: OneEmployeeNoPhotoIdRe
             if (response.message) console.log(response.message)
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
     }
 
@@ -300,7 +300,9 @@ export const oneEmployeeDeleteHardToAPI = ( idEmployee: string ): EmployeesStore
             const response = await employeesApi.deleteOneEmployee({ idEmployee })
             if (response.message) console.log(response.message)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
         // await dispatch(getAllEmployeesAPI())
     }
@@ -316,7 +318,9 @@ export const getOneEmployeeFromAPI = ( idEmployee: string ): EmployeesStoreReduc
                 dispatch(employeesStoreActions.setInitialValues(oneEmployee))
             }
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
     }
 
@@ -350,7 +354,9 @@ export const getOneFiredEmployeeFromAPI = ( idEmployee: string ): EmployeesStore
                 }
             }
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
     }
 // добавить пользователю информацию о привязке к ответу по заявке

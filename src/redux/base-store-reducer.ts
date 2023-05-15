@@ -1,11 +1,11 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from './redux-store'
-import {SelectOptionsType} from '../ui/common/form-selector/selector-utils';
-import {GetActionsTypes} from '../types/ts-utils';
-import {cargoConstType, PreAuthGlobalDataType, propertyRights} from '../types/form-types';
-import {preAuthApi} from '../api/local-api/pre-auth.api';
-import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
-import {TtonErrorType} from '../api/local-api/back-instance.api';
+import {SelectOptionsType} from '../ui/common/form-selector/selector-utils'
+import {GetActionsTypes} from '../types/ts-utils'
+import {cargoConstType, PreAuthGlobalDataType, propertyRights} from '../types/form-types'
+import {preAuthApi} from '../api/local-api/pre-auth.api'
+import {textAndActionGlobalModal} from './utils/global-modal-store-reducer'
+import {TtonErrorType} from '../api/local-api/back-instance.api'
 
 
 const initialState = {
@@ -175,7 +175,7 @@ export const baseStoreActions = {
 
 /* САНКИ */
 
-export type BaseStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
+export type BaseStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType >
 
 
 // запрос и сохранение данных от сервера
@@ -191,10 +191,14 @@ export const preAuthDataSet = (): BaseStoreReducerThunkActionType =>
             }
             // здесь любое сообщение будет ошибкой
             if (response.message) {
-                dispatch(globalModalStoreActions.setTextMessage(response.message))
+                dispatch(textAndActionGlobalModal({
+                    text: response?.message,
+                }))
             }
-
-        } catch (error: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+        } catch
+            (error: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(error),
+            }))
         }
     }

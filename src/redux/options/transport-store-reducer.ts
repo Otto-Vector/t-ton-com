@@ -2,10 +2,11 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {ParserType, TransportCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
-import {syncParsers} from '../../utils/parsers';
-import {transportApi} from '../../api/local-api/options/transport.api';
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {GetActionsTypes} from '../../types/ts-utils';
+import {syncParsers} from '../../utils/parsers'
+import {transportApi} from '../../api/local-api/options/transport.api'
+import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
+import {GetActionsTypes} from '../../types/ts-utils'
+import {TtonErrorType} from '../../api/local-api/back-instance.api'
 
 
 const initialState = {
@@ -129,7 +130,7 @@ export const transportStoreActions = {
 
 /* САНКИ */
 
-export type TransportStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
+export type TransportStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 // запрос всего ТРАНСПОРТА пользователя от сервера
 export const getAllTransportAPI = (): TransportStoreReducerThunkActionType =>
@@ -162,10 +163,10 @@ export const newTransportSaveToAPI = ( values: TransportCardType<string>, image:
                 cargoWeight: values.cargoWeight || '0',
             }, image)
             if (response.success) console.log(response.success)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                e.response.data.failed))
+        } catch (e: TtonErrorType) {
+            dispatch<any>(textAndActionGlobalModal({
+                text: e?.response?.data?.failed || JSON.stringify(e),
+            }))
         }
         await dispatch(getAllTransportAPI())
     }
@@ -182,10 +183,10 @@ export const modifyOneTransportToAPI = ( values: TransportCardType<string>, imag
                 cargoWeight: values.cargoWeight || '0',
             }, image)
             if (response.success) console.log(response.success)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: e.response.data || JSON.stringify(e),
+            }))
         }
         await dispatch(getAllTransportAPI())
     }
@@ -196,10 +197,10 @@ export const oneTransportDeleteToAPI = ( idTransport: string ): TransportStoreRe
         try {
             const response = await transportApi.deleteOneTransport({ idTransport })
             if (response.message) console.log(response.message)
-        } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage(
-                // @ts-ignore
-                JSON.stringify(e.response.data)))
+        } catch (e: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: e?.response?.data || JSON.stringify(e),
+            }))
         }
         await dispatch(getAllTransportAPI())
     }

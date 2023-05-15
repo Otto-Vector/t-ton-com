@@ -29,7 +29,7 @@ import {
     trailerStoreActions,
 } from '../../../redux/options/trailer-store-reducer'
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
-import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
 import {SwitchMask} from '../../common/antd-switch/antd-switch'
 import {syncValidators} from '../../../utils/validators'
@@ -67,17 +67,17 @@ export const TrailerForm: React.FC<OwnProps> = () => {
     const isBusyTrailer = useSelector(getIsBusyTrailer)
 
     const trailertHasPassToDelete = () => {
-        dispatch(globalModalStoreActions.setTextMessage(
-            'Прицеп не может быть удалён, он привязан к сотруднику: '
-            + ( isBusyTrailer?.subLabel ),
-        ))
+        dispatch<any>(textAndActionGlobalModal({
+            text: 'Прицеп не может быть удалён, он привязан к сотруднику: '
+                + ( isBusyTrailer?.subLabel ),
+        }))
     }
 
     const unchangeableField = () => {
-        dispatch(globalModalStoreActions.setTextMessage(
-            'Данное поле Прицепа не может быть изменено, пока он привязан к сотруднику: '
-            + ( isBusyTrailer?.subLabel ),
-        ))
+        dispatch<any>(textAndActionGlobalModal({
+            text: 'Данное поле Прицепа не может быть изменено, пока он привязан к сотруднику: '
+                + ( isBusyTrailer?.subLabel ),
+        }))
     }
 
     // вытаскиваем значение роутера

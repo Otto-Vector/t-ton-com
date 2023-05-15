@@ -1,5 +1,5 @@
 import React from 'react'
-import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
+import {globalModalDestroy} from '../../../redux/utils/global-modal-store-reducer'
 import {syncValidators} from '../../../utils/validators'
 import {useDispatch, useSelector} from 'react-redux'
 import {FormInputType} from '../../common/form-input-type/form-input-type'
@@ -30,7 +30,7 @@ export const CargoWeightInputToModal: React.FC = () => {
     const cargoValidate = syncValidators.cargoWeightInModal(( cargoWeight || driverCanCargoWeight ) + 1)
 
     const onCancelHandle = () => {
-        dispatch(globalModalStoreActions.resetAllValues())
+        dispatch<any>(globalModalDestroy())
     }
 
     const reparseValuesToNumber = ( formValues: ToSmallCalcFormType ) => ( {

@@ -2,9 +2,9 @@ import {AppStateType} from '../redux-store'
 import {AvtoDispetcherResponseType} from '../../types/api-types'
 
 import {ThunkAction} from 'redux-thunk'
-import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api';
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {GetActionsTypes} from '../../types/ts-utils';
+import {GetAvtodispetcherRouteType, getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api'
+import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
+import {GetActionsTypes} from '../../types/ts-utils'
 
 const initialState = {
     responseRoute: {} as AvtoDispetcherResponseType,
@@ -39,7 +39,7 @@ export const avtoDispetcherStoreActions = {
 
 /* САНКИ */
 // конструктор для типов санок
-export type AvtoDispetcherThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, AvtoDispetcherStoreActionsType | GlobalModalActionsType>
+export type AvtoDispetcherThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, AvtoDispetcherStoreActionsType>
 
 // геолокируем (вытаскиваем) название города из запроса автодиспетчера
 export const getCityFromDispetcherAPI = ( {
@@ -58,7 +58,9 @@ export const getCityFromDispetcherAPI = ( {
             }
 
         } catch (e) {
-            dispatch(globalModalStoreActions.setTextMessage('Ошибка запроса на название города'))
+            dispatch(textAndActionGlobalModal({
+                text: 'Ошибка запроса на название города',
+            }))
             return { coordinates: 'Ошибка запроса на название города, измените координаты' }
         }
 

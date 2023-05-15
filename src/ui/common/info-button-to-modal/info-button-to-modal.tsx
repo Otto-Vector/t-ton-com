@@ -1,10 +1,10 @@
 import React from 'react'
 import styles from './info-button-to-modal.module.scss'
 
-import {MaterialIcon} from '../material-icon/material-icon';
-import {Button} from '../button/button';
-import {useDispatch} from 'react-redux';
-import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer';
+import {MaterialIcon} from '../material-icon/material-icon'
+import {Button} from '../button/button'
+import {useDispatch} from 'react-redux'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 
 
 type OwnProps = {
@@ -18,7 +18,9 @@ export const InfoButtonToModal: React.FC<OwnProps> = ( { textToModal = '', mode 
     const dispatch = useDispatch()
 
     const onClickButton = () => {
-        dispatch(globalModalStoreActions.setTextMessage(textToModal))
+        dispatch<any>(textAndActionGlobalModal({
+            text: textToModal,
+        }))
     }
 
     return (

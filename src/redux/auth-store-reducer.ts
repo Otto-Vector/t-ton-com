@@ -2,12 +2,12 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from './redux-store'
 import {PhoneSubmitType, ValidateType} from '../types/form-types'
 import {syncValidators} from '../utils/validators'
-import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/local-api/auth.api';
-import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-reducer';
-import {appActions} from './app-store-reducer';
-import {GlobalModalActionsType, globalModalStoreActions} from './utils/global-modal-store-reducer';
-import {GetActionsTypes} from '../types/ts-utils';
-import {TtonErrorType} from '../api/local-api/back-instance.api';
+import {authApi, AuthRequestType, AuthValidateRequestType, NewUserRequestType} from '../api/local-api/auth.api'
+import {daDataStoreActions, DaDataStoreActionsType} from './api/dadata-response-reducer'
+import {appActions} from './app-store-reducer'
+import {textAndActionGlobalModal} from './utils/global-modal-store-reducer'
+import {GetActionsTypes} from '../types/ts-utils'
+import {TtonErrorType} from '../api/local-api/back-instance.api'
 import {geoPosition} from '../utils/map-utils'
 
 
@@ -155,7 +155,7 @@ export const authStoreActions = {
 
 /* САНКИ */
 export type AuthStoreReducerThunkActionType<R = void> =
-    ThunkAction<Promise<R>, AppStateType, unknown, AuthStoreActionsType | DaDataStoreActionsType | GlobalModalActionsType>
+    ThunkAction<Promise<R>, AppStateType, unknown, AuthStoreActionsType | DaDataStoreActionsType>
 
 // для блокировки нажатия НОВЫЙ ПАРОЛЬ на одну минуту
 export const fakeAuthFetching = (): AuthStoreReducerThunkActionType =>
@@ -208,17 +208,21 @@ export const sendCodeToPhone = ( {
             // обрабатываем ошибку
             if (response.message) {
                 dispatch(authStoreActions.setIsAvailableSMSRequest(false))
-                dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(`Аккаунт c этим номером [ ${ phone } ] уже создан`)))
+                dispatch(textAndActionGlobalModal({
+                    text: JSON.stringify(`Аккаунт c этим номером [ ${ phone } ] уже создан`),
+                }))
                 return { phoneNumber: response.message }
             }
             if (response.success) {
-                dispatch(globalModalStoreActions.setTextMessage(response.success + 'ПАРОЛЬ: ' + response.password))
+                dispatch(textAndActionGlobalModal({
+                    text: response.success + 'ПАРОЛЬ: ' + response.password,
+                }))
             }
         } catch (error: TtonErrorType) {
             dispatch(authStoreActions.setIsFetching(false))
-
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error?.response?.data?.message)))
-
+            await dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(error?.response?.data?.message),
+            }))
             return { innNumber: error?.response?.data?.message }
         }
         dispatch(authStoreActions.setIsAvailableSMSRequest(true))
@@ -261,7 +265,9 @@ export const loginAuthorization = ( {
         } catch (error: TtonErrorType) {
             dispatch(authStoreActions.setIsFetching(false))
 
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error?.response?.data?.message)))
+            await dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(error?.response?.data?.message),
+            }))
 
             return { sms: error?.response?.data?.message }
         }
@@ -282,7 +288,9 @@ export const logoutAuth = (): AuthStoreReducerThunkActionType =>
                 console.log(response.status)
             }
         } catch (error) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(error),
+            }))
         }
     }
 
@@ -294,16 +302,24 @@ export const newPassword = ( { phone }: AuthRequestType ): AuthStoreReducerThunk
             const response = await authApi.passwordRecovery({ phone })
 
             console.log(response)
-            if (response.success) dispatch(globalModalStoreActions.setTextMessage(response.success + '\n ПАРОЛЬ: ' + response.password))
-            if (response.message) dispatch(globalModalStoreActions.setTextMessage(response.message))
+            if (response.success) dispatch(textAndActionGlobalModal({
+                text: response.success + '\n ПАРОЛЬ: ' + response.password,
+            }))
+            if (response.message) dispatch(textAndActionGlobalModal({
+                text: response.message,
+            }))
 
         } catch (error: TtonErrorType) {
             dispatch(authStoreActions.setIsFetching(false))
 
             if (error?.response?.data?.message) {
-                dispatch(globalModalStoreActions.setTextMessage(error.response.data.message + '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА'))
+                dispatch(textAndActionGlobalModal({
+                    text: error.response.data.message + '. ПРОВЕРЬТЕ ПРАВИЛЬНОСТЬ ВВОДА НОМЕРА ТЕЛЕФОНА',
+                }))
             } else {
-                dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error)))
+                dispatch(textAndActionGlobalModal({
+                    text: JSON.stringify(error),
+                }))
             }
         }
         dispatch(authStoreActions.setIsFetching(false))
@@ -322,13 +338,17 @@ export const autoLoginMe = (): AuthStoreReducerThunkActionType =>
             }
             if (response.message) {
                 console.log(response.message)
-                dispatch(globalModalStoreActions.setTextMessage(response.message))
+                dispatch(textAndActionGlobalModal({
+                    text: response.message,
+                }))
             }
         } catch (error: TtonErrorType) {
             if (error?.response?.data?.message) {
                 console.log(error.response.data.message)
             } else {
-                dispatch(globalModalStoreActions.setTextMessage('Ошибка при автоматической авторизации: ' + JSON.stringify(error)))
+                dispatch(textAndActionGlobalModal({
+                    text: 'Ошибка при автоматической авторизации: ' + JSON.stringify(error),
+                }))
             }
         }
         dispatch(authStoreActions.setAutologinDone())

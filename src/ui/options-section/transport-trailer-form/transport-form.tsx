@@ -30,7 +30,7 @@ import {
 } from '../../../redux/options/transport-store-reducer'
 import {syncParsers} from '../../../utils/parsers'
 import {ImageViewSet} from '../../common/image-view-set/image-view-set'
-import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
 import {SwitchMask} from '../../common/antd-switch/antd-switch'
 import {syncValidators} from '../../../utils/validators'
@@ -67,17 +67,17 @@ export const TransportForm: React.FC<OwnProps> = () => {
     const isBusyTransport = useSelector(getIsBusyTransport)
 
     const transportHasPassToDelete = () => {
-        dispatch(globalModalStoreActions.setTextMessage(
-            'Транспорт не может быть удалён, он привязан к сотруднику: '
-            + ( isBusyTransport?.subLabel ),
-        ))
+        dispatch<any>(textAndActionGlobalModal({
+            text: 'Транспорт не может быть удалён, он привязан к сотруднику: '
+                + ( isBusyTransport?.subLabel ),
+        }))
     }
 
     const unchangeableField = () => {
-        dispatch(globalModalStoreActions.setTextMessage(
-            'Данное поле Прицепа не может быть изменено, пока он привязан к сотруднику: '
-            + ( isBusyTransport?.subLabel ),
-        ))
+        dispatch<any>(textAndActionGlobalModal({
+            text: 'Данное поле Прицепа не может быть изменено, пока он привязан к сотруднику: '
+                + ( isBusyTransport?.subLabel ),
+        }))
     }
 
     // вытаскиваем значение роутера

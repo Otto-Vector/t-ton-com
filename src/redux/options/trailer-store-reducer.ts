@@ -2,11 +2,11 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {ParserType, TrailerCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
-import {syncParsers} from '../../utils/parsers';
-import {trailerApi} from '../../api/local-api/options/trailer.api';
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {GetActionsTypes} from '../../types/ts-utils';
-import {TtonErrorType} from '../../api/local-api/back-instance.api';
+import {syncParsers} from '../../utils/parsers'
+import {trailerApi} from '../../api/local-api/options/trailer.api'
+import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
+import {GetActionsTypes} from '../../types/ts-utils'
+import {TtonErrorType} from '../../api/local-api/back-instance.api'
 
 
 const initialState = {
@@ -131,7 +131,7 @@ export const trailerStoreActions = {
 
 /* САНКИ */
 
-export type TrailerStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
+export type TrailerStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 // запрос всех ПРИЦЕПОВ пользователя от сервера
 export const getAllTrailerAPI = (): TrailerStoreReducerThunkActionType =>
@@ -163,7 +163,9 @@ export const newTrailerSaveToAPI = ( values: TrailerCardType<string>, image: Fil
             const response = await trailerApi.createOneTrailer({ ...values, idUser }, image)
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(e?.response?.data?.failed))
+            dispatch(textAndActionGlobalModal({
+                text: e?.response?.data?.failed,
+            }))
         }
         await dispatch(getAllTrailerAPI())
     }
@@ -177,7 +179,9 @@ export const modifyOneTrailerToAPI = ( values: TrailerCardType<string>, image: F
             const response = await trailerApi.modifyOneTrailer({ ...values, idUser }, image)
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
         await dispatch(getAllTrailerAPI())
     }
@@ -189,7 +193,9 @@ export const oneTrailerDeleteToAPI = ( idTrailer: string ): TrailerStoreReducerT
             const response = await trailerApi.deleteOneTrailer({ idTrailer })
             if (response.message) console.log(response.message)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
         await dispatch(getAllTrailerAPI())
     }
@@ -208,7 +214,9 @@ export const getOneTrailerFromAPI = ( idTrailer: string ): TrailerStoreReducerTh
                 }
             }
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
     }
 

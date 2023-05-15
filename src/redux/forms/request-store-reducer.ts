@@ -17,7 +17,7 @@ import {syncValidators} from '../../utils/validators'
 import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api'
 import {oneRequestApi} from '../../api/local-api/request-response/request.api'
 import {apiToISODateFormat, yearMmDdFormat, yearMmDdFormatISO} from '../../utils/date-formats'
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer'
+import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {
     getOneEmployeeFromAPI,
     modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest,
@@ -487,7 +487,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
 
 /* САНКИ */
 
-export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, RequestStoreActionsType | GlobalModalActionsType>
+export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, RequestStoreActionsType>
 
 // запрос списка всех заявок из бэка
 export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
@@ -513,9 +513,11 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
                 dispatch(requestStoreActions.setContentByUser(responseAllRequestsByUser.map(parseRequestFromAPI)))
             }
 
-        } catch (e) {
+        } catch (e: TtonErrorType) {
             dispatch(requestStoreActions.setIsFetching(false))
-            dispatch(globalModalStoreActions.setTextMessage(e as string))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e),
+            }))
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }
@@ -532,14 +534,17 @@ export const getOneRequestsAPI = ( requestNumber: number, giveMeDriver = false )
                     await dispatch(getOneEmployeeFromAPI(response[0].idEmployee))
                 }
             } else {
-                dispatch(globalModalStoreActions.setTextMessage(
-                    [ 'НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber,
+                dispatch(textAndActionGlobalModal({
+                    text: [
+                        'НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber,
                         ( response.message ? ' Причина' + response.message : '' ),
                     ],
-                ))
+                }))
             }
-        } catch (e:TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
+        } catch (e: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e),
+            }))
             dispatch(requestStoreActions.setIsFetching(false))
         }
         dispatch(requestStoreActions.setIsFetching(false))
@@ -563,7 +568,9 @@ export const setNewRequestAPI = (): RequestStoreReducerThunkActionType =>
                 } as OneRequestType))
             }
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e),
+            }))
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }
@@ -667,7 +674,9 @@ export const addAcceptedResponseToRequestOnCreate = (
             }
 
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e),
+            }))
         }
     }
 
@@ -768,7 +777,9 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
 
 
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e),
+            }))
         }
     }
 
@@ -894,7 +905,9 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
                 await dispatch(getAllRequestsAPI())
             }
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e),
+            }))
         }
         dispatch(requestStoreActions.setIsFetching(false))
     }
@@ -908,7 +921,9 @@ export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiT
                 console.log(response.success)
             }
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.message),
+            }))
         }
     }
 
@@ -939,7 +954,9 @@ export const createDriverListApi = ( props: { requestNumber: number, validUntil?
             const response = await requestDocumentsApi.createDriverList(props)
             console.log(response.message)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage('<b>Ошибка создания документа ДОВЕРЕННОСТЬ ВОДИТЕЛЮ: </b><br/>' + JSON.stringify(e?.response?.data?.message)))
+            dispatch(textAndActionGlobalModal({
+                text: '<b>Ошибка создания документа ДОВЕРЕННОСТЬ ВОДИТЕЛЮ: </b><br/>' + JSON.stringify(e?.response?.data?.message),
+            }))
         }
     }
 
@@ -950,7 +967,9 @@ export const deleteCurrentRequestAPI = ( requestNumber: { requestNumber: number 
             const response = await oneRequestApi.deleteOneRequest(requestNumber)
             console.log(response.message)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.message),
+            }))
         }
         await dispatch(getAllRequestsAPI())
     }
@@ -1007,7 +1026,9 @@ export const getRouteFromAPI = ( {
                 distance: 0,
             }))
             // выводим ошибку
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e),
+            }))
         }
 
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
@@ -1022,7 +1043,9 @@ export const addRewriteCargoDocumentRequestAPI = ( props: { requestNumber: numbe
             const response = await requestDocumentsApi.getLoadCargo(props)
             console.log(response.message)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message || e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.message || e?.response?.data),
+            }))
         }
         await dispatch(getOneRequestsAPI(props.requestNumber))
     }

@@ -26,7 +26,7 @@ import {
 } from '../../../redux/options/requisites-store-reducer'
 import {coordsToString, parseAllNumbers} from '../../../utils/parsers'
 import {FormSelector} from '../../common/form-selector/form-selector'
-import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FORM_ERROR} from 'final-form'
 import {newShipperSaveToAPI} from '../../../redux/options/shippers-store-reducer'
@@ -86,7 +86,9 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                 shipperFio: '-',
                 description: '-',
             } as ShippersCardType<string>))
-            dispatch(globalModalStoreActions.setTextMessage('Создан первый грузоотправитель. Скорректируйте данные'))
+            dispatch<any>(textAndActionGlobalModal({
+                text: 'Создан первый грузоотправитель. Скорректируйте данные',
+            }))
             navigate(options)
         } else {
             navigate(-1)

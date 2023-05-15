@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import {globalModalStoreActions} from '../../../redux/utils/global-modal-store-reducer'
 import './modal-animations.css' // вырезал нужные анимации для модалки
 import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфо-окон
 import './info-global-to-modal.scss' // перезапись стилей
@@ -20,6 +19,7 @@ import {useNavigate} from 'react-router-dom'
 import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from-array-to-paragraph'
 import {ModalFooter} from './modal-footer/modal-footer'
 import {CancelXButton} from '../cancel-button/cancel-x-button'
+import {globalModalDestroy} from '../../../redux/utils/global-modal-store-reducer'
 
 
 export const InfoGlobalToModal: React.FC = () => {
@@ -49,7 +49,7 @@ export const InfoGlobalToModal: React.FC = () => {
         setIsOneTimeActivated(false)
 
         setVisible(false)
-        dispatch(globalModalStoreActions.resetAllValues())
+        dispatch<any>(globalModalDestroy())
     }
 
     const onOkHandle = () => {
@@ -96,7 +96,7 @@ export const InfoGlobalToModal: React.FC = () => {
             // onOk={ onOkHandle }
                className={ 'modalStyle' }
                closeIcon={ CancelXButton({ onCancelClick: onCancelHandle }) }
-               // destroyOnClose={ true }
+            // destroyOnClose={ true }
                footer={ isFooterEnable ? ModalFooter({
                        onCancelHandle,
                        onOkHandle,

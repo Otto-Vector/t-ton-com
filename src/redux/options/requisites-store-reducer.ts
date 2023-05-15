@@ -5,11 +5,7 @@ import {syncValidators} from '../../utils/validators'
 import {requisitesApi} from '../../api/local-api/options/requisites.api'
 import {syncParsers} from '../../utils/parsers'
 import {authStoreActions, logoutAuth} from '../auth-store-reducer'
-import {
-    GlobalModalActionsType,
-    globalModalStoreActions,
-    textAndActionGlobalModal,
-} from '../utils/global-modal-store-reducer'
+import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {GetActionsTypes} from '../../types/ts-utils'
 import {TtonErrorType} from '../../api/local-api/back-instance.api'
 
@@ -176,7 +172,7 @@ export const requisitesStoreActions = {
 }
 
 /* САНКИ */
-export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
+export type RequisitesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 // сохранение данных реквизитов в БЭК
 export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
@@ -213,7 +209,9 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
             }
 
         } catch (error: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(error?.response?.data),
+            }))
             dispatch(requisitesStoreActions.setIsFetching(false))
             return 'Ошибка сохранения данных, попробуйте ещё раз'
         }
@@ -234,7 +232,9 @@ export const setOrganizationCashRequisites = ( cash: number ): RequisitesStoreRe
                 await dispatch(getPersonalOrganizationRequisites())
             }
         } catch (error: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(error.response.data),
+            }))
             dispatch(requisitesStoreActions.setIsFetching(false))
         }
     }
@@ -332,7 +332,9 @@ export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunk
                 }
             }
         } catch (error) {
-            dispatch(globalModalStoreActions.setTextMessage('Ошибка API запроса реквизитов организации: ' + error))
+            dispatch(textAndActionGlobalModal({
+                text: 'Ошибка API запроса реквизитов организации: ' + JSON.stringify(error),
+            }))
             dispatch(requisitesStoreActions.setIsFetching(false))
         }
         dispatch(requisitesStoreActions.setIsFetching(false))
@@ -345,10 +347,14 @@ export const deletePersonalOrganizationRequisites = (): RequisitesStoreReducerTh
             const idUser = getState().authStoreReducer.authID
             const response = await requisitesApi.removePersonalData({ idUser })
             if (response.message) {
-                dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(response.message)))
+                dispatch(textAndActionGlobalModal({
+                    text: JSON.stringify(response.message),
+                }))
             }
         } catch (error: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(error.response?.error)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(error.response?.error),
+            }))
         }
         dispatch(logoutAuth())
     }

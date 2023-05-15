@@ -2,11 +2,11 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
-import {coordsToString, syncParsers} from '../../utils/parsers';
-import {consigneesApi} from '../../api/local-api/options/consignees.api';
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer';
-import {GetActionsTypes} from '../../types/ts-utils';
-import {TtonErrorType} from '../../api/local-api/back-instance.api';
+import {coordsToString, syncParsers} from '../../utils/parsers'
+import {consigneesApi} from '../../api/local-api/options/consignees.api'
+import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
+import {GetActionsTypes} from '../../types/ts-utils'
+import {TtonErrorType} from '../../api/local-api/back-instance.api'
 
 
 const initialState = {
@@ -173,8 +173,7 @@ export const consigneesStoreActions = {
 
 /* САНКИ */
 
-export type ConsigneesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
-
+export type ConsigneesStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 // запрос всех грузополучателей по id пользователя
 export const getAllConsigneesAPI = (): ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
@@ -219,7 +218,9 @@ export const setOrganizationByInnKppConsignees = ( {
                 address: data.address.value,
             }))
         } else {
-            dispatch(globalModalStoreActions.setTextMessage('Фильтр КПП локально не сработал!'))
+            dispatch(textAndActionGlobalModal({
+                text: 'Фильтр КПП локально не сработал!',
+            }))
         }
 
     }
@@ -237,7 +238,9 @@ export const newConsigneeSaveToAPI = ( values: ConsigneesCardType<string> ): Con
             })
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.failed)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.failed),
+            }))
         }
         await dispatch(getAllConsigneesAPI())
     }
@@ -255,7 +258,9 @@ export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): C
             })
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
         await dispatch(getAllConsigneesAPI())
     }
@@ -269,7 +274,9 @@ export const oneConsigneeDeleteToAPI = ( idRecipient: string | null ): Consignee
                 if (response.message) console.log(response.message)
             }
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
         await dispatch(getAllConsigneesAPI())
     }
@@ -285,6 +292,8 @@ export const getOneConsigneeFromAPI = ( idRecipient: string ): ConsigneesStoreRe
                 dispatch(consigneesStoreActions.setInitialValues(oneConsignee))
             }
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
     }

@@ -3,7 +3,7 @@ import {AppStateType} from '../redux-store'
 import {EmployeeCardType, ResponseToRequestCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
-import {GlobalModalActionsType, globalModalStoreActions} from '../utils/global-modal-store-reducer'
+import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {getAllRequestsAPI} from './request-store-reducer'
 import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer'
 import {GetActionsTypes} from '../../types/ts-utils'
@@ -80,7 +80,7 @@ export const addDriverStoreActions = {
 }
 
 /* САНКИ */
-export type AddDriverStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType | GlobalModalActionsType>
+export type AddDriverStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
 // сохраняем новый ответ на заявку
 export const setOneResponseToRequest = (
@@ -102,20 +102,24 @@ export const setOneResponseToRequest = (
         } catch (e: TtonErrorType<{ prevResponseToRequest: string }>) {
             dispatch(addDriverStoreActions.setIsFetching(false))
             if (e?.response?.data?.prevResponseToRequest) {
-                dispatch(globalModalStoreActions.setTextMessage([
-                    'Водитель уже был привязан к данной заявке.',
-                    'Cтоимость скорректирована с учётом внесённых данных.',
-                    boldWrapper('Водитель: ') + employeeValues.employeeFIO,
-                    boldWrapper('Общий перевозимый вес: ') + addDriverValues.cargoWeight + ' тн.',
-                    boldWrapper('Стоимость тн.км.: ') + addDriverValues.responseStavka + ' руб.',
-                    boldWrapper('Общая цена за заявку: ') + syncParsers.parseToNormalMoney(+addDriverValues.responsePrice) + ' руб.',
-                ]))
+                await dispatch(textAndActionGlobalModal({
+                    text: [
+                        'Водитель уже был привязан к данной заявке.',
+                        'Cтоимость скорректирована с учётом внесённых данных.',
+                        boldWrapper('Водитель: ') + employeeValues.employeeFIO,
+                        boldWrapper('Общий перевозимый вес: ') + addDriverValues.cargoWeight + ' тн.',
+                        boldWrapper('Стоимость тн.км.: ') + addDriverValues.responseStavka + ' руб.',
+                        boldWrapper('Общая цена за заявку: ') + syncParsers.parseToNormalMoney(+addDriverValues.responsePrice) + ' руб.',
+                    ],
+                }))
                 await dispatch(modifyOneResponseToRequest({
                     addDriverValues,
                     responseId: e.response.data.prevResponseToRequest,
                 }))
             } else {
-                dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+                await dispatch(textAndActionGlobalModal({
+                    text: JSON.stringify(e?.response?.data?.message),
+                }))
             }
         }
         dispatch(addDriverStoreActions.setIsFetching(false))
@@ -130,7 +134,9 @@ export const modifyOneResponseToRequest = ( {
         try {
             await responseToRequestApi.modifyOneResponseToRequest({ ...addDriverValues, responseId })
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+            await dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.message),
+            }))
         }
     }
 
@@ -140,7 +146,9 @@ export const getResponseToRequestListByIdEmployee = ( idEmployee: { idEmployee: 
         try {
             await responseToRequestApi.getOneOrMoreResponseToRequest(idEmployee)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+            await dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.message),
+            }))
         }
     }
 
@@ -150,7 +158,9 @@ export const getResponseToRequestListByRequestNumber = ( requestNumber: { reques
         try {
             await responseToRequestApi.getOneOrMoreResponseToRequest(requestNumber)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+            await dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.message),
+            }))
         }
     }
 
@@ -160,7 +170,9 @@ export const getOneResponseToRequestById = ( responseId: { responseId: string } 
         try {
             await responseToRequestApi.getOneOrMoreResponseToRequest(responseId)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data?.message)))
+            await dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.message),
+            }))
         }
     }
 
@@ -181,7 +193,9 @@ export const removeResponseToRequestsBzRemoveThisDriverFromRequest = ( responseI
             await responseToRequestApi.deleteSomeResponseToRequest({ responseId })
             dispatch(getAllRequestsAPI())
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            await dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
     }
 
@@ -199,6 +213,8 @@ export const removeResponseToRequestsBzEmployee = ( {
             await dispatch(getAllRequestsAPI())
             // console.log(response)
         } catch (e: TtonErrorType) {
-            dispatch(globalModalStoreActions.setTextMessage(JSON.stringify(e?.response?.data)))
+            await dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data),
+            }))
         }
     }

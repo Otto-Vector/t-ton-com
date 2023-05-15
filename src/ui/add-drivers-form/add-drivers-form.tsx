@@ -41,7 +41,7 @@ import {syncParsers} from '../../utils/parsers'
 import {FormApi} from 'final-form'
 import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple'
 import {SelectOptionsType} from '../common/form-selector/selector-utils'
-import {globalModalStoreActions, textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
+import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {setOneResponseToRequest} from '../../redux/forms/add-driver-store-reducer'
 import {getRoutesStore} from '../../selectors/routes-reselect'
@@ -233,12 +233,14 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     // если "по таймингу" или случайно захотелось ответить на заявку, на которую невозможно ответить
     useEffect(() => {
         if (currentRequestValues.globalStatus === 'в работе') {
-            dispatch(globalModalStoreActions.setTextMessage('Извините, заявку уже приняли в работу. Обновляем данные...'))
-            dispatch(globalModalStoreActions.setTimeToDeactivate(3000))
+            dispatch<any>(textAndActionGlobalModal({
+                text: 'Извините, заявку уже приняли в работу. Обновляем данные...',
+                timeToDeactivate: 3000,
+            }))
             dispatch<any>(getAllRequestsAPI())
             navigate(navRoutes.searchList)
         }
-    }, [currentRequestValues.globalStatus, navRoutes,dispatch])
+    }, [ currentRequestValues.globalStatus, navRoutes, dispatch ])
 
 
     return (

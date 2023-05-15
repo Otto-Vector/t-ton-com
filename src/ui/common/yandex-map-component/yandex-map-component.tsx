@@ -17,7 +17,7 @@ import {
 } from 'react-yandex-maps'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {useDispatch} from 'react-redux'
-import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {isOutOfBounds, positionToBoundsLine} from '../../../utils/map-utils'
 import {renderToString} from 'react-dom/server'
 
@@ -281,7 +281,9 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
     }, [ map?.current?.panTo, isOneTimeRendr, setIsOneTimeRendr ])
 
     const modalActivator = ( text: string[] ) => {
-        dispatch(globalModalStoreActions.setTextMessage(text))
+        dispatch<any>(textAndActionGlobalModal({
+            text,
+        }))
     }
 
     return (
