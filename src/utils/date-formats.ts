@@ -37,4 +37,7 @@ export const isToday = ( someDate: Date ) => {
 export const randomDate = ( start: Date, end: Date ): Date => {
     return new Date(start.getTime() + Math.random() * ( end.getTime() - start.getTime() ));
 }
+
 export const randomPassportDate = (): string => yearMmDdFormat(randomDate(new Date(1990, 1, 1), new Date(2018, 1, 1))) || ''
+
+export const hoursDiff = (dateStart: Date, dateFinish: Date) => Math.abs(dateStart.getTime()-dateFinish.getTime()) / 36e5

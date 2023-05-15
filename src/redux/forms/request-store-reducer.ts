@@ -444,6 +444,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     cargoWeight: elem.cargoWeight,
 
     uploadTime: elem.uploadTime && new Date(elem.uploadTime),
+    unloadTime: elem.unloadTime && new Date(elem.unloadTime),
 
     documents: {
         proxyWay: {
@@ -937,8 +938,7 @@ export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
         await dispatch(changeSomeValuesOnCurrentRequest({
             requestNumber: requestNumber + '',
             cargoWeight: cargoWeight + '',
-            // toDo: пока думаю создать ли новое поле фактического получения груза или редактировать shipmentDate
-            shipmentDate: yearMmDdFormatISO(new Date()),
+            uploadTime: yearMmDdFormatISO(new Date()),
             // addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( cargoWeight || 1 ),
             addedPrice,
             localStatuscargoHasBeenTransferred: true,
@@ -966,6 +966,7 @@ export const cargoHasBeenRecievedOnCurrentRequest = ( requestNumber: string ): R
         await dispatch(changeSomeValuesOnCurrentRequest({
             requestNumber,
             localStatuscargoHasBeenReceived: true,
+            unloadTime: yearMmDdFormatISO(new Date()),
         }))
         await dispatch(getOneRequestsAPI(+( requestNumber || 0 )))
     }

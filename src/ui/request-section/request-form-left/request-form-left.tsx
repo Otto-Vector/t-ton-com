@@ -159,15 +159,14 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                     dispatch<any>(addRequestCashPay())
                     navigate(routes.searchList)
                 },
+                // самовывоз при создани заявки
                 submitRequestAndDrive: async ( values: OneRequestType ) => {
                     await onSubmit(values)
                     // оплата за создание заявки
                     dispatch<any>(addRequestCashPay())
                     navigate(routes.selfExportDriver + values.requestNumber)
                 },
-                toSelfExportDriver: ( values: OneRequestType ) => {
-                    navigate(routes.selfExportDriver + values.requestNumber)
-                },
+                // самовывоз при повторном просмотре своей заявки
                 toSelfExportDriverFromStatusAndAccept: ( values: OneRequestType ) => {
                     navigate(routes.selfExportDriverFromStatus + values.requestNumber)
                 },

@@ -484,6 +484,8 @@ export type OneRequestType = {
     // ИЗМЕНЯЕМЫЕ
     // Время погрузки (устанавливается автоматически после нажатия кнопки "Груз у водителя"(сайт) или "Груз получил"(приложение на тел.)
     uploadTime?: Date | string
+    // Время разгрузки (устанавливается автоматически после нажатия кнопки "Груз у получателя"(сайт) или "Груз передал"(приложение на тел.)
+    unloadTime?: Date | string
 
     // блок с документами
     documents: DocumentsRequestType
@@ -771,6 +773,7 @@ export type OneRequestApiType = {
 
     cargoWeight?: string
     uploadTime?: string
+    unloadTime?: string
 
     proxyFreightLoader?: string
     proxyDriver?: string

@@ -111,6 +111,7 @@
     padding-left: 3px;
     margin-bottom: 5px;
     white-space: nowrap;
+    user-select: none;
 
     &::first-letter {
       text-transform: uppercase;

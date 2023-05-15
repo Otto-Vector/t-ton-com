@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect} from 'react'
+import React, {ChangeEvent, useEffect, useState} from 'react'
 import styles from './request-form-documents-right.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 import {
@@ -11,7 +11,7 @@ import {RequestModesType} from '../request-section'
 
 import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
-import {hhmmDdMmYyFormat} from '../../../utils/date-formats'
+import {addNDay, hhmmDdMmYyFormat, hoursDiff} from '../../../utils/date-formats'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
@@ -71,8 +71,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     // блокировка кнопок загрузки данных
     const disabledButtonOnMode = requestModes.acceptDriverMode || requestModes.createMode
 
-    useEffect(() => {
-    }, [ initialValuesDocuments ])
+    const [ uploadMode, setUploadMode ] = useState<'Время погрузки' | 'Время разгрузки' | 'Время в пути'>('Время погрузки')
 
 
     return (
@@ -159,12 +158,24 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
                 + styles.requestFormDocumentRight__inputsPanel_trio }>
                 {/* Время погрузки */ }
-                <div
-                    className={ styles.requestFormDocumentRight__inputsItem + ' ' + styles.requestFormDocumentRight__buttonItem_long }>
+                <div className={ styles.requestFormDocumentRight__inputsItem + ' '
+                    + styles.requestFormDocumentRight__buttonItem_long }
+                     style={ { cursor: 'pointer' } }
+                     onClick={ () => {
+                         initialValuesRequest?.unloadTime &&
+                         setUploadMode(( prevState ) =>
+                             prevState === 'Время погрузки' ? 'Время разгрузки' :
+                                 prevState === 'Время разгрузки' ? 'Время в пути' : 'Время погрузки',
+                         )
+                     } }
+                >
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labelsRequestHead.uploadTime }</label>
+                        { uploadMode }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
-                        { hhmmDdMmYyFormat(initialValuesRequest?.shipmentDate) }
+                        { uploadMode === 'Время погрузки' ? hhmmDdMmYyFormat(initialValuesRequest?.uploadTime as Date) || '-'
+                            : uploadMode === 'Время разгрузки' ? hhmmDdMmYyFormat(initialValuesRequest?.unloadTime as Date) || '-'
+                                : hoursDiff(initialValuesRequest?.uploadTime as Date, initialValuesRequest?.unloadTime as Date) + ' часов'
+                        }
                     </div>
                 </div>
                 {/* Документы груза */ }
