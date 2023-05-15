@@ -5,6 +5,7 @@ import './yandex-map-restyle-ballon.scss'
 import './yandex-map-restyle-copyright.scss'
 
 import {
+    Button,
     FullscreenControl,
     Map,
     MapState,
@@ -18,6 +19,7 @@ import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {useDispatch} from 'react-redux'
 import {globalModalStoreActions, textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {isOutOfBounds, positionToBoundsLine} from '../../../utils/map-utils'
+import {renderToString} from 'react-dom/server'
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -329,6 +331,29 @@ export const YandexMapWithRoute: React.FC<ToRouteMap> = React.memo((
                             senderCity={ fromCity + '' }
                             recipientCity={ toCity + '' }
                             onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : undefined }
+            />
+            <Button
+                options={ {
+                    position: { bottom: '15px', right: '15px' },
+                } }
+                data={ {
+                    content: renderToString(<div
+                        title={ 'Центрирование на маршруте (начало/конец)' }
+                        style={ {
+                            backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNiIgaGVpZ2h0PSIyNiI+PGcgZmlsbD0iIzZCNkI2QiI+PHBhdGggZD0iTTEwIDE0aDQuNWEzLjUgMy41IDAgMCAwIDAtN0gxMHYyaDQuNWExLjUgMS41IDAgMSAxIDAgM0gxMHYyem0wIDAiLz48cGF0aCBkPSJNMTUgMTJoLTQuNWEzLjUgMy41IDAgMCAwIDAgN0gxNXYtMmgtNC41YTEuNSAxLjUgMCAxIDEgMC0zSDE1di0yem0wIDBNMTkgMjBhMiAyIDAgMSAwIDAtNCAyIDIgMCAwIDAgMCA0em0wLTFhMSAxIDAgMSAwIDAtMiAxIDEgMCAwIDAgMCAyem0wIDBNOSAxMGEyIDIgMCAxIDAgMC00IDIgMiAwIDAgMCAwIDR6bTAtMWExIDEgMCAxIDAgMC0yIDEgMSAwIDAgMCAwIDJ6bTAgMCIvPjxwYXRoIGQ9Ik0xMy41NyAyMC44bDIuODMtMi44Mi0uNzEtLjctMi44MyAyLjgyLjcuN3ptMS40MS0yLjgybC43LS43LTIuMTEtMi4xMy0uNy43IDIuMTEgMi4xM3ptMCAwIi8+PC9nPjwvc3ZnPg==)',
+                            width: '25px',
+                            height: '25px',
+                        } }/>),
+                } }
+                onClick={ ( e: any ) => {
+                    map.current.panTo(e?.originalEvent?.target?._selected
+                        ? polyline[0] : polyline[polyline.length - 1])
+                } }
+            />
+            <FullscreenControl
+                options={ {
+                    position: { bottom: '15px', left: '15px' },
+                } }
             />
         </YandexMapComponent>
     )
