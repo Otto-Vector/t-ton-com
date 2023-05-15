@@ -25,6 +25,7 @@ import {
 import {InfoText} from '../../common/info-text/into-text'
 import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
+    cargoHasBeenRecievedOnCurrentRequest,
     changeCurrentRequestOnCreate,
     changeSomeValuesOnCurrentRequest,
     getRouteFromAPI,
@@ -149,15 +150,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 cargoHasBeenReceived: ( values: OneRequestType ) => {
                     console.log('груз получен')
                     if (!values.localStatus?.cargoHasBeenReceived) {
-                        // меняем одновременно в двух местах, чтобы не переподгружаться
-                        // dispatch(requestStoreActions.setInitialValues({
-                        //     ...values,
-                        //     localStatus: { ...values.localStatus, cargoHasBeenReceived: true },
-                        // }))
-                        // dispatch<any>(changeSomeValuesOnCurrentRequest({
-                        //     requestNumber: values.requestNumber + '',
-                        //     localStatuscargoHasBeenReceived: true,
-                        // }))
+                        cargoHasBeenRecievedOnCurrentRequest(values.requestNumber+'')
                     }
                 },
                 submitRequestAndSearch: async ( values: OneRequestType ) => {

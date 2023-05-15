@@ -960,6 +960,16 @@ export const createDriverListApi = ( props: { requestNumber: number, validUntil?
         }
     }
 
+// по событию "груз у получателя"
+export const cargoHasBeenRecievedOnCurrentRequest = ( requestNumber: string ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        await dispatch(changeSomeValuesOnCurrentRequest({
+            requestNumber,
+            localStatuscargoHasBeenReceived: true,
+        }))
+        await dispatch(getOneRequestsAPI(+( requestNumber || 0 )))
+    }
+
 // удаляем заявку по её номеру
 export const deleteCurrentRequestAPI = ( requestNumber: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
