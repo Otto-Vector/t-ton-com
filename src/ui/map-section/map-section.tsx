@@ -180,9 +180,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                             onClick={ ( e: any ) => {
                                 map.current.panTo(e?.originalEvent?.target?._selected
                                     ? polyline[0] : polyline[polyline.length - 1])
-                            }
-                            }
-
+                            } }
                     />
                 }
                 {/* СПИСОК ВОДИТЕЛЕЙ В СЕЛЕКТОРЕ КАРТЫ */ }
@@ -270,11 +268,16 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                   preset: 'islands#circleIcon',
                                                   iconColor: colorOfStatus(status),
                                                   hasBalloon: true,
+                                                  openEmptyBalloon: true
                                               } }
                                               properties={ {
-                                                  iconContent: `${ isSelected ? placemarkIsSelectedStyle : '' }` + id + '</b>',
+                                                  iconContent: renderToString(
+                                                      <span className={
+                                                          styles.yandexMapComponent__placemarkContent + ' '
+                                                          + ( isSelected ? styles.yandexMapComponent__placemarkContent__selected : '' )
+                                                      }>{ id }</span>),
                                                   hintContent: `<b>${ fio }</b>`,
-                                                  balloonContent: `<div id="driver-${ idEmployee }" class="driver-card"></div>`,
+                                                  balloonContent: `<div id='driver-${ idEmployee }' class='driver-card'></div>`,
                                               } }
                                               key={ id + idEmployee }
                                               onClick={ () => {

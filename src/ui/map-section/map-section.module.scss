@@ -34,6 +34,20 @@
     }
   }
 
+  &__placemarkContent {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-radius: 50%;
+    width: 100%;
+
+    &__selected {
+      font-weight: bold;
+      background: #81b5e1;
+      box-shadow: 0 0 15px black;
+    }
+  }
+
   &__preloader {
     position: absolute;
     height: 100%;

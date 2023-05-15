@@ -3,7 +3,7 @@ import styles from './menu-panel.module.scss'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {getRoutesStore} from '../../selectors/routes-reselect'
-import {NavLink, useLocation, useParams} from 'react-router-dom'
+import {NavLink, useLocation} from 'react-router-dom'
 import loginSVG from './buttonsSVG/login.svg'
 import createSVG from './buttonsSVG/create.svg'
 import searchSVG from './buttonsSVG/search.svg'
