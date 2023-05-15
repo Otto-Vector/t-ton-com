@@ -27,6 +27,7 @@ import {globalModalStoreActions, textAndActionGlobalModal} from '../../redux/uti
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
 import {CancelXButtonDriverView} from './cancel-x-button-driver-view/cancel-x-button-driver-view'
 import {parseToNormalMoney} from '../../utils/parsers'
+import {boldWrapper} from '../../utils/html-rebuilds'
 
 
 type OwnProps = {
@@ -160,6 +161,13 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
 
     if (isFetching) return <Preloader/>
 
+    // телефон водителя в модалку
+    const phoneToModal = ( employeeOnePhone: string | undefined ) => {
+        dispatch<any>(textAndActionGlobalModal({
+            text: 'Телефон водителя: ' + boldWrapper(employeeOnePhone),
+        }))
+    }
+
     return (
         <div className={ styles.addDriversForm__wrapper }>
             {/* иконка под невидимую закрывалку на балуне яндекс карты */ }
@@ -286,7 +294,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                                     disabled={ !employeeOnePhone }
                                     colorMode={ 'blue' }
                                     onClick={ () => {
-                                        console.log('нажали кнопку с номером телефона')
+                                        phoneToModal(employeeOnePhone)
                                     } }
                                     title={ employeeOnePhone + '' }
                                     rounded

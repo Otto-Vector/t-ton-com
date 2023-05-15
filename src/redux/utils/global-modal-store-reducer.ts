@@ -83,7 +83,7 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
         case 'global-modal-reducer/SET-BODY-PADDING-VISIBLE': {
             return {
                 ...state,
-                isBodyPadding: action.isBodyPadding
+                isBodyPadding: action.isBodyPadding,
             }
         }
         case 'global-modal-reducer/RESET-ALL-VALUES': {
@@ -189,6 +189,7 @@ export const textAndActionGlobalModal = ( {
                                               isBodyPadding = true,
                                           }: GlobalModalType ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
+        dispatch(globalModalStoreActions.resetAllValues())
         dispatch(globalModalStoreActions.setBodyPaddingVisible(isBodyPadding))
         dispatch(globalModalStoreActions.setAction(action || null))
         dispatch(globalModalStoreActions.setNavigateToOk(navigateOnOk))
