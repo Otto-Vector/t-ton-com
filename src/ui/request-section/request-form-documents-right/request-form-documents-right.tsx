@@ -11,7 +11,7 @@ import {RequestModesType} from '../request-section'
 
 import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
-import {addNDay, hhmmDdMmYyFormat, hoursDiff} from '../../../utils/date-formats'
+import {addNDay, hhmmDdMmYyFormat, timeDiff} from '../../../utils/date-formats'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
@@ -174,7 +174,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__info }>
                         { uploadMode === 'Время погрузки' ? hhmmDdMmYyFormat(initialValuesRequest?.uploadTime as Date) || '-'
                             : uploadMode === 'Время разгрузки' ? hhmmDdMmYyFormat(initialValuesRequest?.unloadTime as Date) || '-'
-                                : hoursDiff(initialValuesRequest?.uploadTime as Date, initialValuesRequest?.unloadTime as Date) + ' часов'
+                                : timeDiff(initialValuesRequest?.uploadTime as Date, initialValuesRequest?.unloadTime as Date) + ' часов'
                         }
                     </div>
                 </div>
