@@ -3,11 +3,11 @@ import {GlobalModalStoreReducerStateType} from '../../redux/utils/global-modal-s
 
 type GlobalModalStoreSelectors<T extends keyof Y, Y = GlobalModalStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
-export const getTextGlobalModalStore: GlobalModalStoreSelectors<'modalGlobalTextMessage'> = ( state ) => state.globalModalStoreReducer.modalGlobalTextMessage
+export const getTextGlobalModalStore: GlobalModalStoreSelectors<'text'> = ( state ) => state.globalModalStoreReducer.text
 export const getChildrenGlobalModalStore: GlobalModalStoreSelectors<'reactChildren'> = ( state ) => state.globalModalStoreReducer.reactChildren
-export const getNavigateToOkGlobalModalStore: GlobalModalStoreSelectors<'navigateToOk'> = ( state ) => state.globalModalStoreReducer.navigateToOk
-export const getNavigateToCancelGlobalModalStore: GlobalModalStoreSelectors<'navigateToCancel'> = ( state ) => state.globalModalStoreReducer.navigateToCancel
-export const getTitleGlobalModalStore: GlobalModalStoreSelectors<'titleText'> = ( state ) => state.globalModalStoreReducer.titleText
+export const getNavigateToOkGlobalModalStore: GlobalModalStoreSelectors<'navigateOnOk'> = ( state ) => state.globalModalStoreReducer.navigateOnOk
+export const getNavigateToCancelGlobalModalStore: GlobalModalStoreSelectors<'navigateOnCancel'> = ( state ) => state.globalModalStoreReducer.navigateOnCancel
+export const getTitleGlobalModalStore: GlobalModalStoreSelectors<'title'> = ( state ) => state.globalModalStoreReducer.title
 export const getTimeToDeactivateGlobalModalStore: GlobalModalStoreSelectors<'timeToDeactivate'> = ( state ) => state.globalModalStoreReducer.timeToDeactivate
 export const getActionGlobalModalStore: GlobalModalStoreSelectors<'action'> = ( state ) => state.globalModalStoreReducer.action
 export const getIsFooterVisibleGlobalModalStore: GlobalModalStoreSelectors<'isFooterVisible'> = ( state ) => state.globalModalStoreReducer.isFooterVisible

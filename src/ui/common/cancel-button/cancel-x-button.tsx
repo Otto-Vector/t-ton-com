@@ -7,11 +7,12 @@ type OwnProps = {
     onCancelClick: () => void
     noAbsolute?: boolean
     mode?: 'redAlert' | 'white' | 'blueAlert' | 'noFill'
+    isNotButtonButSpan?: boolean
 }
 
 export const CancelXButton: React.FC<OwnProps> = (
     {
-        onCancelClick, noAbsolute, mode = 'blueAlert',
+        onCancelClick, noAbsolute, mode = 'blueAlert', isNotButtonButSpan,
     } ) => {
     return (
         <div className={ styles.cancelButtonn + ' '
@@ -22,10 +23,11 @@ export const CancelXButton: React.FC<OwnProps> = (
                     colorMode={ mode }
                     title={ 'Отменить/вернуться' }
                     style={ { border: 'none' } }
+                    isNotButtonButSpan={ isNotButtonButSpan }
                     rounded
             >
                 <MaterialIcon style={ { lineHeight: 1, fontSize: '29px' } } icon_name={ 'cancel' }/>
-                    </Button>
+            </Button>
         </div>
     )
 }

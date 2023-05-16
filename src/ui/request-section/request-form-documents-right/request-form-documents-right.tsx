@@ -157,7 +157,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             </div>
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
                 + styles.requestFormDocumentRight__inputsPanel_trio }>
-                {/* Время погрузки */ }
+                {/* Время погрузки // (изменяется при клике левой кнопкой мыши) */ }
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }
                      style={ { cursor: 'pointer' } }

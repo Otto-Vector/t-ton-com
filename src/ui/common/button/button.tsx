@@ -20,6 +20,7 @@ type OwnProps = {
     isSelectOnTab?: boolean
     // проброс стилей от родительского элемента
     style?: React.CSSProperties
+    isNotButtonButSpan?: boolean
 }
 
 export const Button: React.FC<OwnProps> = (
@@ -28,24 +29,34 @@ export const Button: React.FC<OwnProps> = (
         colorMode = 'noFill', rounded,
         type = 'button', children, wordWrap,
         isSelectOnTab = true,
-        style, label, form,
+        style, label, form, isNotButtonButSpan,
     } ) => {
-
-    return <button className={
-        `${ classes.button } 
+    const className = `${ classes.button } 
         ${ classes['button_' + colorMode] } 
         ${ rounded ? classes.button_rounded : '' } 
         ${ wordWrap ? classes.button_wrap : '' }`
-    }
-                   disabled={ disabled }
-                   onClick={ onClick }
-                   type={ type }
-                   title={ ( label || title ) + ( disabled ? ' (кнопка неактивна)' : '' ) }
-                   tabIndex={ isSelectOnTab ? 0 : -1 }
-                   form={ form }
-                   style={ style }
-    >{ // отображаем то что внутри тега button
-        children || title
-    }
-    </button>
+
+    return ( !isNotButtonButSpan
+            ? <button className={ className }
+                      disabled={ disabled }
+                      onClick={ onClick }
+                      type={ type }
+                      title={ ( label || title ) + ( disabled ? ' (кнопка неактивна)' : '' ) }
+                      tabIndex={ isSelectOnTab ? 0 : -1 }
+                      form={ form }
+                      style={ style }
+            >{ // отображаем то что внутри тега button
+                children || title
+            }
+            </button>
+            : <span
+                className={ className }
+                style={ style }
+                onClick={ onClick }
+                title={ ( label || title ) + ( disabled ? ' (кнопка неактивна)' : '' ) }
+            >{ // отображаем то что внутри тега span
+                children || title
+            }
+            </span>
+    )
 }

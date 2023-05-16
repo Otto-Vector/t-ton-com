@@ -15,11 +15,11 @@ import {
     getTimeToDeactivateGlobalModalStore,
     getTitleGlobalModalStore,
 } from '../../../selectors/utilites/global-modal-reselect'
-import {useNavigate} from 'react-router-dom'
+import {To, useNavigate} from 'react-router-dom'
 import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from-array-to-paragraph'
 import {ModalFooter} from './modal-footer/modal-footer'
 import {CancelXButton} from '../cancel-button/cancel-x-button'
-import {globalModalDestroy} from '../../../redux/utils/global-modal-store-reducer'
+import {globalModalDestroyAndLastView} from '../../../redux/utils/global-modal-store-reducer'
 
 
 export const InfoGlobalToModal: React.FC = () => {
@@ -49,19 +49,19 @@ export const InfoGlobalToModal: React.FC = () => {
         setIsOneTimeActivated(false)
 
         setVisible(false)
-        dispatch<any>(globalModalDestroy())
+        dispatch<any>(globalModalDestroyAndLastView())
     }
 
     const onOkHandle = () => {
         onCloseLocal()
         // выполняем прокинутый экшон (если он есть)
         actionOnOk && actionOnOk()
-        navToOnOk && navigate(navToOnOk)
+        navToOnOk && navigate(navToOnOk as To)
     }
 
     const onCancelHandle = () => {
         onCloseLocal()
-        navToOnCancel && navigate(navToOnCancel)
+        navToOnCancel && navigate(navToOnCancel as To)
     }
 
     const titleHere: string | 'Вопрос' | 'Информация' | undefined = isTitleEnable
@@ -94,8 +94,9 @@ export const InfoGlobalToModal: React.FC = () => {
                bodyStyle={ !isBodyPadding ? { padding: 0 } : undefined }
                width={ !isBodyPadding ? 'auto' : undefined }
             // onOk={ onOkHandle }
+            //    afterClose={ afterClose }
                className={ 'modalStyle' }
-               closeIcon={ CancelXButton({ onCancelClick: onCancelHandle }) }
+               closeIcon={ CancelXButton({ onCancelClick: onCancelHandle, isNotButtonButSpan: true }) }
             // destroyOnClose={ true }
                footer={ isFooterEnable ? ModalFooter({
                        onCancelHandle,
