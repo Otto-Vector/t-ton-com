@@ -13,3 +13,4 @@ export const getActionGlobalModalStore: GlobalModalStoreSelectors<'action'> = ( 
 export const getIsFooterVisibleGlobalModalStore: GlobalModalStoreSelectors<'isFooterVisible'> = ( state ) => state.globalModalStoreReducer.isFooterVisible
 export const getIsTitleVisibleGlobalModalStore: GlobalModalStoreSelectors<'isTitleVisible'> = ( state ) => state.globalModalStoreReducer.isTitleVisible
 export const getIsBodyPaddingVisibleGlobalModalStore: GlobalModalStoreSelectors<'isBodyPadding'> = ( state ) => state.globalModalStoreReducer.isBodyPadding
+export const geActivetModalsListGlobalModalStore: GlobalModalStoreSelectors<'activeModals'> = ( state ) => state.globalModalStoreReducer.activeModals

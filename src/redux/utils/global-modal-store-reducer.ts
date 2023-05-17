@@ -6,8 +6,9 @@ import {GetActionsTypes} from '../../types/ts-utils'
 type GlobalModalType = {
     text?: string | string[]
     reactChildren?: null | JSX.Element
-    // заворачиваем диспатч внутрь анонимной функции: ()=>{dispatch(выполняйтся)}
     title?: 'Вопрос' | 'Сообщение' | 'Внимание!' | 'Информация'
+    // заворачиваем диспатч внутрь анонимной функции: ()=>{dispatch(выполняйтся)}
+    // /// НИКОГДА НЕ ПЕРЕДАВАТЬ СЮДА СОЗДАНИЕ НОВОГО ОКНА !!!
     action?: null | ( () => void )
     navigateOnOk?: To
     navigateOnCancel?: To
@@ -32,7 +33,7 @@ const initialState: GlobalModalStoreReducerStateType = {
     isFooterVisible: false,
     isTitleVisible: false,
     isBodyPadding: true,
-    activeModals: [ {} ],
+    activeModals: [],
 }
 
 
@@ -120,10 +121,9 @@ export const globalModalStoreReducer = ( state = initialState, action: GlobalMod
             }
         }
         case 'global-modal-reducer/ADD-CURRENT-MODAL-TO-ACTIVE-LIST': {
-            const add = ( { activeModals, ...state }: GlobalModalStoreReducerStateType ) => [ ...activeModals, state ]
             return {
                 ...state,
-                activeModals: add(state),
+                activeModals: [ ...state.activeModals, action.currentModal ],
             }
         }
         case 'global-modal-reducer/REMOVE-CURRENT-MODAL-FROM-ACTIVE': {
@@ -159,8 +159,9 @@ const globalModalStoreActions = {
     resetAllValuesOnCurrentModal: () => ( {
         type: 'global-modal-reducer/RESET-ALL-VALUES-ON-CURRENT-MODAL',
     } as const ),
-    addCurrentModalToActiveList: () => ( {
+    addCurrentModalToActiveList: ( currentModal: GlobalModalType ) => ( {
         type: 'global-modal-reducer/ADD-CURRENT-MODAL-TO-ACTIVE-LIST',
+        currentModal,
     } as const ),
     removeCurrentModalFromActiveList: () => ( {
         type: 'global-modal-reducer/REMOVE-CURRENT-MODAL-FROM-ACTIVE',
@@ -197,25 +198,28 @@ export type GlobalModalStoreReducerThunkActionType<R = void> = ThunkAction<Promi
 
 
 // для создания диалогового окна с переданной функцией
-export const textAndActionGlobalModal = ( {
-                                              text,
-                                              action,
-                                              navigateOnOk,
-                                              navigateOnCancel,
-                                              title,
-                                              timeToDeactivate,
-                                              reactChildren,
-                                              isFooterVisible = true,
-                                              isTitleVisible = true,
-                                              isBodyPadding = true,
-                                          }: GlobalModalType ): GlobalModalStoreReducerThunkActionType =>
+export const textAndActionGlobalModal = ( globalModalValue: GlobalModalType ): GlobalModalStoreReducerThunkActionType =>
     async ( dispatch ) => {
-        dispatch(globalModalStoreActions.addCurrentModalToActiveList())
-        dispatch(globalModalStoreActions.resetAllValuesOnCurrentModal())
+        const {
+            text,
+            action,
+            navigateOnOk,
+            navigateOnCancel,
+            title,
+            timeToDeactivate,
+            reactChildren,
+            isFooterVisible = true,
+            isTitleVisible = true,
+            isBodyPadding = true,
+        } = globalModalValue
 
-        dispatch(globalModalStoreActions.setChildren(reactChildren || null))
+        dispatch(globalModalStoreActions.addCurrentModalToActiveList(globalModalValue))
+
+        dispatch(globalModalStoreActions.resetAllValuesOnCurrentModal())
         dispatch(globalModalStoreActions.setTitle(title))
-        dispatch(globalModalStoreActions.setTextMessage(text || ''))
+        dispatch(globalModalStoreActions.setTextMessage(text))
+        // reactChildren: ставить ТОЛЬКО после текста
+        dispatch(globalModalStoreActions.setChildren(reactChildren || null))
         dispatch(globalModalStoreActions.setBodyPaddingVisible(isBodyPadding))
         dispatch(globalModalStoreActions.setFooterVisible(isFooterVisible))
         dispatch(globalModalStoreActions.setTitleVisible(isTitleVisible))
@@ -223,26 +227,26 @@ export const textAndActionGlobalModal = ( {
         dispatch(globalModalStoreActions.setNavigateToOk(navigateOnOk))
         dispatch(globalModalStoreActions.setNavigateToCancel(navigateOnCancel))
         dispatch(globalModalStoreActions.setTimeToDeactivate(timeToDeactivate || null))
+
     }
 
-// // принудительное закрытие окна
-// export const globalModalDestroy = (): GlobalModalStoreReducerThunkActionType =>
-//     async ( dispatch ) => {
-//         dispatch(globalModalStoreActions.resetAllValuesOnCurrentModal())
-//         // dispatch(globalModalStoreActions.removeCurrentModalFromActiveList())
-//     }
-
 // принудительное закрытие окна c переходом на предыдущее
-export const globalModalDestroyAndLastView = (): GlobalModalStoreReducerThunkActionType =>
-    async ( dispatch , getState) => {
-        const activeGlobalModals = getState().globalModalStoreReducer.activeModals
-        const length = activeGlobalModals.length
-        if (length) {
+// (если оно было перекрыто другим окном)
+export const globalModalDestroy = (): GlobalModalStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        const activeModals = getState().globalModalStoreReducer.activeModals
+        const length = activeModals.length
+        // если имеем два и более окна
+        if (length > 1) {
+            // последнее - активное окно, удаляемся
             dispatch(globalModalStoreActions.removeCurrentModalFromActiveList())
-            await dispatch(textAndActionGlobalModal(activeGlobalModals[length-1]))
-            // так как в предыдущем действии окно создаётся ещё раз, то и удаляем его ещё раз
-            dispatch(globalModalStoreActions.removeCurrentModalFromActiveList())
+            // переходим на предпоследнее
+            await dispatch(textAndActionGlobalModal(activeModals[length - 2]))
         } else {
+            // просто закрытие
             dispatch(globalModalStoreActions.resetAllValuesOnCurrentModal())
         }
+        // второе удаление при срабатывании активизации нового "старого" окна
+        // оно же просто удаление при нормальном закрытии
+        dispatch(globalModalStoreActions.removeCurrentModalFromActiveList())
     }

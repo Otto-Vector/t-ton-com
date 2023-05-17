@@ -19,7 +19,7 @@ import undoSVG from './buttonsSVG/undo.svg'
 import {getIsAuthAuthStore} from '../../selectors/auth-reselect'
 import {getUnreadMessagesCountInfoStore} from '../../selectors/info-reselect'
 import {logoutAuth} from '../../redux/auth-store-reducer'
-import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
+import {globalModalDestroy, textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {
     getCashRequisitesStore,
     getIsReqErrorRequisitesStore,
@@ -76,6 +76,10 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
                 text: 'НЕ ХВАТАТЕ СРЕДСТВ НА СОЗДАНИЕ ЗАЯВКИ, НЕОБХОДИМО ПОПОЛНИТЬ БАЛАНС НА ' + tariffs?.create + 'руб. \n ОК - переход к оплате',
                 navigateOnOk: routes.info,
             }))
+    }
+
+    const testAction = () => {
+        dispatch<any>(globalModalDestroy())
     }
 
     const requisitesMustBeFilled = async () => {
@@ -138,15 +142,15 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
             action: null,
         },
         {
-            // route: routes.test,
-            route: routes.requestInfo.history + '76',
+            route: routes.test,
+            // route: routes.requestInfo.history + '76',
             // route: routes.addDriver + '60',
             // route: routes.optionsEdit.employees + 'a5e79ad8-b9b0-42ba-8ad3-ba127b22e9c3',
             src: testPNG, title: 'Для тестов отрисовки компонентов',
             buttonText: 'Тест', active: !isNewRegistrationRoute && isAuth,
-            action: null,
+            action: testAction,
         },
-    ], [ isAuth, isNewRegistrationRoute, routes, newRequest, logout, isOnAnswersMap, reqNumber, pathname ])
+    ], [ isAuth, isNewRegistrationRoute, routes, newRequest, logout, isOnAnswersMap, reqNumber, pathname, testAction ])
 
     return (
         <nav className={ styles.menuPanel }>

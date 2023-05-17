@@ -159,14 +159,14 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
 
     }
 
-    if (isFetching) return <Preloader/>
-
     // телефон водителя в модалку
     const phoneToModal = ( employeeOnePhone: string | undefined ) => {
         dispatch<any>(textAndActionGlobalModal({
             text: 'Телефон водителя: ' + boldWrapper(employeeOnePhone),
         }))
     }
+
+    if (isFetching) return <Preloader/>
 
     return (
         <div className={ styles.addDriversForm__wrapper }>

@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import './modal-animations.css' // вырезал нужные анимации для модалки
 import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфо-окон
 import './info-global-to-modal.scss' // перезапись стилей
 import {Modal} from 'antd'
 import {
+    geActivetModalsListGlobalModalStore,
     getActionGlobalModalStore,
     getChildrenGlobalModalStore, getIsBodyPaddingVisibleGlobalModalStore,
     getIsFooterVisibleGlobalModalStore,
@@ -19,7 +20,7 @@ import {To, useNavigate} from 'react-router-dom'
 import {textFromArrayToParagraph} from './text-from-array-to-paragraph/text-from-array-to-paragraph'
 import {ModalFooter} from './modal-footer/modal-footer'
 import {CancelXButton} from '../cancel-button/cancel-x-button'
-import {globalModalDestroyAndLastView} from '../../../redux/utils/global-modal-store-reducer'
+import {globalModalDestroy} from '../../../redux/utils/global-modal-store-reducer'
 
 
 export const InfoGlobalToModal: React.FC = () => {
@@ -34,6 +35,7 @@ export const InfoGlobalToModal: React.FC = () => {
     const isFooterEnable = useSelector(getIsFooterVisibleGlobalModalStore)
     const isTitleEnable = useSelector(getIsTitleVisibleGlobalModalStore)
     const isBodyPadding = useSelector(getIsBodyPaddingVisibleGlobalModalStore)
+    const activeGlobalModalsList = useSelector(geActivetModalsListGlobalModalStore)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -49,7 +51,7 @@ export const InfoGlobalToModal: React.FC = () => {
         setIsOneTimeActivated(false)
 
         setVisible(false)
-        dispatch<any>(globalModalDestroyAndLastView())
+        dispatch<any>(globalModalDestroy())
     }
 
     const onOkHandle = () => {
@@ -63,6 +65,10 @@ export const InfoGlobalToModal: React.FC = () => {
         onCloseLocal()
         navToOnCancel && navigate(navToOnCancel as To)
     }
+
+    // const afterClose = () => {
+    //     console.log('закрыли: ')
+    // }
 
     const titleHere: string | 'Вопрос' | 'Информация' | undefined = isTitleEnable
         ? ( title || ( ( actionOnOk || navToOnOk ) ? 'Вопрос' : 'Информация' ) )
@@ -97,7 +103,7 @@ export const InfoGlobalToModal: React.FC = () => {
             //    afterClose={ afterClose }
                className={ 'modalStyle' }
                closeIcon={ CancelXButton({ onCancelClick: onCancelHandle, isNotButtonButSpan: true }) }
-            // destroyOnClose={ true }
+               destroyOnClose={ true }
                footer={ isFooterEnable ? ModalFooter({
                        onCancelHandle,
                        onOkHandle,
