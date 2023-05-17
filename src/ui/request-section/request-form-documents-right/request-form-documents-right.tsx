@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react'
+import React, {ChangeEvent, useState} from 'react'
 import styles from './request-form-documents-right.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 import {
@@ -11,7 +11,7 @@ import {RequestModesType} from '../request-section'
 
 import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
-import {addNDay, hhmmDdMmYyFormat, timeDiff} from '../../../utils/date-formats'
+import {hhmmDdMmYyFormat, timeDiff} from '../../../utils/date-formats'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
@@ -72,7 +72,6 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const disabledButtonOnMode = requestModes.acceptDriverMode || requestModes.createMode
 
     const [ uploadMode, setUploadMode ] = useState<'Время погрузки' | 'Время разгрузки' | 'Время в пути'>('Время погрузки')
-
 
     return (
         <div className={ styles.requestFormDocumentRight }>
@@ -135,7 +134,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__line }></div>
             {/*/////////ПАНЕЛЬ РАСЧЁТА////////////////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
-                + styles.requestFormDocumentRight__inputsPanel_trio }>
+                + styles.requestFormDocumentRight__inputsPanel_trio }
+                 title={ 'тн.км.: ' + initialValuesRequest.responseStavka + 'руб. / ' + initialValuesRequest.distance + 'км' }
+            >
                 {/* Вес груза */ }
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }>
@@ -149,7 +150,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labelsRequestHead.responsePrice }</label>
+                        { initialValuesRequest?.addedPrice ? labelsRequestHead.responsePrice : 'Цена до погрузки' }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
                         { price }
                     </div>
@@ -174,7 +175,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__info }>
                         { uploadMode === 'Время погрузки' ? hhmmDdMmYyFormat(initialValuesRequest?.uploadTime as Date) || '-'
                             : uploadMode === 'Время разгрузки' ? hhmmDdMmYyFormat(initialValuesRequest?.unloadTime as Date) || '-'
-                                : timeDiff(initialValuesRequest?.uploadTime as Date, initialValuesRequest?.unloadTime as Date) + ' часов'
+                                : timeDiff(initialValuesRequest?.uploadTime as Date, initialValuesRequest?.unloadTime as Date)
                         }
                     </div>
                 </div>

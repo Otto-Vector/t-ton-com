@@ -136,7 +136,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 cancelRequest: () => {
                     navigate(-1)
                 },
-                // груз передан
+                // груз передан (груз у водителя)
                 cargoHasBeenTransferred: ( values: OneRequestType ) => {
                     if (!values.localStatus?.cargoHasBeenTransferred) {
                         dispatch<any>(textAndActionGlobalModal({
@@ -148,9 +148,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 },
                 // груз получен
                 cargoHasBeenReceived: ( values: OneRequestType ) => {
-                    console.log('груз получен')
                     if (!values.localStatus?.cargoHasBeenReceived) {
-                        cargoHasBeenRecievedOnCurrentRequest(values.requestNumber+'')
+                        dispatch<any>(cargoHasBeenRecievedOnCurrentRequest(values.requestNumber+''))
                     }
                 },
                 submitRequestAndSearch: async ( values: OneRequestType ) => {

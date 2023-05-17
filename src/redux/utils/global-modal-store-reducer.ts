@@ -238,12 +238,12 @@ export const globalModalDestroy = (): GlobalModalStoreReducerThunkActionType =>
         const length = activeModals.length
         // если имеем два и более окна
         if (length > 1) {
-            // последнее - активное окно, удаляемся
+            // последнее - активное окно, удаляется (но не сразу :))
             dispatch(globalModalStoreActions.removeCurrentModalFromActiveList())
             // переходим на предпоследнее
             await dispatch(textAndActionGlobalModal(activeModals[length - 2]))
         } else {
-            // просто закрытие
+            // просто закрытие/очистка
             dispatch(globalModalStoreActions.resetAllValuesOnCurrentModal())
         }
         // второе удаление при срабатывании активизации нового "старого" окна

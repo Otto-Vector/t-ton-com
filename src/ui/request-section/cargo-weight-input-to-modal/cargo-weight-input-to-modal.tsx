@@ -18,7 +18,7 @@ export const CargoWeightInputToModal: React.FC = () => {
     const {
         distance,
         cargoWeight,
-        addedPrice,
+        responsePrice,
         responseStavka,
         driverCanCargoWeight,
     } = useSelector(getInitialDataToModalCalcRequestStore)
@@ -52,11 +52,17 @@ export const CargoWeightInputToModal: React.FC = () => {
         return cargoValidate(cargoWeight + '')
     }
 
+    const StavkaTnKm = ()=><p style={        {
+        background:'lightslategray',
+        borderRadius: '70%',
+        boxShadow: '0 0 5px gray'
+    }
+    }>{ responseStavka + 'р/'+ distance +'км' }</p>
 
     return ( <Form
         onSubmit={ onSubmit }
         decorators={ [ focusOnError ] }
-        initialValues={ { cargoWeight, addedPrice } }
+        initialValues={ { cargoWeight, addedPrice: responsePrice } }
         key={ Math.random() }
         render={
             ( { handleSubmit, form, values } ) => (
@@ -65,7 +71,8 @@ export const CargoWeightInputToModal: React.FC = () => {
                         <div className={ styles.cargoWeightInputToModal__infoPanel }>
                             <p><strong>{ 'До изменения:' }</strong></p>
                             <p>{ cargoWeight + ' тн.' }</p>
-                            <p>{ parseToNormalMoney(addedPrice) + ' руб.' }</p>
+                            <StavkaTnKm/>
+                            <p>{ parseToNormalMoney(responsePrice) + ' руб.' }</p>
                         </div>
                         <div className={ styles.cargoWeightInputToModal__inputsItem }>
                             <label className={ styles.cargoWeightInputToModal__label }
@@ -86,6 +93,7 @@ export const CargoWeightInputToModal: React.FC = () => {
                         <div className={ styles.cargoWeightInputToModal__infoPanel }>
                             <p><strong>{ 'После изменения:' }</strong></p>
                             <p>{ parseCommaToDot(values.cargoWeight + ' тн.') }</p>
+                            <StavkaTnKm/>
                             <p>{ values.addedPrice + ' руб.' }</p>
                         </div>
                     </div>

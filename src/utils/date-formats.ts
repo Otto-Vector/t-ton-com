@@ -42,14 +42,18 @@ export const randomDate = ( start: Date, end: Date ): Date => {
 
 // сколько дней/часов/минут между датами
 export const timeDiff = ( dateStart: Date, dateFinish: Date ): string => {
-    // разница в миллисекундах
-    const diffTime = Math.abs(dateStart.getTime() - dateFinish.getTime())
-    // разница в днях
-    const diffDays = Math.floor(diffTime / ( 1000 * 60 * 60 * 24 ))
-    // разница в часах
-    const diffHours = Math.floor(( diffTime % ( 1000 * 60 * 60 * 24 ) ) / ( 1000 * 60 * 60 ))
-    // разница в минутах
-    const diffMinutes = Math.floor(( diffTime % ( 1000 * 60 * 60 ) ) / ( 1000 * 60 ))
+    try {
+        // разница в миллисекундах
+        const diffTime = Math.abs(dateStart.getTime() - dateFinish.getTime())
+        // разница в днях
+        const diffDays = Math.floor(diffTime / ( 1000 * 60 * 60 * 24 ))
+        // разница в часах
+        const diffHours = Math.floor(( diffTime % ( 1000 * 60 * 60 * 24 ) ) / ( 1000 * 60 * 60 ))
+        // разница в минутах
+        const diffMinutes = Math.floor(( diffTime % ( 1000 * 60 * 60 ) ) / ( 1000 * 60 ))
 
-    return `${ diffDays }д ${ diffHours }ч ${ diffMinutes }м`
+        return `${ diffDays ? diffDays+'д ':''}${ diffHours ? diffHours+'ч ':''}${ diffMinutes ? diffMinutes + 'мин':''}`
+    } catch (e) {
+        return 'Не является датой'
+    }
 }

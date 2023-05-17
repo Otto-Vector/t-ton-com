@@ -28,10 +28,10 @@ export const getInitialDistanceRequestStore = createSelector(getInitialValuesReq
 // export const getInitialStavkaRequestStore = createSelector(getInitialValuesRequestStore, ( { responseStavka } ) => responseStavka)
 
 export const getInitialDataToModalCalcRequestStore = createSelector(getInitialValuesRequestStore, (
-        { distance, cargoWeight, addedPrice, responseStavka, responseTransport, responseTrailer } ) => ( {
+        { distance, cargoWeight, responsePrice, responseStavka, responseTransport, responseTrailer } ) => ( {
         distance: +( distance || 0 ),
         cargoWeight: +( cargoWeight || 0 ),
-        addedPrice: +( addedPrice || 0 ),
+        responsePrice: +( responsePrice || 0 ),
         responseStavka: +( responseStavka || 0 ),
         driverCanCargoWeight: ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) ),
     } ),
