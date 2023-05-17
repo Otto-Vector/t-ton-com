@@ -442,9 +442,9 @@ export type OneRequestType = {
         paymentHasBeenTransferred?: boolean
         // Оплату получил
         paymentHasBeenReceived?: boolean
-        // Груз передан
+        // Груз передан | Груз у водителя
         cargoHasBeenTransferred?: boolean
-        // Груз получен
+        // Груз получен | Груз у грузополучателя
         cargoHasBeenReceived?: boolean
     }
     // количество ответов от водителей // массив с айдишками

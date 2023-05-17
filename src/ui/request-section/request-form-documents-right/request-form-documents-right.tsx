@@ -71,7 +71,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     // блокировка кнопок загрузки данных
     const disabledButtonOnMode = requestModes.acceptDriverMode || requestModes.createMode
 
-    const [ uploadMode, setUploadMode ] = useState<'Время погрузки' | 'Время разгрузки' | 'Время в пути'>(initialValuesRequest?.uploadTime ? 'Время разгрузки' : 'Время погрузки')
+    const [ uploadMode, setUploadMode ] = useState<'Время погрузки' | 'Время разгрузки' | 'Время в пути'>(initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? 'Время разгрузки' : 'Время погрузки')
     // микро-всплывашка над "Вес груза" & "Цена по заявке'
     const tnKmTitle = 'тн.км.: ' + initialValuesRequest.responseStavka + 'руб. / ' + initialValuesRequest.distance + 'км'
 

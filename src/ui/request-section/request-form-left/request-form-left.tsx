@@ -52,7 +52,7 @@ import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisi
 import createDecorator from 'final-form-focus'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {CargoWeightInputToModal} from '../cargo-weight-input-to-modal/cargo-weight-input-to-modal'
-
+import truckPNG from '../../../media/trackToRight.png'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -386,9 +386,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.idEmployee }</label>
-                                <InfoField textData={ !requestModes.acceptDriverMode ? infoData.acceptedEmployeeData : undefined}
-                                           phoneData={ !requestModes.acceptDriverMode ? infoData.acceptedEmployeePhoneData : undefined }
-                                           placeholder={ initialValues.idEmployee ? placeholders.requestCarrierId + '' : 'Водитель не выбран' }
+                                <InfoField
+                                    textData={ !requestModes.acceptDriverMode ? infoData.acceptedEmployeeData : undefined }
+                                    phoneData={ !requestModes.acceptDriverMode ? infoData.acceptedEmployeePhoneData : undefined }
+                                    placeholder={ initialValues.idEmployee ? placeholders.requestCarrierId + '' : 'Водитель не выбран' }
                                 />
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>
@@ -403,7 +404,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                              placeholder={ placeholders.note }
                                              inputType={ 'text' }
                                     />
-                                    : <InfoField placeholder={ initialValues.note + '' || 'Примечание отсутствует'}/>
+                                    : <InfoField placeholder={ initialValues.note + '' || 'Примечание отсутствует' }/>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.note } mode={ 'inForm' }/>
                             </div>
@@ -422,8 +423,17 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation?.cargoStamps } mode={ 'inForm' }/>
                             </div>
-                            <div className={ styles.requestFormLeft__buttonsPanel }>
+                            {/*КНОПКИ И НЕ КНОПКИ*/ }
+                            <div className={ styles.requestFormLeft__buttonsPanel }
+                                 style={ requestModes.statusMode && initialValues.globalStatus !== 'новая заявка' ? {
+                                     backgroundImage: `url(${ truckPNG })`,
+                                     backgroundRepeat: 'no-repeat',
+                                     backgroundPositionX: !values.localStatus?.cargoHasBeenTransferred ? 'left'
+                                         : !values.localStatus?.cargoHasBeenReceived ? 'center' : 'right',
+                                 } : undefined }
+                            >
                                 { !requestModes.historyMode ? <>
+                                    {/* ПОИСК ИСПОЛНИТЕЛЯ | ПРИНЯТЬ ЗАЯВКУ | ГРУЗ У ВОДИТЕЛЯ*/ }
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button
                                             colorMode={ !values.localStatus?.cargoHasBeenTransferred ? 'green' : 'blue' }
@@ -454,6 +464,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                             disabled={ submitting || submitError }
                                             rounded/>
                                     </div>
+                                    {/* САМОВЫВОЗ | ОТКАЗАТЬСЯ | ГРУЗ У ПОЛУЧАТЕЛЯ */ }
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={
                                             ( ( requestModes.createMode || isMyRequestAndNew ) && 'blue' ) ||

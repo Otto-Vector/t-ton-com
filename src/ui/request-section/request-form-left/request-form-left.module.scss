@@ -100,7 +100,7 @@
 
   &__buttonsPanel {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     height: 40px;
     min-width: 300px;
     font-family: $RalewayFont;
