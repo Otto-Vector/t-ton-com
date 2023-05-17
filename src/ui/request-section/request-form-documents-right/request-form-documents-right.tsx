@@ -71,7 +71,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     // блокировка кнопок загрузки данных
     const disabledButtonOnMode = requestModes.acceptDriverMode || requestModes.createMode
 
-    const [ uploadMode, setUploadMode ] = useState<'Время погрузки' | 'Время разгрузки' | 'Время в пути'>('Время погрузки')
+    const [ uploadMode, setUploadMode ] = useState<'Время погрузки' | 'Время разгрузки' | 'Время в пути'>(initialValuesRequest?.uploadTime ? 'Время разгрузки' : 'Время погрузки')
+    // микро-всплывашка над "Вес груза" & "Цена по заявке'
+    const tnKmTitle = 'тн.км.: ' + initialValuesRequest.responseStavka + 'руб. / ' + initialValuesRequest.distance + 'км'
 
     return (
         <div className={ styles.requestFormDocumentRight }>
@@ -135,7 +137,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             {/*/////////ПАНЕЛЬ РАСЧЁТА////////////////////////////////*/ }
             <div className={ styles.requestFormDocumentRight__inputsPanel + ' '
                 + styles.requestFormDocumentRight__inputsPanel_trio }
-                 title={ 'тн.км.: ' + initialValuesRequest.responseStavka + 'руб. / ' + initialValuesRequest.distance + 'км' }
+                 title={ tnKmTitle }
             >
                 {/* Вес груза */ }
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
@@ -150,7 +152,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { initialValuesRequest?.addedPrice ? labelsRequestHead.responsePrice : 'Цена до погрузки' }</label>
+                        { initialValuesRequest?.addedPrice ? labelsRequestHead.responsePrice : 'Цена ДО погрузки' }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
                         { price }
                     </div>
@@ -161,7 +163,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 {/* Время погрузки // (изменяется при клике левой кнопкой мыши) */ }
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }
-                     style={ { cursor: 'pointer' } }
+                     style={ { cursor: 'pointer', position: 'relative' } }
                      onClick={ () => {
                          initialValuesRequest?.unloadTime &&
                          setUploadMode(( prevState ) =>
@@ -170,6 +172,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                          )
                      } }
                 >
+                    <InfoButtonToModal textToModal={ modalsText.uploadTime } mode={ 'inForm' }/>
                     <label className={ styles.requestFormDocumentRight__label }>
                         { uploadMode }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
