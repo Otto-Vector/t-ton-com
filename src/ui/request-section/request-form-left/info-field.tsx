@@ -6,20 +6,22 @@ import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-
 import {useDispatch} from 'react-redux'
 
 type InfoProps = {
-    textData: string[],
-    phoneData: string[],
+    textData?: string[],
+    phoneData?: string[],
+    // при осутствии другой инфы, используется как основной текст
     placeholder: string
 }
 
+// окошко для отображения нередактирумеой инфы с телефоном и другими данными в модалку
 export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placeholder } ) => {
     const dispatch = useDispatch()
 
     // преобразователь в строку и placeholder при отсутствии данных
-    const textFromStrArrOrPlaceholder = textData.join(', ') || placeholder
+    const textDataToString = textData?.join(', ')
+    const phoneDataToString = phoneData?.join(', ')
+    const textFromStrArrOrPlaceholder = !!textDataToString ? textDataToString : placeholder
     const modalActivator = ( text: string[] ) => {
-        dispatch<any>(textAndActionGlobalModal({
-            text: text,
-        }))
+        dispatch<any>(textAndActionGlobalModal({ text }))
     }
     return <>
         <div className={ styles.requestFormLeft__info + ' ' +
@@ -28,7 +30,15 @@ export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placehold
              dangerouslySetInnerHTML={ { __html: `<p>${ textFromStrArrOrPlaceholder }</p>` } }>
             {/*{ removeAllHTMLTags(textFromStrArrOrPlaceholder) }*/ }
         </div>
-        { textFromStrArrOrPlaceholder !== placeholder ? <>
+        { !!textDataToString && textData &&
+            <img src={ info_icon } alt={ 'info' }
+                 className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_info }
+                 title={ 'Показать информацию' }
+                 onClick={ () => {
+                     modalActivator(textData)
+                 } }
+            /> }
+        { !!phoneDataToString && phoneData &&
             <img
                 className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_phone }
                 src={ phoneImage } alt={ 'phone' } title={ 'Показать телефон' }
@@ -36,13 +46,6 @@ export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placehold
                     modalActivator(phoneData)
                 } }
             />
-            <img src={ info_icon } alt={ 'info' }
-                 className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_info }
-                 title={ 'Показать информацию' }
-                 onClick={ () => {
-                     modalActivator(textData)
-                 } }
-            />
-        </> : null }
+        }
     </>
 }

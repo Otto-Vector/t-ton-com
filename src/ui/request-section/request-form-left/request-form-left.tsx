@@ -149,7 +149,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 // груз получен
                 cargoHasBeenReceived: ( values: OneRequestType ) => {
                     if (!values.localStatus?.cargoHasBeenReceived) {
-                        dispatch<any>(cargoHasBeenRecievedOnCurrentRequest(values.requestNumber+''))
+                        dispatch<any>(cargoHasBeenRecievedOnCurrentRequest(values.requestNumber + ''))
                     }
                 },
                 submitRequestAndSearch: async ( values: OneRequestType ) => {
@@ -323,9 +323,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     onDisableHandleClick={ onDisableOptionIdCustomerSelectorHandleClick }
                                                     isClearable
                                     />
-                                    : <InfoField textData={ infoData.customerData }
-                                                 phoneData={ infoData.customerPhoneData }
-                                                 placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : placeholders.idCustomer + '' }
+                                    : <InfoField
+                                        textData={ !requestModes.acceptDriverMode ? infoData.customerData : undefined }
+                                        phoneData={ !requestModes.acceptDriverMode ? infoData.customerPhoneData : undefined }
+                                        placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : placeholders.idCustomer + '' }
                                     />
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.customer } mode={ 'inForm' }/>
@@ -342,9 +343,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     handleChanger={ setOneShipper }
                                                     isSubLabelOnOption
                                                     isClearable
-                                    /> : <InfoField textData={ infoData.shipperSenderData }
-                                                    phoneData={ infoData.shipperSenderPhoneData }
-                                                    placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : placeholders.idSender + '' }
+                                    /> : <InfoField
+                                        textData={ !requestModes.acceptDriverMode ? infoData.shipperSenderData : undefined }
+                                        phoneData={ !requestModes.acceptDriverMode ? infoData.shipperSenderPhoneData : undefined }
+                                        placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : placeholders.idSender + '' }
                                     />
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.shipper } mode={ 'inForm' }/>
@@ -361,9 +363,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     handleChanger={ setOneConsignee }
                                                     isSubLabelOnOption
                                                     isClearable
-                                    /> : <InfoField textData={ infoData.consigneeRecipientData }
-                                                    phoneData={ infoData.consigneeRecipientPhoneData }
-                                                    placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : placeholders.idRecipient + '' }
+                                    /> : <InfoField
+                                        textData={ !requestModes.acceptDriverMode ? infoData.consigneeRecipientData : undefined }
+                                        phoneData={ !requestModes.acceptDriverMode ? infoData.consigneeRecipientPhoneData : undefined }
+                                        placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : placeholders.idRecipient + '' }
                                     />
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.consignee } mode={ 'inForm' }/>
@@ -372,9 +375,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.requestCarrierId }</label>
-                                <InfoField textData={ infoData.acceptedCarrierData }
-                                           phoneData={ infoData.acceptedCarrierPhoneData }
-                                           placeholder={ !infoData.acceptedCarrierData.join(', ') ? placeholders.requestCarrierId + '' : 'Перевозчик не выбран' }
+                                <InfoField
+                                    textData={ !requestModes.acceptDriverMode ? infoData.acceptedCarrierData : undefined }
+                                    phoneData={ !requestModes.acceptDriverMode ? infoData.acceptedCarrierPhoneData : undefined }
+                                    placeholder={ initialValues.requestCarrierId ? placeholders.requestCarrierId + '' : 'Перевозчик не выбран' }
                                 />
                                 <InfoButtonToModal textToModal={ fieldInformation.carrier } mode={ 'inForm' }/>
                             </div>
@@ -382,13 +386,13 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.idEmployee }</label>
-                                <InfoField textData={ infoData.acceptedEmployeeData }
-                                           phoneData={ infoData.acceptedEmployeePhoneData }
-                                           placeholder={ !infoData.acceptedEmployeeData.join(', ') ? placeholders.idEmployee + '' : 'Водитель не выбран' }
+                                <InfoField textData={ !requestModes.acceptDriverMode ? infoData.acceptedEmployeeData : undefined}
+                                           phoneData={ !requestModes.acceptDriverMode ? infoData.acceptedEmployeePhoneData : undefined }
+                                           placeholder={ initialValues.idEmployee ? placeholders.requestCarrierId + '' : 'Водитель не выбран' }
                                 />
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
                             </div>
-                            {/* ПРИМЕЧАНИЕ */}
+                            {/* ПРИМЕЧАНИЕ */ }
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.note }</label>
@@ -398,14 +402,12 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                              resetFieldBy={ form }
                                              placeholder={ placeholders.note }
                                              inputType={ 'text' }
-                                    /> : <div className={ styles.requestFormLeft__info + ' ' +
-                                        styles.requestFormLeft__info_leftAlign }>
-                                        { initialValues.note }
-                                    </div>
+                                    />
+                                    : <InfoField placeholder={ initialValues.note + '' || 'Примечание отсутствует'}/>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.note } mode={ 'inForm' }/>
                             </div>
-                            {/* ПЛОМБЫ ДЛЯ ГРУЗА */}
+                            {/* ПЛОМБЫ ДЛЯ ГРУЗА */ }
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.cargoStamps }</label>
@@ -415,10 +417,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                              resetFieldBy={ form }
                                              placeholder={ placeholders.cargoStamps }
                                              inputType={ 'text' }
-                                    /> : <div className={ styles.requestFormLeft__info + ' ' +
-                                        styles.requestFormLeft__info_leftAlign }>
-                                        { initialValues.cargoStamps }
-                                    </div>
+                                    />
+                                    : <InfoField placeholder={ initialValues.cargoStamps + '' || 'Пломбы не внесены' }/>
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation?.cargoStamps } mode={ 'inForm' }/>
                             </div>
