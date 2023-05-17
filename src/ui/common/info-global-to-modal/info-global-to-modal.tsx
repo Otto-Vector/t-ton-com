@@ -1,13 +1,13 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import './modal-animations.css' // вырезал нужные анимации для модалки
 import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфо-окон
 import './info-global-to-modal.scss' // перезапись стилей
 import {Modal} from 'antd'
 import {
-    geActivetModalsListGlobalModalStore,
     getActionGlobalModalStore,
-    getChildrenGlobalModalStore, getIsBodyPaddingVisibleGlobalModalStore,
+    getChildrenGlobalModalStore,
+    getIsBodyPaddingVisibleGlobalModalStore,
     getIsFooterVisibleGlobalModalStore,
     getIsTitleVisibleGlobalModalStore,
     getNavigateToCancelGlobalModalStore,
@@ -35,7 +35,7 @@ export const InfoGlobalToModal: React.FC = () => {
     const isFooterEnable = useSelector(getIsFooterVisibleGlobalModalStore)
     const isTitleEnable = useSelector(getIsTitleVisibleGlobalModalStore)
     const isBodyPadding = useSelector(getIsBodyPaddingVisibleGlobalModalStore)
-    const activeGlobalModalsList = useSelector(geActivetModalsListGlobalModalStore)
+    // const activeGlobalModalsList = useSelector(geActivetModalsListGlobalModalStore)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -100,7 +100,7 @@ export const InfoGlobalToModal: React.FC = () => {
                bodyStyle={ !isBodyPadding ? { padding: 0 } : undefined }
                width={ !isBodyPadding ? 'auto' : undefined }
             // onOk={ onOkHandle }
-            //    afterClose={ afterClose }
+            // afterClose={ afterClose }
                className={ 'modalStyle' }
                closeIcon={ CancelXButton({ onCancelClick: onCancelHandle, isNotButtonButSpan: true }) }
                destroyOnClose={ true }
