@@ -22,6 +22,10 @@ import {OneRequestTableTypeReq} from '../../../types/form-types'
 import truckToRightPNG from '../../../media/trackToRight.png'
 import truckLoadPNG from '../../../media/trackLoadFuel.png'
 import truckToLeftPNG from '../../../media/truckLeft.png'
+import noRespTruckPNG from '../../../media/noRespTrack.png'
+import haveRespTrackPNG from '../../../media/haveRespTrack.png'
+import transparentPNG from '../../../media/transparent32x32.png'
+
 
 type OwnProps = {
     tableModes: TableModesType
@@ -57,24 +61,37 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const columns = React.useMemo(
         () => [
             {
+                Header: '',
+                accessor: 'globalStatus',
+                Filter: ColumnInputFilter,
+                disableFilters: true,
+                Cell: ( {
+                            localStatus: { cargoHasBeenReceived, cargoHasBeenTransferred },
+                            globalStatus,
+                            answers,
+                        }: OneRequestTableTypeReq ) =>
+                    <img className={ styles.tableComponent__statusImage }
+                         alt={ 'status_icon' }
+                         title={ globalStatus }
+                         src={ tableModes.statusTblMode ?
+                             ( globalStatus === 'в работе' ?
+                                 cargoHasBeenReceived ? truckToLeftPNG
+                                     : cargoHasBeenTransferred ? truckLoadPNG
+                                         : truckToRightPNG
+                                 : globalStatus === 'новая заявка' ?
+                                     !answers ? noRespTruckPNG : haveRespTrackPNG
+                                     : transparentPNG )
+                             : transparentPNG }
+                        // добавим прозрачность на неотвеченные заявки
+                         style={ globalStatus === 'новая заявка' && !answers
+                             ? { opacity: .5 } : undefined }
+                    />,
+            },
+            {
                 Header: '№',
                 accessor: 'requestNumber',
                 Filter: ColumnInputFilter,
                 disableFilters: true,
-                Cell: ( {
-                            requestNumber,
-                            localStatus: { cargoHasBeenReceived, cargoHasBeenTransferred },
-                            globalStatus,
-                        }: OneRequestTableTypeReq ) =>
-                    <div className={ styles.tableComponent__numberColumn }
-                         style={ tableModes.statusTblMode && globalStatus === 'в работе' ? {
-                             backgroundImage: `url(${
-                                 cargoHasBeenReceived ? truckToLeftPNG
-                                     : cargoHasBeenTransferred ? truckLoadPNG : truckToRightPNG
-                             })`,
-                         } : undefined }
-                         title={ globalStatus }
-                    >{ requestNumber }</div>,
             },
             {
                 Header: 'Тип груза',

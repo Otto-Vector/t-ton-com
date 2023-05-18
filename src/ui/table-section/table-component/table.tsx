@@ -8,7 +8,6 @@ import {useNavigate} from 'react-router-dom'
 import {OneRequestTableType} from '../../../types/form-types'
 import {GlobalFilter} from './filter/global-filter'
 import {getGlobalValueFiltersStore} from '../../../selectors/table/filters-reselect'
-// import {GlobalFilter} from './filter/global-filter';
 
 
 type OwnProps = {
