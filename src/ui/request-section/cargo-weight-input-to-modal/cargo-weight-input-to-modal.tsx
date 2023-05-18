@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {globalModalDestroy} from '../../../redux/utils/global-modal-store-reducer'
 import {syncValidators} from '../../../utils/validators'
 import {useDispatch, useSelector} from 'react-redux'
@@ -25,7 +25,7 @@ export const CargoWeightInputToModal: React.FC = () => {
 
     const dispatch = useDispatch()
     //фокусировка на проблемном поле при вводе
-    const focusOnError = createDecorator<ToSmallCalcFormType>()
+    const focusOnError = useMemo(()=>createDecorator<ToSmallCalcFormType>(),[])
 
     const cargoValidate = syncValidators.cargoWeightInModal(( cargoWeight || driverCanCargoWeight ) + 1)
 
@@ -52,25 +52,24 @@ export const CargoWeightInputToModal: React.FC = () => {
         return cargoValidate(cargoWeight + '')
     }
 
-    const StavkaTnKm = ()=><p style={        {
-        background:'lightslategray',
+    const StavkaTnKm = () => <p style={ {
+        background: 'lightslategray',
         borderRadius: '70%',
-        boxShadow: '0 0 5px gray'
-    }
-    }>{ responseStavka + 'р/'+ distance +'км' }</p>
+        boxShadow: '0 0 5px gray',
+    } }>{ responseStavka + 'р/' + distance + 'км' }</p>
 
     return ( <Form
         onSubmit={ onSubmit }
         decorators={ [ focusOnError ] }
-        initialValues={ { cargoWeight, addedPrice: responsePrice } }
-        key={ Math.random() }
+        initialValues={ { cargoWeight: cargoWeight || driverCanCargoWeight, addedPrice: responsePrice } }
+        // key={ Math.random() } // решилось опцией destroyOnClose={ true } в модалке
         render={
             ( { handleSubmit, form, values } ) => (
                 <form onSubmit={ handleSubmit }>
                     <div className={ styles.cargoWeightInputToModal__formContainer }>
                         <div className={ styles.cargoWeightInputToModal__infoPanel }>
                             <p><strong>{ 'До изменения:' }</strong></p>
-                            <p>{ cargoWeight + ' тн.' }</p>
+                            <p>{ driverCanCargoWeight + ' тн.' }</p>
                             <StavkaTnKm/>
                             <p>{ parseToNormalMoney(responsePrice) + ' руб.' }</p>
                         </div>

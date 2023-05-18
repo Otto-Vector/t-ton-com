@@ -60,6 +60,7 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
         const recipientInn = ( recipientUser?.innNumber || recipient?.innNumber )
         const recipientLegalAddress = ( recipientUser?.legalAddress || recipient?.address )
         const driverCanCargoWeight = ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) )
+
         const returnObject = {
             /* ЗАКАЗЧИК */
             customerData: [

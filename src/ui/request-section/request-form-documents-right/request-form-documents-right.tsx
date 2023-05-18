@@ -30,13 +30,13 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
 
     const labelsDocumentsTab = useSelector(getLabelDocumentsRequestValuesStore)
     const labelsRequestHead = useSelector(getLabelRequestStore)
-    // const initialValuesDocuments = useSelector(getInitialDocumentsRequestValuesStore)
     const initialValuesRequest = useSelector(getInitialValuesRequestStore)
     const requestNumber = initialValuesRequest.requestNumber
+    const driverCanCargoWeight = ( +( initialValuesRequest?.responseTransport?.cargoWeight || 0 ) + ( +( initialValuesRequest?.responseTrailer?.cargoWeight || 0 ) ) )
     const initialValuesDocuments = initialValuesRequest.documents
     const modalsText = useSelector(getInfoTextModalsRequestValuesStore)
     const dispatch = useDispatch()
-    const price = parseToNormalMoney(+( initialValuesRequest?.addedPrice || 0 ) || +( initialValuesRequest?.responsePrice || 0 ))
+    const price = parseToNormalMoney(initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? +( initialValuesRequest?.addedPrice || 0 ) : +( initialValuesRequest?.responsePrice || 0 ))
     const buttonsAction = {
         acceptRequest: () => {
         },
@@ -70,8 +70,8 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     }
     // блокировка кнопок загрузки данных
     const disabledButtonOnMode = requestModes.acceptDriverMode || requestModes.createMode
-
-    const [ uploadMode, setUploadMode ] = useState<'Время погрузки' | 'Время разгрузки' | 'Время в пути'>(initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? 'Время разгрузки' : 'Время погрузки')
+    // какую инфу показывать модуле "Время погрузки"
+    const [ uploadMode, setUploadMode ] = useState<'Время погрузки' | 'Время разгрузки' | 'Время в пути'>(initialValuesRequest?.localStatus?.cargoHasBeenReceived ? 'Время разгрузки' : 'Время погрузки')
     // микро-всплывашка над "Вес груза" & "Цена по заявке'
     const tnKmTitle = 'тн.км.: ' + initialValuesRequest.responseStavka + 'руб. / ' + initialValuesRequest.distance + 'км'
 
@@ -143,16 +143,16 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { labelsRequestHead.cargoWeight }</label>
+                        { initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? labelsRequestHead.cargoWeight : 'Вес ДО погрузки' }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
-                        { initialValuesRequest.cargoWeight }
+                        { initialValuesRequest?.localStatus?.cargoHasBeenTransferred ?  initialValuesRequest.cargoWeight : driverCanCargoWeight }
                     </div>
                 </div>
                 {/* Цена по заявке */ }
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { initialValuesRequest?.addedPrice ? labelsRequestHead.responsePrice : 'Цена ДО погрузки' }</label>
+                        { initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? labelsRequestHead.responsePrice : 'Цена ДО погрузки' }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
                         { price }
                     </div>
@@ -163,6 +163,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 {/* Время погрузки // (изменяется при клике левой кнопкой мыши) */ }
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }
+                     // добавлен стиль для InfoButtonToModal
                      style={ { cursor: 'pointer', position: 'relative' } }
                      onClick={ () => {
                          initialValuesRequest?.unloadTime &&

@@ -438,9 +438,9 @@ export type OneRequestType = {
     globalStatus?: RequestGlobalStatusType
     // локальный статус заявки
     localStatus: {
-        // Оплату передал
+        // Оплату передал (от грузополучателя/заказчика --> водителю/перевозчику)
         paymentHasBeenTransferred?: boolean
-        // Оплату получил
+        // Оплату получил (водитель/перевозчик получил(и) оплату)
         paymentHasBeenReceived?: boolean
         // Груз передан | Груз у водителя
         cargoHasBeenTransferred?: boolean
@@ -513,9 +513,10 @@ export type DocumentsRequestType = {
         // ТТН или ЭТрН с ЭЦП (Заголовок / ТОЛЬКО ФРОНТ)
         header?: string
 
-        documentDownload?: string // строка со ссылкой на сгенерированный БЭКОМ документ
-        // (!!! заменяется на сгенерированный ???)
-        documentUpload?: File // участвует ТОЛЬКО при редактировании формы
+        // строка со ссылкой на сгенерированный БЭКОМ документ
+        documentDownload?: string
+        // участвует ТОЛЬКО при редактировании формы
+        documentUpload?: File
 
         /* статусы подписания документа (хранятся на бэке, редактируются фронтом)*/
 
@@ -626,7 +627,7 @@ export type OneRequestApiType = {
     marked?: string
 
     globalStatus?: RequestGlobalStatusType
-    // деньги переданы
+    // деньги переданы (от грузополучателя/заказчика водителю/перевозчику)
     localStatuspaymentHasBeenTransferred?: boolean
     // груз у водителя
     localStatuscargoHasBeenTransferred?: boolean
