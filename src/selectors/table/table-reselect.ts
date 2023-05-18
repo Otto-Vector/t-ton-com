@@ -35,6 +35,7 @@ const parseRequestToTable = ( {
         globalStatus,
         responseEmployee,
         acceptedUsers,
+        localStatus,
     }: OneRequestType ): OneRequestTableType =>
     ( {
         requestNumber,
@@ -46,6 +47,7 @@ const parseRequestToTable = ( {
         // ставим цену в зависимости от расстояния
         price: ( distance || 0 ) > 100 ? +( acceptLongRoute || 0 ) : +( acceptShortRoute || 0 ),
         globalStatus,
+        localStatus,
         responseEmployee: parseFamilyToFIO(responseEmployee?.employeeFIO) || answers?.length + '' || '0',
         // Отмечаем причастных к заявкам
         marked: [ idUserCustomer, idUserRecipient, idUserSender, requestUserCarrierId ].includes(authId)

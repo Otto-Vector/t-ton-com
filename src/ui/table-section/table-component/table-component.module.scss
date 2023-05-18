@@ -7,10 +7,12 @@
     td {
       background-color: rgba($color, .5);
     }
+
     &:hover {
       td {
         background-color: rgba($color, .8);
       }
+
       td:nth-child(7) {
         background: none;
       }
@@ -132,6 +134,13 @@
 
   &__history {
     @include table-bg($grayFontColor);
+  }
+
+  &__numberColumn {
+    padding-left: 20px;
+    background-repeat: no-repeat;
+    background-size: 22px;
+    background-position: left center;
   }
 
   &__status {

@@ -27,7 +27,6 @@ import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
     cargoHasBeenRecievedOnCurrentRequest,
     changeCurrentRequestOnCreate,
-    changeSomeValuesOnCurrentRequest,
     getRouteFromAPI,
     requestStoreActions,
 } from '../../../redux/forms/request-store-reducer'
@@ -36,11 +35,7 @@ import {consigneesStoreActions} from '../../../redux/options/consignees-store-re
 import {Preloader} from '../../common/preloader/preloader'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
-import {
-    acceptLongRoutePay,
-    acceptShorRoutePay,
-    addRequestCashPay,
-} from '../../../redux/options/requisites-store-reducer'
+import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer'
 import {setCargoCompositionSelector} from '../../../redux/api/cargo-composition-response-reducer'
 import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-composition-reselect'
 import {Button} from '../../common/button/button'
@@ -53,6 +48,7 @@ import createDecorator from 'final-form-focus'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {CargoWeightInputToModal} from '../cargo-weight-input-to-modal/cargo-weight-input-to-modal'
 import truckPNG from '../../../media/trackToRight.png'
+import truckLoadPNG from '../../../media/trackLoadFuel.png'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -187,7 +183,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 dispatch(shippersStoreActions.setCurrentId(''))
                 dispatch(consigneesStoreActions.setCurrentId(''))
             }
-
             if (requestModes.historyMode) {
                 dispatch(shippersStoreActions.setCurrentId(initialValues.idSender + ''))
                 dispatch(consigneesStoreActions.setCurrentId(initialValues.idRecipient + ''))
@@ -204,7 +199,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                     getRouteFromAPI({ oneShipper, oneConsignee }))
             }
         }
-    }, [ oneShipper, oneConsignee ])
+    }, [ oneShipper, oneConsignee, isFirstRender ])
 
     // присваивается первое значение селектора, если поле пустое
     useEffect(() => {
@@ -426,7 +421,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             {/*КНОПКИ И НЕ КНОПКИ*/ }
                             <div className={ styles.requestFormLeft__buttonsPanel }
                                  style={ requestModes.statusMode && initialValues.globalStatus !== 'новая заявка' ? {
-                                     backgroundImage: `url(${ truckPNG })`,
+                                     backgroundImage: `url(${ (values.localStatus?.cargoHasBeenTransferred && !values.localStatus?.cargoHasBeenReceived) ? truckLoadPNG : truckPNG })`,
                                      backgroundRepeat: 'no-repeat',
                                      backgroundPositionX: !values.localStatus?.cargoHasBeenTransferred ? 'left'
                                          : !values.localStatus?.cargoHasBeenReceived ? 'center' : 'right',
@@ -458,7 +453,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                             ? buttonsAction.acceptRequest(values)
                                                             : buttonsAction.cargoHasBeenTransferred(values)
                                                     }
-
                                                 }
                                             } }
                                             disabled={ submitting || submitError }

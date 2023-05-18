@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "react-hooks", "import"
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {
+        "additionalHooks": "(useDispatch)"
+      }
+    ]
+  }
+}

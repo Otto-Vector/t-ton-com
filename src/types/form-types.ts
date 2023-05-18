@@ -811,4 +811,7 @@ export type OneRequestTableType = {
     globalStatus?: RequestGlobalStatusType
     responseEmployee?: string
     marked?: boolean
+    localStatus?: OneRequestType['localStatus']
 }
+
+export type OneRequestTableTypeReq = Required<OneRequestTableType>

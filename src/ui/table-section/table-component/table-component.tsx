@@ -18,6 +18,10 @@ import {TableModesType} from '../table-section'
 import {ddMmYearFormat} from '../../../utils/date-formats'
 import {getCashRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {OneRequestTableTypeReq} from '../../../types/form-types'
+import truckPNG from '../../../media/trackToRight.png'
+import truckLoadPNG from '../../../media/trackLoadFuel.png'
+import truckLeftPNG from '../../../media/truckLeft.png'
 
 type OwnProps = {
     tableModes: TableModesType
@@ -57,6 +61,23 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 accessor: 'requestNumber',
                 Filter: ColumnInputFilter,
                 disableFilters: true,
+                Cell: ( {
+                            requestNumber,
+                            localStatus: { cargoHasBeenReceived, cargoHasBeenTransferred },
+                            globalStatus,
+                        }: OneRequestTableTypeReq ) =>
+                    <div className={styles.tableComponent__numberColumn}
+                        style={ globalStatus === 'в работе' ? {
+                        backgroundImage: `url(${
+                            cargoHasBeenReceived ? truckLeftPNG
+                                : cargoHasBeenTransferred ? truckLoadPNG : truckPNG
+                        })`,
+                        // backgroundRepeat: 'no-repeat',
+                        // backgroundSize: '22px',
+                        // backgroundPosition: 'left center',
+                    } : undefined }
+                         title={ globalStatus }
+                    >{ requestNumber }</div>,
             },
             {
                 Header: 'Тип груза',
@@ -116,9 +137,9 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                             price,
                             marked,
                             answers,
-                        }: { requestNumber: number, price: number, marked: boolean, answers: number } ) =>
+                        }: OneRequestTableTypeReq ) =>
                     <Button title={ 'Открыть' }
-                            label={ 'Открыть ' + (( marked || !answers ) ? 'заявку' : 'карту с ответами перевозчиков') }
+                            label={ 'Открыть ' + ( ( marked || !answers ) ? 'заявку' : 'карту с ответами перевозчиков' ) }
                             onClick={ () => {
                                 if (tableModes.searchTblMode) {
                                     ( price > authCash )

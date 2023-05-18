@@ -46,7 +46,7 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
     const { globalFilter } = state
 
     return ( <>
-            <GlobalFilter filter={ globalFilter } setFilter={ setGlobalFilter } value={globalFilterValue}/>
+            <GlobalFilter filter={ globalFilter } setFilter={ setGlobalFilter } value={ globalFilterValue }/>
             <table { ...getTableProps() }>
                 <thead>
                 { headerGroups.map(( headerGroup ) => (
@@ -56,7 +56,7 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                                 { // @ts-ignore-next-line
                                     column?.canFilter
                                         ? column?.render('Filter') : <></>
-                                        // ? <>F</> : <></>
+                                    // ? <>F</> : <></>
                                 }
                             </th>
                         )) }
@@ -86,6 +86,10 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                                     answers: cell.row.original?.answers,
                                     //@ts-ignore-next-line
                                     marked: cell.row.original?.marked,
+                                    //@ts-ignore-next-line
+                                    globalStatus: cell.row.original?.globalStatus,
+                                    //@ts-ignore-next-line
+                                    localStatus: cell.row.original?.localStatus,
                                 }) }</td>
                             }) }
                         </tr>
