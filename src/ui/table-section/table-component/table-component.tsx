@@ -67,7 +67,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                             globalStatus,
                         }: OneRequestTableTypeReq ) =>
                     <div className={ styles.tableComponent__numberColumn }
-                         style={ globalStatus === 'в работе' ? {
+                         style={ tableModes.statusTblMode && globalStatus === 'в работе' ? {
                              backgroundImage: `url(${
                                  cargoHasBeenReceived ? truckLeftPNG
                                      : cargoHasBeenTransferred ? truckLoadPNG : truckPNG
