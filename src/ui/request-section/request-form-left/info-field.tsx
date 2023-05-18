@@ -15,22 +15,26 @@ type InfoProps = {
 // окошко для отображения нередактирумеой инфы с телефоном и другими данными в модалку
 export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placeholder } ) => {
     const dispatch = useDispatch()
-
+    // проверка на присутствие переменных и непустотность массива
+    const isTextData = !!textData?.length
+    const isPhoneData = !!phoneData?.length
     // преобразователь в строку и placeholder при отсутствии данных
-    const textDataToString = textData?.join(', ')
-    const phoneDataToString = phoneData?.join(', ')
-    const textFromStrArrOrPlaceholder = !!textDataToString ? textDataToString : placeholder
+    const textFromStrArrOrPlaceholder = isTextData ? textData.join(', ') : placeholder
+
     const modalActivator = ( text: string[] ) => {
         dispatch<any>(textAndActionGlobalModal({ text }))
     }
+
     return <>
         <div className={ styles.requestFormLeft__info + ' ' +
             styles.requestFormLeft__info_horizontalPadding + ' ' +
+            // включаем вертикальную прокрутку, при большом количестве символов
             ( textFromStrArrOrPlaceholder.length > 100 ? styles.requestFormLeft__info_scrollable : '' ) }
-             dangerouslySetInnerHTML={ { __html: `<p>${ textFromStrArrOrPlaceholder }</p>` } }>
-            {/*{ removeAllHTMLTags(textFromStrArrOrPlaceholder) }*/ }
-        </div>
-        { !!textDataToString && textData &&
+             // вставляем напрямую, так как там могут быть теги <b>
+             dangerouslySetInnerHTML={ { __html: `<p>${ textFromStrArrOrPlaceholder }</p>` } }
+        />
+
+        { isTextData &&
             <img src={ info_icon } alt={ 'info' }
                  className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_info }
                  title={ 'Показать информацию' }
@@ -38,7 +42,7 @@ export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placehold
                      modalActivator(textData)
                  } }
             /> }
-        { !!phoneDataToString && phoneData &&
+        { isPhoneData &&
             <img
                 className={ styles.requestFormLeft__icon + ' ' + styles.requestFormLeft__icon_phone }
                 src={ phoneImage } alt={ 'phone' } title={ 'Показать телефон' }
