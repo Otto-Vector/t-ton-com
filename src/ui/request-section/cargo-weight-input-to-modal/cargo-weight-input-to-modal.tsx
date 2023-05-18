@@ -25,7 +25,7 @@ export const CargoWeightInputToModal: React.FC = () => {
 
     const dispatch = useDispatch()
     //фокусировка на проблемном поле при вводе
-    const focusOnError = useMemo(()=>createDecorator<ToSmallCalcFormType>(),[])
+    const focusOnError = useMemo(() => createDecorator<ToSmallCalcFormType>(), [])
 
     const cargoValidate = syncValidators.cargoWeightInModal(( cargoWeight || driverCanCargoWeight ) + 1)
 
@@ -52,11 +52,8 @@ export const CargoWeightInputToModal: React.FC = () => {
         return cargoValidate(cargoWeight + '')
     }
 
-    const StavkaTnKm = () => <p style={ {
-        background: 'lightslategray',
-        borderRadius: '70%',
-        boxShadow: '0 0 5px gray',
-    } }>{ responseStavka + 'р/' + distance + 'км' }</p>
+    const StavkaTnKm = () => <p className={ styles.cargoWeightInputToModal__tnKm }>
+        { responseStavka + 'р/' + distance + 'км' }</p>
 
     return ( <Form
         onSubmit={ onSubmit }

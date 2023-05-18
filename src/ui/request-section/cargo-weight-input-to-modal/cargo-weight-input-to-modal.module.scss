@@ -17,6 +17,13 @@
     font-family: $PTSansFont;
   }
 
+  &__tnKm {
+    background: lightslategray;
+    border-radius: 70%;
+    box-shadow: 0 0 5px gray;
+    padding: 0 7px;
+  }
+
   &__inputsItem {
     width: 50%;
   }
