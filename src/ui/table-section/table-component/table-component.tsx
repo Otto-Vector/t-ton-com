@@ -66,16 +66,13 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                             localStatus: { cargoHasBeenReceived, cargoHasBeenTransferred },
                             globalStatus,
                         }: OneRequestTableTypeReq ) =>
-                    <div className={styles.tableComponent__numberColumn}
-                        style={ globalStatus === 'в работе' ? {
-                        backgroundImage: `url(${
-                            cargoHasBeenReceived ? truckLeftPNG
-                                : cargoHasBeenTransferred ? truckLoadPNG : truckPNG
-                        })`,
-                        // backgroundRepeat: 'no-repeat',
-                        // backgroundSize: '22px',
-                        // backgroundPosition: 'left center',
-                    } : undefined }
+                    <div className={ styles.tableComponent__numberColumn }
+                         style={ globalStatus === 'в работе' ? {
+                             backgroundImage: `url(${
+                                 cargoHasBeenReceived ? truckLeftPNG
+                                     : cargoHasBeenTransferred ? truckLoadPNG : truckPNG
+                             })`,
+                         } : undefined }
                          title={ globalStatus }
                     >{ requestNumber }</div>,
             },
