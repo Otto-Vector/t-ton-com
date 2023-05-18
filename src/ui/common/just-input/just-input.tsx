@@ -14,7 +14,7 @@ export const JustInput: React.FC<OwnProps> = ( { value, onChange } ) => {
 
     const onChangeDebounce = useAsyncDebounce(value => {
         onChange(value?.slice(0, 20) || '')
-    }, 100)
+    }, 50)
 
     return (
         <div className={ styles.justInput }>

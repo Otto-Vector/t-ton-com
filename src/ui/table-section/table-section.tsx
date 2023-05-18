@@ -114,7 +114,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                                                      onChange={ filtersAction[key] }
                                         />
                                         : ( // убираем кнопки на разных типах
-                                            ( key === 'todayFilter' || key === 'tomorrowFilter' ) && tableModes.historyTblMode )
+                                            ( key === 'todayFilter' || key === 'tomorrowFilter' ) && !tableModes.searchTblMode)
                                             ? null
                                             : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
                                                       title={ value.title }

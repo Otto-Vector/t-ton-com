@@ -70,7 +70,8 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                             globalStatus,
                             answers,
                         }: OneRequestTableTypeReq ) =>
-                    <img className={ styles.tableComponent__statusImage }
+                    <img className={ styles.tableComponent__statusImage + ' '
+                        + ( !tableModes.statusTblMode + styles.tableComponent__statusImage_noWidth ) }
                          alt={ 'status_icon' }
                          title={ globalStatus }
                          src={ tableModes.statusTblMode ?
@@ -83,8 +84,13 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                                      : transparentPNG )
                              : transparentPNG }
                         // добавим прозрачность на неотвеченные заявки
-                         style={ globalStatus === 'новая заявка' && !answers
-                             ? { opacity: .5 } : undefined }
+                         style={ globalStatus === 'новая заявка' ? ( !answers
+                                 ? { opacity: .5 }
+                                    // чёрный в Chocolate. Источник https://isotropic.co/tool/hex-color-to-css-filter/
+                                 : { filter: 'invert(42%) sepia(64%) saturate(622%) hue-rotate(343deg) brightness(99%) contrast(95%)',
+                                 } )
+                             : undefined
+                         }
                     />,
             },
             {
