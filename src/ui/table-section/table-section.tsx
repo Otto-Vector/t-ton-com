@@ -9,7 +9,7 @@ import {
     getGlobalValueFiltersStore,
     getValuesFiltersStore,
 } from '../../selectors/table/filters-reselect'
-import {JustSelect} from '../common/just-select/just-select'
+import {SelectTableFilter} from '../common/select-table-filter/select-table-filter'
 import {getCargoTypeBaseStore} from '../../selectors/base-reselect'
 import {cargoConstType} from '../../types/form-types'
 import {JustInput} from '../common/just-input/just-input'
@@ -21,11 +21,12 @@ import truckLoadPNG from '../../media/trackLoadFuel.png'
 import truckToLeftPNG from '../../media/truckLeft.png'
 import noRespTruckPNG from '../../media/noRespTrack.png'
 import haveRespTrackPNG from '../../media/haveRespTrack.png'
+import transparentPNG from '../../media/transparent32x32.png'
 
 type OwnProps = {
     mode: 'search' | 'history' | 'status'
 }
-const icons = [ truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
+const icons = [ transparentPNG, truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
 const statusValues = [ 'водитель выбран', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
 
 export type TableModesType = { searchTblMode: boolean, historyTblMode: boolean, statusTblMode: boolean }
@@ -112,7 +113,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                         <div key={ key } className={ styles.searchSection__buttonItem + ' ' +
                             ( value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             { key === 'cargoFilter'
-                                ? <JustSelect
+                                ? <SelectTableFilter
                                     optionItems={ [ ...cargoTypes.filter(v => v !== 'Тягач') ] }
                                     selectedValue={ cargoFilter }
                                     titleValue={ value.title }
@@ -120,7 +121,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                                 />
                                 : key === 'statusFilter'
                                     ? tableModes.statusTblMode
-                                        ? <JustSelect
+                                        ? <SelectTableFilter
                                             optionItems={ statusValues }
                                             selectedValue={ statusFilter }
                                             titleValue={ value.title }
