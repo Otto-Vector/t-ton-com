@@ -71,18 +71,17 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 },
                 disableFilters: false,
                 Cell: ( { localStatus }: OneRequestTableTypeReq ) => tableModes.statusTblMode ?
-                    <img className={ styles.tableComponent__statusImage + ' '
-                        + ( !tableModes.statusTblMode + styles.tableComponent__statusImage_noWidth ) }
+                    <img className={ styles.tableComponent__statusImage }
                          alt={ 'status_icon' }
                          title={ localStatus }
-                         src={ tableModes.statusTblMode ?
-                             ( localStatus === 'груз у получателя' ? truckToLeftPNG
+                         src={
+                             localStatus === 'груз у получателя' ? truckToLeftPNG
                                  : localStatus === 'груз у водителя' ? truckLoadPNG
                                      : localStatus === 'водитель выбран' ? truckToRightPNG
                                          : localStatus === 'нет ответов' ? noRespTruckPNG
                                              : localStatus === 'есть ответы' ? haveRespTrackPNG
-                                                 : transparentPNG )
-                             : transparentPNG }
+                                                 : transparentPNG
+                         }
                         // добавим прозрачность на неотвеченные заявки
                          style={ localStatus === 'нет ответов' ? { opacity: .5 }
                              : localStatus === 'есть ответы' ? { // чёрный в Chocolate. Источник https://isotropic.co/tool/hex-color-to-css-filter/
