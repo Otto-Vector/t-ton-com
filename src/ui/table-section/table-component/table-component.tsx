@@ -37,7 +37,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const navigate = useNavigate()
     const { info, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = +( useSelector(getCashRequisitesStore) || 0 )
-    const { dayFilter, routeFilter, cargoFilter } = useSelector(getValuesFiltersStore)
+    const { dayFilter, routeFilter, cargoFilter, statusFilter } = useSelector(getValuesFiltersStore)
     const dispatch = useDispatch()
 
     const toGlobalModalQuest = ( price: number ) => {
@@ -62,37 +62,34 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
         () => [
             {
                 Header: '',
-                accessor: 'globalStatus',
-                Filter: ColumnInputFilter,
-                disableFilters: true,
-                Cell: ( {
-                            localStatus: { cargoHasBeenReceived, cargoHasBeenTransferred },
-                            globalStatus,
-                            answers,
-                        }: OneRequestTableTypeReq ) =>
+                accessor: 'localStatus',
+                Filter: ( { column }: { column?: UseFiltersColumnProps<{}> } ) => {
+                    useEffect(() => {
+                        column?.setFilter(statusFilter)
+                    }, [ column ])
+                    return ( <></> )
+                },
+                disableFilters: false,
+                Cell: ( { localStatus }: OneRequestTableTypeReq ) => tableModes.statusTblMode ?
                     <img className={ styles.tableComponent__statusImage + ' '
                         + ( !tableModes.statusTblMode + styles.tableComponent__statusImage_noWidth ) }
                          alt={ 'status_icon' }
-                         title={ globalStatus }
+                         title={ localStatus }
                          src={ tableModes.statusTblMode ?
-                             ( globalStatus === 'в работе' ?
-                                 cargoHasBeenReceived ? truckToLeftPNG
-                                     : cargoHasBeenTransferred ? truckLoadPNG
-                                         : truckToRightPNG
-                                 : globalStatus === 'новая заявка' ?
-                                     !answers ? noRespTruckPNG : haveRespTrackPNG
-                                     : transparentPNG )
+                             ( localStatus === 'груз у получателя' ? truckToLeftPNG
+                                 : localStatus === 'груз у водителя' ? truckLoadPNG
+                                     : localStatus === 'водитель выбран' ? truckToRightPNG
+                                         : localStatus === 'нет ответов' ? noRespTruckPNG
+                                             : localStatus === 'есть ответы' ? haveRespTrackPNG
+                                                 : transparentPNG )
                              : transparentPNG }
                         // добавим прозрачность на неотвеченные заявки
-                         style={ globalStatus === 'новая заявка'
-                             ? ( !answers
-                                 ? { opacity: .5 }
-                                 : { // чёрный в Chocolate. Источник https://isotropic.co/tool/hex-color-to-css-filter/
-                                     filter: 'invert(42%) sepia(64%) saturate(622%) hue-rotate(343deg) brightness(99%) contrast(95%)',
-                                 } )
-                             : undefined
+                         style={ localStatus === 'нет ответов' ? { opacity: .5 }
+                             : localStatus === 'есть ответы' ? { // чёрный в Chocolate. Источник https://isotropic.co/tool/hex-color-to-css-filter/
+                                 filter: 'invert(42%) sepia(64%) saturate(622%) hue-rotate(343deg) brightness(99%) contrast(95%)',
+                             } : undefined
                          }
-                    />,
+                    /> : null,
             },
             {
                 Header: '№',

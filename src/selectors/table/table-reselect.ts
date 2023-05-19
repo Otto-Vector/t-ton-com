@@ -35,7 +35,7 @@ const parseRequestToTable = ( {
         globalStatus,
         responseEmployee,
         acceptedUsers,
-        localStatus,
+        localStatus: { cargoHasBeenTransferred, cargoHasBeenReceived },
     }: OneRequestType ): OneRequestTableType =>
     ( {
         requestNumber,
@@ -47,11 +47,12 @@ const parseRequestToTable = ( {
         // ставим цену в зависимости от расстояния
         price: ( distance || 0 ) > 100 ? +( acceptLongRoute || 0 ) : +( acceptShortRoute || 0 ),
         globalStatus,
-        localStatus,
+        localStatus: globalStatus === 'в работе' ? ( cargoHasBeenReceived ? 'груз у получателя'
+                : ( cargoHasBeenTransferred ? 'груз у водителя' : 'водитель выбран' ) )
+            : globalStatus === 'новая заявка' ? ( !answers?.length ? 'нет ответов' : 'есть ответы' ) : '',
         responseEmployee: parseFamilyToFIO(responseEmployee?.employeeFIO) || answers?.length + '' || '0',
         // Отмечаем причастных к заявкам
-        marked: [ idUserCustomer, idUserRecipient, idUserSender, requestUserCarrierId ].includes(authId)
-            || ( acceptedUsers?.includes(authId) ),
+        marked: [ idUserCustomer, idUserRecipient, idUserSender, requestUserCarrierId ].includes(authId) || ( acceptedUsers?.includes(authId) ),
     } )
 
 // для реализации контента по списку заявок из разных источников

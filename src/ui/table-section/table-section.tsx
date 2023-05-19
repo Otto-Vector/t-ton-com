@@ -27,7 +27,7 @@ type OwnProps = {
     mode: 'search' | 'history' | 'status'
 }
 const icons = [ transparentPNG, truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
-const statusValues = [ 'Газовоз', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
+const statusValues = [ 'водитель выбран', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
 
 export type TableModesType = { searchTblMode: boolean, historyTblMode: boolean, statusTblMode: boolean }
 

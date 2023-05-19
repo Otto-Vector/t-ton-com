@@ -812,7 +812,7 @@ export type OneRequestTableType = {
     globalStatus?: RequestGlobalStatusType
     responseEmployee?: string
     marked?: boolean
-    localStatus?: OneRequestType['localStatus']
+    localStatus?: 'водитель выбран' | 'груз у водителя' | 'груз у получателя' | 'нет ответов' | 'есть ответы' | ''
 }
 
 export type OneRequestTableTypeReq = Required<OneRequestTableType>
