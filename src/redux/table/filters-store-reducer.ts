@@ -17,6 +17,10 @@ export const initialFiltersState = {
             title: 'Сегодня ' + ddMmFormat(date),
             mode: false,
         },
+        statusFilter: {
+            title: 'Статус заявки',
+            mode: false,
+        },
         tomorrowFilter: {
             title: 'Завтра ' + ddMmFormat(addOneDay(date)),
             mode: false,
@@ -43,6 +47,7 @@ export const initialFiltersState = {
         dayFilter: undefined as undefined | Date,
         routeFilter: [ 0, 99999 ],
         cargoFilter: '',
+        statusFilter: '',
     },
 }
 
@@ -160,7 +165,24 @@ export const filtersStoreReducer = ( state = initialFiltersState, action: Action
                 },
             }
         }
-
+        case 'filters-store-reducer/SET-STATUS-FILTER-VALUE': {
+            return {
+                ...state,
+                values: {
+                    ...state.values,
+                    statusFilter: action.value,
+                },
+            }
+        }
+        case 'filters-store-reducer/SET-STATUS-FILTER-MODE': {
+            return {
+                ...state,
+                buttons: {
+                    ...state.buttons,
+                    statusFilter: { ...state.buttons.statusFilter, mode: action.mode },
+                },
+            }
+        }
         case 'filters-store-reducer/SET-CLEAR-FILTER-MODE': {
             return {
                 ...state,
@@ -225,6 +247,14 @@ export const filtersStoreActions = {
     } as const ),
     setCargoFilterMode: ( mode: boolean ) => ( {
         type: 'filters-store-reducer/SET-CARGO-FILTER-MODE',
+        mode,
+    } as const ),
+    setStatusFilterValue: ( value: string ) => ( {
+        type: 'filters-store-reducer/SET-STATUS-FILTER-VALUE',
+        value,
+    } as const ),
+    setStatusFilterMode: ( mode: boolean ) => ( {
+        type: 'filters-store-reducer/SET-STATUS-FILTER-MODE',
         mode,
     } as const ),
     setClearFilter: ( initial: FiltersStoreReducerStateType ) => ( {

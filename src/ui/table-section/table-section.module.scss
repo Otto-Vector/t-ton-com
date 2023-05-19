@@ -44,6 +44,11 @@
     line-height: 16px;
     color: #ffffff;
 
+    // у пустого блока убираем обязательную ширину
+    &:empty {
+      min-width: auto;
+    }
+
     &_active {
       color: $redColor;
     }

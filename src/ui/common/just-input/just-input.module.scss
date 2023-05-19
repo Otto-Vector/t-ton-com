@@ -5,7 +5,6 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  //background-color: transparent;
   background: $accentColor;
   border-radius: 9999px;
   height: 100%;
@@ -13,20 +12,12 @@
   &__input {
     position: relative;
     z-index: 2;
-    /*убирает стрелочку из выпадающего списка*/
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none; //чтобы select не подсвечивался по умолчанию
-
     font-family: inherit;
     box-sizing: border-box;
     font-weight: 700;
-    //background: $accentColor;
     background-color: #00000000;
     font-size: inherit;
     line-height: 1.2;
-    cursor: pointer;
 
     border-radius: inherit;
     color: whitesmoke;

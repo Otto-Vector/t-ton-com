@@ -84,10 +84,11 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                                      : transparentPNG )
                              : transparentPNG }
                         // добавим прозрачность на неотвеченные заявки
-                         style={ globalStatus === 'новая заявка' ? ( !answers
+                         style={ globalStatus === 'новая заявка'
+                             ? ( !answers
                                  ? { opacity: .5 }
-                                    // чёрный в Chocolate. Источник https://isotropic.co/tool/hex-color-to-css-filter/
-                                 : { filter: 'invert(42%) sepia(64%) saturate(622%) hue-rotate(343deg) brightness(99%) contrast(95%)',
+                                 : { // чёрный в Chocolate. Источник https://isotropic.co/tool/hex-color-to-css-filter/
+                                     filter: 'invert(42%) sepia(64%) saturate(622%) hue-rotate(343deg) brightness(99%) contrast(95%)',
                                  } )
                              : undefined
                          }

@@ -16,11 +16,17 @@ import {JustInput} from '../common/just-input/just-input'
 import {Preloader} from '../common/preloader/preloader'
 import {getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
 import {getAllRequestsAPI} from '../../redux/forms/request-store-reducer'
-
+import truckToRightPNG from '../../media/trackToRight.png'
+import truckLoadPNG from '../../media/trackLoadFuel.png'
+import truckToLeftPNG from '../../media/truckLeft.png'
+import noRespTruckPNG from '../../media/noRespTrack.png'
+import haveRespTrackPNG from '../../media/haveRespTrack.png'
 
 type OwnProps = {
     mode: 'search' | 'history' | 'status'
 }
+const icons = [ truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
+const statusValues = [ 'водитель выбран', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
 
 export type TableModesType = { searchTblMode: boolean, historyTblMode: boolean, statusTblMode: boolean }
 
@@ -35,7 +41,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
     const header = tableModes.searchTblMode ? 'Поиск ' : tableModes.historyTblMode ? 'История' : 'Заявки'
     const cargoTypes = useSelector(getCargoTypeBaseStore) as typeof cargoConstType
     const filterButtons = useSelector(getButtonsFiltersStore)
-    const { cargoFilter } = useSelector(getValuesFiltersStore)
+    const { cargoFilter, statusFilter } = useSelector(getValuesFiltersStore)
     const globalFilterValue = useSelector(getGlobalValueFiltersStore)
     const isFetchingTable = useSelector(getIsFetchingRequestStore)
     const dispatch = useDispatch()
@@ -63,6 +69,10 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
         },
         globalFilter: ( value ) => {
             dispatch(filtersStoreActions.setGlobalFilter(value || ''))
+        },
+        statusFilter: ( value ) => {
+            dispatch(filtersStoreActions.setStatusFilterValue(value || ''))
+            dispatch(filtersStoreActions.setStatusFilterMode(value !== ''))
         },
         cargoFilter: ( value ) => {
             dispatch(filtersStoreActions.setCargoFilterValue(value || ''))
@@ -101,20 +111,28 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                     { Object.entries(filterButtons).map(( [ key, value ] ) =>
                         <div key={ key } className={ styles.searchSection__buttonItem + ' ' +
                             ( value.mode ? styles.searchSection__buttonItem_active : '' ) }>
-                            {
-                                key === 'cargoFilter'
-                                    ? <JustSelect
-                                        optionItems={ [ ...cargoTypes.filter(v => v !== 'Тягач') ] }
-                                        selectedValue={ cargoFilter }
-                                        titleValue={ value.title }
-                                        onChange={ filtersAction[key] }
-                                    />
+                            { key === 'cargoFilter'
+                                ? <JustSelect
+                                    optionItems={ [ ...cargoTypes.filter(v => v !== 'Тягач') ] }
+                                    selectedValue={ cargoFilter }
+                                    titleValue={ value.title }
+                                    onChange={ filtersAction[key] }
+                                />
+                                : key === 'statusFilter'
+                                    ? tableModes.statusTblMode
+                                        ? <JustSelect
+                                            optionItems={ statusValues }
+                                            selectedValue={ statusFilter }
+                                            titleValue={ value.title }
+                                            onChange={ filtersAction[key] }
+                                            iconsBgValue={ icons }
+                                        /> : null
                                     : key === 'globalFilter'
                                         ? <JustInput value={ globalFilterValue }
                                                      onChange={ filtersAction[key] }
                                         />
                                         : ( // убираем кнопки на разных типах
-                                            ( key === 'todayFilter' || key === 'tomorrowFilter' ) && !tableModes.searchTblMode)
+                                            ( key === 'todayFilter' || key === 'tomorrowFilter' ) && !tableModes.searchTblMode )
                                             ? null
                                             : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
                                                       title={ value.title }
@@ -125,9 +143,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                                                           filtersAction[key]()
                                                       } }
                                             /> }
-                        </div>,
-                    )
-                    }
+                        </div>) }
                 </form>
             </header>
             <div className={ styles.searchSection__table }>
