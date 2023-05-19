@@ -8,6 +8,10 @@ const date = new Date()
 
 export const initialFiltersState = {
     buttons: {
+        statusFilter: {
+            title: 'Статус заявки',
+            mode: false,
+        },
         cargoFilter: {
             title: 'Тип груза',
             mode: false,
@@ -15,10 +19,6 @@ export const initialFiltersState = {
         },
         todayFilter: {
             title: 'Сегодня ' + ddMmFormat(date),
-            mode: false,
-        },
-        statusFilter: {
-            title: 'Статус заявки',
             mode: false,
         },
         tomorrowFilter: {

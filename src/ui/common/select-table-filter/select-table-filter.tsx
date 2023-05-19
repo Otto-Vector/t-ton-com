@@ -34,8 +34,11 @@ export const SelectTableFilter: React.FC<OwnProps> = ( {
             }
 
             document.addEventListener('mousedown', handleClickOutside)
+            // выполнить определенные действия при потере фокуса на window
+            window.addEventListener('blur', () => setIsOpen(false))
             return () => {
                 document.removeEventListener('mousedown', handleClickOutside)
+                window.removeEventListener('blur', () => setIsOpen(false))
             }
         }
     }, [ selectRef, isIconsBg ])

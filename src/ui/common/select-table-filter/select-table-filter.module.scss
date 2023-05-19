@@ -18,20 +18,27 @@
     opacity: .5;
     z-index: 1;
   }
+
   &_icons {
     position: absolute;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
+
+    transform-origin: bottom;
+    transform: rotate(180deg);
     z-index: 1000;
-    left: -18px;
-    bottom: -1px;
-    height: 0;
+    left: -20px;
+    bottom: -.25px;
+    height: auto;
+    background: $accentColor;
     width: 20px;
   }
 
   &_icon {
     width: 18px;
     height: 18px;
+    transform: rotate(180deg);
+    filter: invert(100%);
   }
 
   &__select {
