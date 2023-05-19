@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './just-input.module.scss'
+import styles from './input-table-filter.module.scss'
 import {useAsyncDebounce} from 'react-table'
 import {MaterialIcon} from '../material-icon/material-icon'
 
@@ -10,7 +10,7 @@ type OwnProps = {
 }
 
 // самодельный input для фильтра в таблице
-export const JustInput: React.FC<OwnProps> = ( { value, onChange } ) => {
+export const InputTableFilter: React.FC<OwnProps> = ( { value, onChange } ) => {
 
     const onChangeDebounce = useAsyncDebounce(value => {
         onChange(value?.slice(0, 20) || '')

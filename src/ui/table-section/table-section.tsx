@@ -12,7 +12,7 @@ import {
 import {SelectTableFilter} from '../common/select-table-filter/select-table-filter'
 import {getCargoTypeBaseStore} from '../../selectors/base-reselect'
 import {cargoConstType} from '../../types/form-types'
-import {JustInput} from '../common/just-input/just-input'
+import {InputTableFilter} from '../common/input-table-filter/input-table-filter'
 import {Preloader} from '../common/preloader/preloader'
 import {getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
 import {getAllRequestsAPI} from '../../redux/forms/request-store-reducer'
@@ -27,7 +27,7 @@ type OwnProps = {
     mode: 'search' | 'history' | 'status'
 }
 const icons = [ transparentPNG, truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
-const statusValues = [ 'водитель выбран', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
+const statusValues = [ 'Газовоз', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
 
 export type TableModesType = { searchTblMode: boolean, historyTblMode: boolean, statusTblMode: boolean }
 
@@ -129,7 +129,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                                             iconsBgValue={ icons }
                                         /> : null
                                     : key === 'globalFilter'
-                                        ? <JustInput value={ globalFilterValue }
+                                        ? <InputTableFilter value={ globalFilterValue }
                                                      onChange={ filtersAction[key] }
                                         />
                                         : ( // убираем кнопки на разных типах
