@@ -1,25 +1,10 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react'
+import React from 'react'
 import styles from './yandex-map-component.module.scss'
 import './yandex-map-restyle-ballon.scss'
 // import './yandex-map-restyle-drop-box.scss'
 import './yandex-map-restyle-copyright.scss'
 
-import {
-    Button,
-    FullscreenControl,
-    Map,
-    MapState,
-    Placemark,
-    Polyline,
-    SearchControl,
-    TypeSelector,
-    ZoomControl,
-} from 'react-yandex-maps'
-import {valuesAreEqual} from '../../../utils/reactMemoUtils'
-import {useDispatch} from 'react-redux'
-import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
-import {isOutOfBounds, positionToBoundsLine} from '../../../utils/map-utils'
-import {renderToString} from 'react-dom/server'
+import {FullscreenControl, Map, MapState, TypeSelector, ZoomControl} from 'react-yandex-maps'
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
