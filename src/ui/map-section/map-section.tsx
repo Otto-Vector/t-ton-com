@@ -11,7 +11,12 @@ import {
 } from '../../selectors/maps/big-map-reselect'
 import {Button, ListBox, ListBoxItem, Placemark} from 'react-yandex-maps'
 import {getGeoPositionAuthStore} from '../../selectors/auth-reselect'
-import {bigMapStoreActions, setAllMyDriversToMap, setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
+import {
+    bigMapStoreActions,
+    DriverOnMapType,
+    setAllMyDriversToMap,
+    setAnswerDriversToMap,
+} from '../../redux/maps/big-map-store-reducer'
 
 import {AddDriversView} from '../add-drivers-form/add-drivers-view'
 import {Portal} from '../common/portals/Portal'
@@ -25,7 +30,13 @@ import {
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {EmployeeStatusType} from '../../types/form-types'
 import {renderToString} from 'react-dom/server'
-import {isOutOfBounds, positionsToCorrectBounds, positionToBoundsLine} from '../../utils/map-utils'
+import {
+    boundsOffsetCorrector,
+    directionOfBounds,
+    isOutOfBounds,
+    positionsToCorrectBounds,
+    positionToBoundsLine,
+} from '../../utils/map-utils'
 import {MaterialIcon} from '../common/material-icon/material-icon'
 import {boldWrapper} from '../../utils/html-rebuilds'
 import {parseToNormalMoney} from '../../utils/parsers'
@@ -119,10 +130,11 @@ export const MapSection: React.FC<OwnProps> = () => {
     const placemarkersReWriter = useMemo(() => () => {
         const bounds: number[][] = map?.current?.getBounds()
         dispatch(bigMapStoreActions.setDriversList(drivers
-            .map(( { position, ...props } ) => ( {
+            .map(( { position, ...props } ): DriverOnMapType => ( {
                 ...props, position,
                 isOutOfBounds: position[0] !== 0 && isOutOfBounds({ bounds, position }),
                 positionToBounds: positionToBoundsLine({ position, bounds }),
+                directionOfBounds: directionOfBounds({ position, bounds }),
             } )),
         ))
     }, [ JSON.stringify(drivers) ])
@@ -175,7 +187,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                             } }
                     />
                 }
-                {/* СПИСОК ВОДИТЕЛЕЙ В СЕЛЕКТОРЕ КАРТЫ */ }
+                {/* СПИСОК ВОДИТЕЛЕЙ В СЕЛЕКТОРЕ (ВЫПАДАЮЩЕМ СПИСКЕ) КАРТЫ */ }
                 <ListBox
                     state={ { expanded: false } }
                     data={ {
@@ -191,30 +203,30 @@ export const MapSection: React.FC<OwnProps> = () => {
                             data={ {
                                 content: renderToString(
                                     <span className={ styles.yandexMapComponent__menuItem }>
-                    <>
-                    <span className={ styles.yandexMapComponent__menuItemLeft + ' '
-                        + ( position[0] === 0 ? styles.yandexMapComponent__menuItemLeft_noPosition : '' )
-                    }>
-                    <MaterialIcon
-                        style={ {
-                            fontSize: '20px', paddingRight: '5px',
-                            color: !!position[0] ? 'inherit' : 'gray',
-                        } }
-                        icon_name={ !!position[0] ? 'location_on' : 'wrong_location' }/>
-                        { ' ' + fio + ' ' }
-                    </span>
-                        { mapModes.answersMode ?
-                            <span className={ styles.yandexMapComponent__menuItemRight }>
-                { contentOfListboxItem(idEmployee) }
-                    </span>
-                            :
-                            <b className={ styles.yandexMapComponent__menuItemRight }
-                               style={ { color: colorOfStatus(status) } }>
-                                { status }
-                            </b>
-                        }
-                    </>
-                    </span>),
+                                        <>
+                                            <span className={ styles.yandexMapComponent__menuItemLeft + ' '
+                                                + ( position[0] === 0 ? styles.yandexMapComponent__menuItemLeft_noPosition : '' )
+                                            }>
+                                                <MaterialIcon
+                                                    style={ {
+                                                        fontSize: '20px', paddingRight: '5px',
+                                                        color: !!position[0] ? 'inherit' : 'gray',
+                                                    } }
+                                                    icon_name={ !!position[0] ? 'location_on' : 'wrong_location' }/>
+                                                { ' ' + fio + ' ' }
+                                            </span>
+                                            { mapModes.answersMode ?
+                                                <span className={ styles.yandexMapComponent__menuItemRight }>
+                                                    { contentOfListboxItem(idEmployee) }
+                                                </span>
+                                                :
+                                                <b className={ styles.yandexMapComponent__menuItemRight }
+                                                   style={ { color: colorOfStatus(status) } }>
+                                                    { status }
+                                                </b>
+                                            }
+                                        </>
+                                    </span>),
                             } }
                             key={ fio + status }
                             onClick={ () => {
@@ -236,17 +248,28 @@ export const MapSection: React.FC<OwnProps> = () => {
                                     recipientCity={ currentRequest?.recipient?.city + '' }
                     /> }
                 {/* отрисовка водителей вне видимости активной карты */ }
-                { drivers.map(( { id, idEmployee, position, status, positionToBounds, fio, isOutOfBounds } ) =>
+                { drivers.map(( {
+                                    id,
+                                    idEmployee,
+                                    position,
+                                    status,
+                                    positionToBounds,
+                                    fio,
+                                    isOutOfBounds,
+                                    directionOfBounds,
+                                } ) =>
                     isOutOfBounds && <Placemark geometry={ positionToBounds }
                                                 options={ {
                                                     preset: 'islands#blueDeliveryCircleIcon',
                                                     iconColor: colorOfStatus(status),
+                                                    iconOffset: boundsOffsetCorrector(directionOfBounds),
                                                 } }
                                                 properties={ { hintContent: `<b>${ fio }</b>` } }
                                                 onClick={ () => {
                                                     // плавное перемещение к указанной точке
                                                     map?.current?.panTo(position, { flying: 1 })
                                                     setSelectedDriver(idEmployee)
+                                                    console.log(drivers)
                                                 } }
                                                 key={ idEmployee + id }
                     />)

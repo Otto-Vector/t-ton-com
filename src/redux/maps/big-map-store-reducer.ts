@@ -18,6 +18,7 @@ export type DriverOnMapType = EmployeesApiType & {
     fio: string
     isOutOfBounds: boolean
     positionToBounds: number[]
+    directionOfBounds: { [key in 'up' | 'left' | 'down' | 'right']: boolean }
     isSelected: boolean
 }
 
@@ -125,11 +126,12 @@ const myDriversToMapConverter = ( myDriversList: EmployeesApiType[] ): DriverOnM
         ...props, coordinates, employeeFIO,
         id: index + 1,
         position: stringToCoords(coordinates),
-            // toDo: это заглушка для пустых, убрать
-            // .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5) ),
+        // toDo: это заглушка для пустых, убрать
+        // .map(( el, idx ) => el || getRandomInRange(!idx ? 48 : 45, !idx ? 49 : 46, 5) ),
         fio: parseFamilyToFIO(employeeFIO),
         isOutOfBounds: false,
         positionToBounds: stringToCoords(coordinates),
+        directionOfBounds: { up: false, down: false, left: false, right: false },
         isSelected: false,
     } ))
 

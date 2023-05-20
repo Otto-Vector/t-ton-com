@@ -26,6 +26,28 @@ export const isOutOfBounds = ( data: { position: number[], bounds: number[][] } 
     return x !== xo || y !== yo
 }
 
+export const directionOfBounds = ( {
+                                       position: [ x, y ] = [ 0, 0 ],
+                                       bounds: [ [ x1, y1 ], [ x2, y2 ] ] = [ [ 0, 0 ], [ 0, 0 ] ],
+                                   }: { position: number[], bounds: number[][] } ): { [key in 'up' | 'left' | 'down' | 'right']: boolean } => {
+    const up = Math.min(x, x2)
+    const down = Math.max(x, x1)
+    const right = Math.min(y, y2)
+    const left = Math.max(y, y1)
+    return { up: up !== x, down: down !== x, left: left !== y, right: right !== y }
+}
+
+// корректировка отрисовки маркера, ушедшего за край карты (для iconOffset)
+export const boundsOffsetCorrector = ( {
+                                           up,
+                                           right,
+                                           down,
+                                           left,
+                                       }: { [key in 'up' | 'left' | 'down' | 'right']: boolean },
+                                       pixels = 10,
+): number[] => ( [ left ? pixels : right ? -pixels : 0, up ? pixels : down ? -pixels : 0 ] )
+
+
 // назначает координаты крайних точек в нужном для bounds формате
 export const positionsToCorrectBounds = ( {
                                               start: [ x1, y1 ] = [ 0, 0 ],

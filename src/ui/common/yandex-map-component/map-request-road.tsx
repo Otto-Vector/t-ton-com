@@ -1,3 +1,4 @@
+import React from 'react'
 import {Placemark, Polyline} from 'react-yandex-maps'
 
 export type coordinatesFromTargetType = { originalEvent: { target: { geometry: { _coordinates: number[] } } } }
