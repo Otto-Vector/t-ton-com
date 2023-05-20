@@ -2,7 +2,7 @@ import React, {memo} from 'react'
 import styles from './request-map-center.module.scss'
 
 import {RequestModesType} from '../request-section'
-import {YandexMapWithRoute} from '../../common/yandex-map-component/yandex-map-component'
+import {RouteMapCenter} from './route-map-center/route-map-center'
 import {useSelector} from 'react-redux'
 import {
     getPreparedInfoDataRequestStore,
@@ -40,16 +40,15 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
     return (
         <div className={ styles.requestMapCenter }>
             <div className={ styles.requestMapCenter__wrapper }>
-                <YandexMapWithRoute center={ center }
-                                    polyline={ route || testLine }
-                    // zoom={ zoom }
-                                    maxZoom={ maxZoom }
-                                    driverHere={ driverHere }
-                                    driverData={ acceptedEmployeeData }
-                                    fromCity={ fromCity }
-                                    toCity={ toCity }
-                                    isEnableCoordsClick={ !requestModes.acceptDriverMode }
-                                    bounds={ zoomCoords }
+                <RouteMapCenter center={ center }
+                                polyline={ route || testLine }
+                                maxZoom={ maxZoom }
+                                driverHere={ driverHere }
+                                driverData={ acceptedEmployeeData }
+                                fromCity={ fromCity }
+                                toCity={ toCity }
+                                isEnableCoordsClick={ !requestModes.acceptDriverMode }
+                                bounds={ zoomCoords }
                 />
             </div>
         </div>

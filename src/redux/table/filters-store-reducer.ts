@@ -15,7 +15,6 @@ export const initialFiltersState = {
         cargoFilter: {
             title: 'Тип груза',
             mode: false,
-            // type: CargoType,
         },
         todayFilter: {
             title: 'Сегодня ' + ddMmFormat(date),

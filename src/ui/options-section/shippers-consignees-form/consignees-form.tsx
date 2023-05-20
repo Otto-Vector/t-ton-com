@@ -29,7 +29,7 @@ import {
     setOrganizationByInnKppConsignees,
 } from '../../../redux/options/consignees-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
-import {YandexMapToForm} from '../../common/yandex-map-component/yandex-map-component'
+import {YandexMapToForm} from '../../common/yandex-map-component/map-to-form'
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
 import {FormSelector} from '../../common/form-selector/form-selector'
 import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer'

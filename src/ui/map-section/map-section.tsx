@@ -2,11 +2,8 @@ import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'reac
 import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {
-    coordinatesFromTargetType,
-    MapRequestRoad,
-    YandexBigMap,
-} from '../common/yandex-map-component/yandex-map-component'
+import {YandexBigMap} from '../common/yandex-map-component/yandex-map-component'
+import {coordinatesFromTargetType, MapRequestRoad} from '../common/yandex-map-component/map-request-road'
 import {
     getDriversBigMapStore,
     getFilteredResponsesBigMapStore,
@@ -36,6 +33,15 @@ import {parseToNormalMoney} from '../../utils/parsers'
 
 type OwnProps = {}
 
+// вынес статическую функцию из компонеты
+const colorOfStatus = ( stat: EmployeeStatusType ): string =>
+    stat === 'свободен'
+        ? 'red'
+        : stat === 'на заявке'
+            ? 'green'
+            : 'orange'
+
+// основная карта (по кнопке меню)
 export const MapSection: React.FC<OwnProps> = () => {
 
     const drivers = useSelector(getDriversBigMapStore)
@@ -61,10 +67,10 @@ export const MapSection: React.FC<OwnProps> = () => {
         answersMode: pathname.includes(routes.maps.answers),
         routesMode: pathname.includes(routes.maps.routes),
         statusMode: pathname.includes(routes.maps.status),
-    } ), [ pathname ])
+    } ), [ pathname, routes?.maps ])
 
     // этот способ присвоения избавляет от бесконечной перерисовки карты
-    const [ center, setCenter ] = useState(authGeoPositionAsCenter)
+    const [ center ] = useState(authGeoPositionAsCenter)
 
     // корректное отображение цетровки карты по нарисованному маршруту
     const answerRouteBounds = useMemo(() => ( mapModes.answersMode && polyline )
@@ -121,20 +127,6 @@ export const MapSection: React.FC<OwnProps> = () => {
         ))
     }, [ JSON.stringify(drivers) ])
 
-
-    // стиль выделенного маркера в центре круга
-    const placemarkIsSelectedStyle = '<b style="display: flex;' +
-        ' justify-content: center; text-align: center;' +
-        'background: #81b5e1; border-radius: 50%; width: 100%;' +
-        'box-shadow: 0 0 15px black' +
-        '">'
-
-    const colorOfStatus = ( stat: EmployeeStatusType ): string =>
-        stat === 'свободен'
-            ? 'red'
-            : stat === 'на заявке'
-                ? 'green'
-                : 'orange'
 
     const contentOfListboxItem = ( idEmployee: string ): string => {
         const finded = responses?.find(( { idEmployee: id } ) => id === idEmployee)
@@ -260,41 +252,38 @@ export const MapSection: React.FC<OwnProps> = () => {
                     />)
                 }
                 {/* ВОДИТЕЛИ НА КАРТЕ */ }
-                { drivers.map(( { id, idEmployee, position, status, fio, isSelected } ) => {
-                        if (!!position[0])
-                            return <Placemark geometry={ position }
-                                // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
-                                              options={ {
-                                                  preset: 'islands#circleIcon',
-                                                  iconColor: colorOfStatus(status),
-                                                  hasBalloon: true,
-                                                  openEmptyBalloon: true
-                                              } }
-                                              properties={ {
-                                                  iconContent: renderToString(
-                                                      <span className={
-                                                          styles.yandexMapComponent__placemarkContent + ' '
-                                                          + ( isSelected ? styles.yandexMapComponent__placemarkContent__selected : '' )
-                                                      }>{ id }</span>),
-                                                  hintContent: `<b>${ fio }</b>`,
-                                                  balloonContent: `<div id='driver-${ idEmployee }' class='driver-card'></div>`,
-                                              } }
-                                              key={ id + idEmployee }
-                                              onClick={ () => {
-                                                  // ставим в очередь промисов, чтобы сработало после отрисовки балуна
-                                                  setTimeout(() => {
-                                                      // flag нужен, чтобы каждый раз возвращалось новое значение,
-                                                      // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
-                                                      setIdToPortal(( val ) => ( { idEmployee, flag: !val.flag } ))
-                                                      // пометка нажатого водителя
-                                                      setSelectedDriver(idEmployee)
-                                                  }, 0)
-                                              } }
-                                              onContextMenu={ extractCoordinatesToModal }
-                            />
-                    },
-                )
-                }
+                { drivers.map(( { id, idEmployee, position, status, fio, isSelected } ) =>
+                    !!position[0] ?
+                        <Placemark geometry={ position }
+                            // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
+                                   options={ {
+                                       preset: 'islands#circleIcon',
+                                       iconColor: colorOfStatus(status),
+                                       hasBalloon: true,
+                                       openEmptyBalloon: true,
+                                   } }
+                                   properties={ {
+                                       iconContent: renderToString(
+                                           <span className={
+                                               styles.yandexMapComponent__placemarkContent + ' '
+                                               + ( isSelected ? styles.yandexMapComponent__placemarkContent__selected : '' )
+                                           }>{ id }</span>),
+                                       hintContent: `<b>${ fio }</b>`,
+                                       balloonContent: `<div id='driver-${ idEmployee }' class='driver-card'></div>`,
+                                   } }
+                                   key={ id + idEmployee }
+                                   onClick={ () => {
+                                       // ставим в очередь промисов, чтобы сработало после отрисовки балуна
+                                       setTimeout(() => {
+                                           // flag нужен, чтобы каждый раз возвращалось новое значение,
+                                           // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
+                                           setIdToPortal(( val ) => ( { idEmployee, flag: !val.flag } ))
+                                           // пометка нажатого водителя
+                                           setSelectedDriver(idEmployee)
+                                       }, 0)
+                                   } }
+                                   onContextMenu={ extractCoordinatesToModal }
+                        /> : null) }
             </YandexBigMap>
             {/* ждём, когда появится балун с нужным ID */ }
             <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }><AddDriversView
