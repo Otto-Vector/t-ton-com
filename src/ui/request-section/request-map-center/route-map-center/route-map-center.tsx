@@ -55,12 +55,12 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
         dispatch<any>(textAndActionGlobalModal({ text }))
     }
 
-    const [idToPortal,setIdToPortal]=useState( { idEmployee: driver.idEmployee , flag: true } )
+    const [ idToPortal, setIdToPortal ] = useState({ idEmployee: driver.idEmployee, flag: true })
     const map = useRef<any>({})
 
     // псевдо-перерисовка маркера водителя, ушедшего за край видимости карты, на край карты
     const [ boundsDriver, setBoundsDriver ] = useState({ position: driverHere, offset: [ 0, 0 ], haveNoCoords: false })
-    const placemarkerReWriter = useMemo(() => ( e: any ) => {
+    const placemarkerReWriter = useMemo(() => () => {
         const bounds: number[][] = map.current?.getBounds()
         const center: number[] = map.current?.getCenter()
         if (boundsDriver && driverHere && isOutOfBounds({ bounds, position: driverHere })) {
@@ -69,15 +69,17 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                 offset: boundsOffsetCorrector(directionOfBounds({ position: driverHere, bounds })),
                 haveNoCoords: false,
             })
-        } else {
+        } else if (driverHere && driverHere[0] === 0) {
             setBoundsDriver({
                 position: positionToBoundsLine({
                     position: [ bounds[0][0] - 1, center[1] ],
                     bounds,
                 }) as [ number, number ],
                 offset: [ 0, -30 ],
-                haveNoCoords: true,
+                haveNoCoords: false,
             })
+        } else {
+            setBoundsDriver({ position: [ 0, 0 ], offset: [ 0, 0 ], haveNoCoords: true })
         }
     }, [ driverHere, boundsDriver, map ])
 
@@ -110,13 +112,20 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                                options={ {
                                    preset: 'islands#blueDeliveryCircleIcon',
                                    iconColor: 'green',
+                                   hasBalloon: true,
                                } }
                                properties={ {
                                    hintContent: `Водитель здесь`,
+                                   balloonContent: `<div id='driver-${ driver.idEmployee }' class='driver-card'></div>`,
                                } }
                                onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : undefined }
                                onClick={ () => {
-                                   modalActivator(driverData || [])
+                                   // modalActivator(driverData || [])
+                                   setTimeout(() => {
+                                       // flag нужен, чтобы каждый раз возвращалось новое значение,
+                                       // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
+                                       setIdToPortal(val => ( { idEmployee: driver.idEmployee, flag: !val.flag } ))
+                                   }, 0)
                                } }
                     />
                 }
@@ -128,13 +137,12 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                                    preset: 'islands#blueDeliveryCircleIcon',
                                    iconColor: !boundsDriver.haveNoCoords ? 'black' : 'navy',
                                    iconOffset: boundsDriver.offset,
-                                   hasBalloon: true,
-                                   // openEmptyBalloon: true,
+                                   hasBalloon: boundsDriver.haveNoCoords,
                                } }
                                properties={ {
                                    hintContent: !boundsDriver.haveNoCoords ? 'Водитель за пределами видимости карты'
                                        : 'Отсуствуют данные координат водителя',
-                                   balloonContent: `<div id='driver-${ driver.idEmployee }' class='driver-card'>55654</div>`,
+                                   balloonContent: `<div id='driver-${ driver.idEmployee }' class='driver-card'></div>`,
                                } }
                                onClick={ () => {
                                    if (!boundsDriver.haveNoCoords) {
@@ -142,10 +150,9 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                                        map?.current?.panTo(driverHere, { flying: 1 })
                                    } else {
                                        setTimeout(() => {
-                                           console.log('55')
                                            // flag нужен, чтобы каждый раз возвращалось новое значение,
                                            // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
-                                           setIdToPortal( val  => ( { idEmployee: driver.idEmployee, flag: !val.flag } ))
+                                           setIdToPortal(val => ( { idEmployee: driver.idEmployee, flag: !val.flag } ))
                                        }, 0)
                                    }
                                } }

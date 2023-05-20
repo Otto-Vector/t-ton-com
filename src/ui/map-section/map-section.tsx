@@ -108,6 +108,7 @@ export const MapSection: React.FC<OwnProps> = () => {
             map.current.panTo(currentCenter.map(x => x - 0.0001), { flying: 1 })
             setIsOneTimeRender(true)
         }
+
     }, [ map?.current?.panTo, isOneTimeRender, setIsOneTimeRender ])
 
     // маркировка активного водителя
@@ -132,7 +133,7 @@ export const MapSection: React.FC<OwnProps> = () => {
         dispatch(bigMapStoreActions.setDriversList(drivers
             .map(( { position, ...props } ): DriverOnMapType => ( {
                 ...props, position,
-                isOutOfBounds: position[0] !== 0 && isOutOfBounds({ bounds, position }),
+                isOutOfBounds: position[0] !== 0 && isOutOfBounds({ position, bounds }),
                 positionToBounds: positionToBoundsLine({ position, bounds }),
                 directionOfBounds: directionOfBounds({ position, bounds }),
             } )),
@@ -157,6 +158,7 @@ export const MapSection: React.FC<OwnProps> = () => {
             isBodyPadding: false,
         }))
     }
+
 
     return (
         <section className={ styles.yandexMapComponent }>
@@ -309,8 +311,9 @@ export const MapSection: React.FC<OwnProps> = () => {
                         /> : null) }
             </YandexBigMap>
             {/* ждём, когда появится балун с нужным ID */ }
-            <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }><AddDriversView
-                idEmployee={ idToPortal.idEmployee }/></Portal>
+            <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }>
+                <AddDriversView idEmployee={ idToPortal.idEmployee }/>
+            </Portal>
         </section>
     )
 }

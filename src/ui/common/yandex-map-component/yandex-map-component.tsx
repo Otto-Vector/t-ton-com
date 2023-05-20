@@ -83,6 +83,7 @@ type ToBigMap = {
     instanceMap?: React.MutableRefObject<any>
     instanceYMap?: React.MutableRefObject<any>
     onBoundsChange?: ( e?: any ) => void
+    onClick?: ( e: any ) => void
     bounds?: number[][]
 }
 
@@ -95,6 +96,7 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( {
                                                                  instanceMap,
                                                                  instanceYMap,
                                                                  onBoundsChange,
+                                                                 onClick,
                                                              } ) => {
     return (
         <YandexMapComponent
@@ -107,6 +109,7 @@ export const YandexBigMap: React.FC<ToBigMap> = React.memo(( {
             instanceMap={ instanceMap }
             instanceYMap={ instanceYMap }
             onBoundsChange={ onBoundsChange }
+            onClick={ onClick }
         >
             { children }
         </YandexMapComponent>

@@ -36,7 +36,7 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
         finish: route[route.length - 1],
     })
     const maxZoom = requestModes.acceptDriverMode ? 10 : undefined
-    const driverHere = requestModes.statusMode && driver?.coordinates ? stringToCoords(driver.coordinates) : undefined
+    const driverHere = requestModes.statusMode ? stringToCoords(driver.coordinates) : undefined
 
     return (
         <div className={ styles.requestMapCenter }>
