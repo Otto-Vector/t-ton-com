@@ -10,15 +10,16 @@ import {
 } from '../../../selectors/forms/request-form-reselect'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {positionsToCorrectBounds, stringToCoords} from '../../../utils/map-utils'
+import {OneEmployeeNoPhotoIdReqType} from '../../../api/local-api/options/employee.api'
 
 type OwnProps = {
     requestModes: RequestModesType,
-    driverCoords?: string
+    driver: OneEmployeeNoPhotoIdReqType
     fromCity?: string
     toCity?: string
 }
 
-export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, driverCoords, fromCity, toCity } ) => {
+export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, driver, fromCity, toCity } ) => {
 
     const testCenter: [ number, number ] = [ 55.5907807700034, 84.09127066601563 ]
     const testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]
@@ -35,7 +36,7 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
         finish: route[route.length - 1],
     })
     const maxZoom = requestModes.acceptDriverMode ? 10 : undefined
-    const driverHere = requestModes.statusMode && driverCoords ? stringToCoords(driverCoords) : undefined
+    const driverHere = requestModes.statusMode && driver?.coordinates ? stringToCoords(driver.coordinates) : undefined
 
     return (
         <div className={ styles.requestMapCenter }>
@@ -44,6 +45,7 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
                                 polyline={ route || testLine }
                                 maxZoom={ maxZoom }
                                 driverHere={ driverHere }
+                                driver={ driver }
                                 driverData={ acceptedEmployeeData }
                                 fromCity={ fromCity }
                                 toCity={ toCity }

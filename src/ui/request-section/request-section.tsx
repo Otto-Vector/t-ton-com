@@ -71,7 +71,7 @@ export const RequestSection: React.FC = React.memo(() => {
             }
             if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
                 // прогружаем искомую заявку
-                dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 ),true))
+                dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 ), true))
             }
             if (requestModes.statusMode) {
             }
@@ -99,7 +99,7 @@ export const RequestSection: React.FC = React.memo(() => {
                                                                     initialValues={ initialValues }
                                 /> }
                                 { tabModes.center && <RequestMapCenter requestModes={ requestModes }
-                                                                       driverCoords={ oneEmployee?.coordinates }
+                                                                       driver={ oneEmployee }
                                                                        fromCity={ initialValues?.sender?.city }
                                                                        toCity={ initialValues?.recipient?.city }
 
@@ -107,7 +107,8 @@ export const RequestSection: React.FC = React.memo(() => {
                                 { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
                             </div>
 
-                            <CancelXButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/>
+                            { !tabModes.center &&
+                                <CancelXButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/> }
                         </> }
                 </div>
                 <div className={ styles.requestSection__bottomTabsPanel }>

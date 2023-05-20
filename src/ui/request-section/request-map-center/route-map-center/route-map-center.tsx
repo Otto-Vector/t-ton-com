@@ -4,12 +4,21 @@ import {coordinatesFromTargetType, MapRequestRoad} from '../../../common/yandex-
 import {Button, FullscreenControl, MapState, Placemark} from 'react-yandex-maps'
 import {renderToString} from 'react-dom/server'
 import {textAndActionGlobalModal} from '../../../../redux/utils/global-modal-store-reducer'
-import {isOutOfBounds, positionToBoundsLine} from '../../../../utils/map-utils'
+import {
+    boundsOffsetCorrector,
+    directionOfBounds,
+    isOutOfBounds,
+    positionToBoundsLine,
+} from '../../../../utils/map-utils'
 import {useDispatch} from 'react-redux'
+import {Portal} from '../../../common/portals/Portal'
+import {AddDriversView} from '../../../add-drivers-form/add-drivers-view'
+import {OneEmployeeNoPhotoIdReqType} from '../../../../api/local-api/options/employee.api'
 
 type ToRouteMap = {
     center: [ number, number ]
     driverHere?: [ number, number ]
+    driver: OneEmployeeNoPhotoIdReqType
     polyline: number[][]
     bounds?: MapState['bounds']
     zoom?: number
@@ -24,6 +33,7 @@ type ToRouteMap = {
 export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
     {
         driverHere,
+        driver,
         center,
         polyline,
         zoom = 5,
@@ -34,24 +44,42 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
     } ) => {
 
     const dispatch = useDispatch()
+
     const extractCoordinatesToModal = ( e: coordinatesFromTargetType ) => {
         dispatch<any>(textAndActionGlobalModal({
             text: `Координаты: <b>${ e.originalEvent.target.geometry._coordinates?.join(', ') }</b>`,
         }))
     }
 
+    const modalActivator = ( text: string[] ) => {
+        dispatch<any>(textAndActionGlobalModal({ text }))
+    }
+
+    const [idToPortal,setIdToPortal]=useState( { idEmployee: driver.idEmployee , flag: true } )
     const map = useRef<any>({})
 
     // псевдо-перерисовка маркера водителя, ушедшего за край видимости карты, на край карты
-    const [ boundsDriver, setBoundsDriver ] = useState(driverHere)
+    const [ boundsDriver, setBoundsDriver ] = useState({ position: driverHere, offset: [ 0, 0 ], haveNoCoords: false })
     const placemarkerReWriter = useMemo(() => ( e: any ) => {
-        const bounds: number[][] = e?.originalEvent?.newBounds
+        const bounds: number[][] = map.current?.getBounds()
+        const center: number[] = map.current?.getCenter()
         if (boundsDriver && driverHere && isOutOfBounds({ bounds, position: driverHere })) {
-            setBoundsDriver(positionToBoundsLine({ position: driverHere, bounds }) as typeof driverHere)
+            setBoundsDriver({
+                position: positionToBoundsLine({ position: driverHere, bounds }) as [ number, number ],
+                offset: boundsOffsetCorrector(directionOfBounds({ position: driverHere, bounds })),
+                haveNoCoords: false,
+            })
         } else {
-            setBoundsDriver([ 0, 0 ])
+            setBoundsDriver({
+                position: positionToBoundsLine({
+                    position: [ bounds[0][0] - 1, center[1] ],
+                    bounds,
+                }) as [ number, number ],
+                offset: [ 0, -30 ],
+                haveNoCoords: true,
+            })
         }
-    }, [ driverHere, boundsDriver ])
+    }, [ driverHere, boundsDriver, map ])
 
     // один раз сдвигаем чуть-чуть карту, чтобы сработал getBounds
     const [ isOneTimeRendr, setIsOneTimeRendr ] = useState(false)
@@ -63,81 +91,98 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
         }
     }, [ map?.current?.panTo, isOneTimeRendr, setIsOneTimeRendr ])
 
-    const modalActivator = ( text: string[] ) => {
-        dispatch<any>(textAndActionGlobalModal({ text }))
-    }
 
-    return (
-        <YandexMapComponent
-            maxZoom={ maxZoom }
-            state={ {
-                center,
-                zoom,
-                bounds: bounds as undefined,
-            } }
-            onBoundsChange={ placemarkerReWriter }
-            instanceMap={ map }
-        >
-            {/*отрисовка водителя (при наличии корректных координат) */ }
-            { driverHere && driverHere[0] !== 0 &&
-                <Placemark geometry={ driverHere }
-                           options={ {
-                               preset: 'islands#blueDeliveryCircleIcon',
-                               iconColor: 'green',
-                           } }
-                           properties={ {
-                               hintContent: `Водитель здесь`,
-                           } }
-                           onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : undefined }
-                           onClick={ () => {
-                               modalActivator(driverData || [])
-                           } }
+    return ( <>
+            <YandexMapComponent
+                maxZoom={ maxZoom }
+                state={ {
+                    center,
+                    zoom,
+                    bounds: bounds as undefined,
+                } }
+                onBoundsChange={ placemarkerReWriter }
+                instanceMap={ map }
+            >
+                {/*отрисовка водителя (при наличии корректных координат) */ }
+                { driverHere && driverHere[0] !== 0 &&
+                    <Placemark geometry={ driverHere }
+                               modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
+                               options={ {
+                                   preset: 'islands#blueDeliveryCircleIcon',
+                                   iconColor: 'green',
+                               } }
+                               properties={ {
+                                   hintContent: `Водитель здесь`,
+                               } }
+                               onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : undefined }
+                               onClick={ () => {
+                                   modalActivator(driverData || [])
+                               } }
+                    />
+                }
+                {/*отрисовка маркера у края карты (если водитель за пределами границ видимости)*/ }
+                { boundsDriver.position && boundsDriver.position[0] !== 0 &&
+                    <Placemark geometry={ boundsDriver.position }
+                               modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
+                               options={ {
+                                   preset: 'islands#blueDeliveryCircleIcon',
+                                   iconColor: !boundsDriver.haveNoCoords ? 'black' : 'navy',
+                                   iconOffset: boundsDriver.offset,
+                                   hasBalloon: true,
+                                   // openEmptyBalloon: true,
+                               } }
+                               properties={ {
+                                   hintContent: !boundsDriver.haveNoCoords ? 'Водитель за пределами видимости карты'
+                                       : 'Отсуствуют данные координат водителя',
+                                   balloonContent: `<div id='driver-${ driver.idEmployee }' class='driver-card'>55654</div>`,
+                               } }
+                               onClick={ () => {
+                                   if (!boundsDriver.haveNoCoords) {
+                                       // плавное перемещение к указанной точке
+                                       map?.current?.panTo(driverHere, { flying: 1 })
+                                   } else {
+                                       setTimeout(() => {
+                                           console.log('55')
+                                           // flag нужен, чтобы каждый раз возвращалось новое значение,
+                                           // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
+                                           setIdToPortal( val  => ( { idEmployee: driver.idEmployee, flag: !val.flag } ))
+                                       }, 0)
+                                   }
+                               } }
+                    />
+                }
+                <MapRequestRoad polyline={ polyline }
+                                senderCity={ fromCity + '' }
+                                recipientCity={ toCity + '' }
+                                onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : undefined }
                 />
-            }
-            {/*отрисовка маркера у края карты (если водитель за пределами границ видимости)*/ }
-            { boundsDriver && boundsDriver[0] !== 0 &&
-                <Placemark geometry={ boundsDriver }
-                           options={ {
-                               preset: 'islands#blueDeliveryCircleIcon',
-                               iconColor: 'black',
-                           } }
-                           properties={ {
-                               hintContent: `<--.-->`,
-                           } }
-                           onClick={ () => {
-                               // плавное перемещение к указанной точке
-                               map?.current?.panTo(driverHere, { flying: 1 })
-                           } }
+                <Button
+                    options={ {
+                        position: { bottom: '15px', right: '15px' },
+                    } }
+                    data={ {
+                        content: renderToString(<div
+                            title={ 'Центрирование на маршруте (начало/конец)' }
+                            style={ {
+                                backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNiIgaGVpZ2h0PSIyNiI+PGcgZmlsbD0iIzZCNkI2QiI+PHBhdGggZD0iTTEwIDE0aDQuNWEzLjUgMy41IDAgMCAwIDAtN0gxMHYyaDQuNWExLjUgMS41IDAgMSAxIDAgM0gxMHYyem0wIDAiLz48cGF0aCBkPSJNMTUgMTJoLTQuNWEzLjUgMy41IDAgMCAwIDAgN0gxNXYtMmgtNC41YTEuNSAxLjUgMCAxIDEgMC0zSDE1di0yem0wIDBNMTkgMjBhMiAyIDAgMSAwIDAtNCAyIDIgMCAwIDAgMCA0em0wLTFhMSAxIDAgMSAwIDAtMiAxIDEgMCAwIDAgMCAyem0wIDBNOSAxMGEyIDIgMCAxIDAgMC00IDIgMiAwIDAgMCAwIDR6bTAtMWExIDEgMCAxIDAgMC0yIDEgMSAwIDAgMCAwIDJ6bTAgMCIvPjxwYXRoIGQ9Ik0xMy41NyAyMC44bDIuODMtMi44Mi0uNzEtLjctMi44MyAyLjgyLjcuN3ptMS40MS0yLjgybC43LS43LTIuMTEtMi4xMy0uNy43IDIuMTEgMi4xM3ptMCAwIi8+PC9nPjwvc3ZnPg==)',
+                                width: '25px',
+                                height: '25px',
+                            } }/>),
+                    } }
+                    onClick={ ( e: any ) => {
+                        map.current.panTo(e?.originalEvent?.target?._selected
+                            ? polyline[0] : polyline[polyline.length - 1])
+                    } }
                 />
-            }
-            <MapRequestRoad polyline={ polyline }
-                            senderCity={ fromCity + '' }
-                            recipientCity={ toCity + '' }
-                            onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : undefined }
-            />
-            <Button
-                options={ {
-                    position: { bottom: '15px', right: '15px' },
-                } }
-                data={ {
-                    content: renderToString(<div
-                        title={ 'Центрирование на маршруте (начало/конец)' }
-                        style={ {
-                            backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNiIgaGVpZ2h0PSIyNiI+PGcgZmlsbD0iIzZCNkI2QiI+PHBhdGggZD0iTTEwIDE0aDQuNWEzLjUgMy41IDAgMCAwIDAtN0gxMHYyaDQuNWExLjUgMS41IDAgMSAxIDAgM0gxMHYyem0wIDAiLz48cGF0aCBkPSJNMTUgMTJoLTQuNWEzLjUgMy41IDAgMCAwIDAgN0gxNXYtMmgtNC41YTEuNSAxLjUgMCAxIDEgMC0zSDE1di0yem0wIDBNMTkgMjBhMiAyIDAgMSAwIDAtNCAyIDIgMCAwIDAgMCA0em0wLTFhMSAxIDAgMSAwIDAtMiAxIDEgMCAwIDAgMCAyem0wIDBNOSAxMGEyIDIgMCAxIDAgMC00IDIgMiAwIDAgMCAwIDR6bTAtMWExIDEgMCAxIDAgMC0yIDEgMSAwIDAgMCAwIDJ6bTAgMCIvPjxwYXRoIGQ9Ik0xMy41NyAyMC44bDIuODMtMi44Mi0uNzEtLjctMi44MyAyLjgyLjcuN3ptMS40MS0yLjgybC43LS43LTIuMTEtMi4xMy0uNy43IDIuMTEgMi4xM3ptMCAwIi8+PC9nPjwvc3ZnPg==)',
-                            width: '25px',
-                            height: '25px',
-                        } }/>),
-                } }
-                onClick={ ( e: any ) => {
-                    map.current.panTo(e?.originalEvent?.target?._selected
-                        ? polyline[0] : polyline[polyline.length - 1])
-                } }
-            />
-            <FullscreenControl
-                options={ {
-                    position: { bottom: '15px', left: '15px' },
-                } }
-            />
-        </YandexMapComponent>
+                <FullscreenControl
+                    options={ {
+                        position: { bottom: '15px', left: '15px' },
+                    } }
+                />
+            </YandexMapComponent>
+            {/* ждём, когда появится балун с нужным ID */ }
+            <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }><AddDriversView
+                idEmployee={ idToPortal.idEmployee }/></Portal>
+        </>
     )
 })

@@ -263,13 +263,13 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                     preset: 'islands#blueDeliveryCircleIcon',
                                                     iconColor: colorOfStatus(status),
                                                     iconOffset: boundsOffsetCorrector(directionOfBounds),
+                                                    zIndexHover: 10000,
                                                 } }
                                                 properties={ { hintContent: `<b>${ fio }</b>` } }
                                                 onClick={ () => {
                                                     // плавное перемещение к указанной точке
                                                     map?.current?.panTo(position, { flying: 1 })
                                                     setSelectedDriver(idEmployee)
-                                                    console.log(drivers)
                                                 } }
                                                 key={ idEmployee + id }
                     />)
