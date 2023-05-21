@@ -33,10 +33,6 @@ const initialState = {
         responseStavka: '0.00 руб',
     },
 
-    maskOn: {
-        responseStavka: undefined,
-    },
-
     validators: {
         idEmployee: syncValidators.required,
         idTransport: syncValidators.required,

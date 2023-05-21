@@ -25,7 +25,6 @@ type ToRouteMap = {
     maxZoom?: number
     fromCity?: string
     toCity?: string
-    driverData: string[]
     isEnableCoordsClick?: boolean
 }
 
@@ -39,7 +38,7 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
         zoom = 5,
         bounds,
         maxZoom,
-        fromCity, toCity, driverData,
+        fromCity, toCity,
         isEnableCoordsClick,
     } ) => {
 
@@ -49,10 +48,6 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
         dispatch<any>(textAndActionGlobalModal({
             text: `Координаты: <b>${ e.originalEvent.target.geometry._coordinates?.join(', ') }</b>`,
         }))
-    }
-
-    const modalActivator = ( text: string[] ) => {
-        dispatch<any>(textAndActionGlobalModal({ text }))
     }
 
     const [ idToPortal, setIdToPortal ] = useState({ idEmployee: driver.idEmployee, flag: true })

@@ -58,10 +58,10 @@ type OwnProps = {
 
 export const RequestFormLeft: React.FC<OwnProps> = memo((
     {
-        requestModes, initialValues,
+        requestModes: { isHistoryMode, isAcceptDriverMode, isCreateMode, isStatusMode }, initialValues,
     } ) => {
 
-    const acceptDriverModePlaceholder = 'данные будут доступны после принятия заявки'
+    const isAcceptDriverModePlaceholder = 'данные будут доступны после принятия заявки'
     const routes = useSelector(getRoutesStore)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -112,10 +112,10 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     } ))
 
     const onSubmit = useCallback(async ( oneRequestValues: OneRequestType ) => {
-        if (requestModes.createMode) {
+        if (isCreateMode) {
             await dispatch<any>(changeCurrentRequestOnCreate(oneRequestValues))
         }
-    }, [ requestModes.createMode ])
+    }, [ isCreateMode ])
 
     // для сохранения отображаемых данных при переключении вкладок
     const exposeValues = ( values: OneRequestType ) => {
@@ -179,11 +179,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     useEffect(() => {
         if (isFirstRender) {
             // зачистка значений при первом рендере
-            if (requestModes.createMode) {
+            if (isCreateMode) {
                 dispatch(shippersStoreActions.setCurrentId(''))
                 dispatch(consigneesStoreActions.setCurrentId(''))
             }
-            if (requestModes.historyMode) {
+            if (isHistoryMode) {
                 dispatch(shippersStoreActions.setCurrentId(initialValues.idSender + ''))
                 dispatch(consigneesStoreActions.setCurrentId(initialValues.idRecipient + ''))
             }
@@ -193,7 +193,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
 
     // подсчёт маршрута, если выбраны оба селектора грузополучателя и грузоотправителя
     useEffect(() => {
-        if (requestModes.createMode && !isFirstRender) {
+        if (isCreateMode && !isFirstRender) {
             if (oneShipper.idSender && oneConsignee.idRecipient) {
                 dispatch<any>(
                     getRouteFromAPI({ oneShipper, oneConsignee }))
@@ -234,7 +234,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 <div className={ styles.requestFormLeft__selector }>
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.cargoComposition }</label>
-                                    { requestModes.createMode
+                                    { isCreateMode
                                         ? <FormSelector nameForSelector={ 'cargoComposition' }
                                             // placeholder={ placeholders.cargoComposition }
                                                         options={ stringArrayToSelectValue(cargoComposition) }
@@ -258,7 +258,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 <div className={ styles.requestFormLeft__inputsItem }>
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.shipmentDate }</label>
-                                    { requestModes.createMode
+                                    { isCreateMode
                                         ?
                                         <Field name={ 'shipmentDate' }
                                                component={ FormInputType }
@@ -292,7 +292,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 <div className={ styles.requestFormLeft__inputsItem }>
                                     <label className={ styles.requestFormLeft__label }>
                                         { labels.cargoType }</label>
-                                    { requestModes.createMode
+                                    { isCreateMode
                                         ? <FormSelector nameForSelector={ 'cargoType' }
                                                         placeholder={ labels.cargoType }
                                                         options={ stringArrayToSelectValue([ ...cargoTypes.filter(x => x !== 'Тягач') ]) }
@@ -310,7 +310,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idCustomer }</label>
-                                { requestModes.createMode
+                                { isCreateMode
                                     ? <FormSelector nameForSelector={ 'idCustomer' }
                                                     placeholder={ placeholders.idCustomer }
                                                     options={ customersSelect }
@@ -319,9 +319,9 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isClearable
                                     />
                                     : <InfoField
-                                        textData={ !requestModes.acceptDriverMode ? infoData.customerData : undefined }
-                                        phoneData={ !requestModes.acceptDriverMode ? infoData.customerPhoneData : undefined }
-                                        placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : placeholders.idCustomer + '' }
+                                        textData={ !isAcceptDriverMode ? infoData.customerData : undefined }
+                                        phoneData={ !isAcceptDriverMode ? infoData.customerPhoneData : undefined }
+                                        placeholder={ isAcceptDriverMode ? isAcceptDriverModePlaceholder : placeholders.idCustomer + '' }
                                     />
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.customer } mode={ 'inForm' }/>
@@ -330,7 +330,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idSender }</label>
-                                { requestModes.createMode
+                                { isCreateMode
                                     ? <FormSelector nameForSelector={ 'idSender' }
                                                     placeholder={ placeholders.idSender }
                                                     options={ shippersSelect }
@@ -339,9 +339,9 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isSubLabelOnOption
                                                     isClearable
                                     /> : <InfoField
-                                        textData={ !requestModes.acceptDriverMode ? infoData.shipperSenderData : undefined }
-                                        phoneData={ !requestModes.acceptDriverMode ? infoData.shipperSenderPhoneData : undefined }
-                                        placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : placeholders.idSender + '' }
+                                        textData={ !isAcceptDriverMode ? infoData.shipperSenderData : undefined }
+                                        phoneData={ !isAcceptDriverMode ? infoData.shipperSenderPhoneData : undefined }
+                                        placeholder={ isAcceptDriverMode ? isAcceptDriverModePlaceholder : placeholders.idSender + '' }
                                     />
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.shipper } mode={ 'inForm' }/>
@@ -350,7 +350,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
                                     className={ styles.requestFormLeft__label }>{ labels.idRecipient }</label>
-                                { requestModes.createMode
+                                { isCreateMode
                                     ? <FormSelector nameForSelector={ 'idRecipient' }
                                                     placeholder={ placeholders.idRecipient }
                                                     options={ consigneesSelect }
@@ -359,9 +359,9 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isSubLabelOnOption
                                                     isClearable
                                     /> : <InfoField
-                                        textData={ !requestModes.acceptDriverMode ? infoData.consigneeRecipientData : undefined }
-                                        phoneData={ !requestModes.acceptDriverMode ? infoData.consigneeRecipientPhoneData : undefined }
-                                        placeholder={ requestModes.acceptDriverMode ? acceptDriverModePlaceholder : placeholders.idRecipient + '' }
+                                        textData={ !isAcceptDriverMode ? infoData.consigneeRecipientData : undefined }
+                                        phoneData={ !isAcceptDriverMode ? infoData.consigneeRecipientPhoneData : undefined }
+                                        placeholder={ isAcceptDriverMode ? isAcceptDriverModePlaceholder : placeholders.idRecipient + '' }
                                     />
                                 }
                                 <InfoButtonToModal textToModal={ fieldInformation.consignee } mode={ 'inForm' }/>
@@ -371,8 +371,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.requestCarrierId }</label>
                                 <InfoField
-                                    textData={ !requestModes.acceptDriverMode ? infoData.acceptedCarrierData : undefined }
-                                    phoneData={ !requestModes.acceptDriverMode ? infoData.acceptedCarrierPhoneData : undefined }
+                                    textData={ !isAcceptDriverMode ? infoData.acceptedCarrierData : undefined }
+                                    phoneData={ !isAcceptDriverMode ? infoData.acceptedCarrierPhoneData : undefined }
                                     placeholder={ initialValues.requestCarrierId ? placeholders.requestCarrierId + '' : 'Перевозчик не выбран' }
                                 />
                                 <InfoButtonToModal textToModal={ fieldInformation.carrier } mode={ 'inForm' }/>
@@ -382,8 +382,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.idEmployee }</label>
                                 <InfoField
-                                    textData={ !requestModes.acceptDriverMode ? infoData.acceptedEmployeeData : undefined }
-                                    phoneData={ !requestModes.acceptDriverMode ? infoData.acceptedEmployeePhoneData : undefined }
+                                    textData={ !isAcceptDriverMode ? infoData.acceptedEmployeeData : undefined }
+                                    phoneData={ !isAcceptDriverMode ? infoData.acceptedEmployeePhoneData : undefined }
                                     placeholder={ initialValues.idEmployee ? placeholders.requestCarrierId + '' : 'Водитель не выбран' }
                                 />
                                 <InfoButtonToModal textToModal={ fieldInformation.driver } mode={ 'inForm' }/>
@@ -392,7 +392,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.note }</label>
-                                { requestModes.createMode
+                                { isCreateMode
                                     ? <Field name={ 'note' }
                                              component={ FormInputType }
                                              resetFieldBy={ form }
@@ -407,7 +407,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 <label className={ styles.requestFormLeft__label }>
                                     { labels.cargoStamps }</label>
-                                { requestModes.createMode
+                                { isCreateMode
                                     ? <Field name={ 'cargoStamps' }
                                              component={ FormInputType }
                                              resetFieldBy={ form }
@@ -420,35 +420,35 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             </div>
                             {/*КНОПКИ И НЕ КНОПКИ*/ }
                             <div className={ styles.requestFormLeft__buttonsPanel }
-                                 style={ requestModes.statusMode && initialValues.globalStatus !== 'новая заявка' ? {
-                                     backgroundImage: `url(${ (values.localStatus?.cargoHasBeenTransferred && !values.localStatus?.cargoHasBeenReceived) ? truckLoadPNG : truckPNG })`,
+                                 style={ isStatusMode && initialValues.globalStatus !== 'новая заявка' ? {
+                                     backgroundImage: `url(${ ( values.localStatus?.cargoHasBeenTransferred && !values.localStatus?.cargoHasBeenReceived ) ? truckLoadPNG : truckPNG })`,
                                      backgroundRepeat: 'no-repeat',
                                      backgroundPositionX: !values.localStatus?.cargoHasBeenTransferred ? 'left'
                                          : !values.localStatus?.cargoHasBeenReceived ? 'center' : 'right',
                                  } : undefined }
                             >
-                                { !requestModes.historyMode ? <>
+                                { !isHistoryMode ? <>
                                     {/* ПОИСК ИСПОЛНИТЕЛЯ | ПРИНЯТЬ ЗАЯВКУ | ГРУЗ У ВОДИТЕЛЯ*/ }
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button
                                             colorMode={ !values.localStatus?.cargoHasBeenTransferred ? 'green' : 'blue' }
                                             type={ hasValidationErrors ? 'submit' : 'button' }
                                             title={ (
-                                                ( requestModes.createMode && 'Поиск исполнителя' ) ||
-                                                ( ( requestModes.acceptDriverMode ||
-                                                    ( requestModes.statusMode && isMyRequestAndNew )
+                                                ( isCreateMode && 'Поиск исполнителя' ) ||
+                                                ( ( isAcceptDriverMode ||
+                                                    ( isStatusMode && isMyRequestAndNew )
                                                 ) && 'Принять заявку' ) ||
-                                                ( requestModes.statusMode && 'Груз у водителя' ) ) + ''
+                                                ( isStatusMode && 'Груз у водителя' ) ) + ''
                                             }
                                             onClick={ () => {
                                                 if (!hasValidationErrors) {
-                                                    if (requestModes.createMode) {
+                                                    if (isCreateMode) {
                                                         buttonsAction.submitRequestAndSearch(values)
                                                     }
-                                                    if (requestModes.acceptDriverMode) {
+                                                    if (isAcceptDriverMode) {
                                                         buttonsAction.acceptRequest(values)
                                                     }
-                                                    if (requestModes.statusMode) {
+                                                    if (isStatusMode) {
                                                         isMyRequestAndNew
                                                             ? buttonsAction.acceptRequest(values)
                                                             : buttonsAction.cargoHasBeenTransferred(values)
@@ -461,34 +461,34 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                     {/* САМОВЫВОЗ | ОТКАЗАТЬСЯ | ГРУЗ У ПОЛУЧАТЕЛЯ */ }
                                     <div className={ styles.requestFormLeft__panelButton }>
                                         <Button colorMode={
-                                            ( ( requestModes.createMode || isMyRequestAndNew ) && 'blue' ) ||
-                                            ( requestModes.acceptDriverMode && 'red' ) ||
-                                            ( requestModes.statusMode && values.localStatus?.cargoHasBeenReceived ? 'blue' : 'green' )
+                                            ( ( isCreateMode || isMyRequestAndNew ) && 'blue' ) ||
+                                            ( isAcceptDriverMode && 'red' ) ||
+                                            ( isStatusMode && values.localStatus?.cargoHasBeenReceived ? 'blue' : 'green' )
                                         }
                                                 type={ hasValidationErrors ? 'submit' : 'button' }
                                                 title={ (
-                                                    ( ( requestModes.createMode || isMyRequestAndNew ) && 'Cамовывоз' ) ||
-                                                    ( requestModes.acceptDriverMode && 'Отказаться' ) ||
-                                                    ( requestModes.statusMode && 'Груз у получателя' ) ) + ''
+                                                    ( ( isCreateMode || isMyRequestAndNew ) && 'Cамовывоз' ) ||
+                                                    ( isAcceptDriverMode && 'Отказаться' ) ||
+                                                    ( isStatusMode && 'Груз у получателя' ) ) + ''
                                                 }
                                                 onClick={ () => {
                                                     if (!hasValidationErrors) {
-                                                        requestModes.createMode && buttonsAction.submitRequestAndDrive(values)
-                                                        if (requestModes.acceptDriverMode) {
+                                                        isCreateMode && buttonsAction.submitRequestAndDrive(values)
+                                                        if (isAcceptDriverMode) {
                                                             isMyRequestAndNew
                                                                 ? buttonsAction.toSelfExportDriverFromStatusAndAccept(values)
                                                                 : buttonsAction.cancelRequest()
                                                         }
-                                                        if (requestModes.statusMode) {
+                                                        if (isStatusMode) {
                                                             isMyRequestAndNew
                                                                 ? buttonsAction.toSelfExportDriverFromStatusAndAccept(values)
                                                                 : buttonsAction.cargoHasBeenReceived(values)
                                                         }
                                                     }
                                                 } }
-                                                disabled={ requestModes.statusMode ? ( !isMyRequestAndNew && !values.localStatus?.cargoHasBeenTransferred ) : submitting || submitError }
+                                                disabled={ isStatusMode ? ( !isMyRequestAndNew && !values.localStatus?.cargoHasBeenTransferred ) : submitting || submitError }
                                                 rounded/>
-                                        { requestModes.createMode &&
+                                        { isCreateMode &&
                                             <InfoButtonToModal textToModal={ fieldInformation.selfDeliveryButton }
                                                                mode={ 'outClose' }/>
                                         }
@@ -497,7 +497,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                 }
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
-                            { requestModes.createMode &&
+                            { isCreateMode &&
                                 <FormSpySimple form={ form }
                                                onChange={ exposeValues }
                                                isOnActiveChange
@@ -505,7 +505,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                         </form>
                     )
                 }/>
-            { requestModes.createMode && <InfoText/> }
+            { isCreateMode && <InfoText/> }
         </div>
     )
 }, valuesAreEqual)

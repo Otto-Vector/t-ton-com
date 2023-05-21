@@ -17,12 +17,12 @@ import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-
 
 // type OwnProps = { }
 
-export type RequestModesType = { createMode: boolean, statusMode: boolean, historyMode: boolean, acceptDriverMode: boolean }
+export type RequestModesType = { isCreateMode: boolean, isStatusMode: boolean, isHistoryMode: boolean, isAcceptDriverMode: boolean }
 
 export const RequestSection: React.FC = React.memo(() => {
 
     const [ tabModes, setTabModes ] = useState({ left: false, center: false, right: false })
-    const activeTab = useCallback(( tab: 'left' | 'center' | 'right' ) => {
+    const setActiveTab = useCallback(( tab: 'left' | 'center' | 'right' ) => {
         setTabModes({ ...{ left: false, center: false, right: false }, [tab]: true })
     }, [])
 
@@ -34,11 +34,12 @@ export const RequestSection: React.FC = React.memo(() => {
     const { pathname } = useLocation()
 
     const requestModes: RequestModesType = useMemo(() => ( {
-        createMode: pathname.includes(routes.requestInfo.create),
-        statusMode: pathname.includes(routes.requestInfo.status),
-        historyMode: pathname.includes(routes.requestInfo.history),
-        acceptDriverMode: pathname.includes(routes.requestInfo.accept),
+        isCreateMode: pathname.includes(routes.requestInfo.create),
+        isStatusMode: pathname.includes(routes.requestInfo.status),
+        isHistoryMode: pathname.includes(routes.requestInfo.history),
+        isAcceptDriverMode: pathname.includes(routes.requestInfo.accept),
     } ), [ pathname ])
+    const { isCreateMode, isStatusMode, isAcceptDriverMode, isHistoryMode } = requestModes
 
     const isFetching = useSelector(getIsFetchingRequestStore)
     const initialValues = useSelector(getInitialValuesRequestStore)
@@ -46,16 +47,15 @@ export const RequestSection: React.FC = React.memo(() => {
 
     const dispatch = useDispatch()
 
-    const cancelNavigate = (): To => {
-        if (requestModes.acceptDriverMode) return routes.searchList
-        if (requestModes.statusMode) return routes.requestsList
-        if (requestModes.historyMode) return routes.historyList
-        return -1 as To
-    }
+    const cancelNavigate = (): To =>
+        isAcceptDriverMode ? routes.searchList
+            : isStatusMode ? routes.requestsList
+                : isHistoryMode ? routes.historyList
+                    : -1 as To
 
 
     const onCancelButton = () => {
-        if (requestModes.createMode) {
+        if (isCreateMode) {
             dispatch<any>(deleteCurrentRequestAPI({ requestNumber: +( initialValues.requestNumber || 0 ) }))
         }
         navigate(cancelNavigate())
@@ -64,23 +64,21 @@ export const RequestSection: React.FC = React.memo(() => {
 
     useEffect(() => {// должен сработать ТОЛЬКО один раз
         if (isFirstRender) {
-            activeTab('left')
-            if (requestModes.createMode) {
+            setActiveTab('left')
+            if (isCreateMode) {
                 // создаём пустую и записываем номер заявки
                 dispatch<any>(setNewRequestAPI())
             }
-            if (requestModes.statusMode || requestModes.acceptDriverMode || requestModes.historyMode) {
+            if (isStatusMode || isAcceptDriverMode || isHistoryMode) {
                 // прогружаем искомую заявку
                 dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 ), true))
-            }
-            if (requestModes.statusMode) {
             }
             setIsFirstRender(false)
         }
     }, [ isFirstRender ])
 
 
-    if (!requestModes.createMode && !initialValues.requestNumber) return <div>
+    if (!isCreateMode && !initialValues.requestNumber) return <div>
         <br/><br/> { 'ДАННАЯ ЗАЯВКА НЕДОСТУПНА !' }
     </div>
 
@@ -102,30 +100,28 @@ export const RequestSection: React.FC = React.memo(() => {
                                                                        driver={ oneEmployee }
                                                                        fromCity={ initialValues?.sender?.city }
                                                                        toCity={ initialValues?.recipient?.city }
-
                                 /> }
                                 { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
                             </div>
 
-                            { !tabModes.center &&
-                                <CancelXButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/> }
+                            <CancelXButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/>
                         </> }
                 </div>
                 <div className={ styles.requestSection__bottomTabsPanel }>
                     <div className={ styles.requestSection__bottomTabsItem + ' ' +
                         ( tabModes.left && styles.requestSection__bottomTabsItem_active ) }
-                         onClick={ () => activeTab('left') }>
+                         onClick={ () => setActiveTab('left') }>
                         { 'Данные' }
                     </div>
                     <div className={ styles.requestSection__bottomTabsItem + ' ' +
                         ( tabModes.center && styles.requestSection__bottomTabsItem_active ) }
-                         onClick={ () => activeTab('center') }>
+                         onClick={ () => setActiveTab('center') }>
                         { 'Маршрут' }
                     </div>
                     <div className={ styles.requestSection__bottomTabsItem +
                         ( tabModes.right ? ' ' + styles.requestSection__bottomTabsItem_active : '' ) +
-                        ( ( requestModes.createMode || requestModes.acceptDriverMode ) ? ' ' + styles.requestSection__bottomTabsItem_disabled : '' ) }
-                         onClick={ () => ( requestModes.createMode || requestModes.acceptDriverMode ) ? undefined : activeTab('right') }>
+                        ( ( isCreateMode || isAcceptDriverMode ) ? ' ' + styles.requestSection__bottomTabsItem_disabled : '' ) }
+                         onClick={ () => ( isCreateMode || isAcceptDriverMode ) ? undefined : setActiveTab('right') }>
                         { 'Документы' }
                     </div>
                 </div>

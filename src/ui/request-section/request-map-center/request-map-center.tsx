@@ -23,8 +23,6 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
 
     const testCenter: [ number, number ] = [ 55.5907807700034, 84.09127066601563 ]
     const testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]
-    // для отображения данных водителя в режиме статуса/истории
-    const { acceptedEmployeeData } = useSelector(getPreparedInfoDataRequestStore)
 
     const route = useSelector(getRoutesParsedFromPolylineRequestStore) || testLine
     const routeCenterIndex = route ? Math.ceil(route.length / 2) : 0
@@ -35,8 +33,8 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
         start: route[0],
         finish: route[route.length - 1],
     })
-    const maxZoom = requestModes.acceptDriverMode ? 10 : undefined
-    const driverHere = requestModes.statusMode ? stringToCoords(driver.coordinates) : undefined
+    const maxZoom = requestModes.isAcceptDriverMode ? 10 : undefined
+    const driverHere = requestModes.isStatusMode ? stringToCoords(driver.coordinates) : undefined
 
     return (
         <div className={ styles.requestMapCenter }>
@@ -46,10 +44,9 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
                                 maxZoom={ maxZoom }
                                 driverHere={ driverHere }
                                 driver={ driver }
-                                driverData={ acceptedEmployeeData }
                                 fromCity={ fromCity }
                                 toCity={ toCity }
-                                isEnableCoordsClick={ !requestModes.acceptDriverMode }
+                                isEnableCoordsClick={ !requestModes.isAcceptDriverMode }
                                 bounds={ zoomCoords }
                 />
             </div>
