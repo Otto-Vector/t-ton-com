@@ -14,18 +14,20 @@ import {useDispatch} from 'react-redux'
 import {Portal} from '../../../common/portals/Portal'
 import {AddDriversView} from '../../../add-drivers-form/add-drivers-view'
 import {OneEmployeeNoPhotoIdReqType} from '../../../../api/local-api/options/employee.api'
+import {RequestModesType} from '../../request-section'
 
 type ToRouteMap = {
     center: [ number, number ]
     driverHere?: [ number, number ]
     driver: OneEmployeeNoPhotoIdReqType
     polyline: number[][]
-    bounds?: MapState['bounds']
+    boundsToMapState?: MapState['bounds']
     zoom?: number
     maxZoom?: number
     fromCity?: string
     toCity?: string
     isEnableCoordsClick?: boolean
+    requestModes: RequestModesType
 }
 
 // карта с отрисованным маршрутом в центральной части заявки
@@ -36,7 +38,7 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
         center,
         polyline,
         zoom = 5,
-        bounds,
+        boundsToMapState,
         maxZoom,
         fromCity, toCity,
         isEnableCoordsClick,
@@ -51,6 +53,14 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
     }
 
     const [ idToPortal, setIdToPortal ] = useState({ idEmployee: driver.idEmployee, flag: true })
+    const activatePortal = ( idEmployee: string ) => {
+        setTimeout(() => {
+            // flag нужен, чтобы каждый раз возвращалось новое значение,
+            // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
+            setIdToPortal(val => ( { idEmployee, flag: !val.flag } ))
+        }, 0)
+    }
+
     const map = useRef<any>({})
 
     // псевдо-перерисовка маркера водителя, ушедшего за край видимости карты, на край карты
@@ -59,6 +69,7 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
         const bounds: number[][] = map.current?.getBounds()
         const center: number[] = map.current?.getCenter()
         if (driverHere) {
+            // если водитель без координат, ставим метку внизу в центре карты
             if (driverHere[0] === 0) {
                 setBoundsDriver({
                     position: positionToBoundsLine({
@@ -68,13 +79,16 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                     offset: [ 0, -30 ],
                     isNoCoords: true,
                 })
+
             } else if (isOutOfBounds({ bounds, position: driverHere })) {
+                // если водитель с координатами и за пределами видимости активной карты
                 setBoundsDriver({
                     position: positionToBoundsLine({ position: driverHere, bounds }) as [ number, number ],
                     offset: boundsOffsetCorrector(directionOfBounds({ position: driverHere, bounds })),
                     isNoCoords: false,
                 })
             } else {
+                // если водитель с координатами и в пределах видимости, ставим на нули, чтобы не отрисовывалось
                 setBoundsDriver({
                     position: [ 0, 0 ],
                     isNoCoords: false,
@@ -101,7 +115,7 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                 state={ {
                     center,
                     zoom,
-                    bounds: bounds as undefined,
+                    bounds: boundsToMapState as undefined,
                 } }
                 onBoundsChange={ placemarkerReWriter }
                 instanceMap={ map }
@@ -121,12 +135,7 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                                } }
                                onContextMenu={ isEnableCoordsClick ? extractCoordinatesToModal : undefined }
                                onClick={ () => {
-                                   // modalActivator(driverData || [])
-                                   setTimeout(() => {
-                                       // flag нужен, чтобы каждый раз возвращалось новое значение,
-                                       // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
-                                       setIdToPortal(val => ( { idEmployee: driver.idEmployee, flag: !val.flag } ))
-                                   }, 0)
+                                   activatePortal(driver.idEmployee)
                                } }
                     />
                 }
@@ -150,11 +159,7 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                                        // плавное перемещение к указанной точке
                                        map?.current?.panTo(driverHere, { flying: 1 })
                                    } else {
-                                       setTimeout(() => {
-                                           // flag нужен, чтобы каждый раз возвращалось новое значение,
-                                           // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
-                                           setIdToPortal(val => ( { idEmployee: driver.idEmployee, flag: !val.flag } ))
-                                       }, 0)
+                                       activatePortal(driver.idEmployee)
                                    }
                                } }
                     />

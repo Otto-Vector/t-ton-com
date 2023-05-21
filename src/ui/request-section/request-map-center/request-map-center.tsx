@@ -47,7 +47,8 @@ export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, drive
                                 fromCity={ fromCity }
                                 toCity={ toCity }
                                 isEnableCoordsClick={ !requestModes.isAcceptDriverMode }
-                                bounds={ zoomCoords }
+                                boundsToMapState={ zoomCoords }
+                                requestModes={ requestModes }
                 />
             </div>
         </div>
