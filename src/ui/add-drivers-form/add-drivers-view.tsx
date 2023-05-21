@@ -70,6 +70,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
 
     const oneEmployeeFind = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
     const oneEmployee = !isRequestCenterMapMode ? oneEmployeeFind : currentOneRequest.responseEmployee as EmployeeCardType<string>
+    const oneEmployeePhoto = oneEmployee?.photoFace
     const employeeOnePhone = oneEmployee?.employeePhoneNumber
     // на какой он сейчас заявке
     const oneEmployeeOnRequestNumber = +( ( !isRequestCenterMapMode ? oneEmployee?.onCurrentRequest : currentOneRequest?.requestNumber ) || 0 )
@@ -94,13 +95,15 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
 
     const oneTransportFind = useSelector(getFilteredTransportBigMapStore).find(( { idTransport } ) => idTransport === oneEmployee?.idTransport)
     const oneTransport = !isRequestCenterMapMode ? oneTransportFind : currentOneRequest.responseTransport as TransportCardType<string>
+    const transportTradeMarkModel = ( oneTransport?.transportTrademark !== '-' ) ? oneTransport?.transportTrademark + ' , ' + oneTransport?.transportModel : '-'
     const transportOneImage = oneTransport?.transportImage
-    const oneTransportCargoWeight = +( oneTransport?.cargoWeight || 0 )
+    const oneTransportCargoWeight = +( ( oneTransport?.cargoWeight !== '-' ? oneTransport?.cargoWeight : 0 ) || 0 )
 
     const oneTrailerFind = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const oneTrailer = !isRequestCenterMapMode ? oneTrailerFind : currentOneRequest.responseTrailer as TrailerCardType<string>
+    const trailerTradeMarkModel = ( oneTrailer?.trailerTrademark !== '-' ) ? oneTrailer?.trailerTrademark + ' , ' + oneTrailer?.trailerModel : '-'
     const trailerOneImage = oneTrailer?.trailerImage
-    const oneTralerCagoWeigth = +( oneTrailer?.cargoWeight || 0 )
+    const oneTralerCagoWeigth = +( ( oneTrailer?.cargoWeight !== '-' ? oneTrailer?.cargoWeight : 0 ) || 0 )
     // водитель на заявке
     const isDriverOnActiveRequest = isAnswersMode || ( isStatusMode && oneEmployeeStatus === 'на заявке' && !!oneEmployeeOnRequestNumber )
 
@@ -213,7 +216,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneTransport?.transportModel || '-' }
+                            { transportTradeMarkModel }
                         </div>
                     </div>
                     {/* ПРИЦЕП */ }
@@ -223,7 +226,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                         <label
                             className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
                         <div className={ styles.addDriversForm__info }>
-                            { oneTrailer?.trailerModel || '-' }
+                            { trailerTradeMarkModel }
                         </div>
                     </div>
                 </div>
@@ -275,9 +278,9 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                     <div className={ styles.addDriversForm__photo }
                          title={ 'Фото водителя' }>
                         <img
-                            src={ setImage(oneEmployee?.photoFace) }
+                            src={ setImage(oneEmployeePhoto) }
                             alt="driverPhoto"
-                            onClick={ () => setLightBoxImage(setImage(oneEmployee?.photoFace)) }
+                            onClick={ () => setLightBoxImage(setImage(oneEmployeePhoto)) }
                         />
                     </div>
                     <div className={ styles.addDriversForm__photo }
@@ -309,19 +312,16 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                             />
                         </>
                         :
-                        <a role="button"
-                           href={ `tel:${ employeeOnePhone }` }
-                           className={ styles.addDriversForm__buttonHrefWrapper }>
-                            <Button type={ 'button' }
-                                    disabled={ !employeeOnePhone }
-                                    colorMode={ 'blue' }
-                                    onClick={ () => {
-                                        phoneToModal(employeeOnePhone)
-                                    } }
-                                    title={ employeeOnePhone + '' }
-                                    rounded
-                            />
-                        </a> }
+                        <Button type={ 'button' }
+                                disabled={ !employeeOnePhone }
+                                colorMode={ 'blue' }
+                                onClick={ () => {
+                                    phoneToModal(employeeOnePhone)
+                                } }
+                                title={ employeeOnePhone + '' }
+                                rounded
+                        />
+                    }
                 </div>
             </div>
 

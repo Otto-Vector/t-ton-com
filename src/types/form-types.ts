@@ -727,6 +727,8 @@ export type OneRequestApiType = {
     responseEmployeepassportDate?: string
     // Номер водительского удостоверения
     responseEmployeedrivingLicenseNumber?: string
+    // ссылка на фото
+    responseEmployeePhotoFace?: string
 
     /* ТРАНСПОРТ */
     idTransport?: string
@@ -746,6 +748,8 @@ export type OneRequestApiType = {
     responseTransportCargoWeight?: string
     // Право собственности авто
     responseTransportPropertyRights?: PropertyRightsType
+    // ссылка на фото
+    responseTransportImage?: string
 
     /* ПРИЦЕП */
     idTrailer?: string
@@ -765,6 +769,8 @@ export type OneRequestApiType = {
     responseTrailerCargoWeight?: string
     // Права собственности прицепа
     responseTrailerPropertyRights?: PropertyRightsType
+    // ссылка на фото
+    responseTrailerImage?: string
 
     responseStavka?: string
     responseTax?: string

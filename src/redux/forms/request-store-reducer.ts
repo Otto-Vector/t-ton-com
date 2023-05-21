@@ -299,7 +299,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     },
 
     distance: Number(elem.distance),
-    // toDo: убрать эту дибильную проверку, когда он исправит поле на необязательное
+    // toDo: убрать эту дибильную проверку на '-', когда он исправит поле на необязательное
     route: elem?.route || '' + ( elem?.routePlus ? ( ( elem.routePlus !== '-' ) ? elem.routePlus : '' ) : '' ),
     note: elem.note,
     cargoStamps: elem.cargoStamps,
@@ -415,6 +415,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         passportFMS: elem.responseEmployeepassportFMS,
         passportDate: elem.responseEmployeepassportDate,
         drivingLicenseNumber: elem.responseEmployeedrivingLicenseNumber,
+        photoFace: elem.responseEmployeePhotoFace
     },
     // ТРАНСПОРТ
     idTransport: elem.idTransport,
@@ -428,6 +429,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         cargoType: elem.responseTransportCargoType,
         cargoWeight: elem.responseTransportCargoWeight,
         propertyRights: elem.responseTransportPropertyRights,
+        transportImage: elem.responseTransportImage,
     },
     // ПРИЦЕП
     idTrailer: elem.idTrailer,
@@ -441,6 +443,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         cargoType: elem.responseTrailerCargoType,
         cargoWeight: elem.responseTrailerCargoWeight,
         propertyRights: elem.responseTrailerPropertyRights,
+        trailerImage: elem.responseTrailerImage,
     },
 
     responseStavka: elem.responseStavka,
@@ -536,6 +539,7 @@ export const getOneRequestsAPI = ( requestNumber: number, giveMeDriver = false )
             const response = await oneRequestApi.getOneRequestById({ requestNumber })
             if (response.length > 0) {
                 dispatch(requestStoreActions.setInitialValues(parseRequestFromAPI(response[0])))
+                // подгружаем также водителя, для обновления координат
                 if (giveMeDriver && response[0].idEmployee) {
                     await dispatch(getOneEmployeeFromAPI(response[0].idEmployee))
                 }
@@ -543,7 +547,7 @@ export const getOneRequestsAPI = ( requestNumber: number, giveMeDriver = false )
                 dispatch(textAndActionGlobalModal({
                     text: [
                         'НЕ УДАЛОСЬ ЗАГРУЗИТЬ ЗАЯВКУ №' + requestNumber,
-                        ( response.message ? ' Причина' + response.message : '' ),
+                        ( response.message ? 'Причина ' + response.message : '' ),
                     ],
                 }))
             }
@@ -611,7 +615,7 @@ export const addAcceptedResponseToRequestOnCreate = (
                 requestNumber: addDriverValues.requestNumber,
                 globalStatus: 'в работе',
                 responseStavka: addDriverValues.responseStavka,
-                responseTax: addDriverValues.responseId,
+                responseTax: addDriverValues.responseTax,
                 responsePrice: addDriverValues.responsePrice,
                 cargoWeight,
                 requestUserCarrierId: idUser,
@@ -644,6 +648,7 @@ export const addAcceptedResponseToRequestOnCreate = (
                 responseEmployeepassportFMS: employeeValues.passportFMS,
                 responseEmployeepassportDate: employeeValues.passportDate as string,
                 responseEmployeedrivingLicenseNumber: employeeValues.drivingLicenseNumber,
+                responseEmployeePhotoFace: employeeValues.photoFace,
                 /* ТРАНСПОРТ */
                 idTransport: transportValues.idTransport,
                 responseTransportNumber: transportValues.transportNumber,
@@ -654,6 +659,7 @@ export const addAcceptedResponseToRequestOnCreate = (
                 responseTransportCargoType: transportValues.cargoType,
                 responseTransportCargoWeight: transportValues.cargoWeight,
                 responseTransportPropertyRights: transportValues.propertyRights,
+                responseTransportImage: transportValues.transportImage,
                 /* ПРИЦЕП */
                 idTrailer: trailerValues.idTrailer,
                 responseTrailertrailerNumber: trailerValues.trailerNumber,
@@ -664,12 +670,13 @@ export const addAcceptedResponseToRequestOnCreate = (
                 responseTrailerCargoType: trailerValues.cargoType,
                 responseTrailerCargoWeight: trailerValues.cargoWeight,
                 responseTrailerPropertyRights: trailerValues.propertyRights,
+                responseTrailerImage: trailerValues.trailerImage
             })
 
             if (response.success) {
                 // добавляем Id пользователя к заявке (возможно это излишне)
                 await oneRequestApi.addOneUserAcceptRequest({ requestNumber: addDriverValues.requestNumber, idUser })
-                // применяем статус 'на заявке'
+                // применяем статус 'на заявке' водителю и удаляем все ответы на заявки
                 await dispatch(modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest({
                     idEmployee: employeeValues.idEmployee,
                     addedToResponses: employeeValues.addedToResponse,
@@ -711,7 +718,7 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                     requestNumber: oneResponse.requestNumber,
                     globalStatus: 'в работе',
                     responseStavka: oneResponse.responseStavka,
-                    responseTax: oneResponse.responseId,
+                    responseTax: oneResponse.responseTax,
                     responsePrice: oneResponse.responsePrice,
                     requestUserCarrierId: oneResponse.requestCarrierId,
                     cargoWeight: oneResponse.cargoWeight,
@@ -744,6 +751,7 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                     responseEmployeepassportFMS: employeeValues.passportFMS,
                     responseEmployeepassportDate: employeeValues.passportDate as string,
                     responseEmployeedrivingLicenseNumber: employeeValues.drivingLicenseNumber,
+                    responseEmployeePhotoFace: employeeValues.photoFace,
                     /* ТРАНСПОРТ */
                     idTransport: transportValues.idTransport,
                     responseTransportNumber: transportValues.transportNumber,
@@ -754,6 +762,7 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                     responseTransportCargoType: transportValues.cargoType,
                     responseTransportCargoWeight: transportValues.cargoWeight,
                     responseTransportPropertyRights: transportValues.propertyRights,
+                    responseTransportImage: transportValues.transportImage,
                     /* ПРИЦЕП */
                     idTrailer: trailerValues?.idTrailer || '-',
                     responseTrailertrailerNumber: trailerValues?.trailerNumber || '-',
@@ -764,6 +773,7 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                     responseTrailerCargoType: trailerValues?.cargoType,
                     responseTrailerCargoWeight: trailerValues?.cargoWeight || '-',
                     responseTrailerPropertyRights: trailerValues?.propertyRights,
+                    responseTrailerImage: trailerValues?.trailerImage,
                 })
                 if (response.success) {
                     await oneRequestApi.addOneUserAcceptRequest({
@@ -944,7 +954,6 @@ export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
             requestNumber: requestNumber + '',
             cargoWeight: cargoWeight + '',
             uploadTime: yearMmDdFormatISO(new Date()),
-            // addedPrice: +( responseStavka || 1 ) * +( distance || 1 ) * +( cargoWeight || 1 ),
             addedPrice,
             localStatuscargoHasBeenTransferred: true,
         }))
@@ -999,6 +1008,7 @@ export const getRouteFromAPI = ( {
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(true))
         const initialValues = getState().requestStoreReducer.initialValues
+        const distanceCoefficient = getState().baseStoreReducer.distanceCoefficient
         try {
             // отправляем запрос на маршрут
             const response = await getRouteFromAvtodispetcherApi({
@@ -1006,8 +1016,8 @@ export const getRouteFromAPI = ( {
                 to: oneConsignee.coordinates || '',
             })
 
-            // конвертируем дистанцию с учетом коэффициэнта
-            const distance = +( +response.kilometers * getState().baseStoreReducer.distanceCoefficient ).toFixed(0)
+            // конвертируем дистанцию с учетом коэффициэнта и округляем до целого
+            const distance = +( +response.kilometers * distanceCoefficient ).toFixed(0)
 
             // максимальное количество символов, которые мы можем у себя сохранить
             if (response.polyline) {
