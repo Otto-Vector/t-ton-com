@@ -38,10 +38,11 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const initialValuesDocuments = initialValuesRequest.documents
     const modalsText = useSelector(getInfoTextModalsRequestValuesStore)
     const dispatch = useDispatch()
-    const price = parseToNormalMoney(initialValuesRequest?.localStatus?.cargoHasBeenTransferred
-        ? toNumber(initialValuesRequest?.addedPrice)
-        : toNumber(initialValuesRequest?.responsePrice),
+    const price = parseToNormalMoney(
+        toNumber(initialValuesRequest?.localStatus?.cargoHasBeenTransferred
+            ? initialValuesRequest?.addedPrice : initialValuesRequest?.responsePrice),
     )
+
     const buttonsAction = {
         acceptRequest: () => {
         },
