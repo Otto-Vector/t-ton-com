@@ -194,8 +194,9 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                 />
             </YandexMapComponent>
             {/* ждём, когда появится балун с нужным ID */ }
-            <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }><AddDriversView
-                idEmployee={ idToPortal.idEmployee }/></Portal>
+            <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }>
+                <AddDriversView idEmployee={ idToPortal.idEmployee }/>
+            </Portal>
         </>
     )
 })

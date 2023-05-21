@@ -28,6 +28,7 @@ import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-res
 import {CancelXButtonDriverView} from './cancel-x-button-driver-view/cancel-x-button-driver-view'
 import {parseToNormalMoney} from '../../utils/parsers'
 import {boldWrapper} from '../../utils/html-rebuilds'
+import {EmployeeCardType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
 
 
 type OwnProps = {
@@ -45,17 +46,19 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
     const isFetching = isFetchingEmployee && isFetchingRequest
 
     const label = useSelector(getLabelAddDriverStore)
-    const { taxMode } = useSelector(getStoredValuesRequisitesStore)
 
     const dispatch = useDispatch()
     const { pathname } = useLocation()
     const routes = useSelector(getRoutesStore)
 
-    const mapModes = useMemo(() => ( {
-        answersMode: pathname.includes(routes.maps.answers),
-        routesMode: pathname.includes(routes.maps.routes),
-        statusMode: pathname.includes(routes.maps.status),
+    const { isAnswersMode, isRequestCenterMapMode, isStatusMode } = useMemo(() => ( {
+        isAnswersMode: pathname.includes(routes.maps.answers),
+        isRequestCenterMapMode: pathname.includes(routes.requestInfo.status),
+        isStatusMode: pathname.includes(routes.maps.status),
     } ), [ pathname, routes ])
+
+    // данные tax пользователя, авторизованного в системе
+    const requisites = useSelector(getStoredValuesRequisitesStore)
 
     const currentOneRequest = useSelector(getInitialValuesRequestStore)
     const distance = currentOneRequest?.distance
@@ -65,28 +68,47 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
         dispatch(lightBoxStoreActions.setLightBoxImage(image || ''))
     }
 
-    const oneEmployee = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
+    const oneEmployeeFind = useSelector(getFilteredDriversBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
+    const oneEmployee = !isRequestCenterMapMode ? oneEmployeeFind : currentOneRequest.responseEmployee as EmployeeCardType<string>
     const employeeOnePhone = oneEmployee?.employeePhoneNumber
-    const oneEmployeeOnRequestNumber = +( oneEmployee?.onCurrentRequest || 0 )
-    const oneEmployeeStatus = oneEmployee?.status
+    // на какой он сейчас заявке
+    const oneEmployeeOnRequestNumber = +( ( !isRequestCenterMapMode ? oneEmployee?.onCurrentRequest : currentOneRequest?.requestNumber ) || 0 )
+    const oneEmployeeStatus = !isRequestCenterMapMode ? oneEmployee?.status : 'на заявке'
 
-    const oneResponse = useSelector(getFilteredResponsesBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
+    // конкретный ответ на заявку
+    const oneResponseFind = useSelector(getFilteredResponsesBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
+    const oneResponse: ResponseToRequestCardType<string> | undefined = !isRequestCenterMapMode ? oneResponseFind : {
+        responseTax: currentOneRequest.responseTax + '',
+        requestNumber: currentOneRequest.requestNumber + '',
+        cargoWeight: currentOneRequest.cargoWeight + '',
+        idEmployee: currentOneRequest.idEmployee + '',
+        idTrailer: currentOneRequest.idTrailer + '',
+        responseId: '0',
+        idTransport: currentOneRequest.idTransport + '',
+        responsePrice: currentOneRequest.responsePrice + '',
+        responseStavka: currentOneRequest.responseStavka + '',
+        requestCarrierId: currentOneRequest.requestCarrierId + '',
+    }
 
-    const oneTransport = useSelector(getFilteredTransportBigMapStore).find(( { idTransport } ) => idTransport === oneEmployee?.idTransport)
+    const taxMode = isStatusMode ? requisites.taxMode : oneResponse?.responseTax
+
+    const oneTransportFind = useSelector(getFilteredTransportBigMapStore).find(( { idTransport } ) => idTransport === oneEmployee?.idTransport)
+    const oneTransport = !isRequestCenterMapMode ? oneTransportFind : currentOneRequest.responseTransport as TransportCardType<string>
     const transportOneImage = oneTransport?.transportImage
     const oneTransportCargoWeight = +( oneTransport?.cargoWeight || 0 )
 
-    const oneTrailer = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
+    const oneTrailerFind = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
+    const oneTrailer = !isRequestCenterMapMode ? oneTrailerFind : currentOneRequest.responseTrailer as TrailerCardType<string>
     const trailerOneImage = oneTrailer?.trailerImage
     const oneTralerCagoWeigth = +( oneTrailer?.cargoWeight || 0 )
     // водитель на заявке
-    const isDriverOnActiveRequest = mapModes.answersMode || ( mapModes.statusMode && oneEmployeeStatus === 'на заявке' && !!oneEmployeeOnRequestNumber )
+    const isDriverOnActiveRequest = isAnswersMode || ( isStatusMode && oneEmployeeStatus === 'на заявке' && !!oneEmployeeOnRequestNumber )
 
-    const responseStavka = mapModes.answersMode ? oneResponse?.responseStavka
+    const responseStavka = isAnswersMode ? oneResponse?.responseStavka
         : isDriverOnActiveRequest && currentOneRequest?.responseStavka
-    const responsePrice = mapModes.answersMode ? oneResponse?.responsePrice
+    const responsePrice = isAnswersMode ? oneResponse?.responsePrice
         : isDriverOnActiveRequest ? currentOneRequest?.responsePrice || '' : ''
-    const cargoWeight = mapModes.answersMode
+    const cargoWeight = isAnswersMode
         ? oneResponse?.cargoWeight
         : isDriverOnActiveRequest ? currentOneRequest?.cargoWeight : oneTransportCargoWeight + oneTralerCagoWeigth
 
@@ -101,15 +123,15 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
 
 
     useEffect(() => {
-        if (mapModes.statusMode && oneEmployeeOnRequestNumber && oneEmployeeStatus === 'на заявке' && ( oneEmployeeOnRequestNumber !== currentOneRequest.requestNumber )) {
+        if (isStatusMode && oneEmployeeOnRequestNumber && oneEmployeeStatus === 'на заявке' && ( oneEmployeeOnRequestNumber !== currentOneRequest.requestNumber )) {
             dispatch<any>(getOneRequestsAPI(oneEmployeeOnRequestNumber))
         }
-    }, [ currentOneRequest.requestNumber, oneEmployeeOnRequestNumber, mapModes.answersMode, oneEmployeeStatus ])
+    }, [ currentOneRequest.requestNumber, oneEmployeeOnRequestNumber, isAnswersMode, oneEmployeeStatus ])
 
     // при выборе водителя на заявку
     const onSubmit = useCallback(async () => {
         // закрываем модальное окно, если прорисовка в модалке
-        if (mapModes.answersMode && oneResponse && oneEmployee && oneTransport) {
+        if (isAnswersMode && oneResponse && oneEmployee && oneTransport) {
             await dispatch<any>(addAcceptedResponseToRequestOnAcceptDriver({
                 oneResponse,
                 oneEmployee,
@@ -276,7 +298,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                     </div>
                 </div>
                 <div className={ styles.addDriversForm__buttonsPanel }>
-                    { mapModes.answersMode
+                    { isAnswersMode
                         ? <>
                             <Button colorMode={ 'blue' } title={ 'Принять' }
                                     onClick={ onSubmit }
