@@ -37,7 +37,7 @@ import {
     getAllRequestsAPI,
     getOneRequestsAPI,
 } from '../../redux/forms/request-store-reducer'
-import {syncParsers} from '../../utils/parsers'
+import {syncParsers, toNumber} from '../../utils/parsers'
 import {FormApi} from 'final-form'
 import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple'
 import {SelectOptionsType} from '../common/form-selector/selector-utils'
@@ -70,7 +70,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
     const navRoutes = useSelector(getRoutesStore)
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
-    const requestNumber = +( reqNumber || 0 )
+    const requestNumber = toNumber(reqNumber)
 
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     const isFetching = useSelector(getIsFetchingRequisitesStore)
@@ -115,9 +115,9 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     const trailerOneImage = oneTrailer.trailerImage
 
     // перевозимый вес транспорта
-    const transportOneCargoWeight = +( oneTransport?.cargoWeight || 0 )
+    const transportOneCargoWeight = toNumber(oneTransport?.cargoWeight)
     // перевозимый вес прицепа
-    const trailerOneCargoWeight = +( oneTrailer?.cargoWeight || 0 )
+    const trailerOneCargoWeight = toNumber(oneTrailer?.cargoWeight)
     // общий вес перевозимого груза
     const cargoWeight = ( trailerOneCargoWeight + transportOneCargoWeight ).toString()
 
@@ -126,7 +126,7 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
     const resultDistanceCost = useCallback(( form: FormApi<ResponseToRequestCardType<string>> ) => ( stavka: string ): string | undefined => {
         const parsedStavka = syncParsers.parseCommaToDot(stavka)
         const [ stavkaNum, cargoWeight, distanceNum ] = [ parsedStavka, form.getState().values.cargoWeight, distance ]
-            .map(( v ) => +( v || 0 ))
+            .map(toNumber)
         form.change('responsePrice', syncParsers.parseToNormalMoney(( stavkaNum * cargoWeight * distanceNum )))
         return ( validators.responseStavka && validators.responseStavka(stavka) ) || ''
     }, [ distance, validators?.responseStavka ])

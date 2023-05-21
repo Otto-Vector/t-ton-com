@@ -26,7 +26,7 @@ import {
     getTariffsRequisitesStore,
 } from '../../selectors/options/requisites-reselect'
 import {valuesAreEqual} from '../../utils/reactMemoUtils'
-import {syncParsers} from '../../utils/parsers'
+import {syncParsers, toNumber} from '../../utils/parsers'
 
 
 type OwnProps = {}
@@ -64,7 +64,7 @@ export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
     }
 
     const newRequest = () => {
-        const isCorrectCashToCreate = +( cashUser || 0 ) >= +( tariffs?.create || 0 )
+        const isCorrectCashToCreate = toNumber(cashUser) >= toNumber(tariffs?.create)
         isCorrectCashToCreate
             ?
             dispatch<any>(textAndActionGlobalModal({

@@ -26,7 +26,7 @@ import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
 import {CancelXButtonDriverView} from './cancel-x-button-driver-view/cancel-x-button-driver-view'
-import {parseToNormalMoney} from '../../utils/parsers'
+import {toNumber, parseToNormalMoney} from '../../utils/parsers'
 import {boldWrapper} from '../../utils/html-rebuilds'
 import {EmployeeCardType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
 
@@ -73,7 +73,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
     const oneEmployeePhoto = oneEmployee?.photoFace
     const employeeOnePhone = oneEmployee?.employeePhoneNumber
     // на какой он сейчас заявке
-    const oneEmployeeOnRequestNumber = +( ( !isRequestCenterMapMode ? oneEmployee?.onCurrentRequest : currentOneRequest?.requestNumber ) || 0 )
+    const oneEmployeeOnRequestNumber = toNumber(!isRequestCenterMapMode ? oneEmployee?.onCurrentRequest : currentOneRequest?.requestNumber)
     const oneEmployeeStatus = !isRequestCenterMapMode ? oneEmployee?.status : 'на заявке'
 
     // конкретный ответ на заявку
@@ -97,15 +97,15 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
     const oneTransport = !isRequestCenterMapMode ? oneTransportFind : currentOneRequest.responseTransport as TransportCardType<string>
     const transportTradeMarkModel = ( oneTransport?.transportTrademark !== '-' ) ? oneTransport?.transportTrademark + ' , ' + oneTransport?.transportModel : '-'
     const transportOneImage = oneTransport?.transportImage
-    const oneTransportCargoWeight = +( ( oneTransport?.cargoWeight !== '-' ? oneTransport?.cargoWeight : 0 ) || 0 )
+    const oneTransportCargoWeight = toNumber(oneTransport?.cargoWeight)
 
     const oneTrailerFind = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const oneTrailer = !isRequestCenterMapMode ? oneTrailerFind : currentOneRequest.responseTrailer as TrailerCardType<string>
     const trailerTradeMarkModel = ( oneTrailer?.trailerTrademark !== '-' ) ? oneTrailer?.trailerTrademark + ' , ' + oneTrailer?.trailerModel : '-'
     const trailerOneImage = oneTrailer?.trailerImage
-    const oneTralerCagoWeigth = +( ( oneTrailer?.cargoWeight !== '-' ? oneTrailer?.cargoWeight : 0 ) || 0 )
+    const oneTralerCagoWeigth = toNumber(oneTrailer?.cargoWeight)
     // водитель на заявке
-    const isDriverOnActiveRequest = isAnswersMode || ( isStatusMode && oneEmployeeStatus === 'на заявке' && !!oneEmployeeOnRequestNumber )
+    const isDriverOnActiveRequest = isRequestCenterMapMode || isAnswersMode || ( isStatusMode && oneEmployeeStatus === 'на заявке' && !!oneEmployeeOnRequestNumber )
 
     const responseStavka = isAnswersMode ? oneResponse?.responseStavka
         : isDriverOnActiveRequest && currentOneRequest?.responseStavka
@@ -113,7 +113,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
         : isDriverOnActiveRequest ? currentOneRequest?.responsePrice || '' : ''
     const cargoWeight = isAnswersMode
         ? oneResponse?.cargoWeight
-        : isDriverOnActiveRequest ? currentOneRequest?.cargoWeight : oneTransportCargoWeight + oneTralerCagoWeigth
+        : isDriverOnActiveRequest && currentOneRequest.localStatus?.cargoHasBeenReceived ? currentOneRequest?.cargoWeight : oneTransportCargoWeight + oneTralerCagoWeigth
 
     // блок для изменения отображения информационных данных в зависимости от статуса водителя и т.п.
     const answerModeTitle = `Заявка ${ currentOneRequest?.requestNumber } от ${ ddMmYearFormat(currentOneRequest?.requestDate) }`
@@ -250,7 +250,7 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                             <label className={ styles.addDriversForm__label }>
                                 { label.responsePrice + ':' }</label>
                             <div className={ styles.addDriversForm__info }>
-                                { parseToNormalMoney(+( responsePrice || 0 )) }
+                                { parseToNormalMoney(toNumber(responsePrice)) }
                             </div>
                         </div>
                     </div>

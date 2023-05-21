@@ -5,7 +5,7 @@ import {getAllByDateRequestStore, getAllByUserRequestStore} from '../forms/reque
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {getTariffsRequisitesStore} from '../options/requisites-reselect'
 import {OneRequestTableType, OneRequestType} from '../../types/form-types'
-import {parseFamilyToFIO} from '../../utils/parsers'
+import {parseFamilyToFIO, toNumber} from '../../utils/parsers'
 import {getAuthIdAuthStore} from '../auth-reselect'
 
 
@@ -43,9 +43,9 @@ const parseRequestToTable = ( {
         shipmentDate: ddMmYearFormat(shipmentDate),
         distance,
         route: cityShipper + ' в ' + cityConsignee,
-        answers: answers?.length || 0,
+        answers: toNumber(answers?.length),
         // ставим цену в зависимости от расстояния
-        price: ( distance || 0 ) > 100 ? +( acceptLongRoute || 0 ) : +( acceptShortRoute || 0 ),
+        price: toNumber(distance) > 100 ? toNumber(acceptLongRoute) : toNumber(acceptShortRoute),
         globalStatus,
         localStatus: globalStatus === 'в работе' ? ( cargoHasBeenReceived ? 'груз у получателя'
                 : ( cargoHasBeenTransferred ? 'груз у водителя' : 'водитель выбран' ) )

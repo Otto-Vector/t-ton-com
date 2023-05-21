@@ -39,7 +39,7 @@ import {
 } from '../../utils/map-utils'
 import {MaterialIcon} from '../common/material-icon/material-icon'
 import {boldWrapper} from '../../utils/html-rebuilds'
-import {parseToNormalMoney} from '../../utils/parsers'
+import {parseToNormalMoney, toNumber} from '../../utils/parsers'
 
 
 type OwnProps = {}
@@ -145,7 +145,7 @@ export const MapSection: React.FC<OwnProps> = () => {
         const finded = responses?.find(( { idEmployee: id } ) => id === idEmployee)
         return finded
             ? ( ' ' + finded?.cargoWeight + 'тн. | '
-                + parseToNormalMoney(+( finded?.responsePrice || 0 )) + 'руб.' )
+                + parseToNormalMoney(toNumber(finded?.responsePrice)) + 'руб.' )
             : '-'
     }
 

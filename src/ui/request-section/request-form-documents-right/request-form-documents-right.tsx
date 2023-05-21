@@ -16,7 +16,7 @@ import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-t
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
 import {addRewriteCargoDocumentRequestAPI} from '../../../redux/forms/request-store-reducer'
-import {parseToNormalMoney} from '../../../utils/parsers'
+import {toNumber, parseToNormalMoney} from '../../../utils/parsers'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -32,11 +32,16 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const labelsRequestHead = useSelector(getLabelRequestStore)
     const initialValuesRequest = useSelector(getInitialValuesRequestStore)
     const requestNumber = initialValuesRequest.requestNumber
-    const driverCanCargoWeight = ( +( initialValuesRequest?.responseTransport?.cargoWeight || 0 ) + ( +( initialValuesRequest?.responseTrailer?.cargoWeight || 0 ) ) )
+    const transportCargoWeight = toNumber(initialValuesRequest?.responseTransport?.cargoWeight)
+    const tralerCagoWeigth = toNumber(initialValuesRequest?.responseTrailer?.cargoWeight)
+    const driverCanCargoWeight = transportCargoWeight + tralerCagoWeigth
     const initialValuesDocuments = initialValuesRequest.documents
     const modalsText = useSelector(getInfoTextModalsRequestValuesStore)
     const dispatch = useDispatch()
-    const price = parseToNormalMoney(initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? +( initialValuesRequest?.addedPrice || 0 ) : +( initialValuesRequest?.responsePrice || 0 ))
+    const price = parseToNormalMoney(initialValuesRequest?.localStatus?.cargoHasBeenTransferred
+        ? toNumber(initialValuesRequest?.addedPrice)
+        : toNumber(initialValuesRequest?.responsePrice),
+    )
     const buttonsAction = {
         acceptRequest: () => {
         },
@@ -74,6 +79,10 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const [ uploadMode, setUploadMode ] = useState<'Время погрузки' | 'Время разгрузки' | 'Время в пути'>(initialValuesRequest?.localStatus?.cargoHasBeenReceived ? 'Время разгрузки' : 'Время погрузки')
     // микро-всплывашка над "Вес груза" & "Цена по заявке'
     const tnKmTitle = 'тн.км.: ' + initialValuesRequest.responseStavka + 'руб. / ' + initialValuesRequest.distance + 'км'
+    // что писать над весом груза
+    const cargoWeightLabel = initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? labelsRequestHead.cargoWeight : 'Вес ДО погрузки'
+    // что именно отображается в грузе
+    const cargoWeightInfo = initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? initialValuesRequest.cargoWeight : driverCanCargoWeight
 
     return (
         <div className={ styles.requestFormDocumentRight }>
@@ -143,9 +152,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }>
                     <label className={ styles.requestFormDocumentRight__label }>
-                        { initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? labelsRequestHead.cargoWeight : 'Вес ДО погрузки' }</label>
+                        { cargoWeightLabel }</label>
                     <div className={ styles.requestFormDocumentRight__info }>
-                        { initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? initialValuesRequest.cargoWeight : driverCanCargoWeight }
+                        { cargoWeightInfo }
                     </div>
                 </div>
                 {/* Цена по заявке */ }
@@ -163,8 +172,11 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 {/* Время погрузки // (изменяется при клике левой кнопкой мыши) */ }
                 <div className={ styles.requestFormDocumentRight__inputsItem + ' '
                     + styles.requestFormDocumentRight__buttonItem_long }
-                    // добавлен стиль для InfoButtonToModal
-                     style={ { cursor: 'pointer', position: 'relative' } }
+                     style={ {
+                         cursor: initialValuesRequest?.unloadTime ? 'pointer' : 'auto',
+                         // для InfoButtonToModal
+                         position: 'relative',
+                     } }
                      onClick={ () => {
                          initialValuesRequest?.unloadTime &&
                          setUploadMode(( prevState ) =>

@@ -3,7 +3,7 @@ import {AppStateType} from '../redux-store'
 import {CompanyRequisitesApiType, CompanyRequisitesType, ParserType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
 import {requisitesApi} from '../../api/local-api/options/requisites.api'
-import {syncParsers} from '../../utils/parsers'
+import {syncParsers, toNumber} from '../../utils/parsers'
 import {authStoreActions, logoutAuth} from '../auth-store-reducer'
 import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {GetActionsTypes} from '../../types/ts-utils'
@@ -222,7 +222,7 @@ export const setOrganizationCashRequisites = ( cash: number ): RequisitesStoreRe
     async ( dispatch, getState ) => {
         dispatch(requisitesStoreActions.setIsFetching(true))
         const idUser = getState().authStoreReducer.authID
-        const localCash = +( getState().requisitesStoreReducer.storedValues.cash || 0 )
+        const localCash = toNumber(getState().requisitesStoreReducer.storedValues.cash)
         try {
             const setPersonal = await requisitesApi.changePersonalData({
                 idUser, cash: localCash + cash,
@@ -242,28 +242,28 @@ export const setOrganizationCashRequisites = ( cash: number ): RequisitesStoreRe
 // списание оплаты за создание заявки
 export const addRequestCashPay = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
+        const cost = toNumber(getState().requisitesStoreReducer.storedValues.tariffs.create)
         await dispatch(setOrganizationCashRequisites(-cost))
     }
 
 // возврат оплаты за создание заявки
 export const cancelRequestCashReturn = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.create || 0 )
+        const cost = toNumber(getState().requisitesStoreReducer.storedValues.tariffs.create)
         await dispatch(setOrganizationCashRequisites(cost))
     }
 
 // оплата за принятие заявки на КОРОТКОЙ дистанции
 export const acceptShorRoutePay = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.acceptShortRoute || 0 )
+        const cost = toNumber(getState().requisitesStoreReducer.storedValues.tariffs.acceptShortRoute)
         await dispatch(setOrganizationCashRequisites(-cost))
     }
 
 // оплата за принятие заявки на ДЛИННОЙ дистанции
 export const acceptLongRoutePay = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-        const cost = +( getState().requisitesStoreReducer.storedValues.tariffs.acceptLongRoute || 0 )
+        const cost = toNumber(getState().requisitesStoreReducer.storedValues.tariffs.acceptLongRoute)
         await dispatch(setOrganizationCashRequisites(-cost))
     }
 

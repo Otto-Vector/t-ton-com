@@ -3,15 +3,16 @@ import styles from './info-pay-container.module.scss'
 import barcode from '../../../media/barcode.png'
 import ucassa from '../../../media/ukassa.jpg'
 import {useDispatch, useSelector} from 'react-redux'
-import {TariffItem} from './tariff-item/tariff-item';
-import {getTarifsLabelInfoStore} from '../../../selectors/info-reselect';
+import {TariffItem} from './tariff-item/tariff-item'
+import {getTarifsLabelInfoStore} from '../../../selectors/info-reselect'
 import {
     getCashRequisitesStore,
     getIsFetchingRequisitesStore,
     getTariffsRequisitesStore,
-} from '../../../selectors/options/requisites-reselect';
-import {setOrganizationCashRequisites} from '../../../redux/options/requisites-store-reducer';
-import {SizedPreloader} from '../../common/preloader/preloader';
+} from '../../../selectors/options/requisites-reselect'
+import {setOrganizationCashRequisites} from '../../../redux/options/requisites-store-reducer'
+import {SizedPreloader} from '../../common/preloader/preloader'
+import {toNumber} from '../../../utils/parsers'
 
 
 type OwnProps = {}
@@ -19,7 +20,7 @@ type OwnProps = {}
 export const InfoPayContainer: React.FC<OwnProps> = () => {
 
     const dispatch = useDispatch()
-    const balance = +( useSelector(getCashRequisitesStore) || 0 )
+    const balance = toNumber(useSelector(getCashRequisitesStore))
     const isFetchingBalance = useSelector(getIsFetchingRequisitesStore)
     const tarifsHeader = 'Тарифы оказания услуг на сайте'
     const tarifsPrice = useSelector(getTariffsRequisitesStore)
@@ -37,7 +38,7 @@ export const InfoPayContainer: React.FC<OwnProps> = () => {
         <div className={ styles.infoPayContainer }>
             <div className={ styles.infoPayContainer__balanceInfo }>
                 <h3 className={ styles.infoPayContainer__header + ' ' + styles.balanceInfo__header }>
-                    { isFetchingBalance ? <SizedPreloader sizeHW={'28px'}/> : balanceHeader }
+                    { isFetchingBalance ? <SizedPreloader sizeHW={ '28px' }/> : balanceHeader }
                 </h3>
                 <div className={ styles.balanceInfo__subtitle }>
                     { subTitle[0] }</div>

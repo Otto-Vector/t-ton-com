@@ -28,7 +28,6 @@ export const parseCommaToDot = ( val: parsePropType ): string =>
     val?.replace ? val.replace(',', '.') : ''
 
 
-
 // только буквы, знак тире точка и пробел
 export const parseFIO = ( val: parsePropType ) =>
     val?.replace ? val.replace(/[^-А-ЯA-Zа-яa-z.\s]/g, '') : ''
@@ -95,9 +94,12 @@ export const parseFamilyToFIO = ( val: parsePropType ) =>
 export const coordsToString = ( coordsNumArray?: [ number, number ] ): string =>
     coordsNumArray?.map(e => e.toFixed(6)).join(', ') || 'неверные входные данные'
 
+// извлекаем имя файла из URL
 export const getFileNameFromUrl = ( URLWithFilname?: string ) =>
     URLWithFilname?.split('/').pop() || ''
 
+// из любого Г в цифру
+export const toNumber = ( value?: string | number ): number => value && !isNaN(+value) ? +value : 0
 
 export const syncParsers = {
     // parseOnlyOneSpace, parseOnlyOneDash, parseOnlyOneDot, parseNoFirstSpaces

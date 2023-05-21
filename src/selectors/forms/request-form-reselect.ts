@@ -3,6 +3,7 @@ import {RequestStoreReducerStateType} from '../../redux/forms/request-store-redu
 import {createSelector} from 'reselect'
 import {polyline_decode} from '../../utils/map-utils'
 import {boldWrapper} from '../../utils/html-rebuilds'
+import {toNumber} from '../../utils/parsers'
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 type RequestStoreSelectorsInit<T extends keyof Y, Y = RequestStoreReducerStateType['initialValues']> = ( state: AppStateType ) => Y[T]
@@ -22,18 +23,18 @@ export const getCurrentDistanceIsFetchingRequestStore: RequestStoreSelectors<'cu
 export const getPolylineRouteRequestStore: RequestStoreSelectorsInit<'route'> = ( state: AppStateType ) => state.requestStoreReducer.initialValues.route
 
 // дистанция. пока непонятно почему в селекторе, но лучше оставлю
-export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
+// export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
 // export const getInitialCargoWeightRequestStore = createSelector(getInitialValuesRequestStore, ( { cargoWeight } ) => cargoWeight)
 // export const getInitialAddedPriceRequestStore = createSelector(getInitialValuesRequestStore, ( { addedPrice } ) => addedPrice)
 // export const getInitialStavkaRequestStore = createSelector(getInitialValuesRequestStore, ( { responseStavka } ) => responseStavka)
 
 export const getInitialDataToModalCalcRequestStore = createSelector(getInitialValuesRequestStore, (
         { distance, cargoWeight, responsePrice, responseStavka, responseTransport, responseTrailer } ) => ( {
-        distance: +( distance || 0 ),
-        cargoWeight: +( cargoWeight || 0 ),
-        responsePrice: +( responsePrice || 0 ),
-        responseStavka: +( responseStavka || 0 ),
-        driverCanCargoWeight: ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) ),
+        distance: toNumber(distance),
+        cargoWeight: toNumber(cargoWeight),
+        responsePrice: toNumber(responsePrice),
+        responseStavka: toNumber(responseStavka),
+        driverCanCargoWeight: toNumber(responseTransport?.cargoWeight) + toNumber(responseTrailer?.cargoWeight),
     } ),
 )
 
@@ -59,7 +60,7 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
         const senderLegalAddress = ( senderUser?.legalAddress || sender?.address )
         const recipientInn = ( recipientUser?.innNumber || recipient?.innNumber )
         const recipientLegalAddress = ( recipientUser?.legalAddress || recipient?.address )
-        const driverCanCargoWeight = ( +( responseTransport?.cargoWeight || 0 ) + ( +( responseTrailer?.cargoWeight || 0 ) ) )
+        const driverCanCargoWeight = toNumber(responseTransport?.cargoWeight) + toNumber(responseTrailer?.cargoWeight)
 
         const returnObject = {
             /* ЗАКАЗЧИК */

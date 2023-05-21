@@ -27,6 +27,7 @@ import {TtonErrorType} from '../../api/local-api/back-instance.api'
 import {requestDocumentsApi} from '../../api/local-api/request-response/request-documents.api'
 import {getListOrganizationRequisitesByInn} from '../options/requisites-store-reducer'
 import {requisitesApi} from '../../api/local-api/options/requisites.api'
+import {toNumber} from '../../utils/parsers'
 
 
 const initialState = {
@@ -982,7 +983,7 @@ export const cargoHasBeenRecievedOnCurrentRequest = ( requestNumber: string ): R
             localStatuscargoHasBeenReceived: true,
             unloadTime: yearMmDdFormatISO(new Date()),
         }))
-        await dispatch(getOneRequestsAPI(+( requestNumber || 0 )))
+        await dispatch(getOneRequestsAPI(toNumber( requestNumber )))
     }
 
 // удаляем заявку по её номеру

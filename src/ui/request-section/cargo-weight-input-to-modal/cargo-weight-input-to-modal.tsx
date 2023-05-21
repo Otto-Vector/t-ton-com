@@ -9,7 +9,7 @@ import styles from './cargo-weight-input-to-modal.module.scss'
 import {Button} from '../../common/button/button'
 import {changeCargoWeightValuesOnCurrentRequestAndActivateDocs} from '../../../redux/forms/request-store-reducer'
 import {getInitialDataToModalCalcRequestStore} from '../../../selectors/forms/request-form-reselect'
-import {parseCommaToDot, parseToNormalMoney, syncParsers} from '../../../utils/parsers'
+import {toNumber, parseCommaToDot, parseToNormalMoney, syncParsers} from '../../../utils/parsers'
 import {FormApi} from 'final-form'
 
 type ToSmallCalcFormType = { cargoWeight: string, addedPrice: string }
@@ -34,8 +34,8 @@ export const CargoWeightInputToModal: React.FC = () => {
     }
 
     const reparseValuesToNumber = ( formValues: ToSmallCalcFormType ) => ( {
-        cargoWeight: +( syncParsers.parseCommaToDot(formValues.cargoWeight) || 0 ),
-        addedPrice: +( syncParsers.parseNoSpace(formValues.addedPrice) || 0 ),
+        cargoWeight: toNumber(syncParsers.parseCommaToDot(formValues.cargoWeight)),
+        addedPrice: toNumber(syncParsers.parseNoSpace(formValues.addedPrice)),
     } )
 
     const onSubmit = ( submitValue: ToSmallCalcFormType ) => {

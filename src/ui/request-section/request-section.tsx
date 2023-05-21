@@ -14,6 +14,7 @@ import {ddMmYearFormat} from '../../utils/date-formats'
 import {SizedPreloader} from '../common/preloader/preloader'
 import {valuesAreEqual} from '../../utils/reactMemoUtils'
 import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect'
+import {toNumber} from '../../utils/parsers'
 
 // type OwnProps = { }
 
@@ -56,7 +57,7 @@ export const RequestSection: React.FC = React.memo(() => {
 
     const onCancelButton = () => {
         if (isCreateMode) {
-            dispatch<any>(deleteCurrentRequestAPI({ requestNumber: +( initialValues.requestNumber || 0 ) }))
+            dispatch<any>(deleteCurrentRequestAPI({ requestNumber: toNumber(initialValues.requestNumber) }))
         }
         navigate(cancelNavigate())
     }
@@ -71,7 +72,7 @@ export const RequestSection: React.FC = React.memo(() => {
             }
             if (isStatusMode || isAcceptDriverMode || isHistoryMode) {
                 // прогружаем искомую заявку
-                dispatch<any>(getOneRequestsAPI(+( reqNumber || 0 ), true))
+                dispatch<any>(getOneRequestsAPI(toNumber(reqNumber), true))
             }
             setIsFirstRender(false)
         }

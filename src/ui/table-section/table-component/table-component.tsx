@@ -25,6 +25,7 @@ import truckToLeftPNG from '../../../media/truckLeft.png'
 import noRespTruckPNG from '../../../media/noRespTrack.png'
 import haveRespTrackPNG from '../../../media/haveRespTrack.png'
 import transparentPNG from '../../../media/transparent32x32.png'
+import {toNumber} from '../../../utils/parsers'
 
 
 type OwnProps = {
@@ -36,7 +37,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
 
     const navigate = useNavigate()
     const { info, maps, requestInfo } = useSelector(getRoutesStore)
-    const authCash = +( useSelector(getCashRequisitesStore) || 0 )
+    const authCash = toNumber(useSelector(getCashRequisitesStore))
     const { dayFilter, routeFilter, cargoFilter, statusFilter } = useSelector(getValuesFiltersStore)
     const dispatch = useDispatch()
 
