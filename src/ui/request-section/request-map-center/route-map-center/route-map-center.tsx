@@ -59,27 +59,33 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
     const map = useRef<any>({})
 
     // псевдо-перерисовка маркера водителя, ушедшего за край видимости карты, на край карты
-    const [ boundsDriver, setBoundsDriver ] = useState({ position: driverHere, offset: [ 0, 0 ], haveNoCoords: false })
+    const [ boundsDriver, setBoundsDriver ] = useState({ position: driverHere, offset: [ 0, 0 ], isNoCoords: false })
     const placemarkerReWriter = useMemo(() => () => {
         const bounds: number[][] = map.current?.getBounds()
         const center: number[] = map.current?.getCenter()
-        if (boundsDriver && driverHere && isOutOfBounds({ bounds, position: driverHere })) {
-            setBoundsDriver({
-                position: positionToBoundsLine({ position: driverHere, bounds }) as [ number, number ],
-                offset: boundsOffsetCorrector(directionOfBounds({ position: driverHere, bounds })),
-                haveNoCoords: false,
-            })
-        } else if (driverHere && driverHere[0] === 0) {
-            setBoundsDriver({
-                position: positionToBoundsLine({
-                    position: [ bounds[0][0] - 1, center[1] ],
-                    bounds,
-                }) as [ number, number ],
-                offset: [ 0, -30 ],
-                haveNoCoords: false,
-            })
-        } else {
-            setBoundsDriver({ position: [ 0, 0 ], offset: [ 0, 0 ], haveNoCoords: true })
+        if (driverHere) {
+            if (driverHere[0] === 0) {
+                setBoundsDriver({
+                    position: positionToBoundsLine({
+                        position: [ bounds[0][0] - 1, center[1] ],
+                        bounds,
+                    }) as [ number, number ],
+                    offset: [ 0, -30 ],
+                    isNoCoords: true,
+                })
+            } else if (isOutOfBounds({ bounds, position: driverHere })) {
+                setBoundsDriver({
+                    position: positionToBoundsLine({ position: driverHere, bounds }) as [ number, number ],
+                    offset: boundsOffsetCorrector(directionOfBounds({ position: driverHere, bounds })),
+                    isNoCoords: false,
+                })
+            } else {
+                setBoundsDriver({
+                    position: [ 0, 0 ],
+                    isNoCoords: false,
+                    offset: [ 0, 0 ],
+                })
+            }
         }
     }, [ driverHere, boundsDriver, map ])
 
@@ -130,22 +136,22 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                     />
                 }
                 {/*отрисовка маркера у края карты (если водитель за пределами границ видимости)*/ }
-                { boundsDriver.position && boundsDriver.position[0] !== 0 &&
+                { ( boundsDriver.position && boundsDriver.position[0] !== 0 ) &&
                     <Placemark geometry={ boundsDriver.position }
                                modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
                                options={ {
                                    preset: 'islands#blueDeliveryCircleIcon',
-                                   iconColor: !boundsDriver.haveNoCoords ? 'black' : 'navy',
+                                   iconColor: !boundsDriver.isNoCoords ? 'black' : 'navy',
                                    iconOffset: boundsDriver.offset,
-                                   hasBalloon: boundsDriver.haveNoCoords,
+                                   hasBalloon: boundsDriver.isNoCoords,
                                } }
                                properties={ {
-                                   hintContent: !boundsDriver.haveNoCoords ? 'Водитель за пределами видимости карты'
+                                   hintContent: !boundsDriver.isNoCoords ? 'Водитель за пределами видимости карты'
                                        : 'Отсуствуют данные координат водителя',
                                    balloonContent: `<div id='driver-${ driver.idEmployee }' class='driver-card'></div>`,
                                } }
                                onClick={ () => {
-                                   if (!boundsDriver.haveNoCoords) {
+                                   if (!boundsDriver.isNoCoords) {
                                        // плавное перемещение к указанной точке
                                        map?.current?.panTo(driverHere, { flying: 1 })
                                    } else {
