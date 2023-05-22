@@ -437,7 +437,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
     localStatus: {
         paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
-        paymentHasBeenReceived: elem.localStatuscargoHasBeenReceived,
+        paymentHasBeenReceived: elem.localStatuspaymentHasBeenReceived,
         cargoHasBeenTransferred: elem.localStatuscargoHasBeenTransferred,
         cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
     },
@@ -474,7 +474,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         passportFMS: elem.responseEmployeepassportFMS,
         passportDate: elem.responseEmployeepassportDate,
         drivingLicenseNumber: elem.responseEmployeedrivingLicenseNumber,
-        photoFace: elem.responseEmployeePhotoFace
+        photoFace: elem.responseEmployeePhotoFace,
     },
     // ТРАНСПОРТ
     idTransport: elem.idTransport,
@@ -729,7 +729,7 @@ export const addAcceptedResponseToRequestOnCreate = (
                 responseTrailerCargoType: trailerValues.cargoType,
                 responseTrailerCargoWeight: trailerValues.cargoWeight,
                 responseTrailerPropertyRights: trailerValues.propertyRights,
-                responseTrailerImage: trailerValues.trailerImage
+                responseTrailerImage: trailerValues.trailerImage,
             })
 
             if (response.success) {
@@ -1041,7 +1041,7 @@ export const cargoHasBeenRecievedOnCurrentRequest = ( requestNumber: string ): R
             localStatuscargoHasBeenReceived: true,
             unloadTime: yearMmDdFormatISO(new Date()),
         }))
-        await dispatch(getOneRequestsAPI(toNumber( requestNumber )))
+        await dispatch(getOneRequestsAPI(toNumber(requestNumber)))
     }
 
 // удаляем заявку по её номеру
@@ -1118,6 +1118,24 @@ export const getRouteFromAPI = ( {
 
         dispatch(requestStoreActions.setCurrentDistanceIsFetching(false))
     }
+
+// деньги за заявку получены
+export const paymentHasBeenRecievedToRequest = ( requestNumber: number ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await oneRequestApi.modifyOneRequest({
+                requestNumber: requestNumber + '',
+                localStatuspaymentHasBeenReceived: true,
+            })
+            console.log(response.message)
+        } catch (e: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.message || e?.response?.data),
+            }))
+        }
+        await dispatch(getOneRequestsAPI(toNumber(requestNumber)))
+    }
+
 
 ///////////////////////////РАБОТА С ДОКУМЕНТАМИ//////////////////////////////////////////////
 

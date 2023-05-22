@@ -7,7 +7,7 @@ import {
     getLabelDocumentsRequestValuesStore,
     getLabelRequestStore,
 } from '../../../selectors/forms/request-form-reselect'
-import {RequestModesType} from '../request-section'
+import {RequestModesType, RoleModesType} from '../request-section'
 
 import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
@@ -15,26 +15,36 @@ import {hhmmDdMmYyFormat, timeDiff} from '../../../utils/date-formats'
 import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
-import {addRewriteCargoDocumentRequestAPI} from '../../../redux/forms/request-store-reducer'
+import {
+    addRewriteCargoDocumentRequestAPI,
+    paymentHasBeenRecievedToRequest,
+} from '../../../redux/forms/request-store-reducer'
 import {toNumber, parseToNormalMoney} from '../../../utils/parsers'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {boldWrapper} from '../../../utils/html-rebuilds'
 
 type OwnProps = {
     requestModes: RequestModesType,
+    roleModes: RoleModesType,
 }
 
 
 export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     {
-        requestModes: { isHistoryMode, isStatusMode, isAcceptDriverMode, isCreateMode },
+        requestModes: { isHistoryMode, isAcceptDriverMode, isCreateMode },
+        roleModes,
     } ) => {
 
     const labelsDocumentsTab = useSelector(getLabelDocumentsRequestValuesStore)
     const labelsRequestHead = useSelector(getLabelRequestStore)
     const initialValuesRequest = useSelector(getInitialValuesRequestStore)
     const requestNumber = initialValuesRequest.requestNumber
+
+    /* весы груза */
     const transportCargoWeight = toNumber(initialValuesRequest?.responseTransport?.cargoWeight)
     const tralerCagoWeigth = toNumber(initialValuesRequest?.responseTrailer?.cargoWeight)
     const driverCanCargoWeight = transportCargoWeight + tralerCagoWeigth
+
     const initialValuesDocuments = initialValuesRequest.documents
     const modalsText = useSelector(getInfoTextModalsRequestValuesStore)
     const dispatch = useDispatch()
@@ -45,6 +55,16 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
 
     const buttonsAction = {
         acceptRequest: () => {
+        },
+        paymentHasBeenReceived: () => {
+            dispatch<any>(textAndActionGlobalModal({
+                text: `Вы подтверждаете получение денежных средств ${
+                    boldWrapper(parseToNormalMoney(toNumber(initialValuesRequest.addedPrice)) + ' руб.')
+                } за выполненную заявку?`,
+                action: () => {
+                    dispatch<any>(paymentHasBeenRecievedToRequest(initialValuesRequest.requestNumber))
+                },
+            }))
         },
         sendUploadDocument: ( event: ChangeEvent<HTMLInputElement> ) => {
             if (event.target.files?.length) {
@@ -344,11 +364,13 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__buttonsPanel }>
                 { !isHistoryMode && <>
                     <div className={ styles.requestFormDocumentRight__panelButton }>
-                        <Button colorMode={ 'gray' }
-                                wordWrap rounded
-                                title={ labelsRequestHead.localStatus?.paymentHasBeenReceived }
-                                onClick={ () => {
-                                } }
+                        <Button
+                            colorMode={ initialValuesRequest?.localStatus?.paymentHasBeenReceived ? 'green' : 'blue' }
+                            title={ labelsRequestHead.localStatus?.paymentHasBeenReceived }
+                            wordWrap
+                            rounded
+                            onClick={ buttonsAction.paymentHasBeenReceived }
+                            disabled={ !initialValuesRequest?.localStatus?.cargoHasBeenReceived }
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__panelButton }>

@@ -60,6 +60,7 @@
       max-height: 33px;
       width: 160px;
     }
+
     &_long {
       width: 160px;
     }
@@ -136,6 +137,10 @@
     position: relative;
     max-width: 110px;
     height: 100%;
+
+    &:empty {
+      max-width: none;
+    }
   }
 
   &__inAttachText {

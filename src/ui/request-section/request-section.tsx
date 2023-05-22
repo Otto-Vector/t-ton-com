@@ -15,11 +15,21 @@ import {SizedPreloader} from '../common/preloader/preloader'
 import {valuesAreEqual} from '../../utils/reactMemoUtils'
 import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect'
 import {toNumber} from '../../utils/parsers'
+import {getAuthIdAuthStore} from '../../selectors/auth-reselect'
 
 // type OwnProps = { }
 
 export type RequestModesType = { isCreateMode: boolean, isStatusMode: boolean, isHistoryMode: boolean, isAcceptDriverMode: boolean }
-
+export type RoleModesType = {
+    // заказчик
+    isCustomer: boolean
+    // грузоотправитель
+    isSender: boolean
+    // получатель
+    isRecipient: boolean
+    // перевозчик
+    isCarrier: boolean
+}
 export const RequestSection: React.FC = React.memo(() => {
 
     const [ tabModes, setTabModes ] = useState({ left: false, center: false, right: false })
@@ -34,6 +44,7 @@ export const RequestSection: React.FC = React.memo(() => {
     const { reqNumber } = useParams<{ reqNumber: string | undefined }>()
     const { pathname } = useLocation()
 
+    // статусы входа в просмотр/редактирование заявки
     const requestModes: RequestModesType = useMemo(() => ( {
         isCreateMode: pathname.includes(routes.requestInfo.create),
         isStatusMode: pathname.includes(routes.requestInfo.status),
@@ -42,9 +53,24 @@ export const RequestSection: React.FC = React.memo(() => {
     } ), [ pathname ])
     const { isCreateMode, isStatusMode, isAcceptDriverMode, isHistoryMode } = requestModes
 
+    const userID = useSelector(getAuthIdAuthStore)
+
+
     const isFetching = useSelector(getIsFetchingRequestStore)
     const initialValues = useSelector(getInitialValuesRequestStore)
     const oneEmployee = useSelector(getInitialValuesEmployeesStore)
+
+    // статус отношения пользователя к заявке
+    const roleModes = {
+        // заказчик
+        isCustomer: userID === initialValues.idUserCustomer,
+        // грузоотправитель
+        isSender: userID === initialValues.idUserSender,
+        // получатель
+        isRecipient: userID === initialValues.recipientUser,
+        // перевозчик
+        isCarrier: userID === initialValues.requestCarrierUser,
+    }
 
     const dispatch = useDispatch()
 
@@ -96,13 +122,16 @@ export const RequestSection: React.FC = React.memo(() => {
                                 className={ !tabModes.center ? styles.requestSection__formsWrapper : styles.requestSection__mapsWrapper }>
                                 { tabModes.left && <RequestFormLeft requestModes={ requestModes }
                                                                     initialValues={ initialValues }
+                                                                    roleModes={ roleModes }
                                 /> }
                                 { tabModes.center && <RequestMapCenter requestModes={ requestModes }
                                                                        driver={ oneEmployee }
                                                                        fromCity={ initialValues?.sender?.city }
                                                                        toCity={ initialValues?.recipient?.city }
                                 /> }
-                                { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }/> }
+                                { tabModes.right && <RequestFormDocumentsRight requestModes={ requestModes }
+                                                                               roleModes={ roleModes }
+                                /> }
                             </div>
 
                             <CancelXButton onCancelClick={ onCancelButton } mode={ 'blueAlert' }/>

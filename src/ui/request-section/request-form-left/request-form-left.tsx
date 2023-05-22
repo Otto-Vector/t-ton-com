@@ -15,7 +15,7 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
 import {FormSelector} from '../../common/form-selector/form-selector'
-import {RequestModesType} from '../request-section'
+import {RequestModesType, RoleModesType} from '../request-section'
 import {Field, Form} from 'react-final-form'
 import {InfoField} from './info-field'
 import {
@@ -42,7 +42,6 @@ import {Button} from '../../common/button/button'
 import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {getCargoTypeBaseStore} from '../../../selectors/base-reselect'
-import {getAuthIdAuthStore} from '../../../selectors/auth-reselect'
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import createDecorator from 'final-form-focus'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
@@ -52,13 +51,16 @@ import truckLoadPNG from '../../../media/trackLoadFuel.png'
 
 type OwnProps = {
     requestModes: RequestModesType,
+    roleModes: RoleModesType,
     initialValues: OneRequestType,
 }
 
 
 export const RequestFormLeft: React.FC<OwnProps> = memo((
     {
-        requestModes: { isHistoryMode, isAcceptDriverMode, isCreateMode, isStatusMode }, initialValues,
+        requestModes: { isHistoryMode, isAcceptDriverMode, isCreateMode, isStatusMode },
+        roleModes: { isCustomer },
+        initialValues,
     } ) => {
 
     const isAcceptDriverModePlaceholder = 'данные будут доступны после принятия заявки'
@@ -67,7 +69,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const navigate = useNavigate()
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     // заявка создана данной организацией и находится в статусе "новая заявка"
-    const isMyRequestAndNew = ( initialValues.idUserCustomer === useSelector(getAuthIdAuthStore) ) && initialValues.globalStatus === 'новая заявка'
+    const isMyRequestAndNew = isCustomer && initialValues.globalStatus === 'новая заявка'
 
     //фокусировка на проблемном поле при вводе
     const focusOnError = useMemo(() => createDecorator(), [])
