@@ -250,3 +250,15 @@ export const globalModalDestroy = (): GlobalModalStoreReducerThunkActionType =>
         // оно же просто удаление при нормальном закрытии
         dispatch(globalModalStoreActions.removeCurrentModalFromActiveList())
     }
+
+// закрыть все модалки вообще
+export const globalModalDestroyAll = (): GlobalModalStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        // удаляем окна по количеству созданных
+        getState().globalModalStoreReducer.activeModals.every(() => {
+            dispatch(globalModalStoreActions.removeCurrentModalFromActiveList())
+            return null
+        })
+        // зачищаем активное окно
+        dispatch(globalModalStoreActions.resetAllValuesOnCurrentModal())
+    }

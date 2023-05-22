@@ -23,7 +23,10 @@ import {useLocation} from 'react-router-dom'
 import {getRoutesStore} from '../../selectors/routes-reselect'
 import {removeResponseToRequestsBzRemoveThisDriverFromRequest} from '../../redux/forms/add-driver-store-reducer'
 import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
-import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
+import {
+    globalModalDestroyAll,
+    textAndActionGlobalModal,
+} from '../../redux/utils/global-modal-store-reducer'
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
 import {CancelXButtonDriverView} from './cancel-x-button-driver-view/cancel-x-button-driver-view'
 import {toNumber, parseToNormalMoney} from '../../utils/parsers'
@@ -124,7 +127,17 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
     const trailerTitle = oneTralerCagoWeigth ? oneTralerCagoWeigth + 'тн / ' + oneTrailer?.cargoType : ''
     const trailerTradeMarkModel = ( oneTrailer?.trailerTrademark && oneTrailer?.trailerTrademark !== '-' ) ? oneTrailer?.trailerTrademark + ' , ' + oneTrailer?.trailerModel : '-'
 
-    const [ isOneTimeRequestFetch, setIsOneTimeRequestFetch ] = useState(false)
+    // переход к заявке через диалоговое окно
+    const goToRequestOnClickTitle = () => {
+        dispatch<any>(textAndActionGlobalModal({
+            title: 'Вопрос',
+            text: 'Перейти к просмотру заявки №' + boldWrapper(currentOneRequest?.requestNumber + '') + '?',
+            navigateOnOk: routes.requestInfo.status + currentOneRequest?.requestNumber + '',
+            action: isModal ? () => {
+                dispatch<any>(globalModalDestroyAll())
+            } : undefined,
+        }))
+    }
 
     useEffect(() => {
         // подгружаем заявку на statusMode
@@ -205,7 +218,11 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
         <div className={ styles.addDriversForm__wrapper }>
             {/* иконка под невидимую закрывалку на балуне яндекс карты */ }
             { !isModal && <CancelXButtonDriverView/> }
-            <h4 className={ styles.addDriversForm__header }>{ title }</h4>
+            <h4 className={ styles.addDriversForm__header }
+                onClick={ isStatusMode ? goToRequestOnClickTitle : undefined }
+                title={ isStatusMode ? 'переход к просмотру заявки' : undefined }
+                style={ isStatusMode ? { cursor: 'pointer' } : undefined }
+            >{ title }</h4>
             <div className={ styles.addDriversForm__form }>
                 <div
                     className={ styles.addDriversForm__inputsPanel + ' ' + styles.addDriversForm__inputsPanel_titled }>
