@@ -16,6 +16,12 @@ export const valuesAreEqualFormInput = (prevProps, nextProps) => {
     return prevValue === nextValue
 }
 
+export const valuesAreEqualPortalByHTML = (prevProps, nextProps) => {
+    const prevValue = prevProps.getHTMLElementId
+    const nextValue = nextProps.getHTMLElementId
+    return prevValue === nextValue
+}
+
 // type PropsAreEqualType<FormData = AnyObject> = (
 //     prevProps: FormRenderProps<FormData>,
 //     nextProps: FormRenderProps<FormData>,

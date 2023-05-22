@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './add-drivers-form.module.scss'
 import noImage from '../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
@@ -124,12 +124,20 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
     const trailerTitle = oneTralerCagoWeigth ? oneTralerCagoWeigth + 'тн / ' + oneTrailer?.cargoType : ''
     const trailerTradeMarkModel = ( oneTrailer?.trailerTrademark && oneTrailer?.trailerTrademark !== '-' ) ? oneTrailer?.trailerTrademark + ' , ' + oneTrailer?.trailerModel : '-'
 
+    const [ isOneTimeRequestFetch, setIsOneTimeRequestFetch ] = useState(false)
 
     useEffect(() => {
-        if (isStatusMode && oneEmployeeOnRequestNumber && oneEmployeeStatus === 'на заявке' && ( oneEmployeeOnRequestNumber !== currentOneRequest.requestNumber )) {
+        // подгружаем заявку на statusMode
+        if (isStatusMode
+            && oneEmployeeOnRequestNumber
+            && oneEmployeeStatus === 'на заявке'
+            // подгружается один раз или ни одного, в соответствии с активным номером заявки у водителя
+            && oneEmployeeOnRequestNumber !== currentOneRequest.requestNumber
+        ) {
             dispatch<any>(getOneRequestsAPI(oneEmployeeOnRequestNumber))
         }
-    }, [ currentOneRequest.requestNumber, oneEmployeeOnRequestNumber, isAnswersMode, oneEmployeeStatus ])
+
+    }, [ isStatusMode, oneEmployeeOnRequestNumber, oneEmployeeStatus, currentOneRequest.requestNumber ])
 
     // при выборе водителя на заявку
     const onSubmit = useCallback(async () => {

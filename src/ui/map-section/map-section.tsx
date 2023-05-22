@@ -60,7 +60,7 @@ export const MapSection: React.FC<OwnProps> = () => {
     const currentRequest = useSelector(getInitialValuesRequestStore)
 
     const isFetching = useSelector(getIsFetchingBigMapStore)
-    const [ idToPortal, setIdToPortal ] = useState({ idEmployee: '', flag: false })
+    const [ idToPortal, setIdToPortal ] = useState('')
     const routes = useSelector(getRoutesStore)
 
     const polyline = useSelector(getRoutesParsedFromPolylineRequestStore)
@@ -297,22 +297,23 @@ export const MapSection: React.FC<OwnProps> = () => {
                                        balloonContent: `<div id='driver-${ idEmployee }' class='driver-card'></div>`,
                                    } }
                                    key={ id + idEmployee }
+                                   onBalloonClose={ () => {
+                                       setIdToPortal('')
+                                   } }
                                    onClick={ () => {
                                        // ставим в очередь промисов, чтобы сработало после отрисовки балуна
                                        setTimeout(() => {
-                                           // flag нужен, чтобы каждый раз возвращалось новое значение,
-                                           // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
-                                           setIdToPortal(( val ) => ( { idEmployee, flag: !val.flag } ))
-                                           // пометка нажатого водителя
-                                           setSelectedDriver(idEmployee)
+                                           setIdToPortal(idEmployee)
                                        }, 0)
+                                       // пометка нажатого водителя
+                                       setSelectedDriver(idEmployee)
                                    } }
                                    onContextMenu={ extractCoordinatesToModal }
                         /> : null) }
             </YandexBigMap>
             {/* ждём, когда появится балун с нужным ID */ }
-            <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }>
-                <AddDriversView idEmployee={ idToPortal.idEmployee }/>
+            <Portal getHTMLElementId={ `driver-${ idToPortal }` }>
+                <AddDriversView idEmployee={ idToPortal }/>
             </Portal>
         </section>
     )

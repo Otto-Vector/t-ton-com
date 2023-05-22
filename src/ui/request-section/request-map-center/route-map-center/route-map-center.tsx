@@ -52,12 +52,10 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
         }))
     }
 
-    const [ idToPortal, setIdToPortal ] = useState({ idEmployee: driver.idEmployee, flag: true })
+    const [ idToPortal, setIdToPortal ] = useState('')
     const activatePortal = ( idEmployee: string ) => {
         setTimeout(() => {
-            // flag нужен, чтобы каждый раз возвращалось новое значение,
-            // иначе при повторном нажатии на балун, он не от-риcовывается через Portal
-            setIdToPortal(val => ( { idEmployee, flag: !val.flag } ))
+            setIdToPortal(idEmployee)
         }, 0)
     }
 
@@ -154,6 +152,9 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                                        : 'Отсуствуют данные координат водителя',
                                    balloonContent: `<div id='driver-${ driver.idEmployee }' class='driver-card'></div>`,
                                } }
+                               onBalloonClose={ () => {
+                                   activatePortal('')
+                               } }
                                onClick={ () => {
                                    if (!boundsDriver.isNoCoords) {
                                        // плавное перемещение к указанной точке
@@ -194,8 +195,8 @@ export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
                 />
             </YandexMapComponent>
             {/* ждём, когда появится балун с нужным ID */ }
-            <Portal getHTMLElementId={ `driver-${ idToPortal.idEmployee }` }>
-                <AddDriversView idEmployee={ idToPortal.idEmployee }/>
+            <Portal getHTMLElementId={ `driver-${ idToPortal }` }>
+                <AddDriversView idEmployee={ idToPortal }/>
             </Portal>
         </>
     )
