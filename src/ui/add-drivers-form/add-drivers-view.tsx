@@ -95,13 +95,11 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
 
     const oneTransportFind = useSelector(getFilteredTransportBigMapStore).find(( { idTransport } ) => idTransport === oneEmployee?.idTransport)
     const oneTransport = !isRequestCenterMapMode ? oneTransportFind : currentOneRequest.responseTransport as TransportCardType<string>
-    const transportTradeMarkModel = ( oneTransport?.transportTrademark !== '-' ) ? oneTransport?.transportTrademark + ' , ' + oneTransport?.transportModel : '-'
     const transportOneImage = oneTransport?.transportImage
     const oneTransportCargoWeight = toNumber(oneTransport?.cargoWeight)
 
     const oneTrailerFind = useSelector(getFilteredTrailersBigMapStore).find(( { idTrailer } ) => idTrailer === oneEmployee?.idTrailer)
     const oneTrailer = !isRequestCenterMapMode ? oneTrailerFind : currentOneRequest.responseTrailer as TrailerCardType<string>
-    const trailerTradeMarkModel = ( oneTrailer?.trailerTrademark !== '-' ) ? oneTrailer?.trailerTrademark + ' , ' + oneTrailer?.trailerModel : '-'
     const trailerOneImage = oneTrailer?.trailerImage
     const oneTralerCagoWeigth = toNumber(oneTrailer?.cargoWeight)
     // водитель на заявке
@@ -122,7 +120,9 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
     const tnKmData = `${ cargoWeight }т${ isDriverOnActiveRequest ? '/' + distance + 'км' : '' }`
 
     const transportTitle = oneTransportCargoWeight ? oneTransportCargoWeight + 'тн / ' + oneTransport?.cargoType : 'тягач'
+    const transportTradeMarkModel = ( oneTransport?.transportTrademark && oneTransport?.transportTrademark !== '-' ) ? oneTransport?.transportTrademark + ' , ' + oneTransport?.transportModel : '-'
     const trailerTitle = oneTralerCagoWeigth ? oneTralerCagoWeigth + 'тн / ' + oneTrailer?.cargoType : ''
+    const trailerTradeMarkModel = ( oneTrailer?.trailerTrademark && oneTrailer?.trailerTrademark !== '-' ) ? oneTrailer?.trailerTrademark + ' , ' + oneTrailer?.trailerModel : '-'
 
 
     useEffect(() => {
