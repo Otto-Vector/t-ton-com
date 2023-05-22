@@ -47,7 +47,8 @@ import createDecorator from 'final-form-focus'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {CargoWeightInputToModal} from '../cargo-weight-input-to-modal/cargo-weight-input-to-modal'
 import truckPNG from '../../../media/trackToRight.png'
-import truckLoadPNG from '../../../media/trackLoadFuel.png'
+import truckLoadFuelPNG from '../../../media/trackLoadFuel.png'
+import truckLeftPNG from '../../../media/truckLeft.png'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -423,7 +424,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             {/*КНОПКИ И НЕ КНОПКИ*/ }
                             <div className={ styles.requestFormLeft__buttonsPanel }
                                  style={ isStatusMode && initialValues.globalStatus !== 'новая заявка' ? {
-                                     backgroundImage: `url(${ ( values.localStatus?.cargoHasBeenTransferred && !values.localStatus?.cargoHasBeenReceived ) ? truckLoadPNG : truckPNG })`,
+                                     backgroundImage: `url(${ !values.localStatus?.cargoHasBeenTransferred ? truckPNG
+                                         : !values.localStatus?.cargoHasBeenReceived ? truckLoadFuelPNG : truckLeftPNG })`,
                                      backgroundRepeat: 'no-repeat',
                                      backgroundPositionX: !values.localStatus?.cargoHasBeenTransferred ? 'left'
                                          : !values.localStatus?.cargoHasBeenReceived ? 'center' : 'right',
