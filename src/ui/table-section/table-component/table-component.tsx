@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import styles from './table-component.module.scss'
 
 import {Table} from './table'
@@ -40,7 +40,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     const { dayFilter, routeFilter, cargoFilter, statusFilter } = useSelector(getValuesFiltersStore)
     const dispatch = useDispatch()
 
-    const toGlobalModalQuest = ( price: number ) => {
+    const toGlobalModalQuest = useMemo(() => ( price: number ) => {
         dispatch<any>(textAndActionGlobalModal({
             text: [
                 'Не хватает средств (' + price + 'руб) для возможности просмотра и оставления отклика на заявку',
@@ -48,7 +48,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             ],
             navigateOnOk: info,
         }))
-    }
+    }, [ info, dispatch ])
 
     const TABLE_CONTENT = useSelector(
         searchTblMode ? getContentTableStoreNew
@@ -143,8 +143,12 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                     />,
             },
         ],
-        [ , searchTblMode, historyTblMode, statusTblMode, authCash, statusFilter, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT,
-            maps.answers, navigate, requestInfo.status, requestInfo.history, requestInfo.accept ],
+        [
+            searchTblMode, historyTblMode, statusTblMode,
+            statusFilter, dayFilter, routeFilter, cargoFilter,
+            authCash, toGlobalModalQuest,
+            navigate, requestInfo, maps,
+        ],
     )
     const tableModesStyle = styles['tableComponent__' + (
         searchTblMode ? 'search'
