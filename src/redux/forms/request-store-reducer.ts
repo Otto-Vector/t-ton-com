@@ -20,7 +20,7 @@ import {apiToISODateFormat, yearMmDdFormat, yearMmDdFormatISO} from '../../utils
 import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {
     getOneEmployeeFromAPI,
-    modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest,
+    modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest, modifyOneEmployeeSoftToAPI,
 } from '../options/employees-store-reducer'
 import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils'
 import {TtonErrorType} from '../../api/local-api/back-instance.api'
@@ -28,6 +28,7 @@ import {requestDocumentsApi} from '../../api/local-api/request-response/request-
 import {getListOrganizationRequisitesByInn} from '../options/requisites-store-reducer'
 import {requisitesApi} from '../../api/local-api/options/requisites.api'
 import {toNumber} from '../../utils/parsers'
+import {employeesApi} from '../../api/local-api/options/employee.api'
 
 
 const initialState = {
@@ -83,31 +84,18 @@ const initialState = {
     } as AllNestedKeysToType<OneRequestType, ( string | undefined )>,
 
     placeholder: {
-        // №
         requestNumber: '№',
-        // ДД-ММ-ГГГГ
         requestDate: 'ДД-ММ-ГГГГ',
-        // Полное наименование груза
         cargoComposition: 'Полное наименование груза',
-        // ДД-ММ-ГГГГ
         shipmentDate: 'ДД-ММ-ГГГГ',
-        // авто-расчет
         distance: 'авто-расчет',
-        // Тип груза
         cargoType: 'Тип груза',
-        // Наименование организации Заказчика
         idCustomer: 'Наименование организации Заказчика',
-        // Наименование организации Владельца груза
         idSender: 'Наименование организации Владельца груза',
-        // Наименование организации Грузополучателя
         idRecipient: 'Наименование организации Грузополучателя',
-        // Наименование организации Перевозчика
         requestCarrierId: 'Наименование организации Перевозчика',
-        // ФИО, Марка авто, Марка прицепа, тн
         idEmployee: 'ФИО, Марка авто, Марка прицепа, тн',
-        // дополнительные данные
         note: 'дополнительные данные',
-        // Пломбы для груза
         cargoStamps: 'Пломбы для груза',
     } as Record<keyof OneRequestType, string | undefined>,
 
@@ -140,62 +128,39 @@ const initialState = {
     labelDocumentsRequestValues: {
 
         proxyWay: {
-            // Транспортные документы
             header: 'Транспортные документы',
-            // Доверенность Грузовладельцу
             proxyFreightLoader: 'Доверенность Грузовладельцу',
-            // Доверенность на Водителя
             proxyDriver: 'Доверенность на Водителя',
-            // Путевой Лист Водителя
             waybillDriver: 'Путевой Лист Водителя',
-            // Маршрутный Лист Водителя
             itineraryList: 'Маршрутный Лист Водителя',
         },
 
-        // Документы груза + ТН, паспорт, прочее
         cargoDocuments: 'Документы груза + ТН, паспорт, прочее',
 
         ttnECP: {
-            // Товарно-Транспортная Накладная
             header: 'Товарно-Транспортная Накладная',
-            // Заказчик
             customerIsSubscribe: 'Заказчик',
-            // Перевозчик
             carrierIsSubscribe: 'Перевозчик',
-            // Грузополучатель
             consigneeIsSubscribe: 'Грузополучатель',
-            // Загрузить
             documentDownload: 'Загрузить',
         },
         contractECP: {
-            // Договор оказания транспортных услуг
             header: 'Договор оказания транспортных услуг',
-            // Заказчик
             customerIsSubscribe: 'Заказчик',
-            // Перевозчик
             carrierIsSubscribe: 'Перевозчик',
-            // Загрузить
             documentDownload: 'Загрузить',
         },
         updECP: {
-            // УПД от Перевозчика для Заказчика
             header: 'УПД от Перевозчика для Заказчика',
-            // Заказчик
             customerIsSubscribe: 'Заказчик',
-            // Перевозчик
             carrierIsSubscribe: 'Перевозчик',
-            // Загрузить
             documentDownload: 'Загрузить',
         },
 
         customerToConsigneeContractECP: {
-            // Документы от Заказчика для ГрузоПолучателя
             header: 'Документы от Заказчика для ГрузоПолучателя',
-            // Заказчик
             customerIsSubscribe: 'Заказчик',
-            // Грузополучатель
             consigneeIsSubscribe: 'Грузополучатель',
-            // Загрузить
             documentDownload: 'Загрузить',
         },
     } as AllNestedKeysToType<DocumentsRequestType>,
@@ -209,7 +174,7 @@ const initialState = {
         paymentHasBeenTransferred: 'Загрузите платежное поручение из банка с синей отметкой, для подтверждения оплаты.',
 
         cargoComposition: 'Номенклатура груза по документации.',
-        shipmentDate: 'Дата погрузки по доверенности',
+        shipmentDate: [ 'Дата погрузки по доверенности.', 'При создании заявки вводится дата от сегодняшнего дня до +14 дней' ],
         uploadTime: [
             '<b>Время погрузки</b> устанавливается во время передачи груза водителю.',
             '<b>Время разгрузки</b> устанавливается во время передачи груза грузополучателю.',
@@ -987,7 +952,7 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
         dispatch(requestStoreActions.setIsFetching(false))
     }
 
-// внести незначительные изменения в заявку
+// внести незначительные изменения в заявку (без обновления подгрузки заявки)
 export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiType> & { requestNumber: string } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
@@ -1152,3 +1117,30 @@ export const addRewriteCargoDocumentRequestAPI = ( props: { requestNumber: numbe
         }
         await dispatch(getOneRequestsAPI(props.requestNumber))
     }
+
+// закрываем заявку и "освобождаем" водителя
+export const closeRequestAndUpdateDriverStatus = ( {
+                                                       requestNumber,
+                                                       idEmployee,
+                                                       employeeOnNextRequest,
+                                                       employeeAddedToResponse,
+                                                   }: {
+    requestNumber: string, idEmployee: string, employeeOnNextRequest: string, employeeAddedToResponse: string
+} ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        await dispatch(changeSomeValuesOnCurrentRequest({
+            requestNumber,
+            globalStatus: 'завершена',
+        }))
+
+        const onNextRequest = toNumber(employeeOnNextRequest)
+        await dispatch(modifyOneEmployeeSoftToAPI({
+            idEmployee,
+            status: !!onNextRequest ? 'на заявке' : !!employeeAddedToResponse ? 'ожидает принятия' : 'свободен',
+            onCurrentRequest: !!onNextRequest ? onNextRequest + '' : '0',
+            onNextRequest: '0',
+        }))
+
+
+// await dispatch(getOneRequestsAPI(props.requestNumber))
+}

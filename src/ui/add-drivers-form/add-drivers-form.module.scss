@@ -54,9 +54,23 @@
     }
   }
 
+  &__labelNtransportInfo {
+    //display: flex;
+    //justify-content: space-between;
+  }
+
   &__label {
     padding-left: 3px;
   }
+
+  &__transportInfo {
+    font-weight: 600;
+    font-size: rem(12);
+    color: gray;
+    float: right;
+    padding-right: 5px;
+  }
+
 
   &__infoPanel {
     display: flex;

@@ -98,7 +98,7 @@ export const RequestSection: React.FC = React.memo(() => {
             }
             if (isStatusMode || isAcceptDriverMode || isHistoryMode) {
                 // прогружаем искомую заявку
-                dispatch<any>(getOneRequestsAPI(toNumber(reqNumber), true))
+                dispatch<any>(getOneRequestsAPI(toNumber(reqNumber), !isHistoryMode))
             }
             setIsFirstRender(false)
         }

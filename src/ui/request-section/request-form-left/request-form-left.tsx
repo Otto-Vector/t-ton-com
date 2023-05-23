@@ -23,7 +23,7 @@ import {
     getOneConsigneesFromLocal,
 } from '../../../selectors/options/consignees-reselect'
 import {InfoText} from '../../common/info-text/into-text'
-import {ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
+import {addNDay, ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
     cargoHasBeenRecievedOnCurrentRequest,
     changeCurrentRequestOnCreate,
@@ -148,7 +148,17 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 // груз получен
                 cargoHasBeenReceived: ( values: OneRequestType ) => {
                     if (!values.localStatus?.cargoHasBeenReceived) {
-                        dispatch<any>(cargoHasBeenRecievedOnCurrentRequest(values.requestNumber + ''))
+                        dispatch<any>(textAndActionGlobalModal({
+                            title: 'Вопрос',
+                            text: [
+                                'Вы подтверждаете получение груза?',
+                                initialValues.cargoComposition + '',
+                                initialValues.cargoWeight + 'тн',
+                            ],
+                            action: () => {
+                                dispatch<any>(cargoHasBeenRecievedOnCurrentRequest(values.requestNumber + ''))
+                            },
+                        }))
                     }
                 },
                 submitRequestAndSearch: async ( values: OneRequestType ) => {
@@ -239,7 +249,6 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                         { labels.cargoComposition }</label>
                                     { isCreateMode
                                         ? <FormSelector nameForSelector={ 'cargoComposition' }
-                                            // placeholder={ placeholders.cargoComposition }
                                                         options={ stringArrayToSelectValue(cargoComposition) }
                                                         validate={ validators.cargoComposition }
                                                         isCreatableSelect
@@ -269,6 +278,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                inputType={ 'date' }
                                                value={ yearMmDdFormat(initialValues.shipmentDate || new Date()) }
                                                min={ yearMmDdFormat(new Date()) }// для ввода от сегодняшнего дня value обязателен
+                                               max={ yearMmDdFormat(addNDay(new Date(), 14)) }
                                                validate={ validators.shipmentDate }
                                                errorBottom
                                         />
@@ -442,7 +452,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                 ( ( isAcceptDriverMode ||
                                                     ( isStatusMode && isMyRequestAndNew )
                                                 ) && 'Принять заявку' ) ||
-                                                ( isStatusMode && 'Груз у водителя' ) ) + ''
+                                                ( isStatusMode && 'Груз у водителя'
+                                                    + ( !values.localStatus?.cargoHasBeenTransferred ? '?' : '' ) ) ) + ''
                                             }
                                             onClick={ () => {
                                                 if (!hasValidationErrors) {
@@ -473,7 +484,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                 title={ (
                                                     ( ( isCreateMode || isMyRequestAndNew ) && 'Cамовывоз' ) ||
                                                     ( isAcceptDriverMode && 'Отказаться' ) ||
-                                                    ( isStatusMode && 'Груз у получателя' ) ) + ''
+                                                    ( isStatusMode && 'Груз у получателя'
+                                                        + ( !values.localStatus?.cargoHasBeenReceived ? '?' : '' ) ) ) + ''
                                                 }
                                                 onClick={ () => {
                                                     if (!hasValidationErrors) {

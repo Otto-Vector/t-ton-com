@@ -227,7 +227,8 @@ export const modifyOneEmployeeSoftToAPI = ( employeeData: OneEmployeeNoPhotoIdRe
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
             dispatch(textAndActionGlobalModal({
-                text: JSON.stringify(e?.response?.data),
+                title: 'Внимание!',
+                text: [ 'Ошибка в обновлении данных водителя!', JSON.stringify(e?.response?.data) ],
             }))
         }
     }

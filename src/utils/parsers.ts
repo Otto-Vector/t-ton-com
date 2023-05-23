@@ -4,14 +4,14 @@ export const oneRenderParser = ( form: any, parser?: ( value: string ) => string
 export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] ) => ( value: string ): string =>
     parsers.reduce(( val, validator ) => validator(val), value)
 
-type parsePropType = string | undefined | null
+type parsePropType = string | undefined | null | number
 
 // только цифры
 export const parseAllNumbers = ( val: parsePropType ) =>
     ( '' + val ).replace(/\D/g, '') || ''
 
 export const removeFirstSevenOrEight = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/^(\+7\s\([78])/, '+7 (') : ''
+    val ? ( val + '' ).replace(/^(\+7\s\([78])/, '+7 (') : ''
 
 // для отсмотра состояния парсера на разных этапах обработки
 const toConsole = ( val: parsePropType ) => {
@@ -21,38 +21,38 @@ const toConsole = ( val: parsePropType ) => {
 
 // только координаты
 export const parseAllCoords = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/[^\d.,\s]/, '') : ''
+    val ? ( val + '' ).replace(/[^\d.,\s]/, '') : ''
 
 // запятую в точку (для цифр)
 export const parseCommaToDot = ( val: parsePropType ): string =>
-    val?.replace ? val.replace(',', '.') : ''
+    val ? ( val + '' ).replace(',', '.') : ''
 
 
 // только буквы, знак тире точка и пробел
 export const parseFIO = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/[^-А-ЯA-Zа-яa-z.\s]/g, '') : ''
+    val ? ( val + '' ).replace(/[^-А-ЯA-Zа-яa-z.\s]/g, '') : ''
 // только буквы и цифры и пробел
 export const parseCharsAndNumbers = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/[^-А-ЯA-Zа-яa-z\s\d]/g, '') : ''
+    val ? ( val + '' ).replace(/[^-А-ЯA-Zа-яa-z\s\d]/g, '') : ''
 
 // только одна точка
 export const parseOnlyOneDot = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/[..]+/g, '.') : ''
+    val ? ( val + '' ).replace(/[..]+/g, '.') : ''
 // только одно тире
 export const parseOnlyOneDash = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/[--]+/g, '-') : ''
+    val ? ( val + '' ).replace(/[--]+/g, '-') : ''
 // только один пробел
 export const parseOnlyOneSpace = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/\s\s+/g, ' ') : ''
+    val ? ( val + '' ).replace(/\s\s+/g, ' ') : ''
 // ни одного пробела
 export const parseNoSpace = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/\s/g, '') : ''
+    val ? ( val + '' ).replace(/\s/g, '') : ''
 // только одна запятая
 export const parseOnlyOneComma = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/\s\s+/g, ' ') : ''
+    val ? ( val + '' ).replace(/\s\s+/g, ' ') : ''
 // без пробелов в начале строки
 export const parseNoFirstSpaces = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/^\s*/g, '') : ''
+    val ? ( val + '' ).replace(/^\s*/g, '') : ''
 
 ////////////////////////////////////////////////////////////////////////
 // только псевдолатинские русские буквы
@@ -61,33 +61,33 @@ const pseudoRussian = 'ABEKMHOPCTYXabekmhopctyx'
 const enCharToRusChar = ( char: string ): string => pseudoLatin.charAt(pseudoRussian.indexOf(char))
 // удаляем все НЕ (псевдолатиницы, пробелы, цифры и '|') из текста
 export const parsePseudoLatinCharsAndNumbers = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/[^АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx|\d\s]/g, '') : ''
+    val ? ( val + '' ).replace(/[^АВЕКМНОРСТУХавекмнорстухABEKMHOPCTYXabekmhopctyx|\d\s]/g, '') : ''
 // латинские буквы в русские аналоги
 export const parseLatinCharsToRus = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/[ABEKMHOPCTYXabekmhopctyx]/g, enCharToRusChar) : ''
+    val ? ( val + '' ).replace(/[ABEKMHOPCTYXabekmhopctyx]/g, enCharToRusChar) : ''
 ////////////////////////////////////////////////////////////////////////
 // отображение денег с разделителем тысяч пробелом
-export const parseToNormalMoney = ( val: number ) =>
-    ( +val || 0 ).toFixed(1)
+export const parseToNormalMoney = ( val: number | string ): string =>
+    toNumber(val).toFixed(1)
         .replace(/\d(?=(\d{3})+\.)/g, '$&,')
         .replace(',', ' ') || ''
 export const parseClearAllMaskPlaceholders = ( val: parsePropType ) =>
-    val?.replaceAll(/[#_]/g, '') || ''
+    val ? ( val + '' ).replaceAll(/[#_]/g, '') : ''
 
 export const parserDowngradeRUSatEnd = ( val: parsePropType ) =>
-    val?.replace ? val.replace(/RUS$/, 'rus') : ''
+    val ? ( val + '' ).replace(/RUS$/, 'rus') : ''
 
 // преобразовывает в заглавные буквы
 export const parseToUpperCase = ( val: parsePropType ) =>
-    val?.toUpperCase() || ''
+    val ? ( val + '' ).toUpperCase() : ''
 
 // Фамилия Имя Отчество в "Фамилия И.О."
 export const parseFamilyToFIO = ( val: parsePropType ) =>
 // val.replace(/(?<=\S+) (\S)\S* (\S)\S*/, ' $1. $2.') : '' // не работает на сафари
-    val?.split(' ')
-        .map(( el, i ) => i > 0 ? el[0].toUpperCase() + '.' : el)
-        .join(' ')
-    || ''
+    val ? ( val + '' ).split(' ')
+            .map(( el, i ) => i > 0 ? el[0].toUpperCase() + '.' : el)
+            .join(' ')
+        : ''
 
 
 // из массива координат в стороковое значение с обрезанием мегаточности

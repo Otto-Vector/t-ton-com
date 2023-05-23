@@ -16,12 +16,15 @@ import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-t
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
 import {
-    addRewriteCargoDocumentRequestAPI,
+    addRewriteCargoDocumentRequestAPI, closeRequestAndUpdateDriverStatus,
     paymentHasBeenRecievedToRequest,
 } from '../../../redux/forms/request-store-reducer'
 import {toNumber, parseToNormalMoney} from '../../../utils/parsers'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {boldWrapper} from '../../../utils/html-rebuilds'
+import {EmployeeCardType} from '../../../types/form-types'
+import {getInitialValuesEmployeesStore} from '../../../selectors/options/employees-reselect'
+import {getRoutesStore} from '../../../selectors/routes-reselect'
 
 type OwnProps = {
     requestModes: RequestModesType,
@@ -38,7 +41,9 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const labelsDocumentsTab = useSelector(getLabelDocumentsRequestValuesStore)
     const labelsRequestHead = useSelector(getLabelRequestStore)
     const initialValuesRequest = useSelector(getInitialValuesRequestStore)
+    const oneEmployee = useSelector(getInitialValuesEmployeesStore)
     const requestNumber = initialValuesRequest.requestNumber
+    const routes = useSelector(getRoutesStore)
 
     /* весы груза */
     const transportCargoWeight = toNumber(initialValuesRequest?.responseTransport?.cargoWeight)
@@ -56,6 +61,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const buttonsAction = {
         acceptRequest: () => {
         },
+        // получили деньги?
         paymentHasBeenReceived: () => {
             dispatch<any>(textAndActionGlobalModal({
                 text: `Вы подтверждаете получение денежных средств ${
@@ -66,6 +72,7 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                 },
             }))
         },
+        // отправка доп.документов
         sendUploadDocument: ( event: ChangeEvent<HTMLInputElement> ) => {
             if (event.target.files?.length) {
                 const cargoDocuments = event.target.files[0]
@@ -93,6 +100,22 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
             // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
             // initialValues.contractECP.uploadDocument = event
         },
+        // закрываем заявку
+        closeRequest: () => {
+            dispatch<any>(textAndActionGlobalModal({
+                title: 'Вопрос',
+                text: 'Вы всё проверили и готовы закрыть заявку?',
+                action: () => {
+                    dispatch<any>(closeRequestAndUpdateDriverStatus({
+                        requestNumber: initialValuesRequest.requestNumber + '',
+                        idEmployee: oneEmployee.idEmployee,
+                        employeeOnNextRequest: oneEmployee.onNextRequest + '',
+                        employeeAddedToResponse: oneEmployee.addedToResponse + '',
+                    }))
+                },
+                navigateOnOk: routes.historyList,
+            }))
+        },
     }
     // блокировка кнопок загрузки данных
     const disabledButtonOnMode = isAcceptDriverMode || isCreateMode
@@ -104,6 +127,10 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
     const cargoWeightLabel = initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? labelsRequestHead.cargoWeight : 'Вес ДО погрузки'
     // что именно отображается в грузе
     const cargoWeightInfo = initialValuesRequest?.localStatus?.cargoHasBeenTransferred ? initialValuesRequest.cargoWeight : driverCanCargoWeight
+    // логика разрешающая закрытие заявки (пока может закрыть только заказчик)
+    const isRequestReadyToClose = roleModes.isCustomer && initialValuesRequest?.localStatus?.paymentHasBeenReceived
+    // проверка завершена ли заявка
+    const isRequestClosed = initialValuesRequest.globalStatus === 'завершена'
 
     return (
         <div className={ styles.requestFormDocumentRight }>
@@ -366,7 +393,8 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__panelButton }>
                         <Button
                             colorMode={ initialValuesRequest?.localStatus?.paymentHasBeenReceived ? 'green' : 'blue' }
-                            title={ labelsRequestHead.localStatus?.paymentHasBeenReceived }
+                            title={ labelsRequestHead.localStatus?.paymentHasBeenReceived +
+                                ( !initialValuesRequest?.localStatus?.paymentHasBeenReceived ? '?' : '' ) }
                             wordWrap
                             rounded
                             onClick={ buttonsAction.paymentHasBeenReceived }
@@ -374,11 +402,13 @@ export const RequestFormDocumentsRight: React.FC<OwnProps> = (
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__panelButton }>
-                        <Button colorMode={ 'gray' }
+                        <Button colorMode={ isRequestReadyToClose ? 'blue' : isRequestClosed ? 'red' : 'gray' }
                                 wordWrap
                                 rounded
                                 title={ labelsRequestHead.localStatus?.cargoHasBeenReceived }
+                                disabled={ !isRequestReadyToClose || isRequestClosed }
                                 onClick={ () => {
+                                    buttonsAction.closeRequest()
                                 } }
                         />
                     </div>

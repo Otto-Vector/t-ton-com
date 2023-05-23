@@ -212,6 +212,8 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
         }))
     }
 
+    const isCanClickOnRequestToView = isStatusMode && isDriverOnActiveRequest
+
     if (isFetching) return <Preloader/>
 
     return (
@@ -219,9 +221,9 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
             {/* иконка под невидимую закрывалку на балуне яндекс карты */ }
             { !isModal && <CancelXButtonDriverView/> }
             <h4 className={ styles.addDriversForm__header }
-                onClick={ isStatusMode ? goToRequestOnClickTitle : undefined }
-                title={ isStatusMode ? 'переход к просмотру заявки' : undefined }
-                style={ isStatusMode ? { cursor: 'pointer' } : undefined }
+                onClick={ isCanClickOnRequestToView ? goToRequestOnClickTitle : undefined }
+                title={ isCanClickOnRequestToView ? 'переход к просмотру заявки' : undefined }
+                style={ isCanClickOnRequestToView ? { cursor: 'pointer' } : undefined }
             >{ title }</h4>
             <div className={ styles.addDriversForm__form }>
                 <div
@@ -236,20 +238,22 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                     </div>
                     {/* ТЯГАЧ/ТРАНСПОРТ */ }
                     <div className={ styles.addDriversForm__selector }
-                         title={ transportTitle }
-                    >
-                        <label
-                            className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
+                         title={ transportTitle }>
+                        <div className={ styles.addDriversForm__labelNtransportInfo }>
+                            <label className={ styles.addDriversForm__label }>{ label.idTransport + ':' }</label>
+                            <span className={ styles.addDriversForm__transportInfo }>{ transportTitle }</span>
+                        </div>
                         <div className={ styles.addDriversForm__info }>
                             { transportTradeMarkModel }
                         </div>
                     </div>
                     {/* ПРИЦЕП */ }
                     <div className={ styles.addDriversForm__selector }
-                         title={ trailerTitle }
-                    >
-                        <label
-                            className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
+                         title={ trailerTitle }>
+                        <div className={ styles.addDriversForm__labelNtransportInfo }>
+                            <label className={ styles.addDriversForm__label }>{ label.idTrailer + ':' }</label>
+                            <span className={ styles.addDriversForm__transportInfo }>{ trailerTitle }</span>
+                        </div>
                         <div className={ styles.addDriversForm__info }>
                             { trailerTradeMarkModel }
                         </div>
