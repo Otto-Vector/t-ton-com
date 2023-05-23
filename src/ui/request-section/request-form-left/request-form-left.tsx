@@ -277,7 +277,8 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                resetFieldBy={ form }
                                                inputType={ 'date' }
                                                value={ yearMmDdFormat(initialValues.shipmentDate || new Date()) }
-                                               min={ yearMmDdFormat(new Date()) }// для ввода от сегодняшнего дня value обязателен
+                                               // для ввода от сегодняшнего дня value обязателен
+                                               min={ yearMmDdFormat(new Date()) }
                                                max={ yearMmDdFormat(addNDay(new Date(), 14)) }
                                                validate={ validators.shipmentDate }
                                                errorBottom

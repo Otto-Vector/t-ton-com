@@ -35,6 +35,11 @@ type OwnProps = {
 
 export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
 
+    const {
+        historyTblMode,
+        searchTblMode,
+        statusTblMode,
+    } = tableModes
     const navigate = useNavigate()
     const { info, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = toNumber(useSelector(getCashRequisitesStore))
@@ -52,8 +57,8 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
     }
 
     const TABLE_CONTENT = useSelector(
-        tableModes.searchTblMode ? getContentTableStoreNew
-            : tableModes.historyTblMode ? getContentTableStoreInHistory
+        searchTblMode ? getContentTableStoreNew
+            : historyTblMode ? getContentTableStoreInHistory
                 : getContentTableStoreInWork,
     )
 
@@ -71,7 +76,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                     return ( <></> )
                 },
                 disableFilters: false,
-                Cell: ( { localStatus }: OneRequestTableTypeReq ) => tableModes.statusTblMode ?
+                Cell: ( { localStatus }: OneRequestTableTypeReq ) => statusTblMode ?
                     <img className={ styles.tableComponent__statusImage }
                          alt={ 'status_icon' }
                          title={ localStatus }
@@ -139,8 +144,8 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                 disableFilters: true,
             },
             {
-                Header: tableModes.statusTblMode ? 'На заявке' : 'Ответы',
-                accessor: tableModes.statusTblMode ? 'responseEmployee' : 'answers',
+                Header: statusTblMode ? 'На заявке' : 'Ответы',
+                accessor: !searchTblMode ? 'responseEmployee' : 'answers',
                 Filter: ColumnInputFilter,
                 disableFilters: true,
             },
@@ -159,30 +164,30 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                     <Button title={ 'Открыть' }
                             label={ 'Открыть ' + ( ( marked || !answers ) ? 'заявку' : 'карту с ответами перевозчиков' ) }
                             onClick={ () => {
-                                if (tableModes.searchTblMode) {
+                                if (searchTblMode) {
                                     ( price > authCash )
                                         ? toGlobalModalQuest(price)
                                         : navigate(requestInfo.accept + requestNumber)
                                 }
-                                if (tableModes.statusTblMode) navigate(( ( marked || !answers ) ? requestInfo.status : maps.answers ) + requestNumber)
-                                if (tableModes.historyTblMode) navigate(requestInfo.history + requestNumber)
+                                if (statusTblMode) navigate(( ( marked || !answers ) ? requestInfo.status : maps.answers ) + requestNumber)
+                                if (historyTblMode) navigate(requestInfo.history + requestNumber)
                             } }
                             colorMode={
-                                tableModes.searchTblMode ?
+                                searchTblMode ?
                                     price > authCash ? 'gray' : 'blue'
-                                    : tableModes.statusTblMode ? ( answers === 0 || marked ) ? 'green' : 'orange'
-                                        : tableModes.historyTblMode ? 'pink'
+                                    : statusTblMode ? ( answers === 0 || marked ) ? 'green' : 'orange'
+                                        : historyTblMode ? 'pink'
                                             : 'redAlert'
                             }
                     />,
             },
         ],
-        [ tableModes, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT,
+        [ searchTblMode, historyTblMode, statusTblMode, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT,
             maps.answers, navigate, requestInfo.status, requestInfo.history, requestInfo.accept ],
     )
     const tableModesStyle = styles['tableComponent__' + (
-        tableModes.searchTblMode ? 'search'
-            : tableModes.historyTblMode
+        searchTblMode ? 'search'
+            : historyTblMode
                 ? 'history'
                 : 'status'
     )
