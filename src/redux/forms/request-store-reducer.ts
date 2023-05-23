@@ -16,7 +16,7 @@ import {
 import {syncValidators} from '../../utils/validators'
 import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api'
 import {oneRequestApi} from '../../api/local-api/request-response/request.api'
-import {apiToISODateFormat, yearMmDdFormat, yearMmDdFormatISO} from '../../utils/date-formats'
+import {addNDay, apiToISODateFormat, yearMmDdFormat, yearMmDdFormatISO} from '../../utils/date-formats'
 import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {
     getOneEmployeeFromAPI,
@@ -532,8 +532,8 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             // получить список ВООБЩЕ ВСЕХ заявок
             // const responseAllRequests = await oneRequestApi.getAllRequests()
             // toDo: вернуть эту строку, убрать следующую
-            // const shipmentDate = yearMmDdFormat(new Date(''))+'T00:00'
-            const shipmentDate = yearMmDdFormat(new Date('2023-01-26')) + 'T00:00'
+            const shipmentDate = yearMmDdFormat(addNDay(new Date(''),-1))+'T00:00'
+            // const shipmentDate = yearMmDdFormat(new Date('2023-01-26')) + 'T00:00'
             // список заявок по дате
             const responseAllRequestsByDate = await oneRequestApi.getAllRequestByDate({ shipmentDate })
             if (responseAllRequestsByDate.length > 0) {

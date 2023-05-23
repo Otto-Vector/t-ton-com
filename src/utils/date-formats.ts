@@ -21,11 +21,10 @@ export const yearMmDdFormatISO = ( date?: Date ) => date && format(date, 'YYYY-M
 export const apiToISODateFormat = ( dateStringFromAPI: string ) => dateStringFromAPI.split('')
     .map(( e, i ) => i === 10 ? 'T' : i === 13 ? ':' : e).join('')
 
-
-// add a day
-export const addOneDay = ( date: Date ): Date => new Date(date.getTime() + 86400000)
 // add N days
 export const addNDay = ( date: Date, daysToAdd = 1 ): Date => new Date(date.getTime() + ( 86400000 * daysToAdd ))
+// add 1 day
+export const addOneDay = ( date: Date ): Date => addNDay(date)
 
 // проверка является ли дата сегодняшним днём
 export const isToday = ( someDate: Date ) => {
@@ -52,7 +51,7 @@ export const timeDiff = ( dateStart: Date, dateFinish: Date ): string => {
         // разница в минутах
         const diffMinutes = Math.floor(( diffTime % ( 1000 * 60 * 60 ) ) / ( 1000 * 60 ))
 
-        return `${ diffDays ? diffDays+'д ':''}${ diffHours ? diffHours+'ч ':''}${ diffMinutes ? diffMinutes + 'мин':''}`
+        return `${ diffDays ? diffDays + 'д ' : '' }${ diffHours ? diffHours + 'ч ' : '' }${ diffMinutes ? diffMinutes + 'мин' : '' }`
     } catch (e) {
         return 'Не является датой'
     }
