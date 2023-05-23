@@ -366,6 +366,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         dispatcherFIO: elem.dispatcherFIOSender,
     },
 
+    // ГРУЗОПОЛУЧАТЕЛЬ
     idRecipient: elem.idRecipient,
     idUserRecipient: elem.idUserRecipient,
     recipient: {

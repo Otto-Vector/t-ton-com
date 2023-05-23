@@ -10,10 +10,11 @@ type InfoProps = {
     phoneData?: string[],
     // при осутствии другой инфы, используется как основной текст
     placeholder: string
+    isMarked?: boolean
 }
 
 // окошко для отображения нередактирумеой инфы с телефоном и другими данными в модалку
-export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placeholder } ) => {
+export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placeholder, isMarked } ) => {
     const dispatch = useDispatch()
     // проверка на присутствие переменных и непустотность массива
     const isTextData = !!textData?.length
@@ -27,10 +28,11 @@ export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placehold
 
     return <>
         <div className={ styles.requestFormLeft__info + ' ' +
+            ( isMarked ? styles.requestFormLeft__info_marked + ' ' : '' ) +
             styles.requestFormLeft__info_horizontalPadding + ' ' +
             // включаем вертикальную прокрутку, при большом количестве символов
             ( textFromStrArrOrPlaceholder.length > 100 ? styles.requestFormLeft__info_scrollable : '' ) }
-             // вставляем напрямую, так как там могут быть теги <b>
+            // вставляем напрямую, так как там могут быть теги <b>
              dangerouslySetInnerHTML={ { __html: `<p>${ textFromStrArrOrPlaceholder }</p>` } }
         />
 

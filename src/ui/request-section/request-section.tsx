@@ -67,9 +67,9 @@ export const RequestSection: React.FC = React.memo(() => {
         // грузоотправитель
         isSender: userID === initialValues.idUserSender,
         // получатель
-        isRecipient: userID === initialValues.recipientUser,
+        isRecipient: userID === initialValues.idUserRecipient,
         // перевозчик
-        isCarrier: userID === initialValues.requestCarrierUser,
+        isCarrier: userID === initialValues.requestUserCarrierId,
     }
 
     const dispatch = useDispatch()

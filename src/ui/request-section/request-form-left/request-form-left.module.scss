@@ -56,9 +56,14 @@
       justify-content: left;
       padding: 0 35px;
     }
+
     &_scrollable {
       overflow: auto;
       align-items: flex-start;
+    }
+
+    &_marked {
+      box-shadow: 0 0 3px cornflowerblue;
     }
   }
 
@@ -94,6 +99,10 @@
     &::first-letter {
       text-transform: uppercase;
       color: #FFFFFF;
+    }
+
+    &_marked {
+      text-shadow: 0 0 2px cornflowerblue;
     }
 
   }

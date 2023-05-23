@@ -60,7 +60,7 @@ type OwnProps = {
 export const RequestFormLeft: React.FC<OwnProps> = memo((
     {
         requestModes: { isHistoryMode, isAcceptDriverMode, isCreateMode, isStatusMode },
-        roleModes: { isCustomer },
+        roleModes,
         initialValues,
     } ) => {
 
@@ -70,7 +70,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
     const navigate = useNavigate()
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     // заявка создана данной организацией и находится в статусе "новая заявка"
-    const isMyRequestAndNew = isCustomer && initialValues.globalStatus === 'новая заявка'
+    const isMyRequestAndNew = roleModes.isCustomer && initialValues.globalStatus === 'новая заявка'
 
     //фокусировка на проблемном поле при вводе
     const focusOnError = useMemo(() => createDecorator(), [])
@@ -321,8 +321,9 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             </div>
                             {/* ЗАКАЗЧИК */ }
                             <div className={ styles.requestFormLeft__selector }>
-                                <label
-                                    className={ styles.requestFormLeft__label }>{ labels.idCustomer }</label>
+                                <label className={ styles.requestFormLeft__label +
+                                    ( !isCreateMode && roleModes.isCustomer ? ' ' + styles.requestFormLeft__label_marked : '' )
+                                }>{ labels.idCustomer }</label>
                                 { isCreateMode
                                     ? <FormSelector nameForSelector={ 'idCustomer' }
                                                     placeholder={ placeholders.idCustomer }
@@ -332,6 +333,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isClearable
                                     />
                                     : <InfoField
+                                        isMarked={ roleModes.isCustomer }
                                         textData={ !isAcceptDriverMode ? infoData.customerData : undefined }
                                         phoneData={ !isAcceptDriverMode ? infoData.customerPhoneData : undefined }
                                         placeholder={ isAcceptDriverMode ? isAcceptDriverModePlaceholder : placeholders.idCustomer + '' }
@@ -341,8 +343,9 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             </div>
                             {/* ГРУЗООТПРАВИТЕЛЬ */ }
                             <div className={ styles.requestFormLeft__selector }>
-                                <label
-                                    className={ styles.requestFormLeft__label }>{ labels.idSender }</label>
+                                <label className={ styles.requestFormLeft__label +
+                                    ( !isCreateMode && roleModes.isSender ? ' ' + styles.requestFormLeft__label_marked : '' )
+                                }>{ labels.idSender }</label>
                                 { isCreateMode
                                     ? <FormSelector nameForSelector={ 'idSender' }
                                                     placeholder={ placeholders.idSender }
@@ -352,6 +355,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isSubLabelOnOption
                                                     isClearable
                                     /> : <InfoField
+                                        isMarked={ roleModes.isSender }
                                         textData={ !isAcceptDriverMode ? infoData.shipperSenderData : undefined }
                                         phoneData={ !isAcceptDriverMode ? infoData.shipperSenderPhoneData : undefined }
                                         placeholder={ isAcceptDriverMode ? isAcceptDriverModePlaceholder : placeholders.idSender + '' }
@@ -362,7 +366,9 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             {/* ГРУЗОПОЛУЧАТЕЛЬ */ }
                             <div className={ styles.requestFormLeft__selector }>
                                 <label
-                                    className={ styles.requestFormLeft__label }>{ labels.idRecipient }</label>
+                                    className={ styles.requestFormLeft__label +
+                                        ( !isCreateMode && roleModes.isRecipient ? ' ' + styles.requestFormLeft__label_marked : '' )
+                                    }>{ labels.idRecipient }</label>
                                 { isCreateMode
                                     ? <FormSelector nameForSelector={ 'idRecipient' }
                                                     placeholder={ placeholders.idRecipient }
@@ -372,6 +378,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                                                     isSubLabelOnOption
                                                     isClearable
                                     /> : <InfoField
+                                        isMarked={ roleModes.isRecipient }
                                         textData={ !isAcceptDriverMode ? infoData.consigneeRecipientData : undefined }
                                         phoneData={ !isAcceptDriverMode ? infoData.consigneeRecipientPhoneData : undefined }
                                         placeholder={ isAcceptDriverMode ? isAcceptDriverModePlaceholder : placeholders.idRecipient + '' }
@@ -381,9 +388,11 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                             </div>
                             {/* ПЕРЕВОЗЧИК */ }
                             <div className={ styles.requestFormLeft__inputsPanel }>
-                                <label className={ styles.requestFormLeft__label }>
-                                    { labels.requestCarrierId }</label>
+                                <label className={ styles.requestFormLeft__label +
+                                    ( !isCreateMode && roleModes.isCarrier ? ' ' + styles.requestFormLeft__label_marked : '' )
+                                }>{ labels.requestCarrierId }</label>
                                 <InfoField
+                                    isMarked={ roleModes.isCarrier }
                                     textData={ !isAcceptDriverMode ? infoData.acceptedCarrierData : undefined }
                                     phoneData={ !isAcceptDriverMode ? infoData.acceptedCarrierPhoneData : undefined }
                                     placeholder={ initialValues.requestCarrierId ? placeholders.requestCarrierId + '' : 'Перевозчик не выбран' }
