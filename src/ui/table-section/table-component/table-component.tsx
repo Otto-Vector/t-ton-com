@@ -1,11 +1,10 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import styles from './table-component.module.scss'
 
 import {Table} from './table'
-import {ColumnInputFilter} from './filter/column-filters'
+import {columnFilter} from './filter/column-filters'
 import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
 import {useDispatch, useSelector} from 'react-redux'
-import {UseFiltersColumnProps} from 'react-table'
 import {
     getContentTableStoreInHistory,
     getContentTableStoreInWork,
@@ -19,13 +18,8 @@ import {ddMmYearFormat} from '../../../utils/date-formats'
 import {getCashRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {OneRequestTableTypeReq} from '../../../types/form-types'
-import truckToRightPNG from '../../../media/trackToRight.png'
-import truckLoadPNG from '../../../media/trackLoadFuel.png'
-import truckToLeftPNG from '../../../media/truckLeft.png'
-import noRespTruckPNG from '../../../media/noRespTrack.png'
-import haveRespTrackPNG from '../../../media/haveRespTrack.png'
-import transparentPNG from '../../../media/transparent32x32.png'
 import {toNumber} from '../../../utils/parsers'
+import {LocalStatusCell} from './cells/local-status-cell'
 
 
 type OwnProps = {
@@ -69,70 +63,34 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             {
                 Header: '',
                 accessor: 'localStatus',
-                Filter: ( { column }: { column?: UseFiltersColumnProps<{}> } ) => {
-                    useEffect(() => {
-                        column?.setFilter(statusFilter)
-                    }, [ column ])
-                    return ( <></> )
-                },
+                Filter: columnFilter(statusFilter),
                 disableFilters: false,
-                Cell: ( { localStatus }: OneRequestTableTypeReq ) => statusTblMode ?
-                    <img className={ styles.tableComponent__statusImage }
-                         alt={ 'status_icon' }
-                         title={ localStatus }
-                         src={
-                             localStatus === 'груз у получателя' ? truckToLeftPNG
-                                 : localStatus === 'груз у водителя' ? truckLoadPNG
-                                     : localStatus === 'водитель выбран' ? truckToRightPNG
-                                         : localStatus === 'нет ответов' ? noRespTruckPNG
-                                             : localStatus === 'есть ответы' ? haveRespTrackPNG
-                                                 : transparentPNG
-                         }
-                        // добавим прозрачность на неотвеченные заявки
-                         style={ localStatus === 'нет ответов' ? { opacity: .5 }
-                             : localStatus === 'есть ответы' ? { // чёрный в Chocolate. Источник https://isotropic.co/tool/hex-color-to-css-filter/
-                                 filter: 'invert(42%) sepia(64%) saturate(622%) hue-rotate(343deg) brightness(99%) contrast(95%)',
-                             } : undefined
-                         }
-                    /> : null,
+                Cell: statusTblMode ? LocalStatusCell : <></>,
             },
             {
                 Header: '№',
                 accessor: 'requestNumber',
-                Filter: ColumnInputFilter,
+                // для корректной работ
+                // // для корректной работы глобального фильтраы глобального фильтра
+                Filter: columnFilter(),
                 disableFilters: true,
             },
             {
                 Header: 'Тип груза',
                 accessor: 'cargoType',
-                Filter: ( { column }: { column?: UseFiltersColumnProps<{}> } ) => {
-                    useEffect(() => {
-                        column?.setFilter(cargoFilter)
-                    }, [ column ])
-                    return ( <></> )
-                },
+                Filter: columnFilter(cargoFilter),
                 disableFilters: false,
             },
             {
                 Header: 'Дата',
                 accessor: 'shipmentDate',
-                Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
-                    useEffect(() => {
-                        column.setFilter(ddMmYearFormat(dayFilter))
-                    }, [ column ])
-                    return ( <></> )
-                },
+                Filter: columnFilter(ddMmYearFormat(dayFilter)),
                 disableFilters: false,
             },
             {
                 Header: 'Расстояние',
                 accessor: 'distance',
-                Filter: ( { column }: { column: UseFiltersColumnProps<{}> } ) => {
-                    useEffect(() => {
-                        column.setFilter(routeFilter)
-                    }, [ column ])
-                    return ( <></> )
-                },
+                Filter: columnFilter(routeFilter),
                 disableFilters: false,
                 filter: 'between',
                 Cell: ( { value }: { value: number } ) => `${ value } км`,
@@ -140,19 +98,22 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             {
                 Header: 'Маршрут',
                 accessor: 'route',
-                Filter: ColumnInputFilter,
+                // для корректной работы глобального фильтра
+                Filter: columnFilter(),
                 disableFilters: true,
             },
             {
                 Header: statusTblMode ? 'На заявке' : 'Ответы',
                 accessor: !searchTblMode ? 'responseEmployee' : 'answers',
-                Filter: ColumnInputFilter,
+                // для корректной работы глобального фильтра
+                Filter: columnFilter(),
                 disableFilters: true,
             },
             {
                 Header: '',
                 accessor: 'price',
-                Filter: ColumnInputFilter,
+                // для корректной работы глобального фильтра
+                Filter: columnFilter(),
                 disableFilters: true,
                 // чтобы добавить быстрый доступ к нужным полям ищи метку #CellProps в table.tsx
                 Cell: ( {
@@ -182,7 +143,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
                     />,
             },
         ],
-        [ searchTblMode, historyTblMode, statusTblMode, authCash, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT,
+        [ , searchTblMode, historyTblMode, statusTblMode, authCash, statusFilter, dayFilter, routeFilter, cargoFilter, TABLE_CONTENT,
             maps.answers, navigate, requestInfo.status, requestInfo.history, requestInfo.accept ],
     )
     const tableModesStyle = styles['tableComponent__' + (
