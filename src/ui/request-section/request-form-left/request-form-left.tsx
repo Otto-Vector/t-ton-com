@@ -2,7 +2,7 @@ import React, {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './request-form-left.module.scss'
 import {getAllShippersSelectFromLocal, getOneShipperFromLocal} from '../../../selectors/options/shippers-reselect'
 import {useDispatch, useSelector} from 'react-redux'
-import {cargoConstType, OneRequestType} from '../../../types/form-types'
+import {cargoConstType, OneRequestType, RoleModesType} from '../../../types/form-types'
 import {
     getCurrentDistanceIsFetchingRequestStore,
     getInfoTextModalsRequestValuesStore,
@@ -15,7 +15,7 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
 import {FormSelector} from '../../common/form-selector/form-selector'
-import {RequestModesType, RoleModesType} from '../request-section'
+import {RequestModesType} from '../request-section'
 import {Field, Form} from 'react-final-form'
 import {InfoField} from './info-field'
 import {

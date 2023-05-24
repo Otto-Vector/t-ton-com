@@ -16,21 +16,13 @@ import {valuesAreEqual} from '../../utils/reactMemoUtils'
 import {getInitialValuesEmployeesStore} from '../../selectors/options/employees-reselect'
 import {toNumber} from '../../utils/parsers'
 import {getAuthIdAuthStore} from '../../selectors/auth-reselect'
+import {RoleModesType} from '../../types/form-types'
 
 // type OwnProps = { }
 
 export type RequestModesType = { isCreateMode: boolean, isStatusMode: boolean, isHistoryMode: boolean, isAcceptDriverMode: boolean }
-export type RoleModesType = {
-    // заказчик
-    isCustomer: boolean
-    // грузоотправитель
-    isSender: boolean
-    // получатель
-    isRecipient: boolean
-    // перевозчик
-    isCarrier: boolean
-}
-export const RequestSection: React.FC = React.memo(() => {
+
+export const RequestSection: React.ComponentType = React.memo(() => {
 
     const [ tabModes, setTabModes ] = useState({ left: false, center: false, right: false })
     const setActiveTab = useCallback(( tab: 'left' | 'center' | 'right' ) => {
@@ -61,7 +53,7 @@ export const RequestSection: React.FC = React.memo(() => {
     const oneEmployee = useSelector(getInitialValuesEmployeesStore)
 
     // статус отношения пользователя к заявке
-    const roleModes = {
+    const roleModes: RoleModesType = {
         // заказчик
         isCustomer: userID === initialValues.idUserCustomer,
         // грузоотправитель

@@ -7,7 +7,7 @@ import {
     getLabelDocumentsRequestValuesStore,
     getLabelRequestStore,
 } from '../../../selectors/forms/request-form-reselect'
-import {RequestModesType, RoleModesType} from '../request-section'
+import {RequestModesType} from '../request-section'
 
 import {Button} from '../../common/button/button'
 import {InfoText} from '../../common/info-text/into-text'
@@ -16,13 +16,14 @@ import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-t
 import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
 import {
-    addRewriteCargoDocumentRequestAPI, closeRequestAndUpdateDriverStatus,
+    addRewriteCargoDocumentRequestAPI,
+    closeRequestAndUpdateDriverStatus,
     paymentHasBeenRecievedToRequest,
 } from '../../../redux/forms/request-store-reducer'
-import {toNumber, parseToNormalMoney} from '../../../utils/parsers'
+import {parseToNormalMoney, toNumber} from '../../../utils/parsers'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {boldWrapper} from '../../../utils/html-rebuilds'
-import {EmployeeCardType} from '../../../types/form-types'
+import {RoleModesType} from '../../../types/form-types'
 import {getInitialValuesEmployeesStore} from '../../../selectors/options/employees-reselect'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 

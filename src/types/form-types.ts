@@ -292,6 +292,20 @@ export type CargoTypeType = typeof cargoConstType[number]
 export const propertyRights = [ 'Собственность', 'Cовместная собственность супругов', 'Аренда', 'Лизинг', 'Безвозмездное пользование' ] as const
 export type PropertyRightsType = typeof propertyRights[number]
 
+// статусы самой заявки
+export type RequestGlobalStatusType = 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | 'ожидает ответа водителя'
+
+// типы относительности пользователя к заявке
+export type RoleModesType = {
+    // заказчик
+    isCustomer: boolean
+    // грузоотправитель
+    isSender: boolean
+    // получатель
+    isRecipient: boolean
+    // перевозчик
+    isCarrier: boolean
+}
 // на транспорт
 export type TransportCardType<T = DefaultFormType> = {
     idUser: T
@@ -373,9 +387,8 @@ export type ResponseToRequestCardType<T = DefaultFormType> = {
     responseTax: T,
 }
 
-export type RequestGlobalStatusType = 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | 'ожидает ответа водителя'
 
-// ЗАЯВКА
+//////////////////////////// ЗАЯВКА ///////////////////////////////////////////////////////////////////
 export type OneRequestType = {
     /* эти два поля создаются автоматически на бэке при запросе на создание,
     далее заявка ТОЛЬКО редактируется или УДАЛЯЕТСЯ */
@@ -806,6 +819,10 @@ export type OneRequestApiType = {
     customerToConsigneeContractECPconsigneeIsSubscribe?: boolean
 }
 
+//////////////////////////*ТИПЫ ДЛЯ ТАБЛИЦЫ*/////////////////////////////////////////////////
+
+export type TableLocalStatus = 'водитель выбран' | 'груз у водителя' | 'груз у получателя' | 'нет ответов' | 'есть ответы' | ''
+
 // для полей в таблице
 export type OneRequestTableType = {
     requestNumber?: number
@@ -818,7 +835,12 @@ export type OneRequestTableType = {
     globalStatus?: RequestGlobalStatusType
     responseEmployee?: string
     marked?: boolean
-    localStatus?: 'водитель выбран' | 'груз у водителя' | 'груз у получателя' | 'нет ответов' | 'есть ответы' | ''
+    localStatus?: TableLocalStatus
+    roleStatus?: RoleModesType
 }
 
-export type OneRequestTableTypeReq = Required<OneRequestTableType>
+// данные в Cell
+export type OneRequestTableTypeReq = Required<OneRequestTableType> & {
+    // непосредственное содержимое ячейки (по акцессору)
+    value: string
+}

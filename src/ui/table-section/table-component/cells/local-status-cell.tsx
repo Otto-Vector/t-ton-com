@@ -8,6 +8,7 @@ import transparentPNG from '../../../../media/transparent32x32.png'
 import {OneRequestTableTypeReq} from '../../../../types/form-types'
 import styles from '../table-component.module.scss'
 
+// ячейки столбца с картинками статуса
 export const LocalStatusCell = ( { localStatus }: OneRequestTableTypeReq ) =>
                     <img className={ styles.tableComponent__statusImage }
                          alt={ 'status_icon' }

@@ -20,6 +20,7 @@ import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-
 import {OneRequestTableTypeReq} from '../../../types/form-types'
 import {toNumber} from '../../../utils/parsers'
 import {LocalStatusCell} from './cells/local-status-cell'
+import {Column} from 'react-table'
 
 
 type OwnProps = {
@@ -58,7 +59,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
 
     const data = React.useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
-    const columns = React.useMemo(
+    const columns: Column[] = React.useMemo(
         () => [
             {
                 Header: '',
@@ -70,8 +71,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             {
                 Header: '№',
                 accessor: 'requestNumber',
-                // для корректной работ
-                // // для корректной работы глобального фильтраы глобального фильтра
+                // для корректной работы глобального фильтра
                 Filter: columnFilter(),
                 disableFilters: true,
             },
@@ -144,12 +144,17 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
             },
         ],
         [
+            /* моды таблицы */
             searchTblMode, historyTblMode, statusTblMode,
+            /* значение фильтров вне таблицы (должны быть все) */
             statusFilter, dayFilter, routeFilter, cargoFilter,
-            authCash, toGlobalModalQuest,
+            /* навигация и т.п. */
             navigate, requestInfo, maps,
+            /* допы */
+            authCash, toGlobalModalQuest,
         ],
     )
+
     const tableModesStyle = styles['tableComponent__' + (
         searchTblMode ? 'search'
             : historyTblMode

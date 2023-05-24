@@ -4,10 +4,7 @@ import styles from './request-map-center.module.scss'
 import {RequestModesType} from '../request-section'
 import {RouteMapCenter} from './route-map-center/route-map-center'
 import {useSelector} from 'react-redux'
-import {
-    getPreparedInfoDataRequestStore,
-    getRoutesParsedFromPolylineRequestStore,
-} from '../../../selectors/forms/request-form-reselect'
+import {getRoutesParsedFromPolylineRequestStore} from '../../../selectors/forms/request-form-reselect'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {positionsToCorrectBounds, stringToCoords} from '../../../utils/map-utils'
 import {OneEmployeeNoPhotoIdReqType} from '../../../api/local-api/options/employee.api'
