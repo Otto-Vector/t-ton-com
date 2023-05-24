@@ -56,6 +56,12 @@
       th {
         border-bottom: 1px solid #023E8A;
       }
+
+      th:nth-child(9):empty {
+        width: 0;
+        padding: 0;
+        min-width: 0;
+      }
     }
   }
 
@@ -116,10 +122,17 @@
       }
     }
 
-    td:nth-child(9), td:nth-child(9):empty {
+    td:nth-child(9) {
       width: 36px;
       min-width: 36px;
+
+      &:empty {
+        padding: 0;
+        width: 0;
+        min-width: 0;
+      }
     }
+
 
     &:hover, &.selected {
 

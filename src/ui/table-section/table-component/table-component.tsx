@@ -155,7 +155,8 @@ export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) 
                                         }: OneRequestTableTypeReq ) =>
                         isCustomer && localStatus !== 'груз у получателя' && localStatus !== 'груз у водителя'
                             ? <div style={ { background: 'none' } }>
-                                <Button colorMode={ 'redAlert' }><MaterialIcon icon_name={ 'close' }/> </Button>
+                                <Button colorMode={ 'redAlert' }
+                                ><MaterialIcon icon_name={ 'close' }/> </Button>
                             </div>
                             : <></>
                     : <></>,
