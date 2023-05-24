@@ -45,24 +45,12 @@ export const RequestSection: React.ComponentType = React.memo(() => {
     } ), [ pathname ])
     const { isCreateMode, isStatusMode, isAcceptDriverMode, isHistoryMode } = requestModes
 
-    const userID = useSelector(getAuthIdAuthStore)
-
-
     const isFetching = useSelector(getIsFetchingRequestStore)
     const initialValues = useSelector(getInitialValuesRequestStore)
     const oneEmployee = useSelector(getInitialValuesEmployeesStore)
 
     // статус отношения пользователя к заявке
-    const roleModes: RoleModesType = {
-        // заказчик
-        isCustomer: userID === initialValues.idUserCustomer,
-        // грузоотправитель
-        isSender: userID === initialValues.idUserSender,
-        // получатель
-        isRecipient: userID === initialValues.idUserRecipient,
-        // перевозчик
-        isCarrier: userID === initialValues.requestUserCarrierId,
-    }
+    const roleModes = initialValues.roleStatus
 
     const dispatch = useDispatch()
 

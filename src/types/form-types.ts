@@ -445,7 +445,7 @@ export type OneRequestType = {
     // выделение для таблицы (используется только на фронте)
     marked?: boolean
 
-    // БЛОК СТАТУСОВ ЗАЯВКИ
+    /* БЛОК СТАТУСОВ ЗАЯВКИ */
 
     // глобальный статус заявки
     globalStatus?: RequestGlobalStatusType
@@ -460,6 +460,9 @@ export type OneRequestType = {
         // Груз получен | Груз у грузополучателя
         cargoHasBeenReceived?: boolean
     }
+    // статус отношения пользователя к заявке (применяется только на фронте)
+    roleStatus: RoleModesType,
+
     // количество ответов от водителей // массив с айдишками
     answers?: string[]
     // пользователи, имеющие доступ к данной заявке

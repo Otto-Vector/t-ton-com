@@ -28,7 +28,7 @@ type OwnProps = {
 }
 
 
-export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
+export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) => {
 
     const {
         historyTblMode,

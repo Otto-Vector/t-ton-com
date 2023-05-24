@@ -16,7 +16,7 @@ type OwnProps = {
     toCity?: string
 }
 
-export const RequestMapCenter: React.FC<OwnProps> = memo(( { requestModes, driver, fromCity, toCity } ) => {
+export const RequestMapCenter: React.ComponentType<OwnProps> = memo(( { requestModes, driver, fromCity, toCity } ) => {
 
     const testCenter: [ number, number ] = [ 55.5907807700034, 84.09127066601563 ]
     const testLine: number[][] = [ [ 55.185346, 25.14226 ], [ 55.185336, 26.14236 ] ]

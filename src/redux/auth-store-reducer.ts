@@ -29,7 +29,6 @@ const initialState = {
     kppBuffer: [] as string[] | null,
     isFetching: false,
     geoPosition: [ 0, 0 ] as number[],
-    modalMessage: null as string | null, // сообщение в модалку (если null, то модалки нет)
 
     label: {
         innNumber: 'ИНН Организации',

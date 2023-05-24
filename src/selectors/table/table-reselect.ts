@@ -6,7 +6,7 @@ import {ddMmYearFormat} from '../../utils/date-formats'
 import {getTariffsRequisitesStore} from '../options/requisites-reselect'
 import {OneRequestTableType, OneRequestType, TableLocalStatus} from '../../types/form-types'
 import {parseFamilyToFIO, toNumber} from '../../utils/parsers'
-import {getAuthIdAuthStore} from '../auth-reselect'
+import {getAuthIdAuthStore, getInitialValuesAuthStore} from '../auth-reselect'
 
 
 type TableStoreSelectors<T extends keyof Y, Y = TableStoreReducerStateType> = ( state: AppStateType ) => Y[T]
@@ -38,6 +38,7 @@ const requestStatusToTableStatus = ( {
                     : 'есть ответы'
             )
             : ''
+
 // парсинг заявки в таблицу
 const parseRequestToTable = ( {
                                   acceptLongRoute,
@@ -57,34 +58,36 @@ const parseRequestToTable = ( {
         recipient: { city: cityConsignee },
         distance,
         answers,
-        globalStatus,
         responseEmployee,
         acceptedUsers,
+        globalStatus,
         localStatus,
-    }: OneRequestType ): OneRequestTableType =>
-    ( {
+        roleStatus,
+    }: OneRequestType ): OneRequestTableType => {
+
+    const globalStatusNormal = globalStatus || 'отменена'
+    const markedNormal = globalStatusNormal !== 'отменена'
+        ? ( [ idUserCustomer, idUserRecipient, idUserSender, requestUserCarrierId ].includes(authId)
+            || !!acceptedUsers?.includes(authId) )
+        : false
+
+    return {
         requestNumber,
-        cargoType: cargoType+'',
-        shipmentDate: ddMmYearFormat(shipmentDate)+'',
+        cargoType: cargoType + '',
+        shipmentDate: ddMmYearFormat(shipmentDate) + '',
         distance: toNumber(distance),
         route: cityShipper + ' в ' + cityConsignee,
         answers: toNumber(answers?.length),
         // ставим цену в зависимости от расстояния
         price: toNumber(distance) > 100 ? toNumber(acceptLongRoute) : toNumber(acceptShortRoute),
-        globalStatus: globalStatus || 'отменена',
+        globalStatus: globalStatusNormal,
         localStatus: requestStatusToTableStatus({ globalStatus, localStatus, answers }),
         responseEmployee: parseFamilyToFIO(responseEmployee?.employeeFIO) || answers?.length + '' || '0',
         // Отмечаем причастных к заявкам
-        marked: globalStatus !== 'отменена' ||[ idUserCustomer, idUserRecipient, idUserSender, requestUserCarrierId ].includes(authId)
-            || ( acceptedUsers?.includes(authId) )
-            || false,
-        roleStatus: {
-            isCustomer: authId === idUserCustomer,
-            isCarrier: authId === requestUserCarrierId,
-            isRecipient: authId === idUserRecipient,
-            isSender: authId === idUserSender,
-        },
-    } )
+        marked: markedNormal,
+        roleStatus,
+    }
+}
 
 // для реализации контента по списку заявок из разных источников
 export const getContentTableStore = ( getContent: ( state: AppStateType ) => OneRequestType[] ) => createSelector(
@@ -92,7 +95,11 @@ export const getContentTableStore = ( getContent: ( state: AppStateType ) => One
     geInitialValuesTableStore,
     getTariffsRequisitesStore,
     getAuthIdAuthStore,
-    ( requests, initial, { acceptShortRoute, acceptLongRoute }, authId ): OneRequestTableType[] => requests
+    getInitialValuesAuthStore,
+    ( requests, initial, {
+        acceptShortRoute,
+        acceptLongRoute,
+    }, authId, { innNumber } ): OneRequestTableType[] => requests
             .filter(( { visible } ) => visible)
             .map(parseRequestToTable({ acceptLongRoute, acceptShortRoute, authId }))
         || [ initial ],
@@ -113,10 +120,9 @@ export const getContentTableStoreInWork = createSelector(getContentByUserTableSt
                                                                  marked,
                                                                  globalStatus,
                                                              } ) => marked && globalStatus && globalStatus !== 'завершена')
-        .map(( { roleStatus, globalStatus, ...request } ) => ( {
-            ...request, globalStatus, roleStatus,
-            // marked: request.globalStatus === 'в работе'
-            marked: true,
+        .map(( { globalStatus, ...request } ) => ( {
+            ...request, globalStatus,
+            marked: globalStatus === 'в работе',
         } )),
 )
 

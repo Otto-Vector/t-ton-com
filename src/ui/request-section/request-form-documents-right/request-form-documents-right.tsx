@@ -33,7 +33,7 @@ type OwnProps = {
 }
 
 
-export const RequestFormDocumentsRight: React.FC<OwnProps> = (
+export const RequestFormDocumentsRight: React.ComponentType<OwnProps> = (
     {
         requestModes: { isHistoryMode, isAcceptDriverMode, isCreateMode },
         roleModes,

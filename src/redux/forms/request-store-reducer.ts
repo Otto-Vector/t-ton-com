@@ -292,7 +292,11 @@ export const requestStoreActions = {
 }
 
 // адаптируем заявку от сервера в локальную модель данных
-const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
+const parseRequestFromAPI = ( {
+                                  idUserCustomer,
+                                  innNumber,
+                                  kpp,
+                              }: { idUserCustomer: string, innNumber: string, kpp: string } ) => ( elem: OneRequestApiType ): OneRequestType => ( {
     requestNumber: +elem.requestNumber,
     requestDate: elem.requestDate ? new Date(apiToISODateFormat(elem.requestDate)) : undefined,
     cargoComposition: elem.cargoComposition,
@@ -317,6 +321,12 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
 
     /* СТАТУСЫ */
     globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
+    roleStatus: {
+        isCustomer: idUserCustomer === elem.idUserCustomer || ( innNumber === elem.innNumberCustomer && kpp === elem.kppCustomer ),
+        isCarrier: idUserCustomer === elem.requestUserCarrierId || ( innNumber === elem.innNumberCarrier && kpp === elem.kppCarrier ),
+        isRecipient: idUserCustomer === elem.idUserRecipient || ( innNumber === elem.innNumberRecipient && kpp === elem.kppRecipient ),
+        isSender: idUserCustomer === elem.idUserSender || ( innNumber === elem.innNumberSender && kpp === elem.kppSender ),
+    },
     localStatus: {
         paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
         paymentHasBeenReceived: elem.localStatuspaymentHasBeenReceived,
@@ -543,15 +553,19 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             // const shipmentDate = yearMmDdFormat(new Date('2023-01-26')) + 'T00:00'
             // список заявок по дате
             const responseAllRequestsByDate = await oneRequestApi.getAllRequestByDate({ shipmentDate })
-            if (responseAllRequestsByDate.length > 0) {
-                dispatch(requestStoreActions.setContentByDate(responseAllRequestsByDate.map(parseRequestFromAPI)))
-            }
 
             const idUserCustomer = getState().authStoreReducer.authID
+            const { innNumber = '', kpp = '' } = getState().requisitesStoreReducer.storedValues
+            const parseRequestWithDataToStatus = parseRequestFromAPI({ idUserCustomer, innNumber, kpp })
+
+            if (responseAllRequestsByDate.length > 0) {
+                dispatch(requestStoreActions.setContentByDate(responseAllRequestsByDate.map(parseRequestWithDataToStatus)))
+            }
+
             // списко заявок, где пользователь является создателем заявки
             const responseAllRequestsByUser = await oneRequestApi.getAllRequestByUser({ idUserCustomer })
             if (responseAllRequestsByUser.length > 0) {
-                dispatch(requestStoreActions.setContentByUser(responseAllRequestsByUser.map(parseRequestFromAPI)))
+                dispatch(requestStoreActions.setContentByUser(responseAllRequestsByUser.map(parseRequestWithDataToStatus)))
             }
 
         } catch (e: TtonErrorType) {
@@ -565,12 +579,15 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
 
 // забрать данные одной СОЗДАННОЙ заявки от сервера
 export const getOneRequestsAPI = ( requestNumber: number, giveMeDriver = false ): RequestStoreReducerThunkActionType =>
-    async ( dispatch ) => {
+    async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
+        const idUserCustomer = getState().authStoreReducer.authID
+        const { innNumber = '', kpp = '' } = getState().requisitesStoreReducer.storedValues
+        const parseRequestWithDataToStatus = parseRequestFromAPI({ idUserCustomer, innNumber, kpp })
         try {
             const response = await oneRequestApi.getOneRequestById({ requestNumber })
             if (response.length > 0) {
-                dispatch(requestStoreActions.setInitialValues(parseRequestFromAPI(response[0])))
+                dispatch(requestStoreActions.setInitialValues(parseRequestWithDataToStatus(response[0])))
                 // подгружаем также водителя, для обновления координат
                 if (giveMeDriver && response[0].idEmployee) {
                     await dispatch(getOneEmployeeFromAPI(response[0].idEmployee))
