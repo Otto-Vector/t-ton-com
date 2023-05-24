@@ -293,7 +293,7 @@ export const propertyRights = [ 'Собственность', 'Cовместна
 export type PropertyRightsType = typeof propertyRights[number]
 
 // статусы самой заявки
-export type RequestGlobalStatusType = 'новая заявка' | 'в работе' | 'завершена' | 'отменена' | 'ожидает ответа водителя'
+export type RequestGlobalStatusType = 'новая заявка' | 'в работе' | 'завершена' | 'отменена'
 
 // типы относительности пользователя к заявке
 export type RoleModesType = {
@@ -837,7 +837,13 @@ export type OneRequestApiType = {
 
 //////////////////////////*ТИПЫ ДЛЯ ТАБЛИЦЫ*/////////////////////////////////////////////////
 
-export type TableLocalStatus = 'водитель выбран' | 'груз у водителя' | 'груз у получателя' | 'нет ответов' | 'есть ответы' | ''
+export type TableLocalStatus =
+    'водитель выбран'
+    | 'груз у водителя'
+    | 'груз у получателя'
+    | 'нет ответов'
+    | 'есть ответы'
+    | ''
 
 // для полей в таблице
 export type OneRequestTableType = {

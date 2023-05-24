@@ -29,6 +29,9 @@ import {requestDocumentsApi} from '../../api/local-api/request-response/request-
 import {getListOrganizationRequisitesByInn} from '../options/requisites-store-reducer'
 import {requisitesApi} from '../../api/local-api/options/requisites.api'
 import {toNumber} from '../../utils/parsers'
+import {boldWrapper} from '../../utils/html-rebuilds'
+import {employeesApi} from '../../api/local-api/options/employee.api'
+import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
 
 
 const initialState = {
@@ -549,7 +552,7 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             // получить список ВООБЩЕ ВСЕХ заявок
             // const responseAllRequests = await oneRequestApi.getAllRequests()
             // toDo: вернуть эту строку, убрать следующую
-            const shipmentDate = yearMmDdFormat(addNDay(new Date(''), -1)) + 'T00:00'
+            const shipmentDate = yearMmDdFormat(addNDay(new Date(), -1)) + 'T00:00'
             // const shipmentDate = yearMmDdFormat(new Date('2023-01-26')) + 'T00:00'
             // список заявок по дате
             const responseAllRequestsByDate = await oneRequestApi.getAllRequestByDate({ shipmentDate })
@@ -1164,10 +1167,54 @@ export const closeRequestAndUpdateDriverStatus = ( {
         await dispatch(modifyOneEmployeeSoftToAPI({
             idEmployee,
             status: !!onNextRequest ? 'на заявке' : !!employeeAddedToResponse ? 'ожидает принятия' : 'свободен',
-            onCurrentRequest: !!onNextRequest ? onNextRequest + '' : '0',
-            onNextRequest: '0',
+            onCurrentRequest: !!onNextRequest ? onNextRequest + '' : 'null',
+            onNextRequest: 'null',
         }))
 
+    }
+// пометка заявки как удалённой и отвязка всех водителей и т.п.
+export const cancelRequestOnDeleteButton = ( { requestNumber }: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        try {
+            const response = await oneRequestApi.getOneRequestById({ requestNumber })
 
-// await dispatch(getOneRequestsAPI(props.requestNumber))
+            if (response.length > 0) {
+                const { idEmployee, answers } = response[0]
+                // если привязан водитель, то отвязываем его по всем правилам
+                if (idEmployee) {
+                    const employee = await employeesApi.getOneOrMoreEmployeeById({ idEmployee })
+                    if (employee.length) {
+                        const { onNextRequest = 0, addedToResponse } = employee[0]
+                        await dispatch(modifyOneEmployeeSoftToAPI({
+                            idEmployee,
+                            status: !!onNextRequest ? 'на заявке' : !!addedToResponse ? 'ожидает принятия' : 'свободен',
+                            onCurrentRequest: !!onNextRequest ? onNextRequest + '' : 'null',
+                            onNextRequest: 'null',
+                        }))
+                    }
+                }
+                // если есть ответы на заявку, то удаляем ответы
+                if (!!answers?.split(', ')?.length) {
+                    await responseToRequestApi.deleteSomeResponseToRequest({ responseId: answers })
+                }
+                // и при любых вариантах, меняем статус заявки на 'отменена'
+                await dispatch(changeSomeValuesOnCurrentRequest({
+                    requestNumber: requestNumber + '',
+                    globalStatus: 'отменена',
+                    // toDo: задать бэку запрос на "удаление" через команду
+                    isCanceledDate: yearMmDdFormatISO(new Date()),
+                    isCanceledReason: 'Удалена по причине отсутствия причин'
+                }))
+
+            }
+        } catch (e: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: [ 'Не удалось удалить заявку.',
+                    boldWrapper('Причина: ') +
+                    JSON.stringify(e?.response?.data?.message || e?.response?.data),
+                ],
+            }))
+        }
+        // после удаления(т.е. изменения статуса на "отменена") прогружаем список заново
+        await dispatch(getAllRequestsAPI())
     }

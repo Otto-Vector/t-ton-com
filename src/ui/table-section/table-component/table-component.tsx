@@ -22,6 +22,8 @@ import {toNumber} from '../../../utils/parsers'
 import {LocalStatusCell} from './cells/local-status-cell'
 import {Column} from 'react-table'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
+import {boldWrapper} from '../../../utils/html-rebuilds'
+import {cancelRequestOnDeleteButton} from '../../../redux/forms/request-store-reducer'
 
 
 type OwnProps = {
@@ -52,6 +54,15 @@ export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) 
         }))
     }, [ info, dispatch ])
 
+    const onDeleteRequest = ( requestNumber: number ) => {
+        dispatch<any>(textAndActionGlobalModal({
+            title: 'Вопрос',
+            text: 'Вы действительно хотите удалить заявку №' + boldWrapper(requestNumber + '') + '?',
+            action: () => {
+                dispatch<any>(cancelRequestOnDeleteButton({ requestNumber }))
+            },
+        }))
+    }
     const TABLE_CONTENT = useSelector(
         searchTblMode ? getContentTableStoreNew
             : historyTblMode ? getContentTableStoreInHistory
@@ -59,6 +70,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) 
     )
 
     const data = React.useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
+
 
     const columns: Column<OneRequestTableType>[] = React.useMemo(
         () => [
@@ -152,10 +164,14 @@ export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) 
                 Cell: statusTblMode ? ( {
                                             roleStatus: { isCustomer = false },
                                             localStatus,
+                                            requestNumber,
                                         }: OneRequestTableTypeReq ) =>
                         isCustomer && localStatus !== 'груз у получателя' && localStatus !== 'груз у водителя'
                             ? <div style={ { background: 'none' } }>
                                 <Button colorMode={ 'redAlert' }
+                                        onClick={ () => {
+                                            onDeleteRequest(requestNumber)
+                                        } }
                                 ><MaterialIcon icon_name={ 'close' }/> </Button>
                             </div>
                             : <></>
