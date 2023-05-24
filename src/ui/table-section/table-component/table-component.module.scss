@@ -13,7 +13,7 @@
         background-color: rgba($color, .8);
       }
 
-      td:nth-child(8) {
+      td:nth-child(8), td:nth-child(9) {
         background: none;
       }
     }
@@ -78,6 +78,7 @@
       min-width: 45px;
       width: 45px;
       border-radius: 30px 0 0 30px;
+
       &:empty {
         min-width: auto;
         width: 10px;
@@ -105,7 +106,7 @@
       border-radius: 0 30px 30px 0;
     }
 
-    td:nth-child(8) {
+    td:nth-child(8), td:nth-child(9) {
       width: 110px;
       line-height: 19px;
       background: none;
@@ -115,13 +116,26 @@
       }
     }
 
+    td:nth-child(9), td:nth-child(9):empty {
+      width: 36px;
+      min-width: 36px;
+    }
+
     &:hover, &.selected {
 
-      td:nth-child(8) {
+      td:nth-child(8), td:nth-child(9) {
         background: none;
 
         & > * { // отображение кнопки
           display: block;
+        }
+      }
+    }
+
+    &.selected {
+      td:nth-child(9) {
+        & > * { // отображение кнопки
+          display: none;
         }
       }
     }

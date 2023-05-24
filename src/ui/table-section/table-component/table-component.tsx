@@ -21,6 +21,7 @@ import {OneRequestTableType, OneRequestTableTypeReq} from '../../../types/form-t
 import {toNumber} from '../../../utils/parsers'
 import {LocalStatusCell} from './cells/local-status-cell'
 import {Column} from 'react-table'
+import {MaterialIcon} from '../../common/material-icon/material-icon'
 
 
 type OwnProps = {
@@ -141,6 +142,23 @@ export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) 
                                             : 'redAlert'
                             }
                     />,
+            },
+            {
+                Header: statusTblMode ? 'X' : '',
+                accessor: 'roleStatus',
+                // для корректной работы глобального фильтра
+                Filter: columnFilter(),
+                disableFilters: true,
+                Cell: statusTblMode ? ( {
+                                            roleStatus: { isCustomer = false },
+                                            localStatus,
+                                        }: OneRequestTableTypeReq ) =>
+                        isCustomer && localStatus !== 'груз у получателя' && localStatus !== 'груз у водителя'
+                            ? <div style={ { background: 'none' } }>
+                                <Button colorMode={ 'redAlert' }><MaterialIcon icon_name={ 'close' }/> </Button>
+                            </div>
+                            : <></>
+                    : <></>,
             },
         ],
         [

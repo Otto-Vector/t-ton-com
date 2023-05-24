@@ -84,6 +84,7 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                                     marked: cell.row.original?.marked,
                                     globalStatus: cell.row.original?.globalStatus,
                                     localStatus: cell.row.original?.localStatus,
+                                    roleStatus: cell.row.original?.roleStatus,
                                 }) }</td>
                             }) }
                         </tr>
