@@ -17,7 +17,7 @@ import {TableModesType} from '../table-section'
 import {ddMmYearFormat} from '../../../utils/date-formats'
 import {getCashRequisitesStore} from '../../../selectors/options/requisites-reselect'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
-import {OneRequestTableTypeReq} from '../../../types/form-types'
+import {OneRequestTableType, OneRequestTableTypeReq} from '../../../types/form-types'
 import {toNumber} from '../../../utils/parsers'
 import {LocalStatusCell} from './cells/local-status-cell'
 import {Column} from 'react-table'
@@ -59,7 +59,7 @@ export const TableComponent: React.FC<OwnProps> = ( { tableModes } ) => {
 
     const data = React.useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
-    const columns: Column[] = React.useMemo(
+    const columns: Column<OneRequestTableType>[] = React.useMemo(
         () => [
             {
                 Header: '',

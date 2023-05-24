@@ -20,7 +20,8 @@ import {addNDay, apiToISODateFormat, yearMmDdFormat, yearMmDdFormatISO} from '..
 import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {
     getOneEmployeeFromAPI,
-    modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest, modifyOneEmployeeSoftToAPI,
+    modifyOneEmployeeResetResponsesSetStatusAcceptedToRequest,
+    modifyOneEmployeeSoftToAPI,
 } from '../options/employees-store-reducer'
 import {AllNestedKeysToType, GetActionsTypes} from '../../types/ts-utils'
 import {TtonErrorType} from '../../api/local-api/back-instance.api'
@@ -28,7 +29,6 @@ import {requestDocumentsApi} from '../../api/local-api/request-response/request-
 import {getListOrganizationRequisitesByInn} from '../options/requisites-store-reducer'
 import {requisitesApi} from '../../api/local-api/options/requisites.api'
 import {toNumber} from '../../utils/parsers'
-import {employeesApi} from '../../api/local-api/options/employee.api'
 
 
 const initialState = {
@@ -854,9 +854,9 @@ export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): Re
             const acceptedUsers = [ userCustomer?.idUser || userId, userSender?.idUser, userRecipient?.idUser ].filter(x => x).join(', ')
             // делим длинный polyline на две части (ограничения на сервере на 70000 символов
             const route = submitValues?.route?.substring(0, 69999)
-            const routePlus = submitValues?.route?.substring(69999) || '-'
+            const routePlus = submitValues?.route?.substring(69999) || 'null'
             const requestNumber = submitValues.requestNumber?.toString() || '0'
-            const placeholder = '-'
+            const placeholder = 'null'
 
             const response = await oneRequestApi.modifyOneRequest({
                     requestNumber,

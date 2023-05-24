@@ -11,8 +11,8 @@ import {getGlobalValueFiltersStore} from '../../../selectors/table/filters-resel
 
 
 type OwnProps = {
-    columns: readonly Column[],
-    data: readonly {}[],
+    columns: readonly Column<OneRequestTableType>[],
+    data: readonly OneRequestTableType[],
     tableModes: TableModesType
 }
 
@@ -54,8 +54,8 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                             <th { ...column.getHeaderProps() }>{ column.render('Header') }
                                 { // @ts-ignore-next-line
                                     column?.canFilter
-                                        ? column?.render('Filter') : <></>
-                                    // ? <>F</> : <></>
+                                        ? column?.render('Filter')
+                                        : <></>
                                 }
                             </th>
                         )) }
@@ -67,13 +67,12 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                     prepareRow(row)
                     return (
                         <tr { ...row.getRowProps() }
-                            className={ (// @ts-ignore-next-line
+                            className={ (
                                 data[rowId]?.marked ? styles.selected : '' )
                             }
                             onDoubleClick={ onDoubleClick(data[rowId]) }
                             onClick={ () => {
                                 // console.log(data[rowId])
-
                             } }>
                             { row.cells.map(cell => {
                                 return <td { ...cell.getCellProps() }
@@ -81,13 +80,9 @@ export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
                                     // выставляем нужные поля для быстрого доступа здесь #CellProps
                                     requestNumber: cell.row.values?.requestNumber,
                                     price: cell.row.values?.price,
-                                    //@ts-ignore-next-line
                                     answers: cell.row.original?.answers,
-                                    //@ts-ignore-next-line
                                     marked: cell.row.original?.marked,
-                                    //@ts-ignore-next-line
                                     globalStatus: cell.row.original?.globalStatus,
-                                    //@ts-ignore-next-line
                                     localStatus: cell.row.original?.localStatus,
                                 }) }</td>
                             }) }
