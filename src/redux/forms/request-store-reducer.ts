@@ -299,6 +299,31 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
     shipmentDate: elem.shipmentDate ? new Date(elem.shipmentDate) : undefined,
     cargoType: elem.cargoType as CargoTypeType,
     addedPrice: elem.addedPrice,
+
+    distance: Number(elem.distance),
+    // toDo: убрать эту дибильную проверку на '-', когда он исправит поле на необязательное
+    route: elem?.route || '' + ( elem?.routePlus ? ( ( elem.routePlus !== '-' ) ? elem.routePlus : '' ) : '' ),
+    note: elem.note,
+    cargoStamps: elem.cargoStamps,
+    visible: true,
+    marked: false,
+
+    acceptedUsers: elem.acceptedUsers?.split(', ').filter(v => v),
+    answers: elem.answers?.split(', ').filter(v => v),
+
+    /* МАРКЕРЫ ОТМЕНЫ ЗАЯВКИ */
+    isCanceledDate: elem.isCanceledDate,
+    isCanceledReason: elem.isCanceledReason,
+
+    /* СТАТУСЫ */
+    globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
+    localStatus: {
+        paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
+        paymentHasBeenReceived: elem.localStatuspaymentHasBeenReceived,
+        cargoHasBeenTransferred: elem.localStatuscargoHasBeenTransferred,
+        cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
+    },
+    /* ЗАКАЗЧИК */
     idUserCustomer: elem.idUserCustomer,
     idCustomer: elem.idCustomer,
     customerUser: {
@@ -321,18 +346,7 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         mechanicFIO: elem.mechanicFIOCustomer,
         dispatcherFIO: elem.dispatcherFIOCustomer,
     },
-
-    distance: Number(elem.distance),
-    // toDo: убрать эту дибильную проверку на '-', когда он исправит поле на необязательное
-    route: elem?.route || '' + ( elem?.routePlus ? ( ( elem.routePlus !== '-' ) ? elem.routePlus : '' ) : '' ),
-    note: elem.note,
-    cargoStamps: elem.cargoStamps,
-    visible: true,
-    marked: false,
-
-    acceptedUsers: elem.acceptedUsers?.split(', ').filter(v => v),
-    answers: elem.answers?.split(', ').filter(v => v),
-
+    /* ГРУЗООТПРАВИТЕЛЬ */
     idUserSender: elem.idUserSender,
     idSender: elem.idSender,
     sender: {
@@ -400,13 +414,6 @@ const parseRequestFromAPI = ( elem: OneRequestApiType ): OneRequestType => ( {
         dispatcherFIO: elem.dispatcherFIORecipient,
     },
 
-    globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
-    localStatus: {
-        paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
-        paymentHasBeenReceived: elem.localStatuspaymentHasBeenReceived,
-        cargoHasBeenTransferred: elem.localStatuscargoHasBeenTransferred,
-        cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
-    },
     // ПЕРЕВОЗЧИК
     requestUserCarrierId: elem.requestUserCarrierId,
     requestCarrierId: elem.requestCarrierId,
@@ -532,7 +539,7 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             // получить список ВООБЩЕ ВСЕХ заявок
             // const responseAllRequests = await oneRequestApi.getAllRequests()
             // toDo: вернуть эту строку, убрать следующую
-            const shipmentDate = yearMmDdFormat(addNDay(new Date(''),-1))+'T00:00'
+            const shipmentDate = yearMmDdFormat(addNDay(new Date(''), -1)) + 'T00:00'
             // const shipmentDate = yearMmDdFormat(new Date('2023-01-26')) + 'T00:00'
             // список заявок по дате
             const responseAllRequestsByDate = await oneRequestApi.getAllRequestByDate({ shipmentDate })
@@ -749,25 +756,25 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                     cargoWeight: oneResponse.cargoWeight,
 
                     /* ПЕРЕВОЗЧИК */
-                    innNumberCarrier: requestCarrierData?.nnNumber || '-',
-                    organizationNameCarrier: requestCarrierData?.organizationName || '-',
-                    taxModeCarrier: requestCarrierData?.taxMode || '-',
-                    kppCarrier: requestCarrierData?.kpp || '-',
-                    ogrnCarrier: requestCarrierData?.ogrn || '-',
-                    okpoCarrier: requestCarrierData?.okpo || '-',
-                    legalAddressCarrier: requestCarrierData?.legalAddress || '-',
+                    innNumberCarrier: requestCarrierData?.nnNumber || 'null',
+                    organizationNameCarrier: requestCarrierData?.organizationName || 'null',
+                    taxModeCarrier: requestCarrierData?.taxMode || 'null',
+                    kppCarrier: requestCarrierData?.kpp || 'null',
+                    ogrnCarrier: requestCarrierData?.ogrn || 'null',
+                    okpoCarrier: requestCarrierData?.okpo || 'null',
+                    legalAddressCarrier: requestCarrierData?.legalAddress || 'null',
                     // сюда запишу номер телефона из карточки заказчика
-                    descriptionCarrier: requestCarrierData?.description || '-',
-                    postAddressCarrier: requestCarrierData?.postAddress || '-',
-                    phoneDirectorCarrier: requestCarrierData?.phoneDirector || '-',
-                    phoneAccountantCarrier: requestCarrierData?.phoneAccountant || '-',
-                    emailCarrier: requestCarrierData?.email || '-',
-                    bikBankCarrier: requestCarrierData?.bikBank || '-',
-                    nameBankCarrier: requestCarrierData?.nameBank || '-',
-                    checkingAccountCarrier: requestCarrierData?.checkingAccount || '-',
-                    korrAccountCarrier: requestCarrierData?.korrAccount || '-',
-                    mechanicFIOCarrier: requestCarrierData?.mechanicFIO || '-',
-                    dispatcherFIOCarrier: requestCarrierData?.dispatcherFIO || '-',
+                    descriptionCarrier: requestCarrierData?.description || 'null',
+                    postAddressCarrier: requestCarrierData?.postAddress || 'null',
+                    phoneDirectorCarrier: requestCarrierData?.phoneDirector || 'null',
+                    phoneAccountantCarrier: requestCarrierData?.phoneAccountant || 'null',
+                    emailCarrier: requestCarrierData?.email || 'null',
+                    bikBankCarrier: requestCarrierData?.bikBank || 'null',
+                    nameBankCarrier: requestCarrierData?.nameBank || 'null',
+                    checkingAccountCarrier: requestCarrierData?.checkingAccount || 'null',
+                    korrAccountCarrier: requestCarrierData?.korrAccount || 'null',
+                    mechanicFIOCarrier: requestCarrierData?.mechanicFIO || 'null',
+                    dispatcherFIOCarrier: requestCarrierData?.dispatcherFIO || 'null',
                     /* СОТРУДНИК */
                     idEmployee: employeeValues.idEmployee,
                     responseEmployeeFIO: employeeValues.employeeFIO,
@@ -789,14 +796,14 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                     responseTransportPropertyRights: transportValues.propertyRights,
                     responseTransportImage: transportValues.transportImage,
                     /* ПРИЦЕП */
-                    idTrailer: trailerValues?.idTrailer || '-',
-                    responseTrailertrailerNumber: trailerValues?.trailerNumber || '-',
-                    responseTrailerTrademark: trailerValues?.trailerTrademark || '-',
-                    responseTrailerModel: trailerValues?.trailerModel || '-',
-                    responseTrailerPts: trailerValues?.pts || '-',
-                    responseTrailerDopog: trailerValues?.dopog || '-',
+                    idTrailer: trailerValues?.idTrailer || 'null',
+                    responseTrailertrailerNumber: trailerValues?.trailerNumber || 'null',
+                    responseTrailerTrademark: trailerValues?.trailerTrademark || 'null',
+                    responseTrailerModel: trailerValues?.trailerModel || 'null',
+                    responseTrailerPts: trailerValues?.pts || 'null',
+                    responseTrailerDopog: trailerValues?.dopog || 'null',
                     responseTrailerCargoType: trailerValues?.cargoType,
-                    responseTrailerCargoWeight: trailerValues?.cargoWeight || '-',
+                    responseTrailerCargoWeight: trailerValues?.cargoWeight || 'null',
                     responseTrailerPropertyRights: trailerValues?.propertyRights,
                     responseTrailerImage: trailerValues?.trailerImage,
                 })
@@ -1144,4 +1151,4 @@ export const closeRequestAndUpdateDriverStatus = ( {
 
 
 // await dispatch(getOneRequestsAPI(props.requestNumber))
-}
+    }

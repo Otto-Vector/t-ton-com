@@ -57,7 +57,7 @@ type OwnProps = {
 }
 
 
-export const RequestFormLeft: React.FC<OwnProps> = memo((
+export const RequestFormLeft: React.ComponentType<OwnProps> = memo((
     {
         requestModes: { isHistoryMode, isAcceptDriverMode, isCreateMode, isStatusMode },
         roleModes,
@@ -240,7 +240,7 @@ export const RequestFormLeft: React.FC<OwnProps> = memo((
                 //@ts-ignore-next-line
                 decorators={ [ focusOnError ] }
                 render={
-                    ( { submitError, hasValidationErrors, handleSubmit, pristine, form, submitting, values } ) => (
+                    ( { submitError, hasValidationErrors, handleSubmit, form, submitting, values } ) => (
                         <form onSubmit={ handleSubmit } className={ styles.requestFormLeft__form }>
                             <div className={ styles.requestFormLeft__inputsPanel }>
                                 {/* ВИД ГРУЗА */ }

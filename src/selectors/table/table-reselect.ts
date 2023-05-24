@@ -40,10 +40,10 @@ const requestStatusToTableStatus = ( {
             : ''
 // парсинг заявки в таблицу
 const parseRequestToTable = ( {
-                                                       acceptLongRoute,
-                                                       acceptShortRoute,
-                                                       authId,
-                                                   }: { acceptLongRoute?: number, acceptShortRoute?: number, authId: string },
+                                  acceptLongRoute,
+                                  acceptShortRoute,
+                                  authId,
+                              }: { acceptLongRoute?: number, acceptShortRoute?: number, authId: string },
 ) => (
     {
         requestNumber,
@@ -64,24 +64,26 @@ const parseRequestToTable = ( {
     }: OneRequestType ): OneRequestTableType =>
     ( {
         requestNumber,
-        cargoType,
-        shipmentDate: ddMmYearFormat(shipmentDate),
-        distance,
+        cargoType: cargoType+'',
+        shipmentDate: ddMmYearFormat(shipmentDate)+'',
+        distance: toNumber(distance),
         route: cityShipper + ' в ' + cityConsignee,
         answers: toNumber(answers?.length),
         // ставим цену в зависимости от расстояния
         price: toNumber(distance) > 100 ? toNumber(acceptLongRoute) : toNumber(acceptShortRoute),
-        globalStatus,
+        globalStatus: globalStatus || 'отменена',
         localStatus: requestStatusToTableStatus({ globalStatus, localStatus, answers }),
         responseEmployee: parseFamilyToFIO(responseEmployee?.employeeFIO) || answers?.length + '' || '0',
         // Отмечаем причастных к заявкам
-        marked: [ idUserCustomer, idUserRecipient, idUserSender, requestUserCarrierId ].includes(authId) || ( acceptedUsers?.includes(authId) ),
+        marked: globalStatus !== 'отменена' ||[ idUserCustomer, idUserRecipient, idUserSender, requestUserCarrierId ].includes(authId)
+            || ( acceptedUsers?.includes(authId) )
+            || false,
         roleStatus: {
             isCustomer: authId === idUserCustomer,
             isCarrier: authId === requestUserCarrierId,
             isRecipient: authId === idUserRecipient,
             isSender: authId === idUserSender,
-        }
+        },
     } )
 
 // для реализации контента по списку заявок из разных источников
@@ -104,19 +106,22 @@ export const getContentByDateTableStore = getContentTableStore(getAllByDateReque
 export const getContentByUserTableStore = getContentTableStore(getAllByUserRequestStore)
 
 export const getContentTableStoreNew = createSelector(getContentByDateTableStore,
-    ( requests ) => requests.filter(( { globalStatus } ) => globalStatus === 'новая заявка'))
+    ( requests ): OneRequestTableType[] => requests.filter(( { globalStatus } ) => globalStatus === 'новая заявка'))
 
 export const getContentTableStoreInWork = createSelector(getContentByUserTableStore,
-    ( requests ) => requests.filter(( {
-                                          marked,
-                                          globalStatus,
-                                      } ) => marked && globalStatus && globalStatus !== 'завершена')
-        .map(( request ) => ( {
-            ...request,
+    ( requests ): OneRequestTableType[] => requests.filter(( {
+                                                                 marked,
+                                                                 globalStatus,
+                                                             } ) => marked && globalStatus && globalStatus !== 'завершена')
+        .map(( { roleStatus, globalStatus, ...request } ) => ( {
+            ...request, globalStatus, roleStatus,
             // marked: request.globalStatus === 'в работе'
-            marked: idUserCustomer
+            marked: true,
         } )),
 )
 
 export const getContentTableStoreInHistory = createSelector(getContentByUserTableStore,
-    ( requests ) => requests.filter(( { globalStatus, marked } ) => globalStatus === 'завершена' && marked))
+    ( requests ): OneRequestTableType[] => requests.filter(( {
+                                                                 globalStatus,
+                                                                 marked,
+                                                             } ) => globalStatus === 'завершена' && marked))

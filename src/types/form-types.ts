@@ -464,6 +464,14 @@ export type OneRequestType = {
     answers?: string[]
     // пользователи, имеющие доступ к данной заявке
     acceptedUsers?: string[]
+
+    /* БЛОК ОТМЕНЫ */
+
+    // дата/время отмены заявки
+    isCanceledDate?: string
+    // причины отмены заявки
+    isCanceledReason?: string
+
     /* поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку */
     /* НЕИЗМЕНЯЕМЫЕ*/
 
@@ -488,10 +496,10 @@ export type OneRequestType = {
     // система налогообложения (ОСН, УСН, ЕСХН, ПСН, НПД и т.д.) (из карточки отклика)
     responseTax?: string
 
-    // поля вкладки ДОКУМЕНТЫ
+    /* поля вкладки ДОКУМЕНТЫ */
     // подсчитанная сумма (считается на фронте) (из карточки отклика)
     responsePrice?: string
-    // Вес груза, в тн. (высчитывается автоматически по тоннажу тягач+прицеп (из карточки отклика)
+    // Вес груза, в тн. (высчитывается автоматически по тоннажу тягач+прицеп (из карточки отклика) и после принятия груза
     cargoWeight?: number | string
 
     // ИЗМЕНЯЕМЫЕ
@@ -791,10 +799,11 @@ export type OneRequestApiType = {
     responsePrice?: string
     /* Привязанные данные из карточки ответа на заявку =КОНЕЦ= */
 
+    /* ПОГРУЗКА-РАЗГРУЗКА */
     cargoWeight?: string
     uploadTime?: string
     unloadTime?: string
-
+    /* ДОКИ */
     proxyFreightLoader?: string
     proxyDriver?: string
     proxyWaybillDriver?: string
@@ -817,6 +826,10 @@ export type OneRequestApiType = {
     customerToConsigneeContractECPdocumentUpload?: string
     customerToConsigneeContractECPcustomerIsSubscribe?: boolean
     customerToConsigneeContractECPconsigneeIsSubscribe?: boolean
+
+    /* дата отмены и причина отмены заявки */
+    isCanceledDate?: string
+    isCanceledReason?: string
 }
 
 //////////////////////////*ТИПЫ ДЛЯ ТАБЛИЦЫ*/////////////////////////////////////////////////
@@ -825,21 +838,21 @@ export type TableLocalStatus = 'водитель выбран' | 'груз у в
 
 // для полей в таблице
 export type OneRequestTableType = {
-    requestNumber?: number
-    cargoType?: string
-    shipmentDate?: string
-    distance?: number
-    route?: string
-    answers?: number
-    price?: number
-    globalStatus?: RequestGlobalStatusType
-    responseEmployee?: string
-    marked?: boolean
-    localStatus?: TableLocalStatus
-    roleStatus?: RoleModesType
+    requestNumber: number
+    cargoType: string
+    shipmentDate: string
+    distance: number
+    route: string
+    answers: number
+    price: number
+    globalStatus: RequestGlobalStatusType
+    responseEmployee: string
+    marked: boolean
+    localStatus: TableLocalStatus
+    roleStatus: RoleModesType
 }
 
-// данные в Cell
+// данные в Cell таблицы
 export type OneRequestTableTypeReq = Required<OneRequestTableType> & {
     // непосредственное содержимое ячейки (по акцессору)
     value: string
