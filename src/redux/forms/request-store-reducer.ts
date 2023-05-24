@@ -293,10 +293,10 @@ export const requestStoreActions = {
 
 // адаптируем заявку от сервера в локальную модель данных
 const parseRequestFromAPI = ( {
-                                  idUserCustomer,
+                                  idUser,
                                   innNumber,
                                   kpp,
-                              }: { idUserCustomer: string, innNumber: string, kpp: string } ) => ( elem: OneRequestApiType ): OneRequestType => ( {
+                              }: { idUser: string, innNumber: string, kpp: string } ) => ( elem: OneRequestApiType ): OneRequestType => ( {
     requestNumber: +elem.requestNumber,
     requestDate: elem.requestDate ? new Date(apiToISODateFormat(elem.requestDate)) : undefined,
     cargoComposition: elem.cargoComposition,
@@ -321,11 +321,11 @@ const parseRequestFromAPI = ( {
 
     /* СТАТУСЫ */
     globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
-    roleStatus: {
-        isCustomer: idUserCustomer === elem.idUserCustomer || ( innNumber === elem.innNumberCustomer && kpp === elem.kppCustomer ),
-        isCarrier: idUserCustomer === elem.requestUserCarrierId || ( innNumber === elem.innNumberCarrier && kpp === elem.kppCarrier ),
-        isRecipient: idUserCustomer === elem.idUserRecipient || ( innNumber === elem.innNumberRecipient && kpp === elem.kppRecipient ),
-        isSender: idUserCustomer === elem.idUserSender || ( innNumber === elem.innNumberSender && kpp === elem.kppSender ),
+    roleStatus: { // вычисляем отношение к заявке не только по idUser
+        isCustomer: idUser === elem.idUserCustomer || ( innNumber === elem.innNumberCustomer && kpp === elem.kppCustomer ),
+        isCarrier: idUser === elem.requestUserCarrierId || ( innNumber === elem.innNumberCarrier && kpp === elem.kppCarrier ),
+        isRecipient: idUser === elem.idUserRecipient || ( innNumber === elem.innNumberRecipient && kpp === elem.kppRecipient ),
+        isSender: idUser === elem.idUserSender || ( innNumber === elem.innNumberSender && kpp === elem.kppSender ),
     },
     localStatus: {
         paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
@@ -556,16 +556,16 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
 
             const idUserCustomer = getState().authStoreReducer.authID
             const { innNumber = '', kpp = '' } = getState().requisitesStoreReducer.storedValues
-            const parseRequestWithDataToStatus = parseRequestFromAPI({ idUserCustomer, innNumber, kpp })
+            const parseRequestWithDataToRoleStatus = parseRequestFromAPI({ idUser: idUserCustomer, innNumber, kpp })
 
             if (responseAllRequestsByDate.length > 0) {
-                dispatch(requestStoreActions.setContentByDate(responseAllRequestsByDate.map(parseRequestWithDataToStatus)))
+                dispatch(requestStoreActions.setContentByDate(responseAllRequestsByDate.map(parseRequestWithDataToRoleStatus)))
             }
 
             // списко заявок, где пользователь является создателем заявки
             const responseAllRequestsByUser = await oneRequestApi.getAllRequestByUser({ idUserCustomer })
             if (responseAllRequestsByUser.length > 0) {
-                dispatch(requestStoreActions.setContentByUser(responseAllRequestsByUser.map(parseRequestWithDataToStatus)))
+                dispatch(requestStoreActions.setContentByUser(responseAllRequestsByUser.map(parseRequestWithDataToRoleStatus)))
             }
 
         } catch (e: TtonErrorType) {
@@ -581,13 +581,15 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
 export const getOneRequestsAPI = ( requestNumber: number, giveMeDriver = false ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
-        const idUserCustomer = getState().authStoreReducer.authID
+
+        const idUser = getState().authStoreReducer.authID
         const { innNumber = '', kpp = '' } = getState().requisitesStoreReducer.storedValues
-        const parseRequestWithDataToStatus = parseRequestFromAPI({ idUserCustomer, innNumber, kpp })
+        const parseRequestWithDataToRoleStatus = parseRequestFromAPI({ idUser, innNumber, kpp })
+
         try {
             const response = await oneRequestApi.getOneRequestById({ requestNumber })
             if (response.length > 0) {
-                dispatch(requestStoreActions.setInitialValues(parseRequestWithDataToStatus(response[0])))
+                dispatch(requestStoreActions.setInitialValues(parseRequestWithDataToRoleStatus(response[0])))
                 // подгружаем также водителя, для обновления координат
                 if (giveMeDriver && response[0].idEmployee) {
                     await dispatch(getOneEmployeeFromAPI(response[0].idEmployee))
