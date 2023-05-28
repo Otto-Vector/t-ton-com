@@ -6,15 +6,15 @@ import {FormInputType} from '../../common/form-input-type/form-input-type'
 import {Field, Form} from 'react-final-form'
 import createDecorator from 'final-form-focus'
 import styles from './cargo-weight-input-to-modal.module.scss'
-import {Button} from '../../common/button/button'
 import {changeCargoWeightValuesOnCurrentRequestAndActivateDocs} from '../../../redux/forms/request-store-reducer'
 import {getInitialDataToModalCalcRequestStore} from '../../../selectors/forms/request-form-reselect'
-import {toNumber, parseCommaToDot, parseToNormalMoney, syncParsers} from '../../../utils/parsers'
+import {parseCommaToDot, parseToNormalMoney, syncParsers, toNumber} from '../../../utils/parsers'
 import {FormApi} from 'final-form'
+import {ModalFooter} from '../../common/info-global-to-modal/modal-footer/modal-footer'
 
 type ToSmallCalcFormType = { cargoWeight: string, addedPrice: string }
 
-export const CargoWeightInputToModal: React.FC = () => {
+export const CargoWeightInputToModal: React.ComponentType = () => {
     const {
         distance,
         cargoWeight,
@@ -93,20 +93,11 @@ export const CargoWeightInputToModal: React.FC = () => {
                             <p>{ values.addedPrice + ' руб.' }</p>
                         </div>
                     </div>
-                    <footer className={ styles.cargoWeightInputToModal__footer }>
-                        <div className={ styles.cargoWeightInputToModal__button }>
-                            <Button title={ 'Отмена' }
-                                    colorMode={ 'blueAlert' }
-                                    onClick={ onCancelHandle }
-                            />
-                        </div>
-                        <div className={ styles.cargoWeightInputToModal__button }>
-                            <Button title={ 'Ok' }
-                                    type={ 'submit' }
-                                    colorMode={ 'blue' }
-                            />
-                        </div>
-                    </footer>
+                    <ModalFooter
+                        onCancelHandle={ onCancelHandle }
+                        isCancelButtonEnable
+                        isFooterPadding
+                    />
                 </form> )
         }
     /> )

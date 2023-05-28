@@ -308,7 +308,6 @@ const parseRequestFromAPI = ( {
     addedPrice: elem.addedPrice,
 
     distance: Number(elem.distance),
-    // toDo: убрать эту дибильную проверку на '-', когда он исправит поле на необязательное
     route: elem?.route || '' + ( elem?.routePlus ? ( ( elem.routePlus !== '-' ) ? elem.routePlus : '' ) : '' ),
     note: elem.note,
     cargoStamps: elem.cargoStamps,
@@ -321,6 +320,11 @@ const parseRequestFromAPI = ( {
     /* МАРКЕРЫ ОТМЕНЫ ЗАЯВКИ */
     isCanceledDate: elem.isCanceledDate,
     isCanceledReason: elem.isCanceledReason,
+
+    /* МАРКЕРЫ ВРЕМЕНИ */
+    isClosedDate: elem.isClosedDate,
+    successPaymentDate: elem.successPaymentDate,
+    paymentDate: elem.paymentDate,
 
     /* СТАТУСЫ */
     globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
@@ -551,8 +555,10 @@ export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
             dispatch(requestStoreActions.setKoefficientToInfo(getState().baseStoreReducer.distanceCoefficient))
             // получить список ВООБЩЕ ВСЕХ заявок
             // const responseAllRequests = await oneRequestApi.getAllRequests()
-            // toDo: вернуть эту строку, убрать следующую
+
+            // получаем список заявок по сегодняшней дате (минус один день //на всякий)
             const shipmentDate = yearMmDdFormat(addNDay(new Date(), -1)) + 'T00:00'
+
             // const shipmentDate = yearMmDdFormat(new Date('2023-01-26')) + 'T00:00'
             // список заявок по дате
             const responseAllRequestsByDate = await oneRequestApi.getAllRequestByDate({ shipmentDate })
@@ -1007,7 +1013,8 @@ export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
         await dispatch(changeSomeValuesOnCurrentRequest({
             requestNumber: requestNumber + '',
             cargoWeight: cargoWeight + '',
-            uploadTime: yearMmDdFormatISO(new Date()),
+            // uploadTime: yearMmDdFormatISO(new Date()),
+            uploadTime: 'serverDateTime', // по договорённости, это слово применяет дату, которая на сервере
             addedPrice,
             localStatuscargoHasBeenTransferred: true,
         }))
@@ -1034,7 +1041,8 @@ export const cargoHasBeenRecievedOnCurrentRequest = ( requestNumber: string ): R
         await dispatch(changeSomeValuesOnCurrentRequest({
             requestNumber,
             localStatuscargoHasBeenReceived: true,
-            unloadTime: yearMmDdFormatISO(new Date()),
+            // unloadTime: yearMmDdFormatISO(new Date()),
+            unloadTime: 'serverDateTime', // по договорённости, это слово применяет дату, которая на сервере
         }))
         await dispatch(getOneRequestsAPI(toNumber(requestNumber)))
     }
@@ -1121,6 +1129,7 @@ export const paymentHasBeenRecievedToRequest = ( requestNumber: number ): Reques
             const response = await oneRequestApi.modifyOneRequest({
                 requestNumber: requestNumber + '',
                 localStatuspaymentHasBeenReceived: true,
+                successPaymentDate: 'serverDateTime',
             })
             console.log(response.message)
         } catch (e: TtonErrorType) {
@@ -1161,6 +1170,7 @@ export const closeRequestAndUpdateDriverStatus = ( {
         await dispatch(changeSomeValuesOnCurrentRequest({
             requestNumber,
             globalStatus: 'завершена',
+            isClosedDate: 'serverDateTime',
         }))
 
         const onNextRequest = toNumber(employeeOnNextRequest)
@@ -1173,8 +1183,8 @@ export const closeRequestAndUpdateDriverStatus = ( {
 
     }
 // пометка заявки как удалённой и отвязка всех водителей и т.п.
-export const cancelRequestOnDeleteButton = ( { requestNumber }: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
+export const cancelRequestOnDeleteButton = ( { requestNumber }: { requestNumber: number, isCanceledReason: string } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
         try {
             const response = await oneRequestApi.getOneRequestById({ requestNumber })
 
@@ -1194,16 +1204,15 @@ export const cancelRequestOnDeleteButton = ( { requestNumber }: { requestNumber:
                     }
                 }
                 // если есть ответы на заявку, то удаляем ответы
-                if (!!answers?.split(', ')?.length) {
+                if (!!answers?.split(', ')?.filter(x => x)?.length) {
                     await responseToRequestApi.deleteSomeResponseToRequest({ responseId: answers })
                 }
                 // и при любых вариантах, меняем статус заявки на 'отменена'
                 await dispatch(changeSomeValuesOnCurrentRequest({
                     requestNumber: requestNumber + '',
                     globalStatus: 'отменена',
-                    // toDo: задать бэку запрос на "удаление" через команду
-                    isCanceledDate: yearMmDdFormatISO(new Date()),
-                    isCanceledReason: 'Удалена по причине отсутствия причин'
+                    isCanceledDate: 'serverDateTime', // по договорённости, это слово применяет дату, которая на сервере
+                    isCanceledReason: 'Удалена по причине отсутствия причин',
                 }))
 
             }

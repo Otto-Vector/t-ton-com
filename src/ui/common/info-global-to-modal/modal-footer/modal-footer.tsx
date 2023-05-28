@@ -7,6 +7,8 @@ type OwnProps = {
     onOkHandle?: () => void,
     isCancelButtonEnable?: boolean
     isOkButtonEnable?: boolean
+    // добавляем, когда пририсовываем футер через свой компонент
+    isFooterPadding?: boolean
 }
 
 export const ModalFooter: React.FC<OwnProps> = (
@@ -15,8 +17,9 @@ export const ModalFooter: React.FC<OwnProps> = (
         onCancelHandle,
         isOkButtonEnable = true,
         isCancelButtonEnable = false,
+        isFooterPadding = false,
     } ) =>
-    <footer className={ styles.modalFooter }>
+    <footer className={ styles.modalFooter + ( isFooterPadding ? ' ' + styles.modalFooter_padding : '' ) }>
         { isCancelButtonEnable ?
             <div className={ styles.modalFooter__button }>
                 <Button title={ 'Отмена' }
@@ -29,6 +32,7 @@ export const ModalFooter: React.FC<OwnProps> = (
             <div className={ styles.modalFooter__button }>
                 <Button title={ 'Ok' }
                         colorMode={ 'blue' }
+                        type={ 'submit' }
                         onClick={ onOkHandle }
                 />
             </div>

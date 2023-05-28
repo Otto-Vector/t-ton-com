@@ -14,6 +14,7 @@ export const instanceBack = axios.create({
     withCredentials: true,
 })
 // отсылка на любое поле текста 'null' зачищает его
+// в некоторых полях заявки 'serverDateTime' применяет время сервера
 
 // Глобальные ответы на 200
 // {"message": "Error, login please"}

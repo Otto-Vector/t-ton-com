@@ -1,0 +1,21 @@
+@import 'src/styles/variables';
+
+.modalFormTextToDeleteResponse {
+
+  &__inputsItem {
+    width: 100%;
+    text-align: center;
+  }
+
+  &__label {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 19px;
+    color: $accentColorLabelType;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+}

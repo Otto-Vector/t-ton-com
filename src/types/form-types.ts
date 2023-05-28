@@ -468,12 +468,7 @@ export type OneRequestType = {
     // пользователи, имеющие доступ к данной заявке
     acceptedUsers?: string[]
 
-    /* БЛОК ОТМЕНЫ */
 
-    // дата/время отмены заявки
-    isCanceledDate?: string
-    // причины отмены заявки
-    isCanceledReason?: string
 
     /* поля, заполняемые ПРИ/ПОСЛЕ принятия ответа на заявку */
     /* НЕИЗМЕНЯЕМЫЕ*/
@@ -510,6 +505,19 @@ export type OneRequestType = {
     uploadTime?: Date | string
     // Время разгрузки (устанавливается автоматически после нажатия кнопки "Груз у получателя"(сайт) или "Груз передал"(приложение на тел.)
     unloadTime?: Date | string
+
+    // время оплаты
+    paymentDate?: Date | string
+    // время подтверждения получения оплаты
+    successPaymentDate?: Date | string
+    // время, когда заявку закрыли (по правилам)
+    isClosedDate?: Date | string
+
+    /* БЛОК ОТМЕНЫ */
+    // дата/время отмены заявки
+    isCanceledDate?: Date | string
+    // причины отмены заявки
+    isCanceledReason?: string
 
     // блок с документами
     documents: DocumentsRequestType
@@ -601,54 +609,54 @@ export type DocumentsRequestType = {
 // поля, которые возвращаются из бэка
 export type OneRequestApiType = {
     requestNumber: string
-    requestDate?: string
+    requestDate?: string | 'null'
     idUserCustomer: string
-    idCustomer?: string
+    idCustomer?: string | 'null'
 
-    cargoComposition?: string
-    shipmentDate?: string
-    cargoType?: string
+    cargoComposition?: string | 'null'
+    shipmentDate?: string | 'null'
+    cargoType?: string | 'null'
     /* ГРУЗООТПРАВИТЕЛЬ ИЗ КАРТОЧКИ */
-    idSender?: string
-    idUserSender?: string
-    titleSender?: string
-    innNumberSender?: string
-    organizationNameSender?: string
-    kppSender?: string
-    ogrnSender?: string
-    addressSender?: string
-    shipperFioSender?: string
-    shipperTelSender?: string
-    descriptionSender?: string
-    coordinatesSender?: string
-    citySender?: string
+    idSender?: string | 'null'
+    idUserSender?: string | 'null'
+    titleSender?: string | 'null'
+    innNumberSender?: string | 'null'
+    organizationNameSender?: string | 'null'
+    kppSender?: string | 'null'
+    ogrnSender?: string | 'null'
+    addressSender?: string | 'null'
+    shipperFioSender?: string | 'null'
+    shipperTelSender?: string | 'null'
+    descriptionSender?: string | 'null'
+    coordinatesSender?: string | 'null'
+    citySender?: string | 'null'
     /* ГРУЗОПОЛУЧАТЕЛЬ ИЗ КАРТОЧКИ */
-    idRecipient?: string
-    idUserRecipient?: string
-    titleRecipient?: string
-    innNumberRecipient?: string
-    organizationNameRecipient?: string
-    kppRecipient?: string
-    ogrnRecipient?: string
-    addressRecipient?: string
-    consigneesFioRecipient?: string
-    consigneesTelRecipient?: string
-    descriptionRecipient?: string
-    coordinatesRecipient?: string
-    cityRecipient?: string
+    idRecipient?: string | 'null'
+    idUserRecipient?: string | 'null'
+    titleRecipient?: string | 'null'
+    innNumberRecipient?: string | 'null'
+    organizationNameRecipient?: string | 'null'
+    kppRecipient?: string | 'null'
+    ogrnRecipient?: string | 'null'
+    addressRecipient?: string | 'null'
+    consigneesFioRecipient?: string | 'null'
+    consigneesTelRecipient?: string | 'null'
+    descriptionRecipient?: string | 'null'
+    coordinatesRecipient?: string | 'null'
+    cityRecipient?: string | 'null'
 
     // полилиния маршрута (оганичение на сервере 70000 символов)
-    route?: string
+    route?: string | 'null'
     // так как полилиния может быть больше 70000, то остальные данные берём отсюда
-    routePlus?: string
+    routePlus?: string | 'null'
     // окончательная цена
     addedPrice?: number
 
-    distance?: string
-    cargoStamps?: string
-    note?: string
-    visible?: string
-    marked?: string
+    distance?: string | 'null'
+    cargoStamps?: string | 'null'
+    note?: string | 'null'
+    visible?: string | 'null'
+    marked?: string | 'null'
 
     globalStatus?: RequestGlobalStatusType
     // деньги переданы (от грузополучателя/заказчика водителю/перевозчику)
@@ -661,178 +669,186 @@ export type OneRequestApiType = {
     localStatuscargoHasBeenReceived?: boolean
 
     // ответы на заявки от перевозчиков (псевдо-массив строка id чз ', ')
-    answers?: string
+    answers?: string | 'null'
     // пользователи, имеющие доступ к данной заявке (псевдо-массив строка id чз ', ')
-    acceptedUsers?: string
+    acceptedUsers?: string | 'null'
 
     /* Привязанные данные из карточки ответа на заявку =НАЧАЛО= */
 
     // id Пользователя, в принятом ответе на заявку (перевозчик)
-    requestUserCarrierId?: string
+    requestUserCarrierId?: string | 'null'
     // id ответа на заявку (перевозчик)
-    requestCarrierId?: string
+    requestCarrierId?: string | 'null'
     /* ЗАКАЗЧИК */
-    innNumberCustomer?: string
-    organizationNameCustomer?: string
-    taxModeCustomer?: string
-    kppCustomer?: string
-    ogrnCustomer?: string
-    okpoCustomer?: string
-    legalAddressCustomer?: string
-    descriptionCustomer?: string
-    postAddressCustomer?: string
-    phoneDirectorCustomer?: string
-    phoneAccountantCustomer?: string
-    emailCustomer?: string
-    bikBankCustomer?: string
-    nameBankCustomer?: string
-    checkingAccountCustomer?: string
-    korrAccountCustomer?: string
-    mechanicFIOCustomer?: string
-    dispatcherFIOCustomer?: string
+    innNumberCustomer?: string | 'null'
+    organizationNameCustomer?: string | 'null'
+    taxModeCustomer?: string | 'null'
+    kppCustomer?: string | 'null'
+    ogrnCustomer?: string | 'null'
+    okpoCustomer?: string | 'null'
+    legalAddressCustomer?: string | 'null'
+    descriptionCustomer?: string | 'null'
+    postAddressCustomer?: string | 'null'
+    phoneDirectorCustomer?: string | 'null'
+    phoneAccountantCustomer?: string | 'null'
+    emailCustomer?: string | 'null'
+    bikBankCustomer?: string | 'null'
+    nameBankCustomer?: string | 'null'
+    checkingAccountCustomer?: string | 'null'
+    korrAccountCustomer?: string | 'null'
+    mechanicFIOCustomer?: string | 'null'
+    dispatcherFIOCustomer?: string | 'null'
     /* ОТПРАВИТЕЛЬ */
-    taxModeSender?: string
-    okpoSender?: string
-    legalAddressSender?: string
-    postAddressSender?: string
-    phoneDirectorSender?: string
-    phoneAccountantSender?: string
-    emailSender?: string
-    bikBankSender?: string
-    nameBankSender?: string
-    checkingAccountSender?: string
-    korrAccountSender?: string
-    mechanicFIOSender?: string
-    dispatcherFIOSender?: string
+    taxModeSender?: string | 'null'
+    okpoSender?: string | 'null'
+    legalAddressSender?: string | 'null'
+    postAddressSender?: string | 'null'
+    phoneDirectorSender?: string | 'null'
+    phoneAccountantSender?: string | 'null'
+    emailSender?: string | 'null'
+    bikBankSender?: string | 'null'
+    nameBankSender?: string | 'null'
+    checkingAccountSender?: string | 'null'
+    korrAccountSender?: string | 'null'
+    mechanicFIOSender?: string | 'null'
+    dispatcherFIOSender?: string | 'null'
     /* ПОЛУЧАТЕЛЬ */
-    taxModeRecipient?: string
-    okpoRecipient?: string
-    legalAddressRecipient?: string
-    postAddressRecipient?: string
-    phoneDirectorRecipient?: string
-    phoneAccountantRecipient?: string
-    emailRecipient?: string
-    bikBankRecipient?: string
-    nameBankRecipient?: string
-    checkingAccountRecipient?: string
-    korrAccountRecipient?: string
-    mechanicFIORecipient?: string
-    dispatcherFIORecipient?: string
+    taxModeRecipient?: string | 'null'
+    okpoRecipient?: string | 'null'
+    legalAddressRecipient?: string | 'null'
+    postAddressRecipient?: string | 'null'
+    phoneDirectorRecipient?: string | 'null'
+    phoneAccountantRecipient?: string | 'null'
+    emailRecipient?: string | 'null'
+    bikBankRecipient?: string | 'null'
+    nameBankRecipient?: string | 'null'
+    checkingAccountRecipient?: string | 'null'
+    korrAccountRecipient?: string | 'null'
+    mechanicFIORecipient?: string | 'null'
+    dispatcherFIORecipient?: string | 'null'
     /* ПЕРЕВОЗЧИК */
-    innNumberCarrier?: string
-    organizationNameCarrier?: string
-    taxModeCarrier?: string
-    kppCarrier?: string
-    ogrnCarrier?: string
-    okpoCarrier?: string
-    legalAddressCarrier?: string
-    descriptionCarrier?: string
-    postAddressCarrier?: string
-    phoneDirectorCarrier?: string
-    phoneAccountantCarrier?: string
-    emailCarrier?: string
-    bikBankCarrier?: string
-    nameBankCarrier?: string
-    checkingAccountCarrier?: string
-    korrAccountCarrier?: string
-    mechanicFIOCarrier?: string
-    dispatcherFIOCarrier?: string
+    innNumberCarrier?: string | 'null'
+    organizationNameCarrier?: string | 'null'
+    taxModeCarrier?: string | 'null'
+    kppCarrier?: string | 'null'
+    ogrnCarrier?: string | 'null'
+    okpoCarrier?: string | 'null'
+    legalAddressCarrier?: string | 'null'
+    descriptionCarrier?: string | 'null'
+    postAddressCarrier?: string | 'null'
+    phoneDirectorCarrier?: string | 'null'
+    phoneAccountantCarrier?: string | 'null'
+    emailCarrier?: string | 'null'
+    bikBankCarrier?: string | 'null'
+    nameBankCarrier?: string | 'null'
+    checkingAccountCarrier?: string | 'null'
+    korrAccountCarrier?: string | 'null'
+    mechanicFIOCarrier?: string | 'null'
+    dispatcherFIOCarrier?: string | 'null'
     /* СОТРУДНИК */
-    idEmployee?: string
+    idEmployee?: string | 'null'
     // ФИО сотрудника
-    responseEmployeeFIO?: string
+    responseEmployeeFIO?: string | 'null'
     // Телефон сотрудника
-    responseEmployeePhoneNumber?: string
+    responseEmployeePhoneNumber?: string | 'null'
     // Серия, № паспорта
-    responseEmployeepassportSerial?: string
+    responseEmployeepassportSerial?: string | 'null'
     // Кем выдан паспорт
-    responseEmployeepassportFMS?: string
+    responseEmployeepassportFMS?: string | 'null'
     // Когда выдан
-    responseEmployeepassportDate?: string
+    responseEmployeepassportDate?: string | 'null'
     // Номер водительского удостоверения
-    responseEmployeedrivingLicenseNumber?: string
+    responseEmployeedrivingLicenseNumber?: string | 'null'
     // ссылка на фото
-    responseEmployeePhotoFace?: string
+    responseEmployeePhotoFace?: string | 'null'
 
     /* ТРАНСПОРТ */
-    idTransport?: string
+    idTransport?: string | 'null'
     // Гос. номер авто
-    responseTransportNumber?: string
+    responseTransportNumber?: string | 'null'
     // Марка авто
-    responseTransportTrademark?: string
+    responseTransportTrademark?: string | 'null'
     // Модель авто
-    responseTransportModel?: string
+    responseTransportModel?: string | 'null'
     // ПТС авто
-    responseTransportPts?: string
+    responseTransportPts?: string | 'null'
     // ДОПОГ авто
-    responseTransportDopog?: string
+    responseTransportDopog?: string | 'null'
     // Тип груза авто
     responseTransportCargoType?: CargoTypeType
     // Вес груза авто
-    responseTransportCargoWeight?: string
+    responseTransportCargoWeight?: string | 'null'
     // Право собственности авто
     responseTransportPropertyRights?: PropertyRightsType
     // ссылка на фото
-    responseTransportImage?: string
+    responseTransportImage?: string | 'null'
 
     /* ПРИЦЕП */
-    idTrailer?: string
+    idTrailer?: string | 'null'
     // Гос. номер прицепа
-    responseTrailertrailerNumber?: string
+    responseTrailertrailerNumber?: string | 'null'
     // Марка прицепа
-    responseTrailerTrademark?: string
+    responseTrailerTrademark?: string | 'null'
     // Модель прицепа
-    responseTrailerModel?: string
+    responseTrailerModel?: string | 'null'
     // ПТС прицепа
-    responseTrailerPts?: string
+    responseTrailerPts?: string | 'null'
     // ДОПОГ прицепа
-    responseTrailerDopog?: string
+    responseTrailerDopog?: string | 'null'
     // Тип груза прицепа
     responseTrailerCargoType?: CargoTypeType
     // Вес груза прицепа
-    responseTrailerCargoWeight?: string
+    responseTrailerCargoWeight?: string | 'null'
     // Права собственности прицепа
     responseTrailerPropertyRights?: PropertyRightsType
     // ссылка на фото
-    responseTrailerImage?: string
+    responseTrailerImage?: string | 'null'
 
-    responseStavka?: string
-    responseTax?: string
+    responseStavka?: string | 'null'
+    responseTax?: string | 'null'
     // цена в ответе на заявку
-    responsePrice?: string
+    responsePrice?: string | 'null'
     /* Привязанные данные из карточки ответа на заявку =КОНЕЦ= */
 
     /* ПОГРУЗКА-РАЗГРУЗКА */
-    cargoWeight?: string
-    uploadTime?: string
-    unloadTime?: string
+    cargoWeight?: string | 'null'
+    uploadTime?: string | 'null' | 'serverDateTime'
+    unloadTime?: string | 'null' | 'serverDateTime'
+
     /* ДОКИ */
-    proxyFreightLoader?: string
-    proxyDriver?: string
-    proxyWaybillDriver?: string
-    proxyItineraryList?: string
-    cargoDocuments?: string
-    ttnECPdocumentDownload?: string
-    ttnECPdocumentUpload?: string
+    proxyFreightLoader?: string | 'null'
+    proxyDriver?: string | 'null'
+    proxyWaybillDriver?: string | 'null'
+    proxyItineraryList?: string | 'null'
+    cargoDocuments?: string | 'null'
+    ttnECPdocumentDownload?: string | 'null'
+    ttnECPdocumentUpload?: string | 'null'
     ttnECPcustomerIsSubscribe?: boolean
     ttnECPcarrierIsSubscribe?: boolean
     ttnECPconsigneeIsSubscribe?: boolean
-    contractECPdocumentDownload?: string
-    contractECPdocumentUpload?: string
+    contractECPdocumentDownload?: string | 'null'
+    contractECPdocumentUpload?: string | 'null'
     contractECPcustomerIsSubscribe?: boolean
     contractECPcarrierIsSubscribe?: boolean
-    updECPdocumentDownload?: string
-    updECPdocumentUpload?: string
+    updECPdocumentDownload?: string | 'null'
+    updECPdocumentUpload?: string | 'null'
     updECPcustomerIsSubscribe?: boolean
     updECPcarrierIsSubscribe?: boolean
-    customerToConsigneeContractECPdocumentDownload?: string
-    customerToConsigneeContractECPdocumentUpload?: string
+    customerToConsigneeContractECPdocumentDownload?: string | 'null'
+    customerToConsigneeContractECPdocumentUpload?: string | 'null'
     customerToConsigneeContractECPcustomerIsSubscribe?: boolean
     customerToConsigneeContractECPconsigneeIsSubscribe?: boolean
 
     /* дата отмены и причина отмены заявки */
-    isCanceledDate?: string
-    isCanceledReason?: string
+    isCanceledDate?: string | 'null' | 'serverDateTime'
+    isCanceledReason?: string | 'null'
+
+    // время, когда заявку закрыли (по правилам)
+    isClosedDate?: string | 'null' | 'serverDateTime'
+    // время оплаты
+    paymentDate?: string | 'null' | 'serverDateTime'
+    // время подтверждения получения оплаты
+    successPaymentDate?: string | 'null' | 'serverDateTime'
 }
 
 //////////////////////////*ТИПЫ ДЛЯ ТАБЛИЦЫ*/////////////////////////////////////////////////

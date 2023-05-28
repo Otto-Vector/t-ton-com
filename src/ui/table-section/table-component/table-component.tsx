@@ -22,8 +22,7 @@ import {toNumber} from '../../../utils/parsers'
 import {LocalStatusCell} from './cells/local-status-cell'
 import {Column} from 'react-table'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
-import {boldWrapper} from '../../../utils/html-rebuilds'
-import {cancelRequestOnDeleteButton} from '../../../redux/forms/request-store-reducer'
+import {ModalFormTextToDeleteResponse} from '../modal-form-text-to-delete-response/modal-form-text-to-delete-response'
 
 
 type OwnProps = {
@@ -57,12 +56,11 @@ export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) 
     const onDeleteRequest = ( requestNumber: number ) => {
         dispatch<any>(textAndActionGlobalModal({
             title: 'Вопрос',
-            text: 'Вы действительно хотите удалить заявку №' + boldWrapper(requestNumber + '') + '?',
-            action: () => {
-                dispatch<any>(cancelRequestOnDeleteButton({ requestNumber }))
-            },
+            reactChildren: <ModalFormTextToDeleteResponse requestNumber={ requestNumber }/>,
+            isFooterVisible: false,
         }))
     }
+
     const TABLE_CONTENT = useSelector(
         searchTblMode ? getContentTableStoreNew
             : historyTblMode ? getContentTableStoreInHistory
