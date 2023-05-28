@@ -1,5 +1,5 @@
 import {InfoResponseType, instanceBack} from '../back-instance.api'
-import {OneRequestApiType} from '../../../types/form-types'
+import {OneRequestApiToApiType, OneRequestApiType} from '../../../types/form-types'
 
 
 export const oneRequestApi = {
@@ -49,7 +49,7 @@ export const oneRequestApi = {
     },
 
     // ИЗМЕНИТЬ одну Заявку PUT /api/onerequesttype/
-    modifyOneRequest( modifiedRequest: Partial<OneRequestApiType> & { requestNumber: string } ) {
+    modifyOneRequest( modifiedRequest: Partial<OneRequestApiToApiType> & { requestNumber: string } ) {
         return instanceBack.put<InfoResponseType>('/api/onerequesttype/', modifiedRequest)
             .then(response => response.data)
         // 1.	Code 449, {'failed': "OneRequestType is not updated"}
@@ -65,7 +65,8 @@ export const oneRequestApi = {
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
     },
 
-    /*-----------------------------------------------*/
+    /*----------------------------------------------------------*/
+    /* СПЕЦИФИЧЕСКОЕ РЕШЕНИЕ, НО ВОЗМОЖНО В БУДУЩЕМ ПРИГОДИТСЯ */
 
     // ДОБАВИТЬ доступ пользователя к Заявке PUT /api/onerequesttypeacceptuser/
     // (изменяет поле acceptedUsers в OneRequestApiType)
