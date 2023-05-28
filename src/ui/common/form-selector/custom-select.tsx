@@ -1,13 +1,13 @@
 import React, {useCallback, useMemo} from 'react'
 import styles from './form-selector.module.scss'
-import Select, {GroupBase, StylesConfig} from 'react-select';
-import CreatableSelect from 'react-select/creatable';
-import {SelectComponents} from 'react-select/dist/declarations/src/components';
-import {components} from './form-selector-creatable-corrector';
-import {FieldInputProps, FieldMetaState} from 'react-final-form';
-import {SelectOptionsType} from './selector-utils';
-import {SelectorStyles} from './use-selector-styles';
-import {FormSelectorProps} from './form-selector';
+import Select, {GroupBase, StylesConfig} from 'react-select'
+import CreatableSelect from 'react-select/creatable'
+import {SelectComponents} from 'react-select/dist/declarations/src/components'
+import {components} from './form-selector-creatable-corrector'
+import {FieldInputProps, FieldMetaState} from 'react-final-form'
+import {SelectOptionsType} from './selector-utils'
+import {SelectorStyles} from './use-selector-styles'
+import {FormSelectorProps} from './form-selector'
 
 
 type FormInputType = {
@@ -85,7 +85,7 @@ export const CustomSelect: React.FC<Partial<FormSelectorProps> & FormInputType> 
         onClick={ () => {
             onDisableHandleClick && props?.data?.isDisabled && onDisableHandleClick(props?.data as SelectOptionsType)
         } }>
-        <components.Option { ...props } />
+        <components.Option { ...props } children={ props?.children }/>
     </div>
 
     return (

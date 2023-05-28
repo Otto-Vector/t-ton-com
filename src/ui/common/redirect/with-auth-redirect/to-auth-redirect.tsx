@@ -5,7 +5,7 @@ import {Navigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../../selectors/routes-reselect';
 
 // Переброс на логинизацию при отсутствии таковой
-export const ТoAuthRedirect: React.FC = ( { children } ) => {
+export const ToAuthRedirect: React.FC = ( { children } ) => {
     const isAuth = useSelector(getIsAuthAuthStore)
     const { login } = useSelector(getRoutesStore)
 

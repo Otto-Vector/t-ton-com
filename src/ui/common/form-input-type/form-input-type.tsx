@@ -73,6 +73,7 @@ export const FormInputType: React.FC<OwnProps> = React.memo((
             {// если формат отсутствует, то на обычный инпут
                 ( ( maskFormat || inputType === 'money' ) && !isInputMask )
                     ? <NumberFormat
+                        children={ undefined }
                         mask={ mask }
                         format={ maskFormat }
                         // fixedDecimalScale={true}

@@ -502,12 +502,16 @@ export const RequestFormLeft: React.ComponentType<OwnProps> = memo((
                                                         isCreateMode && buttonsAction.submitRequestAndDrive(values)
                                                         if (isAcceptDriverMode) {
                                                             isMyRequestAndNew
+                                                                // САМОВЫВОЗ (при создании заявки)
                                                                 ? buttonsAction.toSelfExportDriverFromStatusAndAccept(values)
+                                                                // ОТКАЗАТЬСЯ
                                                                 : buttonsAction.cancelRequest()
                                                         }
                                                         if (isStatusMode) {
                                                             isMyRequestAndNew
+                                                                // САМОВЫВОЗ (при повторном просмотре своей заявки)
                                                                 ? buttonsAction.toSelfExportDriverFromStatusAndAccept(values)
+                                                                // ГРУЗ У ПОЛУЧАТЕЛЯ
                                                                 : buttonsAction.cargoHasBeenReceived(values)
                                                         }
                                                     }
