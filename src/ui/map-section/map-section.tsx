@@ -152,13 +152,12 @@ export const MapSection: React.FC<OwnProps> = () => {
     // прогрузка водителя в модальное окно
     const activateDriverCard = ( idEmployee: string ) => {
         dispatch<any>(textAndActionGlobalModal({
-            reactChildren: <AddDriversView idEmployee={ idEmployee } isModal={ true }/>,
+            reactChildren: <AddDriversView idEmployee={ idEmployee } isModal/>,
             isFooterVisible: false,
             isTitleVisible: false,
             isBodyPadding: false,
         }))
     }
-
 
     return (
         <section className={ styles.yandexMapComponent }>
@@ -249,67 +248,71 @@ export const MapSection: React.FC<OwnProps> = () => {
                                     senderCity={ currentRequest?.sender?.city + '' }
                                     recipientCity={ currentRequest?.recipient?.city + '' }
                     /> }
-                {/* отрисовка водителей вне видимости активной карты */ }
+                {/* ВОДИТЕЛИ НА КАРТЕ */ }
                 { drivers.map(( {
                                     id,
                                     idEmployee,
                                     position,
                                     status,
-                                    positionToBounds,
                                     fio,
+                                    isSelected,
                                     isOutOfBounds,
+                                    positionToBounds,
                                     directionOfBounds,
                                 } ) =>
-                    isOutOfBounds && <Placemark geometry={ positionToBounds }
-                                                options={ {
-                                                    preset: 'islands#blueDeliveryCircleIcon',
-                                                    iconColor: colorOfStatus(status),
-                                                    iconOffset: boundsOffsetCorrector(directionOfBounds),
-                                                    zIndexHover: 10000,
-                                                } }
-                                                properties={ { hintContent: `<b>${ fio }</b>` } }
-                                                onClick={ () => {
-                                                    // плавное перемещение к указанной точке
-                                                    map?.current?.panTo(position, { flying: 1 })
-                                                    setSelectedDriver(idEmployee)
-                                                } }
-                                                key={ idEmployee + id }
-                    />)
-                }
-                {/* ВОДИТЕЛИ НА КАРТЕ */ }
-                { drivers.map(( { id, idEmployee, position, status, fio, isSelected } ) =>
-                    !!position[0] ?
-                        <Placemark geometry={ position }
-                            // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
-                                   options={ {
-                                       preset: 'islands#circleIcon',
-                                       iconColor: colorOfStatus(status),
-                                       hasBalloon: true,
-                                       openEmptyBalloon: true,
-                                   } }
-                                   properties={ {
-                                       iconContent: renderToString(
-                                           <span className={
-                                               styles.yandexMapComponent__placemarkContent + ' '
-                                               + ( isSelected ? styles.yandexMapComponent__placemarkContent__selected : '' )
-                                           }>{ id }</span>),
-                                       hintContent: `<b>${ fio }</b>`,
-                                       balloonContent: `<div id='driver-${ idEmployee }' class='driver-card'></div>`,
-                                   } }
-                                   key={ id + idEmployee }
-                                   onBalloonClose={ () => {
-                                       setIdToPortal('')
-                                   } }
-                                   onClick={ () => {
-                                       // ставим в очередь промисов, чтобы сработало после отрисовки балуна
-                                       setTimeout(() => {
-                                           setIdToPortal(idEmployee)
-                                       }, 0)
-                                       // пометка нажатого водителя
-                                       setSelectedDriver(idEmployee)
-                                   } }
-                                   onContextMenu={ extractCoordinatesToModal }
-                        /> : null) }
+                    !!position[0]
+                        ? <>
+                            <Placemark geometry={ position }
+                                // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
+                                       options={ {
+                                           preset: 'islands#circleIcon',
+                                           iconColor: colorOfStatus(status),
+                                           hasBalloon: true,
+                                           openEmptyBalloon: true,
+                                       } }
+                                       properties={ {
+                                           iconContent: renderToString(
+                                               <span className={
+                                                   styles.yandexMapComponent__placemarkContent + ' '
+                                                   + ( isSelected ? styles.yandexMapComponent__placemarkContent__selected : '' )
+                                               }>{ id }</span>),
+                                           hintContent: `<b>${ fio }</b>`,
+                                           balloonContent: `<div id='driver-${ idEmployee }' class='driver-card'></div>`,
+                                       } }
+                                       key={ id + idEmployee }
+                                       onBalloonClose={ () => {
+                                           setIdToPortal('')
+                                       } }
+                                       onClick={ () => {
+                                           // ставим в очередь промисов, чтобы сработало после отрисовки балуна
+                                           setTimeout(() => {
+                                               setIdToPortal(idEmployee)
+                                           }, 0)
+                                           // пометка нажатого водителя
+                                           setSelectedDriver(idEmployee)
+                                       } }
+                                       onContextMenu={ extractCoordinatesToModal }
+                            />
+                            {/* отрисовка маркера на водителей вне видимости активной карты */
+                                isOutOfBounds &&
+                                <Placemark geometry={ positionToBounds }
+                                           options={ {
+                                               preset: 'islands#blueDeliveryCircleIcon',
+                                               iconColor: colorOfStatus(status),
+                                               iconOffset: boundsOffsetCorrector(directionOfBounds),
+                                               zIndexHover: 10000,
+                                           } }
+                                           properties={ { hintContent: `<b>${ fio }</b>` } }
+                                           onClick={ () => {
+                                               // плавное перемещение к указанной точке
+                                               map?.current?.panTo(position, { flying: 1 })
+                                               setSelectedDriver(idEmployee)
+                                           } }
+                                           key={ idEmployee + id }
+                                /> }
+                        </>
+                        : null,
+                ) }
             </YandexBigMap>
             {/* ждём, когда появится балун с нужным ID */ }
             <Portal getHTMLElementId={ `driver-${ idToPortal }` }>

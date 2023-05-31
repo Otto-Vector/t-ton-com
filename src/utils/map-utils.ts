@@ -60,6 +60,34 @@ export const positionsToCorrectBounds = ( {
     return [ [ down, left ], [ up, right ] ]
 }
 
+// расстояние между двумя точками на карте в метрах
+export const distanceBetweenMeAndPoint = ( {
+                                               firstPoint: [ lat1, long1 ] = [ 0, 0 ],
+                                               secondPoint: [ lat2, long2 ] = [ 0, 0 ],
+                                           }: {firstPoint: number[], secondPoint: number[]} ): number => {
+    //радиус Земли
+    const R = 6372795
+    //перевод коордитат в радианы
+    lat1 *= Math.PI / 180
+    lat2 *= Math.PI / 180
+    long1 *= Math.PI / 180
+    long2 *= Math.PI / 180
+    //вычисление косинусов и синусов широт и разницы долгот
+    const cl1 = Math.cos(lat1)
+    const cl2 = Math.cos(lat2)
+    const sl1 = Math.sin(lat1)
+    const sl2 = Math.sin(lat2)
+    const delta = long2 - long1
+    const cdelta = Math.cos(delta)
+    const sdelta = Math.sin(delta)
+    //вычисления длины большого круга
+    const y = Math.sqrt(Math.pow(cl2 * sdelta, 2) + Math.pow(cl1 * sl2 - sl1 * cl2 * cdelta, 2))
+    const x = sl1 * sl2 + cl1 * cl2 * cdelta
+    const ad = Math.atan2(y, x)
+    const dist = ad * R
+    return Math.round(dist) // расстояние между двумя координатами в метрах
+}
+
 // для перевода зашифрованной полилинии автодиспетчера в набор координат
 export const polyline_decode = function ( polyline: string, precision?: number ): number[][] {
     let index = 0,
