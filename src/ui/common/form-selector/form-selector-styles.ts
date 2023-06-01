@@ -1,7 +1,7 @@
 import {SelectOptionsType} from './selector-utils'
 import {StylesConfig} from 'react-select'
 
-export const SelectorStyles = ( isError: boolean ): StylesConfig<SelectOptionsType> => ( {
+export const formSelectorStyles = ( isError: boolean ): StylesConfig<SelectOptionsType> => ( {
     menu: ( baseStyles ) => ( {
         ...baseStyles,
         margin: 0, padding: 0,

@@ -1,12 +1,12 @@
 import React, {useCallback, useMemo} from 'react'
 import styles from './form-selector.module.scss'
-import Select, {GroupBase, StylesConfig} from 'react-select'
+import Select, {GroupBase, OptionProps, StylesConfig} from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import {SelectComponents} from 'react-select/dist/declarations/src/components'
 import {components} from './form-selector-creatable-corrector'
 import {FieldInputProps, FieldMetaState} from 'react-final-form'
 import {SelectOptionsType} from './selector-utils'
-import {SelectorStyles} from './use-selector-styles'
+import {formSelectorStyles} from './form-selector-styles'
 import {FormSelectorProps} from './form-selector'
 
 
@@ -15,7 +15,7 @@ type FormInputType = {
     meta: FieldMetaState<any>
 }
 
-export const CustomSelect: React.FC<Partial<FormSelectorProps> & FormInputType> = ( {
+export const CustomSelect: React.ComponentType<Partial<FormSelectorProps> & FormInputType> = ( {
                                                                                         input,
                                                                                         meta,
                                                                                         options,
@@ -78,15 +78,18 @@ export const CustomSelect: React.FC<Partial<FormSelectorProps> & FormInputType> 
     // условие для отображения ошибки
     const isError = ( meta.error || meta.submitError ) && meta.touched
     // стили для селектора
-    const stylesSelect = useMemo(() => SelectorStyles(isError), [ isError ])
+    const stylesSelect = useMemo(() => formSelectorStyles(isError), [ isError ])
 
     // обёртка для доп контента на клик по отключенному пункту селектора
-    const OptionWithOnClickOnDisabled = ( props: any ) => <div
-        onClick={ () => {
-            onDisableHandleClick && props?.data?.isDisabled && onDisableHandleClick(props?.data as SelectOptionsType)
-        } }>
-        <components.Option { ...props } children={ props?.children }/>
-    </div>
+    const OptionWithOnClickOnDisabled
+        // :React.ComponentType<OptionProps<"" | SelectOptionsType, boolean, GroupBase<"" | SelectOptionsType>>>
+        = ( props:any ) =>
+        <div
+            onClick={ () => {
+                onDisableHandleClick && props?.data?.isDisabled && onDisableHandleClick(props?.data as SelectOptionsType)
+            } }>
+            <components.Option { ...props } children={ props?.children }/>
+        </div>
 
     return (
         <>

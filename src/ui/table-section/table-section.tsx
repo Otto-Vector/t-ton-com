@@ -1,6 +1,5 @@
 import React, {useEffect, useLayoutEffect} from 'react'
 import styles from './table-section.module.scss'
-import {Button} from '../common/button/button'
 import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {filtersStoreActions, initialFiltersState} from '../../redux/table/filters-store-reducer'
@@ -9,10 +8,8 @@ import {
     getGlobalValueFiltersStore,
     getValuesFiltersStore,
 } from '../../selectors/table/filters-reselect'
-import {SelectTableFilter} from '../common/select-table-filter/select-table-filter'
 import {getCargoTypeBaseStore} from '../../selectors/base-reselect'
 import {cargoConstType} from '../../types/form-types'
-import {InputTableFilter} from '../common/input-table-filter/input-table-filter'
 import {Preloader} from '../common/preloader/preloader'
 import {getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
 import {getAllRequestsAPI} from '../../redux/forms/request-store-reducer'
@@ -21,16 +18,45 @@ import truckLoadPNG from '../../media/trackLoadFuel.png'
 import truckToLeftPNG from '../../media/truckLeft.png'
 import noRespTruckPNG from '../../media/noRespTrack.png'
 import haveRespTrackPNG from '../../media/haveRespTrack.png'
-import transparentPNG from '../../media/transparent32x32.png'
+import Select, {components, GroupBase, OptionProps} from 'react-select'
+import {tableSelectorStyles} from '../common/form-selector/table-selector-style'
+import {SelectOptionsType} from '../common/form-selector/selector-utils'
+import {Button} from '../common/button/button'
+import {InputTableFilter} from '../common/input-table-filter/input-table-filter'
+
+const icons = [ truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
+const statusStrValues = [ 'водитель выбран', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
+const statusValues = statusStrValues.map(( value, index ) => ( {
+    value,
+    label: value,
+    key: value,
+    subLabel: icons[index],
+} ))
+
+// обёртка для доп контента на клик по отключенному пункту селектора
+const OptionWithIcon: React.ComponentType<OptionProps<SelectOptionsType, boolean, GroupBase<SelectOptionsType>>> = ( props ) =>
+    <div style={ { position: 'relative', textAlign: 'right' } }>
+        { props?.data?.subLabel ? <img src={ props?.data?.subLabel }
+                                       style={ {
+                                           height: 24, width: 24,
+                                           position: 'absolute',
+                                           left: 7,
+                                           top: 3,
+                                           filter: 'invert(100%)',
+                                       } }
+
+        /> : null }
+        <components.Option { ...props } children={ props?.children }/>
+    </div>
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type OwnProps = {
     mode: 'search' | 'history' | 'status'
 }
-const icons = [ transparentPNG, truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
-const statusValues = [ 'водитель выбран', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
 
 export type TableModesType = { searchTblMode: boolean, historyTblMode: boolean, statusTblMode: boolean }
 
+// секция для работы с фильтрами таблицы и отрисовки её самой
 export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
 
     const tableModes: TableModesType = {
@@ -76,6 +102,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
             dispatch(filtersStoreActions.setStatusFilterMode(value !== ''))
         },
         cargoFilter: ( value ) => {
+            // console.log(value)
             dispatch(filtersStoreActions.setCargoFilterValue(value || ''))
             dispatch(filtersStoreActions.setCargoFilterMode(value !== ''))
         },
@@ -104,6 +131,8 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
         if (clearMode !== filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(clearMode))
     }, [ filterButtons, dispatch ])
 
+    const cargoValues = cargoTypes?.filter(v => v !== 'Тягач').map(value => ( { value, label: value, key: value } ))
+
     return (
         <section className={ styles.searchSection }>
             <header className={ styles.searchSection__header }>
@@ -113,24 +142,43 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                         <div key={ key } className={ styles.searchSection__buttonItem + ' ' +
                             ( value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             { key === 'cargoFilter'
-                                ? <SelectTableFilter
-                                    optionItems={ [ ...cargoTypes.filter(v => v !== 'Тягач') ] }
-                                    selectedValue={ cargoFilter }
-                                    titleValue={ value.title }
-                                    onChange={ filtersAction[key] }
+                                ?
+                                <Select
+                                    isSearchable={ false }
+                                    styles={ tableSelectorStyles() }
+                                    // @ts-ignore-next-line
+                                    onChange={ ( { value } ) => filtersAction[key](value) }
+                                    placeholder={ value.title }
+                                    options={ cargoValues }
+                                    isDisabled={ false }
+                                    value={ cargoFilter ? {
+                                        value: cargoFilter,
+                                        label: cargoFilter,
+                                        key: cargoFilter,
+                                    } : null }
                                 />
                                 : key === 'statusFilter'
                                     ? tableModes.statusTblMode
-                                        ? <SelectTableFilter
-                                            optionItems={ statusValues }
-                                            selectedValue={ statusFilter }
-                                            titleValue={ value.title }
-                                            onChange={ filtersAction[key] }
-                                            iconsBgValue={ icons }
-                                        /> : null
+                                        ?
+                                        <Select
+                                            isSearchable={ false }
+                                            styles={ tableSelectorStyles() }
+                                            components={ { Option: OptionWithIcon } }
+                                            // @ts-ignore-next-line
+                                            onChange={ ( { value } ) => filtersAction[key](value) }
+                                            placeholder={ value.title }
+                                            options={ statusValues }
+                                            isDisabled={ false }
+                                            value={ statusFilter ? {
+                                                value: statusFilter,
+                                                label: statusFilter,
+                                                key: statusFilter,
+                                            } : null }
+                                        />
+                                        : null
                                     : key === 'globalFilter'
                                         ? <InputTableFilter value={ globalFilterValue }
-                                                     onChange={ filtersAction[key] }
+                                                            onChange={ filtersAction[key] }
                                         />
                                         : ( // убираем кнопки на разных типах
                                             ( key === 'todayFilter' || key === 'tomorrowFilter' ) && !tableModes.searchTblMode )
