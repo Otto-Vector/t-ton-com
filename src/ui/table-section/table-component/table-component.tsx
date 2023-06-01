@@ -73,7 +73,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) 
     const columns: Column<OneRequestTableType>[] = React.useMemo(
         () => [
             {
-                Header: '',
+                Header: TABLE_CONTENT.length || '',
                 accessor: 'localStatus',
                 Filter: columnFilter(statusFilter),
                 disableFilters: false,
