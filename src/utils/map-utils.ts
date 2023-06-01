@@ -61,10 +61,10 @@ export const positionsToCorrectBounds = ( {
 }
 
 // расстояние между двумя точками на карте в метрах
-export const distanceBetweenMeAndPoint = ( {
-                                               firstPoint: [ lat1, long1 ] = [ 0, 0 ],
-                                               secondPoint: [ lat2, long2 ] = [ 0, 0 ],
-                                           }: {firstPoint: number[], secondPoint: number[]} ): number => {
+export const distanceBetweenMeAndPointOnMap = ( {
+                                                    firstPoint: [ lat1, long1 ] = [ 0, 0 ],
+                                                    secondPoint: [ lat2, long2 ] = [ 0, 0 ],
+                                                }: { firstPoint: number[], secondPoint: number[] } ): number => {
     //радиус Земли
     const R = 6372795
     //перевод коордитат в радианы

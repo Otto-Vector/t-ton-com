@@ -775,11 +775,11 @@ export type OneRequestApiType<T extends string = ''> = {
     // ДОПОГ авто
     responseTransportDopog?: string | T
     // Тип груза авто
-    responseTransportCargoType?: CargoTypeType | T
+    responseTransportCargoType?: CargoTypeType
     // Вес груза авто
     responseTransportCargoWeight?: string | T
     // Право собственности авто
-    responseTransportPropertyRights?: PropertyRightsType | T
+    responseTransportPropertyRights?: PropertyRightsType
     // ссылка на фото
     responseTransportImage?: string | T
 
@@ -796,11 +796,11 @@ export type OneRequestApiType<T extends string = ''> = {
     // ДОПОГ прицепа
     responseTrailerDopog?: string | T
     // Тип груза прицепа
-    responseTrailerCargoType?: CargoTypeType | T
+    responseTrailerCargoType?: CargoTypeType
     // Вес груза прицепа
     responseTrailerCargoWeight?: string | T
     // Права собственности прицепа
-    responseTrailerPropertyRights?: PropertyRightsType | T
+    responseTrailerPropertyRights?: PropertyRightsType
     // ссылка на фото
     responseTrailerImage?: string | T
 
