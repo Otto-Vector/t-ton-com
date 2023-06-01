@@ -6,6 +6,12 @@ import {getInfoMessages} from './info-store-reducer'
 import {GetActionsTypes} from '../types/ts-utils'
 import {getCargoCompositionSelector} from './api/cargo-composition-response-reducer'
 import {preAuthDataSet} from './base-store-reducer'
+import {getAllTrailerAPI} from './options/trailer-store-reducer'
+import {getAllTransportAPI} from './options/transport-store-reducer'
+import {getAllConsigneesAPI} from './options/consignees-store-reducer'
+import {getAllShippersAPI} from './options/shippers-store-reducer'
+import {getAllEmployeesAPI} from './options/employees-store-reducer'
+import {getAllRequestsAPI} from './forms/request-store-reducer'
 
 const initialState = {
     initialized: false,
@@ -51,28 +57,27 @@ export const initializedAll = (): InitializedThunkActionType =>
             const getPersonal = dispatch(getPersonalOrganizationRequisites())
             const getBaseData = dispatch(preAuthDataSet())
             const getGeoPosition = dispatch(geoPositionTake())
-            // const getAllShippers = dispatch(getAllShippersAPI())
-            // const getAllConsignees = dispatch(getAllConsigneesAPI())
-            // const getAllTransport = dispatch(getAllTransportAPI())
-            // const getAllTrailer = dispatch(getAllTrailerAPI())
-            // const getAllEmployees = dispatch(getAllEmployeesAPI())
+            const getAllShippers = dispatch(getAllShippersAPI())
+            const getAllConsignees = dispatch(getAllConsigneesAPI())
+            const getAllTransport = dispatch(getAllTransportAPI())
+            const getAllTrailer = dispatch(getAllTrailerAPI())
+            const getAllEmployees = dispatch(getAllEmployeesAPI())
             const getCargoComposition = dispatch(getCargoCompositionSelector())
             // debugger
-            // const getAllRequests = dispatch(getAllRequestsAPI())
+            const getAllRequests = dispatch(getAllRequestsAPI())
             const getAllInfoMessages = dispatch(getInfoMessages())
 
             Promise.all([
                 getPersonal,
                 getBaseData,
                 getGeoPosition,
-                // getOrganisationsList,
                 getCargoComposition,
-                // getAllShippers,
-                // getAllConsignees,
-                // getAllRequests,
-                // getAllTransport,
-                // getAllTrailer,
-                // getAllEmployees,
+                getAllShippers,
+                getAllConsignees,
+                getAllRequests,
+                getAllTransport,
+                getAllTrailer,
+                getAllEmployees,
                 getAllInfoMessages,
             ])
                 .then(() => {
