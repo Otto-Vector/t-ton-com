@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import React, {Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import styles from './map-section.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -194,7 +194,6 @@ export const MapSection: React.FC<OwnProps> = () => {
                     data={ {
                         content: 'Выберите водителя',
                     } }>
-
                     { drivers.map(( { fio, status, position, idEmployee } ) =>
                         <ListBoxItem
                             options={ {
@@ -229,7 +228,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                         </>
                                     </span>),
                             } }
-                            key={ fio + status }
+                            key={ fio + status + idEmployee }
                             onClick={ () => {
                                 if (position[0] !== 0) {
                                     map?.current?.panTo(position, { flying: 1 })
@@ -261,7 +260,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                     directionOfBounds,
                                 } ) =>
                     !!position[0]
-                        ? <>
+                        ? <Fragment key={ id + idEmployee }>
                             <Placemark geometry={ position }
                                 // modules={ [ 'geoObject.addon.balloon', 'geoObject.addon.hint' ] }
                                        options={ {
@@ -279,7 +278,7 @@ export const MapSection: React.FC<OwnProps> = () => {
                                            hintContent: `<b>${ fio }</b>`,
                                            balloonContent: `<div id='driver-${ idEmployee }' class='driver-card'></div>`,
                                        } }
-                                       key={ id + idEmployee }
+                                // key={ id + idEmployee }
                                        onBalloonClose={ () => {
                                            setIdToPortal('')
                                        } }
@@ -308,9 +307,9 @@ export const MapSection: React.FC<OwnProps> = () => {
                                                map?.current?.panTo(position, { flying: 1 })
                                                setSelectedDriver(idEmployee)
                                            } }
-                                           key={ idEmployee + id }
+                                    // key={ idEmployee + id }
                                 /> }
-                        </>
+                        </Fragment>
                         : null,
                 ) }
             </YandexBigMap>
