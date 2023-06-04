@@ -17,16 +17,19 @@ import truckLoadPNG from '../../media/trackLoadFuel.png'
 import truckToLeftPNG from '../../media/truckLeft.png'
 import noRespTruckPNG from '../../media/noRespTrack.png'
 import haveRespTrackPNG from '../../media/haveRespTrack.png'
+import xIcon from '../../media/x.png'
 
 import {Button} from '../common/button/button'
 import {InputTableFilter} from '../common/input-table-filter/input-table-filter'
 import {TableFilterSelect} from './table-filter-select/table-filter-select'
+import {SelectOptionsType} from '../common/form-selector/selector-utils'
 
-const icons = [ truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
-const statusStrValues = [ 'водитель выбран', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
+// toDo: перенести в отдельный элемент или файл
+const icons = [ xIcon, truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
+const statusStrValues = [ '', 'водитель выбран', 'груз у водителя', 'груз у получателя', 'нет ответов', 'есть ответы' ]
 const statusValues = statusStrValues.map(( value, index ) => ( {
     value,
-    label: value,
+    label: value || 'без фильтра',
     key: value,
     subLabel: icons[index],
 } ))
@@ -80,15 +83,16 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
         },
         globalFilter: ( value ) => {
             dispatch(filtersStoreActions.setGlobalFilter(value || ''))
+            dispatch(filtersStoreActions.setGlobalFilterMode(!!value))
         },
         statusFilter: ( value ) => {
             dispatch(filtersStoreActions.setStatusFilterValue(value || ''))
-            dispatch(filtersStoreActions.setStatusFilterMode(value !== ''))
+            dispatch(filtersStoreActions.setStatusFilterMode(!!value))
         },
         cargoFilter: ( value ) => {
             // console.log(value)
             dispatch(filtersStoreActions.setCargoFilterValue(value || ''))
-            dispatch(filtersStoreActions.setCargoFilterMode(value !== ''))
+            dispatch(filtersStoreActions.setCargoFilterMode(!!value))
         },
         clearFilters: () => {
             dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
@@ -100,13 +104,14 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
         dispatch<any>(getAllRequestsAPI())
     }, [])
 
+    // сброс фильтров
     useEffect(() => {
         dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
     }, [ mode, dispatch ])
 
     useEffect(() => { // перекрашиваем кнопку "Без фильтра"
         // если любой из фильтров на кнопках активен
-        let clearMode = !Object.entries(filterButtons)
+        const clearMode = !Object.entries(filterButtons)
             // кроме самой clearFilters
             .map(( [ key, { mode } ] ) => key === 'clearFilters' ? false : mode)
             // складываем логически все состояния кнопок
@@ -116,7 +121,12 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
     }, [ filterButtons, dispatch ])
 
     // оптимизация данных под селектор
-    const cargoValues = cargoTypes.map(value => ( { value, label: value, key: value } ))
+    const cargoValues: SelectOptionsType[] = [ {
+        value: '',
+        label: 'без фильтра',
+        key: '',
+        subLabel: xIcon,
+    }, ...cargoTypes.map(value => ( { value, label: value, key: value } )) ]
 
     return (
         <section className={ styles.searchSection }>
@@ -125,6 +135,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                 <form className={ styles.searchSection__buttonFilters }>
                     { Object.entries(filterButtons).map(( [ key, value ] ) =>
                         <div key={ key } className={ styles.searchSection__buttonItem + ' ' +
+                            // перекраска текста в красный
                             ( value.mode ? styles.searchSection__buttonItem_active : '' ) }>
                             { key === 'cargoFilter'
                                 ?
@@ -151,8 +162,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                                         : ( // убираем кнопки на разных типах
                                             ( key === 'todayFilter' || key === 'tomorrowFilter' ) && !tableModes.searchTblMode )
                                             ? null
-                                            : <Button type={ ( key === 'clearFilters' ) ? 'reset' : 'button' }
-                                                      title={ value.title }
+                                            : <Button title={ value.title }
                                                       colorMode={ 'whiteBlue' }
                                                       rounded
                                                       onClick={ () => {

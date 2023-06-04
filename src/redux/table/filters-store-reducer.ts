@@ -34,7 +34,7 @@ export const initialFiltersState = {
         },
         globalFilter: {
             title: 'Глобальный Фильтр',
-            mode: true,
+            mode: false,
         },
         clearFilters: {
             title: 'Без Фильтра',

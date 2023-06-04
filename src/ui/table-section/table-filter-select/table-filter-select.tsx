@@ -50,7 +50,7 @@ export const TableFilterSelect: React.ComponentType<OwnType> = ( {
             onChange(value) }
         placeholder={ placeholder }
         options={ options }
-        isDisabled={ false }
         value={ value }
+        isDisabled={ false }
     />
 }
