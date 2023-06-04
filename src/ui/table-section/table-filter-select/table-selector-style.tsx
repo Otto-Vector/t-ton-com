@@ -1,4 +1,4 @@
-import {SelectOptionsType} from './selector-utils'
+import {SelectOptionsType} from '../../common/form-selector/selector-utils'
 import {StylesConfig} from 'react-select'
 
 export const tableSelectorStyles = (): StylesConfig<SelectOptionsType> => ( {
@@ -42,15 +42,16 @@ export const tableSelectorStyles = (): StylesConfig<SelectOptionsType> => ( {
         },
 
     } ),
-    option: ( baseStyles, { isFocused, isSelected, isDisabled } ) => ( {
+    option: ( baseStyles, { isFocused, isSelected, isDisabled ,data} ) => ( {
         ...baseStyles,
         fontSize: '90%',
         lineHeight: 1,
         fontWeight: 'normal',
+        // отступ выставляется при наличии иконки, которая в данном контексте записывается в subLabel
+        paddingLeft: data.subLabel ? 40 : baseStyles.padding,
         color: isDisabled
             ? '#023E8AFF'
             : 'white',
-        // textShadow: '.5px .5px blue',
         borderBottom: '.5px solid #92ABC8',
         backgroundColor: isDisabled
             ? '#023E8A66'
