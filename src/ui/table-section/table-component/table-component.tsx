@@ -3,26 +3,23 @@ import styles from './table-component.module.scss'
 
 import {Table} from './table'
 import {columnFilter} from './filter/column-filters'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {
     getContentTableStoreInHistory,
     getContentTableStoreInWork,
     getContentTableStoreNew,
     getFilteredRowsCountTableStore,
 } from '../../../selectors/table/table-reselect'
-import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {TableModesType} from '../table-section'
 import {ddMmYearFormat} from '../../../utils/date-formats'
 import {getCashRequisitesStore} from '../../../selectors/options/requisites-reselect'
-import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
-import {OneRequestTableType, OneRequestTableTypeReq} from '../../../types/form-types'
+import {OneRequestTableType} from '../../../types/form-types'
 import {toNumber} from '../../../utils/parsers'
 import {LocalStatusCell} from './cells/local-status-cell'
 import {Column} from 'react-table'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
-import {ModalFormTextToDeleteResponse} from '../modal-form-text-to-delete-response/modal-form-text-to-delete-response'
 import {initialFiltersState} from '../../../redux/table/filters-store-reducer'
 import {DeleteCell} from './cells/delete-cell'
 import {ButtonCell} from './cells/button-cell'
@@ -52,20 +49,9 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
 
     const navigate = useNavigate()
     const routes = useSelector(getRoutesStore)
-    const { info, maps, requestInfo } = routes
+    const { maps, requestInfo } = routes
     const authCash = toNumber(useSelector(getCashRequisitesStore))
     const filteredRows = useSelector(getFilteredRowsCountTableStore)
-    const dispatch = useDispatch()
-
-    const toGlobalModalQuest = useMemo(() => ( price: number ) => {
-        dispatch<any>(textAndActionGlobalModal({
-            text: [
-                'Не хватает средств (' + price + 'руб) для возможности просмотра и оставления отклика на заявку',
-                '- "OK" для перехода к пополнению личного счёта',
-            ],
-            navigateOnOk: info,
-        }))
-    }, [ info, dispatch ])
 
 
     const TABLE_CONTENT = useSelector(
@@ -144,9 +130,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 disableFilters: true,
                 // чтобы добавить быстрый доступ к нужным полям ищи метку #CellProps в table.tsx
                 // Cell: buttonCell
-                Cell: ButtonCell({
-                    tableModes, authCash, navigate, routes, toGlobalModalQuest,
-                }),
+                Cell: ButtonCell({ tableModes, authCash }),
             },
             {
                 Header: deleteHeader,
@@ -165,7 +149,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
             /* навигация и т.п. */
             navigate, requestInfo, maps,
             /* допы */
-            authCash, toGlobalModalQuest,
+            authCash,
             TABLE_CONTENT, countHeader, deleteHeader,
         ],
     )

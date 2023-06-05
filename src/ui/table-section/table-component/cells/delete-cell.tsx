@@ -31,6 +31,7 @@ export const DeleteCellReact: React.ComponentType<OwnProps & OneRequestTableType
     const Cell = isCustomer && localStatus !== 'груз у получателя' && localStatus !== 'груз у водителя'
         ? <div style={ { background: 'none' } }>
             <Button colorMode={ 'redAlert' }
+                    title={ 'Удалить заявку №' + requestNumber }
                     onClick={ () => {
                         onDeleteRequest(requestNumber)
                     } }
