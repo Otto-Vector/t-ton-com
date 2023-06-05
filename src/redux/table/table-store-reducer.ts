@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
-import {OneRequestTableType} from '../../types/form-types';
-import {GetActionsTypes} from '../../types/ts-utils';
+import {OneRequestTableType} from '../../types/form-types'
+import {GetActionsTypes} from '../../types/ts-utils'
 
 
 const initialState = {
@@ -12,8 +12,9 @@ const initialState = {
         distance: undefined,
         route: undefined,
         answers: undefined,
-        price: 100,
+        price: 0,
     },
+    filteredRowsCount: 0,
     content: [] as OneRequestTableType[],
 }
 
@@ -29,6 +30,12 @@ export const tableStoreReducer = ( state = initialState, action: ActionsType ): 
             return {
                 ...state,
                 content: action.content,
+            }
+        }
+        case 'table-store-reducer/SET-FILTERED-ROWS': {
+            return {
+                ...state,
+                filteredRowsCount: action.filteredRowsCount,
             }
         }
         case 'table-store-reducer/DELETE-ROW': {
@@ -50,6 +57,10 @@ export const tableStoreActions = {
     setValues: ( content: OneRequestTableType[] ) => ( {
         type: 'table-store-reducer/SET-VALUES',
         content,
+    } as const ),
+    setFilteredRows: ( filteredRowsCount: number ) => ( {
+        type: 'table-store-reducer/SET-FILTERED-ROWS',
+        filteredRowsCount,
     } as const ),
     deleteRow: ( requestNumber: number ) => ( {
         type: 'table-store-reducer/DELETE-ROW',

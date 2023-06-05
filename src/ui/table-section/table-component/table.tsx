@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Column, useFilters, useGlobalFilter, useTable} from 'react-table'
 import styles from './table-component.module.scss'
 import {TableModesType} from '../table-section'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
 import {OneRequestTableType} from '../../../types/form-types'
@@ -12,6 +12,7 @@ import {
     getSearchGlobalValueFiltersStore,
     getStatusGlobalValueFiltersStore,
 } from '../../../selectors/table/filters-reselect'
+import {tableStoreActions} from '../../../redux/table/table-store-reducer'
 
 
 type OwnProps = {
@@ -23,6 +24,7 @@ type OwnProps = {
 export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableModes } ) => {
     const navRoutes = useSelector(getRoutesStore)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const globalFilterValue = useSelector(tableModes.searchTblMode ? getSearchGlobalValueFiltersStore :
         tableModes.historyTblMode ? getHistoryGlobalValueFiltersStore : getStatusGlobalValueFiltersStore)
     const onDoubleClick = ( rowData: OneRequestTableType ) => () => {
@@ -48,6 +50,11 @@ export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableMode
 
     // @ts-ignore-next-line
     const { globalFilter } = state
+    const filteredRowsCount = rows.length
+
+    useEffect(() => {
+        dispatch(tableStoreActions.setFilteredRows(filteredRowsCount))
+    }, [ filteredRowsCount ])
 
     return ( <>
             <GlobalFilter filter={ globalFilter } setFilter={ setGlobalFilter } value={ globalFilterValue }/>

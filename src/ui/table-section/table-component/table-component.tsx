@@ -8,6 +8,7 @@ import {
     getContentTableStoreInHistory,
     getContentTableStoreInWork,
     getContentTableStoreNew,
+    getFilteredRowsCountTableStore,
 } from '../../../selectors/table/table-reselect'
 import {Button} from '../../common/button/button'
 import {useNavigate} from 'react-router-dom'
@@ -50,6 +51,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
     const navigate = useNavigate()
     const { info, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = toNumber(useSelector(getCashRequisitesStore))
+    const filteredRows = useSelector(getFilteredRowsCountTableStore)
     const dispatch = useDispatch()
 
     const toGlobalModalQuest = useMemo(() => ( price: number ) => {
@@ -78,11 +80,14 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
 
     const data = useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
+    const countHeader = <span style={ { fontSize: '75%' } }>{
+        `${ TABLE_CONTENT.length || '' }${ ( !!filteredRows && filteredRows !== TABLE_CONTENT.length ) ? '/' + filteredRows : '' }`
+    }</span>
 
     const columns: Column<OneRequestTableType>[] = useMemo(
         () => [
             {
-                Header: TABLE_CONTENT.length || '',
+                Header: countHeader,
                 accessor: 'localStatus',
                 Filter: columnFilter(statusFilter),
                 disableFilters: false,
@@ -194,7 +199,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
             navigate, requestInfo, maps,
             /* допы */
             authCash, toGlobalModalQuest,
-            TABLE_CONTENT,
+            TABLE_CONTENT, countHeader,
         ],
     )
 

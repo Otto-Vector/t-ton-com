@@ -12,7 +12,8 @@ import {getAuthIdAuthStore, getInitialValuesAuthStore} from '../auth-reselect'
 type TableStoreSelectors<T extends keyof Y, Y = TableStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 
 // export const getContentTableStore: TableStoreSelectors<'content'> = (state) => state.tableStoreReducer.content
-export const geInitialValuesTableStore: TableStoreSelectors<'initialValues'> = ( state ) => state.tableStoreReducer.initialValues
+export const getInitialValuesTableStore: TableStoreSelectors<'initialValues'> = ( state ) => state.tableStoreReducer.initialValues
+export const getFilteredRowsCountTableStore: TableStoreSelectors<'filteredRowsCount'> = ( state ) => state.tableStoreReducer.filteredRowsCount
 
 // присвоение статуса в таблицу
 const requestStatusToTableStatus = ( {
@@ -92,7 +93,7 @@ const parseRequestToTable = ( {
 // для реализации контента по списку заявок из разных источников
 export const getContentTableStore = ( getContent: ( state: AppStateType ) => OneRequestType[] ) => createSelector(
     getContent,
-    geInitialValuesTableStore,
+    getInitialValuesTableStore,
     getTariffsRequisitesStore,
     getAuthIdAuthStore,
     getInitialValuesAuthStore,
