@@ -24,6 +24,8 @@ import {Column} from 'react-table'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {ModalFormTextToDeleteResponse} from '../modal-form-text-to-delete-response/modal-form-text-to-delete-response'
 import {initialFiltersState} from '../../../redux/table/filters-store-reducer'
+import {DeleteCell} from './cells/delete-cell'
+import {ButtonCell} from './cells/button-cell'
 
 
 type OwnProps = {
@@ -49,7 +51,8 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
     } = tableModes
 
     const navigate = useNavigate()
-    const { info, maps, requestInfo } = useSelector(getRoutesStore)
+    const routes = useSelector(getRoutesStore)
+    const { info, maps, requestInfo } = routes
     const authCash = toNumber(useSelector(getCashRequisitesStore))
     const filteredRows = useSelector(getFilteredRowsCountTableStore)
     const dispatch = useDispatch()
@@ -80,13 +83,16 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
 
     const data = useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
+    // хедер в начале для статусов (показывает количество заявок в списке и кол-во отфильтрованных
     const countHeader = <span style={ { fontSize: '75%' } }>{
         `${ TABLE_CONTENT.length || '' }${ ( filteredRows !== TABLE_CONTENT.length ) ? '/' + filteredRows : '' }`
     }</span>
 
+    // хедер в конце для удялторов
     const deleteHeader = statusTblMode ?
         <MaterialIcon icon_name={ 'delete_forever' } style={ { lineHeight: 'unset' } }/> : ''
 
+    // формирование хедеров и контента таблицы
     const columns: Column<OneRequestTableType>[] = useMemo(
         () => [
             {
@@ -144,31 +150,10 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 Filter: columnFilter(),
                 disableFilters: true,
                 // чтобы добавить быстрый доступ к нужным полям ищи метку #CellProps в table.tsx
-                Cell: ( {
-                            requestNumber,
-                            price,
-                            marked,
-                            answers,
-                        }: OneRequestTableTypeReq ) =>
-                    <Button title={ 'Открыть' }
-                            label={ 'Открыть ' + ( ( marked || !answers ) ? 'заявку' : 'карту с ответами перевозчиков' ) }
-                            onClick={ () => {
-                                if (searchTblMode) {
-                                    ( price > authCash )
-                                        ? toGlobalModalQuest(price)
-                                        : navigate(requestInfo.accept + requestNumber)
-                                }
-                                if (statusTblMode) navigate(( ( marked || !answers ) ? requestInfo.status : maps.answers ) + requestNumber)
-                                if (historyTblMode) navigate(requestInfo.history + requestNumber)
-                            } }
-                            colorMode={
-                                searchTblMode ?
-                                    price > authCash ? 'gray' : 'blue'
-                                    : statusTblMode ? ( answers === 0 || marked ) ? 'green' : 'orange'
-                                        : historyTblMode ? 'pink'
-                                            : 'redAlert'
-                            }
-                    />,
+                // Cell: buttonCell
+                Cell: ButtonCell({
+                    tableModes, authCash, navigate, routes, toGlobalModalQuest,
+                }),
             },
             {
                 Header: deleteHeader,
@@ -176,21 +161,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 // для корректной работы глобального фильтра
                 Filter: columnFilter(),
                 disableFilters: true,
-                Cell: statusTblMode ? ( {
-                                            roleStatus: { isCustomer = false },
-                                            localStatus,
-                                            requestNumber,
-                                        }: OneRequestTableTypeReq ) =>
-                        isCustomer && localStatus !== 'груз у получателя' && localStatus !== 'груз у водителя'
-                            ? <div style={ { background: 'none' } }>
-                                <Button colorMode={ 'redAlert' }
-                                        onClick={ () => {
-                                            onDeleteRequest(requestNumber)
-                                        } }
-                                ><MaterialIcon icon_name={ 'close' }/> </Button>
-                            </div>
-                            : <></>
-                    : <></>,
+                Cell: DeleteCell({ isStatusTableMode: statusTblMode, onClick: onDeleteRequest }),
             },
         ],
         [
