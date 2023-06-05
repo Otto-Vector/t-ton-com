@@ -550,6 +550,8 @@ export type RequestStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R
 // запрос списка всех заявок из бэка
 export const getAllRequestsAPI = (): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
+        dispatch(requestStoreActions.setContentByDate([]))
+        dispatch(requestStoreActions.setContentByUser([]))
         dispatch(requestStoreActions.setIsFetching(true))
         try {
             dispatch(requestStoreActions.setKoefficientToInfo(getState().baseStoreReducer.distanceCoefficient))

@@ -16,7 +16,7 @@ type OwnProps = {
     tableModes: TableModesType
 }
 
-export const Table: React.FC<OwnProps> = ( { columns, data, tableModes } ) => {
+export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableModes } ) => {
     const navRoutes = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const globalFilterValue = useSelector(getGlobalValueFiltersStore)

@@ -3,11 +3,7 @@ import styles from './table-section.module.scss'
 import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {filtersStoreActions, initialFiltersState} from '../../redux/table/filters-store-reducer'
-import {
-    getButtonsFiltersStore,
-    getGlobalValueFiltersStore,
-    getValuesFiltersStore,
-} from '../../selectors/table/filters-reselect'
+import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
 import {getCargoTypeNoTrackBaseStore} from '../../selectors/base-reselect'
 import {Preloader} from '../common/preloader/preloader'
 import {getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
@@ -44,7 +40,7 @@ type OwnProps = {
 export type TableModesType = { searchTblMode: boolean, historyTblMode: boolean, statusTblMode: boolean }
 
 // секция для работы с фильтрами таблицы и отрисовки её самой
-export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
+export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
 
     const tableModes: TableModesType = {
         searchTblMode: mode === 'search',
@@ -55,8 +51,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
     const header = tableModes.searchTblMode ? 'Поиск ' : tableModes.historyTblMode ? 'История' : 'Заявки'
     const cargoTypes = useSelector(getCargoTypeNoTrackBaseStore)
     const filterButtons = useSelector(getButtonsFiltersStore)
-    const { cargoFilter, statusFilter } = useSelector(getValuesFiltersStore)
-    const globalFilterValue = useSelector(getGlobalValueFiltersStore)
+    const filtersValue = useSelector(getValuesFiltersStore)
     const isFetchingTable = useSelector(getIsFetchingRequestStore)
     const dispatch = useDispatch()
 
@@ -90,7 +85,6 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
             dispatch(filtersStoreActions.setStatusFilterMode(!!value))
         },
         cargoFilter: ( value ) => {
-            // console.log(value)
             dispatch(filtersStoreActions.setCargoFilterValue(value || ''))
             dispatch(filtersStoreActions.setCargoFilterMode(!!value))
         },
@@ -104,10 +98,10 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
         dispatch<any>(getAllRequestsAPI())
     }, [])
 
-    // сброс фильтров
+    // сброс фильтров при смене типа отображения и при первоначальной загрузке
     useEffect(() => {
         dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
-    }, [ mode, dispatch ])
+    }, [ mode ])
 
     useEffect(() => { // перекрашиваем кнопку "Без фильтра"
         // если любой из фильтров на кнопках активен
@@ -116,7 +110,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
             .map(( [ key, { mode } ] ) => key === 'clearFilters' ? false : mode)
             // складываем логически все состояния кнопок
             .reduce(( a, b ) => a || b)
-        // если состояния отличаются, то присваиваем
+        // если состояния отличаются, то перекрашиваем кнопку "Без фильтра"
         if (clearMode !== filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(clearMode))
     }, [ filterButtons, dispatch ])
 
@@ -141,7 +135,7 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                                 ?
                                 <TableFilterSelect
                                     placeholder={ value.title }
-                                    selectedValue={ cargoFilter }
+                                    selectedValue={ filtersValue.cargoFilter }
                                     onChange={ filtersAction[key] }
                                     options={ cargoValues }
                                 />
@@ -150,13 +144,13 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                                         ?
                                         <TableFilterSelect
                                             placeholder={ value.title }
-                                            selectedValue={ statusFilter }
+                                            selectedValue={ filtersValue.statusFilter }
                                             onChange={ filtersAction[key] }
                                             options={ statusValues }
                                         />
                                         : null
                                     : key === 'globalFilter'
-                                        ? <InputTableFilter value={ globalFilterValue }
+                                        ? <InputTableFilter value={ filtersValue.globalFilterValue }
                                                             onChange={ filtersAction[key] }
                                         />
                                         : ( // убираем кнопки на разных типах
@@ -174,7 +168,9 @@ export const TableSection: React.FC<OwnProps> = ( { mode } ) => {
                 </form>
             </header>
             <div className={ styles.searchSection__table }>
-                <TableComponent tableModes={ tableModes }/>
+                <TableComponent tableModes={ tableModes }
+                                filters={ filtersValue }
+                />
             </div>
         </section>
     )

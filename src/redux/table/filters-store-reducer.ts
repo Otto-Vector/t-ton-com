@@ -41,12 +41,12 @@ export const initialFiltersState = {
             mode: true,
         },
     },
-    globalFilterValue: '',
     values: {
         dayFilter: undefined as undefined | Date,
         routeFilter: [ 0, 99999 ],
         cargoFilter: '',
         statusFilter: '',
+        globalFilterValue: '',
     },
 }
 
@@ -61,17 +61,19 @@ export const filtersStoreReducer = ( state = initialFiltersState, action: Action
         case 'filters-store-reducer/SET-GLOBAL-FILTER': {
             return {
                 ...state,
-                globalFilterValue: action.value,
+                values: {
+                    ...state.values,
+                    globalFilterValue: action.value,
+                },
             }
         }
         case 'filters-store-reducer/SET-TODAY-FILTER': {
             return {
                 ...state,
-                values:
-                    {
-                        ...state.values,
-                        dayFilter: state.buttons.todayFilter.mode ? date : undefined,
-                    },
+                values: {
+                    ...state.values,
+                    dayFilter: state.buttons.todayFilter.mode ? date : undefined,
+                },
             }
         }
         case 'filters-store-reducer/SET-TODAY-MODE': {

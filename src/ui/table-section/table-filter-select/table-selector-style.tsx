@@ -8,7 +8,6 @@ export const tableSelectorStyles = (): StylesConfig<SelectOptionsType> => ( {
         backgroundColor: 'whitesmoke',
         width: 'fit-content',
         minWidth: '-webkit-fill-available',
-        maxWidth: '600px',
     } ),
     container: ( baseStyles ) => ( { ...baseStyles, height: '100%' } ),
     placeholder: ( baseStyles ) => ( { ...baseStyles, color: 'whitesmoke' } ),

@@ -3,7 +3,6 @@ import styles from './table-component.module.scss'
 
 import {Table} from './table'
 import {columnFilter} from './filter/column-filters'
-import {getValuesFiltersStore} from '../../../selectors/table/filters-reselect'
 import {useDispatch, useSelector} from 'react-redux'
 import {
     getContentTableStoreInHistory,
@@ -23,24 +22,35 @@ import {LocalStatusCell} from './cells/local-status-cell'
 import {Column} from 'react-table'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {ModalFormTextToDeleteResponse} from '../modal-form-text-to-delete-response/modal-form-text-to-delete-response'
+import {FiltersStoreReducerStateType} from '../../../redux/table/filters-store-reducer'
 
 
 type OwnProps = {
     tableModes: TableModesType
+    filters: FiltersStoreReducerStateType['values']
 }
 
 
-export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) => {
+export const TableComponent: React.ComponentType<OwnProps> = ( {
+                                                                   tableModes,
+                                                                   filters: {
+                                                                       dayFilter,
+                                                                       routeFilter,
+                                                                       cargoFilter,
+                                                                       statusFilter,
+                                                                   },
+                                                               } ) => {
 
     const {
         historyTblMode,
         searchTblMode,
         statusTblMode,
     } = tableModes
+
     const navigate = useNavigate()
     const { info, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = toNumber(useSelector(getCashRequisitesStore))
-    const { dayFilter, routeFilter, cargoFilter, statusFilter } = useSelector(getValuesFiltersStore)
+    // const { dayFilter, routeFilter, cargoFilter, statusFilter } = useSelector(getValuesFiltersStore)
     const dispatch = useDispatch()
 
     const toGlobalModalQuest = useMemo(() => ( price: number ) => {
@@ -67,10 +77,10 @@ export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) 
                 : getContentTableStoreInWork,
     )
 
-    const data = React.useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
+    const data = useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
 
-    const columns: Column<OneRequestTableType>[] = React.useMemo(
+    const columns: Column<OneRequestTableType>[] = useMemo(
         () => [
             {
                 Header: TABLE_CONTENT.length || '',
@@ -185,6 +195,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( { tableModes } ) 
             navigate, requestInfo, maps,
             /* допы */
             authCash, toGlobalModalQuest,
+            TABLE_CONTENT
         ],
     )
 
