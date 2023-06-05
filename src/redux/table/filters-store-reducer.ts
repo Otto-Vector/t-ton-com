@@ -1,5 +1,3 @@
-import {ThunkAction} from 'redux-thunk'
-import {AppStateType} from '../redux-store'
 import {addOneDay, ddMmFormat} from '../../utils/date-formats'
 import {GetActionsTypes} from '../../types/ts-utils'
 
@@ -50,152 +48,208 @@ export const initialFiltersState = {
     },
 }
 
-export type FiltersStoreReducerStateType = typeof initialFiltersState
+const modesInitial = {
+    search: JSON.parse(JSON.stringify(initialFiltersState)) as typeof initialFiltersState,
+    history: JSON.parse(JSON.stringify(initialFiltersState)) as typeof initialFiltersState,
+    status: JSON.parse(JSON.stringify(initialFiltersState)) as typeof initialFiltersState,
+}
+
+export type tableModesType = 'search' | 'history' | 'status'
+
+export type FiltersStoreReducerStateType = typeof modesInitial
 
 type ActionsType = GetActionsTypes<typeof filtersStoreActions>
 
-export const filtersStoreReducer = ( state = initialFiltersState, action: ActionsType ): FiltersStoreReducerStateType => {
+export const filtersStoreReducer = ( state = modesInitial, action: ActionsType ): FiltersStoreReducerStateType => {
 
     switch (action.type) {
 
         case 'filters-store-reducer/SET-GLOBAL-FILTER': {
             return {
                 ...state,
-                values: {
-                    ...state.values,
-                    globalFilterValue: action.value,
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    values: {
+                        ...state[action.tableMode].values,
+                        globalFilterValue: action.value,
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-TODAY-FILTER': {
             return {
                 ...state,
-                values: {
-                    ...state.values,
-                    dayFilter: state.buttons.todayFilter.mode ? date : undefined,
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    values: {
+                        ...state[action.tableMode].values,
+                        dayFilter: state[action.tableMode].buttons.todayFilter.mode ? date : undefined,
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-TODAY-MODE': {
             return {
                 ...state,
-                buttons: {
-                    ...state.buttons,
-                    todayFilter: { ...state.buttons.todayFilter, mode: action.mode },
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    buttons: {
+                        ...state[action.tableMode].buttons,
+                        todayFilter: { ...state[action.tableMode].buttons.todayFilter, mode: action.mode },
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-TOMORROW-FILTER': {
             return {
                 ...state,
-                values: {
-                    ...state.values,
-                    dayFilter: state.buttons.tomorrowFilter.mode ? addOneDay(date) : undefined,
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    values: {
+                        ...state[action.tableMode].values,
+                        dayFilter: state[action.tableMode].buttons.tomorrowFilter.mode ? addOneDay(date) : undefined,
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-TOMORROW-MODE': {
             return {
                 ...state,
-                buttons: {
-                    ...state.buttons,
-                    tomorrowFilter: { ...state.buttons.tomorrowFilter, mode: action.mode },
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    buttons: {
+                        ...state[action.tableMode].buttons,
+                        tomorrowFilter: { ...state[action.tableMode].buttons.tomorrowFilter, mode: action.mode },
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-SHORT-ROUTE-FILTER': {
             return {
                 ...state,
-                values: {
-                    ...state.values,
-                    routeFilter: state.buttons.shortRouteFilter.mode ? [ 0, 100 ] : [ 0, 99999 ],
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    values: {
+                        ...state[action.tableMode].values,
+                        routeFilter: state[action.tableMode].buttons.shortRouteFilter.mode ? [ 0, 100 ] : [ 0, 99999 ],
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-SHORT-ROUTE-MODE': {
             return {
                 ...state,
-                buttons: {
-                    ...state.buttons,
-                    shortRouteFilter: { ...state.buttons.shortRouteFilter, mode: action.mode },
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    buttons: {
+                        ...state[action.tableMode].buttons,
+                        shortRouteFilter: { ...state[action.tableMode].buttons.shortRouteFilter, mode: action.mode },
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-LONG-ROUTE-FILTER': {
             return {
                 ...state,
-                values: {
-                    ...state.values,
-                    routeFilter: state.buttons.longRouteFilter.mode ? [ 100, 99999 ] : [ 0, 99999 ],
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    values: {
+                        ...state[action.tableMode].values,
+                        routeFilter: state[action.tableMode].buttons.longRouteFilter.mode ? [ 100, 99999 ] : [ 0, 99999 ],
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-LONG-ROUTE-MODE': {
             return {
                 ...state,
-                buttons: {
-                    ...state.buttons,
-                    longRouteFilter: { ...state.buttons.longRouteFilter, mode: action.mode },
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    buttons: {
+                        ...state[action.tableMode].buttons,
+                        longRouteFilter: { ...state[action.tableMode].buttons.longRouteFilter, mode: action.mode },
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-GLOBAL-FILTER-MODE': {
             return {
                 ...state,
-                buttons: {
-                    ...state.buttons,
-                    globalFilter: { ...state.buttons.globalFilter, mode: action.mode },
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    buttons: {
+                        ...state[action.tableMode].buttons,
+                        globalFilter: { ...state[action.tableMode].buttons.globalFilter, mode: action.mode },
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-CARGO-FILTER-VALUE': {
             return {
                 ...state,
-                values: {
-                    ...state.values,
-                    cargoFilter: action.value,
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    values: {
+                        ...state[action.tableMode].values,
+                        cargoFilter: action.value,
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-CARGO-FILTER-MODE': {
             return {
                 ...state,
-                buttons: {
-                    ...state.buttons,
-                    cargoFilter: { ...state.buttons.cargoFilter, mode: action.mode },
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    buttons: {
+                        ...state[action.tableMode].buttons,
+                        cargoFilter: { ...state[action.tableMode].buttons.cargoFilter, mode: action.mode },
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-STATUS-FILTER-VALUE': {
             return {
                 ...state,
-                values: {
-                    ...state.values,
-                    statusFilter: action.value,
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    values: {
+                        ...state[action.tableMode].values,
+                        statusFilter: action.value,
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-STATUS-FILTER-MODE': {
             return {
                 ...state,
-                buttons: {
-                    ...state.buttons,
-                    statusFilter: { ...state.buttons.statusFilter, mode: action.mode },
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    buttons: {
+                        ...state[action.tableMode].buttons,
+                        statusFilter: { ...state[action.tableMode].buttons.statusFilter, mode: action.mode },
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-CLEAR-FILTER-MODE': {
             return {
                 ...state,
-                buttons: {
-                    ...state.buttons,
-                    clearFilters: { ...state.buttons.clearFilters, mode: action.mode },
+                [action.tableMode]: {
+                    ...state[action.tableMode],
+                    buttons: {
+                        ...state[action.tableMode].buttons,
+                        clearFilters: { ...state[action.tableMode].buttons.clearFilters, mode: action.mode },
+                    },
                 },
             }
         }
         case 'filters-store-reducer/SET-CLEAR-FILTER': {
             return {
-                ...action.initial,
+                ...state,
+                [action.tableMode]: {
+                    ...action.initial,
+                },
             }
         }
         default: {
@@ -206,83 +260,85 @@ export const filtersStoreReducer = ( state = initialFiltersState, action: Action
 
 /* ЭКШОНЫ */
 export const filtersStoreActions = {
-    setGlobalFilter: ( value: string ) => ( {
+    setGlobalFilter: ( value: string, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-GLOBAL-FILTER',
         value,
+        tableMode,
     } as const ),
-    setGlobalFilterMode: ( mode: boolean ) => ( {
+    setGlobalFilterMode: ( mode: boolean, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-GLOBAL-FILTER-MODE',
         mode,
+        tableMode,
     } as const ),
-    setTodayFilter: () => ( {
+    setTodayFilter: ( tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-TODAY-FILTER',
+        tableMode,
     } as const ),
-    setTodayMode: ( mode: boolean ) => ( {
+    setTodayMode: ( mode: boolean, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-TODAY-MODE',
         mode,
+        tableMode,
     } as const ),
-    setTomorrowFilter: () => ( {
+    setTomorrowFilter: ( tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-TOMORROW-FILTER',
+        tableMode,
     } as const ),
-    setTomorrowMode: ( mode: boolean ) => ( {
+    setTomorrowMode: ( mode: boolean, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-TOMORROW-MODE',
         mode,
+        tableMode,
     } as const ),
-    setShortRouteFilter: () => ( {
+    setShortRouteFilter: ( tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-SHORT-ROUTE-FILTER',
+        tableMode,
     } as const ),
-    setShortRouteMode: ( mode: boolean ) => ( {
+    setShortRouteMode: ( mode: boolean, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-SHORT-ROUTE-MODE',
         mode,
+        tableMode,
     } as const ),
-    setLongRouteFilter: () => ( {
+    setLongRouteFilter: ( tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-LONG-ROUTE-FILTER',
+        tableMode,
     } as const ),
-    setLongRouteMode: ( mode: boolean ) => ( {
+    setLongRouteMode: ( mode: boolean, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-LONG-ROUTE-MODE',
         mode,
+        tableMode,
     } as const ),
-    setCargoFilterValue: ( value: string ) => ( {
+    setCargoFilterValue: ( value: string, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-CARGO-FILTER-VALUE',
         value,
+        tableMode,
     } as const ),
-    setCargoFilterMode: ( mode: boolean ) => ( {
+    setCargoFilterMode: ( mode: boolean, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-CARGO-FILTER-MODE',
         mode,
+        tableMode,
     } as const ),
-    setStatusFilterValue: ( value: string ) => ( {
+    setStatusFilterValue: ( value: string, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-STATUS-FILTER-VALUE',
         value,
+        tableMode,
     } as const ),
-    setStatusFilterMode: ( mode: boolean ) => ( {
+    setStatusFilterMode: ( mode: boolean, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-STATUS-FILTER-MODE',
         mode,
+        tableMode,
     } as const ),
-    setClearFilter: ( initial: FiltersStoreReducerStateType ) => ( {
+    setClearFilter: ( initial: typeof initialFiltersState, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-CLEAR-FILTER',
         initial,
+        tableMode,
     } as const ),
-    setClearFilterMode: ( mode: boolean ) => ( {
+    setClearFilterMode: ( mode: boolean, tableMode: tableModesType ) => ( {
         type: 'filters-store-reducer/SET-CLEAR-FILTER-MODE',
         mode,
+        tableMode,
     } as const ),
 
 }
 
 /* САНКИ */
 
-export type FiltersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
-
-
-// export const getIcons = ( { domain }: GetIconsType ): FiltersStoreReducerThunkActionType =>
-//     async ( dispatch ) => {
-//         // dispatch( requestFormActions.setIcons( null ) )
-//         try {
-//             const response = await getIconsFromApi( { domain } )
-//             dispatch( baseStoreActions.setIcons( domain, response ) )
-//         } catch (e) {
-//             alert( e )
-//             // dispatch( requestFormActions.setApiError( `Not found book with id: ${ bookId } ` ) )
-//         }
-//
-//     }
+// export type FiltersStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>

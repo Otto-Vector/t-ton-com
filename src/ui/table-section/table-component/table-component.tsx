@@ -22,12 +22,12 @@ import {LocalStatusCell} from './cells/local-status-cell'
 import {Column} from 'react-table'
 import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {ModalFormTextToDeleteResponse} from '../modal-form-text-to-delete-response/modal-form-text-to-delete-response'
-import {FiltersStoreReducerStateType} from '../../../redux/table/filters-store-reducer'
+import {initialFiltersState} from '../../../redux/table/filters-store-reducer'
 
 
 type OwnProps = {
     tableModes: TableModesType
-    filters: FiltersStoreReducerStateType['values']
+    filters: typeof initialFiltersState['values']
 }
 
 
@@ -50,7 +50,6 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
     const navigate = useNavigate()
     const { info, maps, requestInfo } = useSelector(getRoutesStore)
     const authCash = toNumber(useSelector(getCashRequisitesStore))
-    // const { dayFilter, routeFilter, cargoFilter, statusFilter } = useSelector(getValuesFiltersStore)
     const dispatch = useDispatch()
 
     const toGlobalModalQuest = useMemo(() => ( price: number ) => {
@@ -195,7 +194,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
             navigate, requestInfo, maps,
             /* допы */
             authCash, toGlobalModalQuest,
-            TABLE_CONTENT
+            TABLE_CONTENT,
         ],
     )
 

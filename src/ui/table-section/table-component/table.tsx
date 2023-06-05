@@ -7,7 +7,11 @@ import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
 import {OneRequestTableType} from '../../../types/form-types'
 import {GlobalFilter} from './filter/global-filter'
-import {getGlobalValueFiltersStore} from '../../../selectors/table/filters-reselect'
+import {
+    getHistoryGlobalValueFiltersStore,
+    getSearchGlobalValueFiltersStore,
+    getStatusGlobalValueFiltersStore,
+} from '../../../selectors/table/filters-reselect'
 
 
 type OwnProps = {
@@ -19,7 +23,8 @@ type OwnProps = {
 export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableModes } ) => {
     const navRoutes = useSelector(getRoutesStore)
     const navigate = useNavigate()
-    const globalFilterValue = useSelector(getGlobalValueFiltersStore)
+    const globalFilterValue = useSelector(tableModes.searchTblMode ? getSearchGlobalValueFiltersStore :
+        tableModes.historyTblMode ? getHistoryGlobalValueFiltersStore : getStatusGlobalValueFiltersStore)
     const onDoubleClick = ( rowData: OneRequestTableType ) => () => {
         tableModes.statusTblMode && navigate(navRoutes.requestInfo.status + rowData.requestNumber)
     }

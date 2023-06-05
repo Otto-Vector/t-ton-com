@@ -3,7 +3,14 @@ import styles from './table-section.module.scss'
 import {TableComponent} from './table-component/table-component'
 import {useDispatch, useSelector} from 'react-redux'
 import {filtersStoreActions, initialFiltersState} from '../../redux/table/filters-store-reducer'
-import {getButtonsFiltersStore, getValuesFiltersStore} from '../../selectors/table/filters-reselect'
+import {
+    getHistoryFilterValuesFiltersStore,
+    getHistoryhButtonsFiltersStore,
+    getSearchButtonsFiltersStore,
+    getSearchFilterValuesFiltersStore,
+    getStatusButtonsFiltersStore,
+    getStatusFilterValuesFiltersStore,
+} from '../../selectors/table/filters-reselect'
 import {getCargoTypeNoTrackBaseStore} from '../../selectors/base-reselect'
 import {Preloader} from '../common/preloader/preloader'
 import {getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
@@ -50,46 +57,48 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
 
     const header = tableModes.searchTblMode ? 'Поиск ' : tableModes.historyTblMode ? 'История' : 'Заявки'
     const cargoTypes = useSelector(getCargoTypeNoTrackBaseStore)
-    const filterButtons = useSelector(getButtonsFiltersStore)
-    const filtersValue = useSelector(getValuesFiltersStore)
+    const filterButtons = useSelector(mode === 'search' ? getSearchButtonsFiltersStore :
+        mode === 'history' ? getHistoryhButtonsFiltersStore : getStatusButtonsFiltersStore)
+    const filtersValue = useSelector(mode === 'search' ? getSearchFilterValuesFiltersStore :
+        mode === 'history' ? getHistoryFilterValuesFiltersStore : getStatusFilterValuesFiltersStore)
     const isFetchingTable = useSelector(getIsFetchingRequestStore)
     const dispatch = useDispatch()
 
     const filtersAction: Record<keyof typeof filterButtons, ( value?: string ) => void> = {
         todayFilter: () => {
-            dispatch(filtersStoreActions.setTomorrowMode(false))
-            dispatch(filtersStoreActions.setTodayMode(!filterButtons.todayFilter.mode))
-            dispatch(filtersStoreActions.setTodayFilter())
+            dispatch(filtersStoreActions.setTomorrowMode(false, mode))
+            dispatch(filtersStoreActions.setTodayMode(!filterButtons.todayFilter.mode, mode))
+            dispatch(filtersStoreActions.setTodayFilter(mode))
         },
         tomorrowFilter: () => {
-            dispatch(filtersStoreActions.setTodayMode(false))
-            dispatch(filtersStoreActions.setTomorrowMode(!filterButtons.tomorrowFilter.mode))
-            dispatch(filtersStoreActions.setTomorrowFilter())
+            dispatch(filtersStoreActions.setTodayMode(false, mode))
+            dispatch(filtersStoreActions.setTomorrowMode(!filterButtons.tomorrowFilter.mode, mode))
+            dispatch(filtersStoreActions.setTomorrowFilter(mode))
         },
         shortRouteFilter: () => {
-            dispatch(filtersStoreActions.setLongRouteMode(false))
-            dispatch(filtersStoreActions.setShortRouteMode(!filterButtons.shortRouteFilter.mode))
-            dispatch(filtersStoreActions.setShortRouteFilter())
+            dispatch(filtersStoreActions.setLongRouteMode(false, mode))
+            dispatch(filtersStoreActions.setShortRouteMode(!filterButtons.shortRouteFilter.mode, mode))
+            dispatch(filtersStoreActions.setShortRouteFilter(mode))
         },
         longRouteFilter: () => {
-            dispatch(filtersStoreActions.setShortRouteMode(false))
-            dispatch(filtersStoreActions.setLongRouteMode(!filterButtons.longRouteFilter.mode))
-            dispatch(filtersStoreActions.setLongRouteFilter())
+            dispatch(filtersStoreActions.setShortRouteMode(false, mode))
+            dispatch(filtersStoreActions.setLongRouteMode(!filterButtons.longRouteFilter.mode, mode))
+            dispatch(filtersStoreActions.setLongRouteFilter(mode))
         },
         globalFilter: ( value ) => {
-            dispatch(filtersStoreActions.setGlobalFilter(value || ''))
-            dispatch(filtersStoreActions.setGlobalFilterMode(!!value))
+            dispatch(filtersStoreActions.setGlobalFilter(value || '', mode))
+            dispatch(filtersStoreActions.setGlobalFilterMode(!!value, mode))
         },
         statusFilter: ( value ) => {
-            dispatch(filtersStoreActions.setStatusFilterValue(value || ''))
-            dispatch(filtersStoreActions.setStatusFilterMode(!!value))
+            dispatch(filtersStoreActions.setStatusFilterValue(value || '', mode))
+            dispatch(filtersStoreActions.setStatusFilterMode(!!value, mode))
         },
         cargoFilter: ( value ) => {
-            dispatch(filtersStoreActions.setCargoFilterValue(value || ''))
-            dispatch(filtersStoreActions.setCargoFilterMode(!!value))
+            dispatch(filtersStoreActions.setCargoFilterValue(value || '', mode))
+            dispatch(filtersStoreActions.setCargoFilterMode(!!value, mode))
         },
         clearFilters: () => {
-            dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
+            dispatch(filtersStoreActions.setClearFilter(initialFiltersState, mode))
         },
     }
 
@@ -99,9 +108,9 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
     }, [])
 
     // сброс фильтров при смене типа отображения и при первоначальной загрузке
-    useEffect(() => {
-        dispatch(filtersStoreActions.setClearFilter(initialFiltersState))
-    }, [ mode ])
+    // useEffect(() => {
+        // dispatch(filtersStoreActions.setClearFilter(initialFiltersState, mode))
+    // }, [ mode ])
 
     useEffect(() => { // перекрашиваем кнопку "Без фильтра"
         // если любой из фильтров на кнопках активен
@@ -111,8 +120,8 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
             // складываем логически все состояния кнопок
             .reduce(( a, b ) => a || b)
         // если состояния отличаются, то перекрашиваем кнопку "Без фильтра"
-        if (clearMode !== filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(clearMode))
-    }, [ filterButtons, dispatch ])
+        if (clearMode !== filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(clearMode, mode))
+    }, [ filterButtons, mode ])
 
     // оптимизация данных под селектор
     const cargoValues: SelectOptionsType[] = [ {
