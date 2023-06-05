@@ -10,12 +10,9 @@ import {
     getContentTableStoreNew,
     getFilteredRowsCountTableStore,
 } from '../../../selectors/table/table-reselect'
-import {useNavigate} from 'react-router-dom'
-import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {TableModesType} from '../table-section'
 import {ddMmYearFormat} from '../../../utils/date-formats'
 import {getCashRequisitesStore} from '../../../selectors/options/requisites-reselect'
-import {OneRequestTableType} from '../../../types/form-types'
+import {OneRequestTableType, TableModesBooleanType, TableModesType} from '../../../types/form-types'
 import {toNumber} from '../../../utils/parsers'
 import {LocalStatusCell} from './cells/local-status-cell'
 import {Column} from 'react-table'
@@ -23,10 +20,12 @@ import {MaterialIcon} from '../../common/material-icon/material-icon'
 import {initialFiltersState} from '../../../redux/table/filters-store-reducer'
 import {DeleteCell} from './cells/delete-cell'
 import {ButtonCell} from './cells/button-cell'
+import {CountHeader} from './headers/count-header'
 
 
 type OwnProps = {
-    tableModes: TableModesType
+    mode: TableModesType
+    tableModes: TableModesBooleanType
     filters: typeof initialFiltersState['values']
 }
 
@@ -39,47 +38,37 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                                                                        cargoFilter,
                                                                        statusFilter,
                                                                    },
+                                                                   mode,
                                                                } ) => {
 
     const {
-        historyTblMode,
-        searchTblMode,
-        statusTblMode,
+        isHistoryTblMode,
+        isSearchTblMode,
+        isStatusTblMode,
     } = tableModes
 
-    const navigate = useNavigate()
-    const routes = useSelector(getRoutesStore)
-    const { maps, requestInfo } = routes
+
     const authCash = toNumber(useSelector(getCashRequisitesStore))
     const filteredRows = useSelector(getFilteredRowsCountTableStore)
 
-
+    // Загружаем таблицы в соответвтвии с теми, которые нам нужны
     const TABLE_CONTENT = useSelector(
-        searchTblMode ? getContentTableStoreNew
-            : historyTblMode ? getContentTableStoreInHistory
+        isSearchTblMode ? getContentTableStoreNew
+            : isHistoryTblMode ? getContentTableStoreInHistory
                 : getContentTableStoreInWork,
     )
 
     const data = useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
-    // хедер в начале для статусов (показывает количество заявок в списке и кол-во отфильтрованных
-    const countHeader = <span style={ { fontSize: '75%' } }>{
-        `${ TABLE_CONTENT.length || '' }${ ( filteredRows !== TABLE_CONTENT.length ) ? '/' + filteredRows : '' }`
-    }</span>
-
-    // хедер в конце для удялторов
-    const deleteHeader = statusTblMode ?
-        <MaterialIcon icon_name={ 'delete_forever' } style={ { lineHeight: 'unset' } }/> : ''
-
     // формирование хедеров и контента таблицы
     const columns: Column<OneRequestTableType>[] = useMemo(
         () => [
             {
-                Header: countHeader,
+                Header: <CountHeader filteredRows={ filteredRows } unfilteredRows={ TABLE_CONTENT.length }/>,
                 accessor: 'localStatus',
                 Filter: columnFilter(statusFilter),
                 disableFilters: false,
-                Cell: statusTblMode ? LocalStatusCell : <></>,
+                Cell: isStatusTblMode ? LocalStatusCell : <></>,
             },
             {
                 Header: '№',
@@ -116,8 +105,8 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 disableFilters: true,
             },
             {
-                Header: statusTblMode ? 'На заявке' : 'Ответы',
-                accessor: !searchTblMode ? 'responseEmployee' : 'answers',
+                Header: isStatusTblMode ? 'На заявке' : 'Ответы',
+                accessor: !isSearchTblMode ? 'responseEmployee' : 'answers',
                 // для корректной работы глобального фильтра
                 Filter: columnFilter(),
                 disableFilters: true,
@@ -129,41 +118,32 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 Filter: columnFilter(),
                 disableFilters: true,
                 // чтобы добавить быстрый доступ к нужным полям ищи метку #CellProps в table.tsx
-                // Cell: buttonCell
                 Cell: ButtonCell({ tableModes, authCash }),
             },
             {
-                Header: deleteHeader,
+                Header: isStatusTblMode
+                    ? <MaterialIcon icon_name={ 'delete_forever' } style={ { lineHeight: 'unset' } }/>
+                    : <></>,
                 accessor: 'roleStatus',
                 // для корректной работы глобального фильтра
                 Filter: columnFilter(),
                 disableFilters: true,
-                Cell: DeleteCell({ isStatusTableMode: statusTblMode }),
+                Cell: DeleteCell({ isStatusTblMode }),
             },
         ],
         [
             /* моды таблицы */
-            searchTblMode, historyTblMode, statusTblMode,
+            tableModes, isSearchTblMode, isHistoryTblMode, isStatusTblMode,
             /* значение фильтров вне таблицы (должны быть все) */
             statusFilter, dayFilter, routeFilter, cargoFilter,
-            /* навигация и т.п. */
-            navigate, requestInfo, maps,
             /* допы */
-            authCash,
-            TABLE_CONTENT, countHeader, deleteHeader,
+            filteredRows, authCash, TABLE_CONTENT,
         ],
     )
 
-    const tableModesStyle = styles['tableComponent__' + (
-        searchTblMode ? 'search'
-            : historyTblMode
-                ? 'history'
-                : 'status'
-    )
-        ]
 
     return (
-        <div className={ styles.tableComponent + ' ' + tableModesStyle }>
+        <div className={ styles.tableComponent + ' ' + styles['tableComponent__' + mode] }>
             <Table columns={ columns } data={ data } tableModes={ tableModes }/>
         </div>
     )

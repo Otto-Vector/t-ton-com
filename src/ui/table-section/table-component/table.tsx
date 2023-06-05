@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react'
 import {Column, useFilters, useGlobalFilter, useTable} from 'react-table'
 import styles from './table-component.module.scss'
-import {TableModesType} from '../table-section'
 import {useDispatch, useSelector} from 'react-redux'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
-import {OneRequestTableType} from '../../../types/form-types'
+import {OneRequestTableType, TableModesBooleanType} from '../../../types/form-types'
 import {GlobalFilter} from './filter/global-filter'
 import {
     getHistoryGlobalValueFiltersStore,
@@ -18,17 +17,17 @@ import {tableStoreActions} from '../../../redux/table/table-store-reducer'
 type OwnProps = {
     columns: readonly Column<OneRequestTableType>[],
     data: readonly OneRequestTableType[],
-    tableModes: TableModesType
+    tableModes: TableModesBooleanType
 }
 
 export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableModes } ) => {
     const navRoutes = useSelector(getRoutesStore)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const globalFilterValue = useSelector(tableModes.searchTblMode ? getSearchGlobalValueFiltersStore :
-        tableModes.historyTblMode ? getHistoryGlobalValueFiltersStore : getStatusGlobalValueFiltersStore)
+    const globalFilterValue = useSelector(tableModes.isSearchTblMode ? getSearchGlobalValueFiltersStore :
+        tableModes.isHistoryTblMode ? getHistoryGlobalValueFiltersStore : getStatusGlobalValueFiltersStore)
     const onDoubleClick = ( rowData: OneRequestTableType ) => () => {
-        tableModes.statusTblMode && navigate(navRoutes.requestInfo.status + rowData.requestNumber)
+        tableModes.isStatusTblMode && navigate(navRoutes.requestInfo.status + rowData.requestNumber)
     }
 
     // Use the state and functions returned from useTable to build your UI

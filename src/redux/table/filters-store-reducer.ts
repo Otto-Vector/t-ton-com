@@ -1,5 +1,6 @@
 import {addOneDay, ddMmFormat} from '../../utils/date-formats'
 import {GetActionsTypes} from '../../types/ts-utils'
+import { TableModesType } from '../../types/form-types'
 
 
 const date = new Date()
@@ -53,8 +54,6 @@ const modesInitial = {
     history: JSON.parse(JSON.stringify(initialFiltersState)) as typeof initialFiltersState,
     status: JSON.parse(JSON.stringify(initialFiltersState)) as typeof initialFiltersState,
 }
-
-export type tableModesType = 'search' | 'history' | 'status'
 
 export type FiltersStoreReducerStateType = typeof modesInitial
 
@@ -260,78 +259,78 @@ export const filtersStoreReducer = ( state = modesInitial, action: ActionsType )
 
 /* ЭКШОНЫ */
 export const filtersStoreActions = {
-    setGlobalFilter: ( value: string, tableMode: tableModesType ) => ( {
+    setGlobalFilter: ( value: string, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-GLOBAL-FILTER',
         value,
         tableMode,
     } as const ),
-    setGlobalFilterMode: ( mode: boolean, tableMode: tableModesType ) => ( {
+    setGlobalFilterMode: ( mode: boolean, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-GLOBAL-FILTER-MODE',
         mode,
         tableMode,
     } as const ),
-    setTodayFilter: ( tableMode: tableModesType ) => ( {
+    setTodayFilter: ( tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-TODAY-FILTER',
         tableMode,
     } as const ),
-    setTodayMode: ( mode: boolean, tableMode: tableModesType ) => ( {
+    setTodayMode: ( mode: boolean, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-TODAY-MODE',
         mode,
         tableMode,
     } as const ),
-    setTomorrowFilter: ( tableMode: tableModesType ) => ( {
+    setTomorrowFilter: ( tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-TOMORROW-FILTER',
         tableMode,
     } as const ),
-    setTomorrowMode: ( mode: boolean, tableMode: tableModesType ) => ( {
+    setTomorrowMode: ( mode: boolean, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-TOMORROW-MODE',
         mode,
         tableMode,
     } as const ),
-    setShortRouteFilter: ( tableMode: tableModesType ) => ( {
+    setShortRouteFilter: ( tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-SHORT-ROUTE-FILTER',
         tableMode,
     } as const ),
-    setShortRouteMode: ( mode: boolean, tableMode: tableModesType ) => ( {
+    setShortRouteMode: ( mode: boolean, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-SHORT-ROUTE-MODE',
         mode,
         tableMode,
     } as const ),
-    setLongRouteFilter: ( tableMode: tableModesType ) => ( {
+    setLongRouteFilter: ( tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-LONG-ROUTE-FILTER',
         tableMode,
     } as const ),
-    setLongRouteMode: ( mode: boolean, tableMode: tableModesType ) => ( {
+    setLongRouteMode: ( mode: boolean, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-LONG-ROUTE-MODE',
         mode,
         tableMode,
     } as const ),
-    setCargoFilterValue: ( value: string, tableMode: tableModesType ) => ( {
+    setCargoFilterValue: ( value: string, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-CARGO-FILTER-VALUE',
         value,
         tableMode,
     } as const ),
-    setCargoFilterMode: ( mode: boolean, tableMode: tableModesType ) => ( {
+    setCargoFilterMode: ( mode: boolean, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-CARGO-FILTER-MODE',
         mode,
         tableMode,
     } as const ),
-    setStatusFilterValue: ( value: string, tableMode: tableModesType ) => ( {
+    setStatusFilterValue: ( value: string, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-STATUS-FILTER-VALUE',
         value,
         tableMode,
     } as const ),
-    setStatusFilterMode: ( mode: boolean, tableMode: tableModesType ) => ( {
+    setStatusFilterMode: ( mode: boolean, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-STATUS-FILTER-MODE',
         mode,
         tableMode,
     } as const ),
-    setClearFilter: ( initial: typeof initialFiltersState, tableMode: tableModesType ) => ( {
+    setClearFilter: ( initial: typeof initialFiltersState, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-CLEAR-FILTER',
         initial,
         tableMode,
     } as const ),
-    setClearFilterMode: ( mode: boolean, tableMode: tableModesType ) => ( {
+    setClearFilterMode: ( mode: boolean, tableMode: TableModesType ) => ( {
         type: 'filters-store-reducer/SET-CLEAR-FILTER-MODE',
         mode,
         tableMode,

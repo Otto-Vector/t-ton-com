@@ -26,6 +26,7 @@ import {Button} from '../common/button/button'
 import {InputTableFilter} from '../common/input-table-filter/input-table-filter'
 import {TableFilterSelect} from './table-filter-select/table-filter-select'
 import {SelectOptionsType} from '../common/form-selector/selector-utils'
+import {TableModesBooleanType, TableModesType} from '../../types/form-types'
 
 // toDo: перенести в отдельный элемент или файл
 const icons = [ xIcon, truckToRightPNG, truckLoadPNG, truckToLeftPNG, noRespTruckPNG, haveRespTrackPNG ]
@@ -41,26 +42,25 @@ const statusValues = statusStrValues.map(( value, index ) => ( {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type OwnProps = {
-    mode: 'search' | 'history' | 'status'
+    mode: TableModesType
 }
-
-export type TableModesType = { searchTblMode: boolean, historyTblMode: boolean, statusTblMode: boolean }
 
 // секция для работы с фильтрами таблицы и отрисовки её самой
 export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
 
-    const tableModes: TableModesType = {
-        searchTblMode: mode === 'search',
-        historyTblMode: mode === 'history',
-        statusTblMode: mode === 'status',
+    const tableModes: TableModesBooleanType = {
+        isSearchTblMode: mode === 'search',
+        isHistoryTblMode: mode === 'history',
+        isStatusTblMode: mode === 'status',
     }
+    const { isSearchTblMode, isHistoryTblMode, isStatusTblMode } = tableModes
 
-    const header = tableModes.searchTblMode ? 'Поиск ' : tableModes.historyTblMode ? 'История' : 'Заявки'
+    const header = isSearchTblMode ? 'Поиск ' : isHistoryTblMode ? 'История' : 'Заявки'
     const cargoTypes = useSelector(getCargoTypeNoTrackBaseStore)
-    const filterButtons = useSelector(mode === 'search' ? getSearchButtonsFiltersStore :
-        mode === 'history' ? getHistoryhButtonsFiltersStore : getStatusButtonsFiltersStore)
-    const filtersValue = useSelector(mode === 'search' ? getSearchFilterValuesFiltersStore :
-        mode === 'history' ? getHistoryFilterValuesFiltersStore : getStatusFilterValuesFiltersStore)
+    const filterButtons = useSelector(isSearchTblMode ? getSearchButtonsFiltersStore :
+        isHistoryTblMode ? getHistoryhButtonsFiltersStore : getStatusButtonsFiltersStore)
+    const filtersValue = useSelector(isSearchTblMode ? getSearchFilterValuesFiltersStore :
+        isStatusTblMode ? getHistoryFilterValuesFiltersStore : getStatusFilterValuesFiltersStore)
     const isFetchingTable = useSelector(getIsFetchingRequestStore)
     const dispatch = useDispatch()
 
@@ -109,7 +109,7 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
 
     // сброс фильтров при смене типа отображения и при первоначальной загрузке
     // useEffect(() => {
-        // dispatch(filtersStoreActions.setClearFilter(initialFiltersState, mode))
+    // dispatch(filtersStoreActions.setClearFilter(initialFiltersState, mode))
     // }, [ mode ])
 
     useEffect(() => { // перекрашиваем кнопку "Без фильтра"
@@ -123,7 +123,7 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
         if (clearMode !== filterButtons.clearFilters.mode) dispatch(filtersStoreActions.setClearFilterMode(clearMode, mode))
     }, [ filterButtons, mode ])
 
-    // оптимизация данных под селектор
+    // оптимизация данных 'Тип груза' под селектор
     const cargoValues: SelectOptionsType[] = [ {
         value: '',
         label: 'без фильтра',
@@ -149,7 +149,7 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
                                     options={ cargoValues }
                                 />
                                 : key === 'statusFilter'
-                                    ? tableModes.statusTblMode
+                                    ? isStatusTblMode
                                         ?
                                         <TableFilterSelect
                                             placeholder={ value.title }
@@ -163,7 +163,7 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
                                                             onChange={ filtersAction[key] }
                                         />
                                         : ( // убираем кнопки на разных типах
-                                            ( key === 'todayFilter' || key === 'tomorrowFilter' ) && !tableModes.searchTblMode )
+                                            ( key === 'todayFilter' || key === 'tomorrowFilter' ) && !isSearchTblMode )
                                             ? null
                                             : <Button title={ value.title }
                                                       colorMode={ 'whiteBlue' }
@@ -179,6 +179,7 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
             <div className={ styles.searchSection__table }>
                 <TableComponent tableModes={ tableModes }
                                 filters={ filtersValue }
+                                mode={ mode }
                 />
             </div>
         </section>

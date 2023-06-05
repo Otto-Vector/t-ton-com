@@ -1,24 +1,22 @@
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import {NavigateFunction, useNavigate} from 'react-router-dom'
-import {RoutesStoreReducerStateType} from '../../../../redux/routes-store-reducer'
+import {useNavigate} from 'react-router-dom'
 import {textAndActionGlobalModal} from '../../../../redux/utils/global-modal-store-reducer'
 import {getRoutesStore} from '../../../../selectors/routes-reselect'
-import {OneRequestTableTypeReq} from '../../../../types/form-types'
+import {OneRequestTableTypeReq, TableModesBooleanType} from '../../../../types/form-types'
 import {Button} from '../../../common/button/button'
-import {TableModesType} from '../../table-section'
 
 type OwnProps = {
-    tableModes: TableModesType
+    tableModes: TableModesBooleanType
     authCash: number
 }
 
 
 const ButtonCellReact: React.ComponentType<OwnProps & OneRequestTableTypeReq> = ( {
                                                                                       tableModes: {
-                                                                                          searchTblMode,
-                                                                                          historyTblMode,
-                                                                                          statusTblMode,
+                                                                                          isSearchTblMode,
+                                                                                          isHistoryTblMode,
+                                                                                          isStatusTblMode,
                                                                                       },
                                                                                       authCash,
                                                                                       marked,
@@ -43,19 +41,19 @@ const ButtonCellReact: React.ComponentType<OwnProps & OneRequestTableTypeReq> = 
     return ( <Button title={ 'Открыть' }
                      label={ 'Открыть ' + ( ( marked || !answers ) ? 'заявку' : 'карту с ответами перевозчиков' ) }
                      onClick={ () => {
-                         if (searchTblMode) {
+                         if (isSearchTblMode) {
                              ( price > authCash )
                                  ? toGlobalModalQuest(price)
                                  : navigate(requestInfo.accept + requestNumber)
                          }
-                         if (statusTblMode) navigate(( ( marked || !answers ) ? requestInfo.status : maps.answers ) + requestNumber)
-                         if (historyTblMode) navigate(requestInfo.history + requestNumber)
+                         if (isStatusTblMode) navigate(( ( marked || !answers ) ? requestInfo.status : maps.answers ) + requestNumber)
+                         if (isHistoryTblMode) navigate(requestInfo.history + requestNumber)
                      } }
                      colorMode={
-                         searchTblMode ?
+                         isSearchTblMode ?
                              price > authCash ? 'gray' : 'blue'
-                             : statusTblMode ? ( answers === 0 || marked ) ? 'green' : 'orange'
-                                 : historyTblMode ? 'pink'
+                             : isStatusTblMode ? ( answers === 0 || marked ) ? 'green' : 'orange'
+                                 : isHistoryTblMode ? 'pink'
                                      : 'redAlert'
                      }
     /> )

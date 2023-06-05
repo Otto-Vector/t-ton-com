@@ -9,12 +9,12 @@ import {
 import {textAndActionGlobalModal} from '../../../../redux/utils/global-modal-store-reducer'
 
 type OwnProps = {
-    isStatusTableMode: boolean
+    isStatusTblMode: boolean
 }
 
 // кнопка на удаление в таблице
 export const DeleteCellReact: React.ComponentType<OwnProps & OneRequestTableTypeReq> = ( {
-                                                                                             isStatusTableMode,
+                                                                                             isStatusTblMode,
                                                                                              roleStatus: { isCustomer = false },
                                                                                              localStatus,
                                                                                              requestNumber,
@@ -39,7 +39,7 @@ export const DeleteCellReact: React.ComponentType<OwnProps & OneRequestTableType
             ><MaterialIcon icon_name={ 'cancel' } style={ { fontSize: '20px' } }/> </Button>
         </div>
         : <></>
-    return isStatusTableMode ? Cell : <></>
+    return isStatusTblMode ? Cell : <></>
 }
 
 // замыкаем React объект для Cell

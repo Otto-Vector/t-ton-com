@@ -856,6 +856,12 @@ export type OneRequestApiToApiType = OneRequestApiType<'null' | 'serverDateTime'
 
 //////////////////////////*ТИПЫ ДЛЯ ТАБЛИЦЫ*/////////////////////////////////////////////////
 
+// моды отображения таблицы
+export type TableModesType = 'search' | 'history' | 'status'
+
+export type TableModesBooleanType = { isSearchTblMode: boolean, isHistoryTblMode: boolean, isStatusTblMode: boolean }
+
+// статусы заявки в таблице
 export type TableLocalStatus =
     'водитель выбран'
     | 'груз у водителя'
