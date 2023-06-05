@@ -81,8 +81,11 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
     const data = useMemo(() => ( TABLE_CONTENT ), [ TABLE_CONTENT ])
 
     const countHeader = <span style={ { fontSize: '75%' } }>{
-        `${ TABLE_CONTENT.length || '' }${ ( !!filteredRows && filteredRows !== TABLE_CONTENT.length ) ? '/' + filteredRows : '' }`
+        `${ TABLE_CONTENT.length || '' }${ ( filteredRows !== TABLE_CONTENT.length ) ? '/' + filteredRows : '' }`
     }</span>
+
+    const deleteHeader = statusTblMode ?
+        <MaterialIcon icon_name={ 'delete_forever' } style={ { lineHeight: 'unset' } }/> : ''
 
     const columns: Column<OneRequestTableType>[] = useMemo(
         () => [
@@ -168,7 +171,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                     />,
             },
             {
-                Header: statusTblMode ? 'X' : '',
+                Header: deleteHeader,
                 accessor: 'roleStatus',
                 // для корректной работы глобального фильтра
                 Filter: columnFilter(),
@@ -199,7 +202,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
             navigate, requestInfo, maps,
             /* допы */
             authCash, toGlobalModalQuest,
-            TABLE_CONTENT, countHeader,
+            TABLE_CONTENT, countHeader, deleteHeader,
         ],
     )
 
