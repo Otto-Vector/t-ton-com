@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {UseFiltersColumnProps} from 'react-table'
 
-const ColumnInputFilter = ( { column, filterValue }: { column: UseFiltersColumnProps<{}>, filterValue?: any } ) => {
+const ColumnInputFilter: React.ComponentType<{ column: UseFiltersColumnProps<{}>, filterValue?: any }> = ( { column, filterValue } ) => {
     useEffect(() => {
         column?.setFilter(filterValue)
     }, [ column, filterValue ])

@@ -9,7 +9,7 @@ import {OneRequestTableTypeReq} from '../../../../types/form-types'
 import styles from '../table-component.module.scss'
 
 // ячейки столбца с картинками статуса
-export const LocalStatusCell = ( { localStatus }: OneRequestTableTypeReq ) =>
+export const LocalStatusCell: React.ComponentType<OneRequestTableTypeReq> = ( { localStatus }: OneRequestTableTypeReq ) =>
                     <img className={ styles.tableComponent__statusImage }
                          alt={ 'status_icon' }
                          title={ localStatus }

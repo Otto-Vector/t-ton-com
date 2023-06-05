@@ -67,13 +67,6 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
         }))
     }, [ info, dispatch ])
 
-    const onDeleteRequest = ( requestNumber: number ) => {
-        dispatch<any>(textAndActionGlobalModal({
-            title: 'Вопрос',
-            reactChildren: <ModalFormTextToDeleteResponse requestNumber={ requestNumber }/>,
-            isFooterVisible: false,
-        }))
-    }
 
     const TABLE_CONTENT = useSelector(
         searchTblMode ? getContentTableStoreNew
@@ -161,7 +154,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 // для корректной работы глобального фильтра
                 Filter: columnFilter(),
                 disableFilters: true,
-                Cell: DeleteCell({ isStatusTableMode: statusTblMode, onClick: onDeleteRequest }),
+                Cell: DeleteCell({ isStatusTableMode: statusTblMode }),
             },
         ],
         [
