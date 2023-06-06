@@ -14,6 +14,7 @@ import {
 import {tableStoreActions} from '../../../redux/table/table-store-reducer'
 
 
+
 type OwnProps = {
     columns: readonly Column<OneRequestTableType>[],
     data: readonly OneRequestTableType[],
