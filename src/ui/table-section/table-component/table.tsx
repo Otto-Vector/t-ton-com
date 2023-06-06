@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {Column, useFilters, useGlobalFilter, useTable} from 'react-table'
+import {Column, useFilters, useGlobalFilter, useSortBy, useTable} from 'react-table'
 import styles from './table-component.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
@@ -12,7 +12,6 @@ import {
     getStatusGlobalValueFiltersStore,
 } from '../../../selectors/table/filters-reselect'
 import {tableStoreActions} from '../../../redux/table/table-store-reducer'
-
 
 
 type OwnProps = {
@@ -46,7 +45,9 @@ export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableMode
             data,
         },
         useFilters,
-        useGlobalFilter)
+        useGlobalFilter,
+        useSortBy,
+    )
 
     // @ts-ignore-next-line
     const { globalFilter } = state
@@ -62,11 +63,22 @@ export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableMode
                 <thead>
                 { headerGroups.map(( headerGroup ) => (
                     <tr { ...headerGroup.getHeaderGroupProps() }>
-                        { headerGroup.headers.map(( column ) => (
-                            <th { ...column.getHeaderProps() }>{ column.render('Header') }
+                        { headerGroup.headers.map(( header ) => (
+                            <th { ...header.getHeaderProps(
+                                //@ts-ignore-next-line // сортировочка
+                                header?.getSortByToggleProps(),
+                            ) }
+                                className={ styles.tableComponent_sorted + ' ' + (
+                                    //@ts-ignore-next-line // отображение статуса сортировки
+                                    header.isSorted ? ( header.isSortedDesc
+                                            ? styles.tableComponent_sortedUp
+                                            : styles.tableComponent_sortedDown )
+                                        : ''
+                                ) }
+                            >{ header.render('Header') }
                                 { // @ts-ignore-next-line
-                                    column?.canFilter
-                                        ? column?.render('Filter')
+                                    header?.canFilter
+                                        ? header?.render('Filter')
                                         : <></>
                                 }
                             </th>
