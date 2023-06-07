@@ -68,13 +68,13 @@ export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableMode
                                 //@ts-ignore-next-line // сортировочка
                                 header?.getSortByToggleProps(),
                             ) }
-                                className={ styles.tableComponent_sorted + ' ' + (
-                                    //@ts-ignore-next-line // отображение статуса сортировки
+                                className={ header.render('Header') ? (styles.sorted + ' ' + (
+                                    //@ts-ignore-next-line // отображение статуса сортировки через стили
                                     header.isSorted ? ( header.isSortedDesc
-                                            ? styles.tableComponent_sortedUp
-                                            : styles.tableComponent_sortedDown )
+                                            ? styles.sortedUp
+                                            : styles.sortedDown )
                                         : ''
-                                ) }
+                                )) : '' }
                             >{ header.render('Header') }
                                 { // @ts-ignore-next-line
                                     header?.canFilter
