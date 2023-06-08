@@ -3,7 +3,7 @@ import {GetActionsTypes} from '../../types/ts-utils'
 import { TableModesType } from '../../types/form-types'
 
 
-const date = new Date()
+const todayDate = new Date()
 
 export const initialFiltersState = {
     buttons: {
@@ -16,11 +16,11 @@ export const initialFiltersState = {
             mode: false,
         },
         todayFilter: {
-            title: 'Сегодня ' + ddMmFormat(date),
+            title: 'Сегодня ' + ddMmFormat(todayDate),
             mode: false,
         },
         tomorrowFilter: {
-            title: 'Завтра ' + ddMmFormat(addOneDay(date)),
+            title: 'Завтра ' + ddMmFormat(addOneDay(todayDate)),
             mode: false,
         },
         shortRouteFilter: {
@@ -82,7 +82,7 @@ export const filtersStoreReducer = ( state = modesInitial, action: ActionsType )
                     ...state[action.tableMode],
                     values: {
                         ...state[action.tableMode].values,
-                        dayFilter: state[action.tableMode].buttons.todayFilter.mode ? date : undefined,
+                        dayFilter: state[action.tableMode].buttons.todayFilter.mode ? todayDate : undefined,
                     },
                 },
             }
@@ -106,7 +106,7 @@ export const filtersStoreReducer = ( state = modesInitial, action: ActionsType )
                     ...state[action.tableMode],
                     values: {
                         ...state[action.tableMode].values,
-                        dayFilter: state[action.tableMode].buttons.tomorrowFilter.mode ? addOneDay(date) : undefined,
+                        dayFilter: state[action.tableMode].buttons.tomorrowFilter.mode ? addOneDay(todayDate) : undefined,
                     },
                 },
             }

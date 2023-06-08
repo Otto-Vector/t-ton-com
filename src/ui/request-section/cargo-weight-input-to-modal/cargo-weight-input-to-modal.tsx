@@ -96,7 +96,7 @@ export const CargoWeightInputToModal: React.ComponentType = () => {
                     <ModalFooter
                         onCancelHandle={ onCancelHandle }
                         isCancelButtonEnable
-                        isFooterPadding
+                        isFooterPaddingEnable
                     />
                 </form> )
         }

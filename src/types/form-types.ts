@@ -874,7 +874,8 @@ export type TableLocalStatus =
 export type OneRequestTableType = {
     requestNumber: number
     cargoType: string
-    shipmentDate: string
+    shipmentDate: Date
+    shipmentDateToFilter: string
     distance: number
     route: string
     answers: number

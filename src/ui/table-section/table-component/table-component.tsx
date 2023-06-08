@@ -29,7 +29,7 @@ type OwnProps = {
     filters: typeof initialFiltersState['values']
 }
 
-
+// промежуточный компонент с генератором колонок
 export const TableComponent: React.ComponentType<OwnProps> = ( {
                                                                    tableModes,
                                                                    filters: {
@@ -47,7 +47,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
         isStatusTblMode,
     } = tableModes
 
-
+    console.log(dayFilter)
     const authCash = toNumber(useSelector(getCashRequisitesStore))
     const filteredRows = useSelector(getFilteredRowsCountTableStore)
 
@@ -69,6 +69,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 Filter: columnFilter(statusFilter),
                 disableFilters: false,
                 Cell: isStatusTblMode ? LocalStatusCell : <></>,
+                disableSortBy: true,
             },
             {
                 Header: '№',
@@ -76,18 +77,23 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 // для корректной работы глобального фильтра
                 Filter: columnFilter(),
                 disableFilters: true,
+                disableSortBy: false,
             },
             {
                 Header: 'Тип груза',
                 accessor: 'cargoType',
                 Filter: columnFilter(cargoFilter),
                 disableFilters: false,
+                disableSortBy: false,
             },
             {
                 Header: 'Дата',
                 accessor: 'shipmentDate',
-                Filter: columnFilter(ddMmYearFormat(dayFilter)),
-                disableFilters: false,
+                Filter: columnFilter(),
+                disableFilters: true,
+                disableSortBy: false,
+                sortType: 'datetime',
+                Cell: ( { value }: { value: Date } ) => ddMmYearFormat(value),
             },
             {
                 Header: 'Расстояние',
@@ -96,6 +102,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 disableFilters: false,
                 filter: 'between',
                 Cell: ( { value }: { value: number } ) => `${ value } км`,
+                disableSortBy: false,
             },
             {
                 Header: 'Маршрут',
@@ -103,6 +110,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 // для корректной работы глобального фильтра
                 Filter: columnFilter(),
                 disableFilters: true,
+                disableSortBy: false,
             },
             {
                 Header: isStatusTblMode ? 'На заявке' : 'Ответы',
@@ -110,6 +118,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 // для корректной работы глобального фильтра
                 Filter: columnFilter(),
                 disableFilters: true,
+                disableSortBy: false,
             },
             {
                 Header: '',
@@ -119,6 +128,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 disableFilters: true,
                 // чтобы добавить быстрый доступ к нужным полям ищи метку #CellProps в table.tsx
                 Cell: ButtonCell({ tableModes, authCash }),
+                disableSortBy: true,
             },
             {
                 Header: isStatusTblMode
@@ -129,6 +139,16 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 Filter: columnFilter(),
                 disableFilters: true,
                 Cell: DeleteCell({ isStatusTblMode }),
+                disableSortBy: true,
+            },
+            {
+                Header: '',
+                accessor: 'shipmentDateToFilter',
+                Filter: columnFilter(ddMmYearFormat(dayFilter)),
+                disableFilters: false,
+                Cell: '',
+                disableSortBy: true,
+                sortType: 'datetime',
             },
         ],
         [

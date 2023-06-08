@@ -57,7 +57,7 @@ export const ModalFormTextToDeleteResponse: React.ComponentType<PropsType> = ( {
                     <ModalFooter
                         onCancelHandle={ onCancelHandle }
                         isCancelButtonEnable
-                        isFooterPadding
+                        isFooterPaddingEnable
                     />
                 </form> )
         }

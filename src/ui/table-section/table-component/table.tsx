@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {Column, useFilters, useGlobalFilter, useSortBy, useTable} from 'react-table'
+import {Column, HeaderGroup, useFilters, useGlobalFilter, useSortBy, useTable} from 'react-table'
 import styles from './table-component.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
@@ -57,28 +57,41 @@ export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableMode
         dispatch(tableStoreActions.setFilteredRows(filteredRowsCount))
     }, [ filteredRowsCount ])
 
+    // отображение статуса сортировки через стили
+    const bySortHeaderStyle = ( header: HeaderGroup<OneRequestTableType> ): string =>
+        //@ts-ignore-next-line
+        ( header.canSort ? styles.headerCanSorted : '' ) + ' ' + (
+            //@ts-ignore-next-line
+            header.isSorted ? ( header.isSortedDesc
+                    ? styles.headerCanSortedUp
+                    : styles.headerCanSortedDown )
+                : ''
+        )
+
+    // подпись под мышкой при наведении на хэдер
+    const bySortHeaderTitle = ( header: HeaderGroup<OneRequestTableType> ): string =>
+        //@ts-ignore-next-line
+        header.canSort ? ( header.isSorted ? ( header.isSortedDesc
+                ? 'Отсортировано по убыванию' : 'Отсортировано по возрастанию' ) :
+            'На этом столбце доступна сортировка' ) : ''
+
     return ( <>
             <GlobalFilter filter={ globalFilter } setFilter={ setGlobalFilter } value={ globalFilterValue }/>
             <table { ...getTableProps() }>
                 <thead>
                 { headerGroups.map(( headerGroup ) => (
                     <tr { ...headerGroup.getHeaderGroupProps() }>
-                        { headerGroup.headers.map(( header ) => (
-                            <th { ...header.getHeaderProps(
+                        { headerGroup.headers.map(( headerItem ) => (
+                            <th { ...headerItem.getHeaderProps(
                                 //@ts-ignore-next-line // сортировочка
-                                header?.getSortByToggleProps(),
+                                headerItem?.getSortByToggleProps(),
                             ) }
-                                className={ header.render('Header') ? (styles.sorted + ' ' + (
-                                    //@ts-ignore-next-line // отображение статуса сортировки через стили
-                                    header.isSorted ? ( header.isSortedDesc
-                                            ? styles.sortedUp
-                                            : styles.sortedDown )
-                                        : ''
-                                )) : '' }
-                            >{ header.render('Header') }
+                                title={ bySortHeaderTitle(headerItem) }
+                                className={ bySortHeaderStyle(headerItem) }
+                            >{ headerItem.render('Header') }
                                 { // @ts-ignore-next-line
-                                    header?.canFilter
-                                        ? header?.render('Filter')
+                                    headerItem?.canFilter
+                                        ? headerItem?.render('Filter')
                                         : <></>
                                 }
                             </th>
@@ -102,13 +115,14 @@ export const Table: React.ComponentType<OwnProps> = ( { columns, data, tableMode
                                 return <td { ...cell.getCellProps() }
                                 >{ cell.render('Cell', {
                                     // выставляем нужные поля для быстрого доступа здесь #CellProps
-                                    requestNumber: cell.row.values?.requestNumber,
-                                    price: cell.row.values?.price,
+                                    requestNumber: cell.row.original?.requestNumber,
+                                    price: cell.row.original?.price,
                                     answers: cell.row.original?.answers,
                                     marked: cell.row.original?.marked,
                                     globalStatus: cell.row.original?.globalStatus,
                                     localStatus: cell.row.original?.localStatus,
                                     roleStatus: cell.row.original?.roleStatus,
+                                    shipmentDateToSortBy: cell.row.original?.shipmentDateToFilter,
                                 }) }</td>
                             }) }
                         </tr>

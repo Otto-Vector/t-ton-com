@@ -60,7 +60,8 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
     const filterButtons = useSelector(isSearchTblMode ? getSearchButtonsFiltersStore :
         isHistoryTblMode ? getHistoryhButtonsFiltersStore : getStatusButtonsFiltersStore)
     const filtersValue = useSelector(isSearchTblMode ? getSearchFilterValuesFiltersStore :
-        isStatusTblMode ? getHistoryFilterValuesFiltersStore : getStatusFilterValuesFiltersStore)
+        isHistoryTblMode ? getHistoryFilterValuesFiltersStore : getStatusFilterValuesFiltersStore)
+
     const isFetchingTable = useSelector(getIsFetchingRequestStore)
     const dispatch = useDispatch()
 

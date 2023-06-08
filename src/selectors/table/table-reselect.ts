@@ -2,11 +2,11 @@ import {AppStateType} from '../../redux/redux-store'
 import {TableStoreReducerStateType} from '../../redux/table/table-store-reducer'
 import {createSelector} from 'reselect'
 import {getAllByDateRequestStore, getAllByUserRequestStore} from '../forms/request-form-reselect'
-import {ddMmYearFormat} from '../../utils/date-formats'
 import {getTariffsRequisitesStore} from '../options/requisites-reselect'
 import {OneRequestTableType, OneRequestType, TableLocalStatus} from '../../types/form-types'
 import {parseFamilyToFIO, toNumber} from '../../utils/parsers'
 import {getAuthIdAuthStore, getInitialValuesAuthStore} from '../auth-reselect'
+import { ddMmYearFormat } from '../../utils/date-formats'
 
 
 type TableStoreSelectors<T extends keyof Y, Y = TableStoreReducerStateType> = ( state: AppStateType ) => Y[T]
@@ -75,7 +75,8 @@ const parseRequestToTable = ( {
     return {
         requestNumber,
         cargoType: cargoType + '',
-        shipmentDate: ddMmYearFormat(shipmentDate) + '',
+        shipmentDate: shipmentDate || new Date(),
+        shipmentDateToFilter: ddMmYearFormat(shipmentDate) + '',
         distance: toNumber(distance),
         route: cityShipper + ' в ' + cityConsignee,
         answers: toNumber(answers?.length),
