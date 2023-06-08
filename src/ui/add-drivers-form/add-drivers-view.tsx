@@ -9,9 +9,9 @@ import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../sel
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {getAllEmployeesAPI, modifyOneEmployeeStatusToAPI} from '../../redux/options/employees-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
-import {Preloader} from '../common/preloader/preloader'
+import {Preloader} from '../common/tiny/preloader/preloader'
 import {addAcceptedResponseToRequestOnAcceptDriver, getOneRequestsAPI} from '../../redux/forms/request-store-reducer'
-import {Button} from '../common/button/button'
+import {ProjectButton} from '../common/buttons/project-button/project-button'
 import {AppStateType} from '../../redux/redux-store'
 import {
     getFilteredDriversBigMapStore,
@@ -39,7 +39,7 @@ type OwnProps = {
     isModal?: boolean
 }
 // для отображения сотрудника на карте
-export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = false } ) => {
+export const AddDriversView: React.ComponentType<OwnProps> = ( { idEmployee, isModal = false } ) => {
 
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
     const setImage = ( urlImage?: string | null ): string => urlImage ? currentURL + urlImage : noImage
@@ -332,23 +332,23 @@ export const AddDriversView: React.FC<OwnProps> = ( { idEmployee, isModal = fals
                 <div className={ styles.addDriversForm__buttonsPanel }>
                     { isAnswersMode
                         ? <>
-                            <Button colorMode={ 'blue' } title={ 'Принять' }
-                                    onClick={ onSubmit }
+                            <ProjectButton colorMode={ 'blue' } title={ 'Принять' }
+                                           onClick={ onSubmit }
                             />
                             <span style={ { paddingLeft: '10px' } }/>
-                            <Button colorMode={ 'red' } title={ 'Отказать' }
-                                    onClick={ onDecline }
+                            <ProjectButton colorMode={ 'red' } title={ 'Отказать' }
+                                           onClick={ onDecline }
                             />
                         </>
                         :
-                        <Button type={ 'button' }
-                                disabled={ !employeeOnePhone }
-                                colorMode={ 'blue' }
-                                onClick={ () => {
+                        <ProjectButton type={ 'button' }
+                                       disabled={ !employeeOnePhone }
+                                       colorMode={ 'blue' }
+                                       onClick={ () => {
                                     phoneToModal(employeeOnePhone)
                                 } }
-                                title={ employeeOnePhone + '' }
-                                rounded
+                                       title={ employeeOnePhone + '' }
+                                       rounded
                         />
                     }
                 </div>

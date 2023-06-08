@@ -1,4 +1,4 @@
-import {SelectOptionsType} from '../../common/form-selector/selector-utils'
+import {SelectOptionsType} from '../../common/inputs/final-form-inputs/form-selector/selector-utils'
 import {StylesConfig} from 'react-select'
 
 export const tableSelectorStyles = (): StylesConfig<SelectOptionsType> => ( {

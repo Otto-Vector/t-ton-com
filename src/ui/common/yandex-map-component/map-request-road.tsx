@@ -11,7 +11,7 @@ type MapRequestRoadType = {
 }
 
 // отрисовка дороги И точки погрузки/разгрузки с контекстом
-export const MapRequestRoad: React.FC<MapRequestRoadType> = ( {
+export const MapRequestRoad: React.ComponentType<MapRequestRoadType> = ( {
                                                                   polyline,
                                                                   recipientCity,
                                                                   senderCity,

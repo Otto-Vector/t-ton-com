@@ -2,12 +2,12 @@ import React, {useMemo} from 'react'
 import {globalModalDestroy} from '../../../redux/utils/global-modal-store-reducer'
 import {syncValidators} from '../../../utils/validators'
 import {useDispatch} from 'react-redux'
-import {FormInputType} from '../../common/form-input-type/form-input-type'
+import {FormInputType} from '../../common/inputs/final-form-inputs/form-input-type/form-input-type'
 import {Field, Form} from 'react-final-form'
 import createDecorator from 'final-form-focus'
 import styles from './modal-form-text-to-delete-response.module.scss'
 import {cancelRequestOnDeleteButton} from '../../../redux/forms/request-store-reducer'
-import {ModalFooter} from '../../common/info-global-to-modal/modal-footer/modal-footer'
+import {ModalFooter} from '../../common/modals/info-global-to-modal/modal-footer/modal-footer'
 
 type PropsType = { requestNumber: number }
 

@@ -6,7 +6,7 @@ type PortalType = {
     getHTMLElementId: string
 }
 
-export const Portal: React.FC<PortalType> = React.memo(( { children, getHTMLElementId } ) => {
+export const Portal: React.ComponentType<PortalType> = React.memo(( { children, getHTMLElementId } ) => {
 
     // находим искомый HTML по id
     const mount = document.getElementById(getHTMLElementId)

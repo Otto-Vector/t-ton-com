@@ -5,7 +5,7 @@ import {getLinksBaseStore} from '../../selectors/base-reselect'
 
 type OwnProps = {}
 
-export const LinksPanel: React.FC<OwnProps> = () => {
+export const LinksPanel: React.ComponentType<OwnProps> = () => {
     const links = useSelector(getLinksBaseStore)
 
     return (

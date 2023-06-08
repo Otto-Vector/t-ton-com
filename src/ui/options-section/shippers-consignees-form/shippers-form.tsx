@@ -2,15 +2,15 @@ import React, {useEffect, useMemo, useState} from 'react'
 import styles from './shippers-consignees-form.module.scss'
 import {Field, Form} from 'react-final-form'
 
-import {Button} from '../../common/button/button'
-import {FormInputType} from '../../common/form-input-type/form-input-type'
-import {Preloader} from '../../common/preloader/preloader'
+import {ProjectButton} from '../../common/buttons/project-button/project-button'
+import {FormInputType} from '../../common/inputs/final-form-inputs/form-input-type/form-input-type'
+import {Preloader} from '../../common/tiny/preloader/preloader'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {InfoText} from '../../common/info-text/into-text'
-import {CancelXButton} from '../../common/cancel-button/cancel-x-button'
+import {InfoText} from '../../common/tiny/info-text/into-text'
+import {CancelXButton} from '../../common/buttons/cancel-button/cancel-x-button'
 import {ShippersCardType} from '../../../types/form-types'
 import {
     getCurrentIdShipperStore,
@@ -31,7 +31,7 @@ import {
 } from '../../../redux/options/shippers-store-reducer'
 import {parseAllNumbers} from '../../../utils/parsers'
 import {YandexMapToForm} from '../../common/yandex-map-component/map-to-form'
-import {FormSelector} from '../../common/form-selector/form-selector'
+import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
 import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer'
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect'
@@ -42,7 +42,7 @@ import {
 } from '../../../selectors/options/options-reselect'
 import {includesTitleValidator} from '../../../utils/validators'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
-import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple'
+import {FormSpySimple} from '../../common/inputs/final-form-inputs/form-spy-simple/form-spy-simple'
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate'
 import {getCityFromDispetcherAPI} from '../../../redux/api/avto-dispetcher-response-reducer'
 import createDecorator from 'final-form-focus'
@@ -52,7 +52,7 @@ import {stringToCoords} from '../../../utils/map-utils'
 type OwnProps = {}
 
 
-export const ShippersForm: React.FC<OwnProps> = () => {
+export const ShippersForm: React.ComponentType<OwnProps> = () => {
 
     const header = 'Заказчики и Грузоотправители'
     const isFetching = useSelector(getIsFetchingShippersStore)
@@ -362,20 +362,20 @@ export const ShippersForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <div className={ styles.shippersConsigneesForm__buttonsPanel }>
                                                 <div className={ styles.shippersConsigneesForm__button }>
-                                                    <Button type={ 'submit' }
-                                                            disabled={ submitting || submitError }
-                                                            colorMode={ 'green' }
-                                                            title={ 'Cохранить' }
-                                                            rounded
-                                                    >{ submitting && <Preloader/> }</Button>
+                                                    <ProjectButton type={ 'submit' }
+                                                                   disabled={ submitting || submitError }
+                                                                   colorMode={ 'green' }
+                                                                   title={ 'Cохранить' }
+                                                                   rounded
+                                                    >{ submitting && <Preloader/> }</ProjectButton>
                                                 </div>
                                                 <div className={ styles.shippersConsigneesForm__button }>
-                                                    <Button type={ 'button' }
-                                                            disabled={ isNew }
-                                                            colorMode={ 'red' }
-                                                            title={ 'Удалить' }
-                                                            rounded
-                                                            onClick={ shipperDeleteHandleClick }
+                                                    <ProjectButton type={ 'button' }
+                                                                   disabled={ isNew }
+                                                                   colorMode={ 'red' }
+                                                                   title={ 'Удалить' }
+                                                                   rounded
+                                                                   onClick={ shipperDeleteHandleClick }
                                                     />
                                                 </div>
                                             </div>

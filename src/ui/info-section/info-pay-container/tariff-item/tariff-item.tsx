@@ -7,7 +7,7 @@ type OwnProps = {
     tarifsPrice: string
 }
 
-export const TariffItem: React.FC<OwnProps> = (
+export const TariffItem: React.ComponentType<OwnProps> = (
     {
         tarifsLabel,
         tarifsPrice,

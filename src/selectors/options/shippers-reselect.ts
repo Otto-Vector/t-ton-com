@@ -2,7 +2,7 @@ import {AppStateType} from '../../redux/redux-store'
 import {ShippersStoreReducerStateType} from '../../redux/options/shippers-store-reducer'
 import {createSelector} from 'reselect';
 import {ShippersCardType} from '../../types/form-types';
-import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
+import {SelectOptionsType} from '../../ui/common/inputs/final-form-inputs/form-selector/selector-utils';
 
 
 type ShippersStoreSelectors<T extends keyof Y, Y = ShippersStoreReducerStateType> = ( state: AppStateType ) => Y[T]

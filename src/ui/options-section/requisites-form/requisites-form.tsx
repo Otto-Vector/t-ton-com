@@ -2,11 +2,11 @@ import React, {useMemo} from 'react'
 import styles from './requisites-form.module.scss'
 import {Field, Form} from 'react-final-form'
 
-import {Button} from '../../common/button/button'
-import {FormInputType} from '../../common/form-input-type/form-input-type'
+import {ProjectButton} from '../../common/buttons/project-button/project-button'
+import {FormInputType} from '../../common/inputs/final-form-inputs/form-input-type/form-input-type'
 
 import {useDispatch, useSelector} from 'react-redux'
-import {Preloader, SizedPreloader} from '../../common/preloader/preloader'
+import {Preloader, SizedPreloader} from '../../common/tiny/preloader/preloader'
 import {
     getIsFetchingRequisitesStore,
     getLabelRequisitesStore,
@@ -16,29 +16,29 @@ import {
     getValidatorsRequisitesStore,
 } from '../../../selectors/options/requisites-reselect'
 import {CompanyRequisitesType, ShippersCardType} from '../../../types/form-types'
-import {CancelXButton} from '../../common/cancel-button/cancel-x-button'
+import {CancelXButton} from '../../common/buttons/cancel-button/cancel-x-button'
 import {useNavigate, useParams} from 'react-router-dom'
-import {InfoText} from '../../common/info-text/into-text'
+import {InfoText} from '../../common/tiny/info-text/into-text'
 import {
     deletePersonalOrganizationRequisites,
     requisitesStoreActions,
     setOrganizationRequisites,
 } from '../../../redux/options/requisites-store-reducer'
 import {coordsToString, parseAllNumbers} from '../../../utils/parsers'
-import {FormSelector} from '../../common/form-selector/form-selector'
+import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FORM_ERROR} from 'final-form'
 import {newShipperSaveToAPI} from '../../../redux/options/shippers-store-reducer'
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect'
-import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
+import {stringArrayToSelectValue} from '../../common/inputs/final-form-inputs/form-selector/selector-utils'
 
 
 import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
 
-export const RequisitesForm: React.FC<OwnProps> = () => {
+export const RequisitesForm: React.ComponentType<OwnProps> = () => {
 
     const isFetching = useSelector(getIsFetchingRequisitesStore)
     const localCoords = useSelector(getGeoPositionAuthStore)
@@ -290,12 +290,12 @@ export const RequisitesForm: React.FC<OwnProps> = () => {
                                                    parse={ parsers.korrAccount }
                                             />
                                             <div className={ styles.requisitesForm__buttonsPanel }>
-                                                <Button type={ 'submit' }
-                                                        disabled={ submitting || pristine }
-                                                        colorMode={ 'green' }
-                                                        title={ 'Cохранить' }
-                                                        rounded
-                                                >{ submitting && <Preloader/> }</Button>
+                                                <ProjectButton type={ 'submit' }
+                                                               disabled={ submitting || pristine }
+                                                               colorMode={ 'green' }
+                                                               title={ 'Cохранить' }
+                                                               rounded
+                                                >{ submitting && <Preloader/> }</ProjectButton>
                                             </div>
                                         </div>
                                         { submitError && <span className={ styles.onError }>{ submitError }</span> }

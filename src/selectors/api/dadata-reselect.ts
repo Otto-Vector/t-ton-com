@@ -1,7 +1,7 @@
 import {AppStateType} from '../../redux/redux-store'
 import {DaDataStoreReducerStateType} from '../../redux/api/dadata-response-reducer';
 import {createSelector} from 'reselect';
-import {SelectOptionsType} from '../../ui/common/form-selector/selector-utils';
+import {SelectOptionsType} from '../../ui/common/inputs/final-form-inputs/form-selector/selector-utils';
 
 
 type daDataStoreSelectors<T extends keyof Y, Y = DaDataStoreReducerStateType> = ( state: AppStateType ) => Y[T]

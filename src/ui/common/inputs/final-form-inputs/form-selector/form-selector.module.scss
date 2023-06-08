@@ -1,0 +1,47 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+$dropdown--font: $PTSansFont;
+$dropdown--bgColor: white;
+$dropdown--borderColor: #92ABC8;
+$dropdown--fontColor: $accentColor;
+$black-75: #00000075;
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  font-family: $dropdown--font;
+  font-size: inherit;
+  white-space: nowrap;
+  font-weight: 400;
+  text-align: left;
+  position: relative;
+  background-color: transparent;
+  border-radius: rem(12);
+  width: 100%;
+}
+
+.label {
+  font-size: rem(18);
+  font-weight: bold;
+
+  padding-bottom: rem(4);
+  padding-left: rem(4);
+}
+
+.errorSpan {
+  position: absolute;
+  left: 5px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: rgba(199, 7, 7, 0.75);
+  font-weight: bold;
+
+  &_bottom {
+    bottom: -14px;
+  }
+
+  &_top {
+    top: -14px;
+  }
+}

@@ -10,7 +10,7 @@ type OwnProps = {
     baseHref: string
 }
 
-export const Logo: React.FC<OwnProps> = ( { companyName, baseHref } ) => {
+export const Logo: React.ComponentType<OwnProps> = ( { companyName, baseHref } ) => {
     const { hello } = useSelector(getRoutesStore)
     return (
         <div className={ styles.logo }>

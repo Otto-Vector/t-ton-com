@@ -14,13 +14,13 @@ import {
 import {getIsFetchingShippersStore} from '../../selectors/options/shippers-reselect'
 import {getIsFetchingConsigneesStore} from '../../selectors/options/consignees-reselect'
 
-import {Button} from '../common/button/button'
+import {ProjectButton} from '../common/buttons/project-button/project-button'
 import {ColumnDataList} from './column-data-list/column-data-list'
-import {SizedPreloader} from '../common/preloader/preloader'
+import {SizedPreloader} from '../common/tiny/preloader/preloader'
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
 import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect'
 import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect'
-import {InfoButtonToModal} from '../common/info-button-to-modal/info-button-to-modal'
+import {InfoButtonToModal} from '../common/modals/info-button-to-modal/info-button-to-modal'
 import {initializedAllOptionsList} from '../../redux/options/options-store-reducer'
 import {AppStateType} from '../../redux/redux-store'
 
@@ -28,7 +28,7 @@ import {AppStateType} from '../../redux/redux-store'
 type OwnProps = {}
 
 
-export const OptionsSection: React.FC<OwnProps> = () => {
+export const OptionsSection: React.ComponentType<OwnProps> = () => {
 
     const titleHeader = 'Настройки'
     const initialazed = useSelector(( state: AppStateType ) => state.appStoreReducer.initialized)
@@ -72,11 +72,11 @@ export const OptionsSection: React.FC<OwnProps> = () => {
             <header className={ styles.optionsSection__header }>
                 <h3>{ titleHeader }</h3>
                 <div className={ styles.optionsSection__buttonRequisites }>
-                    <Button type={ 'button' }
-                            title={ 'Реквизиты' }
-                            colorMode={ 'blue' }
-                            rounded
-                            onClick={ showRequisitesOnClick }> Реквизиты </Button>
+                    <ProjectButton type={ 'button' }
+                                   title={ 'Реквизиты' }
+                                   colorMode={ 'blue' }
+                                   rounded
+                                   onClick={ showRequisitesOnClick }> Реквизиты </ProjectButton>
                     <InfoButtonToModal textToModal={ requisitesInfoText }/>
                 </div>
             </header>

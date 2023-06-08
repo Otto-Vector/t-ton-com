@@ -9,12 +9,12 @@ import {
 } from '../../../selectors/forms/request-form-reselect'
 import {RequestModesType} from '../request-section'
 
-import {Button} from '../../common/button/button'
-import {InfoText} from '../../common/info-text/into-text'
+import {ProjectButton} from '../../common/buttons/project-button/project-button'
+import {InfoText} from '../../common/tiny/info-text/into-text'
 import {hhmmDdMmYyFormat, timeDiff} from '../../../utils/date-formats'
-import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
-import {DownloadSampleFileWrapper} from '../../common/download-sample-file/download-sample-file-wrapper'
-import {ButtonMenuSaveLoad} from '../../common/button-menu-save-load/button-menu-save-load'
+import {InfoButtonToModal} from '../../common/modals/info-button-to-modal/info-button-to-modal'
+import {DownloadSampleFileWrapper} from '../../common/buttons/download-sample-file-wrapper/download-sample-file-wrapper'
+import {ButtonMenuSaveLoad} from '../../common/buttons/button-menu-save-load/button-menu-save-load'
 import {
     addRewriteCargoDocumentRequestAPI,
     closeRequestAndUpdateDriverStatus,
@@ -145,7 +145,7 @@ export const RequestFormDocumentsRight: React.ComponentType<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' '
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <DownloadSampleFileWrapper urlShort={ initialValuesDocuments.proxyWay?.proxyFreightLoader }>
-                            <Button
+                            <ProjectButton
                                 colorMode={ !initialValuesDocuments.proxyWay?.proxyFreightLoader ? 'grayAlert' : 'blue' }
                                 title={ labelsDocumentsTab.proxyWay?.proxyFreightLoader }
                                 disabled={ !initialValuesDocuments.proxyWay?.proxyFreightLoader }
@@ -157,10 +157,10 @@ export const RequestFormDocumentsRight: React.ComponentType<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' '
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <DownloadSampleFileWrapper urlShort={ initialValuesDocuments.proxyWay?.proxyDriver }>
-                            <Button colorMode={ !initialValuesDocuments.proxyWay?.proxyDriver ? 'grayAlert' : 'blue' }
-                                    title={ labelsDocumentsTab.proxyWay?.proxyDriver?.toString() }
-                                    disabled={ !initialValuesDocuments.proxyWay?.proxyDriver }
-                                    wordWrap
+                            <ProjectButton colorMode={ !initialValuesDocuments.proxyWay?.proxyDriver ? 'grayAlert' : 'blue' }
+                                           title={ labelsDocumentsTab.proxyWay?.proxyDriver?.toString() }
+                                           disabled={ !initialValuesDocuments.proxyWay?.proxyDriver }
+                                           wordWrap
                             />
                         </DownloadSampleFileWrapper>
                     </div>
@@ -171,10 +171,10 @@ export const RequestFormDocumentsRight: React.ComponentType<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' '
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <DownloadSampleFileWrapper urlShort={ initialValuesDocuments.proxyWay?.waybillDriver }>
-                            <Button colorMode={ !initialValuesDocuments.proxyWay?.waybillDriver ? 'grayAlert' : 'blue' }
-                                    title={ labelsDocumentsTab.proxyWay?.waybillDriver?.toString() }
-                                    disabled={ !initialValuesDocuments.proxyWay?.waybillDriver }
-                                    wordWrap
+                            <ProjectButton colorMode={ !initialValuesDocuments.proxyWay?.waybillDriver ? 'grayAlert' : 'blue' }
+                                           title={ labelsDocumentsTab.proxyWay?.waybillDriver?.toString() }
+                                           disabled={ !initialValuesDocuments.proxyWay?.waybillDriver }
+                                           wordWrap
                             />
                         </DownloadSampleFileWrapper>
                     </div>
@@ -182,10 +182,10 @@ export const RequestFormDocumentsRight: React.ComponentType<OwnProps> = (
                     <div className={ styles.requestFormDocumentRight__buttonItem + ' '
                         + styles.requestFormDocumentRight__buttonItem_twoLines }>
                         <DownloadSampleFileWrapper urlShort={ initialValuesDocuments.proxyWay?.itineraryList }>
-                            <Button colorMode={ !initialValuesDocuments.proxyWay?.itineraryList ? 'grayAlert' : 'blue' }
-                                    title={ labelsDocumentsTab.proxyWay?.itineraryList?.toString() }
-                                    disabled={ !initialValuesDocuments.proxyWay?.itineraryList }
-                                    wordWrap
+                            <ProjectButton colorMode={ !initialValuesDocuments.proxyWay?.itineraryList ? 'grayAlert' : 'blue' }
+                                           title={ labelsDocumentsTab.proxyWay?.itineraryList?.toString() }
+                                           disabled={ !initialValuesDocuments.proxyWay?.itineraryList }
+                                           wordWrap
                             />
                         </DownloadSampleFileWrapper>
                     </div>
@@ -392,7 +392,7 @@ export const RequestFormDocumentsRight: React.ComponentType<OwnProps> = (
             <div className={ styles.requestFormDocumentRight__buttonsPanel }>
                 { !isHistoryMode && <>
                     <div className={ styles.requestFormDocumentRight__panelButton }>
-                        <Button
+                        <ProjectButton
                             colorMode={ initialValuesRequest?.localStatus?.paymentHasBeenReceived ? 'green' : 'blue' }
                             title={ labelsRequestHead.localStatus?.paymentHasBeenReceived +
                                 ( !initialValuesRequest?.localStatus?.paymentHasBeenReceived ? '?' : '' ) }
@@ -403,12 +403,12 @@ export const RequestFormDocumentsRight: React.ComponentType<OwnProps> = (
                         />
                     </div>
                     <div className={ styles.requestFormDocumentRight__panelButton }>
-                        <Button colorMode={ isRequestReadyToClose ? 'blue' : isRequestClosed ? 'red' : 'gray' }
-                                wordWrap
-                                rounded
-                                title={ labelsRequestHead.localStatus?.cargoHasBeenReceived }
-                                disabled={ !isRequestReadyToClose || isRequestClosed }
-                                onClick={ () => {
+                        <ProjectButton colorMode={ isRequestReadyToClose ? 'blue' : isRequestClosed ? 'red' : 'gray' }
+                                       wordWrap
+                                       rounded
+                                       title={ labelsRequestHead.localStatus?.cargoHasBeenReceived }
+                                       disabled={ !isRequestReadyToClose || isRequestClosed }
+                                       onClick={ () => {
                                     buttonsAction.closeRequest()
                                 } }
                         />

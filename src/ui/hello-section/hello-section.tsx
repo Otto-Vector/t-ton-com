@@ -14,7 +14,7 @@ import {getHelloDescriptionBaseStore} from '../../selectors/base-reselect';
 
 type OwnProps = {}
 
-export const HelloSection: React.FC<OwnProps> = React.memo(() => {
+export const HelloSection: React.ComponentType<OwnProps> = React.memo(() => {
 
     const description = useSelector(getHelloDescriptionBaseStore)
 

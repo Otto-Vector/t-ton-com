@@ -8,7 +8,7 @@ type OwnProps = {
     hide?: boolean
 }
 
-export const DescriptionInsider: React.FC<OwnProps> = ( { srcIcon, textArray, position = 'center', hide = true } ) => {
+export const DescriptionInsider: React.ComponentType<OwnProps> = ( { srcIcon, textArray, position = 'center', hide = true } ) => {
 
     const positionIs = ( pos: OwnProps['position'] ): string =>
         pos === 'left' ? styles.descriptionInsider_left

@@ -5,7 +5,7 @@ import {Ofer} from './ofer/ofer';
 
 type OwnProps = {}
 
-export const Footer: React.FC<OwnProps> = () => {
+export const Footer: React.ComponentType<OwnProps> = () => {
     return (
         <footer className={ styles.footer }>
             <Ofer/>

@@ -1,0 +1,19 @@
+@import '../../../../styles/variables';
+
+.rotated-ant-switch {
+  width: 40px;
+  transform: rotate(90deg);
+  transform-origin: 35% 40%;
+}
+
+.ant-switch-checked {
+  background-color: $accentColor !important;
+
+  &:focus {
+    box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.54) !important;
+  }
+}
+
+.ant-switch-inner {
+  font-family: 'PT Sans', sans-serif;
+}

@@ -1,11 +1,11 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
 import styles from './column-data-list.module.scss'
-import {MaterialIcon} from '../../common/material-icon/material-icon'
-import {Button} from '../../common/button/button'
+import {MaterialIcon} from '../../common/tiny/material-icon/material-icon'
+import {ProjectButton} from '../../common/buttons/project-button/project-button'
 import {useNavigate} from 'react-router-dom'
 import {parseCharsAndNumbers} from '../../../utils/parsers'
 import {OptionsLabelType} from '../../../redux/options/options-store-reducer'
-import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
+import {InfoButtonToModal} from '../../common/modals/info-button-to-modal/info-button-to-modal'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {useSelector} from 'react-redux'
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
@@ -22,7 +22,7 @@ type OwnProps = {
     isPlacemarked?: boolean
 }
 
-export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, isPlacemarked } ) => {
+export const ColumnDataList: React.ComponentType<OwnProps> = React.memo(( { item, route, isPlacemarked } ) => {
     const navigate = useNavigate()
 
     const { innNumber } = useSelector(getStoredValuesRequisitesStore)
@@ -58,15 +58,15 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
                     />
                     {/*КНОПКА СБРОСА*/ }
                     <div className={ styles.rowItem__clear }>
-                        <Button colorMode={ 'white' }
-                                disabled={ !test }
-                                title={ 'Очистить строку поиска' }
-                                onClick={ () => {
+                        <ProjectButton colorMode={ 'white' }
+                                       disabled={ !test }
+                                       title={ 'Очистить строку поиска' }
+                                       onClick={ () => {
                                     setTest('')
                                 }
                                 }>
                             <MaterialIcon icon_name={ 'close' }/>
-                        </Button>
+                        </ProjectButton>
                     </div>
                 </div>
             </header>
@@ -99,12 +99,12 @@ export const ColumnDataList: React.FC<OwnProps> = React.memo(( { item, route, is
             </div>
             {/*КНОПКА "+" СОЗДАТЬ */ }
             <div className={ styles.columnDataList__button + ' ' + styles.columnDataList__button_left }>
-                <Button onClick={ () => {
+                <ProjectButton onClick={ () => {
                     navigate(route + 'new')
                 } }
-                        title={ 'Добавить' }
-                        rounded colorMode={ 'lightBlue' }>
-                    <MaterialIcon icon_name={ 'add' }/></Button>
+                               title={ 'Добавить' }
+                               rounded colorMode={ 'lightBlue' }>
+                    <MaterialIcon icon_name={ 'add' }/></ProjectButton>
             </div>
             {/*КНОПКА "?" ИНФО */ }
             <InfoButtonToModal textToModal={ item.info } mode={ 'in' }/>

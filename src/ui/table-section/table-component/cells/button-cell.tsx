@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import {textAndActionGlobalModal} from '../../../../redux/utils/global-modal-store-reducer'
 import {getRoutesStore} from '../../../../selectors/routes-reselect'
 import {OneRequestTableTypeReq, TableModesBooleanType} from '../../../../types/form-types'
-import {Button} from '../../../common/button/button'
+import {ProjectButton} from '../../../common/buttons/project-button/project-button'
 
 type OwnProps = {
     tableModes: TableModesBooleanType
@@ -38,9 +38,9 @@ const ButtonCellReact: React.ComponentType<OwnProps & OneRequestTableTypeReq> = 
         }))
     }
 
-    return ( <Button title={ 'Открыть' }
-                     label={ 'Открыть ' + ( ( marked || !answers ) ? 'заявку' : 'карту с ответами перевозчиков' ) }
-                     onClick={ () => {
+    return ( <ProjectButton title={ 'Открыть' }
+                            label={ 'Открыть ' + ( ( marked || !answers ) ? 'заявку' : 'карту с ответами перевозчиков' ) }
+                            onClick={ () => {
                          if (isSearchTblMode) {
                              ( price > authCash )
                                  ? toGlobalModalQuest(price)
@@ -49,7 +49,7 @@ const ButtonCellReact: React.ComponentType<OwnProps & OneRequestTableTypeReq> = 
                          if (isStatusTblMode) navigate(( ( marked || !answers ) ? requestInfo.status : maps.answers ) + requestNumber)
                          if (isHistoryTblMode) navigate(requestInfo.history + requestNumber)
                      } }
-                     colorMode={
+                            colorMode={
                          isSearchTblMode ?
                              price > authCash ? 'gray' : 'blue'
                              : isStatusTblMode ? ( answers === 0 || marked ) ? 'green' : 'orange'

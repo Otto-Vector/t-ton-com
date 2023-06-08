@@ -11,7 +11,7 @@ type OwnProps = {
     oneInfoItem: OneInfoItem
 }
 
-export const MessageItem: React.FC<OwnProps> = (
+export const MessageItem: React.ComponentType<OwnProps> = (
     {
         oneInfoItem: { idLog, mode, Message, Time, idObject },
     },

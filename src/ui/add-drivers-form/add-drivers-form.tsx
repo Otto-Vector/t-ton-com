@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import styles from './add-drivers-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {Button} from '../common/button/button'
-import {Preloader} from '../common/preloader/preloader'
+import {ProjectButton} from '../common/buttons/project-button/project-button'
+import {Preloader} from '../common/tiny/preloader/preloader'
 import noImage from '../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {
@@ -10,7 +10,7 @@ import {
     getStoredValuesRequisitesStore,
 } from '../../selectors/options/requisites-reselect'
 import {useNavigate, useParams} from 'react-router-dom'
-import {CancelXButton} from '../common/cancel-button/cancel-x-button'
+import {CancelXButton} from '../common/buttons/cancel-button/cancel-x-button'
 import {EmployeeCardType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
 
 import {
@@ -19,8 +19,8 @@ import {
     getPlaceholderAddDriverStore,
     getValidatorsAddDriverStore,
 } from '../../selectors/forms/add-driver-reselect'
-import {FormSelector} from '../common/form-selector/form-selector'
-import {FormInputType} from '../common/form-input-type/form-input-type'
+import {FormSelector} from '../common/inputs/final-form-inputs/form-selector/form-selector'
+import {FormInputType} from '../common/inputs/final-form-inputs/form-input-type/form-input-type'
 import {getInitialValuesRequestStore} from '../../selectors/forms/request-form-reselect'
 import {getOneEmployeeFromLocal} from '../../selectors/options/employees-reselect'
 import {getOneTransportFromLocal} from '../../selectors/options/transport-reselect'
@@ -39,8 +39,8 @@ import {
 } from '../../redux/forms/request-store-reducer'
 import {syncParsers, toNumber} from '../../utils/parsers'
 import {FormApi} from 'final-form'
-import {FormSpySimple} from '../common/form-spy-simple/form-spy-simple'
-import {SelectOptionsType} from '../common/form-selector/selector-utils'
+import {FormSpySimple} from '../common/inputs/final-form-inputs/form-spy-simple/form-spy-simple'
+import {SelectOptionsType} from '../common/inputs/final-form-inputs/form-selector/selector-utils'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {setOneResponseToRequest} from '../../redux/forms/add-driver-store-reducer'
@@ -57,7 +57,7 @@ type OwnProps = {
 }
 
 
-export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
+export const AddDriversForm: React.ComponentType<OwnProps> = ( { mode } ) => {
 
     const currentURL = useSelector(( state: AppStateType ) => state.baseStoreReducer.serverURL)
     const setImage = ( urlImage?: string ): string => urlImage ? currentURL + urlImage : noImage
@@ -378,21 +378,21 @@ export const AddDriversForm: React.FC<OwnProps> = ( { mode } ) => {
 
                                         <div className={ styles.addDriversForm__buttonsPanel }>
                                             <div className={ styles.addDriversForm__button }>
-                                                <Button type={ 'submit' }
-                                                        disabled={ submitting || hasValidationErrors }
-                                                        colorMode={ 'green' }
-                                                        title={ 'Принять' }
-                                                        rounded
+                                                <ProjectButton type={ 'submit' }
+                                                               disabled={ submitting || hasValidationErrors }
+                                                               colorMode={ 'green' }
+                                                               title={ 'Принять' }
+                                                               rounded
                                                 />
                                             </div>
                                             <div className={ styles.addDriversForm__button }>
-                                                <Button type={ 'button' }
-                                                        colorMode={ 'red' }
-                                                        title={ 'Отказаться' }
-                                                        onClick={ () => {
+                                                <ProjectButton type={ 'button' }
+                                                               colorMode={ 'red' }
+                                                               title={ 'Отказаться' }
+                                                               onClick={ () => {
                                                             onCancelClick()
                                                         } }
-                                                        rounded
+                                                               rounded
                                                 />
                                             </div>
                                         </div>

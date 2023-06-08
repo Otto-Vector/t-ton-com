@@ -11,10 +11,10 @@ import {
     getPreparedInfoDataRequestStore,
     getValidatorsRequestStore,
 } from '../../../selectors/forms/request-form-reselect'
-import {FormInputType} from '../../common/form-input-type/form-input-type'
+import {FormInputType} from '../../common/inputs/final-form-inputs/form-input-type/form-input-type'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {useNavigate} from 'react-router-dom'
-import {FormSelector} from '../../common/form-selector/form-selector'
+import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
 import {RequestModesType} from '../request-section'
 import {Field, Form} from 'react-final-form'
 import {InfoField} from './info-field'
@@ -22,7 +22,7 @@ import {
     getAllConsigneesSelectFromLocal,
     getOneConsigneesFromLocal,
 } from '../../../selectors/options/consignees-reselect'
-import {InfoText} from '../../common/info-text/into-text'
+import {InfoText} from '../../common/tiny/info-text/into-text'
 import {addNDay, ddMmYearFormat, yearMmDdFormat} from '../../../utils/date-formats'
 import {
     cargoHasBeenRecievedOnCurrentRequest,
@@ -32,14 +32,14 @@ import {
 } from '../../../redux/forms/request-store-reducer'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
-import {Preloader} from '../../common/preloader/preloader'
-import {InfoButtonToModal} from '../../common/info-button-to-modal/info-button-to-modal'
-import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
+import {Preloader} from '../../common/tiny/preloader/preloader'
+import {InfoButtonToModal} from '../../common/modals/info-button-to-modal/info-button-to-modal'
+import {stringArrayToSelectValue} from '../../common/inputs/final-form-inputs/form-selector/selector-utils'
 import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer'
 import {setCargoCompositionSelector} from '../../../redux/api/cargo-composition-response-reducer'
 import {getCargoCompositionSelectorStore} from '../../../selectors/api/cargo-composition-reselect'
-import {Button} from '../../common/button/button'
-import {FormSpySimple} from '../../common/form-spy-simple/form-spy-simple'
+import {ProjectButton} from '../../common/buttons/project-button/project-button'
+import {FormSpySimple} from '../../common/inputs/final-form-inputs/form-spy-simple/form-spy-simple'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
 import {getCargoTypeBaseStore} from '../../../selectors/base-reselect'
 import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisites-reselect'
@@ -454,7 +454,7 @@ export const RequestFormLeft: React.ComponentType<OwnProps> = memo((
                                 { !isHistoryMode ? <>
                                     {/* ПОИСК ИСПОЛНИТЕЛЯ | ПРИНЯТЬ ЗАЯВКУ | ГРУЗ У ВОДИТЕЛЯ*/ }
                                     <div className={ styles.requestFormLeft__panelButton }>
-                                        <Button
+                                        <ProjectButton
                                             colorMode={ !values.localStatus?.cargoHasBeenTransferred ? 'green' : 'blue' }
                                             type={ hasValidationErrors ? 'submit' : 'button' }
                                             title={ (
@@ -485,19 +485,19 @@ export const RequestFormLeft: React.ComponentType<OwnProps> = memo((
                                     </div>
                                     {/* САМОВЫВОЗ | ОТКАЗАТЬСЯ | ГРУЗ У ПОЛУЧАТЕЛЯ */ }
                                     <div className={ styles.requestFormLeft__panelButton }>
-                                        <Button colorMode={
+                                        <ProjectButton colorMode={
                                             ( ( isCreateMode || isMyRequestAndNew ) && 'blue' ) ||
                                             ( isAcceptDriverMode && 'red' ) ||
                                             ( isStatusMode && values.localStatus?.cargoHasBeenReceived ? 'blue' : 'green' )
                                         }
-                                                type={ hasValidationErrors ? 'submit' : 'button' }
-                                                title={ (
+                                                       type={ hasValidationErrors ? 'submit' : 'button' }
+                                                       title={ (
                                                     ( ( isCreateMode || isMyRequestAndNew ) && 'Cамовывоз' ) ||
                                                     ( isAcceptDriverMode && 'Отказаться' ) ||
                                                     ( isStatusMode && 'Груз у получателя'
                                                         + ( !values.localStatus?.cargoHasBeenReceived ? '?' : '' ) ) ) + ''
                                                 }
-                                                onClick={ () => {
+                                                       onClick={ () => {
                                                     if (!hasValidationErrors) {
                                                         isCreateMode && buttonsAction.submitRequestAndDrive(values)
                                                         if (isAcceptDriverMode) {
@@ -516,8 +516,8 @@ export const RequestFormLeft: React.ComponentType<OwnProps> = memo((
                                                         }
                                                     }
                                                 } }
-                                                disabled={ isStatusMode ? ( !isMyRequestAndNew && !values.localStatus?.cargoHasBeenTransferred ) : submitting || submitError }
-                                                rounded/>
+                                                       disabled={ isStatusMode ? ( !isMyRequestAndNew && !values.localStatus?.cargoHasBeenTransferred ) : submitting || submitError }
+                                                       rounded/>
                                         { isCreateMode &&
                                             <InfoButtonToModal textToModal={ fieldInformation.selfDeliveryButton }
                                                                mode={ 'outClose' }/>

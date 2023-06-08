@@ -22,7 +22,7 @@ import {AddDriversView} from '../add-drivers-form/add-drivers-view'
 import {Portal} from '../common/portals/Portal'
 import {getRoutesStore} from '../../selectors/routes-reselect'
 import {useLocation, useParams} from 'react-router-dom'
-import {SizedPreloader} from '../common/preloader/preloader'
+import {SizedPreloader} from '../common/tiny/preloader/preloader'
 import {
     getInitialValuesRequestStore,
     getRoutesParsedFromPolylineRequestStore,
@@ -37,7 +37,7 @@ import {
     positionsToCorrectBounds,
     positionToBoundsLine,
 } from '../../utils/map-utils'
-import {MaterialIcon} from '../common/material-icon/material-icon'
+import {MaterialIcon} from '../common/tiny/material-icon/material-icon'
 import {boldWrapper} from '../../utils/html-rebuilds'
 import {parseToNormalMoney, toNumber} from '../../utils/parsers'
 
@@ -53,7 +53,7 @@ const colorOfStatus = ( stat: EmployeeStatusType ): string =>
             : 'orange'
 
 // основная карта (по кнопке меню)
-export const MapSection: React.FC<OwnProps> = () => {
+export const MapSection: React.ComponentType<OwnProps> = () => {
 
     const drivers = useSelector(getDriversBigMapStore)
     const responses = useSelector(getFilteredResponsesBigMapStore)

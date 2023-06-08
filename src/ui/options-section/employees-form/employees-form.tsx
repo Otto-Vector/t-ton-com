@@ -1,15 +1,15 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './employees-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {Button} from '../../common/button/button'
-import {FormInputType} from '../../common/form-input-type/form-input-type'
-import {Preloader} from '../../common/preloader/preloader'
+import {ProjectButton} from '../../common/buttons/project-button/project-button'
+import {FormInputType} from '../../common/inputs/final-form-inputs/form-input-type/form-input-type'
+import {Preloader} from '../../common/tiny/preloader/preloader'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {InfoText} from '../../common/info-text/into-text'
-import {CancelXButton} from '../../common/cancel-button/cancel-x-button'
+import {InfoText} from '../../common/tiny/info-text/into-text'
+import {CancelXButton} from '../../common/buttons/cancel-button/cancel-x-button'
 import {EmployeeCardType, ParserType, ValidateType} from '../../../types/form-types'
 import {
     getCurrentIdEmployeesStore,
@@ -29,15 +29,15 @@ import {
     oneEmployeeDeleteSoftToAPI,
 } from '../../../redux/options/employees-store-reducer'
 
-import {FormSelector} from '../../common/form-selector/form-selector'
+import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
 
 import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers'
-import {ImageViewSet} from '../../common/image-view-set/image-view-set'
+import {ImageViewSet} from '../../common/modals/image-view-set/image-view-set'
 import {yearMmDdFormat} from '../../../utils/date-formats'
 import {getDrivingCategorySelectorBaseStore} from '../../../selectors/base-reselect'
 import {syncValidators} from '../../../utils/validators'
-import {SwitchMask} from '../../common/antd-switch/antd-switch'
-import {SelectOptionsType} from '../../common/form-selector/selector-utils'
+import {SwitchMask} from '../../common/inputs/antd-switch/antd-switch'
+import {SelectOptionsType} from '../../common/inputs/final-form-inputs/form-selector/selector-utils'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {FormApi} from 'final-form'
 import {removeResponseToRequestsBzEmployee} from '../../../redux/forms/add-driver-store-reducer'
@@ -53,7 +53,7 @@ import {boldWrapper} from '../../../utils/html-rebuilds'
 type OwnProps = {}
 
 
-export const EmployeesForm: React.FC<OwnProps> = () => {
+export const EmployeesForm: React.ComponentType<OwnProps> = () => {
 
     const header = 'Сотрудник'
     const isFetching = useSelector(getIsFetchingEmployeesStore)
@@ -424,22 +424,22 @@ export const EmployeesForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <div className={ styles.employeesForm__buttonsPanel }>
                                                 <div className={ styles.employeesForm__button }>
-                                                    <Button type={ 'button' }
-                                                            disabled={ submitting || isNew }
-                                                            colorMode={ 'red' }
-                                                            title={ 'Удалить' }
-                                                            onClick={ () => {
+                                                    <ProjectButton type={ 'button' }
+                                                                   disabled={ submitting || isNew }
+                                                                   colorMode={ 'red' }
+                                                                   title={ 'Удалить' }
+                                                                   onClick={ () => {
                                                                 employeesDeleteHandleClick(initialValues)
                                                             } }
-                                                            rounded
+                                                                   rounded
                                                     />
                                                 </div>
                                                 <div className={ styles.employeesForm__button }>
-                                                    <Button type={ 'submit' }
-                                                            disabled={ !isImageChanged && ( submitting || ( isNew ? false : pristine ) ) }
-                                                            colorMode={ 'green' }
-                                                            title={ 'Cохранить' }
-                                                            rounded
+                                                    <ProjectButton type={ 'submit' }
+                                                                   disabled={ !isImageChanged && ( submitting || ( isNew ? false : pristine ) ) }
+                                                                   colorMode={ 'green' }
+                                                                   title={ 'Cохранить' }
+                                                                   rounded
                                                     />
                                                 </div>
                                             </div>

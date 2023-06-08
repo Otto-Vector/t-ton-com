@@ -5,7 +5,7 @@ import {Navigate} from 'react-router-dom';
 import {getRoutesStore} from '../../../../selectors/routes-reselect';
 
 
-export const WithAuthRedirect: React.FC = ( { children } ) => {
+export const WithAuthRedirect: React.ComponentType = ( { children } ) => {
     const isAuth = useSelector(getIsAuthAuthStore)
     const { options } = useSelector(getRoutesStore)
 

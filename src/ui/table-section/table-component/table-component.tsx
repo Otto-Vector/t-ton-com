@@ -16,7 +16,7 @@ import {OneRequestTableType, TableModesBooleanType, TableModesType} from '../../
 import {toNumber} from '../../../utils/parsers'
 import {LocalStatusCell} from './cells/local-status-cell'
 import {Column} from 'react-table'
-import {MaterialIcon} from '../../common/material-icon/material-icon'
+import {MaterialIcon} from '../../common/tiny/material-icon/material-icon'
 import {initialFiltersState} from '../../../redux/table/filters-store-reducer'
 import {DeleteCell} from './cells/delete-cell'
 import {ButtonCell} from './cells/button-cell'

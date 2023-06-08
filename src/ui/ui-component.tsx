@@ -21,10 +21,10 @@ import {RequestSection} from './request-section/request-section'
 import {AddDriversForm} from './add-drivers-form/add-drivers-form'
 import {InfoSection} from './info-section/info-section'
 import {MapSection} from './map-section/map-section'
-import {LightBoxComponent} from './common/lightbox-component/lightbox-component'
+import {LightBoxComponent} from './common/modals/lightbox-component/lightbox-component'
 import {AppStateType} from '../redux/redux-store'
 import {initializedAll} from '../redux/app-store-reducer'
-import {Preloader} from './common/preloader/preloader'
+import {Preloader} from './common/tiny/preloader/preloader'
 import {WithAuthRedirect} from './common/redirect/with-auth-redirect/with-auth-redirect'
 import {ToAuthRedirect} from './common/redirect/with-auth-redirect/to-auth-redirect'
 import {getAutologinAuthStore, getIsAuthAuthStore} from '../selectors/auth-reselect'
@@ -33,7 +33,7 @@ import {Page404} from './common/404-page/page-404'
 
 type OwnProps = {}
 
-export const UiComponent: React.FC<OwnProps> = () => {
+export const UiComponent: React.ComponentType<OwnProps> = () => {
 
     const routes = useSelector(getRoutesStore)
     const initialazed = useSelector(( state: AppStateType ) => state.appStoreReducer.initialized)

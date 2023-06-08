@@ -1,16 +1,16 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import styles from './transport-trailer-form.module.scss'
 import {Field, Form} from 'react-final-form'
-import {Button} from '../../common/button/button'
-import {FormInputType} from '../../common/form-input-type/form-input-type'
-import {Preloader} from '../../common/preloader/preloader'
+import {ProjectButton} from '../../common/buttons/project-button/project-button'
+import {FormInputType} from '../../common/inputs/final-form-inputs/form-input-type/form-input-type'
+import {Preloader} from '../../common/tiny/preloader/preloader'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {FormSelector} from '../../common/form-selector/form-selector'
-import {InfoText} from '../../common/info-text/into-text'
-import {CancelXButton} from '../../common/cancel-button/cancel-x-button'
+import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
+import {InfoText} from '../../common/tiny/info-text/into-text'
+import {CancelXButton} from '../../common/buttons/cancel-button/cancel-x-button'
 import {cargoConstType, propertyRights, TrailerCardType} from '../../../types/form-types'
 import {
     getCurrentIdTrailerStore,
@@ -28,10 +28,10 @@ import {
     oneTrailerDeleteToAPI,
     trailerStoreActions,
 } from '../../../redux/options/trailer-store-reducer'
-import {ImageViewSet} from '../../common/image-view-set/image-view-set'
+import {ImageViewSet} from '../../common/modals/image-view-set/image-view-set'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
-import {stringArrayToSelectValue} from '../../common/form-selector/selector-utils'
-import {SwitchMask} from '../../common/antd-switch/antd-switch'
+import {stringArrayToSelectValue} from '../../common/inputs/final-form-inputs/form-selector/selector-utils'
+import {SwitchMask} from '../../common/inputs/antd-switch/antd-switch'
 import {syncValidators} from '../../../utils/validators'
 import {syncParsers} from '../../../utils/parsers'
 import {getIsBusyTrailer} from '../../../selectors/options/for-selectors/all-selectors-buffer-reselect'
@@ -42,7 +42,7 @@ import createDecorator from 'final-form-focus'
 type OwnProps = {}
 
 
-export const TrailerForm: React.FC<OwnProps> = () => {
+export const TrailerForm: React.ComponentType<OwnProps> = () => {
 
     const header = 'Прицеп'
     const isFetching = useSelector(getIsFetchingTrailerStore)
@@ -258,20 +258,20 @@ export const TrailerForm: React.FC<OwnProps> = () => {
                                             </div>
                                             <div className={ styles.transportTrailerForm__buttonsPanel }>
                                                 <div className={ styles.transportTrailerForm__button }>
-                                                    <Button type={ 'button' }
-                                                            colorMode={ 'red' }
-                                                            title={ 'Удалить' }
-                                                            onClick={ isBusyTrailer ? trailertHasPassToDelete : trailerDeleteHandleClick }
-                                                            disabled={ isNew }
-                                                            rounded
+                                                    <ProjectButton type={ 'button' }
+                                                                   colorMode={ 'red' }
+                                                                   title={ 'Удалить' }
+                                                                   onClick={ isBusyTrailer ? trailertHasPassToDelete : trailerDeleteHandleClick }
+                                                                   disabled={ isNew }
+                                                                   rounded
                                                     />
                                                 </div>
                                                 <div className={ styles.transportTrailerForm__button }>
-                                                    <Button type={ 'submit' }
-                                                            disabled={ !isImageChanged && ( submitting || pristine ) }
-                                                            colorMode={ 'green' }
-                                                            title={ 'Cохранить' }
-                                                            rounded
+                                                    <ProjectButton type={ 'submit' }
+                                                                   disabled={ !isImageChanged && ( submitting || pristine ) }
+                                                                   colorMode={ 'green' }
+                                                                   title={ 'Cохранить' }
+                                                                   rounded
                                                     />
                                                 </div>
                                             </div>

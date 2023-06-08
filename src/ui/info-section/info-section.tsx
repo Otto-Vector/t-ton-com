@@ -8,7 +8,7 @@ import {InfoPayContainer} from './info-pay-container/info-pay-container'
 
 type OwnProps = {}
 
-export const InfoSection: React.FC<OwnProps> = () => {
+export const InfoSection: React.ComponentType<OwnProps> = () => {
     const messages = useSelector(getContentInfoStore)
     const unreadCount = useSelector(getUnreadMessagesCountInfoStore)
     const dispatch = useDispatch()

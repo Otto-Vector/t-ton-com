@@ -4,11 +4,11 @@ import {Logo} from './logo/logo';
 import {Phone} from './phone/phone';
 import {useSelector} from 'react-redux';
 import {getHeaderBaseStore} from '../../selectors/base-reselect';
-import {InfoGlobalToModal} from '../common/info-global-to-modal/info-global-to-modal';
+import {InfoGlobalToModal} from '../common/modals/info-global-to-modal/info-global-to-modal';
 
 type OwnProps = {}
 
-export const Header: React.FC<OwnProps> = () => {
+export const Header: React.ComponentType<OwnProps> = () => {
     const { directPhoneNumber, companyName, baseHref } = useSelector(getHeaderBaseStore)
     return (
         <header className={ styles.header }>

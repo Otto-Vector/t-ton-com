@@ -9,7 +9,7 @@ type ToFormProps = {
 }
 
 // в маленькое окошко формы ГРУЗООТПРАВИТЕЛЬ / ГРУЗОПОЛУЧАТЕЛЬ
-export const YandexMapToForm: React.FC<ToFormProps> = React.memo(
+export const YandexMapToForm: React.ComponentType<ToFormProps> = React.memo(
     ( { center, getCoordinates } ) => {
 
         return (

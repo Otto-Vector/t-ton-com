@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from './redux-store'
-import {SelectOptionsType} from '../ui/common/form-selector/selector-utils'
+import {SelectOptionsType} from '../ui/common/inputs/final-form-inputs/form-selector/selector-utils'
 import {GetActionsTypes} from '../types/ts-utils'
 import {cargoConstType, PreAuthGlobalDataType, propertyRights} from '../types/form-types'
 import {preAuthApi} from '../api/local-api/pre-auth.api'

@@ -2,8 +2,8 @@ import React, {useEffect, useMemo, useState} from 'react'
 import styles from './auth-login-form.module.scss'
 import {Field, Form} from 'react-final-form'
 import {FORM_ERROR, FormApi} from 'final-form'
-import {Button} from '../../common/button/button'
-import {FormInputType} from '../../common/form-input-type/form-input-type'
+import {ProjectButton} from '../../common/buttons/project-button/project-button'
+import {FormInputType} from '../../common/inputs/final-form-inputs/form-input-type/form-input-type'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {
@@ -15,7 +15,7 @@ import {
     getMaskOnAuthStore,
     getValidatorsAuthStore,
 } from '../../../selectors/auth-reselect'
-import {Preloader} from '../../common/preloader/preloader'
+import {Preloader} from '../../common/tiny/preloader/preloader'
 import {
     authStoreActions,
     fakeAuthFetching,
@@ -28,7 +28,7 @@ import {PhoneSubmitType} from '../../../types/form-types'
 
 import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
-import {FormSelector} from '../../common/form-selector/form-selector'
+import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
 import {daDataStoreActions, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer'
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate'
@@ -37,7 +37,7 @@ import createDecorator from 'final-form-focus'
 
 type OwnProps = {}
 
-export const AuthLoginForm: React.FC<OwnProps> = () => {
+export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
 
     const { options, requisites } = useSelector(getRoutesStore)
     const navigate = useNavigate()
@@ -221,38 +221,38 @@ export const AuthLoginForm: React.FC<OwnProps> = () => {
                                 >
                                     { !isRegisterMode && <div className={
                                         styles.loginForm__smallButton + ' ' + styles.loginForm__smallButton_position }>
-                                        <Button type={ 'button' }
-                                                title={ 'Новый запрос на пароль из SMS' }
-                                                colorMode={ 'gray' }
-                                                disabled={ !form.getFieldState('phoneNumber')?.valid || isFetching }
-                                                onClick={ () => {
+                                        <ProjectButton type={ 'button' }
+                                                       title={ 'Новый запрос на пароль из SMS' }
+                                                       colorMode={ 'gray' }
+                                                       disabled={ !form.getFieldState('phoneNumber')?.valid || isFetching }
+                                                       onClick={ () => {
                                                     newSMSCode(values.phoneNumber as string)
                                                 } }
-                                                rounded
-                                        >{ 'Новый пароль' }</Button>
+                                                       rounded
+                                        >{ 'Новый пароль' }</ProjectButton>
                                     </div> }
                                 </Field>
                             </div>
                             <div className={ styles.loginForm__buttonsPanel }>
-                                <Button type={ 'submit' }
-                                        disabled={ submitting || isFetching ||
+                                <ProjectButton type={ 'submit' }
+                                               disabled={ submitting || isFetching ||
                                             ( !isRegisterMode && !form.getFieldState('phoneNumber')?.valid && !form.getFieldState('sms')?.valid ) }
-                                        colorMode={ 'green' }
-                                        title={ 'Далее' }
-                                        rounded
+                                               colorMode={ 'green' }
+                                               title={ 'Далее' }
+                                               rounded
                                 >
                                     { isFetching && <Preloader/> }
-                                </Button>
+                                </ProjectButton>
                             </div>
                             { submitError && <span className={ styles.onError }>{ submitError }</span> }
                             <div className={ styles.loginForm__smallButton }>
-                                <Button type={ 'button' }
-                                        title={ !isRegisterMode ? 'Регистрация' : 'Назад' }
-                                        colorMode={ 'blue' }
-                                        onClick={ () => {
+                                <ProjectButton type={ 'button' }
+                                               title={ !isRegisterMode ? 'Регистрация' : 'Назад' }
+                                               colorMode={ 'blue' }
+                                               onClick={ () => {
                                             registerHandleClick(form)
                                         } }
-                                        rounded
+                                               rounded
                                 />
                             </div>
                             {/*<FormSpySimple form={ form }*/ }

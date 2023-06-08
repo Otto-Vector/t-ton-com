@@ -31,7 +31,7 @@ import {syncParsers, toNumber} from '../../utils/parsers'
 
 type OwnProps = {}
 
-export const MenuPanel: React.FC<OwnProps> = React.memo(() => {
+export const MenuPanel: React.ComponentType<OwnProps> = React.memo(() => {
 
     const dispatch = useDispatch()
     const { pathname } = useLocation()

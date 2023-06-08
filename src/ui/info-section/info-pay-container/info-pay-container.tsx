@@ -11,13 +11,13 @@ import {
     getTariffsRequisitesStore,
 } from '../../../selectors/options/requisites-reselect'
 import {setOrganizationCashRequisites} from '../../../redux/options/requisites-store-reducer'
-import {SizedPreloader} from '../../common/preloader/preloader'
+import {SizedPreloader} from '../../common/tiny/preloader/preloader'
 import {toNumber} from '../../../utils/parsers'
 
 
 type OwnProps = {}
 
-export const InfoPayContainer: React.FC<OwnProps> = () => {
+export const InfoPayContainer: React.ComponentType<OwnProps> = () => {
 
     const dispatch = useDispatch()
     const balance = toNumber(useSelector(getCashRequisitesStore))

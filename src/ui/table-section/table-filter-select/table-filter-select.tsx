@@ -1,6 +1,6 @@
 import React from 'react'
 import Select, {components, GroupBase, OptionProps} from 'react-select'
-import {SelectOptionsType} from '../../common/form-selector/selector-utils'
+import {SelectOptionsType} from '../../common/inputs/final-form-inputs/form-selector/selector-utils'
 import {tableSelectorStyles} from './table-selector-style'
 
 

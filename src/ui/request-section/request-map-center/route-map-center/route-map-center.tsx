@@ -31,7 +31,7 @@ type ToRouteMap = {
 }
 
 // карта с отрисованным маршрутом в центральной части заявки
-export const RouteMapCenter: React.FC<ToRouteMap> = React.memo((
+export const RouteMapCenter: React.ComponentType<ToRouteMap> = React.memo((
     {
         driverHere,
         driver,

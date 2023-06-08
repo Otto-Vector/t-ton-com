@@ -9,7 +9,7 @@ import {YMaps} from 'react-yandex-maps'
 
 const { REACT_APP_YANDEX_KEY } = process.env
 
-const App: React.FC = () => {
+const App: React.ComponentType = () => {
     return (
         <Provider store={ store }>
             <YMaps

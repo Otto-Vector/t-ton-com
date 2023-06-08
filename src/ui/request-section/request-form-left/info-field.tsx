@@ -14,7 +14,7 @@ type InfoProps = {
 }
 
 // окошко для отображения нередактирумеой инфы с телефоном и другими данными в модалку
-export const InfoField: React.FC<InfoProps> = ( { textData, phoneData, placeholder, isMarked } ) => {
+export const InfoField: React.ComponentType<InfoProps> = ( { textData, phoneData, placeholder, isMarked } ) => {
     const dispatch = useDispatch()
     // проверка на присутствие переменных и непустотность массива
     const isTextData = !!textData?.length

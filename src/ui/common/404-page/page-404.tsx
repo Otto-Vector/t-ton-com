@@ -1,10 +1,10 @@
 import React from 'react'
 import classes from './page-404.module.scss'
-import {MaterialIcon} from '../material-icon/material-icon';
+import {MaterialIcon} from '../tiny/material-icon/material-icon';
 
 type OwnProps = {}
 
-export const Page404: React.FC<OwnProps> = () => {
+export const Page404: React.ComponentType<OwnProps> = () => {
 
     return <section className={classes.error404}>
         <div className={ classes.error404_mainbox }>
@@ -18,4 +18,3 @@ export const Page404: React.FC<OwnProps> = () => {
         </div>
     </section>
 }
-

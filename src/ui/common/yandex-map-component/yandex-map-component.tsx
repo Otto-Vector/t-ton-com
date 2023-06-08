@@ -20,7 +20,7 @@ type OwnProps = {
 }
 
 // главная компомнента карты, куда все стремятся
-export const YandexMapComponent: React.FC<OwnProps> = ( {
+export const YandexMapComponent: React.ComponentType<OwnProps> = ( {
                                                             state,
                                                             modules,
                                                             children,
@@ -88,7 +88,7 @@ type ToBigMap = {
 }
 
 // компонента-прокладка на большую карту
-export const YandexBigMap: React.FC<ToBigMap> = React.memo(( {
+export const YandexBigMap: React.ComponentType<ToBigMap> = React.memo(( {
                                                                  center,
                                                                  zoom,
                                                                  children,

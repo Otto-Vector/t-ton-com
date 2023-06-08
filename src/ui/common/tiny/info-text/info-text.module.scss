@@ -1,0 +1,11 @@
+@import '../../../../styles/variables';
+
+.infoText {
+  text-align: center;
+  color: $accentColor;
+  font-family: $RalewayFont;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 1.2;
+  width: 100%;
+}

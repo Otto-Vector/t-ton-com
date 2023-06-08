@@ -1,4 +1,4 @@
-import {MaterialIcon} from '../../common/material-icon/material-icon'
+import {MaterialIcon} from '../../common/tiny/material-icon/material-icon'
 
 export const CancelXButtonDriverView = () => <MaterialIcon icon_name={ 'highlight_off' }
                                                     style={ {

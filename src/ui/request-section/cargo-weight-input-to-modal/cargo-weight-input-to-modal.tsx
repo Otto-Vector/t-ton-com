@@ -2,7 +2,7 @@ import React, {useMemo} from 'react'
 import {globalModalDestroy} from '../../../redux/utils/global-modal-store-reducer'
 import {syncValidators} from '../../../utils/validators'
 import {useDispatch, useSelector} from 'react-redux'
-import {FormInputType} from '../../common/form-input-type/form-input-type'
+import {FormInputType} from '../../common/inputs/final-form-inputs/form-input-type/form-input-type'
 import {Field, Form} from 'react-final-form'
 import createDecorator from 'final-form-focus'
 import styles from './cargo-weight-input-to-modal.module.scss'
@@ -10,7 +10,7 @@ import {changeCargoWeightValuesOnCurrentRequestAndActivateDocs} from '../../../r
 import {getInitialDataToModalCalcRequestStore} from '../../../selectors/forms/request-form-reselect'
 import {parseCommaToDot, parseToNormalMoney, syncParsers, toNumber} from '../../../utils/parsers'
 import {FormApi} from 'final-form'
-import {ModalFooter} from '../../common/info-global-to-modal/modal-footer/modal-footer'
+import {ModalFooter} from '../../common/modals/info-global-to-modal/modal-footer/modal-footer'
 
 type ToSmallCalcFormType = { cargoWeight: string, addedPrice: string }
 

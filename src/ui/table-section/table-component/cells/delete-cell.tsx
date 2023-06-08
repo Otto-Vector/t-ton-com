@@ -1,7 +1,7 @@
 import React from 'react'
 import {OneRequestTableTypeReq} from '../../../../types/form-types'
-import {MaterialIcon} from '../../../common/material-icon/material-icon'
-import {Button} from '../../../common/button/button'
+import {MaterialIcon} from '../../../common/tiny/material-icon/material-icon'
+import {ProjectButton} from '../../../common/buttons/project-button/project-button'
 import {useDispatch} from 'react-redux'
 import {
     ModalFormTextToDeleteResponse,
@@ -30,13 +30,13 @@ export const DeleteCellReact: React.ComponentType<OwnProps & OneRequestTableType
 
     const Cell = isCustomer && localStatus !== 'груз у получателя' && localStatus !== 'груз у водителя'
         ? <div style={ { background: 'none' } }>
-            <Button colorMode={ 'redAlert' }
-                    title={ 'Удалить заявку №' + requestNumber }
-                    onClick={ () => {
+            <ProjectButton colorMode={ 'redAlert' }
+                           title={ 'Удалить заявку №' + requestNumber }
+                           onClick={ () => {
                         onDeleteRequest(requestNumber)
                     } }
-                    style={ { border: 'none' } }
-            ><MaterialIcon icon_name={ 'cancel' } style={ { fontSize: '20px' } }/> </Button>
+                           style={ { border: 'none' } }
+            ><MaterialIcon icon_name={ 'cancel' } style={ { fontSize: '20px' } }/> </ProjectButton>
         </div>
         : <></>
     return isStatusTblMode ? Cell : <></>

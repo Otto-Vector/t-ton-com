@@ -7,7 +7,7 @@ import {getAllEmployeesStore, getOneEmployeeFromLocal} from '../employees-resele
 import {createSelector} from 'reselect';
 import {getInitialValuesRequestStore} from '../../forms/request-form-reselect';
 import {parseFamilyToFIO} from '../../../utils/parsers';
-import {SelectOptionsType} from '../../../ui/common/form-selector/selector-utils';
+import {SelectOptionsType} from '../../../ui/common/inputs/final-form-inputs/form-selector/selector-utils';
 
 export const getAllEmployeesSelectWithCargoType = createSelector(
     getAllEmployeesStore,

@@ -4,7 +4,7 @@ import phone from './../../../media/phone.png'
 
 type OwnProps = { directPhoneNumber: string }
 
-export const Phone: React.FC<OwnProps> = ( { directPhoneNumber } ) => {
+export const Phone: React.ComponentType<OwnProps> = ( { directPhoneNumber } ) => {
 
     const [ isActive, setIsActive ] = useState(false)
 

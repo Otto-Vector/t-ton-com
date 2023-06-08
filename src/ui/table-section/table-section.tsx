@@ -12,7 +12,7 @@ import {
     getStatusFilterValuesFiltersStore,
 } from '../../selectors/table/filters-reselect'
 import {getCargoTypeNoTrackBaseStore} from '../../selectors/base-reselect'
-import {Preloader} from '../common/preloader/preloader'
+import {Preloader} from '../common/tiny/preloader/preloader'
 import {getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
 import {getAllRequestsAPI} from '../../redux/forms/request-store-reducer'
 import truckToRightPNG from '../../media/trackToRight.png'
@@ -22,10 +22,10 @@ import noRespTruckPNG from '../../media/noRespTrack.png'
 import haveRespTrackPNG from '../../media/haveRespTrack.png'
 import xIcon from '../../media/x.png'
 
-import {Button} from '../common/button/button'
-import {InputTableFilter} from '../common/input-table-filter/input-table-filter'
+import {ProjectButton} from '../common/buttons/project-button/project-button'
+import {InputTableFilter} from '../common/inputs/input-table-filter/input-table-filter'
 import {TableFilterSelect} from './table-filter-select/table-filter-select'
-import {SelectOptionsType} from '../common/form-selector/selector-utils'
+import {SelectOptionsType} from '../common/inputs/final-form-inputs/form-selector/selector-utils'
 import {TableModesBooleanType, TableModesType} from '../../types/form-types'
 
 // toDo: перенести в отдельный элемент или файл
@@ -165,10 +165,10 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
                                         : ( // убираем кнопки на разных типах
                                             ( key === 'todayFilter' || key === 'tomorrowFilter' ) && !isSearchTblMode )
                                             ? null
-                                            : <Button title={ value.title }
-                                                      colorMode={ 'whiteBlue' }
-                                                      rounded
-                                                      onClick={ () => {
+                                            : <ProjectButton title={ value.title }
+                                                             colorMode={ 'whiteBlue' }
+                                                             rounded
+                                                             onClick={ () => {
                                                           // @ts-ignore-next-line
                                                           filtersAction[key]()
                                                       } }
