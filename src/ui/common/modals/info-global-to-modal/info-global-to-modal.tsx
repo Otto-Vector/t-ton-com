@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import './modal-animations.css' // вырезал нужные анимации для модалки
+import './modal-animations.css' // вырезал анимации для модалки
 import 'antd/lib/modal/style/index.css' // используем стили antd для модальных инфо-окон
 import './info-global-to-modal.scss' // перезапись стилей
 import {Modal} from 'antd'
