@@ -12,7 +12,7 @@ import {RequestModesType} from '../request-section'
 import {ProjectButton} from '../../common/buttons/project-button/project-button'
 import {InfoText} from '../../common/tiny/info-text/into-text'
 import {hhmmDdMmYyFormat, timeDiff} from '../../../utils/date-formats'
-import {InfoButtonToModal} from '../../common/modals/info-button-to-modal/info-button-to-modal'
+import {InfoButtonToModal} from '../../common/buttons/info-button-to-modal/info-button-to-modal'
 import {DownloadSampleFileWrapper} from '../../common/buttons/download-sample-file-wrapper/download-sample-file-wrapper'
 import {ButtonMenuSaveLoad} from '../../common/buttons/button-menu-save-load/button-menu-save-load'
 import {

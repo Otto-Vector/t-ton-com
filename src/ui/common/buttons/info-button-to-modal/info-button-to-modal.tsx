@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './info-button-to-modal.module.scss'
 
 import {MaterialIcon} from '../../tiny/material-icon/material-icon'
-import {ProjectButton} from '../../buttons/project-button/project-button'
+import {ProjectButton} from '../project-button/project-button'
 import {useDispatch} from 'react-redux'
 import {textAndActionGlobalModal} from '../../../../redux/utils/global-modal-store-reducer'
 

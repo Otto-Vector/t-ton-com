@@ -95,21 +95,20 @@ export const InfoGlobalToModal: React.ComponentType = () => {
     return (
         <Modal title={ titleHere }
                centered={ isCentered }
-               visible={ visible }
+               open={ visible }
                onCancel={ onCancelHandle }
                bodyStyle={ !isBodyPadding ? { padding: 0 } : undefined }
                width={ !isBodyPadding ? 'auto' : undefined }
             // onOk={ onOkHandle }
             // afterClose={ afterClose }
                className={ 'modalStyle' }
-               closeIcon={ CancelXButton({ onCancelClick: onCancelHandle, isNotButtonButSpan: true }) }
+               closeIcon={ <CancelXButton onCancelClick={ onCancelHandle } isNotButtonButSpan={ true }/> }
                destroyOnClose={ true }
-               footer={ isFooterEnable ? ModalFooter({
-                       onCancelHandle,
-                       onOkHandle,
-                       isCancelButtonEnable: titleHere !== 'Информация',
-                   })
-                   : null }>
+               footer={ isFooterEnable ? <ModalFooter
+                   onCancelHandle={ onCancelHandle }
+                   onOkHandle={ onOkHandle }
+                   isCancelButtonEnable={ titleHere !== 'Информация' }
+               /> : null }>
             { textToGlobalModal && textFromArrayToParagraph(textToGlobalModal) }
             { reactChildren }
         </Modal>

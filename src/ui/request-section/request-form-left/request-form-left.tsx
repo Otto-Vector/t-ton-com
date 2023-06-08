@@ -33,7 +33,7 @@ import {
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
 import {Preloader} from '../../common/tiny/preloader/preloader'
-import {InfoButtonToModal} from '../../common/modals/info-button-to-modal/info-button-to-modal'
+import {InfoButtonToModal} from '../../common/buttons/info-button-to-modal/info-button-to-modal'
 import {stringArrayToSelectValue} from '../../common/inputs/final-form-inputs/form-selector/selector-utils'
 import {addRequestCashPay} from '../../../redux/options/requisites-store-reducer'
 import {setCargoCompositionSelector} from '../../../redux/api/cargo-composition-response-reducer'

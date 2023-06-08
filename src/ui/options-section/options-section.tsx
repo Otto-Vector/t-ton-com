@@ -20,7 +20,7 @@ import {SizedPreloader} from '../common/tiny/preloader/preloader'
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
 import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect'
 import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect'
-import {InfoButtonToModal} from '../common/modals/info-button-to-modal/info-button-to-modal'
+import {InfoButtonToModal} from '../common/buttons/info-button-to-modal/info-button-to-modal'
 import {initializedAllOptionsList} from '../../redux/options/options-store-reducer'
 import {AppStateType} from '../../redux/redux-store'
 
