@@ -47,7 +47,6 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
         isStatusTblMode,
     } = tableModes
 
-    console.log(dayFilter)
     const authCash = toNumber(useSelector(getCashRequisitesStore))
     const filteredRows = useSelector(getFilteredRowsCountTableStore)
 

@@ -48,11 +48,13 @@ export const getShippersOptionsStore = createSelector(getAllShippersStore, getSh
             } )),
         }
     })
+
 // выборка из названий грузополучателей
-export const getShippersAllNamesListOptionsStore = createSelector(getShippersOptionsStore,
+export const getShippersAllNamesOptionsStore = createSelector(getShippersOptionsStore,
     ( { content } ): string[] => content.map(( { title } ) => title))
+
 // выборка из названий грузополучателей, кроме имени того, который сейчас редактируется
-export const getShippersNamesListOptionsStore = createSelector(getShippersOptionsStore, getCurrentIdShipperStore,
+export const getShippersNamesExcludeCurrentOptionsStore = createSelector(getShippersOptionsStore, getCurrentIdShipperStore,
     ( { content }, currentId ): string[] => content.filter(( { id } ) => id !== currentId).map(( { title } ) => title))
 
 // выборка из списка загруженных грузополучателей
@@ -75,7 +77,7 @@ export const getConsigneesOptionsStore = createSelector(getAllConsigneesStore, g
     })
 
 // массив названий грузополучателей
-export const getConsigneesAllNamesListOptionsStore = createSelector(getConsigneesOptionsStore,
+export const getConsigneesAllNamesOptionsStore = createSelector(getConsigneesOptionsStore,
     ( { content } ): string[] => content.map(( { title } ) => title))
 // выборка из названий грузополучателей, кроме имени того, который сейчас редактируется
 export const getConsigneesNamesListOptionsStore = createSelector(getConsigneesOptionsStore, getCurrentIdConsigneeStore,

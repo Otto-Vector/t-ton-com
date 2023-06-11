@@ -21,7 +21,7 @@ import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-res
 import {getIsFetchingTrailerStore} from '../../selectors/options/trailer-reselect'
 import {getIsFetchingTransportStore} from '../../selectors/options/transport-reselect'
 import {InfoButtonToModal} from '../common/buttons/info-button-to-modal/info-button-to-modal'
-import {initializedAllOptionsList} from '../../redux/options/options-store-reducer'
+import {initializedAllOptionsUploads} from '../../redux/options/options-store-reducer'
 import {AppStateType} from '../../redux/redux-store'
 
 
@@ -38,7 +38,7 @@ export const OptionsSection: React.ComponentType<OwnProps> = () => {
     useLayoutEffect(() => {
         // минус одна подгрузка при инициализации
         if (initialazed)
-            dispatch<any>(initializedAllOptionsList())
+            dispatch<any>(initializedAllOptionsUploads())
     }, [ initialazed ])
 
     const { requisites, optionsEdit } = useSelector(getRoutesStore)

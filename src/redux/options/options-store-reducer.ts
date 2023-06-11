@@ -81,7 +81,7 @@ export const optionsStoreActions = {}
 
 export type OptionsStoreReducerThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateType, unknown, ActionsType>
 
-export const initializedAllOptionsList = (): OptionsStoreReducerThunkActionType =>
+export const initializedAllOptionsUploads = (): OptionsStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
             await dispatch(getAllShippersAPI())

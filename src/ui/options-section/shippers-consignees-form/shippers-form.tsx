@@ -37,8 +37,8 @@ import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer'
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect'
 import {FormApi} from 'final-form'
 import {
-    getShippersAllNamesListOptionsStore,
-    getShippersNamesListOptionsStore,
+    getShippersAllNamesOptionsStore,
+    getShippersNamesExcludeCurrentOptionsStore,
 } from '../../../selectors/options/options-reselect'
 import {includesTitleValidator} from '../../../utils/validators'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
@@ -59,8 +59,8 @@ export const ShippersForm: React.ComponentType<OwnProps> = () => {
 
     const initialValues = useSelector(getInitialValuesShippersStore)
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
-    const shippersListExcludeCurrentToValidate = useSelector(getShippersNamesListOptionsStore)
-    const shippersAllListToValidate = useSelector(getShippersAllNamesListOptionsStore)
+    const shippersNamesExcludeCurrentToValidate = useSelector(getShippersNamesExcludeCurrentOptionsStore)
+    const shippersAllNamesToValidate = useSelector(getShippersAllNamesOptionsStore)
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     const [ initialCoords, setInitialCoords ] = useState(initialValues.coordinates)
 
@@ -172,7 +172,7 @@ export const ShippersForm: React.ComponentType<OwnProps> = () => {
     const titleValidator = ( preValue: string ) => ( currentValue: string ) => {
         return ( validators.title && validators.title(currentValue) )
             || ( currentValue && ( preValue !== currentValue )
-                    ? includesTitleValidator(isNew ? shippersAllListToValidate : shippersListExcludeCurrentToValidate, currentValue)
+                    ? includesTitleValidator(isNew ? shippersAllNamesToValidate : shippersNamesExcludeCurrentToValidate, currentValue)
                     : undefined
             )
     }

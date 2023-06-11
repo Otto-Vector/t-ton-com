@@ -36,7 +36,7 @@ import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer'
 import {getGeoPositionAuthStore} from '../../../selectors/auth-reselect'
 import {FormApi} from 'final-form'
 import {
-    getConsigneesAllNamesListOptionsStore,
+    getConsigneesAllNamesOptionsStore,
     getConsigneesNamesListOptionsStore,
 } from '../../../selectors/options/options-reselect'
 import {includesTitleValidator} from '../../../utils/validators'
@@ -59,7 +59,7 @@ export const ConsigneesForm: React.ComponentType<OwnProps> = () => {
 
     const kppSelect = useSelector(getAllKPPSelectFromLocal)
     const consigneesListExcludeCurrentToValidate = useSelector(getConsigneesNamesListOptionsStore)
-    const consigneesAllListToValidate = useSelector(getConsigneesAllNamesListOptionsStore)
+    const consigneesAllListToValidate = useSelector(getConsigneesAllNamesOptionsStore)
 
     const [ isFirstRender, setIsFirstRender ] = useState(true)
     const [ initialCoords, setInitialCoords ] = useState(initialValues.coordinates)
