@@ -26,4 +26,13 @@ export const requestDocumentsApi = {
         // 1.	Code 200, {"message": "Документ ДОВЕРЕННОСТЬ НА ВОДИТЕЛЯ сгенерирован."}
         // 2.	Code 401, {'message': 'Заявка номер ${requestNumber} не существует'}
     },
+    // запрос на создание документа "УПД от Перевозчика для Закзчика"
+    createUPDdocument( { requestNumber }: { requestNumber: number } ) {
+
+        return instanceBack.patch<InfoResponseType>('/api/generateUPDdoc/', { requestNumber })
+            .then(response => response.data)
+        // 1.	Code 200, { "message": "Документ УПД от Перевозчика для Заказчика сгенерирован.",
+        //                      "url": "https://server.t-ton.com/temp_documents/*********.pdf" }
+        // 2.	Code 401, {'message': 'Заявка номер ${requestNumber} не существует'}
+    },
 }
