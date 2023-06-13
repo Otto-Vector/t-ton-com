@@ -2,6 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      style="margin: auto; background: transparent; display: block; shape-rendering: auto;" width="100px" height="100px"
      viewBox="24 24 53 53" preserveAspectRatio="xMidYMid">
+
     <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#07abcc" transform="rotate(0 50 50)">
         <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.916s"
                  repeatCount="indefinite"/>
