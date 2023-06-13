@@ -10,13 +10,13 @@
   background-color: $accentColor;
 
   &__wrapper {
+    position: relative;
     max-width: 695px;
     background: #FFFFFF;
     border: 1px solid rgba(2, 62, 138, 0.54);
     box-shadow: $cardsShadow;
     border-radius: 25px;
     padding: 13px;
-    position: relative;
   }
 
   &__form {

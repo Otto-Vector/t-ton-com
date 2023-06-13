@@ -9,6 +9,7 @@ import {tableSelectorStyles} from './table-selector-style'
 const OptionWithIcon: React.ComponentType<OptionProps<SelectOptionsType, boolean, GroupBase<SelectOptionsType>>> = ( props ) =>
     <div style={ { position: 'relative'} }>
         { props?.data?.subLabel ? <img src={ props?.data?.subLabel }
+                                       alt={'icon'}
                                        style={ {
                                            height: 24, width: 24,
                                            position: 'absolute',
