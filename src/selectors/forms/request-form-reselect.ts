@@ -4,6 +4,7 @@ import {createSelector} from 'reselect'
 import {polyline_decode} from '../../utils/map-utils'
 import {boldWrapper} from '../../utils/html-rebuilds'
 import {toNumber} from '../../utils/parsers'
+import { ResponseToRequestCardType } from '../../types/form-types'
 
 type RequestStoreSelectors<T extends keyof Y, Y = RequestStoreReducerStateType> = ( state: AppStateType ) => Y[T]
 type RequestStoreSelectorsInit<T extends keyof Y, Y = RequestStoreReducerStateType['initialValues']> = ( state: AppStateType ) => Y[T]
@@ -42,7 +43,7 @@ export const getInitialDataToModalCalcRequestStore = createSelector(getInitialVa
 export const getRoutesParsedFromPolylineRequestStore = createSelector(getPolylineRouteRequestStore,
     ( polyline ): number[][] | undefined => polyline ? polyline_decode(polyline) : undefined)
 
-// информация, подготовленная для отображения в информационных полях
+// информация, подготовленная для отображения в информационных полях первой вкладки
 export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRequestStore,
     ( {
           customerUser,
@@ -129,3 +130,19 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
             .map(n => [ n[0], n[1].filter(x => x) as string[] ])) as { [key in keyof typeof returnObject]: string[] }
     },
 )
+
+// данные об ответе на заявку, взятые из самой заявки
+export const getResponseDataFromRequestStore = createSelector(getInitialValuesRequestStore,
+    (currentOneRequest): ResponseToRequestCardType<string>=>({
+        responseTax: currentOneRequest.responseTax + '',
+        requestNumber: currentOneRequest.requestNumber + '',
+        cargoWeight: currentOneRequest.cargoWeight + '',
+        idEmployee: currentOneRequest.idEmployee + '',
+        idTrailer: currentOneRequest.idTrailer + '',
+        responseId: '0',
+        idTransport: currentOneRequest.idTransport + '',
+        responsePrice: currentOneRequest.responsePrice + '',
+        responseStavka: currentOneRequest.responseStavka + '',
+        requestCarrierId: currentOneRequest.requestCarrierId + '',
+        responseCreateTime: ''
+    }))

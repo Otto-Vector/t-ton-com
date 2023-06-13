@@ -1005,7 +1005,7 @@ export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiT
         }
     }
 
-// скорректировать вес груза и пересчитать стоимость
+// скорректировать вес груза и пересчитать стоимость, выставить статус "груз у водителя" и создать документы
 export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
                                                                             cargoWeight,
                                                                             addedPrice,
@@ -1021,6 +1021,7 @@ export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
             localStatuscargoHasBeenTransferred: true,
         }))
         await dispatch(createDriverListApi({ requestNumber }))
+        await dispatch(createUPDDocument({ requestNumber }))
         await dispatch(getOneRequestsAPI(requestNumber))
     }
 
@@ -1037,6 +1038,18 @@ export const createDriverListApi = ( props: { requestNumber: number, validUntil?
         }
     }
 
+// создать УПД грузоотправителя/грузополучателя
+export const createUPDDocument = ( props: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await requestDocumentsApi.createUPDdocument(props)
+            console.log(response.message)
+        } catch (e: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: '<b>Ошибка создания документа Универсальный Передаточный Документ: </b><br/>' + JSON.stringify(e?.response?.data?.message),
+            }))
+        }
+    }
 // по событию "груз у получателя"
 export const cargoHasBeenRecievedOnCurrentRequest = ( requestNumber: string ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {

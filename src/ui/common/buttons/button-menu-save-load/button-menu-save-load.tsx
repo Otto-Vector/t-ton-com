@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useState} from 'react'
 import styles from './button-menu-save-load.module.scss'
-import {ProjectButton, CommonButtonColorModeType} from '../project-button/project-button'
+import {CommonButtonColorModeType, ProjectButton} from '../project-button/project-button'
 import {MaterialIcon} from '../../tiny/material-icon/material-icon'
 import {DownloadSampleFileWrapper} from '../download-sample-file-wrapper/download-sample-file-wrapper'
 import {AttachDocumentWrapper} from './attach-document-wrapper/attach-document-wrapper'
@@ -15,7 +15,7 @@ type OwnProps = {
     onUpload?: ( event: ChangeEvent<HTMLInputElement> ) => void
     colorMode?: CommonButtonColorModeType
     disabled?: boolean
-    maximumSizeUpload?: number
+    maximumFileSizeUploadInBytes?: number
 }
 
 // кнопка с выпадающим меню загрузки, выгрузки и просмотра файла
@@ -23,7 +23,7 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
     {
         title, loadUrl, onUpload, disabled,
         colorMode = 'blue',
-        maximumSizeUpload = 5242880,
+        maximumFileSizeUploadInBytes = 5242880,
     } ) => {
 
     const [ isOpen, setIsOpen ] = useState(false)
@@ -39,10 +39,10 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
             onUpload && onUpload(changeEvent)
         }
         if (changeEvent.target?.files?.length &&
-            changeEvent.target.files[0].size > maximumSizeUpload) {
+            changeEvent.target.files[0].size > maximumFileSizeUploadInBytes) {
             dispatch<any>(textAndActionGlobalModal({
                 text: [ 'Размер файла больше необходимого минимума для сервера:',
-                    `${ parseToNormalMoney(maximumSizeUpload / 1024) } Kb`,
+                    `${ parseToNormalMoney(maximumFileSizeUploadInBytes / 1024) } Kb`,
                     'Измените размер файла или выберите файл другого размера',
                 ],
             }))
@@ -65,13 +65,7 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
                  setIsOpen(isMouseOnMenu)
              } }
         >
-            <ProjectButton onClick={ onClick }
-                           colorMode={ colorMode }
-                           disabled={ disabled || !( onUpload || loadUrl ) }
-            >
-                <span className={ styles.buttonMenuSaveLoad__text }>{ title }</span>
-                <MaterialIcon style={ { fontWeight: '100' } } icon_name={ 'expand_circle_down' }/>
-            </ProjectButton>
+
             { isOpen && <>
                 <div className={ styles.buttonMenuSaveLoad__lining }/>
                 <div className={ styles.buttonMenuSaveLoad__menu }
@@ -96,7 +90,7 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
                     { loadUrl ?
                         <DownloadSampleFileWrapper urlShort={ loadUrl }>
                             <div className={ styles.buttonMenuSaveLoad__menuOption }
-                                 title={getFileNameFromUrl(loadUrl)}
+                                 title={ getFileNameFromUrl(loadUrl) }
                             >
                                 <span>{ 'Скачать' }</span>
                                 <MaterialIcon icon_name={ 'download' }/>
@@ -107,6 +101,13 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
                 </div>
             </>
             }
+            <ProjectButton onClick={ onClick }
+                           colorMode={ colorMode }
+                           disabled={ disabled || !( onUpload || loadUrl ) }
+            >
+                <span className={ styles.buttonMenuSaveLoad__text }>{ title }</span>
+                <MaterialIcon style={ { fontWeight: '100' } } icon_name={ 'expand_circle_down' }/>
+            </ProjectButton>
         </div>
     )
 }

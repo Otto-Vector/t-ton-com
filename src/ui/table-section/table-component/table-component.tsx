@@ -68,7 +68,7 @@ export const TableComponent: React.ComponentType<OwnProps> = ( {
                 Filter: columnFilter(statusFilter),
                 disableFilters: false,
                 Cell: isStatusTblMode ? LocalStatusCell : <></>,
-                disableSortBy: true,
+                disableSortBy: false,
             },
             {
                 Header: '№',

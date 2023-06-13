@@ -360,7 +360,7 @@ export type TrailerCardType<T = DefaultFormType> = {
 
 export type TrailerApiType = TrailerCardType<string>
 
-// на добавление отклика на заявку
+// на добавление отклика на заявку (ответ на заявку)
 export type ResponseToRequestCardType<T = DefaultFormType> = {
     // уникальный id отклика на заявку
     responseId: T,
@@ -385,6 +385,8 @@ export type ResponseToRequestCardType<T = DefaultFormType> = {
     responsePrice: T,
     // система налогообложения (ОСН, УСН, ЕСХН, ПСН, НПД и т.д.)
     responseTax: T,
+    // время создания ответа на заявку
+    responseCreateTime: T
 }
 
 

@@ -1,11 +1,15 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useMemo} from 'react'
 import styles from './add-drivers-form.module.scss'
 import noImage from '../../media/logo192.png'
 import {useDispatch, useSelector} from 'react-redux'
 import {getStoredValuesRequisitesStore} from '../../selectors/options/requisites-reselect'
 
 import {getLabelAddDriverStore} from '../../selectors/forms/add-driver-reselect'
-import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
+import {
+    getInitialValuesRequestStore,
+    getIsFetchingRequestStore,
+    getResponseDataFromRequestStore,
+} from '../../selectors/forms/request-form-reselect'
 import {ddMmYearFormat} from '../../utils/date-formats'
 import {getAllEmployeesAPI, modifyOneEmployeeStatusToAPI} from '../../redux/options/employees-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
@@ -23,13 +27,10 @@ import {useLocation} from 'react-router-dom'
 import {getRoutesStore} from '../../selectors/routes-reselect'
 import {removeResponseToRequestsBzRemoveThisDriverFromRequest} from '../../redux/forms/add-driver-store-reducer'
 import {setAnswerDriversToMap} from '../../redux/maps/big-map-store-reducer'
-import {
-    globalModalDestroyAll,
-    textAndActionGlobalModal,
-} from '../../redux/utils/global-modal-store-reducer'
+import {globalModalDestroyAll, textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
 import {getIsFetchingEmployeesStore} from '../../selectors/options/employees-reselect'
 import {CancelXButtonDriverView} from './cancel-x-button-driver-view/cancel-x-button-driver-view'
-import {toNumber, parseToNormalMoney} from '../../utils/parsers'
+import {parseToNormalMoney, toNumber} from '../../utils/parsers'
 import {boldWrapper} from '../../utils/html-rebuilds'
 import {EmployeeCardType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
 
@@ -64,6 +65,7 @@ export const AddDriversView: React.ComponentType<OwnProps> = ( { idEmployee, isM
     const requisites = useSelector(getStoredValuesRequisitesStore)
 
     const currentOneRequest = useSelector(getInitialValuesRequestStore)
+    const currentResponseFromOneRequest = useSelector(getResponseDataFromRequestStore)
     const distance = currentOneRequest?.distance
 
     // для модульного окна с просмотром картинки
@@ -81,18 +83,7 @@ export const AddDriversView: React.ComponentType<OwnProps> = ( { idEmployee, isM
 
     // конкретный ответ на заявку
     const oneResponseFind = useSelector(getFilteredResponsesBigMapStore).find(( { idEmployee: id } ) => idEmployee === id)
-    const oneResponse: ResponseToRequestCardType<string> | undefined = !isRequestCenterMapMode ? oneResponseFind : {
-        responseTax: currentOneRequest.responseTax + '',
-        requestNumber: currentOneRequest.requestNumber + '',
-        cargoWeight: currentOneRequest.cargoWeight + '',
-        idEmployee: currentOneRequest.idEmployee + '',
-        idTrailer: currentOneRequest.idTrailer + '',
-        responseId: '0',
-        idTransport: currentOneRequest.idTransport + '',
-        responsePrice: currentOneRequest.responsePrice + '',
-        responseStavka: currentOneRequest.responseStavka + '',
-        requestCarrierId: currentOneRequest.requestCarrierId + '',
-    }
+    const oneResponse: ResponseToRequestCardType<string> | undefined = !isRequestCenterMapMode ? oneResponseFind : currentResponseFromOneRequest
 
     const taxMode = isStatusMode ? requisites.taxMode : oneResponse?.responseTax
 
@@ -345,8 +336,8 @@ export const AddDriversView: React.ComponentType<OwnProps> = ( { idEmployee, isM
                                        disabled={ !employeeOnePhone }
                                        colorMode={ 'blue' }
                                        onClick={ () => {
-                                    phoneToModal(employeeOnePhone)
-                                } }
+                                           phoneToModal(employeeOnePhone)
+                                       } }
                                        title={ employeeOnePhone + '' }
                                        rounded
                         />
