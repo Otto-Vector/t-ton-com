@@ -1005,51 +1005,7 @@ export const changeSomeValuesOnCurrentRequest = ( values: Partial<OneRequestApiT
         }
     }
 
-// скорректировать вес груза и пересчитать стоимость, выставить статус "груз у водителя" и создать документы
-export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
-                                                                            cargoWeight,
-                                                                            addedPrice,
-                                                                        }: { cargoWeight: number, addedPrice: number } ): RequestStoreReducerThunkActionType =>
-    async ( dispatch, getState ) => {
-        const { requestNumber } = getState().requestStoreReducer.initialValues
-        await dispatch(changeSomeValuesOnCurrentRequest({
-            requestNumber: requestNumber + '',
-            cargoWeight: cargoWeight + '',
-            // uploadTime: yearMmDdFormatISO(new Date()),
-            uploadTime: 'serverDateTime', // по договорённости, это слово применяет дату, которая на сервере
-            addedPrice,
-            localStatuscargoHasBeenTransferred: true,
-        }))
-        await dispatch(createDriverListApi({ requestNumber }))
-        await dispatch(createUPDDocument({ requestNumber }))
-        await dispatch(getOneRequestsAPI(requestNumber))
-    }
 
-// создать ДОВЕРЕННОСТЬ НА ВОДИТЕЛЯ
-export const createDriverListApi = ( props: { requestNumber: number, validUntil?: number } ): RequestStoreReducerThunkActionType =>
-    async ( dispatch ) => {
-        try {
-            const response = await requestDocumentsApi.createDriverList(props)
-            console.log(response.message)
-        } catch (e: TtonErrorType) {
-            dispatch(textAndActionGlobalModal({
-                text: '<b>Ошибка создания документа ДОВЕРЕННОСТЬ ВОДИТЕЛЮ: </b><br/>' + JSON.stringify(e?.response?.data?.message),
-            }))
-        }
-    }
-
-// создать УПД грузоотправителя/грузополучателя
-export const createUPDDocument = ( props: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
-    async ( dispatch ) => {
-        try {
-            const response = await requestDocumentsApi.createUPDdocument(props)
-            console.log(response.message)
-        } catch (e: TtonErrorType) {
-            dispatch(textAndActionGlobalModal({
-                text: '<b>Ошибка создания документа Универсальный Передаточный Документ: </b><br/>' + JSON.stringify(e?.response?.data?.message),
-            }))
-        }
-    }
 // по событию "груз у получателя"
 export const cargoHasBeenRecievedOnCurrentRequest = ( requestNumber: string ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
@@ -1158,11 +1114,11 @@ export const paymentHasBeenRecievedToRequest = ( requestNumber: number ): Reques
 
 ///////////////////////////РАБОТА С ДОКУМЕНТАМИ//////////////////////////////////////////////
 
-// подгрузка дополнительного документа
+// подгрузка дополнительного документа "документы груза"
 export const addRewriteCargoDocumentRequestAPI = ( props: { requestNumber: number, cargoDocuments: File } ): RequestStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            const response = await requestDocumentsApi.getLoadCargo(props)
+            const response = await requestDocumentsApi.sendLoadCargo(props)
             console.log(response.message)
         } catch (e: TtonErrorType) {
             dispatch(textAndActionGlobalModal({
@@ -1241,4 +1197,63 @@ export const cancelRequestOnDeleteButton = ( { requestNumber }: { requestNumber:
         }
         // после удаления(т.е. изменения статуса на "отменена") прогружаем список заново
         await dispatch(getAllRequestsAPI())
+    }
+
+// скорректировать вес груза и пересчитать стоимость, выставить статус "груз у водителя" и создать документы
+export const changeCargoWeightValuesOnCurrentRequestAndActivateDocs = ( {
+                                                                            cargoWeight,
+                                                                            addedPrice,
+                                                                        }: { cargoWeight: number, addedPrice: number } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch, getState ) => {
+        const { requestNumber } = getState().requestStoreReducer.initialValues
+        await dispatch(changeSomeValuesOnCurrentRequest({
+            requestNumber: requestNumber + '',
+            cargoWeight: cargoWeight + '',
+            uploadTime: 'serverDateTime', // по договорённости, это слово применяет дату, которая на сервере
+            addedPrice,
+            localStatuscargoHasBeenTransferred: true,
+        }))
+        await dispatch(createDriverListApi({ requestNumber }))
+        await dispatch(createUPDDocument({ requestNumber }))
+        await dispatch(getOneRequestsAPI(requestNumber))
+    }
+
+// создать ДОВЕРЕННОСТЬ НА ВОДИТЕЛЯ
+export const createDriverListApi = ( props: { requestNumber: number, validUntil?: number } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await requestDocumentsApi.createDriverList(props)
+            console.log(response.message)
+        } catch (e: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: '<b>Ошибка создания документа ДОВЕРЕННОСТЬ ВОДИТЕЛЮ: </b><br/>' + JSON.stringify(e?.response?.data?.message),
+            }))
+        }
+    }
+
+// создать УПД грузоотправителя/грузополучателя
+export const createUPDDocument = ( props: { requestNumber: number } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await requestDocumentsApi.createUPDdocument(props)
+            console.log(response.message)
+        } catch (e: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: '<b>Ошибка создания документа Универсальный Передаточный Документ: </b><br/>' + JSON.stringify(e?.response?.data?.message),
+            }))
+        }
+    }
+
+// подгрузка дополнительного документа "документы груза"
+export const addRewriteUPDDocumentRequestAPI = ( props: { requestNumber: number, document: File } ): RequestStoreReducerThunkActionType =>
+    async ( dispatch ) => {
+        try {
+            const response = await requestDocumentsApi.sendUPDDocument(props)
+            console.log(response.message)
+        } catch (e: TtonErrorType) {
+            dispatch(textAndActionGlobalModal({
+                text: JSON.stringify(e?.response?.data?.message || e?.response?.data),
+            }))
+        }
+        await dispatch(getOneRequestsAPI(props.requestNumber))
     }

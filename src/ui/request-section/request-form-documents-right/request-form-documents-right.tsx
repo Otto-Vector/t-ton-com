@@ -17,6 +17,7 @@ import {DownloadSampleFileWrapper} from '../../common/buttons/download-sample-fi
 import {ButtonMenuSaveLoad} from '../../common/buttons/button-menu-save-load/button-menu-save-load'
 import {
     addRewriteCargoDocumentRequestAPI,
+    addRewriteUPDDocumentRequestAPI,
     closeRequestAndUpdateDriverStatus,
     paymentHasBeenRecievedToRequest,
 } from '../../../redux/forms/request-store-reducer'
@@ -73,33 +74,31 @@ export const RequestFormDocumentsRight: React.ComponentType<OwnProps> = (
                 },
             }))
         },
-        // отправка доп.документов
+        // отправка доп. документов
         sendUploadDocument: ( event: ChangeEvent<HTMLInputElement> ) => {
             if (event.target.files?.length) {
-                const cargoDocuments = event.target.files[0]
-                console.log(cargoDocuments.name)
-                dispatch<any>(addRewriteCargoDocumentRequestAPI({ requestNumber, cargoDocuments }))
+                dispatch<any>(addRewriteCargoDocumentRequestAPI({
+                    requestNumber,
+                    cargoDocuments: event.target.files[0],
+                }))
             }
         },
         sendTtnECPFile: ( event: ChangeEvent<HTMLInputElement> ) => {
             if (event.target.files?.length) console.log(event.target.files[0].name)
             // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
-            // initialValues.contractECP.uploadDocument = event
         },
         sendContractECPFile: ( event: ChangeEvent<HTMLInputElement> ) => {
             if (event.target.files?.length) console.log(event.target.files[0].name)
             // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
-            // initialValues.contractECP.uploadDocument = event
         },
         sendUpdECPFile: ( event: ChangeEvent<HTMLInputElement> ) => {
-            if (event.target.files?.length) console.log(event.target.files[0].name)
-            // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
-            // initialValues.contractECP.uploadDocument = event
+            if (event.target.files?.length) {
+                dispatch<any>(addRewriteUPDDocumentRequestAPI({ requestNumber, document: event.target.files[0] }))
+            }
         },
         sendCustomerToConsigneeECPFile: ( event: ChangeEvent<HTMLInputElement> ) => {
             if (event.target.files?.length) console.log(event.target.files[0].name)
             // if (event.target.files?.length) dispatch( setPassportFile( event.target.files[0] ) )
-            // initialValues.contractECP.uploadDocument = event
         },
 
         // закрываем заявку
