@@ -26,7 +26,7 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
         maximumFileSizeUploadInBytes = 5242880,
     } ) => {
 
-    const [ isOpen, setIsOpen ] = useState(false)
+    const [ isOpen, setIsOpen ] = useState(true)
     const [ isMouseOnMenu, setIsMouseOnMenu ] = useState(false)
     const dispatch = useDispatch()
 
@@ -58,14 +58,20 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
 
     return (
         <div className={ styles.buttonMenuSaveLoad }
-             onMouseLeave={ () => {
-                 setIsOpen(false)
-             } }
-             onBlur={ () => {
-                 setIsOpen(isMouseOnMenu)
-             } }
+            onMouseLeave={ () => {
+                setIsOpen(false)
+            } }
+            onBlur={ () => {
+                setIsOpen(isMouseOnMenu)
+            } }
         >
-
+            <ProjectButton onClick={ onClick }
+                           colorMode={ colorMode }
+                           disabled={ disabled || !( onUpload || loadUrl ) }
+            >
+                <span className={ styles.buttonMenuSaveLoad__text }>{ title }</span>
+                <MaterialIcon style={ { fontWeight: '100' } } icon_name={ 'expand_circle_down' }/>
+            </ProjectButton>
             { isOpen && <>
                 <div className={ styles.buttonMenuSaveLoad__lining }/>
                 <div className={ styles.buttonMenuSaveLoad__menu }
@@ -81,7 +87,7 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
                             <AttachDocumentWrapper onChange={
                                 rewriteAlertOrUpload
                             }>
-                                <span>{ 'Загрузить' }</span>
+                                <span className={ styles.buttonMenuSaveLoad__text }>{ 'Загрузить' }</span>
                                 <MaterialIcon icon_name={ 'attach_file' }/>
                             </AttachDocumentWrapper>
                         </div>
@@ -92,7 +98,7 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
                             <div className={ styles.buttonMenuSaveLoad__menuOption }
                                  title={ getFileNameFromUrl(loadUrl) }
                             >
-                                <span>{ 'Скачать' }</span>
+                                <span className={ styles.buttonMenuSaveLoad__text }>{ 'Скачать' }</span>
                                 <MaterialIcon icon_name={ 'download' }/>
                             </div>
                         </DownloadSampleFileWrapper>
@@ -101,13 +107,7 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
                 </div>
             </>
             }
-            <ProjectButton onClick={ onClick }
-                           colorMode={ colorMode }
-                           disabled={ disabled || !( onUpload || loadUrl ) }
-            >
-                <span className={ styles.buttonMenuSaveLoad__text }>{ title }</span>
-                <MaterialIcon style={ { fontWeight: '100' } } icon_name={ 'expand_circle_down' }/>
-            </ProjectButton>
+
         </div>
     )
 }
