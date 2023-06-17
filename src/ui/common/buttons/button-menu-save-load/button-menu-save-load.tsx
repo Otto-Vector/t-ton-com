@@ -26,7 +26,7 @@ export const ButtonMenuSaveLoad: React.ComponentType<OwnProps> = (
         maximumFileSizeUploadInBytes = 5242880,
     } ) => {
 
-    const [ isOpen, setIsOpen ] = useState(true)
+    const [ isOpen, setIsOpen ] = useState(false)
     const [ isMouseOnMenu, setIsMouseOnMenu ] = useState(false)
     const dispatch = useDispatch()
 
