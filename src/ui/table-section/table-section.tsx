@@ -14,7 +14,7 @@ import {
 import {getCargoTypeNoTrackBaseStore} from '../../selectors/base-reselect'
 import {Preloader} from '../common/tiny/preloader/preloader'
 import {getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
-import {getAllRequestsAPI} from '../../redux/forms/request-store-reducer'
+import {getAllRequestsAPI} from '../../redux/request-form/request-store-reducer'
 import truckToRightPNG from '../../media/trackToRight.png'
 import truckLoadPNG from '../../media/trackLoadFuel.png'
 import truckToLeftPNG from '../../media/truckLeft.png'

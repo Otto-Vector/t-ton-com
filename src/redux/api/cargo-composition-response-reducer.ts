@@ -3,7 +3,7 @@ import {ThunkAction} from 'redux-thunk'
 import {GetActionsTypes} from '../../types/ts-utils';
 import {cargoEditableSelectorApi} from '../../api/local-api/cargoEditableSelector.api';
 import {TtonErrorType} from '../../api/local-api/back-instance.api';
-import {requestStoreActions, RequestStoreActionsType} from '../forms/request-store-reducer';
+import {requestStoreActions, RequestStoreActionsType} from '../request-form/request-store-reducer';
 
 const initialState = {
     // список названий грузов (изменяемый при создании заявки) - подгружается из бэка

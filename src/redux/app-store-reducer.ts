@@ -11,7 +11,7 @@ import {getAllTransportAPI} from './options/transport-store-reducer'
 import {getAllConsigneesAPI} from './options/consignees-store-reducer'
 import {getAllShippersAPI} from './options/shippers-store-reducer'
 import {getAllEmployeesAPI} from './options/employees-store-reducer'
-import {getAllRequestsAPI} from './forms/request-store-reducer'
+import {getAllRequestsAPI} from './request-form/request-store-reducer'
 
 const initialState = {
     initialized: false,

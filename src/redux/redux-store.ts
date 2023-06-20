@@ -13,7 +13,7 @@ import {transportStoreReducer} from './options/transport-store-reducer'
 import {filtersStoreReducer} from './table/filters-store-reducer'
 import {tableStoreReducer} from './table/table-store-reducer';
 import {addDriverStoreReducer} from './forms/add-driver-store-reducer';
-import {requestStoreReducer} from './forms/request-store-reducer';
+import {requestStoreReducer} from './request-form/request-store-reducer';
 import {infoStoreReducer} from './info-store-reducer';
 import {lightBoxStoreReducer} from './utils/lightbox-store-reducer'
 import {bigMapStoreReducer} from './maps/big-map-store-reducer';

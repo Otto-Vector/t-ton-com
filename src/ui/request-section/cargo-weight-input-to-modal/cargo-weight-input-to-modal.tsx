@@ -6,7 +6,7 @@ import {FormInputType} from '../../common/inputs/final-form-inputs/form-input-ty
 import {Field, Form} from 'react-final-form'
 import createDecorator from 'final-form-focus'
 import styles from './cargo-weight-input-to-modal.module.scss'
-import {changeCargoWeightValuesOnCurrentRequestAndActivateDocs} from '../../../redux/forms/request-store-reducer'
+import {changeCargoWeightValuesOnCurrentRequestAndActivateDocs} from '../../../redux/request-form/request-store-reducer'
 import {getInitialDataToModalCalcRequestStore} from '../../../selectors/forms/request-form-reselect'
 import {parseCommaToDot, parseToNormalMoney, syncParsers, toNumber} from '../../../utils/parsers'
 import {FormApi} from 'final-form'

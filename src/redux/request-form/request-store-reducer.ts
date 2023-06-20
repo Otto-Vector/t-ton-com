@@ -1,7 +1,6 @@
 import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {
-    CargoTypeType,
     ConsigneesCardType,
     DocumentsRequestType,
     EmployeeCardType,
@@ -16,7 +15,7 @@ import {
 import {syncValidators} from '../../utils/validators'
 import {getRouteFromAvtodispetcherApi} from '../../api/external-api/avtodispetcher.api'
 import {oneRequestApi} from '../../api/local-api/request-response/request.api'
-import {addNDay, apiToISODateFormat, yearMmDdFormat, yearMmDdFormatISO} from '../../utils/date-formats'
+import {addNDay, apiToISODateFormat, yearMmDdFormat} from '../../utils/date-formats'
 import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {
     getOneEmployeeFromAPI,
@@ -32,6 +31,7 @@ import {toNumber} from '../../utils/parsers'
 import {boldWrapper} from '../../utils/html-rebuilds'
 import {employeesApi} from '../../api/local-api/options/employee.api'
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
+import {parseRequestFromAPI, parseRequestToAPIonAccept, parseRequestToApiOnCreate} from './request-store-parser'
 
 
 const initialState = {
@@ -294,254 +294,6 @@ export const requestStoreActions = {
     } as const ),
 }
 
-// адаптируем заявку от сервера в локальную модель данных
-const parseRequestFromAPI = ( {
-                                  idUser,
-                                  innNumber,
-                                  kpp,
-                              }: { idUser: string, innNumber: string, kpp: string } ) => ( elem: OneRequestApiType ): OneRequestType => ( {
-    requestNumber: +elem.requestNumber,
-    requestDate: elem.requestDate ? new Date(apiToISODateFormat(elem.requestDate)) : undefined,
-    cargoComposition: elem.cargoComposition,
-    shipmentDate: elem.shipmentDate ? new Date(elem.shipmentDate) : undefined,
-    cargoType: elem.cargoType as CargoTypeType,
-    addedPrice: elem.addedPrice,
-
-    distance: Number(elem.distance),
-    route: elem?.route || '' + ( elem?.routePlus ? ( ( elem.routePlus !== '-' ) ? elem.routePlus : '' ) : '' ),
-    note: elem.note,
-    cargoStamps: elem.cargoStamps,
-    visible: true,
-    marked: false,
-
-    acceptedUsers: elem.acceptedUsers?.split(', ').filter(v => v),
-    answers: elem.answers?.split(', ').filter(v => v),
-
-    /* МАРКЕРЫ ОТМЕНЫ ЗАЯВКИ */
-    isCanceledDate: elem.isCanceledDate,
-    isCanceledReason: elem.isCanceledReason,
-
-    /* МАРКЕРЫ ВРЕМЕНИ */
-    isClosedDate: elem.isClosedDate,
-    successPaymentDate: elem.successPaymentDate,
-    paymentDate: elem.paymentDate,
-
-    /* СТАТУСЫ */
-    globalStatus: elem.globalStatus as OneRequestType['globalStatus'],
-    roleStatus: { // вычисляем отношение к заявке не только по idUser
-        isCustomer: idUser === elem.idUserCustomer || ( innNumber === elem.innNumberCustomer && kpp === elem.kppCustomer ),
-        isCarrier: idUser === elem.requestUserCarrierId || ( innNumber === elem.innNumberCarrier && kpp === elem.kppCarrier ),
-        isRecipient: idUser === elem.idUserRecipient || ( innNumber === elem.innNumberRecipient && kpp === elem.kppRecipient ),
-        isSender: idUser === elem.idUserSender || ( innNumber === elem.innNumberSender && kpp === elem.kppSender ),
-    },
-    localStatus: {
-        paymentHasBeenTransferred: elem.localStatuspaymentHasBeenTransferred,
-        paymentHasBeenReceived: elem.localStatuspaymentHasBeenReceived,
-        cargoHasBeenTransferred: elem.localStatuscargoHasBeenTransferred,
-        cargoHasBeenReceived: elem.localStatuscargoHasBeenReceived,
-    },
-    /* ЗАКАЗЧИК */
-    idUserCustomer: elem.idUserCustomer,
-    idCustomer: elem.idCustomer,
-    customerUser: {
-        innNumber: elem.innNumberCustomer,
-        organizationName: elem.organizationNameCustomer,
-        taxMode: elem.taxModeCustomer,
-        kpp: elem.kppCustomer,
-        ogrn: elem.ogrnCustomer,
-        okpo: elem.okpoCustomer,
-        legalAddress: elem.legalAddressCustomer,
-        description: elem.descriptionCustomer,
-        postAddress: elem.postAddressCustomer,
-        phoneDirector: elem.phoneDirectorCustomer,
-        phoneAccountant: elem.phoneAccountantCustomer,
-        email: elem.emailCustomer,
-        bikBank: elem.bikBankCustomer,
-        nameBank: elem.nameBankCustomer,
-        checkingAccount: elem.checkingAccountCustomer,
-        korrAccount: elem.korrAccountCustomer,
-        mechanicFIO: elem.mechanicFIOCustomer,
-        dispatcherFIO: elem.dispatcherFIOCustomer,
-    },
-    /* ГРУЗООТПРАВИТЕЛЬ */
-    idUserSender: elem.idUserSender,
-    idSender: elem.idSender,
-    sender: {
-        idUser: elem.idUserSender,
-        idSender: elem.idSender + '',
-        title: elem.titleSender,
-        innNumber: elem.innNumberSender,
-        organizationName: elem.organizationNameSender,
-        kpp: elem.kppSender,
-        ogrn: elem.ogrnSender,
-        address: elem.addressSender,
-        shipperFio: elem.shipperFioSender,
-        shipperTel: elem.shipperTelSender,
-        description: elem.descriptionSender,
-        coordinates: elem.coordinatesSender,
-        city: elem.citySender,
-    },
-    senderUser: {
-        taxMode: elem.taxModeSender,
-        okpo: elem.okpoSender,
-        legalAddress: elem.legalAddressSender,
-        postAddress: elem.postAddressSender,
-        phoneDirector: elem.phoneDirectorSender,
-        phoneAccountant: elem.phoneAccountantSender,
-        email: elem.emailSender,
-        bikBank: elem.bikBankSender,
-        nameBank: elem.nameBankSender,
-        checkingAccount: elem.checkingAccountSender,
-        korrAccount: elem.korrAccountSender,
-        mechanicFIO: elem.mechanicFIOSender,
-        dispatcherFIO: elem.dispatcherFIOSender,
-    },
-
-    // ГРУЗОПОЛУЧАТЕЛЬ
-    idRecipient: elem.idRecipient,
-    idUserRecipient: elem.idUserRecipient,
-    recipient: {
-        idUser: elem.idUserRecipient,
-        idRecipient: elem.idRecipient as string,
-        title: elem.titleRecipient,
-        innNumber: elem.innNumberRecipient,
-        organizationName: elem.organizationNameRecipient,
-        kpp: elem.kppRecipient,
-        ogrn: elem.ogrnRecipient,
-        address: elem.addressRecipient,
-        consigneesFio: elem.consigneesFioRecipient,
-        consigneesTel: elem.consigneesTelRecipient,
-        description: elem.descriptionRecipient,
-        coordinates: elem.coordinatesRecipient,
-        city: elem.cityRecipient,
-    },
-    recipientUser: {
-        taxMode: elem.taxModeRecipient,
-        okpo: elem.okpoRecipient,
-        legalAddress: elem.legalAddressRecipient,
-        postAddress: elem.postAddressRecipient,
-        phoneDirector: elem.phoneDirectorRecipient,
-        phoneAccountant: elem.phoneAccountantRecipient,
-        email: elem.emailRecipient,
-        bikBank: elem.bikBankRecipient,
-        nameBank: elem.nameBankRecipient,
-        checkingAccount: elem.checkingAccountRecipient,
-        korrAccount: elem.korrAccountRecipient,
-        mechanicFIO: elem.mechanicFIORecipient,
-        dispatcherFIO: elem.dispatcherFIORecipient,
-    },
-
-    // ПЕРЕВОЗЧИК
-    requestUserCarrierId: elem.requestUserCarrierId,
-    requestCarrierId: elem.requestCarrierId,
-    requestCarrierUser: {
-        innNumber: elem.innNumberCarrier,
-        organizationName: elem.organizationNameCarrier,
-        taxMode: elem.taxModeCarrier,
-        kpp: elem.kppCarrier,
-        ogrn: elem.ogrnCarrier,
-        okpo: elem.okpoCarrier,
-        legalAddress: elem.legalAddressCarrier,
-        description: elem.descriptionCarrier,
-        postAddress: elem.postAddressCarrier,
-        phoneDirector: elem.phoneDirectorCarrier,
-        phoneAccountant: elem.phoneAccountantCarrier,
-        email: elem.emailCarrier,
-        bikBank: elem.bikBankCarrier,
-        nameBank: elem.nameBankCarrier,
-        checkingAccount: elem.checkingAccountCarrier,
-        korrAccount: elem.korrAccountCarrier,
-        mechanicFIO: elem.mechanicFIOCarrier,
-        dispatcherFIO: elem.dispatcherFIOCarrier,
-    },
-    // ВОДИТЕЛЬ
-    idEmployee: elem.idEmployee,
-    responseEmployee: {
-        idEmployee: elem.idEmployee,
-        employeeFIO: elem.responseEmployeeFIO,
-        employeePhoneNumber: elem.responseEmployeePhoneNumber,
-        passportSerial: elem.responseEmployeepassportSerial,
-        passportFMS: elem.responseEmployeepassportFMS,
-        passportDate: elem.responseEmployeepassportDate,
-        drivingLicenseNumber: elem.responseEmployeedrivingLicenseNumber,
-        photoFace: elem.responseEmployeePhotoFace,
-    },
-    // ТРАНСПОРТ
-    idTransport: elem.idTransport,
-    responseTransport: {
-        idTransport: elem.idTransport,
-        transportNumber: elem.responseTransportNumber,
-        transportTrademark: elem.responseTransportTrademark,
-        transportModel: elem.responseTransportModel,
-        pts: elem.responseTransportPts,
-        dopog: elem.responseTransportDopog,
-        cargoType: elem.responseTransportCargoType,
-        cargoWeight: elem.responseTransportCargoWeight,
-        propertyRights: elem.responseTransportPropertyRights,
-        transportImage: elem.responseTransportImage,
-    },
-    // ПРИЦЕП
-    idTrailer: elem.idTrailer,
-    responseTrailer: {
-        idTrailer: elem.idTrailer,
-        trailerNumber: elem.responseTrailertrailerNumber,
-        trailerTrademark: elem.responseTrailerTrademark,
-        trailerModel: elem.responseTrailerModel,
-        pts: elem.responseTrailerPts,
-        dopog: elem.responseTrailerDopog,
-        cargoType: elem.responseTrailerCargoType,
-        cargoWeight: elem.responseTrailerCargoWeight,
-        propertyRights: elem.responseTrailerPropertyRights,
-        trailerImage: elem.responseTrailerImage,
-    },
-
-    responseStavka: elem.responseStavka,
-    responseTax: elem.responseTax,
-    responsePrice: elem.responsePrice,
-    cargoWeight: elem.cargoWeight,
-
-    uploadTime: elem.uploadTime && new Date(elem.uploadTime),
-    unloadTime: elem.unloadTime && new Date(elem.unloadTime),
-
-    documents: {
-        proxyWay: {
-            header: undefined,
-            proxyFreightLoader: elem.proxyFreightLoader,
-            proxyDriver: elem.proxyDriver,
-            waybillDriver: elem.proxyWaybillDriver,
-        },
-        cargoDocuments: elem.cargoDocuments,
-        ttnECP: {
-            header: undefined,
-            documentUpload: undefined,
-            documentDownload: elem.ttnECPdocumentDownload,
-            customerIsSubscribe: elem.ttnECPcustomerIsSubscribe,
-            carrierIsSubscribe: elem.ttnECPcarrierIsSubscribe,
-            consigneeIsSubscribe: elem.ttnECPconsigneeIsSubscribe,
-        },
-        contractECP: {
-            header: undefined,
-            documentUpload: undefined,
-            documentDownload: elem.contractECPdocumentDownload,
-            customerIsSubscribe: elem.contractECPcustomerIsSubscribe,
-            carrierIsSubscribe: elem.contractECPcarrierIsSubscribe,
-        },
-        updECP: {
-            header: undefined,
-            documentUpload: undefined,
-            documentDownload: elem.updECPdocumentDownload,
-            customerIsSubscribe: elem.updECPcustomerIsSubscribe,
-            carrierIsSubscribe: elem.updECPcarrierIsSubscribe,
-        },
-        customerToConsigneeContractECP: {
-            header: undefined,
-            documentUpload: undefined,
-            documentDownload: elem.customerToConsigneeContractECPdocumentDownload,
-            customerIsSubscribe: elem.customerToConsigneeContractECPcustomerIsSubscribe,
-            consigneeIsSubscribe: elem.customerToConsigneeContractECPconsigneeIsSubscribe,
-        },
-    },
-} )
 
 /* САНКИ */
 
@@ -668,72 +420,21 @@ export const addAcceptedResponseToRequestOnCreate = (
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
         const idUser = getState().authStoreReducer.authID
-        const requestCarrierData = getState().requisitesStoreReducer.storedValues
-        // данные из локальной карточки
+        // данные телефона из локальной карточки
         const customerCardPhone = getState().shippersStoreReducer.content
             .find(( { idSender } ) => idSender === idCustomer)?.shipperTel
-        try {
-            const response = await oneRequestApi.modifyOneRequest({
-                requestNumber: addDriverValues.requestNumber,
-                globalStatus: 'в работе',
-                responseStavka: addDriverValues.responseStavka,
-                responseTax: addDriverValues.responseTax,
-                responsePrice: addDriverValues.responsePrice,
-                cargoWeight,
-                requestUserCarrierId: idUser,
 
-                /* ПЕРЕВОЗЧИК */
-                innNumberCarrier: requestCarrierData.innNumber,
-                organizationNameCarrier: requestCarrierData.organizationName,
-                taxModeCarrier: requestCarrierData.taxMode,
-                kppCarrier: requestCarrierData.kpp,
-                ogrnCarrier: requestCarrierData.ogrn,
-                okpoCarrier: requestCarrierData.okpo,
-                legalAddressCarrier: requestCarrierData.legalAddress,
-                // сюда запишу номер телефона из карточки заказчика
-                descriptionCarrier: customerCardPhone || requestCarrierData.description,
-                postAddressCarrier: requestCarrierData.postAddress,
-                phoneDirectorCarrier: requestCarrierData.phoneDirector,
-                phoneAccountantCarrier: requestCarrierData.phoneAccountant,
-                emailCarrier: requestCarrierData.email,
-                bikBankCarrier: requestCarrierData.bikBank,
-                nameBankCarrier: requestCarrierData.nameBank,
-                checkingAccountCarrier: requestCarrierData.checkingAccount,
-                korrAccountCarrier: requestCarrierData.korrAccount,
-                mechanicFIOCarrier: requestCarrierData.mechanicFIO,
-                dispatcherFIOCarrier: requestCarrierData.dispatcherFIO,
-                /* СОТРУДНИК */
-                idEmployee: employeeValues.idEmployee,
-                responseEmployeeFIO: employeeValues.employeeFIO,
-                responseEmployeePhoneNumber: employeeValues.employeePhoneNumber,
-                responseEmployeepassportSerial: employeeValues.passportSerial,
-                responseEmployeepassportFMS: employeeValues.passportFMS,
-                responseEmployeepassportDate: employeeValues.passportDate as string,
-                responseEmployeedrivingLicenseNumber: employeeValues.drivingLicenseNumber,
-                responseEmployeePhotoFace: employeeValues.photoFace,
-                /* ТРАНСПОРТ */
-                idTransport: transportValues.idTransport,
-                responseTransportNumber: transportValues.transportNumber,
-                responseTransportTrademark: transportValues.transportTrademark,
-                responseTransportModel: transportValues.transportModel,
-                responseTransportPts: transportValues.pts,
-                responseTransportDopog: transportValues.dopog,
-                responseTransportCargoType: transportValues.cargoType,
-                responseTransportCargoWeight: transportValues.cargoWeight,
-                responseTransportPropertyRights: transportValues.propertyRights,
-                responseTransportImage: transportValues.transportImage,
-                /* ПРИЦЕП */
-                idTrailer: trailerValues.idTrailer,
-                responseTrailertrailerNumber: trailerValues.trailerNumber,
-                responseTrailerTrademark: trailerValues.trailerTrademark,
-                responseTrailerModel: trailerValues.trailerModel,
-                responseTrailerPts: trailerValues.pts,
-                responseTrailerDopog: trailerValues.dopog,
-                responseTrailerCargoType: trailerValues.cargoType,
-                responseTrailerCargoWeight: trailerValues.cargoWeight,
-                responseTrailerPropertyRights: trailerValues.propertyRights,
-                responseTrailerImage: trailerValues.trailerImage,
-            })
+        try {
+            const response = await oneRequestApi.modifyOneRequest(parseRequestToAPIonAccept({
+                requestUserCarrierId: idUser,
+                requestCarrierData: getState().requisitesStoreReducer.storedValues,
+                customerCardPhone,
+                addDriverValues,
+                employeeValues,
+                trailerValues,
+                transportValues,
+                cargoWeight,
+            }))
 
             if (response.success) {
                 // добавляем Id пользователя к заявке (возможно это излишне)
@@ -772,71 +473,19 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
     async ( dispatch ) => {
 
         try {
-            // Загружаем данные пользователя, ответчика по заявке
+            // загружаем данные пользователя, ответчика по заявке
             const requestCarrierDataFromApi = await requisitesApi.getPersonalDataFromId({ idUser: oneResponse.requestCarrierId })
             if (Array.isArray(requestCarrierDataFromApi)) {
-                const requestCarrierData = requestCarrierDataFromApi[0]
-                const response = await oneRequestApi.modifyOneRequest({
-                    requestNumber: oneResponse.requestNumber,
-                    globalStatus: 'в работе',
-                    responseStavka: oneResponse.responseStavka,
-                    responseTax: oneResponse.responseTax,
-                    responsePrice: oneResponse.responsePrice,
+                const requestCarrierDataCurrent = requestCarrierDataFromApi[0]
+                const response = await oneRequestApi.modifyOneRequest(parseRequestToAPIonAccept({
                     requestUserCarrierId: oneResponse.requestCarrierId,
                     cargoWeight: oneResponse.cargoWeight,
-
-                    /* ПЕРЕВОЗЧИК */
-                    innNumberCarrier: requestCarrierData?.nnNumber || 'null',
-                    organizationNameCarrier: requestCarrierData?.organizationName || 'null',
-                    taxModeCarrier: requestCarrierData?.taxMode || 'null',
-                    kppCarrier: requestCarrierData?.kpp || 'null',
-                    ogrnCarrier: requestCarrierData?.ogrn || 'null',
-                    okpoCarrier: requestCarrierData?.okpo || 'null',
-                    legalAddressCarrier: requestCarrierData?.legalAddress || 'null',
-                    // сюда запишу номер телефона из карточки заказчика
-                    descriptionCarrier: requestCarrierData?.description || 'null',
-                    postAddressCarrier: requestCarrierData?.postAddress || 'null',
-                    phoneDirectorCarrier: requestCarrierData?.phoneDirector || 'null',
-                    phoneAccountantCarrier: requestCarrierData?.phoneAccountant || 'null',
-                    emailCarrier: requestCarrierData?.email || 'null',
-                    bikBankCarrier: requestCarrierData?.bikBank || 'null',
-                    nameBankCarrier: requestCarrierData?.nameBank || 'null',
-                    checkingAccountCarrier: requestCarrierData?.checkingAccount || 'null',
-                    korrAccountCarrier: requestCarrierData?.korrAccount || 'null',
-                    mechanicFIOCarrier: requestCarrierData?.mechanicFIO || 'null',
-                    dispatcherFIOCarrier: requestCarrierData?.dispatcherFIO || 'null',
-                    /* СОТРУДНИК */
-                    idEmployee: employeeValues.idEmployee,
-                    responseEmployeeFIO: employeeValues.employeeFIO,
-                    responseEmployeePhoneNumber: employeeValues.employeePhoneNumber,
-                    responseEmployeepassportSerial: employeeValues.passportSerial,
-                    responseEmployeepassportFMS: employeeValues.passportFMS,
-                    responseEmployeepassportDate: employeeValues.passportDate as string,
-                    responseEmployeedrivingLicenseNumber: employeeValues.drivingLicenseNumber,
-                    responseEmployeePhotoFace: employeeValues.photoFace,
-                    /* ТРАНСПОРТ */
-                    idTransport: transportValues.idTransport,
-                    responseTransportNumber: transportValues.transportNumber,
-                    responseTransportTrademark: transportValues.transportTrademark,
-                    responseTransportModel: transportValues.transportModel,
-                    responseTransportPts: transportValues.pts,
-                    responseTransportDopog: transportValues.dopog,
-                    responseTransportCargoType: transportValues.cargoType,
-                    responseTransportCargoWeight: transportValues.cargoWeight,
-                    responseTransportPropertyRights: transportValues.propertyRights,
-                    responseTransportImage: transportValues.transportImage,
-                    /* ПРИЦЕП */
-                    idTrailer: trailerValues?.idTrailer || 'null',
-                    responseTrailertrailerNumber: trailerValues?.trailerNumber || 'null',
-                    responseTrailerTrademark: trailerValues?.trailerTrademark || 'null',
-                    responseTrailerModel: trailerValues?.trailerModel || 'null',
-                    responseTrailerPts: trailerValues?.pts || 'null',
-                    responseTrailerDopog: trailerValues?.dopog || 'null',
-                    responseTrailerCargoType: trailerValues?.cargoType,
-                    responseTrailerCargoWeight: trailerValues?.cargoWeight || 'null',
-                    responseTrailerPropertyRights: trailerValues?.propertyRights,
-                    responseTrailerImage: trailerValues?.trailerImage,
-                })
+                    addDriverValues: oneResponse,
+                    requestCarrierDataFromApi: requestCarrierDataCurrent,
+                    employeeValues,
+                    trailerValues,
+                    transportValues,
+                }))
                 if (response.success) {
                     await oneRequestApi.addOneUserAcceptRequest({
                         requestNumber: oneResponse.requestNumber,
@@ -853,7 +502,6 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
                 }
             }
 
-
         } catch (e: TtonErrorType) {
             dispatch(textAndActionGlobalModal({
                 text: JSON.stringify(e),
@@ -862,123 +510,26 @@ export const addAcceptedResponseToRequestOnAcceptDriver = (
     }
 
 // изменить текущую заявку ПРИ СОЗДАНИИ
-export const changeCurrentRequestOnCreate = ( submitValues: OneRequestType ): RequestStoreReducerThunkActionType =>
+export const changeCurrentRequestOnCreate = ( { oneRequestValues }: { oneRequestValues: OneRequestType } ): RequestStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requestStoreActions.setIsFetching(true))
         try {
             const userId = getState().authStoreReducer.authID
             // данные из локальной карточки
             const customerCard = getState().shippersStoreReducer.content
-                .find(( { idSender } ) => idSender === submitValues.idCustomer)
+                .find(( { idSender } ) => idSender === oneRequestValues.idCustomer)
             // механика выяснения какому пользователю какой инн
             await dispatch(getListOrganizationRequisitesByInn([
                 customerCard?.innNumber,
-                submitValues.sender.innNumber,
-                submitValues.recipient.innNumber,
+                oneRequestValues.sender.innNumber,
+                oneRequestValues.recipient.innNumber,
             ].filter(x => x).join(',')))
             const filteredContent = await getState().requisitesStoreReducer.filteredContent
-            // подгрузка данных созданных пользователей
-            const userCustomer = filteredContent?.find(( { innNumber } ) => innNumber === customerCard?.innNumber)
-            const userSender = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.sender.innNumber)
-            const userRecipient = filteredContent?.find(( { innNumber } ) => innNumber === submitValues.recipient.innNumber)
-            const acceptedUsers = [ userCustomer?.idUser || userId, userSender?.idUser, userRecipient?.idUser ].filter(x => x).join(', ')
-            // делим длинный polyline на две части (ограничения на сервере на 70000 символов
-            const route = submitValues?.route?.substring(0, 69999)
-            const routePlus = submitValues?.route?.substring(69999) || 'null'
-            const requestNumber = submitValues.requestNumber?.toString() || '0'
-            const placeholder = 'null'
-
-            const response = await oneRequestApi.modifyOneRequest({
-                    requestNumber,
-                    globalStatus: 'новая заявка',
-                    acceptedUsers,
-                    cargoComposition: submitValues.cargoComposition,
-                    shipmentDate: yearMmDdFormatISO(submitValues.shipmentDate),
-                    cargoType: submitValues.cargoType,
-                    distance: submitValues.distance?.toString(),
-                    route,
-                    routePlus,
-                    note: submitValues.note,
-                    cargoStamps: submitValues.cargoStamps,
-                    /* ЗАКАЗЧИК - ДАННЫЕ ПОЛЬЗОВАТЕЛЯ (ЕСЛИ ЕСТЬ) */
-                    idCustomer: submitValues.idCustomer,
-                    idUserCustomer: userCustomer?.idUser || userId,
-                    innNumberCustomer: userCustomer?.innNumber || customerCard?.innNumber,
-                    organizationNameCustomer: userCustomer?.organizationName || customerCard?.organizationName,
-                    taxModeCustomer: userCustomer?.taxMode,
-                    kppCustomer: userCustomer?.kpp || customerCard?.kpp,
-                    ogrnCustomer: userCustomer?.ogrn || customerCard?.ogrn,
-                    okpoCustomer: userCustomer?.okpo,
-                    legalAddressCustomer: userCustomer?.legalAddress || customerCard?.address,
-                    descriptionCustomer: customerCard?.shipperTel || customerCard?.description,
-                    postAddressCustomer: userCustomer?.postAddress || customerCard?.address,
-                    phoneDirectorCustomer: userCustomer?.phoneDirector,
-                    phoneAccountantCustomer: userCustomer?.phoneAccountant,
-                    emailCustomer: userCustomer?.email,
-                    bikBankCustomer: userCustomer?.bikBank,
-                    nameBankCustomer: userCustomer?.nameBank,
-                    checkingAccountCustomer: userCustomer?.checkingAccount,
-                    korrAccountCustomer: userCustomer?.korrAccount,
-                    mechanicFIOCustomer: userCustomer?.mechanicFIO,
-                    dispatcherFIOCustomer: userCustomer?.dispatcherFIO,
-                    /* ГРУЗООТПРАВИТЕЛЬ - КАРТОЧКА */
-                    idSender: submitValues.idSender,
-                    titleSender: submitValues.sender.title,
-                    innNumberSender: submitValues.sender.innNumber,
-                    organizationNameSender: submitValues.sender.organizationName,
-                    kppSender: submitValues.sender.kpp,
-                    ogrnSender: submitValues.sender.ogrn,
-                    addressSender: submitValues.sender.address,
-                    shipperFioSender: submitValues.sender.shipperFio,
-                    shipperTelSender: submitValues.sender.shipperTel,
-                    descriptionSender: submitValues.sender.description,
-                    coordinatesSender: submitValues.sender.coordinates,
-                    citySender: submitValues.sender.city,
-                    /* ГРУЗООТПРАВИТЕЛЬ - ДАННЫЕ ПОЛЬЗОВАТЕЛЯ */
-                    idUserSender: userSender?.idUser,
-                    taxModeSender: userSender?.taxMode,
-                    okpoSender: userSender?.okpo,
-                    legalAddressSender: userSender?.legalAddress,
-                    postAddressSender: userSender?.postAddress,
-                    phoneDirectorSender: userSender?.phoneDirector,
-                    phoneAccountantSender: userSender?.phoneAccountant,
-                    emailSender: userSender?.email,
-                    bikBankSender: userSender?.bikBank,
-                    nameBankSender: userSender?.nameBank,
-                    checkingAccountSender: userSender?.checkingAccount,
-                    korrAccountSender: userSender?.korrAccount,
-                    mechanicFIOSender: userSender?.mechanicFIO,
-                    dispatcherFIOSender: userSender?.dispatcherFIO,
-                    /* ГРУЗОПОЛУЧАТЕЛЬ - КАРТОЧКА */
-                    idRecipient: submitValues.idRecipient,
-                    titleRecipient: submitValues.recipient.title,
-                    innNumberRecipient: submitValues.recipient.innNumber,
-                    organizationNameRecipient: submitValues.recipient.organizationName,
-                    kppRecipient: submitValues.recipient.kpp,
-                    ogrnRecipient: submitValues.recipient.ogrn,
-                    addressRecipient: submitValues.recipient.address,
-                    consigneesFioRecipient: submitValues.recipient.consigneesFio,
-                    consigneesTelRecipient: submitValues.recipient.consigneesTel,
-                    descriptionRecipient: submitValues.recipient.description || placeholder,
-                    coordinatesRecipient: submitValues.recipient.coordinates,
-                    cityRecipient: submitValues.recipient.city,
-                    /* ГРУЗОПОЛУЧАТЕЛЬ - ДАННЫЕ ПОЛЬЗОВАТЕЛЯ */
-                    idUserRecipient: userRecipient?.idUser,
-                    taxModeRecipient: userRecipient?.taxMode,
-                    okpoRecipient: userRecipient?.okpo,
-                    legalAddressRecipient: userRecipient?.legalAddress,
-                    postAddressRecipient: userRecipient?.postAddress,
-                    phoneDirectorRecipient: userRecipient?.phoneDirector,
-                    phoneAccountantRecipient: userRecipient?.phoneAccountant,
-                    emailRecipient: userRecipient?.email,
-                    bikBankRecipient: userRecipient?.bikBank,
-                    nameBankRecipient: userRecipient?.nameBank,
-                    checkingAccountRecipient: userRecipient?.checkingAccount,
-                    korrAccountRecipient: userRecipient?.korrAccount,
-                    mechanicFIORecipient: userRecipient?.mechanicFIO,
-                    dispatcherFIORecipient: userRecipient?.dispatcherFIO,
-                },
-            )
+            console.log(filteredContent)
+            debugger
+            const response = await oneRequestApi.modifyOneRequest(parseRequestToApiOnCreate({
+                userId, customerCard, oneRequestValues, filteredContent,
+            }))
             if (response.success) {
                 await dispatch(getAllRequestsAPI())
             }

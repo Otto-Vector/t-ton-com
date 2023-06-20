@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {To, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {getRoutesStore} from '../../selectors/routes-reselect'
-import {deleteCurrentRequestAPI, getOneRequestsAPI, setNewRequestAPI} from '../../redux/forms/request-store-reducer'
+import {deleteCurrentRequestAPI, getOneRequestsAPI, setNewRequestAPI} from '../../redux/request-form/request-store-reducer'
 import {getInitialValuesRequestStore, getIsFetchingRequestStore} from '../../selectors/forms/request-form-reselect'
 import {CancelXButton} from '../common/buttons/cancel-button/cancel-x-button'
 import {RequestFormDocumentsRight} from './request-form-documents-right/request-form-documents-right'

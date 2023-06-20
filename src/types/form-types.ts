@@ -853,8 +853,12 @@ export type OneRequestApiType<T extends string = ''> = {
     successPaymentDate?: string | T
 }
 
+type ServerSpecialWordsType = 'null' | 'serverDateTime'
+
 // добавлены служебные слова для обнуления и присвоения серверного времени
-export type OneRequestApiToApiType = OneRequestApiType<'null' | 'serverDateTime'>
+export type OneRequestApiToApiType = Partial<OneRequestApiType<ServerSpecialWordsType>> & {
+    requestNumber: string
+}
 
 //////////////////////////*ТИПЫ ДЛЯ ТАБЛИЦЫ*/////////////////////////////////////////////////
 

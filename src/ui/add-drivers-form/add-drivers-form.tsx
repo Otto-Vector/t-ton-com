@@ -36,7 +36,7 @@ import {
     deleteCurrentRequestAPI,
     getAllRequestsAPI,
     getOneRequestsAPI,
-} from '../../redux/forms/request-store-reducer'
+} from '../../redux/request-form/request-store-reducer'
 import {syncParsers, toNumber} from '../../utils/parsers'
 import {FormApi} from 'final-form'
 import {FormSpySimple} from '../common/inputs/final-form-inputs/form-spy-simple/form-spy-simple'

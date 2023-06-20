@@ -20,7 +20,7 @@ import {
     addRewriteUPDDocumentRequestAPI,
     closeRequestAndUpdateDriverStatus,
     paymentHasBeenRecievedToRequest,
-} from '../../../redux/forms/request-store-reducer'
+} from '../../../redux/request-form/request-store-reducer'
 import {parseToNormalMoney, toNumber} from '../../../utils/parsers'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {boldWrapper} from '../../../utils/html-rebuilds'

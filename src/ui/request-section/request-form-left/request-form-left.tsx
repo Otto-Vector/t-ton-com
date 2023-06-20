@@ -29,7 +29,7 @@ import {
     changeCurrentRequestOnCreate,
     getRouteFromAPI,
     requestStoreActions,
-} from '../../../redux/forms/request-store-reducer'
+} from '../../../redux/request-form/request-store-reducer'
 import {shippersStoreActions} from '../../../redux/options/shippers-store-reducer'
 import {consigneesStoreActions} from '../../../redux/options/consignees-store-reducer'
 import {Preloader} from '../../common/tiny/preloader/preloader'
@@ -116,7 +116,7 @@ export const RequestFormLeft: React.ComponentType<OwnProps> = memo((
 
     const onSubmit = useCallback(async ( oneRequestValues: OneRequestType ) => {
         if (isCreateMode) {
-            await dispatch<any>(changeCurrentRequestOnCreate(oneRequestValues))
+            await dispatch<any>(changeCurrentRequestOnCreate({oneRequestValues}))
         }
     }, [ isCreateMode ])
 

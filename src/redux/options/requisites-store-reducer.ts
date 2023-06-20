@@ -366,56 +366,19 @@ export const getListOrganizationRequisitesByInn = ( innNumber: string ): Requisi
         try {
             const response = await requisitesApi.getPersonalDataFromId({ innNumber })
             if (response.message) {
-                console.log('Сообщение в запросе списка пользователей', JSON.stringify(response.message))
+                console.log('Сообщение в запросе списка пользователей: ', JSON.stringify(response.message))
             }
             if (response.length > 0) {
-                console.log('Список пользователей по ИНН:', response)
-                dispatch(requisitesStoreActions.setFilteredContent(response.filter(
-                    ( { idUser, nnNumber } ) => idUser && nnNumber)?.map(
-                    ( {
-                          idUser,
-                          nnNumber,
-                          organizationName,
-                          taxMode,
-                          kpp,
-                          ogrn,
-                          okpo,
-                          legalAddress,
-                          dispatcherFIO,
-                          mechanicFIO,
-                          bikBank,
-                          checkingAccount,
-                          korrAccount,
-                          nameBank,
-                          email,
-                          phoneDirector,
-                          phoneAccountant,
-                          postAddress,
-                          description,
-                      } ) => ( {
-                        idUser,
-                        innNumber: nnNumber,
-                        organizationName,
-                        taxMode,
-                        kpp,
-                        ogrn,
-                        okpo,
-                        legalAddress,
-                        dispatcherFIO,
-                        mechanicFIO,
-                        bikBank,
-                        checkingAccount,
-                        korrAccount,
-                        nameBank,
-                        email,
-                        phoneDirector,
-                        phoneAccountant,
-                        postAddress,
-                        description,
-                    } ),
-                ) || null))
+                // console.log('Список пользователей по ИНН:', response)
+                const responseParser = response.filter(( { idUser, nnNumber } ) => idUser && nnNumber)?.map(
+                    // исправляем косяк бэка на ключе nnNumber
+                    ( { nnNumber, ...rest } ) => ( { ...rest, innNumber: nnNumber } ),
+                )
+                dispatch(requisitesStoreActions.setFilteredContent( responseParser.length ? responseParser : null))
+                // return responseParser
             }
         } catch (error: TtonErrorType) {
             console.log('Не удалось загрузить список пользователей: ', error)
         }
+        // return null
     }

@@ -1,5 +1,5 @@
 import {AppStateType} from '../../redux/redux-store'
-import {RequestStoreReducerStateType} from '../../redux/forms/request-store-reducer'
+import {RequestStoreReducerStateType} from '../../redux/request-form/request-store-reducer'
 import {createSelector} from 'reselect'
 import {polyline_decode} from '../../utils/map-utils'
 import {boldWrapper} from '../../utils/html-rebuilds'

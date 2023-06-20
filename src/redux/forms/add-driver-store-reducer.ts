@@ -4,7 +4,7 @@ import {EmployeeCardType, ResponseToRequestCardType, ValidateType} from '../../t
 import {syncValidators} from '../../utils/validators'
 import {responseToRequestApi} from '../../api/local-api/request-response/response-to-request.api'
 import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
-import {getAllRequestsAPI} from './request-store-reducer'
+import {getAllRequestsAPI} from '../request-form/request-store-reducer'
 import {modifyOneEmployeeSetStatusAddedToResponse} from '../options/employees-store-reducer'
 import {GetActionsTypes} from '../../types/ts-utils'
 import {syncParsers} from '../../utils/parsers'

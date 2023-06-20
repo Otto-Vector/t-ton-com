@@ -8,7 +8,7 @@ import {employeesApi} from '../../api/local-api/options/employee.api'
 import {EmployeesApiType, ResponseToRequestCardType, TrailerCardType, TransportCardType} from '../../types/form-types'
 import {trailerApi} from '../../api/local-api/options/trailer.api'
 import {transportApi} from '../../api/local-api/options/transport.api'
-import {getOneRequestsAPI} from '../forms/request-store-reducer'
+import {getOneRequestsAPI} from '../request-form/request-store-reducer'
 import {TtonErrorType} from '../../api/local-api/back-instance.api'
 import {stringToCoords} from '../../utils/map-utils'
 

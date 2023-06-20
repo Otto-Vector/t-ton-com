@@ -14,7 +14,7 @@ import {ddMmYearFormat} from '../../utils/date-formats'
 import {getAllEmployeesAPI, modifyOneEmployeeStatusToAPI} from '../../redux/options/employees-store-reducer'
 import {lightBoxStoreActions} from '../../redux/utils/lightbox-store-reducer'
 import {Preloader} from '../common/tiny/preloader/preloader'
-import {addAcceptedResponseToRequestOnAcceptDriver, getOneRequestsAPI} from '../../redux/forms/request-store-reducer'
+import {addAcceptedResponseToRequestOnAcceptDriver, getOneRequestsAPI} from '../../redux/request-form/request-store-reducer'
 import {ProjectButton} from '../common/buttons/project-button/project-button'
 import {AppStateType} from '../../redux/redux-store'
 import {
