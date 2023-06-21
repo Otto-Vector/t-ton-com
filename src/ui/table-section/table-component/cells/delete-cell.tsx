@@ -10,6 +10,7 @@ import {textAndActionGlobalModal} from '../../../../redux/utils/global-modal-sto
 
 type OwnProps = {
     isStatusTblMode: boolean
+    text?: string
 }
 
 // кнопка на удаление в таблице
@@ -33,8 +34,8 @@ export const DeleteCellReact: React.ComponentType<OwnProps & OneRequestTableType
             <ProjectButton colorMode={ 'redAlert' }
                            title={ 'Удалить заявку №' + requestNumber }
                            onClick={ () => {
-                        onDeleteRequest(requestNumber)
-                    } }
+                               onDeleteRequest(requestNumber)
+                           } }
                            style={ { border: 'none' } }
             ><MaterialIcon icon_name={ 'cancel' } style={ { fontSize: '20px' } }/> </ProjectButton>
         </div>

@@ -33,6 +33,7 @@ import {renderToString} from 'react-dom/server'
 import {
     boundsOffsetCorrector,
     directionOfBounds,
+    distanceBetweenMeAndPointOnMap,
     isOutOfBounds,
     positionsToCorrectBounds,
     positionToBoundsLine,
@@ -216,9 +217,14 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
                                                 { ' ' + fio + ' ' }
                                             </span>
                                             { mapModes.answersMode ?
-                                                <span className={ styles.yandexMapComponent__menuItemRight }>
+                                                <><span className={ styles.yandexMapComponent__menuItemRight }>
                                                     { contentOfListboxItem(idEmployee) }
                                                 </span>
+                                                    { ( !!position[0] && polyline ) ?
+                                                        <span>{'~'+ Math.round(distanceBetweenMeAndPointOnMap({
+                                                            firstPoint: position, secondPoint: polyline[0],
+                                                        })/1000)+'km' }</span> : null }
+                                                </>
                                                 :
                                                 <b className={ styles.yandexMapComponent__menuItemRight }
                                                    style={ { color: colorOfStatus(status) } }>

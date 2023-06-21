@@ -524,9 +524,8 @@ export const changeCurrentRequestOnCreate = ( { oneRequestValues }: { oneRequest
                 oneRequestValues.sender.innNumber,
                 oneRequestValues.recipient.innNumber,
             ].filter(x => x).join(',')))
+            // в данном случае await`ы на filteredContent работают как надо - проверено
             const filteredContent = await getState().requisitesStoreReducer.filteredContent
-            console.log(filteredContent)
-            debugger
             const response = await oneRequestApi.modifyOneRequest(parseRequestToApiOnCreate({
                 userId, customerCard, oneRequestValues, filteredContent,
             }))
