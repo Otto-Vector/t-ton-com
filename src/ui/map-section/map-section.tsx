@@ -223,7 +223,7 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
                                                     { ( !!position[0] && polyline ) ?
                                                         <span>{'~'+ Math.round(distanceBetweenMeAndPointOnMap({
                                                             firstPoint: position, secondPoint: polyline[0],
-                                                        })/1000)+'km' }</span> : null }
+                                                        })/1000)+'км' }</span> : null }
                                                 </>
                                                 :
                                                 <b className={ styles.yandexMapComponent__menuItemRight }
