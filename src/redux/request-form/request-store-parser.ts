@@ -360,11 +360,21 @@ export const parseRequestToApiOnCreate = ( { userId, oneRequestValues, filteredC
     const route = oneRequestValues?.route?.substring(0, 69999)
     const routePlus = oneRequestValues?.route?.substring(69999) || placeholderNull
 
-     const userCustomer = filteredContent?.find(( { innNumber } ) => innNumber === customerCard?.innNumber)
-            const idUserCustomer =  userCustomer?.idUser || userId
-            const userSender = filteredContent?.find(( { innNumber,kpp } ) => innNumber === oneRequestValues.sender.innNumber && kpp === oneRequestValues.sender.kpp)
-            const userRecipient = filteredContent?.find(( { innNumber,kpp } ) => innNumber === oneRequestValues.recipient.innNumber && kpp === oneRequestValues.recipient.kpp)
-            const acceptedUsers = [ idUserCustomer, userSender?.idUser, userRecipient?.idUser ].filter(x => x).join(', ')
+    const userCustomer = filteredContent?.find(
+        ( { innNumber, kpp } ) => innNumber === customerCard?.innNumber && kpp === customerCard?.kpp,
+    )
+    const idUserCustomer = userCustomer?.idUser || userId
+    const userSender = filteredContent?.find(
+        ( { innNumber, kpp } ) => innNumber === oneRequestValues?.sender?.innNumber && kpp === oneRequestValues?.sender?.kpp,
+    )
+    const userRecipient = filteredContent?.find(
+        ( {
+              innNumber,
+              kpp,
+          } ) => innNumber === oneRequestValues.recipient.innNumber && kpp === oneRequestValues?.recipient?.kpp,
+    )
+    const acceptedUsers = [ idUserCustomer, userSender?.idUser, userRecipient?.idUser ].filter(x => x).join(', ')
+
     return {
         requestNumber,
         globalStatus: 'новая заявка',

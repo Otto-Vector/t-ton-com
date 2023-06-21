@@ -160,6 +160,24 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
         }))
     }
 
+    // дорисовка расстояния (в радиусе)
+    const distanceInKm = ( position: number[] ) => {
+
+        const distance = !!position[0] && polyline
+            ? distanceBetweenMeAndPointOnMap({
+                firstPoint: position, secondPoint: polyline[0],
+            })
+            : null
+
+        const distanceText = distance && (
+            distance < 10e6
+                ? '< 1'
+                : '~' + Math.round(distance / 1000)
+        )
+
+        return distance && <span>{ distanceText + 'км' }</span>
+    }
+
     return (
         <section className={ styles.yandexMapComponent }>
             { isFetching &&
@@ -217,13 +235,11 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
                                                 { ' ' + fio + ' ' }
                                             </span>
                                             { mapModes.answersMode ?
-                                                <><span className={ styles.yandexMapComponent__menuItemRight }>
+                                                <>
+                                                <span className={ styles.yandexMapComponent__menuItemRight }>
                                                     { contentOfListboxItem(idEmployee) }
                                                 </span>
-                                                    { ( !!position[0] && polyline ) ?
-                                                        <span>{'~'+ Math.round(distanceBetweenMeAndPointOnMap({
-                                                            firstPoint: position, secondPoint: polyline[0],
-                                                        })/1000)+'км' }</span> : null }
+                                                    { distanceInKm(position) }
                                                 </>
                                                 :
                                                 <b className={ styles.yandexMapComponent__menuItemRight }

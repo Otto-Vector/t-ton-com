@@ -46,9 +46,9 @@ import {getStoredValuesRequisitesStore} from '../../../selectors/options/requisi
 import createDecorator from 'final-form-focus'
 import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
 import {CargoWeightInputToModal} from '../cargo-weight-input-to-modal/cargo-weight-input-to-modal'
-import truckPNG from '../../../media/trackToRight.png'
-import truckLoadFuelPNG from '../../../media/trackLoadFuel.png'
-import truckLeftPNG from '../../../media/truckLeft.png'
+import truckPNG from '../../../media/tracks-of-status/trackToRight.png'
+import truckLoadFuelPNG from '../../../media/tracks-of-status/trackLoadFuel.png'
+import truckLeftPNG from '../../../media/tracks-of-status/truckLeft.png'
 
 type OwnProps = {
     requestModes: RequestModesType,
