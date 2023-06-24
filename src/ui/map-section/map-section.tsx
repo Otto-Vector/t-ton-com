@@ -28,7 +28,6 @@ import {
     getRoutesParsedFromPolylineRequestStore,
 } from '../../selectors/forms/request-form-reselect'
 import {textAndActionGlobalModal} from '../../redux/utils/global-modal-store-reducer'
-import {EmployeeStatusType} from '../../types/form-types'
 import {renderToString} from 'react-dom/server'
 import {
     boundsOffsetCorrector,
@@ -38,20 +37,15 @@ import {
     positionsToCorrectBounds,
     positionToBoundsLine,
 } from '../../utils/map-utils'
-import {MaterialIcon} from '../common/tiny/material-icon/material-icon'
 import {boldWrapper} from '../../utils/html-rebuilds'
 import {parseToNormalMoney, toNumber} from '../../utils/parsers'
+import {colorOfStatus} from './utilites'
+import {MapListBoxItem} from './map-list-box-item/map-list-box-item'
 
 
 type OwnProps = {}
 
-// вынес статическую функцию из компонеты
-const colorOfStatus = ( stat: EmployeeStatusType ): string =>
-    stat === 'свободен'
-        ? 'red'
-        : stat === 'на заявке'
-            ? 'green'
-            : 'orange'
+export type MapModesType = { answersMode: boolean, routesMode: boolean, statusMode: boolean }
 
 // основная карта (по кнопке меню)
 export const MapSection: React.ComponentType<OwnProps> = () => {
@@ -75,7 +69,7 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
     const map = useRef<any>({})
     const ymap = useRef<any>({})
 
-    const mapModes = useMemo(() => ( {
+    const mapModes: MapModesType = useMemo(() => ( {
         answersMode: pathname.includes(routes.maps.answers),
         routesMode: pathname.includes(routes.maps.routes),
         statusMode: pathname.includes(routes.maps.status),
@@ -141,12 +135,12 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
         ))
     }, [ JSON.stringify(drivers) ])
 
-
+    // элемент выпадающего списка в селекторе на карте
     const contentOfListboxItem = ( idEmployee: string ): string => {
-        const finded = responses?.find(( { idEmployee: id } ) => id === idEmployee)
-        return finded
-            ? ( ' ' + finded?.cargoWeight + 'тн. | '
-                + parseToNormalMoney(toNumber(finded?.responsePrice)) + 'руб.' )
+        const responseWithCurrentIdEmployee = responses?.find(( { idEmployee: id } ) => id === idEmployee)
+        return responseWithCurrentIdEmployee
+            ? ( ' ' + responseWithCurrentIdEmployee?.cargoWeight + 'тн. | '
+                + parseToNormalMoney(toNumber(responseWithCurrentIdEmployee?.responsePrice)) + 'руб.' )
             : '-'
     }
 
@@ -161,7 +155,7 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
     }
 
     // дорисовка расстояния (в радиусе)
-    const distanceInKm = ( position: number[] ) => {
+    const SpanDistanceInKm = ( { position, polyline }: { position: number[], polyline?: number[][] } ) => {
 
         const distance = !!position[0] && polyline
             ? distanceBetweenMeAndPointOnMap({
@@ -220,35 +214,15 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
                                 layout: 'islands#listBoxItemLayout',
                             } }
                             data={ {
-                                content: renderToString(
-                                    <span className={ styles.yandexMapComponent__menuItem }>
-                                        <>
-                                            <span className={ styles.yandexMapComponent__menuItemLeft + ' '
-                                                + ( position[0] === 0 ? styles.yandexMapComponent__menuItemLeft_noPosition : '' )
-                                            }>
-                                                <MaterialIcon
-                                                    style={ {
-                                                        fontSize: '20px', paddingRight: '5px',
-                                                        color: !!position[0] ? 'inherit' : 'gray',
-                                                    } }
-                                                    icon_name={ !!position[0] ? 'location_on' : 'wrong_location' }/>
-                                                { ' ' + fio + ' ' }
-                                            </span>
-                                            { mapModes.answersMode ?
-                                                <>
-                                                <span className={ styles.yandexMapComponent__menuItemRight }>
-                                                    { contentOfListboxItem(idEmployee) }
-                                                </span>
-                                                    { distanceInKm(position) }
-                                                </>
-                                                :
-                                                <b className={ styles.yandexMapComponent__menuItemRight }
-                                                   style={ { color: colorOfStatus(status) } }>
-                                                    { status }
-                                                </b>
-                                            }
-                                        </>
-                                    </span>),
+                                content: renderToString(<MapListBoxItem fio={ fio }
+                                                                        status={ status }
+                                                                        position={ position }
+                                                                        idEmployee={ idEmployee }
+                                                                        mapModes={ mapModes }
+                                                                        polyline={ polyline }
+                                                                        responses={ responses }
+                                    />,
+                                ),
                             } }
                             key={ fio + status + idEmployee }
                             onClick={ () => {
@@ -262,6 +236,7 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
                         />)
                     }
                 </ListBox>
+
                 {/* МАРШРУТ/ДОРОГА */ }
                 { mapModes.answersMode && polyline &&
                     <MapRequestRoad polyline={ polyline }
