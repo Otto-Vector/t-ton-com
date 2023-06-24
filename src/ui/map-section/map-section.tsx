@@ -135,14 +135,6 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
         ))
     }, [ JSON.stringify(drivers) ])
 
-    // элемент выпадающего списка в селекторе на карте
-    const contentOfListboxItem = ( idEmployee: string ): string => {
-        const responseWithCurrentIdEmployee = responses?.find(( { idEmployee: id } ) => id === idEmployee)
-        return responseWithCurrentIdEmployee
-            ? ( ' ' + responseWithCurrentIdEmployee?.cargoWeight + 'тн. | '
-                + parseToNormalMoney(toNumber(responseWithCurrentIdEmployee?.responsePrice)) + 'руб.' )
-            : '-'
-    }
 
     // прогрузка водителя в модальное окно
     const activateDriverCard = ( idEmployee: string ) => {
@@ -154,23 +146,6 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
         }))
     }
 
-    // дорисовка расстояния (в радиусе)
-    const SpanDistanceInKm = ( { position, polyline }: { position: number[], polyline?: number[][] } ) => {
-
-        const distance = !!position[0] && polyline
-            ? distanceBetweenMeAndPointOnMap({
-                firstPoint: position, secondPoint: polyline[0],
-            })
-            : null
-
-        const distanceText = distance && (
-            distance < 10e6
-                ? '< 1'
-                : '~' + Math.round(distance / 1000)
-        )
-
-        return distance && <span>{ distanceText + 'км' }</span>
-    }
 
     return (
         <section className={ styles.yandexMapComponent }>
@@ -275,7 +250,6 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
                                            hintContent: `<b>${ fio }</b>`,
                                            balloonContent: `<div id='driver-${ idEmployee }' class='driver-card'></div>`,
                                        } }
-                                // key={ id + idEmployee }
                                        onBalloonClose={ () => {
                                            setIdToPortal('')
                                        } }
@@ -304,7 +278,6 @@ export const MapSection: React.ComponentType<OwnProps> = () => {
                                                map?.current?.panTo(position, { flying: 1 })
                                                setSelectedDriver(idEmployee)
                                            } }
-                                    // key={ idEmployee + id }
                                 /> }
                         </Fragment>
                         : null,
