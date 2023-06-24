@@ -136,7 +136,7 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
         <section className={ styles.searchSection }>
             <header className={ styles.searchSection__header }>
                 { isFetchingTable ? <Preloader/> : <h3>{ header }</h3> }
-                <form className={ styles.searchSection__buttonFilters }>
+                <div className={ styles.searchSection__buttonFilters }>
                     { Object.entries(filterButtons).map(( [ key, value ] ) =>
                         <div key={ key } className={ styles.searchSection__buttonItem + ' ' +
                             // перекраска текста в красный
@@ -175,7 +175,7 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
                                                       } }
                                             /> }
                         </div>) }
-                </form>
+                </div>
             </header>
             <div className={ styles.searchSection__table }>
                 <TableComponent tableModes={ tableModes }
