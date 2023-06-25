@@ -169,11 +169,9 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                     ( {
                           submitError,
                           handleSubmit,
-                          hasValidationErrors,
                           form,
                           submitting,
                           values,
-                          valid,
                       } ) => (
                         <form onSubmit={ handleSubmit }>
                             <span className={ styles.onError }>{ submitError }</span>
@@ -215,7 +213,8 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                                 <Field name={ 'sms' }
                                        placeholder={ label.sms }
                                        component={ FormInputType }
-                                       maskFormat={ maskOn.sms }
+                                    // maskFormat={ maskOn.sms }
+                                       inputType={ 'password' }
                                        validate={ !isRegisterMode || ( isRegisterMode && isAvailableSMS ) ? validators.sms : undefined }
                                        disabled={ isRegisterMode ? !isAvailableSMS : false }
                                 >
@@ -226,8 +225,8 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                                                        colorMode={ 'gray' }
                                                        disabled={ !form.getFieldState('phoneNumber')?.valid || isFetching }
                                                        onClick={ () => {
-                                                    newSMSCode(values.phoneNumber as string)
-                                                } }
+                                                           newSMSCode(values.phoneNumber as string)
+                                                       } }
                                                        rounded
                                         >{ 'Новый пароль' }</ProjectButton>
                                     </div> }
@@ -236,7 +235,7 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                             <div className={ styles.loginForm__buttonsPanel }>
                                 <ProjectButton type={ 'submit' }
                                                disabled={ submitting || isFetching ||
-                                            ( !isRegisterMode && !form.getFieldState('phoneNumber')?.valid && !form.getFieldState('sms')?.valid ) }
+                                                   ( !isRegisterMode && !form.getFieldState('phoneNumber')?.valid && !form.getFieldState('sms')?.valid ) }
                                                colorMode={ 'green' }
                                                title={ 'Далее' }
                                                rounded
@@ -250,8 +249,8 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                                                title={ !isRegisterMode ? 'Регистрация' : 'Назад' }
                                                colorMode={ 'blue' }
                                                onClick={ () => {
-                                            registerHandleClick(form)
-                                        } }
+                                                   registerHandleClick(form)
+                                               } }
                                                rounded
                                 />
                             </div>

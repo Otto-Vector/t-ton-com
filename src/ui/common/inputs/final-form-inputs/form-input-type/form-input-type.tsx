@@ -27,7 +27,7 @@ type OwnProps = {
     disabled?: boolean
     // тэг input будет станет textarea
     textArea?: boolean
-    inputType?: 'text' | 'date' | 'email' | 'money'
+    inputType?: 'text' | 'date' | 'email' | 'money' | 'password'
     min?: string
     max?: string
     // отображаем ошибку внизу (по умолчаниию - наверху)
@@ -124,11 +124,13 @@ export const FormInputType: React.ComponentType<OwnProps> = React.memo((
             }
             { children }
             {/*сообщение об ошибке появляется в этом спане*/ }
-            { isError && ( <span className={
-                styles.errorSpan + ' ' + ( errorBottom ? styles.errorSpan_bottom : styles.errorSpan_top )
-            }>{ meta.error || // обычная ошибка
-                ( meta.dirtySinceLastSubmit || meta.submitError ) // ошибка из сабмита
-            }</span> ) }
+            { isError &&
+                <span className={ styles.errorSpan
+                    + ' ' + ( errorBottom ? styles.errorSpan_bottom : styles.errorSpan_top )
+                }> {
+                    meta.error || // обычная ошибка
+                    ( meta.dirtySinceLastSubmit || meta.submitError ) // ошибка из сабмита
+                }</span> }
         </div>
     )
 }, valuesAreEqualFormInput)

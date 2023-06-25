@@ -34,7 +34,7 @@ const initialState = {
         innNumber: 'ИНН Организации',
         kppNumber: 'КПП Организации',
         phoneNumber: 'Контактный номер',
-        sms: 'Пароль из sms',
+        sms: 'Пароль',
     } as PhoneSubmitType<string | undefined>,
 
     initialValues: { ...initialValues },
