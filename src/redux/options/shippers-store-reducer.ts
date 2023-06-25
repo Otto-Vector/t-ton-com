@@ -20,6 +20,7 @@ const initialState = {
         kpp: 'КПП',
         ogrn: 'ОГРН',
         address: 'Юридический адрес',
+        phisicalAddress: 'Физический адрес',
         shipperFio: 'ФИО отправителя',
         shipperTel: 'Телефон отправителя',
         description: 'Доп. данные для ТТН (в т.ч. реальный адрес)',
@@ -34,6 +35,7 @@ const initialState = {
         kpp: '#########', // 9 цифр
         ogrn: '############# ##', // 13,15 цифр
         address: undefined, // просто адрес
+        phisicalAddress: undefined, // просто адрес
         shipperFio: undefined, //
         shipperTel: '+7 (###) ###-##-##', // 11 цифр
         description: undefined, // много букав
@@ -48,6 +50,7 @@ const initialState = {
         kpp: undefined,
         ogrn: undefined,
         address: undefined,
+        phisicalAddress: undefined,
         shipperFio: undefined,
         shipperTel: undefined,
         description: undefined,
@@ -62,6 +65,7 @@ const initialState = {
         kpp: syncValidators.required,
         ogrn: syncValidators.ogrn,
         address: syncValidators.textReqMiddle,
+        phisicalAddress: syncValidators.textReqMiddle,
         shipperFio: syncValidators.textReqMin,
         shipperTel: syncValidators.phone,
         description: syncValidators.textMax,
@@ -75,6 +79,7 @@ const initialState = {
         kpp: undefined,
         ogrn: undefined,
         address: syncParsers.title,
+        phisicalAddress: syncParsers.title,
         shipperFio: syncParsers.fio,
         shipperTel: undefined,
         description: undefined,
@@ -235,8 +240,8 @@ export const newShipperSaveToAPI = ( values: ShippersCardType<string> ): Shipper
             const idUser = getState().authStoreReducer.authID
             const response = await shippersApi.createOneShipper({
                 ...values, idUser,
-                description: values.description || '-',
-                city: values.city || '-',
+                description: values.description || 'null',
+                city: values.city || 'null',
             })
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
@@ -255,8 +260,8 @@ export const modifyOneShipperToAPI = ( values: ShippersCardType<string> ): Shipp
             const idUser = getState().authStoreReducer.authID
             const response = await shippersApi.modifyOneShipper({
                 ...values, idUser,
-                description: values.description || '-',
-                city: values.city || '-',
+                description: values.description || 'null',
+                city: values.city || 'null',
             })
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {

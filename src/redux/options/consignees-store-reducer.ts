@@ -20,6 +20,7 @@ const initialState = {
         kpp: 'КПП',
         ogrn: 'ОГРН',
         address: 'Юридический адрес',
+        phisicalAddress: 'Фактический адрес',
         consigneesFio: 'ФИО получателя',
         consigneesTel: 'Телефон получателя',
         description: 'Доп. данные для ТТН (в т.ч. реальный адрес)',
@@ -33,6 +34,7 @@ const initialState = {
         kpp: '#########', // 9 цифр
         ogrn: '############# ##', // 13,15 цифр
         address: undefined, // понятно. просто адрес
+        phisicalAddress: undefined, // понятно. просто адрес
         consigneesFio: undefined, //
         consigneesTel: '+7 (###) ###-##-##', //
         description: undefined, // много букав
@@ -46,6 +48,7 @@ const initialState = {
         kpp: undefined,
         ogrn: undefined,
         address: undefined,
+        phisicalAddress: undefined,
         consigneesFio: undefined,
         consigneesTel: undefined,
         description: undefined,
@@ -59,6 +62,7 @@ const initialState = {
         kpp: syncValidators.required,
         ogrn: syncValidators.ogrn,
         address: syncValidators.textReqMiddle,
+        phisicalAddress: syncValidators.textReqMiddle,
         consigneesFio: syncValidators.textReqMin,
         consigneesTel: syncValidators.phone,
         description: syncValidators.textReqMax,
@@ -72,6 +76,7 @@ const initialState = {
         kpp: undefined,
         ogrn: undefined,
         address: syncParsers.title,
+        phisicalAddress: syncParsers.title,
         consigneesFio: syncParsers.fio,
         consigneesTel: undefined,
         description: undefined,
@@ -233,8 +238,8 @@ export const newConsigneeSaveToAPI = ( values: ConsigneesCardType<string> ): Con
             const idUser = getState().authStoreReducer.authID
             const response = await consigneesApi.createOneConsignee({
                 ...values, idUser,
-                description: values.description || '-',
-                city: values.city || '-',
+                description: values.description || 'null',
+                city: values.city || 'null',
             })
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {
@@ -253,8 +258,8 @@ export const modifyOneConsigneeToAPI = ( values: ConsigneesCardType<string> ): C
             const idUser = getState().authStoreReducer.authID
             const response = await consigneesApi.modifyOneConsignee({
                 ...values, idUser,
-                description: values.description || '-',
-                city: values.city || '-',
+                description: values.description || 'null',
+                city: values.city || 'null',
             })
             if (response.success) console.log(response.success)
         } catch (e: TtonErrorType) {

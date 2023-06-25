@@ -239,6 +239,8 @@ export type ConsigneesCardType<T = DefaultFormType> = {
     ogrn: T
     // Юридический адрес
     address: T
+    // Фактический адрес
+    phisicalAddress: T
     // ФИО получателя
     consigneesFio: T
     // Телефон получателя
@@ -270,6 +272,8 @@ export type ShippersCardType<T = DefaultFormType> = {
     ogrn: T
     // Юридический адрес
     address: T
+    // Фактический адрес
+    phisicalAddress: T
     // ФИО отправителя
     shipperFio: T
     // Телефон отправителя
