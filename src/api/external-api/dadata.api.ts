@@ -26,7 +26,7 @@ type localResponseType = {
     suggestions: DaDataResponseAPIType[]
 }
 
-// запрос на сервер
+// запрос на сервер списка по ИНН
 export const getOrganizationByInnDaDataAPI = ( { inn }: GetOrganizationByInnDaDataType ) => {
     return instance.post<localResponseType>('/suggestions/api/4_1/rs/findById/party', {
         query: inn,
@@ -35,6 +35,7 @@ export const getOrganizationByInnDaDataAPI = ( { inn }: GetOrganizationByInnDaDa
     }).then(response => response.data.suggestions)
 }
 
+// запрос на сервер списка по ИНН + КПП
 export const getOrganizationByInnKPPDaDataAPI = ( { inn, kpp }: GetOrganizationByInnKPPDaDataType ) => {
     return instance.post<localResponseType>('/suggestions/api/4_1/rs/findById/party', {
         query: inn,

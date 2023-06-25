@@ -180,19 +180,19 @@ export const setOrganizationRequisites = ( values: CompanyRequisitesType ):
     async ( dispatch, getState ) => {
         dispatch(requisitesStoreActions.setIsFetching(true))
         const idUser = getState().authStoreReducer.authID
-        const placeholder = '-'
+        const placeholderNull = 'null'
         try {
             const setPersonal = await requisitesApi.changePersonalData({
                 idUser,
                 nnNumber: values.innNumber,
                 organizationName: values.organizationName,
                 taxMode: values.taxMode,
-                kpp: values.kpp || placeholder,
+                kpp: values.kpp || placeholderNull,
                 ogrn: values.ogrn,
-                okpo: values.okpo || placeholder,
+                okpo: values.okpo || placeholderNull,
                 legalAddress: values.legalAddress,
-                dispatcherFIO: values.dispatcherFIO || placeholder,
-                mechanicFIO: values.mechanicFIO || placeholder,
+                dispatcherFIO: values.dispatcherFIO || placeholderNull,
+                mechanicFIO: values.mechanicFIO || placeholderNull,
 
                 postAddress: values.postAddress,
                 phoneDirector: values.phoneDirector,

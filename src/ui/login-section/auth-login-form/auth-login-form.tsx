@@ -21,7 +21,7 @@ import {
     fakeAuthFetching,
     loginAuthorization,
     newPassword,
-    sendCodeToPhone,
+    sendCodeToPhoneAndCreateShortRequisitesToValidateOnServer,
 } from '../../../redux/auth-store-reducer'
 import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers'
 import {PhoneSubmitType} from '../../../types/form-types'
@@ -30,7 +30,7 @@ import {useNavigate} from 'react-router-dom'
 import {getRoutesStore} from '../../../selectors/routes-reselect'
 import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
-import {daDataStoreActions, getOrganizationsByInnKPP} from '../../../redux/api/dadata-response-reducer'
+import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer'
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate'
 import createDecorator from 'final-form-focus'
 
@@ -62,19 +62,12 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
     // при нажатии кнопки ДАЛЕЕ
     const onSubmit = async ( { phoneNumber, innNumber, kppNumber, sms }: PhoneSubmitType ) => {
         const [ unmaskedInn, unmaskedKpp ] = [ innNumber, kppNumber ].map(parseAllNumbers)
-        let innError, phoneError, loginError
+        let loginError
 
         if (isRegisterMode) { // если РЕГИСТРАЦИЯ,
             if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан,
-                // то сначала проверяем ИНН на сущестование
-                innError = await dispatch<any>(getOrganizationsByInnKPP({ inn: unmaskedInn, kpp: unmaskedKpp }))
-                if (innError) { // если ошибка, (ИНН не существует, не найден)
-                    // блокируем ввод sms
-                    dispatch(authStoreActions.setIsAvailableSMSRequest(false))
-                    // выводим ошибку в форму
-                    return innError
-                } else { // если организация существует, отправляем sms на регистрацию
-                    phoneError = await dispatch<any>(sendCodeToPhone({
+                    // отправляем sms на регистрацию
+                    const phoneError = await dispatch<any>(sendCodeToPhoneAndCreateShortRequisitesToValidateOnServer({
                         phone: phoneNumber as string,
                         kpp: unmaskedKpp,
                         innNumber: unmaskedInn,
@@ -85,7 +78,6 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                         // выводим её в форму
                         return phoneError
                     }
-                }
             } else { // если SMS на авторизацию отослан,
                 // логинимся
                 loginError = await dispatch<any>(

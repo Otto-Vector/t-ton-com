@@ -177,7 +177,7 @@ export const geoPositionTake = (): AuthStoreReducerThunkActionType =>
     }
 
 // отправляем запрос на код авторизации в телефон
-export const sendCodeToPhone = ( {
+export const sendCodeToPhoneAndCreateShortRequisitesToValidateOnServer = ( {
                                      phone,
                                      innNumber,
                                      kpp,
@@ -185,22 +185,21 @@ export const sendCodeToPhone = ( {
     async ( dispatch, getState ) => {
         dispatch(authStoreActions.setIsFetching(true))
         try {
+            const daDataLocalAllValues = getState().daDataStoreReducer.suggestions
+            // уже подгруженные при регистрации данные из dadata
+            const { value, data } = daDataLocalAllValues.find(( { data } ) => data.kpp === kpp) ||
+                daDataLocalAllValues[0]
 
-            const dadataLocalParams = ( kpp !== '' && kpp !== '-' )
-                ? getState().daDataStoreReducer.suggestions.filter(( { data } ) => data.kpp === kpp)[0]
-                : getState().daDataStoreReducer.suggestions[0]
-
-            const { value, data } = dadataLocalParams
             const response = await authApi.sendCodeToPhone({
                 phone, innNumber,
-                kpp: kpp || '-',
+                kpp,
                 organizationName: value,
-                taxMode: data.finance?.tax_system || undefined,
+                taxMode: data.finance?.tax_system || 'null',
                 ogrn: data.ogrn,
-                okpo: data.okpo || undefined,
+                okpo: data.okpo || 'null',
                 legalAddress: data.address.value,
                 postAddress: data.address.value,
-                email: data.emails ? data.emails[0]?.value : undefined,
+                email: data.emails ? data.emails[0]?.value : 'null',
             })
 
             dispatch(authStoreActions.setIsFetching(false))

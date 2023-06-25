@@ -3,8 +3,6 @@ import {DaDataResponseAPIType} from '../../types/api-types'
 import {
     getOrganizationByInnDaDataAPI,
     GetOrganizationByInnDaDataType,
-    getOrganizationByInnKPPDaDataAPI,
-    GetOrganizationByInnKPPDaDataType,
 } from '../../api/external-api/dadata.api'
 import {ThunkAction} from 'redux-thunk'
 import {GetActionsTypes} from '../../types/ts-utils';
@@ -47,11 +45,11 @@ export type DaDataThunkActionType<R = void> = ThunkAction<Promise<R>, AppStateTy
 
 // запрос параметров организации из DaData
 export const getOrganizationsByInn = ( { inn }: GetOrganizationByInnDaDataType ): DaDataThunkActionType<string | null> =>
-    async ( dispatch, getState ) => {
+    async ( dispatch) => {
         dispatch(daDataStoreActions.setSuggectionsValues([]))
 
         const response = await getOrganizationByInnDaDataAPI({ inn })
-        console.log(response)
+        // console.log(response)
         if (response.length < 1) {
             return 'Неверный ИНН!'
         }
@@ -60,20 +58,20 @@ export const getOrganizationsByInn = ( { inn }: GetOrganizationByInnDaDataType )
     }
 
 // запрос параметров организации из DaData
-export const getOrganizationsByInnKPP = ( {
-                                              inn,
-                                              kpp,
-                                          }: GetOrganizationByInnKPPDaDataType ): DaDataThunkActionType<{ innNumber: string } | null> =>
-    async ( dispatch, getState ) => {
-
-        const response = await getOrganizationByInnKPPDaDataAPI({ inn, kpp })
-        console.log(response)
-
-        if (response.length < 1) {
-            return ( { innNumber: 'Неверный ИНН/КПП!' } )
-        }
-
-        dispatch(daDataStoreActions.setSuggectionsValues(response))
-
-        return null
-    }
+// export const getOrganizationsByInnKPP = ( {
+//                                               inn,
+//                                               kpp,
+//                                           }: GetOrganizationByInnKPPDaDataType ): DaDataThunkActionType<{ innNumber: string } | null> =>
+//     async ( dispatch ) => {
+//
+//         const response = await getOrganizationByInnKPPDaDataAPI({ inn, kpp })
+//         console.log(response)
+//
+//         if (response.length < 1) {
+//             return ( { innNumber: 'Неверный ИНН/КПП!' } )
+//         }
+//
+//         dispatch(daDataStoreActions.setSuggectionsValues(response))
+//
+//         return null
+//     }

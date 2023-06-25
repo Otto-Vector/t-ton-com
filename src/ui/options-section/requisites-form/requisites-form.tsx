@@ -64,7 +64,7 @@ export const RequisitesForm: React.ComponentType<OwnProps> = () => {
         const unmaskedValues: CompanyRequisitesType = {
             ...requisites,
             innNumber: parseAllNumbers(requisites.innNumber),
-            kpp: parseAllNumbers(requisites.innNumber),
+            kpp: parseAllNumbers(requisites.kpp),
             ogrn: parseAllNumbers(requisites.ogrn),
         }
         const error = await dispatch<any>(setOrganizationRequisites(unmaskedValues))
