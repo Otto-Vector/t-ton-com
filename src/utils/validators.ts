@@ -15,16 +15,16 @@ export const maxNumbers = ( max: number ) => ( value: string ) => parseAllNumber
 export const minNumbers = ( min: number ) => ( value: string ) => parseAllNumbers(value).length < min ? `Должно быть не менее ${ min } цифр!` : undefined
 export const mustBe00Numbers = ( exact: number ) => ( value: string ) => ( value && parseAllNumbers(value).length !== exact ) ? `Должно быть ${ exact } цифр!` : undefined
 export const mustNotBeOnlyNull = ( value: string ) => ( value && toNumber(parseAllNumbers(value)) === 0 ) ? `Здесь только нули!` : undefined
-export const mustBe0_0Numbers = ( exactMin: number ) => ( exactMax: number ) => ( value: string ) => {
-    const numbersLength = parseAllNumbers(value).length
-    return ( numbersLength !== exactMin && numbersLength !== exactMax ) ? `Должно быть ${ exactMin } или ${ exactMax } цифр!` : undefined
-}
+export const mustBe0_0Numbers = ( exactMin: number ) => ( exactMax: number ) => ( value: string ) =>
+    ![ exactMin, exactMax ].includes(parseAllNumbers(value).length) ? `Должно быть ${ exactMin } или ${ exactMax } цифр!` : undefined
+
 export const mustBeMail = ( value: string ) => value ? value.match(/^\S+@\S+\.\S+$/) ? undefined : 'Введите email корректно' : undefined
 
 export const includesTitleValidator = ( list: string[], include: string ) => list.includes(include) ? 'Такой заголовок уже существует. Измените его' : undefined
 
 export const syncValidators = {
     required,
+    // только 10 цифр
     justTenNumbers: composeValidators(maxNumbers(10)),
     // рекомендовано максимум 20 символов
     textReqMicro: composeValidators(required, maxLength(20)),
