@@ -1,22 +1,24 @@
-import {parseAllNumbers} from './parsers'
+import {parseAllNumbers, toNumber} from './parsers'
 
 export const composeValidators = ( ...validators: ( ( val: string ) => string | undefined )[] ) => ( value: string ): string | undefined =>
     validators.reduce(( error, validator ) => error || validator(value), undefined as string | undefined)
 
 
 /////////////////////////////////////////////////////////////////////////////////
-export const required = ( value: string ) => ( value ? undefined : 'Обязательное поле' )
+export const required = ( value: string ) => value ? undefined : 'Обязательное поле'
 
-export const mustBeNumber = ( value: string ) => ( isNaN(Number(value)) ? 'Только цифры' : undefined )
-export const maxLength = ( max: number ) => ( value: string ) => ( ( value && ( value.length > max ) ) ? `Больше ${ max } символов!` : undefined )
-export const minLength = ( min: number ) => ( value: string ) => ( ( value.length <= min ) ? `Меньше ${ min } символов!` : undefined )
-export const maxRangeNumber = ( max: number ) => ( value: string ) => ( ( ( value ? +value : 0 ) > max ) ? `Значение не должно превышать ${ max }!` : undefined )
-export const maxNumbers = ( max: number ) => ( value: string ) => ( ( parseAllNumbers(value).length > max ) ? `Больше ${ max } цифр!` : undefined )
-export const minNumbers = ( min: number ) => ( value: string ) => ( ( parseAllNumbers(value).length < min ) ? `Должно быть не менее ${ min } цифр!` : undefined )
-export const mustBe00Numbers = ( exact: number ) => ( value: string ) => ( value && ( parseAllNumbers(value).length !== exact ) ? `Должно быть ${ exact } цифр!` : undefined )
-export const mustNotBeOnlyNull = ( value: string ) => ( value && ( +parseAllNumbers(value) === 0 ) ? `Здесь только нули!` : undefined )
-export const mustBe0_0Numbers = ( from: number ) => ( to: number ) => ( value: string ) => (
-    ( parseAllNumbers(value).length !== from && parseAllNumbers(value).length !== to ) ? `Должно быть ${ from } или ${ to } цифр!` : undefined )
+export const mustBeNumber = ( value: string ) => isNaN(Number(value)) ? 'Должны быть только цифры' : undefined
+export const maxLength = ( max: number ) => ( value: string ) => ( value && value.length > max ) ? `Больше ${ max } символов!` : undefined
+export const minLength = ( min: number ) => ( value: string ) => value.length <= min ? `Меньше ${ min } символов!` : undefined
+export const maxRangeNumber = ( max: number ) => ( value: string ) => toNumber(value) > max ? `Значение не должно превышать ${ max }!` : undefined
+export const maxNumbers = ( max: number ) => ( value: string ) => parseAllNumbers(value).length > max ? `Больше ${ max } цифр!` : undefined
+export const minNumbers = ( min: number ) => ( value: string ) => parseAllNumbers(value).length < min ? `Должно быть не менее ${ min } цифр!` : undefined
+export const mustBe00Numbers = ( exact: number ) => ( value: string ) => ( value && parseAllNumbers(value).length !== exact ) ? `Должно быть ${ exact } цифр!` : undefined
+export const mustNotBeOnlyNull = ( value: string ) => ( value && toNumber(parseAllNumbers(value)) === 0 ) ? `Здесь только нули!` : undefined
+export const mustBe0_0Numbers = ( exactMin: number ) => ( exactMax: number ) => ( value: string ) => {
+    const numbersLength = parseAllNumbers(value).length
+    return ( numbersLength !== exactMin && numbersLength !== exactMax ) ? `Должно быть ${ exactMin } или ${ exactMax } цифр!` : undefined
+}
 export const mustBeMail = ( value: string ) => value ? value.match(/^\S+@\S+\.\S+$/) ? undefined : 'Введите email корректно' : undefined
 
 export const includesTitleValidator = ( list: string[], include: string ) => list.includes(include) ? 'Такой заголовок уже существует. Измените его' : undefined
@@ -49,7 +51,7 @@ export const syncValidators = {
     // телефон
     phone: composeValidators(required, mustBe00Numbers(11), mustNotBeOnlyNull),
     // SMS код
-    sms: composeValidators(required, mustBe00Numbers(4)),
+    sms: composeValidators(required, mustBeNumber, mustBe00Numbers(4)),
     // серия номер паспорта
     passport: composeValidators(required, mustBe00Numbers(10), mustNotBeOnlyNull),
     // водительские права
