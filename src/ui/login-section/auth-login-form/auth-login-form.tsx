@@ -66,18 +66,18 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
 
         if (isRegisterMode) { // если РЕГИСТРАЦИЯ,
             if (!isAvailableSMS) { // если SMS на регистрацию ещё не отослан,
-                    // отправляем sms на регистрацию
-                    const phoneError = await dispatch<any>(sendCodeToPhoneAndCreateShortRequisitesToValidateOnServer({
-                        phone: phoneNumber as string,
-                        kpp: unmaskedKpp,
-                        innNumber: unmaskedInn,
-                    }))
-                    if (phoneError) { // если возвращается ошибка по номеру телефона,
-                        // блокируем ввод sms,
-                        dispatch(authStoreActions.setIsAvailableSMSRequest(false))
-                        // выводим её в форму
-                        return phoneError
-                    }
+                // отправляем sms на регистрацию
+                const phoneError = await dispatch<any>(sendCodeToPhoneAndCreateShortRequisitesToValidateOnServer({
+                    phone: phoneNumber as string,
+                    kpp: unmaskedKpp,
+                    innNumber: unmaskedInn,
+                }))
+                if (phoneError) { // если возвращается ошибка по номеру телефона,
+                    // блокируем ввод sms,
+                    dispatch(authStoreActions.setIsAvailableSMSRequest(false))
+                    // выводим её в форму
+                    return phoneError
+                }
             } else { // если SMS на авторизацию отослан,
                 // логинимся
                 loginError = await dispatch<any>(
@@ -187,7 +187,7 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                                                           // сброс активности дефолтного селектора при первом же выборе
                                                           setIsDefaultSelect(false)
                                                       } }
-                                                      disabled={ isAvailableSMS || kppSelect.length < 1 || !form.getFieldState('innNumber')?.valid }
+                                                      disabled={ isAvailableSMS || !kppSelect.length }
                                                       errorTop
                                         />
                                     </>

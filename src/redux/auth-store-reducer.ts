@@ -213,7 +213,7 @@ export const sendCodeToPhoneAndCreateShortRequisitesToValidateOnServer = ( {
             }
             if (response.success) {
                 dispatch(textAndActionGlobalModal({
-                    text: response.success + 'ПАРОЛЬ: ' + response.password,
+                    text: response.success + ' ПАРОЛЬ: ' + response.password,
                 }))
             }
         } catch (error: TtonErrorType) {
