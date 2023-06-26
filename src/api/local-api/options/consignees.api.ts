@@ -10,7 +10,6 @@ export const consigneesApi = {
             .then(response => response.data)
         // 1.  Code 200, Models: ConsigneesApiType[]
         // 2.  Code 520, {"message":"Error"}
-
     },
 
     // запрос списка всех грузополучателей созданных данным пользователем PATCH /api/recipientuser/
@@ -54,4 +53,3 @@ export const consigneesApi = {
         // 2.	Code 449, {'error':'Неправильно указаны аргументы'}
     },
 }
-

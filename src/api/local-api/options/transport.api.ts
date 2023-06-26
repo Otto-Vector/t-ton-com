@@ -53,7 +53,6 @@ export const transportApi = {
             .then(response => response.data)
         // 1.	Code 449, {'failed': " Transport is not updated"}
         // 2.	Code 200, "success": "Transport {}' updated successfully".format(Transport _saved.idTransport)
-
     },
 
     // УДАЛИТЬ один ТРАНСПОРТ • DELETE /api/transport/
