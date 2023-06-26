@@ -213,7 +213,7 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                                        placeholder={ label.sms }
                                        component={ FormInputType }
                                     // maskFormat={ maskOn.sms }
-                                       inputType={ 'current-password' }
+                                       inputType={ 'password' }
                                        validate={ !isRegisterMode || ( isRegisterMode && isAvailableSMS ) ? validators.sms : undefined }
                                        disabled={ isRegisterMode ? !isAvailableSMS : false }
                                 >
