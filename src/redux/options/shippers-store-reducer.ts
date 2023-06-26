@@ -23,7 +23,7 @@ const initialState = {
         phisicalAddress: 'Физический адрес',
         shipperFio: 'ФИО отправителя',
         shipperTel: 'Телефон отправителя',
-        description: 'Доп. данные для ТТН (в т.ч. реальный адрес)',
+        description: 'Доп. данные для ТТН',
         coordinates: 'Местоположение в координатах',
         city: undefined,
     } as ShippersCardType<string | undefined>,

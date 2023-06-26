@@ -631,6 +631,7 @@ export type OneRequestApiType<T extends string = ''> = {
     kppSender?: string | T
     ogrnSender?: string | T
     addressSender?: string | T
+    phisicalAddressSender?: string | T
     shipperFioSender?: string | T
     shipperTelSender?: string | T
     descriptionSender?: string | T
@@ -645,6 +646,7 @@ export type OneRequestApiType<T extends string = ''> = {
     kppRecipient?: string | T
     ogrnRecipient?: string | T
     addressRecipient?: string | T
+    phisicalAddressRecipient?: string | T
     consigneesFioRecipient?: string | T
     consigneesTelRecipient?: string | T
     descriptionRecipient?: string | T

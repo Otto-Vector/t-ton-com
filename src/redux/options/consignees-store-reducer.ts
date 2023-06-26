@@ -23,7 +23,7 @@ const initialState = {
         phisicalAddress: 'Фактический адрес',
         consigneesFio: 'ФИО получателя',
         consigneesTel: 'Телефон получателя',
-        description: 'Доп. данные для ТТН (в т.ч. реальный адрес)',
+        description: 'Доп. данные для ТТН',
         coordinates: 'Местоположение в координатах',
     } as ConsigneesCardType<string | undefined>,
 

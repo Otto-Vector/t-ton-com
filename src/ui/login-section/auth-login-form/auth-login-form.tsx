@@ -23,7 +23,7 @@ import {
     newPassword,
     sendCodeToPhoneAndCreateShortRequisitesToValidateOnServer,
 } from '../../../redux/auth-store-reducer'
-import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers'
+import {parseAllNumbers, parseOnChangeValue, syncParsers} from '../../../utils/parsers'
 import {PhoneSubmitType} from '../../../types/form-types'
 
 import {useNavigate} from 'react-router-dom'
@@ -33,6 +33,8 @@ import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
 import {daDataStoreActions} from '../../../redux/api/dadata-response-reducer'
 import {useInnPlusApiValidator} from '../../../use-hooks/useAsyncInnValidate'
 import createDecorator from 'final-form-focus'
+import {textAndActionGlobalModal} from '../../../redux/utils/global-modal-store-reducer'
+import {boldWrapper} from '../../../utils/html-rebuilds'
 
 
 type OwnProps = {}
@@ -122,9 +124,14 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
     }
 
     const newSMSCode = ( phone: string ) => {
-        // сразу блокируем повторное нажание на 1 минуту
-        dispatch<any>(fakeAuthFetching())
-        dispatch<any>(newPassword({ phone }))
+        const valid = validators.phoneNumber && validators.phoneNumber(phone)
+        if (!valid) {
+            // сразу блокируем повторное нажание на 1 минуту
+            dispatch<any>(fakeAuthFetching())
+            dispatch<any>(newPassword({ phone }))
+        } else {
+            dispatch<any>(textAndActionGlobalModal({ text: 'Некорректрый номер телефона: ' + boldWrapper(valid) }))
+        }
     }
 
     // синхронно/асинхронный валидатор на поле ИНН
@@ -199,14 +206,14 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                                        allowEmptyFormatting
                                        maskFormat={ maskOn.phoneNumber }
                                        validate={ validators.phoneNumber }
-                                       parse={ oneRenderParser(form, syncParsers.tel) }
+                                       parse={ parseOnChangeValue(form, syncParsers.tel) }
                                        disabled={ isRegisterMode ? isAvailableSMS : false }
                                 />
                                 <Field name={ 'sms' }
                                        placeholder={ label.sms }
                                        component={ FormInputType }
                                     // maskFormat={ maskOn.sms }
-                                       inputType={ 'password' }
+                                       inputType={ 'current-password' }
                                        validate={ !isRegisterMode || ( isRegisterMode && isAvailableSMS ) ? validators.sms : undefined }
                                        disabled={ isRegisterMode ? !isAvailableSMS : false }
                                 >
@@ -217,7 +224,7 @@ export const AuthLoginForm: React.ComponentType<OwnProps> = () => {
                                                        colorMode={ 'gray' }
                                                        disabled={ !form.getFieldState('phoneNumber')?.valid || isFetching }
                                                        onClick={ () => {
-                                                           newSMSCode(values.phoneNumber as string)
+                                                           newSMSCode(form.getFieldState('phoneNumber')?.value as string)
                                                        } }
                                                        rounded
                                         >{ 'Новый пароль' }</ProjectButton>

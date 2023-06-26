@@ -1,5 +1,5 @@
-export const oneRenderParser = ( form: any, parser?: ( value: string ) => string ) => ( value: string, name: string ): string =>
-    value !== form.getFieldState(name)?.value ? parser ? parser(value) : value : value
+export const parseOnChangeValue = ( form: any, parser?: ( value: string ) => string ) => ( value: string, name: string ): string =>
+    (value !== form.getFieldState(name)?.value && parser) ? parser(value) : value
 
 export const composeParsers = ( ...parsers: ( ( val: string | undefined ) => string )[] ) => ( value: string ): string =>
     parsers.reduce(( val, validator ) => validator(val), value)

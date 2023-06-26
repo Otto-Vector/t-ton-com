@@ -332,6 +332,14 @@ export const ShippersForm: React.ComponentType<OwnProps> = () => {
                                                    parse={ parsers.shipperTel }
                                                    allowEmptyFormatting
                                             />
+                                            <Field name={ 'phisicalAddress' }
+                                                       placeholder={ label.phisicalAddress }
+                                                       maskFormat={ maskOn.phisicalAddress }
+                                                       component={ FormInputType }
+                                                       resetFieldBy={ form }
+                                                       validate={ validators.phisicalAddress }
+                                                       parse={ parsers.phisicalAddress }
+                                                />
                                             <div className={ styles.shippersConsigneesForm__textArea }>
                                                 <Field name={ 'description' }
                                                        placeholder={ label.description }

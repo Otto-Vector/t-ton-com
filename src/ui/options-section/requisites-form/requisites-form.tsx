@@ -79,12 +79,13 @@ export const RequisitesForm: React.ComponentType<OwnProps> = () => {
                 kpp: unmaskedValues.kpp,
                 ogrn: unmaskedValues.ogrn,
                 coordinates: coordsToString(localCoords as [ number, number ]),
-                city: '-',
+                city: 'null',
                 address: unmaskedValues.legalAddress,
+                phisicalAddress: unmaskedValues.postAddress,
                 organizationName: unmaskedValues.organizationName,
                 shipperTel: unmaskedValues.phoneDirector,
-                shipperFio: '-',
-                description: '-',
+                shipperFio: 'null',
+                description: 'null',
             } as ShippersCardType<string>))
             dispatch<any>(textAndActionGlobalModal({
                 text: 'Создан первый грузоотправитель. Скорректируйте данные',

@@ -31,7 +31,7 @@ import {
 
 import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
 
-import {oneRenderParser, parseAllNumbers, syncParsers} from '../../../utils/parsers'
+import {parseOnChangeValue, parseAllNumbers, syncParsers} from '../../../utils/parsers'
 import {ImageViewSet} from '../../common/modals/image-view-set/image-view-set'
 import {yearMmDdFormat} from '../../../utils/date-formats'
 import {getDrivingCategorySelectorBaseStore} from '../../../selectors/base-reselect'
@@ -399,7 +399,7 @@ export const EmployeesForm: React.ComponentType<OwnProps> = () => {
                                                    component={ FormInputType }
                                                    resetFieldBy={ form }
                                                    validate={ validators.employeePhoneNumber }
-                                                   parse={ oneRenderParser(form, parsers.employeePhoneNumber) }
+                                                   parse={ parseOnChangeValue(form, parsers.employeePhoneNumber) }
                                             />
                                             {/* Когда выдан паспорт */ }
                                             <Field name={ 'passportDate' }
