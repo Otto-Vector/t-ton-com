@@ -399,6 +399,7 @@ export const parseRequestToApiOnCreate = ( { userId, oneRequestValues, filteredC
         ogrnCustomer: userCustomer?.ogrn || customerCard?.ogrn,
         okpoCustomer: userCustomer?.okpo,
         legalAddressCustomer: userCustomer?.legalAddress || customerCard?.address,
+        // подставляем данные телефона сотрудника из карточки перевозчика
         descriptionCustomer: customerCard?.shipperTel || customerCard?.description,
         postAddressCustomer: userCustomer?.postAddress || customerCard?.address,
         phoneDirectorCustomer: userCustomer?.phoneDirector,

@@ -123,7 +123,7 @@ export const getTransportSelectEnableCurrentEmployee = createSelector(getAllTran
         isDisabled: values.isDisabled && ( values.value !== oneEmployee.idTransport ),
     } )),
 )
-
+// селектор для сотрудника + данные по типу груза
 export const getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel = createSelector(getTransportSelectEnableCurrentEmployee,
     ( transportSelect ): SelectOptionsType[] => transportSelect.map(( values ) => ( {
             ...values,

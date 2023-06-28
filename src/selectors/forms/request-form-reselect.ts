@@ -23,12 +23,7 @@ export const getAllByUserRequestStore: RequestStoreSelectors<'contentByUser'> = 
 export const getCurrentDistanceIsFetchingRequestStore: RequestStoreSelectors<'currentDistanceIsFetching'> = ( state ) => state.requestStoreReducer.currentDistanceIsFetching
 export const getPolylineRouteRequestStore: RequestStoreSelectorsInit<'route'> = ( state: AppStateType ) => state.requestStoreReducer.initialValues.route
 
-// дистанция. пока непонятно почему в селекторе, но лучше оставлю
-// export const getInitialDistanceRequestStore = createSelector(getInitialValuesRequestStore, ( { distance } ) => distance)
-// export const getInitialCargoWeightRequestStore = createSelector(getInitialValuesRequestStore, ( { cargoWeight } ) => cargoWeight)
-// export const getInitialAddedPriceRequestStore = createSelector(getInitialValuesRequestStore, ( { addedPrice } ) => addedPrice)
-// export const getInitialStavkaRequestStore = createSelector(getInitialValuesRequestStore, ( { responseStavka } ) => responseStavka)
-
+// данные в модальное окно калькуляции при нажатии "груз у водителя"
 export const getInitialDataToModalCalcRequestStore = createSelector(getInitialValuesRequestStore, (
         { distance, cargoWeight, responsePrice, responseStavka, responseTransport, responseTrailer } ) => ( {
         distance: toNumber(distance),
@@ -80,7 +75,7 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
                 senderUser?.organizationName || sender?.organizationName,
                 senderInnNumber && boldWrapper('ИНН: ') + senderInnNumber,
                 senderLegalAddress && boldWrapper('Юр.Адрес: ') + senderLegalAddress,
-                sender?.description && boldWrapper('Адрес отправления: ') + sender.description,
+                sender?.phisicalAddress && boldWrapper('Адрес отправления: ') + sender.phisicalAddress,
             ],
             shipperSenderPhoneData: [
                 senderUser?.phoneDirector && boldWrapper('Телефон директора: ') + senderUser.phoneDirector,
@@ -92,7 +87,7 @@ export const getPreparedInfoDataRequestStore = createSelector(getInitialValuesRe
                 recipientUser?.organizationName || recipient?.organizationName,
                 recipientInn && boldWrapper('ИНН: ') + recipientInn,
                 recipientLegalAddress && boldWrapper('Юр.Адрес: ') + recipientLegalAddress,
-                recipient?.description && boldWrapper('Адрес прибытия: ') + recipient.description,
+                recipient?.phisicalAddress && boldWrapper('Адрес прибытия: ') + recipient.phisicalAddress,
             ],
             consigneeRecipientPhoneData: [
                 recipientUser?.phoneDirector && boldWrapper('Телефон директора: ') + recipientUser.phoneDirector,
