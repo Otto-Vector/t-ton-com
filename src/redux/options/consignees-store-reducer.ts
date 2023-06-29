@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {ConsigneesCardType, ParserType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
-import {coordsToString, syncParsers} from '../../utils/parsers'
+import {coordsToString, syncParsers, toNumber} from '../../utils/parsers'
 import {consigneesApi} from '../../api/local-api/options/consignees.api'
 import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {GetActionsTypes} from '../../types/ts-utils'
@@ -205,7 +205,7 @@ export const setOrganizationByInnKppConsignees = ( {
                                                    }: { kppNumber: string, formValue: ConsigneesCardType } ):
     ConsigneesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
-
+        const coordinates = getState().consigneesStoreReducer.initialValues.coordinates
         const suggestions = getState().daDataStoreReducer.suggestions
 
         const response = ( kppNumber !== '-' )
@@ -214,6 +214,10 @@ export const setOrganizationByInnKppConsignees = ( {
 
         if (response !== undefined) {
             const { data } = response
+             const geo_lat = toNumber(data?.address?.data?.geo_lat)
+            const geo_lon = toNumber(data?.address?.data?.geo_lon)
+            const isHaveGeo = !!geo_lat && !!geo_lon
+
             dispatch(consigneesStoreActions.setInitialValues({
                 ...formValue,
                 innNumber: data.inn,
@@ -221,6 +225,7 @@ export const setOrganizationByInnKppConsignees = ( {
                 organizationName: response.value,
                 ogrn: data.ogrn,
                 address: data.address.value,
+                coordinates: isHaveGeo ? coordsToString([ geo_lat, geo_lon ]) : coordinates,
             }))
         } else {
             dispatch(textAndActionGlobalModal({

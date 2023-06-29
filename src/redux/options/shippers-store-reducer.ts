@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk'
 import {AppStateType} from '../redux-store'
 import {ParserType, ShippersCardType, ValidateType} from '../../types/form-types'
 import {syncValidators} from '../../utils/validators'
-import {coordsToString, syncParsers} from '../../utils/parsers'
+import {coordsToString, syncParsers, toNumber} from '../../utils/parsers'
 import {shippersApi} from '../../api/local-api/options/shippers.api'
 import {textAndActionGlobalModal} from '../utils/global-modal-store-reducer'
 import {GetActionsTypes} from '../../types/ts-utils'
@@ -211,21 +211,27 @@ export const setOrganizationByInnKppShippers = ( {
     async ( dispatch, getState ) => {
 
         const suggestions = getState().daDataStoreReducer.suggestions
+        const coordinates = getState().shippersStoreReducer.initialValues.coordinates
 
-        const response = ( kppNumber !== '-' )
+        const response = ( kppNumber !== '-' && kppNumber !== '_' )
             ? suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
             : suggestions[0]
 
         if (response !== undefined) {
             const { data } = response
+            const geo_lat = toNumber(data?.address?.data?.geo_lat)
+            const geo_lon = toNumber(data?.address?.data?.geo_lon)
+            const isHaveGeo = !!geo_lat && !!geo_lon
             dispatch(shippersStoreActions.setInitialValues({
                 ...formValue,
-                innNumber: data.inn,
+                innNumber: data?.inn,
                 kpp: kppNumber,
-                organizationName: response.value,
-                ogrn: data.ogrn,
-                address: data.address.value,
+                organizationName: response?.value,
+                ogrn: data?.ogrn,
+                address: data?.address?.value,
+                coordinates: isHaveGeo ? coordsToString([ geo_lat, geo_lon ]) : coordinates,
             }))
+
         } else {
             dispatch(textAndActionGlobalModal({
                 text: 'Фильтр КПП локально не сработал!',

@@ -271,8 +271,13 @@ export const acceptLongRoutePay = (): RequisitesStoreReducerThunkActionType =>
 export const getPersonalOrganizationRequisites = (): RequisitesStoreReducerThunkActionType =>
     async ( dispatch, getState ) => {
         dispatch(requisitesStoreActions.setIsFetching(true))
+        dispatch(requisitesStoreActions.setStoredValues({} as CompanyRequisitesType))
         try {
             const idUser = getState().authStoreReducer.authID
+
+            if (!idUser) {
+                throw new Error('Id пользователя пустое!')
+            }
             const user = await requisitesApi.getPersonalDataFromId({ idUser })
 
             if (user.message || !user.length) {
@@ -374,7 +379,7 @@ export const getListOrganizationRequisitesByInn = ( innNumber: string ): Requisi
                     // исправляем косяк бэка на ключе nnNumber
                     ( { nnNumber, ...rest } ) => ( { ...rest, innNumber: nnNumber } ),
                 )
-                dispatch(requisitesStoreActions.setFilteredContent( responseParser.length ? responseParser : null))
+                dispatch(requisitesStoreActions.setFilteredContent(responseParser.length ? responseParser : null))
                 // return responseParser
             }
         } catch (error: TtonErrorType) {
