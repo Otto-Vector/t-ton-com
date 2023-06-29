@@ -208,13 +208,13 @@ export const setOrganizationByInnKppConsignees = ( {
         const coordinates = getState().consigneesStoreReducer.initialValues.coordinates
         const suggestions = getState().daDataStoreReducer.suggestions
 
-        const response = ( kppNumber !== '-' && kppNumber !== '_')
+        const response = ( kppNumber !== '-' && kppNumber !== '_' )
             ? suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
             : suggestions[0]
 
         if (response !== undefined) {
             const { data } = response
-             const geo_lat = toNumber(data?.address?.data?.geo_lat)
+            const geo_lat = toNumber(data?.address?.data?.geo_lat)
             const geo_lon = toNumber(data?.address?.data?.geo_lon)
             const isHaveGeo = !!geo_lat && !!geo_lon
 
