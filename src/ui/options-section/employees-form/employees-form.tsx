@@ -31,7 +31,7 @@ import {
 
 import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
 
-import {parseOnChangeValue, parseAllNumbers, syncParsers} from '../../../utils/parsers'
+import {parseAllNumbers, parseOnChangeValue, syncParsers} from '../../../utils/parsers'
 import {ImageViewSet} from '../../common/modals/image-view-set/image-view-set'
 import {yearMmDdFormat} from '../../../utils/date-formats'
 import {getDrivingCategorySelectorBaseStore} from '../../../selectors/base-reselect'
@@ -429,8 +429,8 @@ export const EmployeesForm: React.ComponentType<OwnProps> = () => {
                                                                    colorMode={ 'red' }
                                                                    title={ 'Удалить' }
                                                                    onClick={ () => {
-                                                                employeesDeleteHandleClick(initialValues)
-                                                            } }
+                                                                       employeesDeleteHandleClick(initialValues)
+                                                                   } }
                                                                    rounded
                                                     />
                                                 </div>

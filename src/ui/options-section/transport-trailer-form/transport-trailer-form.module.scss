@@ -25,6 +25,15 @@
     justify-content: space-evenly;
   }
 
+  &__status {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 70%;
+    font-weight: bold;
+    color: gray;
+  }
+
   &__header {
     font-family: $RalewayFont;
     font-weight: 700;

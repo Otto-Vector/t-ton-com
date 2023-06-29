@@ -51,16 +51,20 @@ export const getAllTrailerSelectFromLocal = createSelector(
     getAllTrailerStore, getAllEmployeesStore, ( trailers, employees ): SelectOptionsType[] =>
         trailers
             .map(( { idTrailer, trailerTrademark, trailerNumber, cargoWeight, cargoType } ) => {
-                    const employeesHasTrailer = employees
+
+                    const employeesHasThisTrailer = employees
+                        // так-то один водитель, но на всякий случай ищем по всем (для поиска багов)
                         .filter(( { idTrailer: id } ) => id === idTrailer)
                         .map(( { employeeFIO } ) => parseFamilyToFIO(employeeFIO))
                         .join(',')
+                    const isTralerBusy = !!employeesHasThisTrailer.length
+
                     return ( {
                         key: idTrailer,
                         value: idTrailer,
                         label: [ trailerTrademark, trailerNumber, '(' + cargoWeight ].join(', ') + 'т.)',
-                        isDisabled: !!employeesHasTrailer.length,
-                        subLabel: employeesHasTrailer,
+                        isDisabled: isTralerBusy,
+                        subLabel: employeesHasThisTrailer,
                         extendInfo: cargoType,
                     } )
                 },
@@ -123,6 +127,7 @@ export const getTransportSelectEnableCurrentEmployee = createSelector(getAllTran
         isDisabled: values.isDisabled && ( values.value !== oneEmployee.idTransport ),
     } )),
 )
+
 // селектор для сотрудника + данные по типу груза
 export const getTransportSelectEnableCurrentEmployeeWithCargoTypeOnSubLabel = createSelector(getTransportSelectEnableCurrentEmployee,
     ( transportSelect ): SelectOptionsType[] => transportSelect.map(( values ) => ( {

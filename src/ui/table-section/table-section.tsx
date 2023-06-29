@@ -108,10 +108,6 @@ export const TableSection: React.ComponentType<OwnProps> = ( { mode } ) => {
         dispatch<any>(getAllRequestsAPI())
     }, [])
 
-    // сброс фильтров при смене типа отображения и при первоначальной загрузке
-    // useEffect(() => {
-    // dispatch(filtersStoreActions.setClearFilter(initialFiltersState, mode))
-    // }, [ mode ])
 
     useEffect(() => { // перекрашиваем кнопку "Без фильтра"
         // если любой из фильтров на кнопках активен

@@ -38,6 +38,7 @@ import {getIsBusyTrailer} from '../../../selectors/options/for-selectors/all-sel
 import {getCargoTypeBaseStore, getPropertyRightsBaseStore} from '../../../selectors/base-reselect'
 
 import createDecorator from 'final-form-focus'
+import { boldWrapper } from '../../../utils/html-rebuilds'
 
 type OwnProps = {}
 
@@ -69,14 +70,14 @@ export const TrailerForm: React.ComponentType<OwnProps> = () => {
     const trailertHasPassToDelete = () => {
         dispatch<any>(textAndActionGlobalModal({
             text: 'Прицеп не может быть удалён, он привязан к сотруднику: '
-                + ( isBusyTrailer?.subLabel ),
+                + boldWrapper( isBusyTrailer?.subLabel ),
         }))
     }
 
     const unchangeableField = () => {
         dispatch<any>(textAndActionGlobalModal({
             text: 'Данное поле Прицепа не может быть изменено, пока он привязан к сотруднику: '
-                + ( isBusyTrailer?.subLabel ),
+                + boldWrapper( isBusyTrailer?.subLabel ),
         }))
     }
 
@@ -139,6 +140,10 @@ export const TrailerForm: React.ComponentType<OwnProps> = () => {
             <div className={ styles.transportTrailerForm__wrapper }>
                 { // установил прелоадер
                     isFetching ? <Preloader/> : <>
+                        {
+                            !isNew && !!isBusyTrailer &&
+                            <span className={ styles.transportTrailerForm__status }>{ isBusyTrailer?.subLabel }</span>
+                        }
                         <h4 className={ styles.transportTrailerForm__header }>{ header }</h4>
                         <Form
                             onSubmit={ onSubmit }
