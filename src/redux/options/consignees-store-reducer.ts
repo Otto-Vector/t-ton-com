@@ -208,7 +208,7 @@ export const setOrganizationByInnKppConsignees = ( {
         const coordinates = getState().consigneesStoreReducer.initialValues.coordinates
         const suggestions = getState().daDataStoreReducer.suggestions
 
-        const response = ( kppNumber !== '-' )
+        const response = ( kppNumber !== '-' && kppNumber !== '_')
             ? suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
             : suggestions[0]
 
