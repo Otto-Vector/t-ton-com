@@ -66,6 +66,7 @@ export const RouteMapCenter: React.ComponentType<ToRouteMap> = React.memo((
     const placemarkerReWriter = useMemo(() => () => {
         const bounds: number[][] = map.current?.getBounds()
         const center: number[] = map.current?.getCenter()
+
         if (driverHere && driver.idEmployee) {
             // если водитель без координат, ставим метку внизу в центре карты
             if (driverHere[0] === 0) {

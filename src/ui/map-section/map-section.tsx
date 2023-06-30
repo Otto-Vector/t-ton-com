@@ -38,7 +38,6 @@ import {
     positionToBoundsLine,
 } from '../../utils/map-utils'
 import {boldWrapper} from '../../utils/html-rebuilds'
-import {parseToNormalMoney, toNumber} from '../../utils/parsers'
 import {colorOfStatus} from './utilites'
 import {MapListBoxItem} from './map-list-box-item/map-list-box-item'
 

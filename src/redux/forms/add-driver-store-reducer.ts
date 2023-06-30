@@ -204,7 +204,7 @@ export const removeResponseToRequestsBzEmployee = ( {
                                                     }: { responseId: string, idEmployee: string } ): AddDriverStoreReducerThunkActionType =>
     async ( dispatch ) => {
         try {
-            await responseToRequestApi.deleteSomeResponseToRequest({ responseId })
+            if (responseId) await responseToRequestApi.deleteSomeResponseToRequest({ responseId })
             // дополнительная зачистка из-за предыдущих глюков удаления в этом поле
             await employeesApi.removeResponseToRequestFromEmployee({ idEmployee, addedToResponse: 'all' })
             await dispatch(getAllRequestsAPI())

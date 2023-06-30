@@ -390,8 +390,8 @@ export const AddDriversForm: React.ComponentType<OwnProps> = ( { mode } ) => {
                                                                colorMode={ 'red' }
                                                                title={ 'Отказаться' }
                                                                onClick={ () => {
-                                                            onCancelClick()
-                                                        } }
+                                                                   onCancelClick()
+                                                               } }
                                                                rounded
                                                 />
                                             </div>
