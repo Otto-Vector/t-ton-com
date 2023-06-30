@@ -29,7 +29,7 @@ import {
     setOrganizationByInnKppShippers,
     shippersStoreActions,
 } from '../../../redux/options/shippers-store-reducer'
-import {parseAllNumbers} from '../../../utils/parsers'
+import {coordsToString, parseAllNumbers} from '../../../utils/parsers'
 import {YandexMapToForm} from '../../common/yandex-map-component/map-to-form'
 import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
@@ -158,6 +158,7 @@ export const ShippersForm: React.ComponentType<OwnProps> = () => {
                 ogrn: '',
                 address: '',
                 kpp: '',
+                coordinates: coordsToString(localCoords as [ number, number ]),
             } as ShippersCardType))
         }
     }
@@ -165,7 +166,13 @@ export const ShippersForm: React.ComponentType<OwnProps> = () => {
     // онлайн валидация ИНН с подгрузкой КПП в селектор
     const innPlusApiValidator = useInnPlusApiValidator<ShippersCardType<string>>(
         dispatch, shippersStoreActions.setInitialValues,
-        { organizationName: '', ogrn: '', address: '', kpp: '' } as ShippersCardType<string>,
+        {
+            organizationName: '',
+            ogrn: '',
+            address: '',
+            kpp: '',
+            coordinates: coordsToString(localCoords as [ number, number ]),
+        } as ShippersCardType<string>,
     )
 
     // валидатор на одинаковые названия заголовков
@@ -333,13 +340,13 @@ export const ShippersForm: React.ComponentType<OwnProps> = () => {
                                                    allowEmptyFormatting
                                             />
                                             <Field name={ 'phisicalAddress' }
-                                                       placeholder={ label.phisicalAddress }
-                                                       maskFormat={ maskOn.phisicalAddress }
-                                                       component={ FormInputType }
-                                                       resetFieldBy={ form }
-                                                       validate={ validators.phisicalAddress }
-                                                       parse={ parsers.phisicalAddress }
-                                                />
+                                                   placeholder={ label.phisicalAddress }
+                                                   maskFormat={ maskOn.phisicalAddress }
+                                                   component={ FormInputType }
+                                                   resetFieldBy={ form }
+                                                   validate={ validators.phisicalAddress }
+                                                   parse={ parsers.phisicalAddress }
+                                            />
                                             <div className={ styles.shippersConsigneesForm__textArea }>
                                                 <Field name={ 'description' }
                                                        placeholder={ label.description }

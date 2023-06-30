@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {Placemark, SearchControl} from 'react-yandex-maps'
 import {YandexMapComponent} from './yandex-map-component'
 import {valuesAreEqual} from '../../../utils/reactMemoUtils'
@@ -11,6 +11,8 @@ type ToFormProps = {
 // в маленькое окошко формы ГРУЗООТПРАВИТЕЛЬ / ГРУЗОПОЛУЧАТЕЛЬ
 export const YandexMapToForm: React.ComponentType<ToFormProps> = React.memo(
     ( { center, getCoordinates } ) => {
+        // для забора координат и перерисовки маркера после ввода адреса на карте
+        const searchConrolRef = useRef(null)
 
         return (
             <YandexMapComponent
@@ -39,7 +41,16 @@ export const YandexMapToForm: React.ComponentType<ToFormProps> = React.memo(
                     options={ {
                         float: 'right',
                         noPlacemark: true,
-                    } }/>
+                    } }
+                    // @ts-ignore
+                    instanceRef={ searchConrolRef }
+                    onResultShow={ () => {
+                        // забираем данные из результатов поиска
+                        // @ts-ignore
+                        getCoordinates(searchConrolRef.current.getResult(0)._value.geometry._coordinates)
+                    } }
+                    // onResultSelect={ ( event: any ) => {} }
+                />
             </YandexMapComponent>
         )
     }, valuesAreEqual)

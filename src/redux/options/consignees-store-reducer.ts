@@ -208,12 +208,10 @@ export const setOrganizationByInnKppConsignees = ( {
         const coordinates = getState().consigneesStoreReducer.initialValues.coordinates
         const suggestions = getState().daDataStoreReducer.suggestions
 
-        const response = ( kppNumber !== '-' && kppNumber !== '_' )
-            ? suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
-            : suggestions[0]
+        const selectedOrganization = suggestions.find(( { data: { kpp } } ) => [ '_', kpp ].includes(kppNumber))
 
-        if (response !== undefined) {
-            const { data } = response
+        if (selectedOrganization) {
+            const { data } = selectedOrganization
             const geo_lat = toNumber(data?.address?.data?.geo_lat)
             const geo_lon = toNumber(data?.address?.data?.geo_lon)
             const isHaveGeo = !!geo_lat && !!geo_lon
@@ -222,7 +220,7 @@ export const setOrganizationByInnKppConsignees = ( {
                 ...formValue,
                 innNumber: data.inn,
                 kpp: kppNumber,
-                organizationName: response.value,
+                organizationName: selectedOrganization.value,
                 ogrn: data.ogrn,
                 address: data.address.value,
                 coordinates: isHaveGeo ? coordsToString([ geo_lat, geo_lon ]) : coordinates,

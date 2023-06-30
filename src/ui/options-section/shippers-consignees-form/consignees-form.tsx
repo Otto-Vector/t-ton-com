@@ -28,7 +28,7 @@ import {
     oneConsigneeDeleteToAPI,
     setOrganizationByInnKppConsignees,
 } from '../../../redux/options/consignees-store-reducer'
-import {parseAllNumbers} from '../../../utils/parsers'
+import {coordsToString, parseAllNumbers} from '../../../utils/parsers'
 import {YandexMapToForm} from '../../common/yandex-map-component/map-to-form'
 import {getAllKPPSelectFromLocal} from '../../../selectors/api/dadata-reselect'
 import {FormSelector} from '../../common/inputs/final-form-inputs/form-selector/form-selector'
@@ -159,6 +159,7 @@ export const ConsigneesForm: React.ComponentType<OwnProps> = () => {
                 ogrn: '',
                 address: '',
                 kpp: '',
+                coordinates: coordsToString(localCoords as [ number, number ]),
             } as ConsigneesCardType))
         }
     }
@@ -166,7 +167,13 @@ export const ConsigneesForm: React.ComponentType<OwnProps> = () => {
     // синхронно/асинхронный валидатор на поле ИНН
     const innPlusApiValidator = useInnPlusApiValidator<ConsigneesCardType<string>>(
         dispatch, consigneesStoreActions.setInitialValues,
-        { organizationName: '', ogrn: '', address: '', kpp: '' } as ConsigneesCardType<string>,
+        {
+            organizationName: '',
+            ogrn: '',
+            address: '',
+            kpp: '',
+            coordinates: coordsToString(localCoords as [ number, number ]),
+        } as ConsigneesCardType<string>,
     )
 
     // валидатор на одинаковые названия заголовков

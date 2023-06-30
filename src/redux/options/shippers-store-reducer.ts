@@ -214,7 +214,7 @@ export const setOrganizationByInnKppShippers = ( {
         const coordinates = getState().shippersStoreReducer.initialValues.coordinates
 
         const response = ( kppNumber !== '-' && kppNumber !== '_' )
-            ? suggestions.filter(( { data: { kpp } } ) => kpp === kppNumber)[0]
+            ? suggestions.find(( { data: { kpp } } ) => kpp === kppNumber)
             : suggestions[0]
 
         if (response !== undefined) {
